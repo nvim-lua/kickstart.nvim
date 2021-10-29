@@ -25,7 +25,6 @@ nnoremap j gj
 nnoremap k gk
 
 " FZF Bindings
-nnoremap <C-F> :Files<CR>
 noremap <leader><leader> :GFiles<CR>
 nnoremap <leader>C        :Colors<CR>
 nnoremap <leader><CR>     :Buffers<CR>

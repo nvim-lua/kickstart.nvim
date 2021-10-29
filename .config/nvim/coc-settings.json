@@ -1,3 +1,5 @@
 {
-      "coc.preferences.formatOnSaveFiletypes": ["css", "markdown", "javascript", "typescript", "typescriptreact", "go"]
+      "coc.preferences.formatOnSaveFiletypes": ["css", "markdown", "javascript", "typescript", "typescriptreact", "go"],
+      "eslint.autoFixOnSave": true,
+      "diagnostic.checkCurrentLine": true
 }
