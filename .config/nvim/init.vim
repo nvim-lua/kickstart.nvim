@@ -1,6 +1,4 @@
-
 let mapleader = " "
-
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 
@@ -67,7 +65,6 @@ Plug 'stsewd/fzf-checkout.vim'
 Plug 'leafgarland/typescript-vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'github/copilot.vim'
 Plug 'tpope/vim-rhubarb'
 Plug 'thesis/vim-solidity'
 Plug 'vim-test/vim-test'
