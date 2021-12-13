@@ -1,5 +1,6 @@
+
 if [ ! -f $HOME/antigen/antigen.zsh ]; then
-    echo <<EOF
+    cat <<EOF
     Antigen not installed!
 
     git clone https://github.com/zsh-users/antigen.git ~/antigen
@@ -19,7 +20,7 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 if [ ! -f ~/.fzf.zsh ]; then 
-    echo <<EOF 
+    cat<<EOF 
     FZF Not installed!
 
     git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
@@ -29,8 +30,8 @@ else
     source ~/.fzf.zsh
 fi
 
-if ! type rvm &> /dev/null; then
-echo <<EOF
+if type rvm &> /dev/null; then
+cat<<EOF
 RVM Not installed. You should probably do this:
 
 mkdir -p ~/.rvm/src && cd ~/.rvm/src && rm -rf ./rvm && \
