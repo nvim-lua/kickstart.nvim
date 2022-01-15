@@ -8,10 +8,10 @@ EOF
 else
     source "$HOME/antigen/antigen.zsh"
 
-antigen use oh-my-zsh
-antigen bundle arialdomartini/oh-my-git
-antigen theme arialdomartini/oh-my-git-themes oppa-lana-style
-antigen apply
+    antigen use oh-my-zsh
+    antigen bundle arialdomartini/oh-my-git
+    antigen theme arialdomartini/oh-my-git-themes oppa-lana-style
+    antigen apply
 fi
 
 alias config="/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME"
@@ -30,7 +30,7 @@ else
     source ~/.fzf.zsh
 fi
 
-if type rvm &> /dev/null; then
+if [ ! type rvm &> /dev/null ]; then
 cat<<EOF
 RVM Not installed. You should probably do this:
 
