@@ -8,6 +8,7 @@ EOF
 else
     source "$HOME/antigen/antigen.zsh"
 
+    antigen bundle zsh-users/zsh-autosuggestions
     antigen use oh-my-zsh
     antigen bundle arialdomartini/oh-my-git
     antigen theme arialdomartini/oh-my-git-themes oppa-lana-style
@@ -40,6 +41,17 @@ cd rvm && ./install
 EOF
 else
     # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-    export PATH="$PATH:$HOME/.rvm/bin"
+    PATH="$PATH:$HOME/.rvm/bin"
 fi
 
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/.local/bin" ] ; then
+    PATH="$HOME/.local/bin:$PATH"
+fi
+
+export PATH

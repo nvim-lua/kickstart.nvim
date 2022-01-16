@@ -26,6 +26,7 @@ nnoremap k gk
 
 " FZF Bindings
 noremap <leader><leader> :GFiles<CR>
+noremap <leader>pf :Files<CR>
 nnoremap <leader>C        :Colors<CR>
 nnoremap <leader><CR>     :Buffers<CR>
 nnoremap <leader>fl       :Lines<CR>
@@ -77,6 +78,7 @@ augroup END
 "  autocmd!
 "  autocmd VimEnter * :Vexplore
 "augroup END
+nnoremap <leader>pv :Vex<CR>
 
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
@@ -89,3 +91,7 @@ let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 nmap <leader>gs :G<CR>
 nmap <leader>gh :diffget //3<CR>
 nmap <leader>gu :diffget //2<CR>
+
+" Copy to system clipboard
+vnoremap <leader>y "*y
+nnoremap <leader>y "*y
