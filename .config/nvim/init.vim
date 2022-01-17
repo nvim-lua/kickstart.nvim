@@ -6,6 +6,8 @@ vnoremap K :m '<-2<CR>gv=gv
 
 nnoremap / /\v
 vnoremap / /\v
+nnoremap <leader>/ :Rg<space>
+vnoremap <leader>/ :Rg<space>
 nnoremap <leader>` :noh<cr>
 nnoremap <tab> %
 vnoremap <tab> %
