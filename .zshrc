@@ -8,6 +8,12 @@ EOF
 else
     source "$HOME/antigen/antigen.zsh"
 
+    export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+    export NVM_COMPLETION=true
+    export NVM_LAZY_LOAD=true
+    export NVM_AUTO_USE=true
+    antigen bundle lukechilds/zsh-nvm
+
     antigen bundle zsh-users/zsh-autosuggestions
     antigen use oh-my-zsh
     antigen bundle arialdomartini/oh-my-git
@@ -16,9 +22,6 @@ else
 fi
 
 alias config="/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME"
-
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 if [ ! -f ~/.fzf.zsh ]; then 
     cat<<EOF 
