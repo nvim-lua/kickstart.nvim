@@ -71,6 +71,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'github/copilot.vim'
 Plug 'tpope/vim-rhubarb'
+Plug 'thesis/vim-solidity'
 
 " Initialize plugin system
 call plug#end()

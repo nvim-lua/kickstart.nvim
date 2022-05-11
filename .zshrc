@@ -1,28 +1,3 @@
-
-if [ ! -f $HOME/antigen/antigen.zsh ]; then
-    cat <<EOF
-    Antigen not installed!
-
-    git clone https://github.com/zsh-users/antigen.git ~/antigen
-EOF
-else
-    source "$HOME/antigen/antigen.zsh"
-
-    export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-    export NVM_COMPLETION=true
-    export NVM_LAZY_LOAD=true
-    export NVM_AUTO_USE=true
-    antigen bundle lukechilds/zsh-nvm
-
-    antigen bundle zsh-users/zsh-autosuggestions
-    antigen use oh-my-zsh
-    antigen bundle arialdomartini/oh-my-git
-    antigen theme arialdomartini/oh-my-git-themes oppa-lana-style
-    antigen apply
-fi
-
-alias config="/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME"
-
 if [ ! -f ~/.fzf.zsh ]; then 
     cat<<EOF 
     FZF Not installed!
@@ -34,18 +9,7 @@ else
     source ~/.fzf.zsh
 fi
 
-if [ ! type rvm &> /dev/null ]; then
-cat<<EOF
-RVM Not installed. You should probably do this:
-
-mkdir -p ~/.rvm/src && cd ~/.rvm/src && rm -rf ./rvm && \
-git clone --depth 1 https://github.com/rvm/rvm.git && \
-cd rvm && ./install
-EOF
-else
-    # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-    PATH="$PATH:$HOME/.rvm/bin"
-fi
+alias config="/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME"
 
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
@@ -58,3 +22,27 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 
 export PATH
+
+if [ ! -f $HOME/antigen/antigen.zsh ]; then
+    cat <<EOF
+    Antigen not installed!
+
+    git clone https://github.com/zsh-users/antigen.git ~/antigen
+EOF
+else
+   source "$HOME/antigen/antigen.zsh"
+
+   antigen bundle zsh-users/zsh-autosuggestions
+   antigen use oh-my-zsh
+   antigen bundle arialdomartini/oh-my-git
+   antigen theme arialdomartini/oh-my-git-themes oppa-lana-style
+   antigen apply
+fi
+
+. $HOME/.asdf/asdf.sh
+
+# append completions to fpath
+fpath=(${ASDF_DIR}/completions $fpath)
+# initialise completions with ZSH's compinit
+autoload -Uz compinit && compinit
+
