@@ -10,8 +10,9 @@
   ],
   "eslint.autoFixOnSave": true,
   "diagnostic.checkCurrentLine": true,
+  "codeLens.enabled": true,
   "solargraph.autoformat": true,
   "solargraph.formatting": true,
   "solargraph.hover": true,
-  "solargraph.diagnostics": true,
+  "solargraph.diagnostics": true
 }

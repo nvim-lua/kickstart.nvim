@@ -30,9 +30,23 @@ nnoremap k gk
 noremap <leader><leader> :GFiles<CR>
 noremap <leader>pf :Files<CR>
 nnoremap <leader>C        :Colors<CR>
-nnoremap <leader><CR>     :Buffers<CR>
+nnoremap <leader>B        :Buffers<CR>
 nnoremap <leader>fl       :Lines<CR>
-nnoremap <leader>m        :History<CR>
+noremap <leader>m        :History<CR>
+noremap <leader>/        :Rg<space>
+
+" Use fuzzy completion relative filepaths across directory
+imap <expr> <c-x><c-f> fzf#vim#complete#path('git ls-files $(git rev-parse --show-toplevel)')
+
+" Better command history with q:
+command! CmdHist call fzf#vim#command_history({'right': '40'})
+nnoremap q: :CmdHist<CR>
+
+" Better search history
+command! QHist call fzf#vim#search_history({'right': '40'})
+nnoremap q/ :QHist<CR>
+
+command! -bang -nargs=* Ack call fzf#vim#ag(<q-args>, {'down': '40%', 'options': --no-color'})
 
 inoremap <F1> <ESC>
 nnoremap <F1> <ESC>
@@ -51,10 +65,12 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'stsewd/fzf-checkout.vim'
 Plug 'leafgarland/typescript-vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'github/copilot.vim'
+Plug 'tpope/vim-rhubarb'
 
 " Initialize plugin system
 call plug#end()
@@ -93,6 +109,7 @@ let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 nmap <leader>gs :G<CR>
 nmap <leader>gh :diffget //3<CR>
 nmap <leader>gu :diffget //2<CR>
+nnoremap <leader>gc :GCheckout<CR>
 
 " Copy to system clipboard
 vnoremap <leader>y "*y
