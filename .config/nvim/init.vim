@@ -70,6 +70,7 @@ Plug 'leafgarland/typescript-vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'github/copilot.vim'
+Plug 'tpope/vim-rhubarb'
 
 " Initialize plugin system
 call plug#end()
