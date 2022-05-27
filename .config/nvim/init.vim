@@ -9,8 +9,6 @@ vnoremap / /\v
 nnoremap <leader>/ :Rg<space>
 vnoremap <leader>/ :Rg<space>
 nnoremap <leader>` :noh<cr>
-nnoremap <tab> %
-vnoremap <tab> %
 
 " No Cheating
 nnoremap <up> <nop>
@@ -100,7 +98,7 @@ augroup END
 nnoremap <leader>pv :Vex<CR>
 
 let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tGabline#enabled = 1
 
 " Completion
 set completeopt=menuone,noinsert,noselect
@@ -114,4 +112,8 @@ nnoremap <leader>gc :GCheckout<CR>
 
 " Copy to system clipboard
 vnoremap <leader>y "*y
-nnoremap <leader>y "*y
+nnoremap <leader>y "*<y
+
+" Move buffers
+nmap sp :bprev<Return>
+nmap sn :bnext<Return>
