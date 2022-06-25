@@ -332,6 +332,8 @@ require('lspconfig').sumneko_lua.setup {
         globals = { 'vim' },
       },
       workspace = { library = vim.api.nvim_get_runtime_file('', true) },
+      -- Do not send telemetry data containing a randomized but unique identifier
+      telemetry = { enable = false, },
     },
   },
 }
