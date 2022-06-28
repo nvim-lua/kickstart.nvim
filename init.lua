@@ -149,7 +149,7 @@ require('gitsigns').setup {
 }
 
 -- [[ Configure Telescope ]]
--- See `:help telesceope` and `:help telescope.setup()`
+-- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
   defaults = {
     mappings = {
