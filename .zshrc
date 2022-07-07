@@ -46,3 +46,8 @@ fpath=(${ASDF_DIR}/completions $fpath)
 # initialise completions with ZSH's compinit
 autoload -Uz compinit && compinit
 
+[[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
+[[ /Users/rahsheen.porter/.asdf/shims/kubectl ]] && source <(kubectl completion zsh)
+[[ /Users/rahsheen.porter/.asdf/shims/kubectl ]] && source <(kubectl completion zsh)
+[[ /Users/rahsheen.porter/.asdf/shims/kubectl ]] && source <(kubectl completion zsh)
+[[ /Users/rahsheen.porter/.asdf/shims/kubectl ]] && source <(kubectl completion zsh)
