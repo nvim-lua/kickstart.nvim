@@ -15,7 +15,7 @@ require('packer').startup(function(use)
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }       -- Add git related info in the signs columns and popups
   use 'numToStr/Comment.nvim'                                                     -- "gc" to comment visual regions/lines
   use 'nvim-treesitter/nvim-treesitter'                                           -- Highlight, edit, and navigate code
-  use 'nvim-treesitter/nvim-treesitter-textobjects'                               --  Additional textobjects for treesitter
+  use 'nvim-treesitter/nvim-treesitter-textobjects'                               -- Additional textobjects for treesitter
   use 'neovim/nvim-lspconfig'                                                     -- Collection of configurations for built-in LSP client
   use 'williamboman/nvim-lsp-installer'                                           -- Automatically install language servers to stdpath
   use { 'hrsh7th/nvim-cmp', requires = { 'hrsh7th/cmp-nvim-lsp' } }               -- Autocompletion
