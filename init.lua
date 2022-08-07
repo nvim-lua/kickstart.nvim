@@ -17,7 +17,8 @@ require('packer').startup(function(use)
   use 'nvim-treesitter/nvim-treesitter'                                     -- Highlight, edit, and navigate code
   use 'nvim-treesitter/nvim-treesitter-textobjects'                         -- Additional textobjects for treesitter
   use 'neovim/nvim-lspconfig'                                               -- Collection of configurations for built-in LSP client
-  use 'williamboman/nvim-lsp-installer'                                     -- Automatically install language servers to stdpath
+  use 'williamboman/mason.nvim'                                             -- Manage external editor tooling i.e LSP servers
+  use 'williamboman/mason-lspconfig.nvim'                                   -- Automatically install language servers to stdpath
   use { 'hrsh7th/nvim-cmp', requires = { 'hrsh7th/cmp-nvim-lsp' } }         -- Autocompletion
   use { 'L3MON4D3/LuaSnip', requires = { 'saadparwaiz1/cmp_luasnip' } }     -- Snippet Engine and Snippet Expansion
   use 'mjlbach/onedark.nvim'                                                -- Theme inspired by Atom
@@ -303,11 +304,14 @@ end
 -- nvim-cmp supports additional completion capabilities
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
+-- Setup mason so it can manage external tooling
+require('mason').setup()
+
 -- Enable the following language servers
 local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua' }
 
 -- Ensure the servers above are installed
-require('nvim-lsp-installer').setup {
+require('mason-lspconfig').setup {
   ensure_installed = servers,
 }
 
