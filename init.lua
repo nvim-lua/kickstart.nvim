@@ -21,7 +21,7 @@ require('packer').startup(function(use)
   use 'williamboman/mason-lspconfig.nvim'                                              -- Automatically install language servers to stdpath
   use { 'hrsh7th/nvim-cmp', requires = { 'hrsh7th/cmp-nvim-lsp' } }                    -- Autocompletion
   use { 'L3MON4D3/LuaSnip', requires = { 'saadparwaiz1/cmp_luasnip' } }                -- Snippet Engine and Snippet Expansion
-  use 'mjlbach/onedark.nvim'                                                           -- Theme inspired by Atom
+  use 'navarasu/onedark.nvim'                                                           -- Theme inspired by Atom
   use 'nvim-lualine/lualine.nvim'                                                      -- Fancier statusline
   use 'lukas-reineke/indent-blankline.nvim'                                            -- Add indentation guides even on blank lines
   use 'tpope/vim-sleuth'                                                               -- Detect tabstop and shiftwidth automatically
