@@ -70,6 +70,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'github/copilot.vim'
 Plug 'tpope/vim-rhubarb'
 Plug 'thesis/vim-solidity'
+Plug 'vim-test/vim-test'
 
 " Initialize plugin system
 call plug#end()
@@ -105,10 +106,25 @@ set completeopt=menuone,noinsert,noselect
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 
 " Git Fugitive
-nmap <leader>gs :G<CR>
-nmap <leader>gh :diffget //3<CR>
-nmap <leader>gu :diffget //2<CR>
+nnoremap <leader>gs :G<CR>
+nnoremap <leader>gh :diffget //3<CR>
+nnoremap <leader>gu :diffget //2<CR>
 nnoremap <leader>gc :GCheckout<CR>
+nnoremap <leader>ga :G add %:p<CR><CR>
+nnoremap <leader>gc :G commit -v -q<CR>
+nnoremap <leader>gt :G commit -v -q %:p<CR>
+nnoremap <leader>gca :G commit --amend --no-edit<CR>
+nnoremap <leader>gd :Gdiff<CR>
+nnoremap <leader>ge :Gedit<CR>
+nnoremap <leader>gr :Gread<CR>
+nnoremap <leader>gw :Gwrite<CR><CR>
+nnoremap <leader>gl :silent! Glog<CR>:bot copen<CR>
+nnoremap <leader>gp :Ggrep<Space>
+nnoremap <leader>gm :Gmove<Space>
+nnoremap <leader>gb :G branch<Space>
+nnoremap <leader>go :G checkout<Space>
+nnoremap <leader>gps :Dispatch! git push<CR>
+nnoremap <leader>gpl :Dispatch! git pull<CR>
 
 " Copy to system clipboard
 vnoremap <leader>y "*y
