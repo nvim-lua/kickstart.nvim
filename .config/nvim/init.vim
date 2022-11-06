@@ -125,7 +125,7 @@ nnoremap <leader>gpl :Dispatch! git pull<CR>
 
 " Copy to system clipboard
 vnoremap <leader>y "*y
-nnoremap <leader>y "*<y
+vnoremap <leader>yy "+y
 
 " Move buffers
 nmap sp :bprev<Return>
