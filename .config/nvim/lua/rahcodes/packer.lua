@@ -60,6 +60,8 @@ return require("packer").startup(function(use)
 		end,
 	})
 
+	use("tpope/vim-fugitive")
+
 	use({
 		"folke/trouble.nvim",
 		requires = "kyazdani42/nvim-web-devicons",
@@ -68,6 +70,16 @@ return require("packer").startup(function(use)
 				-- your configuration comes here
 				-- or leave it empty to use the default settings
 				-- refer to the configuration section below
+			})
+		end,
+	})
+
+	use({
+		"kylechui/nvim-surround",
+		tag = "*", -- Use for stability; omit to use `main` branch for the latest features
+		config = function()
+			require("nvim-surround").setup({
+				-- Configuration here, or leave empty to use defaults
 			})
 		end,
 	})

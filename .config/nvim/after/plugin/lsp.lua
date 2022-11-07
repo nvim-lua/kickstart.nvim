@@ -3,7 +3,7 @@ local nnoremap = Remap.nnoremap
 local inoremap = Remap.inoremap
 
 local sumneko_root_path = "/usr/lib/lua-language-server"
-local sumneko_binary = "/usr/bin/lua-language-server"
+local sumneko_binary = "/usr/local/bin/lua-language-server"
 
 -- Setup nvim-cmp.
 local cmp = require("cmp")
@@ -30,23 +30,23 @@ cmp.setup({
 			-- vim.fn["UltiSnips#Anon"](args.body)
 		end,
 	},
-  mapping = cmp.mapping.preset.insert({
-    ["<C-u>"] = cmp.mapping.scroll_docs(-4),
-    ["<C-d>"] = cmp.mapping.scroll_docs(4),
-    ["<C-Space>"] = cmp.mapping.complete(),
-    ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-  }),
+	mapping = cmp.mapping.preset.insert({
+		["<C-u>"] = cmp.mapping.scroll_docs(-4),
+		["<C-d>"] = cmp.mapping.scroll_docs(4),
+		["<C-Space>"] = cmp.mapping.complete(),
+		["<C-y>"] = cmp.mapping.confirm({ select = true }),
+	}),
 
 	formatting = {
 		format = function(entry, vim_item)
 			vim_item.kind = lspkind.presets.default[vim_item.kind]
 			local menu = source_mapping[entry.source.name]
---			if entry.source.name == "cmp_tabnine" then
---				if entry.completion_item.data ~= nil and entry.completion_item.data.detail ~= nil then
---					menu = entry.completion_item.data.detail .. " " .. menu
---				end
---				vim_item.kind = ""
---			end
+			--			if entry.source.name == "cmp_tabnine" then
+			--				if entry.completion_item.data ~= nil and entry.completion_item.data.detail ~= nil then
+			--					menu = entry.completion_item.data.detail .. " " .. menu
+			--				end
+			--				vim_item.kind = ""
+			--			end
 			vim_item.menu = menu
 			return vim_item
 		end,
@@ -82,42 +82,78 @@ tabnine:setup({
 	run_on_every_keystroke = true,
 	snippet_placeholder = "..",
 })
-]]--
+]]
+--
 
 local function config(_config)
 	return vim.tbl_deep_extend("force", {
 		on_attach = function()
-			nnoremap("gD", function() vim.lsp.buf.definition() end)
-			nnoremap("gd", function() vim.lsp.buf.definition() end)
-			nnoremap("K", function() vim.lsp.buf.hover() end)
-			nnoremap("gi", function() vim.lsp.buf.implementation() end)
-			nnoremap("<leader>wa", function() vim.lsp.buf.add_workspace_folder() end)
-			nnoremap("<leader>wr", function() vim.lsp.buf.remove_workspace_folder() end)
-			nnoremap("<leader>wl", function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end)
-			nnoremap("<leader>vws", function() vim.lsp.buf.workspace_symbol() end)
-			nnoremap("<leader>vd", function() vim.diagnostic.open_float() end)
-			nnoremap("[d", function() vim.diagnostic.goto_next() end)
-			nnoremap("]d", function() vim.diagnostic.goto_prev() end)
-			nnoremap("<leader>ca", function() vim.lsp.buf.code_action() end)
-			nnoremap("<leader>vco", function() vim.lsp.buf.code_action({
-                filter = function(code_action)
-                    if not code_action or not code_action.data then
-                        return false
-                    end
+			nnoremap("gD", function()
+				vim.lsp.buf.definition()
+			end)
+			nnoremap("gd", function()
+				vim.lsp.buf.definition()
+			end)
+			nnoremap("K", function()
+				vim.lsp.buf.hover()
+			end)
+			nnoremap("gi", function()
+				vim.lsp.buf.implementation()
+			end)
+			nnoremap("<leader>wa", function()
+				vim.lsp.buf.add_workspace_folder()
+			end)
+			nnoremap("<leader>wr", function()
+				vim.lsp.buf.remove_workspace_folder()
+			end)
+			nnoremap("<leader>wl", function()
+				print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+			end)
+			nnoremap("<leader>vws", function()
+				vim.lsp.buf.workspace_symbol()
+			end)
+			nnoremap("<leader>vd", function()
+				vim.diagnostic.open_float()
+			end)
+			nnoremap("[d", function()
+				vim.diagnostic.goto_next()
+			end)
+			nnoremap("]d", function()
+				vim.diagnostic.goto_prev()
+			end)
+			nnoremap("<leader>ca", function()
+				vim.lsp.buf.code_action()
+			end)
+			nnoremap("<leader>vco", function()
+				vim.lsp.buf.code_action({
+					filter = function(code_action)
+						if not code_action or not code_action.data then
+							return false
+						end
 
-                    local data = code_action.data.id
-                    return string.sub(data, #data - 1, #data) == ":0"
-                end,
-                apply = true
-            }) end)
-			nnoremap("<leader>gr", function() vim.lsp.buf.references() end)
-			nnoremap("<leader>rn", function() vim.lsp.buf.rename() end)
-			inoremap("<C-h>", function() vim.lsp.buf.signature_help() end)
-			nnoremap("<leader>f", function() vim.lsp.buf.format({ async = true }) end)
+						local data = code_action.data.id
+						return string.sub(data, #data - 1, #data) == ":0"
+					end,
+					apply = true,
+				})
+			end)
+			nnoremap("<leader>gr", function()
+				vim.lsp.buf.references()
+			end)
+			nnoremap("<leader>rn", function()
+				vim.lsp.buf.rename()
+			end)
+			inoremap("<C-h>", function()
+				vim.lsp.buf.signature_help()
+			end)
+			nnoremap("<leader>f", function()
+				vim.lsp.buf.format({ async = true })
+			end)
 		end,
 	}, _config or {})
 end
 
+require("lspconfig").solargraph.setup(config())
 require("lspconfig").zls.setup(config())
 
 require("lspconfig").tsserver.setup(config())
@@ -147,15 +183,6 @@ require("lspconfig").gopls.setup(config({
 -- who even uses this?
 require("lspconfig").rust_analyzer.setup(config({
 	cmd = { "rustup", "run", "nightly", "rust-analyzer" },
-	--[[
-    settings = {
-        rust = {
-            unstable_features = true,
-            build_on_save = false,
-            all_features = true,
-        },
-    }
-    --]]
 }))
 
 require("lspconfig").sumneko_lua.setup(config({
@@ -216,4 +243,3 @@ require("luasnip.loaders.from_vscode").lazy_load({
 	include = nil, -- Load all languages
 	exclude = {},
 })
-
