@@ -5,7 +5,6 @@ local inoremap = Remap.inoremap
 local nmap = Remap.nmap
 
 nnoremap("<leader>pv", "<cmd>Ex<CR>")
-
 local builtin = require("telescope.builtin")
 vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
 vim.keymap.set("n", "<leader>fg", builtin.live_grep, {})
@@ -41,10 +40,8 @@ nnoremap("<leader>gpl", ":Dispatch! git pull<CR>")
 vnoremap("J", ":m '>+1<CR>gv=gv")
 vnoremap("K", ":m '<-2<CR>gv=gv")
 
-nnoremap("/", "/\v")
-vnoremap("/", "/\v")
-nnoremap("<leader>/", ":Rg<space>")
-vnoremap("<leader>/", ":Rg<space>")
+-- nnoremap("/", "/\v")
+-- vnoremap("/", "/\v")
 nnoremap("<leader>`", ":noh<cr>")
 
 -- No Cheating
