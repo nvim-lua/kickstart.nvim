@@ -10,6 +10,7 @@ else
 fi
 
 alias config="/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME"
+alias vimconfig="GIT_DIR=$HOME/.cfg GIT_WORK_TREE=$HOME nvim"
 
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then

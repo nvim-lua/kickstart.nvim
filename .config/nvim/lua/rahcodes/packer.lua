@@ -61,6 +61,7 @@ return require("packer").startup(function(use)
 	})
 
 	use("tpope/vim-fugitive")
+	use("tpope/vim-rhubarb")
 
 	use({
 		"folke/trouble.nvim",
