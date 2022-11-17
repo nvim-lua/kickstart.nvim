@@ -17,6 +17,10 @@ vim.keymap.set("n", "<leader>gb", builtin.git_branches, {})
 -- vim.keymap.set('n', '<leader>gs', builtin.git_status, {})
 vim.keymap.set("n", "<leader><leader>", builtin.git_files, {})
 
+-- Null Ls
+nnoremap("<leader>lf", ":lua vim.lsp.buf.format({ timeout_ms = 10000 })<CR>")
+nnoremap("<leader>lF", ":lua vim.lsp.buf.range_format({ timeout_ms = 2000 })<CR>")
+
 -- Git Fugitive
 nnoremap("<leader>gs", ":G<CR>")
 nnoremap("<leader>gh", ":diffget //3<CR>")
@@ -35,7 +39,7 @@ nnoremap("<leader>gw", ":Gwrite<CR><CR>")
 nnoremap("<leader>gl", ":silent! Glog<CR>:bot copen<CR>")
 nnoremap("<leader>gp", ":Ggrep<Space>")
 nnoremap("<leader>gm", ":Gmove<Space>")
-nnoremap("<leader>gb", ":G branch<Space>")
+-- nnoremap("<leader>gb", ":G branch<Space>")
 nnoremap("<leader>go", ":G checkout<Space>")
 nnoremap("<leader>gps", ":Dispatch! git push<CR>")
 nnoremap("<leader>gpl", ":Dispatch! git pull<CR>")
