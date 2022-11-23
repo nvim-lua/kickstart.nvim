@@ -11,6 +11,8 @@ fi
 
 alias config="/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME"
 alias vimconfig="GIT_DIR=$HOME/.cfg GIT_WORK_TREE=$HOME nvim"
+alias asdfg="setxkbmap -option ctrl:nocaps dvorak"
+alias aoeu="setxkbmap -option ctrl:nocaps us"
 
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
@@ -21,6 +23,10 @@ fi
 if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
+
+export ANDROID_SDK_ROOT=$HOME/Android/Sdk
+PATH=$PATH:$ANDROID_SDK_ROOT/emulator
+PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
 
 export PATH
 
