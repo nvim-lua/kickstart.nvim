@@ -7,7 +7,7 @@ A starting point for Neovim that is:
 * Documented
 * Modular
 
-Kickstart.nvim targets *only* the Neovim releases tagged ['stable'](https://github.com/neovim/neovim/releases/tag/stable) and ['nightly'](https://github.com/neovim/neovim/releases/tag/nightly).
+Kickstart.nvim targets *only* the latest ['stable'](https://github.com/neovim/neovim/releases/tag/stable) and latest ['nightly'](https://github.com/neovim/neovim/releases/tag/nightly) of Neovim. If you are experiencing issues, please make sure you have the latest versions.
 
 This repo is meant to be used as a starting point for a user's own configuration; remove the things you don't use and add what you miss. This configuration serves as the reference configuration for the [lspconfig wiki](https://github.com/neovim/nvim-lspconfig/wiki).
 
