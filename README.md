@@ -108,12 +108,21 @@ Use the VS Code Grammarly plugin:
   ```
 ## Configure neovim
 
-- remove $HOME/.config/nvim
-- link this repo to $HOME/.config/nvim
-- edit `lua/grammarly.lua` and set the Grammarly LSP cmd (using the one you just built in the `znck/grammarly` dir)
+Replace the path to the `grammarly-languageserver` with where you built it:
+
+```lua
+require'lspconfig'.grammarly.setup({
+    capabilities = capabilities,
+    on_attach = on_attach,
+    cmd = { "/home/droscigno/GitHub/grammarly/extension/node_modules/.bin/grammarly-languageserver", "--stdio" },
+    filetypes = { "markdown", "text" },
+    init_options = {
+        clientId = 'client_BaDkMgx4X19X9UxxYRCXZo',
+    },
+})
+```
 
 ## Test
-- edit a markdown file (this one will show some issues). You should see marks in the far left column indicating grammar and spelling errors. Navigate through the errors with `]d`
-- add a link to a non-existent markdown file, for example, `[foo](./foo.md)`.  This will show as a warning from Marksman if you add it outside of a code block.
-[foo](./foo.md)
+- edit a markdown file. You should see marks in the far left column indicating grammar and spelling errors. Navigate through the errors with `]d`
+
 
