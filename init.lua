@@ -454,5 +454,29 @@ require("filetype").setup({
    },
 })
 
+-- change the way that diagnostics are displayed
+local diagconfig = {
+  -- disable virtual text
+  virtual_text = false,
+  -- show signs
+  signs = {
+    active = signs,
+  },
+  update_in_insert = true,
+  underline = true,
+  severity_sort = true,
+  float = {
+    focusable = false,
+    style = "minimal",
+    border = "rounded",
+    source = "always",
+    header = "",
+    --prefix = "",
+  },
+}
+
+vim.diagnostic.config(diagconfig)
+
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
