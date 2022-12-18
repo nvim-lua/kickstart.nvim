@@ -348,43 +348,52 @@ require('mason-lspconfig').setup {
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
-for _, lsp in ipairs(servers) do
-  require('lspconfig')[lsp].setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-  }
-end
-
--- Turn on lsp status information
-require('fidget').setup()
-
 -- Example custom configuration for lua
 --
 -- Make runtime files discoverable to the server
+-- doc: https://github.com/glepnir/nvim-lspconfig/blob/master/doc/server_configurations.md#sumneko_lua
 local runtime_path = vim.split(package.path, ';')
 table.insert(runtime_path, 'lua/?.lua')
 table.insert(runtime_path, 'lua/?/init.lua')
-
-require('lspconfig').sumneko_lua.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  settings = {
-    Lua = {
-      runtime = {
-        -- Tell the language server which version of Lua you're using (most likely LuaJIT)
-        version = 'LuaJIT',
-        -- Setup your lua path
-        path = runtime_path,
+local lsp_settings = {
+  -- lua
+  sumneko_lua = {
+    settings = {
+      Lua = {
+        runtime = {
+          -- Tell the language server which version of Lua you're using (most likely LuaJIT)
+          version = 'LuaJIT',
+          -- Setup your lua path
+          path = runtime_path,
+        },
+        diagnostics = {
+          globals = { 'vim' },
+        },
+        workspace = { library = vim.api.nvim_get_runtime_file('', true) },
+        -- Do not send telemetry data containing a randomized but unique identifier
+        telemetry = { enable = false },
       },
-      diagnostics = {
-        globals = { 'vim' },
-      },
-      workspace = { library = vim.api.nvim_get_runtime_file('', true) },
-      -- Do not send telemetry data containing a randomized but unique identifier
-      telemetry = { enable = false },
-    },
+    }
   },
+
+  -- golang
+  -- gopls = {filetypes={"go", "gomod", "gowork", "gotmpl"}},
 }
+
+for _, lsp in ipairs(servers) do
+  local options = {
+    on_attach = on_attach,
+    capabilities = capabilities,
+  }
+  if lsp_settings[lsp] then
+    options = vim.tbl_extend('force', options, lsp_settings[lsp])
+  end
+  require('lspconfig')[lsp].setup(options)
+end
+
+
+-- Turn on lsp status information
+require('fidget').setup()
 
 -- nvim-cmp setup
 local cmp = require 'cmp'
