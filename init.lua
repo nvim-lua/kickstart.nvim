@@ -57,7 +57,10 @@ require('packer').startup(function(use)
   -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable 'make' == 1 }
 
-  -- Add custom plugins to packer from ~/.config/nvim/lua/custom/plugins.lua
+  -- filetype plugin allows me to associate mdx files with markdown
+  use { 'nathom/filetype.nvim' }
+
+  -- Add custom plugins to packer from /nvim/lua/custom/plugins.lua
   local has_plugins, plugins = pcall(require, 'custom.plugins')
   if has_plugins then
     plugins(use)
@@ -218,7 +221,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'typescript', 'help' },
+  ensure_installed = { 'lua', 'python', 'typescript', 'help' },
 
   highlight = { enable = true },
   indent = { enable = true },
@@ -337,7 +340,7 @@ require('mason').setup()
 
 -- Enable the following language servers
 -- Feel free to add/remove any LSPs that you want here. They will automatically be installed
-local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'gopls' }
+local servers = { 'grammarly', 'marksman', 'pyright', 'tsserver', 'sumneko_lua' }
 
 -- Ensure the servers above are installed
 require('mason-lspconfig').setup {
@@ -428,6 +431,28 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
+
+require'lspconfig'.grammarly.setup({
+    capabilities = capabilities,
+    on_attach = on_attach,
+    cmd = { "/home/droscigno/GitHub/grammarly/extension/node_modules/.bin/grammarly-languageserver", "--stdio" },
+    filetypes = { "markdown", "text" },
+    init_options = {
+        clientId = 'client_BaDkMgx4X19X9UxxYRCXZo',
+    },
+})
+
+-- Use Marksman for markdown
+--require'lspconfig'.marksman.setup{}
+
+-- Set the filetype of *.mdx files to markdown
+require("filetype").setup({
+    overrides = {
+        extensions = {
+            mdx = "markdown",
+        },
+   },
+})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
