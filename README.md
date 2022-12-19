@@ -18,6 +18,8 @@ This repo is meant to be used as a starting point for a user's own configuration
 * Start Neovim (`nvim`) and run `:PackerInstall` - ignore any error message about missing plugins, `:PackerInstall` will fix that shortly
 * Restart Neovim
 
+N.B. if you already had a prior nvim setup with plugins you will need to remove them first with `rm -rf ~/.local/share/nvim/`
+
 ### Configuration
 
 You could directly modify the `init.lua` file with your personal customizations. This option is the most straightforward, but if you update your config from this repo, you may need to reapply your changes.
