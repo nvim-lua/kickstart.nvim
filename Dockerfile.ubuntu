@@ -1,0 +1,21 @@
+FROM ubuntu:22.04
+
+ARG VERSION=stable
+RUN apt-get update -qq \
+	&& apt-get install software-properties-common gpg-agent curl -y -qq --no-install-recommends
+
+
+
+RUN curl -fsSL https://deb.nodesource.com/setup_current.x | bash - \
+	&& apt-get install -y -qq --no-install-recommends nodejs
+
+
+RUN add-apt-repository ppa:neovim-ppa/${VERSION} -y
+
+RUN apt-get update -qq \
+	&& apt-get install git neovim build-essential unzip fzf golang python3-pip ripgrep fd-find exuberant-ctags -y -qq --no-install-recommends
+
+
+COPY ./init.lua /root/.config/nvim/init.lua
+
+WORKDIR /root
