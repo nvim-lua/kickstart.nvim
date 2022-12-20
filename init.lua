@@ -340,11 +340,12 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Configure language servers
---  Automatically install language servers
 --  Set up a default handler for language servers, and a custom one as an example
 local mason_lspconfig = require 'mason-lspconfig'
 mason_lspconfig.setup {
-  automatic_installation = true,
+  -- Enable the following language servers
+  -- Feel free to add/remove any LSPs that you want here. They will automatically be installed
+  ensure_installed = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'gopls' },
 }
 
 mason_lspconfig.setup_handlers {
