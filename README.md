@@ -19,6 +19,8 @@ This repo is meant to be used as a starting point for a user's own configuration
 * Restart Neovim
 
 
+If there are languages that you don't want to use, remove their configuration and notes from your `init.lua` after copy and pasting (for example, in the mason configuration).
+
 ### Configuration
 
 You could directly modify the `init.lua` file with your personal customizations. This option is the most straightforward, but if you update your config from this repo, you may need to reapply your changes.
