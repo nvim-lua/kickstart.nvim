@@ -92,6 +92,9 @@ vim.api.nvim_create_autocmd('BufWritePost', {
 -- [[ Setting options ]]
 -- See `:help vim.o`
 
+-- Use os clipboard
+vim.cmd("set clipboard+=unnamedplus")
+
 -- Set highlight on search
 vim.o.hlsearch = false
 
