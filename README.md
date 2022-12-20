@@ -18,6 +18,7 @@ This repo is meant to be used as a starting point for a user's own configuration
 * Start Neovim (`nvim`) and run `:PackerInstall` - ignore any error message about missing plugins, `:PackerInstall` will fix that shortly
 * Restart Neovim
 
+
 If there are languages that you don't want to use, remove their configuration and notes from your `init.lua` after copy and pasting (for example, in the mason configuration).
 
 ### Configuration
@@ -60,3 +61,9 @@ Pull-requests are welcome. The goal of this repo is not to create a Neovim confi
 * Lazy-loading. Kickstart.nvim should start within 40 ms on modern hardware. Please profile and contribute to upstream plugins to optimize startup time instead.
 
 Each PR, especially those which increase the line count, should have a description as to why the PR is necessary.
+
+### FAQ
+
+ * What should I do if I already have a pre-existing neovim configuration?
+     * You should back it up, then delete all files associated with it. This includes your existing init.lua and the neovim files in .local which can be deleted with `rm -rf ~/.local/share/nvim/`
+
