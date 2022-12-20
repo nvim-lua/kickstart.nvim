@@ -20,6 +20,9 @@ require('packer').startup(function(use)
 
       -- Useful status updates for LSP
       'j-hui/fidget.nvim',
+
+      -- Additional lua configuration, makes nvim stuff amazing
+      'folke/neodev.nvim',
     },
   }
 
@@ -341,11 +344,11 @@ table.insert(runtime_path, 'lua/?/init.lua')
 --  Add any additional override configuration in the following tables. They will be passed to
 --  the `settings` field of the server config
 local servers = {
-  clangd = {},
-  gopls = {},
-  pyright = {},
-  rust_analyzer = {},
-  tsserver = {},
+  -- clangd = {},
+  -- gopls = {},
+  -- pyright = {},
+  -- rust_analyzer = {},
+  -- tsserver = {},
 
   sumneko_lua = {
     Lua = {
@@ -359,6 +362,9 @@ local servers = {
     },
   },
 }
+
+-- Setup neovim lua configuration
+require('neodev').setup()
 
 -- Setup mason so it can manage external tooling
 require('mason').setup()
