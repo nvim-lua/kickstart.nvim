@@ -9,7 +9,7 @@ A starting point for Neovim that is:
 
 Kickstart.nvim targets *only* the latest ['stable'](https://github.com/neovim/neovim/releases/tag/stable) and latest ['nightly'](https://github.com/neovim/neovim/releases/tag/nightly) of Neovim. If you are experiencing issues, please make sure you have the latest versions.
 
-This repo is meant to be used as a starting point for a user's own configuration; remove the things you don't use and add what you miss. This configuration serves as the reference configuration for the [lspconfig wiki](https://github.com/neovim/nvim-lspconfig/wiki).
+This repo is meant to be used as a starting point for a user's own configuration; remove the things you don't use and add what you miss. Please refrain from leaving comments about enabling / disabling particular languages out of the box.
 
 ### Installation
 
@@ -65,5 +65,6 @@ Each PR, especially those which increase the line count, should have a descripti
 ### FAQ
 
  * What should I do if I already have a pre-existing neovim configuration?
-     * You should back it up, then delete all files associated with it. This includes your existing init.lua and the neovim files in .local which can be deleted with `rm -rf ~/.local/share/nvim/`
+     * You should back it up, then delete all files associated with it.
+     * This includes your existing init.lua and the neovim files in `.local` which can be deleted with `rm -rf ~/.local/share/nvim/`
 

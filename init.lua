@@ -327,22 +327,15 @@ local on_attach = function(_, bufnr)
 
   -- Create a command `:Format` local to the LSP buffer
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-    if vim.lsp.buf.format then
-      vim.lsp.buf.format()
-    elseif vim.lsp.buf.formatting then
-      vim.lsp.buf.formatting()
-    end
+    vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
 end
 
-local runtime_path = vim.split(package.path, ';')
-table.insert(runtime_path, 'lua/?.lua')
-table.insert(runtime_path, 'lua/?/init.lua')
-
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
+--
 --  Add any additional override configuration in the following tables. They will be passed to
---  the `settings` field of the server config
+--  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
   -- clangd = {},
   -- gopls = {},
@@ -352,12 +345,7 @@ local servers = {
 
   sumneko_lua = {
     Lua = {
-      runtime = { version = 'LuaJIT', path = runtime_path },
-      diagnostics = { globals = { 'vim' } },
-      workspace = {
-        library = vim.api.nvim_get_runtime_file('', true),
-        checkThirdParty = false,
-      },
+      workspace = { checkThirdParty = false },
       telemetry = { enable = false },
     },
   },
@@ -374,7 +362,7 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 require('mason').setup()
 
 -- Ensure the servers above are installed
-local mason_lspconfig = require('mason-lspconfig')
+local mason_lspconfig = require 'mason-lspconfig'
 
 mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
