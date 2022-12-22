@@ -48,6 +48,7 @@ require('packer').startup(function(use)
   use 'tpope/vim-rhubarb'
   use 'lewis6991/gitsigns.nvim'
 
+  use 'preservim/nerdtree' -- A simple file explorer
   use 'navarasu/onedark.nvim' -- Theme inspired by Atom
   use 'nvim-lualine/lualine.nvim' -- Fancier statusline
   use 'lukas-reineke/indent-blankline.nvim' -- Add indentation guides even on blank lines
@@ -140,6 +141,9 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
+-- Don't autocomment new lines
+vim.api.nvim_create_autocmd("BufEnter", { pattern = "*", command = "set fo-=c fo-=r fo-=o" })
+
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
@@ -196,6 +200,9 @@ require('telescope').setup {
     },
   },
 }
+
+-- nerdtree
+vim.keymap.set('n', '<leader>fe', ':NERDTreeToggle<CR>', { desc = '[F]ile [E]xplorer' })
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
