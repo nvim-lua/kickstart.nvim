@@ -11,6 +11,8 @@ Kickstart.nvim targets *only* the latest ['stable'](https://github.com/neovim/ne
 
 This repo is meant to be used as a starting point for a user's own configuration; remove the things you don't use and add what you miss. Please refrain from leaving comments about enabling / disabling particular languages out of the box.
 
+Check out this [video introduction to Kickstart.nvim](https://youtu.be/stqUbv-5u2s).
+
 ### Installation
 
 * Backup your previous configuration
