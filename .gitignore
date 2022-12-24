@@ -2,4 +2,4 @@ tags
 test.sh
 .luarc.json
 nvim
-packer_compiled.lua
+plugin/packer_compiled.lua
