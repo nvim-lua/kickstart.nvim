@@ -91,3 +91,5 @@ analysisOfVariance
 sql
 datasource
 ClickHouse
+Grafana
+clickhouse

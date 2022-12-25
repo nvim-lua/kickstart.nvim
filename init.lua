@@ -92,6 +92,13 @@ vim.api.nvim_create_autocmd('BufWritePost', {
   pattern = vim.fn.expand '$MYVIMRC',
 })
 
+vim.api.nvim_create_augroup("spellcheck", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+    group = "spellcheck",
+    pattern = { "gitcommit", "markdown", "mdx" },
+    command = "setlocal spell",
+})
+
 -- [[ Setting options ]]
 -- See `:help vim.o`
 
