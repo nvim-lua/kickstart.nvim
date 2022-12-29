@@ -81,4 +81,7 @@ Each PR, especially those which increase the line count, should have a descripti
  * What should I do if I already have a pre-existing neovim configuration?
      * You should back it up, then delete all files associated with it.
      * This includes your existing init.lua and the neovim files in `.local` which can be deleted with `rm -rf ~/.local/share/nvim/`
+ * How do I uninstall kickstart.nvim?
+     * Remove the nvim config with `rm -rf ~/.config/nvim/*`
+     * Remove the nvim local share with `rm -rf ~/.local/share/nvim/*`
 
