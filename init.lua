@@ -370,10 +370,14 @@ mason_lspconfig.setup {
 
 mason_lspconfig.setup_handlers {
   function(server_name)
+    -- In case root_dir is set in the servers table, we need to extract it before calling setup
+    local root_dir = servers[server_name]['root_dir']
+    servers[server_name]['root_dir'] = nil
     require('lspconfig')[server_name].setup {
       capabilities = capabilities,
       on_attach = on_attach,
       settings = servers[server_name],
+      root_dir = root_dir,
     }
   end,
 }
