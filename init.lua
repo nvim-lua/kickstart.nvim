@@ -40,7 +40,7 @@ require('lazy').setup({
 
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
-    config = function()
+    build = function()
       pcall(require('nvim-treesitter.install').update { with_sync = true })
     end,
   },
