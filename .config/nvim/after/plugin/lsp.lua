@@ -9,14 +9,6 @@ lsp.ensure_installed({
 	"rust_analyzer",
 })
 
--- see documentation of null-null-ls for more configuration options!
-local mason_nullls = require("mason-null-ls")
-mason_nullls.setup({
-	automatic_installation = true,
-	automatic_setup = true,
-})
-mason_nullls.setup_handlers({})
-
 local Remap = require("rahcodes.keymap")
 local nnoremap = Remap.nnoremap
 local inoremap = Remap.inoremap
@@ -32,8 +24,28 @@ local cmp_mappings = lsp.defaults.cmp_mappings({
 	["<C-y>"] = cmp.mapping.confirm({ select = true }),
 	["<C-Space>"] = cmp.mapping.complete(),
 })
+
 lsp.setup_nvim_cmp({
 	mapping = cmp_mappings,
+})
+
+lsp.configure("solargraph", {
+	settings = {
+		solargraph = {
+			diagnostics = false,
+		},
+	},
+	on_attach = function()
+		print("hello solargraph")
+	end,
+})
+
+lsp.configure("sumneko_lua", {
+	settings = {
+		Lua = {
+			diagnostics = { globals = { "vim" } },
+		},
+	},
 })
 
 lsp.on_attach = function(client, bufnr)
@@ -110,3 +122,10 @@ lsp.on_attach = function(client, bufnr)
 end
 
 lsp.setup()
+
+local mason_nullls = require("mason-null-ls")
+mason_nullls.setup({
+	automatic_installation = true,
+	automatic_setup = true,
+})
+mason_nullls.setup_handlers({})

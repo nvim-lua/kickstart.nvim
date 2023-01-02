@@ -48,7 +48,7 @@ nmap("sp", ":bprev<Return>")
 nmap("sn", ":bnext<Return>")
 
 vim.keymap.set("n", "<leader>f", function()
-	vim.lsp.buf.format()
+	vim.lsp.buf.format({ timeout_ms = 10000 })
 end)
 vim.keymap.set("n", "<leader>F", function()
 	vim.lsp.buf.range_format()

@@ -22,7 +22,6 @@ vim.keymap.set("n", "<leader>fh", builtin.help_tags, {})
 
 vim.keymap.set("n", "<leader>m", builtin.oldfiles, {})
 vim.keymap.set("n", "<leader>gb", builtin.git_branches, {})
--- vim.keymap.set('n', '<leader>gs', builtin.git_status, {})
 vim.keymap.set("n", "<leader><leader>", builtin.git_files, {})
 vim.keymap.set("n", "<leader>ps", function()
 	builtin.grep_string({ search = vim.fn.input("Grep > ") })
