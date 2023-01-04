@@ -2,7 +2,7 @@
 
 A starting point for Neovim that is:
 
-* Small (~500 lines)
+* Small (<500 lines)
 * Single-file
 * Documented
 * Modular
