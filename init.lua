@@ -385,6 +385,10 @@ require('fidget').setup()
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
 
+luasnip.config.set_config {
+  region_check_events = 'InsertEnter'
+}
+
 cmp.setup {
   snippet = {
     expand = function(args)
