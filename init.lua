@@ -60,6 +60,9 @@ require('packer').startup(function(use)
   -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable 'make' == 1 }
 
+  -- Emmet support
+  use 'mattn/emmet-vim'
+
   -- Add custom plugins to packer from ~/.config/nvim/lua/custom/plugins.lua
   local has_plugins, plugins = pcall(require, 'custom.plugins')
   if has_plugins then
@@ -121,6 +124,10 @@ vim.wo.signcolumn = 'yes'
 -- Set colorscheme
 vim.o.termguicolors = true
 vim.cmd [[colorscheme onedark]]
+
+-- Enable Emmet only for html and css
+vim.g.user_emmet_install_global = 0
+vim.cmd('autocmd FileType html,css EmmetInstall')
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
