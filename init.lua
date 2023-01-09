@@ -125,9 +125,13 @@ vim.wo.signcolumn = 'yes'
 vim.o.termguicolors = true
 vim.cmd [[colorscheme onedark]]
 
--- Enable Emmet only for html and css
+-- Enable Emmet only for web files
 vim.g.user_emmet_install_global = 0
 vim.cmd('autocmd FileType html,css,scss,sass,xml,jsx EmmetInstall')
+
+-- remap the emmet leader key to tab
+-- Note that the trailing , still needs to be entered, making the new key combo <Tab>,
+vim.g.user_emmet_leader_key = '<Tab>' 
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
