@@ -127,7 +127,7 @@ vim.cmd [[colorscheme onedark]]
 
 -- Enable Emmet only for html and css
 vim.g.user_emmet_install_global = 0
-vim.cmd('autocmd FileType html,css EmmetInstall')
+vim.cmd('autocmd FileType html,css,scss,sass,xml,jsx EmmetInstall')
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
