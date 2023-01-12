@@ -14,7 +14,7 @@ This repo is meant to be used as a starting point for a user's own configuration
 ### Installation
 
 * Backup your previous configuration
-* Copy and paste the kickstart.nvim `init.lua` into `$HOME/.config/nvim/init.lua` (Linux) or `~/AppData/Local/nvim/init.lua` (Windows)
+* Copy and paste the kickstart.nvim `init.lua` into `$HOME/.config/nvim/init.lua` (Linux/Mac) or `~/AppData/Local/nvim/init.lua` (Windows)
 * Start Neovim (`nvim`) and run `:PackerInstall` - ignore any error message about missing plugins, `:PackerInstall` will fix that shortly
 * Restart Neovim
 
