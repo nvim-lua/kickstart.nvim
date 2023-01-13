@@ -21,6 +21,8 @@ This repo is meant to be used as a starting point for a user's own configuration
 
 If there are languages that you don't want to use, remove their configuration and notes from your `init.lua` after copy and pasting (for example, in the mason configuration).
 
+To use the live_grep and grep_string functions of telescope, the ripgrep dependency is required. See [telescope](https://github.com/nvim-telescope/telescope.nvim#suggested-dependencies) for more details and [ripgrep](https://github.com/BurntSushi/ripgrep#installation) for installation instructions.
+
 ### Windows Installation
 
 Installation may require installing build tools, and updating the run command for `telescope-fzf-native`
