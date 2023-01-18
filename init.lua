@@ -12,8 +12,8 @@ local status_ok, packer = pcall(require, "packer")
 if not status_ok then
   return
 end
-local status_util_ok, packer_util = pcall(require, "packer.util")
-if not status_util_ok then
+local status_packer_util_ok, packer_util = pcall(require, "packer.util")
+if not status_packer_util_ok then
   return
 end
 
