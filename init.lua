@@ -7,7 +7,23 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
   vim.cmd [[packadd packer.nvim]]
 end
 
-require('packer').startup(function(use)
+-- Use a protected call so we don't error out on first use
+local status_ok, packer = pcall(require, "packer")
+if not status_ok then
+  return
+end
+local status_util_ok, util = pcall(require, "packer.util")
+if not status_util_ok then
+  return
+end
+
+-- Have packer use a popup window
+packer.init({
+  package_root = util.join_paths(vim.fn.stdpath('data'), 'site', 'pack'),
+  compile_path = util.join_paths(vim.fn.stdpath('data'), 'site', 'plugin', 'packer_compiled.lua'),
+})
+
+packer.startup(function(use)
   -- Package manager
   use 'wbthomason/packer.nvim'
 
