@@ -12,15 +12,15 @@ local status_ok, packer = pcall(require, "packer")
 if not status_ok then
   return
 end
-local status_util_ok, util = pcall(require, "packer.util")
+local status_util_ok, packer_util = pcall(require, "packer.util")
 if not status_util_ok then
   return
 end
 
 -- Have packer use a popup window
 packer.init({
-  package_root = util.join_paths(vim.fn.stdpath('data'), 'site', 'pack'),
-  compile_path = util.join_paths(vim.fn.stdpath('data'), 'site', 'plugin', 'packer_compiled.lua'),
+  package_root = packer_util.join_paths(vim.fn.stdpath('data'), 'site', 'pack'),
+  compile_path = packer_util.join_paths(vim.fn.stdpath('data'), 'site', 'plugin', 'packer_compiled.lua'),
 })
 
 packer.startup(function(use)
