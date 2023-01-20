@@ -91,6 +91,12 @@ vim.api.nvim_create_autocmd('BufWritePost', {
   group = packer_group,
   pattern = vim.fn.expand '$MYVIMRC',
 })
+-- Automatically eslint format on save
+vim.api.nvim_create_autocmd('BufWritePre', {
+  pattern = { '*.tsx', '*.ts', '*.jsx', '*.js' },
+  command = 'silent! EslintFixAll',
+  group = vim.api.nvim_create_augroup('MyAutocmdsJavaScripFormatting', {}),
+})
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -221,7 +227,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'typescript', 'help', 'vim' },
+  ensure_installed = { 'go', 'javascript', 'lua', 'python', 'rust', 'typescript', 'help', 'vim' },
 
   highlight = { enable = true },
   indent = { enable = true, disable = { 'python' } },
