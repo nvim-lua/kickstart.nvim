@@ -110,6 +110,11 @@ vim.o.hlsearch = false
 -- Make line numbers default
 vim.wo.number = true
 
+-- When I hit `Tab` insert 2 spaces
+-- Auto indents are also 2 spaces
+vim.o.shiftwidth = 2
+vim.o.expandtab = true
+
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
@@ -122,6 +127,9 @@ vim.o.undofile = true
 -- Case insensitive searching UNLESS /C or capital in search
 vim.o.ignorecase = true
 vim.o.smartcase = true
+-- When searching, scroll text so that there
+-- are at least 5 lines above and below result
+vim.o.scrolloff = 5
 
 -- Decrease update time
 vim.o.updatetime = 250
@@ -230,7 +238,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'lua', 'python', 'typescript', 'help' },
+  ensure_installed = { 'go', 'lua', 'python', 'typescript', 'help' },
 
   highlight = { enable = true },
   indent = { enable = true },
