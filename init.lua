@@ -223,6 +223,10 @@ require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
   ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'typescript', 'help', 'vim' },
 
+  -- Automatically install missing parsers when entering buffer
+  -- `tree-sitter` CLI must be installed locally
+  auto_install = false,
+
   highlight = { enable = true },
   indent = { enable = true, disable = { 'python' } },
   incremental_selection = {
