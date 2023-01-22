@@ -31,6 +31,11 @@ require('packer').startup(function(use)
     requires = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
   }
 
+  use {  -- Autopairs for brackets
+    'windwp/nvim-autopairs',
+    config = function() require('nvim-autopairs').setup {} end
+  }
+    
   use { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     run = function()
@@ -383,6 +388,7 @@ require('fidget').setup()
 
 -- nvim-cmp setup
 local cmp = require 'cmp'
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local luasnip = require 'luasnip'
 
 cmp.setup {
@@ -424,5 +430,9 @@ cmp.setup {
   },
 }
 
+cmp.event:on(
+  'confirm_done',
+  cmp_autopairs.on_confirm_done()
+)
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
