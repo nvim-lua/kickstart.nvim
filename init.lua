@@ -32,7 +32,7 @@ require('packer').startup(function(use)
     use { -- Autocompletion
         'hrsh7th/nvim-cmp',
         requires = {
-            'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip',
+            'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer', 'L3MON4D3/LuaSnip',
             'saadparwaiz1/cmp_luasnip'
         }
     }
@@ -115,7 +115,6 @@ vim.wo.number = true
 
 -- Enable mouse mode
 vim.o.mouse = ''
-vim.o.ttymouse = ''
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -404,7 +403,7 @@ cmp.setup {
             end
         end, {'i', 's'})
     },
-    sources = {{name = 'nvim_lsp'}, {name = 'luasnip'}}
+    sources = {{name = 'nvim_lsp'}, {name = 'luasnip'}, {name = 'buffer'}}
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`
