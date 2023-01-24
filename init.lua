@@ -143,11 +143,17 @@ vim.o.completeopt = 'menuone,noselect'
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-vim.keymap.set({'n'}, ';', ':', {silent = true})
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({'n', 'v'}, '<Space>', '<Nop>', {silent = true})
+vim.keymap.set({'n'}, ';', ':', {})
+vim.keymap.set({'n'}, '<leader>n', ':set number!<cr>', {})
+vim.keymap.set({'n'}, '<leader>s', ':setlocal spell! spell?<cr>', {})
+vim.keymap.set({'n'}, '<leader>z', '<c-w><c-w>', {})
+
+vim.keymap.set({'v'}, '<', '<gv', {})
+vim.keymap.set({'v'}, '>', '>gv', {})
 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'",
