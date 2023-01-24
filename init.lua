@@ -370,8 +370,8 @@ else
     haskell_cmd = {'haskell-language-server-wrapper', '--lsp'}
 end
 require('lspconfig')['hls'].setup {cmd = haskell_cmd, on_attach = on_attach}
--- nix lsp
 require('lspconfig')['nil_ls'].setup {}
+require('lspconfig')['pyright'].setup {}
 
 -- Turn on lsp status information
 require('fidget').setup()
