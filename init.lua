@@ -518,5 +518,19 @@ cmp.setup {
 -- Leap setup
 require('leap').add_default_mappings()
 
+local numbertoggle = vim.api.nvim_create_augroup("numbertoggle", {clear = true})
+vim.api.nvim_create_autocmd({"BufEnter", "FocusGained" ,"InsertLeave"}, {
+    command = "set relativenumber",
+    group = my_group
+  }
+)
+
+vim.api.nvim_create_autocmd({"BufLeave", "FocusLost", "InsertEnter"}, {
+    command = "set norelativenumber",
+    group = my_group
+  }
+)
+
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
