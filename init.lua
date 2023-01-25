@@ -33,7 +33,7 @@ require('packer').startup(function(use)
         'hrsh7th/nvim-cmp',
         requires = {
             'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer', 'L3MON4D3/LuaSnip',
-            'saadparwaiz1/cmp_luasnip'
+            'saadparwaiz1/cmp_luasnip', 'hrsh7th/cmp-path'
         }
     }
 
@@ -411,7 +411,10 @@ cmp.setup {
             end
         end, {'i', 's'})
     },
-    sources = {{name = 'nvim_lsp'}, {name = 'luasnip'}, {name = 'buffer'}}
+    sources = {
+        {name = 'nvim_lsp'}, {name = 'luasnip'}, {name = 'buffer'},
+        {name = 'path'}
+    }
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`
