@@ -1,3 +1,29 @@
+### Motivation
+
+This repository is a bit of a meme. The meme is that my neovim is configured by
+a Lisp, similar to emacs. The Lisp used is [fennel][Fennel] which transpiles
+directly to Lua. I am using a tool called [aniseed][Aniseed] to automatically
+convert Fennel to Lua. Lastly, I use [nix][Nix] to bootstrap Aniseed.
+
+The configuration itself is rather close to the original
+[kickstart][kickstart.nvim] repository. I added some utility from my original
+neovim configuration and added my LSP configuration.
+
+### Installation
+
+```
+nix build                  # builds `init.vim`
+ln -s result/init.vim      # reads fnl/ converts to lua/
+vim -s ":PackerInstall"    # bootstrap packer
+vim -s ":PackerInstall"    # install plugins
+```
+
+### TODO:
+
+- [ ] Finish converting `init.lua` to Fennel
+
+**EVERYTHING BELOW THIS LINE WAS ORIGINAL DOCUMENTATION**
+
 ### Introduction
 
 A starting point for Neovim that is:
@@ -82,3 +108,7 @@ Each PR, especially those which increase the line count, should have a descripti
      * You should back it up, then delete all files associated with it.
      * This includes your existing init.lua and the neovim files in `.local` which can be deleted with `rm -rf ~/.local/share/nvim/`
 
+[nix]: https://nixos.org/download.html
+[fennel]: https://fennel-lang.org
+[aniseed]: https://github.com/Olical/aniseed
+[kickstart]: https://github.com/nvim-lua/kickstart.nvim
