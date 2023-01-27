@@ -18,6 +18,10 @@ vim -s ":PackerInstall"    # bootstrap packer
 vim -s ":PackerInstall"    # install plugins
 ```
 
+### Useful
+
+If you ever get stuck converting Lua to Fennel, check out [antifennel][antifennel].
+
 ### TODO:
 
 - [ ] Finish converting `init.lua` to Fennel
@@ -112,3 +116,4 @@ Each PR, especially those which increase the line count, should have a descripti
 [fennel]: https://fennel-lang.org
 [aniseed]: https://github.com/Olical/aniseed
 [kickstart]: https://github.com/nvim-lua/kickstart.nvim
+[antifennel]: https://fennel-lang.org/see
