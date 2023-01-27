@@ -3,6 +3,7 @@ test.sh
 .luarc.json
 nvim
 plugin/packer_compiled.lua
+lua/
 
 .direnv/
 .envrc
