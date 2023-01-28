@@ -335,7 +335,12 @@ local on_attach = function(_, bufnr)
     group = vim.api.nvim_create_augroup('AutoSave', { clear = true }),
     buffer = bufnr,
     callback = function()
-      if vim.fn.getbufvar(bufnr, '&modifiable') == 1 and vim.api.nvim_buf_get_option(bufnr, 'modified') then
+      local is_modifiable = vim.fn.getbufvar(bufnr, "&modifiable")
+      local is_readonly = vim.fn.getbufvar(bufnr, "&readonly")
+      local buftype = vim.api.nvim_buf_get_option(bufnr, "buftype")
+      local is_modified = vim.api.nvim_buf_get_option(bufnr, "modified")
+
+      if is_modifiable and not is_readonly and buftype == "" and is_modified then
         vim.cmd 'w'
       end
     end,
