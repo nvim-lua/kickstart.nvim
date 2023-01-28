@@ -329,6 +329,25 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
+
+  -- Automatically save when leaving Insert mode
+  vim.api.nvim_create_autocmd({ 'InsertLeave' }, {
+    group = vim.api.nvim_create_augroup('AutoSave', { clear = true }),
+    buffer = bufnr,
+    callback = function()
+      -- We need to be able to save the buffer
+      if vim.fn.getbufvar(bufnr, '&modifiable') ~= 1 then
+        return
+      end
+
+      -- If the buffer hasn't been modified, don't bother doing anything
+      if not vim.api.nvim_buf_get_option(bufnr, 'modified') then
+        return
+      end
+
+      vim.cmd 'w'
+    end,
+  })
 end
 
 -- Enable the following language servers
