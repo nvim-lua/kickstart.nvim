@@ -335,17 +335,9 @@ local on_attach = function(_, bufnr)
     group = vim.api.nvim_create_augroup('AutoSave', { clear = true }),
     buffer = bufnr,
     callback = function()
-      -- We need to be able to save the buffer
-      if vim.fn.getbufvar(bufnr, '&modifiable') ~= 1 then
-        return
+      if vim.fn.getbufvar(bufnr, '&modifiable') == 1 and vim.api.nvim_buf_get_option(bufnr, 'modified') then
+        vim.cmd 'w'
       end
-
-      -- If the buffer hasn't been modified, don't bother doing anything
-      if not vim.api.nvim_buf_get_option(bufnr, 'modified') then
-        return
-      end
-
-      vim.cmd 'w'
     end,
   })
 end
