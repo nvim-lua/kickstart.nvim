@@ -518,6 +518,7 @@ cmp.setup {
 -- Leap setup
 require('leap').add_default_mappings()
 
+
 local numbertoggle = vim.api.nvim_create_augroup("numbertoggle", {clear = true})
 vim.api.nvim_create_autocmd({"BufEnter", "FocusGained" ,"InsertLeave"}, {
     command = "set relativenumber",
@@ -531,6 +532,12 @@ vim.api.nvim_create_autocmd({"BufLeave", "FocusLost", "InsertEnter"}, {
   }
 )
 
+
+-- Use ctrl-[hjkl] to select the active split!
+vim.keymap.set('n', '<c-k', ':wincmd k<CR>', {silent = true})
+vim.keymap.set('n', '<c-j>', ':wincmd j<CR>', {silent = true})
+vim.keymap.set('n', '<c-h>', ':wincmd h<CR>', {silent = true})
+vim.keymap.set('n', '<c-l>', ':wincmd l<CR>', {silent = true})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
