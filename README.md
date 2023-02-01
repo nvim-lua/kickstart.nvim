@@ -56,6 +56,18 @@ return function(use)
 end
 ```
 
+#### Example `config.lua`
+
+Customizing initialization behavior (beyond plugin configuration discussed above) can occur in two places -- before, and after, base configuration and plugin configuration. If you need to update something before kickstart loads, e.g. setting the `mapleader`, this can be done by adding a `config.lua` file (located at `$HOME/.config/nvim/lua/custom/config.lua`).
+
+```lua
+return function()
+  -- set the leaders
+  vim.g.mapleader = ';'
+  vim.g.localmapleader = ' '
+end
+```
+
 #### Example `defaults.lua`
 
 For further customizations, you can add a file in the `/after/plugin/` folder (see `:help load-plugins`) to include your own options, keymaps, autogroups, and more. The following is an example `defaults.lua` file (located at `$HOME/.config/nvim/after/plugin/defaults.lua`).
