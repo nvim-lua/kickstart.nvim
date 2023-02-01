@@ -132,6 +132,12 @@ vim.o.completeopt = 'menuone,noselect'
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- Add custom config before keymaps and plugin configs
+local has_config, config = pcall(require, 'custom.config')
+if has_config then
+  config()
+end
+
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
