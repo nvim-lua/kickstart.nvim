@@ -47,15 +47,11 @@ vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 nmap("sp", ":bprev<Return>")
 nmap("sn", ":bnext<Return>")
 
-vim.keymap.set("n", "<leader>f", function()
-	vim.lsp.buf.format({ timeout_ms = 10000 })
-end)
-vim.keymap.set("n", "<leader>F", function()
-	vim.lsp.buf.range_format()
-end)
-
 -- Quickfix list navigation
 vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
 vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
 vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
+
+-- Save
+nmap("<C-s>", ":wa<Return>")
