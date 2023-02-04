@@ -553,5 +553,9 @@ vim.keymap.set('n', '<c-j>', ':wincmd j<CR>', {silent = true})
 vim.keymap.set('n', '<c-h>', ':wincmd h<CR>', {silent = true})
 vim.keymap.set('n', '<c-l>', ':wincmd l<CR>', {silent = true})
 
+vim.o.cursorline = true
+vim.o.cursorcolumn = true
+vim.o.smartcase = false
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
