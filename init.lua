@@ -13,6 +13,18 @@ require('packer').startup(function(use)
  
   use {'akinsho/bufferline.nvim', tag = "v3.*", requires = 'nvim-tree/nvim-web-devicons'}
 
+  -- AI code completion
+  -- Remove the `use` here if you're using folke/lazy.nvim.
+  use {
+    'Exafunction/codeium.vim',
+    config = function ()
+      -- Change '<C-g>' here to any keycode you like.
+      vim.keymap.set('i', '<C-g>', function ()
+        return vim.fn['codeium#Accept']()
+      end, { expr = true })
+    end
+  }
+
   use { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     requires = {
@@ -105,7 +117,8 @@ vim.api.nvim_create_autocmd("FileType", {
 -- See `:help vim.o`
 
 -- Set highlight on search
-vim.o.hlsearch = false
+vim.o.hlsearch = true
+
 
 -- Make line numbers default
 vim.wo.number = true
@@ -138,6 +151,18 @@ vim.wo.signcolumn = 'yes'
 -- Set colorscheme
 vim.o.termguicolors = true
 vim.cmd [[colorscheme onedark]]
+-- show cursorline and column (set these after the colorscheme!)
+vim.o.cursorline = true
+vim.o.cursorcolumn = true
+-- vim.cmd[[highlight CursorColumn ctermbg=0 guibg=lightgrey]]
+vim.cmd[[highlight CursorLine ctermfg=White ctermbg=Yellow cterm=bold guifg=white guibg=slategray gui=bold]]
+vim.cmd[[highlight CursorColumn ctermfg=White ctermbg=Yellow cterm=bold guifg=white guibg=slategray gui=bold]]
+-- vim.cmhighlight guibg=#000050 guifg=fg guibg=#000050 guifg=fg [[highlight CursorLine ctermfg=White ctermbg=Yellow cterm=bold guifg=white guibg=slategray gui=bold]]
+--
+-- highlight CursorColumn ctermfg=White ctermbg=Yellow cterm=bold guifg=white guibg=yellow gui=bold
+-- highlight CursorLine guibg=#000050 guifg=fg
+-- highlight CursorColumn ctermfg=White ctermbg=Yellow cterm=bold guifg=white guibg=yellow gui=bold
+--
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
