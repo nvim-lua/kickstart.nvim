@@ -66,6 +66,20 @@ require('packer').startup(function(use)
   -- Leap to help quickly navigate
 
   use 'ggandor/leap.nvim'
+
+
+  -- Adds ability to highlight row and/or column containing cursor 
+  use {
+    'tummetott/reticle.nvim',
+    config = function()
+        require('reticle').setup {
+
+            -- add options here or leave empty
+        }
+    end
+}
+
+  -- Shows what actions can be performed by pressing keys
   use {
     "folke/which-key.nvim",
     config = function()
