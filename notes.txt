@@ -1,0 +1,4 @@
+- installed jdtls as a Mason package
+- installed Python, Java, and Scala in init.lua
+- Would like to fix the issue with Java indentation.
+

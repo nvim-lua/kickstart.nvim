@@ -1,0 +1,17 @@
+- Enter to open/close node of tree
+- Enter or Click to open a file
+- Tab to open while being focused on tree
+- a to create a file
+- r to rename a file
+- x and then p to move a file
+- c and then p to paste a file
+
+- Ctrl + v (open in vsplit)
+
+- "-" to change the directory to the parent directory
+- Ctrl + ] (change base directory of tree)
+
+- q to close
+
+
+
