@@ -1,3 +1,9 @@
+-- TODO: Have to decide how we would make this easy
+-- to configure and understand from init.lua...
+--
+-- I was hoping all of them could go in plugins, but it's a little weird
+-- to do that I guess?
+
 -- Toggle this on/off for autoformatting
 local autoformatting = false
 if not autoformatting then
