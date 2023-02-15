@@ -77,8 +77,12 @@ require('lazy').setup({
     end,
   },
 
+  -- Next Step: Add additional "plugins" for kickstart
+  require 'kickstart.plugins.autoformat',
+  -- require('kickstart.plugins.debug'),
+
   -- TODO:
-  { import = 'kickstart.plugins' },
+  -- { import = 'kickstart.plugins' },
   -- { import = 'custom.plugins' },
 }, {})
 
