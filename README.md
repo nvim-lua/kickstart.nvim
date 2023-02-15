@@ -47,12 +47,12 @@ The following is an example of a `plugins.lua` module (located at `$HOME/.config
 
 ```lua
 return function(use)
-  use({
+  use{
     "folke/which-key.nvim",
       config = function()
-        require("which-key").setup({})
+        require("which-key").setup()
       end
-  })
+  }
 end
 ```
 
