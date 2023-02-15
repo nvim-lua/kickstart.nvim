@@ -15,7 +15,10 @@ This repo is meant to be used as a starting point for a user's own configuration
 
 * Backup your previous configuration
 * Copy and paste the kickstart.nvim `init.lua` into `$HOME/.config/nvim/init.lua` (Linux/Mac) or `~/AppData/Local/nvim/init.lua` (Windows)
+
+TODO: This isn't right anymore. Also, link to the sections about setting up the installation from the lazy readme
 * Start Neovim (`nvim`) and run `:PackerInstall` - ignore any error message about missing plugins, `:PackerInstall` will fix that shortly
+
 * Restart Neovim
 
 
@@ -82,7 +85,9 @@ Each PR, especially those which increase the line count, should have a descripti
 
 ### FAQ
 
- * What should I do if I already have a pre-existing neovim configuration?
-     * You should back it up, then delete all files associated with it.
-     * This includes your existing init.lua and the neovim files in `.local` which can be deleted with `rm -rf ~/.local/share/nvim/`
-
+* What should I do if I already have a pre-existing neovim configuration?
+   * You should back it up, then delete all files associated with it.
+   * This includes your existing init.lua and the neovim files in `.local` which can be deleted with `rm -rf ~/.local/share/nvim/`
+* Are there any cool videos about this plugin?
+  * Current iteration of kickstart (coming soon)
+  * Here is one about the previous iteration of kickstart: [video introduction to Kickstart.nvim](https://youtu.be/stqUbv-5u2s).
