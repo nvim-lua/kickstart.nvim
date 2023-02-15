@@ -78,7 +78,7 @@ require('lazy').setup({
   },
 
   -- TODO:
-  -- { import = 'kickstart' },
+  { import = 'kickstart.plugins' },
   -- { import = 'custom.plugins' },
 }, {})
 
@@ -372,6 +372,8 @@ require('fidget').setup()
 -- nvim-cmp setup
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
+
+luasnip.config.setup {}
 
 cmp.setup {
   snippet = {
