@@ -54,6 +54,15 @@ require('lazy').setup({
     end,
   },
 
+  { -- Useful plugin to show you pending keybinds.
+    'folke/which-key.nvim',
+    config = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 300
+      require('which-key').setup {}
+    end,
+  },
+
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
