@@ -23,7 +23,7 @@ Kickstart.nvim targets *only* the latest ['stable'](https://github.com/neovim/ne
 Additional system requirements:
 - Make sure to review the readmes of the plugins if you are experiencing errors. In particular:
   - [ripgrep](https://github.com/BurntSushi/ripgrep#installation) is required for multiple [telescope](https://github.com/nvim-telescope/telescope.nvim#suggested-dependencies) pickers.
-- See as well [Windows Installation]
+- See as well [Windows Installation](#Windows-Installation)
 
 ### Usage
 
