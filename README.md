@@ -16,7 +16,8 @@ This repo is meant to be used as by **YOU** to begin your Neovim journey; remove
 Kickstart.nvim targets *only* the latest ['stable'](https://github.com/neovim/neovim/releases/tag/stable) and latest ['nightly'](https://github.com/neovim/neovim/releases/tag/nightly) of Neovim. If you are experiencing issues, please make sure you have the latest versions.
 
 * Backup your previous configuration
-* Copy and paste the kickstart.nvim `init.lua` into `$HOME/.config/nvim/init.lua` (Linux/Mac) or `~/AppData/Local/nvim/init.lua` (Windows)
+* (Recommended) Fork this repo (so that you have your own copy that you can modify).
+* Clone the kickstart repo into `$HOME/.config/nvim/` (Linux/Mac) or `~/AppData/Local/nvim/` (Windows)
 * Start Neovim (`nvim`) and allow `lazy.nvim` to complete installation.
 * Restart Neovim
 
@@ -25,9 +26,8 @@ Additional system requirements:
   - [ripgrep](https://github.com/BurntSushi/ripgrep#installation) is required for multiple [telescope](https://github.com/nvim-telescope/telescope.nvim#suggested-dependencies) pickers.
 - See as well [Windows Installation](#Windows-Installation)
 
-### Usage
+### Configuration And Extension
 
-* Fork this repo (so that you have your own copy that you can modify).
 * Inside of your fork, feel free to modify any file you like! It's your fork!
 * Then there are two primary configuration options available:
   * Include the `lua/kickstart/plugins/*` files in your configuration.
