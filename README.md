@@ -52,7 +52,32 @@ return {
 }
 ```
 
+
 This will automatically install `nvim-autopairs` and enable it on startup. For more information, see documentation for [lazy.nvim](https://github.com/folke/lazy.nvim).
+
+#### Example: Adding a file tree plugin
+
+In the file: `lua/custom/plugins/filetree.lua`, add:
+
+```lua
+return {
+  "nvim-neo-tree/neo-tree.nvim",
+  branch = "v2.x",
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+    "MunifTanjim/nui.nvim",
+  },
+  config = function ()
+    -- Unless you are still migrating, remove the deprecated commands from v1.x
+    vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
+
+    require('neo-tree').setup {}
+  end,
+}
+```
+
+This will install the tree plugin and add the command `:NeoTree` for you. You can explore the documentation at [neo-tree.nvim](https://github.com/nvim-neo-tree/neo-tree.nvim) for more information.
 
 #### Example: Adding a file to change default options
 
