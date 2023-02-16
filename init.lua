@@ -77,13 +77,14 @@ require('lazy').setup({
     end,
   },
 
-  -- Next Step: Add additional "plugins" for kickstart
-  require 'kickstart.plugins.autoformat',
-  -- require('kickstart.plugins.debug'),
+  -- Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
+  -- require 'kickstart.plugins.autoformat',
+  -- require 'kickstart.plugins.debug',
 
-  -- TODO:
-  -- { import = 'kickstart.plugins' },
-  -- { import = 'custom.plugins' },
+  -- Add your own custom plugins to `lua/custom/plugins/*.lua`
+  --    For more information see:
+  --    https://github.com/folke/lazy.nvim#-structuring-your-plugins
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
