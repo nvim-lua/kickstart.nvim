@@ -18,8 +18,10 @@ Kickstart.nvim targets *only* the latest ['stable'](https://github.com/neovim/ne
 * Backup your previous configuration
 * (Recommended) Fork this repo (so that you have your own copy that you can modify).
 * Clone the kickstart repo into `$HOME/.config/nvim/` (Linux/Mac) or `~/AppData/Local/nvim/` (Windows)
+  * If you don't want to include it as a git repo, you can just clone it and then move the files to this location
 * Start Neovim (`nvim`) and allow `lazy.nvim` to complete installation.
 * Restart Neovim
+* **You're ready to go!**
 
 Additional system requirements:
 - Make sure to review the readmes of the plugins if you are experiencing errors. In particular:
