@@ -11,6 +11,9 @@ A starting point for Neovim that is:
 
 This repo is meant to be used as by **YOU** to begin your Neovim journey; remove the things you don't use and add what you miss.
 
+Distribution Alternatives:
+- [LazyVim](https://www.lazyvim.org/): A delightful distribution maintained by @folke (the author of lazy.nvim, the package manager used here)
+
 ### Installation
 
 Kickstart.nvim targets *only* the latest ['stable'](https://github.com/neovim/neovim/releases/tag/stable) and latest ['nightly'](https://github.com/neovim/neovim/releases/tag/nightly) of Neovim. If you are experiencing issues, please make sure you have the latest versions.
@@ -34,6 +37,7 @@ Additional system requirements:
 * Then there are two primary configuration options available:
   * Include the `lua/kickstart/plugins/*` files in your configuration.
   * Add new configuration in `lua/custom/plugins/*` files, which will be auto sourced using `lazy.nvim`
+    * NOTE: To enable this, you need to uncomment `{ import = 'custom.plugins' }` in your `init.lua`
 
 You can also merge updates/changes from the repo back into your fork, to keep up-to-date with any changes for the default configuration
 
@@ -62,7 +66,7 @@ In the file: `lua/custom/plugins/filetree.lua`, add:
 ```lua
 return {
   "nvim-neo-tree/neo-tree.nvim",
-  branch = "v2.x",
+  version = "*",
   dependencies = {
     "nvim-lua/plenary.nvim",
     "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
