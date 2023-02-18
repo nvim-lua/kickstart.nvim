@@ -119,7 +119,9 @@ require('lazy').setup({
       vim.cmd.colorscheme 'onedark'
     end,
   },
-
+  { -- Theme gruvbox
+    "ellisonleao/gruvbox.nvim"
+  },
   { -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
     -- See `:help lualine.txt`
