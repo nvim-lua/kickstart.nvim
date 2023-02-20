@@ -39,8 +39,9 @@ P.S. You can delete this when you're done too. It's your config now :)
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
+
+-- My custom remaps
 require('remap')
-require('set')
 
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
@@ -167,6 +168,12 @@ require('lazy').setup({
       pcall(require('nvim-treesitter.install').update { with_sync = true })
     end,
   },
+  {
+    'nvim-tree/nvim-tree.lua',
+    dependencies = {
+      'nvim-tree/nvim-web-devicons', -- optional, for file icons
+    },
+  },
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
@@ -187,8 +194,8 @@ require('lazy').setup({
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
--- My custom remaps
-require('remap')
+-- set termguicolors to enable highlight groups
+vim.opt.termguicolors = true
 
 vim.o.guicursor = ""
 
@@ -493,6 +500,19 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
+
+require("nvim-tree").setup({
+  sort_by = "case_sensitive",
+  view = {
+    width = 30,
+  },
+  -- renderer = {
+  --   group_empty = true,
+  -- },
+  filters = {
+    dotfiles = true,
+  },
+})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
