@@ -1,17 +1,25 @@
 FROM ubuntu:latest
 
 # Install dependencies
-RUN apt update && apt install -y \
+RUN apt update && apt upgrade -y 
+RUN apt install -y \
     curl \
     wget \
+    make \
+    g++ \
     gzip \
     unzip \
     git \
-    npm \
     python3 \
+    python3-venv \
     cargo \
     ripgrep \
     fd-find
+
+RUN apt remove -y nodejs npm && \
+    curl -sL https://deb.nodesource.com/setup_18.x -o nodesource_setup.sh && \
+    bash nodesource_setup.sh && \
+    apt install -y nodejs
 
 # Installation Settings
 # branch can be nightly
