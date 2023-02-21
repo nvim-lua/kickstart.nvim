@@ -15,7 +15,7 @@ RUN apt update && apt install -y \
 
 # Installation Settings
 # branch can be nightly
-ENV BRANCH=nightly
+ENV BRANCH=stable
 ENV LSP_LIST='lua-language-server'
 ENV TS_LIST='c cpp go lua python rust tsx typescript help vim'
 
