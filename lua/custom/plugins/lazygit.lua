@@ -1,0 +1,3 @@
+return {
+	'kdheepak/lazygit.nvim'
+}
