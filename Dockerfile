@@ -33,4 +33,3 @@ COPY . /root/.config/nvim
 RUN nvim --headless "+Lazy! install" +"MasonInstall ${LSP_LIST}" +qa
 RUN nvim --headless +"TSUpdateSync ${TS_LIST}" +qa
 
-CMD [ "/bin/bash" ]
