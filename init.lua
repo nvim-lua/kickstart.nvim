@@ -69,10 +69,19 @@ require('lazy').setup({
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
+  'mhinz/vim-startify',
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
-
+  {
+    "kylechui/nvim-surround",
+    -- tag = "", -- Use for stability; omit to use `main` branch for the latest features
+    config = function()
+        require("nvim-surround").setup({
+            -- Configuration here, or leave empty to use defaults
+        })
+    end
+  },
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   { -- LSP Configuration & Plugins
@@ -152,14 +161,17 @@ require('lazy').setup({
   -- Fuzzy Finder Algorithm which requires local dependencies to be built.
   -- Only load if `make` is available. Make sure you have the system
   -- requirements installed.
-  {
-    'nvim-telescope/telescope-fzf-native.nvim',
-    -- NOTE: If you are having trouble with this installation,
-    --       refer to the README for telescope-fzf-native for more instructions.
-    build = 'make',
-    cond = function()
-      return vim.fn.executable 'make' == 1
-    end,
+  -- {
+  --   'nvim-telescope/telescope-fzf-native.nvim',
+  --   -- NOTE: If you are having trouble with this installation,
+  --   --       refer to the README for telescope-fzf-native for more instructions.
+  --   build = 'make',
+  --   cond = function()
+  --     return vim.fn.executable 'make' == 1
+  --   end,
+  -- },
+  {'nvim-telescope/telescope-fzf-native.nvim',
+    build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
   },
 
   { -- Highlight, edit, and navigate code
@@ -231,6 +243,30 @@ vim.o.completeopt = 'menuone,noselect'
 vim.o.termguicolors = true
 
 -- [[ Basic Keymaps ]]
+--
+-- my Custom mappings
+--
+-- normal mode
+--     **filepath stuff**
+vim.keymap.set('n', 'gf', ':vert winc f<cr>')
+--    moves split panes
+vim.keymap.set('n', '<A-h>', '<C-W>H')
+vim.keymap.set('n', '<A-j>', '<C-W>J')
+vim.keymap.set('n', '<A-k>', '<C-W>K')
+vim.keymap.set('n', '<A-l>', '<C-W>L')
+--    switch split windows
+vim.keymap.set('n', '<C-h>', '<C-w>h')
+vim.keymap.set('n', '<C-j>', '<C-w>j')
+vim.keymap.set('n', '<C-k>', '<C-w>k')
+vim.keymap.set('n', '<C-l>', '<C-w>l')
+-- insert mode
+--    these 2 shift current line in insert mode
+vim.keymap.set('i', '<A-j>', '<Esc>:m .+1<CR>==gi')
+vim.keymap.set('i', '<A-k>', '<Esc>:m .-2<CR>==gi')
+
+--    these 2 exit insert mode easily
+vim.keymap.set('i', 'JJ', '<Esc>')
+vim.keymap.set('i', 'jk', '<Esc>')
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
