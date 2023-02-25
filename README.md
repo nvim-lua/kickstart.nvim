@@ -1,4 +1,8 @@
-# kickstart.nvim
+# kickstart.nvim - CrawDad Fork
+
+still working on some lsp issues on local machine
+
+Check 'myChanges.md' and 'myWinDeps.md' for changes and required dependencies for my changes.
 
 ### Introduction
 
