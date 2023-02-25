@@ -230,6 +230,10 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+-- Set relative and absolute line numbers
+vim.o.relativenumber = true
+vim.o.number = true
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -407,11 +411,24 @@ end
 --  Add any additional override configuration in the following tables. They will be passed to
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
-  -- clangd = {},
+  clangd = {},
   gopls = {},
-  -- pyright = {},
-  -- rust_analyzer = {},
-  -- tsserver = {},
+  solargraph = {},
+  sqlls = {},
+  angularls = {},
+  bashls = {},
+  cssls = {},
+  dockerls = {},
+  gradle_ls = {},
+  pyright = {},
+  tsserver = {},
+  html = {},
+  jsonls = {},
+  jdtls = {},
+  rust_analyzer = {},
+  marksman = {},
+  volar = {},
+  yamlls = {},
 
   lua_ls = {
     Lua = {
