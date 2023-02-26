@@ -189,13 +189,17 @@ require('lazy').setup({
 -- See `:help vim.o`
 
 -- Set highlight on search
-vim.o.hlsearch = false
+vim.o.hlsearch = true
+vim.cmd [[highlight Search guifg=#292e42 guibg=#bb9af7]]
+
+
 
 -- Make line numbers default
 vim.wo.number = true
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
+
 -- enable relativew numbers
 vim.o.relativenumber = true
 
@@ -241,6 +245,8 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 -- go from insert to normal with "jj"
 vim.api.nvim_set_keymap('i', 'jj', '<Esc>', { noremap = true })
 
+vim.api.nvim_set_keymap('i', 'jk', '<Esc>', { noremap = true })
+
 -- save the file with space w
 vim.api.nvim_set_keymap('n', '<leader>w', ':Format<CR> :w<CR>', { noremap = true, silent = true, desc = "save" })
 
@@ -268,7 +274,7 @@ vim.api.nvim_set_keymap('n', '<S-h>', ':BufferPrevious<CR>', { noremap = true, s
 vim.api.nvim_set_keymap('n', '<S-l>', ':BufferNext<CR>', { noremap = true, silent = true })
 
 -- close the current buffer
-vim.api.nvim_set_keymap('n', '<leader>c', ':bd<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>cb', ':bd<CR>', { noremap = true, silent = true })
 
 -- Mapping copilot to <C-j>
 vim.g.copilot_no_tab_map = true
@@ -276,7 +282,21 @@ vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true,
 
 vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', { noremap = true })
 
+vim.api.nvim_set_keymap('n', '<leader>hs', ':nohlsearch<CR>',
+  { noremap = true, silent = true, desc = "toggle of search highlight" })
+
+vim.api.nvim_set_keymap('n', 'gm', ":call cursor(0, len(getline('.'))/2)<CR>",
+  { noremap = true, silent = true, desc = "[g]o [m]iddle" })
+
+-- disable swap file beacause it cause crashes in neovide and neovim
 vim.o.swapfile = false
+
+
+-- changing the color mapping for the neotree mapping
+vim.g.nvim_tree_highlight_opened_files = 1
+
+
+
 
 -- custom requirements
 config = function()
