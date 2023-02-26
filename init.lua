@@ -288,6 +288,23 @@ vim.api.nvim_set_keymap('n', '<leader>hs', ':nohlsearch<CR>',
 vim.api.nvim_set_keymap('n', 'gm', ":call cursor(0, len(getline('.'))/2)<CR>",
   { noremap = true, silent = true, desc = "[g]o [m]iddle" })
 
+-- map ) to search for the previous closing bracket
+vim.api.nvim_set_keymap('n', ')', "<Cmd>call search('[([{<]', 'b')<CR>",
+  { noremap = true, silent = true, desc = "" })
+
+-- map ( to search for the next closing bracket
+vim.api.nvim_set_keymap('n', '(', "<Cmd>call search('[([{<]')<CR>",
+  { noremap = true, silent = true, desc = "" })
+
+-- map alt-/ to search in the visualized code section
+vim.api.nvim_set_keymap('v', '<M-7>', ":<Esc>/\\%V", { noremap = true, silent = true })
+
+
+-- trucco sul relplace.
+-- selezionare la sezione in cui si vuole rimpiazzare una parola (si puo anche non
+-- selezionare, funziona lo stess) e poi premere : seguito da s/parolaDaCercare/parolaDaSostituire
+-- esempio: :s/parolaDaCercare/parolaDaSostituire
+
 -- disable swap file beacause it cause crashes in neovide and neovim
 vim.o.swapfile = false
 
