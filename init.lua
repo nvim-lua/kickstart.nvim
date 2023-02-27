@@ -65,6 +65,11 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
+  { -- Set lualine as statusline
+    'nvim-lualine/lualine.nvim',
+    -- See `:help lualine.txt`
+  },
+
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
@@ -113,19 +118,6 @@ require('lazy').setup({
 
   { -- Theme inspired by Atom
     'navarasu/onedark.nvim',
-  },
-
-  { -- Set lualine as statusline
-    'nvim-lualine/lualine.nvim',
-    -- See `:help lualine.txt`
-    opts = {
-      options = {
-        icons_enabled = false,
-        theme = 'onedark',
-        component_separators = '|',
-        section_separators = '',
-      },
-    },
   },
 
   { -- Add indentation guides even on blank lines
@@ -280,7 +272,7 @@ vim.api.nvim_set_keymap('n', '<leader>cb', ':bd<CR>', { noremap = true, silent =
 vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 
-vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', { noremap = true })
+-- vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', { noremap = true })
 
 vim.api.nvim_set_keymap('n', '<leader>hs', ':nohlsearch<CR>',
   { noremap = true, silent = true, desc = "toggle of search highlight" })
@@ -299,6 +291,9 @@ vim.api.nvim_set_keymap('n', '(', "<Cmd>call search('[([{<]')<CR>",
 -- map alt-/ to search in the visualized code section
 vim.api.nvim_set_keymap('v', '<M-7>', ":<Esc>/\\%V", { noremap = true, silent = true })
 
+
+-- set keybind to delete the selected text and trhow into the void (not yanking)
+vim.api.nvim_set_keymap('v', '<leader>v', '"_d', { noremap = true, silent = true, desc = '[V]oid' })
 
 -- trucco sul relplace.
 -- selezionare la sezione in cui si vuole rimpiazzare una parola (si puo anche non
@@ -401,7 +396,7 @@ require('nvim-treesitter.configs').setup {
   ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'help', 'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-  auto_install = false,
+  auto_install = true,
 
   highlight = { enable = true },
   indent = { enable = true, disable = { 'python' } },
@@ -479,12 +474,12 @@ local on_attach = function(_, bufnr)
     if desc then
       desc = 'LSP: ' .. desc
     end
-
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
+  vim.api.nvim_set_keymap("n", '<leader>la', "<Cmd>CodeActionMenu<CR>", { desc = '[L]sp [A]ction' })
   nmap('<leader>lr', vim.lsp.buf.rename, '[L]sp [r]ename')
-  nmap('<leader>la', vim.lsp.buf.code_action, '[L]sp [A]ction')
+  nmap('<leader>ll', vim.lsp.codelens.run, '[L]sp [L]ense')
 
   nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
