@@ -310,6 +310,12 @@ vim.api.nvim_set_keymap('v', '<M-7>', ":<Esc>/\\%V", { noremap = true, silent = 
 -- per sostituire tutte le occorrenze di una parola in un file, si deve usare il comando
 -- :%s/parolaDaCercare/parolaDaSostituire/g
 
+
+-- trucco global project grep replace
+-- utilizzando l'utility di telescope possiamo fare una ricerca globale di una parola
+-- usanod il comando :Telescope live_grep (<leader>sg) poi reindirizzare l'output al
+-- buffer qflist con il comando <C-q> e poi usare il comando :cdo s/parolaDaCercare/parolaDaSostituire/gc
+
 -- disable swap file beacause it cause crashes in neovide and neovim
 vim.o.swapfile = false
 
