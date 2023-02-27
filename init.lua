@@ -302,8 +302,13 @@ vim.api.nvim_set_keymap('v', '<M-7>', ":<Esc>/\\%V", { noremap = true, silent = 
 
 -- trucco sul relplace.
 -- selezionare la sezione in cui si vuole rimpiazzare una parola (si puo anche non
--- selezionare, funziona lo stess) e poi premere : seguito da s/parolaDaCercare/parolaDaSostituire
+-- selezionare, funziona lo stesso) e poi premere : seguito da s/parolaDaCercare/parolaDaSostituire
 -- esempio: :s/parolaDaCercare/parolaDaSostituire
+--
+-- questo funzionerà solo per la sezione selezionata, se non si seleziona nessuna sezione
+-- funzionerà per la riga corrente
+-- per sostituire tutte le occorrenze di una parola in un file, si deve usare il comando
+-- :%s/parolaDaCercare/parolaDaSostituire/g
 
 -- disable swap file beacause it cause crashes in neovide and neovim
 vim.o.swapfile = false
