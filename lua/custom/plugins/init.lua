@@ -3,6 +3,11 @@
 --
 -- See the kickstart.nvim README for more information
 return {
-
+	{
+		'mbbill/undotree',
+		keys = {
+			{ "<leader>U", "<Cmd>UndotreeToggle<CR>", desc = "Undotree Toggle" },
+		},
+	}
 
 }
