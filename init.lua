@@ -87,6 +87,7 @@ require('lazy').setup({
     'neovim/nvim-lspconfig',
 
     dependencies = {
+
       -- Automatically install LSPs to stdpath for neovim
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
@@ -170,7 +171,6 @@ require('lazy').setup({
     end,
   },
 
-
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -215,8 +215,6 @@ require('orgmode').setup({
 -- Set highlight on search
 vim.o.hlsearch = true
 vim.cmd [[highlight Search guifg=#292e42 guibg=#bb9af7]]
-
-
 
 -- Make line numbers default
 vim.wo.number = true
