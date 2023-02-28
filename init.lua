@@ -96,7 +96,7 @@ require('lazy').setup({
       { 'j-hui/fidget.nvim', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
-      'folkenvim_set_keymap/neodev.nvim',
+      'folke/neodev.nvim',
     },
   },
 
@@ -129,6 +129,7 @@ require('lazy').setup({
   { -- Theme inspired by Atom
     'navarasu/onedark.nvim',
   },
+
 
   { -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
@@ -303,7 +304,7 @@ vim.api.nvim_set_keymap('n', '<leader>cb', ':bd<CR>', { noremap = true, silent =
 vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 
--- vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', { noremap = true })
+vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', { noremap = true })
 
 vim.api.nvim_set_keymap('n', '<leader>hs', ':nohlsearch<CR>',
   { noremap = true, silent = true, desc = "toggle of search highlight" })
@@ -562,6 +563,7 @@ require('neodev').setup()
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
+
 -- Setup mason so it can manage external tooling
 require('mason').setup()
 
@@ -628,6 +630,8 @@ cmp.setup {
     { name = 'orgmode' },
   },
 }
+
+
 --
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
