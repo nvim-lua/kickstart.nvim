@@ -33,6 +33,7 @@ Additional system requirements:
 
 ### Configuration And Extension
 
+
 * Inside of your fork, feel free to modify any file you like! It's your fork!
 * Then there are two primary configuration options available:
   * Include the `lua/kickstart/plugins/*` files in your configuration.
