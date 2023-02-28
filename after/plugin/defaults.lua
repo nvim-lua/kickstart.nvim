@@ -105,3 +105,10 @@ vim.o.hidden = true
 
 -- Copy paste between vim and everything else
 vim.o.clipboard = "unnamedplus"
+
+-- diagnostic symbols
+local signs = { Error = "", Warn = "", Hint = "", Info = "" }
+for type, icon in pairs(signs) do
+    local hl = "DiagnosticSign" .. type
+    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
