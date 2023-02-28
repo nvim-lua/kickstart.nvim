@@ -1,3 +1,1 @@
-return {
-  'mhinz/vim-startify'
-}
+return {'mhinz/vim-startify'}

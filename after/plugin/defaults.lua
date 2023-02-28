@@ -25,14 +25,12 @@ vim.keymap.set('n', '<leader>u', '20k')
 vim.keymap.set('v', '<leader>n', '20j')
 vim.keymap.set('v', '<leader>u', '20k')
 
-
 -- Alternate way to save
 vim.cmd('nnoremap <C-s> :w!<CR>')
 vim.cmd('inoremap <C-s> <ESC> :w!<CR>')
 
 -- Alternate way to quit
 vim.cmd('nnoremap <S-c> :q!<CR>')
-
 
 -- ================= File management ================= --
 
@@ -103,8 +101,8 @@ vim.o.hidden = true
 vim.o.clipboard = "unnamedplus"
 
 -- diagnostic symbols
-local signs = { Error = "", Warn = "", Hint = "", Info = "" }
+local signs = {Error = "", Warn = "", Hint = "", Info = ""}
 for type, icon in pairs(signs) do
-    local hl = "DiagnosticSign" .. type
-    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+  local hl = "DiagnosticSign" .. type
+  vim.fn.sign_define(hl, {text = icon, texthl = hl, numhl = hl})
 end

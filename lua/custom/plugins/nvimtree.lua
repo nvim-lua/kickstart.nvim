@@ -1,7 +1,7 @@
 return {
   'nvim-tree/nvim-tree.lua',
   requires = {
-    'nvim-tree/nvim-web-devicons', -- optional, for file icons
+    'nvim-tree/nvim-web-devicons' -- optional, for file icons
   },
   config = function()
     local nvim_tree_events = require('nvim-tree.events')
@@ -29,10 +29,7 @@ return {
     require("nvim-tree").setup({
       sync_root_with_cwd = true,
       respect_buf_cwd = true,
-      update_focused_file = {
-        enable = true,
-        update_root = true
-      },
+      update_focused_file = { enable = true, update_root = true }
     })
   end
 }
