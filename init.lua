@@ -256,7 +256,7 @@ vim.o.completeopt = 'menuone,noselect'
 vim.o.termguicolors = true
 
 -- [[ Basic Keymaps ]]
-
+--
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
@@ -325,6 +325,10 @@ vim.api.nvim_set_keymap('v', '<M-7>', ":<Esc>/\\%V", { noremap = true, silent = 
 
 -- set keybind to delete the selected text and trhow into the void (not yanking)
 vim.api.nvim_set_keymap('v', '<leader>v', '"_d', { noremap = true, silent = true, desc = '[V]oid' })
+
+vim.api.nvim_set_keymap('i', '<C-k>', '<C-W>', { noremap = true, desc = "delete word" })
+
+
 
 -- trucco sul relplace.
 -- selezionare la sezione in cui si vuole rimpiazzare una parola (si puo anche non
