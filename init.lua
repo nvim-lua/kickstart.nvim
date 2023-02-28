@@ -409,9 +409,13 @@ end
 local servers = {
   -- clangd = {},
   -- gopls = {},
-  -- pyright = {},
+  pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
+  intelephense = {},
+  tflint = {},
+  terraformls = {},
+  eslint = {},
 
   lua_ls = {
     Lua = {
@@ -495,3 +499,9 @@ cmp.setup {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+
+-- my keymaps
+vim.api.nvim_set_keymap('i', 'jk', '<Esc>', {});
+vim.api.nvim_set_keymap('i', 'kj', '<Esc>', {});
+
