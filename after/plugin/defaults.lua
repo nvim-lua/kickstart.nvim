@@ -2,10 +2,6 @@ vim.opt.relativenumber = true
 vim.opt.cursorline = true
 vim.opt.colorcolumn = '120'
 
-vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>')
-vim.keymap.set('n', '<leader>f', ':NvimTreeFindFile<CR>')
-
-
 -- indent via Tab
 vim.keymap.set('n', '<Tab>', '>>_')
 vim.keymap.set('n', '<S-Tab>', '<<_')
