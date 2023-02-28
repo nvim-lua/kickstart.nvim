@@ -234,6 +234,9 @@ vim.o.termguicolors = true
 vim.o.relativenumber = true
 vim.o.number = true
 
+vim.o.scrolloff = 5
+vim.o.sidescrolloff = 10
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -273,7 +276,7 @@ pcall(require('telescope').load_extension, 'fzf')
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
+vim.keymap.set('n', '<leader>b', require('telescope.builtin').buffers, { desc = 'Find existing [b]uffers' })
 vim.keymap.set('n', '<leader>/', function()
   -- You can pass additional configuration to telescope to change theme, layout, etc.
   require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
@@ -413,7 +416,8 @@ end
 local servers = {
   clangd = {},
   gopls = {},
-  solargraph = {},
+  -- solargraph = {},
+  ruby_ls = {},
   sqlls = {},
   angularls = {},
   bashls = {},

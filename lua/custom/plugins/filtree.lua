@@ -13,5 +13,8 @@ return {
     require('neo-tree').setup {
       close_if_last_window = true,
     }
+
+    vim.keymap.set('n', '<leader>nf', ':NeoTreeFloatToggle<CR>', { desc = '[N]eoTree [F]loat Toggle' })
+    vim.keymap.set('n', '<leader>nr', ':NeoTreeRevealToggle<CR>', { desc = '[N]eoTree [R]eveal Toggle' })
   end,
 }
