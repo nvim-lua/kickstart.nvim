@@ -126,19 +126,19 @@ require('lazy').setup({
     },
   },
 
-  { -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-  },
-
 
   { -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
-    opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
-    },
+    config = function()
+      require("indent_blankline").setup {
+        char = '┊',
+        show_trailing_blankline_indent = false,
+        show_current_context = true,
+      }
+    end,
+
   },
 
   -- "gc" to comment visual regions/lines
@@ -325,7 +325,6 @@ vim.api.nvim_set_keymap('v', '<M-7>', ":<Esc>/\\%V", { noremap = true, silent = 
 vim.api.nvim_set_keymap('v', '<leader>v', '"_d', { noremap = true, silent = true, desc = '[V]oid' })
 
 vim.api.nvim_set_keymap('i', '<C-k>', '<C-W>', { noremap = true, desc = "delete word" })
-
 
 
 -- trucco sul relplace.
