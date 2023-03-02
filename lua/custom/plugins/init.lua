@@ -77,4 +77,31 @@ return {
 			{ "<leader>ul", "<Cmd>UrlView<CR>", desc = "View buffer URLs" },
 		},
 	},
+
+	-- Toggleterm: multiple terminals
+	{ 'akinsho/toggleterm.nvim',
+		version = "*",
+		config = function()
+			require("toggleterm").setup {
+				insert_mappings = true, -- whether or not the open mapping applies in insert mode
+				size = 10,
+				open_mapping = [[<F7>]],
+				shading_factor = 2,
+				direction = "float",
+				float_opts = {
+					border = "curved",
+					highlights = {
+						border = "Normal",
+						background = "Normal",
+					},
+				},
+			}
+		end,
+	},
+
+	-- Markdown preview (attempt)
+	{
+		"iamcco/markdown-preview.nvim",
+		run = function() vim.fn["mkdp#util#install"]() end,
+	}
 }
