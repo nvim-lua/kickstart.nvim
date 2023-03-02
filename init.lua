@@ -1,41 +1,3 @@
---[[
-
-=====================================================================
-==================== READ THIS BEFORE CONTINUING ====================
-=====================================================================
-
-Kickstart.nvim is *not* a distribution.
-
-Kickstart.nvim is a template for your own configuration.
-  The goal is that you can read every line of code, top-to-bottom, and understand
-  what your configuration is doing.
-
-  Once you've done that, you should start exploring, configuring and tinkering to
-  explore Neovim!
-
-  If you don't know anything about Lua, I recommend taking some time to read through
-  a guide. One possible example:
-  - https://learnxinyminutes.com/docs/lua/
-
-  And then you can explore or search through `:help lua-guide`
-
-
-Kickstart Guide:
-
-I have left several `:help X` comments throughout the init.lua
-You should run that command and read that help section for more information.
-
-In addition, I have some `NOTE:` items throughout the file.
-These are for you, the reader to help understand what is happening. Feel free to delete
-them once you know what you're doing, but they should serve as a guide for when you
-are first encountering a few different constructs in your nvim config.
-
-I hope you enjoy your Neovim journey,
-- TJ
-
-P.S. You can delete this when you're done too. It's your config now :)
---]]
-
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
@@ -112,12 +74,19 @@ require('lazy').setup({
     },
   },
 
-  { -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
+  -- { -- Theme inspired by Atom
+  --   'navarasu/onedark.nvim',
+  --   priority = 1000,
+  --   config = function()
+  --     vim.cmd.colorscheme 'onedark'
+  --   end,
+  -- },
+
+  {
+    'phha/zenburn.nvim',
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
+      require('zenburn').setup() end
   },
 
   { -- Set lualine as statusline
@@ -126,7 +95,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'zenburn',
         component_separators = '|',
         section_separators = '',
       },
@@ -191,12 +160,32 @@ require('lazy').setup({
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
+require('zenburn').setup()
 
 -- Set highlight on search
 vim.o.hlsearch = false
+vim.o.incsearch = true
+
+-- Disable line wrap
+vim.o.wrap = false
+
+-- Blocky Chocky Thockty Cursor
+vim.o.guicursor = ''
 
 -- Make line numbers default
 vim.wo.number = true
+vim.wo.relativenumber = true
+
+vim.o.tabstop = 4
+vim.o.softtabstop = 4
+vim.o.shiftwidth = 4
+vim.o.expandtab = true
+
+vim.o.smartindent = true
+
+vim.o.colorcolumn = 80
+vim.o.scrolloff = 8
+vim.o.sidescrolloff = 8
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -220,7 +209,7 @@ vim.o.smartcase = true
 vim.wo.signcolumn = 'yes'
 
 -- Decrease update time
-vim.o.updatetime = 250
+vim.o.updatetime = 50
 vim.o.timeout = true
 vim.o.timeoutlen = 300
 
