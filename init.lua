@@ -502,6 +502,7 @@ cmp.setup {
 
 
 -- my keymaps
-vim.api.nvim_set_keymap('i', 'jk', '<Esc>', {});
-vim.api.nvim_set_keymap('i', 'kj', '<Esc>', {});
-
+vim.keymap.set('i', 'jk', '<Esc>', {});
+vim.keymap.set('i', 'kj', '<Esc>', {});
+vim.keymap.set({'n', 'x'}, 'B', '0', {});
+vim.keymap.set({'n', 'x'}, 'E', '$', {});
