@@ -44,16 +44,17 @@ vim.g.maplocalleader = ' '
 -- Set powershell as the terminal
 local powershell_options = {
   shell = vim.fn.executable "pwsh" == 1 and "pwsh" or "powershell",
-  shellcmdflag =
-  "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;",
+  shellcmdflag = "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;",
   shellredir = "-RedirectStandardOutput %s -NoNewWindow -Wait",
   shellpipe = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode",
   shellquote = "",
   shellxquote = "",
 }
+
 for option, value in pairs(powershell_options) do
   vim.opt[option] = value
 end
+
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -87,42 +88,30 @@ require('lazy').setup({
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
-  {
-    -- LSP Configuration & Plugins
-    {
-      'VonHeikemen/lsp-zero.nvim',
-      branch = 'v1.x',
-      dependencies = {
-        -- LSP Support
-        { 'neovim/nvim-lspconfig' },             -- Required
-        { 'williamboman/mason.nvim' },           -- Optional
-        { 'williamboman/mason-lspconfig.nvim' }, -- Optional
+  { -- LSP Configuration & Plugins
+    'neovim/nvim-lspconfig',
+    dependencies = {
+      -- Automatically install LSPs to stdpath for neovim
+      'williamboman/mason.nvim',
+      'williamboman/mason-lspconfig.nvim',
 
-        -- Autocompletion
-        { 'hrsh7th/nvim-cmp' },         -- Required
-        { 'hrsh7th/cmp-nvim-lsp' },     -- Required
-        { 'hrsh7th/cmp-buffer' },       -- Optional
-        { 'hrsh7th/cmp-path' },         -- Optional
-        { 'saadparwaiz1/cmp_luasnip' }, -- Optional
-        { 'hrsh7th/cmp-nvim-lua' },     -- Optional
+      -- Useful status updates for LSP
+      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
+      { 'j-hui/fidget.nvim', opts = {} },
 
-        -- Snippets
-        { 'L3MON4D3/LuaSnip' },             -- Required
-        { 'rafamadriz/friendly-snippets' }, -- Optional
-      }
-    }
+      -- Additional lua configuration, makes nvim stuff amazing!
+      'folke/neodev.nvim',
+    },
   },
 
-  {
-    -- Autocompletion
+  { -- Autocompletion
     'hrsh7th/nvim-cmp',
     dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
   },
 
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim',          opts = {} },
-  {
-    -- Adds git releated signs to the gutter, as well as utilities for managing changes
+  { -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
       -- See `:help gitsigns.txt`
@@ -169,8 +158,7 @@ require('lazy').setup({
     end,
   },
 
-  {
-    -- Set lualine as statusline
+  { -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
     -- See `:help lualine.txt`
     opts = {
@@ -183,8 +171,7 @@ require('lazy').setup({
     },
   },
 
-  {
-    -- Add indentation guides even on blank lines
+  { -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
@@ -213,8 +200,7 @@ require('lazy').setup({
     end,
   },
 
-  {
-    -- Highlight, edit, and navigate code
+  { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
@@ -326,8 +312,8 @@ require('telescope').setup {
   defaults = {
     mappings = {
       i = {
-            ['<C-u>'] = false,
-            ['<C-d>'] = false,
+        ['<C-u>'] = false,
+        ['<C-d>'] = false,
       },
     },
   },
@@ -379,41 +365,41 @@ require('nvim-treesitter.configs').setup {
       lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
       keymaps = {
         -- You can use the capture groups defined in textobjects.scm
-            ['aa'] = '@parameter.outer',
-            ['ia'] = '@parameter.inner',
-            ['af'] = '@function.outer',
-            ['if'] = '@function.inner',
-            ['ac'] = '@class.outer',
-            ['ic'] = '@class.inner',
+        ['aa'] = '@parameter.outer',
+        ['ia'] = '@parameter.inner',
+        ['af'] = '@function.outer',
+        ['if'] = '@function.inner',
+        ['ac'] = '@class.outer',
+        ['ic'] = '@class.inner',
       },
     },
     move = {
       enable = true,
       set_jumps = true, -- whether to set jumps in the jumplist
       goto_next_start = {
-            [']m'] = '@function.outer',
-            [']]'] = '@class.outer',
+        [']m'] = '@function.outer',
+        [']]'] = '@class.outer',
       },
       goto_next_end = {
-            [']M'] = '@function.outer',
-            [']['] = '@class.outer',
+        [']M'] = '@function.outer',
+        [']['] = '@class.outer',
       },
       goto_previous_start = {
-            ['[m'] = '@function.outer',
-            ['[['] = '@class.outer',
+        ['[m'] = '@function.outer',
+        ['[['] = '@class.outer',
       },
       goto_previous_end = {
-            ['[M'] = '@function.outer',
-            ['[]'] = '@class.outer',
+        ['[M'] = '@function.outer',
+        ['[]'] = '@class.outer',
       },
     },
     swap = {
       enable = true,
       swap_next = {
-            ['<leader>a'] = '@parameter.inner',
+        ['<leader>a'] = '@parameter.inner',
       },
       swap_previous = {
-            ['<leader>A'] = '@parameter.inner',
+        ['<leader>A'] = '@parameter.inner',
       },
     },
   },
@@ -425,20 +411,8 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Go to next diagnos
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
 
--- LSP Settings
-local lsp = require('lsp-zero').preset({
-  name = 'minimal',
-  set_lsp_keymaps = false,
-  manage_nvim_cmp = true,
-  suggest_lsp_servers = false,
-})
-lsp.ensure_installed({
-  'tsserver',
-  'rust_analyzer',
-})
-
--- Create a callback function that will be called in lsp-zero's ".on_attach" function
--- It is used to
+-- LSP settings.
+--  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
   -- to define small helper and utility functions so you don't have to repeat yourself
@@ -451,7 +425,7 @@ local on_attach = function(_, bufnr)
       desc = 'LSP: ' .. desc
     end
 
-    vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc, remap = false })
+    vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
@@ -482,8 +456,97 @@ local on_attach = function(_, bufnr)
   end, { desc = 'Format current buffer with LSP' })
 end
 
-lsp.on_attach(on_attach)
--- (Optional) Configure lua language server for neovim
-lsp.nvim_workspace()
+-- Enable the following language servers
+--  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
+--
+--  Add any additional override configuration in the following tables. They will be passed to
+--  the `settings` field of the server config. You must look up that documentation yourself.
+local servers = {
+  -- clangd = {},
+  -- gopls = {},
+  -- pyright = {},
+  -- rust_analyzer = {},
+  -- tsserver = {},
 
-lsp.setup()
+  lua_ls = {
+    Lua = {
+      workspace = { checkThirdParty = false },
+      telemetry = { enable = false },
+    },
+  },
+}
+
+-- Setup neovim lua configuration
+require('neodev').setup()
+
+-- nvim-cmp supports additional completion capabilities, so broadcast that to servers
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+
+-- Setup mason so it can manage external tooling
+require('mason').setup()
+
+-- Ensure the servers above are installed
+local mason_lspconfig = require 'mason-lspconfig'
+
+mason_lspconfig.setup {
+  ensure_installed = vim.tbl_keys(servers),
+}
+
+mason_lspconfig.setup_handlers {
+  function(server_name)
+    require('lspconfig')[server_name].setup {
+      capabilities = capabilities,
+      on_attach = on_attach,
+      settings = servers[server_name],
+    }
+  end,
+}
+
+-- nvim-cmp setup
+local cmp = require 'cmp'
+local luasnip = require 'luasnip'
+
+luasnip.config.setup {}
+
+cmp.setup {
+  snippet = {
+    expand = function(args)
+      luasnip.lsp_expand(args.body)
+    end,
+  },
+  mapping = cmp.mapping.preset.insert {
+    ['<C-d>'] = cmp.mapping.scroll_docs( -4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete {},
+    ['<CR>'] = cmp.mapping.confirm {
+      behavior = cmp.ConfirmBehavior.Replace,
+      select = true,
+    },
+    ['<Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
+    ['<S-Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.jumpable( -1) then
+        luasnip.jump( -1)
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
+  },
+  sources = {
+    { name = 'nvim_lsp' },
+    { name = 'luasnip' },
+  },
+}
+
+-- The line beneath this is called `modeline`. See `:help modeline`
+-- vim: ts=2 sts=2 sw=2 et
