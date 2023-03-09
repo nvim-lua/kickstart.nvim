@@ -37,9 +37,19 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = 'Scroll up' })
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
+-- Use "<leader>y" if you want the yank to go to the system register, otherwise yank only applies to nvim
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = 'Yank to system clipboard' })
+vim.keymap.set("n", "<leader>Y", [["+Y]], { desc = 'Yank to end of line into system clipboard' })
+
+-- Use "<leader>dd" to delete without saving to a register
+vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
 -- When highlighting a word and pasting over it, don't lose current register value
 vim.keymap.set("x", "<leader>pp", [["_dP]], { desc = 'Paste without losing register' })
+
+-- Navigate quick fix commands
+vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
+vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 
 -- Set terminal keymaps
 vim.keymap.set('t', '<esc>', [[<C-\><C-n>]])
@@ -85,7 +95,8 @@ vim.o.mouse = 'a'
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.o.clipboard = 'unnamedplus'
+--  I'm going to use a keymap "<leader>y" for system clipboard to keep the two separate
+-- vim.o.clipboard = 'unnamedplus'
 
 -- Enable break indent
 vim.o.breakindent = true
