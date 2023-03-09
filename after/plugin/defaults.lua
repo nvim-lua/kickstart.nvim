@@ -22,6 +22,25 @@ vim.keymap.set('n', '<leader>bx', ':BufferClose<CR>', { desc = 'Close Buffer' })
 -- Enter explorer
 vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, { desc = 'Explorer' })
 
+-- Move text around in visual mode and indent properly
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+
+-- Append line below you to the end of current line with a space, and don't move cursor
+vim.keymap.set("n", "J", "mzJ`z", { desc = 'Append line below to current line' })
+
+-- Scroll with cursor in middle of screen
+vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = 'Scroll down' })
+vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = 'Scroll up' })
+
+-- Navigate search terms, but keep cursor in middle of screen
+vim.keymap.set("n", "n", "nzzzv")
+vim.keymap.set("n", "N", "Nzzzv")
+
+
+-- When highlighting a word and pasting over it, don't lose current register value
+vim.keymap.set("x", "<leader>pp", [["_dP]], { desc = 'Paste without losing register' })
+
 -- Set terminal keymaps
 vim.keymap.set('t', '<esc>', [[<C-\><C-n>]])
 vim.keymap.set('t', 'jk', [[<C-\><C-n>]])
@@ -55,7 +74,8 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = "Open diagn
 
 -- Set highlight on search
 vim.o.hlsearch = false
-
+-- To demonstrate, try typing /vim.* = and see what happens
+vim.opt.incsearch = true
 -- Make line numbers default
 vim.wo.number = true
 
