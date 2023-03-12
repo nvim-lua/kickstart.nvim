@@ -81,7 +81,7 @@ return {
 }
 ```
 
-This will install the tree plugin and add the command `:NeoTree` for you. You can explore the documentation at [neo-tree.nvim](https://github.com/nvim-neo-tree/neo-tree.nvim) for more information.
+This will install the tree plugin and add the command `:Neotree` for you. You can explore the documentation at [neo-tree.nvim](https://github.com/nvim-neo-tree/neo-tree.nvim) for more information.
 
 #### Example: Adding a file to change default options
 
