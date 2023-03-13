@@ -2,4 +2,12 @@
 --  I promise not to create any merge conflicts in this directory :)
 --
 -- See the kickstart.nvim README for more information
-return {}
+return {
+  'folke/tokyonight.nvim',
+  config = function()
+    require('tokyonight').setup({
+      transparent = true
+    })
+    vim.cmd [[colorscheme tokyonight-storm]]
+  end
+}
