@@ -203,7 +203,7 @@ vim.o.mouse = 'a'
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.o.clipboard = 'unnamedplus'
+-- vim.o.clipboard = 'unnamedplus'
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -233,8 +233,14 @@ vim.o.termguicolors = true
 vim.o.relativenumber = true
 vim.o.number = true
 
+-- Set scroll offsets to have additional space when scrolling
 vim.o.scrolloff = 5
 vim.o.sidescrolloff = 10
+
+-- Set tabs to 2 spaces
+vim.o.tabstop = 2
+vim.o.softtabstop = 2
+vim.o.shiftwidth = 2
 
 -- [[ Basic Keymaps ]]
 
@@ -406,7 +412,7 @@ local on_attach = function(_, bufnr)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
 
-  nmap('<leader>f', function() vim.lsp.buf.format { async = true } end, 'Auto [F]ormat')
+  nmap('<leader><C-f>', function() vim.lsp.buf.format { async = true } end, 'Auto [F]ormat')
 end
 
 -- Enable the following language servers
