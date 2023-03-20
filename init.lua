@@ -117,13 +117,12 @@ require('lazy').setup({
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
+    dependencies = { 'RRethy/nvim-base16' },
     -- See `:help lualine.txt`
     opts = {
+      theme = 'base16',
       options = {
-        icons_enabled = false,
-        theme = 'base16',
-        component_separators = '|',
-        section_separators = '',
+        icons_enabled = true,
       },
     },
   },
@@ -403,6 +402,8 @@ end
 --
 --  Add any additional override configuration in the following tables. They will be passed to
 --  the `settings` field of the server config. You must look up that documentation yourself.
+--
+--  https://github.com/williamboman/mason-lspconfig.nvim/blob/main/doc/server-mapping.md
 local servers = {
   clangd = {},
   cssls = {},
@@ -410,7 +411,6 @@ local servers = {
   gopls = {},
   pyright = {},
   rust_analyzer = {},
-  stylelint_lsp = {},
   tsserver = {},
   lua_ls = {
     Lua = {
