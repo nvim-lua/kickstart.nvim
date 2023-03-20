@@ -27,6 +27,7 @@ return {
 
     local lsp_formatting = function(bufnr)
       vim.lsp.buf.format({
+        -- async = true,
         filter = function(client)
           -- apply whatever logic you want (in this example, we'll only use null-ls)
           return client.name == "null-ls"
@@ -39,6 +40,9 @@ return {
     local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
     local on_attach = function(client, bufnr)
+      -- if client.name == "tsserver" or client.name == "cssls" or client.name == "html" then
+      --   client.server_capabilities.documentFormattingProvider = false -- 0.8 and later
+      -- end
       if client.supports_method("textDocument/formatting") then
         vim.api.nvim_clear_autocmds({group = augroup, buffer = bufnr})
         vim.api.nvim_create_autocmd("BufWritePre", {
