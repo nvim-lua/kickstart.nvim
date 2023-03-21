@@ -1,3 +1,20 @@
+local set = vim.opt
+
+set.colorcolumn = "80,120"
+set.cursorline = true
+set.expandtab = true
+set.list = true
+set.swapfile = false
+set.writebackup = false
+set.wrap = false
+-- vim.o.sessionoptions = "resize,winpos,winsize,buffers,tabpages,folds,curdir,help"
+set.shiftwidth = 2
+-- vim.o.showmode = true
+set.splitbelow = true
+set.splitright = true
+set.tabstop = 2
+set.textwidth = 80
+
 -- prev/next tab
 vim.keymap.set('n', 'H', 'gT')
 vim.keymap.set('n', 'L', 'gt')
