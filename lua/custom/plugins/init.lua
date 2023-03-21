@@ -19,8 +19,10 @@ return {
 
   {
     "kristijanhusak/vim-dirvish-git",
-    dependencies = {
-      "justinmk/vim-dirvish",
-    },
+    dependencies = { "justinmk/vim-dirvish", },
   },
+  {
+    "jose-elias-alvarez/null-ls.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+  }
 }
