@@ -1,0 +1,1 @@
+return {'HenryNewcomer/vim-theme-papaya'}

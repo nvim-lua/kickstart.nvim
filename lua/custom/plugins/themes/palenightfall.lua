@@ -1,0 +1,1 @@
+return {'JoosepAlviste/palenightfall.nvim'}

@@ -1,0 +1,1 @@
+return { 'kaicataldo/material.vim', branch = 'main' }
