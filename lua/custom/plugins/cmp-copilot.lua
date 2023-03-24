@@ -1,10 +1,10 @@
 return {
-  'hrsh7th/cmp-nvim-lsp',
+  'hrsh7th/cmp-copilot',
   config = function()
     local cmp = require 'cmp'
     local config = cmp.get_config()
     table.insert(config.sources, {
-      name = 'nvim_lsp',
+      name = 'copilot',
       option = {},
     })
     cmp.setup(config)
