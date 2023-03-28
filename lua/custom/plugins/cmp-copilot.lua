@@ -1,8 +1,7 @@
 return {
-  'zbirenbaum/copilot-cmp',
+  'hrsh7th/cmp-copilot',
   dependencies = { 'zbirenbaum/copilot.lua', 'github/copilot.vim' },
   config = function()
-    require('copilot_cmp').setup()
     local cmp = require 'cmp'
     local config = cmp.get_config()
     table.insert(config.sources, {

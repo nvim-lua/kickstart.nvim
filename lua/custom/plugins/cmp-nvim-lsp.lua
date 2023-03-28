@@ -5,7 +5,6 @@ return {
     local config = cmp.get_config()
     table.insert(config.sources, {
       name = 'nvim_lsp',
-      option = {},
     })
     cmp.setup(config)
   end,
