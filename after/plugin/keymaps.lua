@@ -22,4 +22,4 @@ keymap("n", "<C-k>", "<C-w>k", opts)
 keymap("n", "<C-l>", "<C-w>l", opts)
 
 -- Nvimtree
-keymap('n', '<leader>n', ":NvimTreeToggle<cr>")
+keymap('n', '<leader>n', ":NvimTreeToggle<cr>", {silent = true, noremap = true})
