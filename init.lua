@@ -41,6 +41,8 @@ P.S. You can delete this when you're done too. It's your config now :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+vim.o.termguicolors = true
+
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -114,13 +116,28 @@ require('lazy').setup({
     },
   },
 
+  -- {
+  --   -- Theme inspired by Atom
+  --   'navarasu/onedark.nvim',
+  --   priority = 1000,
+  --   config = function()
+  --     require('onedark').setup {
+  --       style = 'dark',
+  --       code_style = {
+  --         comments = 'none',
+  --       },
+  --     }
+  --     require('onedark').load()
+  --     vim.cmd.colorscheme 'onedark'
+  --   end,
+  -- },
   {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
+    'morhetz/gruvbox',
     config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
+      vim.cmd.colorscheme 'gruvbox'
+      vim.o.background = 'dark'
+      vim.o.termguicolors = true
+    end
   },
 
   {
@@ -130,7 +147,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'gruvbox',
         component_separators = '|',
         section_separators = '',
       },
@@ -306,7 +323,8 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'help', 'vim', 'ruby' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'help', 'vim', 'ruby', 'http',
+    'css' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = true,
@@ -419,6 +437,9 @@ local on_attach = function(_, bufnr)
   end, { desc = 'Format current buffer with LSP' })
 
   nmap('<leader><C-f>', function() vim.lsp.buf.format { async = true } end, 'Auto [F]ormat')
+
+  nmap('[e', vim.diagnostic.goto_next, 'Next [e]rror')
+  nmap(']e', vim.diagnostic.goto_prev, 'Prev [e]rror')
 end
 
 -- Enable the following language servers
@@ -452,6 +473,7 @@ local servers = {
       telemetry = { enable = false },
     },
   },
+  tailwindcss = {},
 }
 
 -- Setup neovim lua configuration
