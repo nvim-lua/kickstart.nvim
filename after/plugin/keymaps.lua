@@ -22,4 +22,38 @@ keymap("n", "<C-k>", "<C-w>k", opts)
 keymap("n", "<C-l>", "<C-w>l", opts)
 
 -- Nvimtree
-keymap('n', '<leader>n', ":NvimTreeToggle<cr>", {silent = true, noremap = true})
+keymap('n', '<leader>n', ":NvimTreeToggle<cr>", {silent = true, noremap = true, desc = "Toggle [N]vimtree"})
+
+-- UndoTree
+keymap('n', '<leader>u', ":UndotreeToggle<cr>", { desc = "Toggle [U]ndo tree" })
+
+-- Move line
+keymap('v', 'J', ":m '>+1<CR>gv=gv", {noremap = true})
+keymap('v', 'K', ":m '<-2<CR>gv=gv", {noremap = true})
+
+-- Search cursor in the middle
+keymap('n', 'n', "nzzzv")
+keymap('n', 'N', "Nzzzv")
+
+-- replace without copy current selected
+keymap('x', '<leader>p', "\"_dp")
+
+-- yank to system clipboard
+keymap('n', '<leader>y', "\"+y", { desc = "[Y]ank to clipboard" })
+keymap('v', '<leader>y', "\"+y", { desc = "[Y]ank to clipboard" })
+keymap('n', '<leader>Y', "\"+Y", { desc = "[Y]ank to clipboard" })
+
+-- Quickfix
+keymap('n', "<C-k>", "<cmd>cnext<CR>zz")
+keymap('n', "<C-j>", "<cmd>cprev<CR>zz")
+keymap('n', "<leader>k", "<cmd>lnext<CR>zz")
+keymap('n', "<leader>j", "<cmd>lprev<CR>zz")
+
+-- replace selected word in the file
+keymap("n", "<leader>R", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "[R]eplace words in the file" })
+
+-- Make file executable
+keymap("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make [X]ecutable file" })
+
+-- Do nothing
+keymap("n", "Q", "<nop>")
