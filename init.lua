@@ -230,6 +230,9 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+-- NOTE: you can add any custom options in the `lua/custom/options.lua`
+-- file to avoid any conflict with this file if you're interested in keeping
+-- up-to-date with whatever is in the kickstart repo.
 pcall(require, 'custom/options')
 
 -- [[ Basic Keymaps ]]
@@ -242,6 +245,9 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
+-- NOTE: you can add any custom keybinding in the `lua/custom/keybindings.lua`
+-- file to avoid any conflict with this file if you're interested in keeping
+-- up-to-date with whatever is in the kickstart repo.
 pcall(require, 'custom/keybindings')
 
 -- [[ Highlight on yank ]]
@@ -500,4 +506,7 @@ cmp.setup {
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 
+-- NOTE: you can add any custom `vim` command in the `lua/custom/commands.lua`
+-- file to avoid any conflict with this file if you're interested in keeping
+-- up-to-date with whatever is in the kickstart repo.
 pcall(require, 'custom/commands')
