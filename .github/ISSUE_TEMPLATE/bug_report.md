@@ -8,6 +8,7 @@ assignees: ''
 ---
 
 <!-- Any bug report not following this template will be immediately closed. Thanks -->
+
 ## Describe the bug
 A clear and concise description of what the bug is.
 
