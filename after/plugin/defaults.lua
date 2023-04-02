@@ -16,25 +16,25 @@ set.tabstop = 2
 set.textwidth = 80
 
 -- prev/next tab
-vim.keymap.set('n', 'H', 'gT')
-vim.keymap.set('n', 'L', 'gt')
+vim.keymap.set('n', 'H', 'gT', { desc = 'Tab Left' })
+vim.keymap.set('n', 'L', 'gt', { desc = 'Tab Right' })
 
 -- line bubbling
 
 -- nnoremap <C-j> :m .+1<CR>==
 -- nnoremap <C-k> :m .-2<CR>==
-vim.keymap.set('n', '<C-j>', ':m .+1<CR>==', { noremap = true })
-vim.keymap.set('n', '<C-k>', ':m .-2<CR>==', { noremap = true }) -- conflicts with "signature help" from LSP
+vim.keymap.set('n', '<C-j>', ':m .+1<CR>==', { noremap = true, desc = 'Bubble Down' })
+vim.keymap.set('n', '<C-k>', ':m .-2<CR>==', { noremap = true, desc = 'Bubble Up' }) -- conflicts with "signature help" from LSP
 
 -- inoremap <C-j> <ESC>:m .+1<CR>==gi
 -- inoremap <C-k> <ESC>:m .-2<CR>==gi
-vim.keymap.set('i', '<C-j>', '<ESC>:m .+1<CR>==gi', { noremap = true })
-vim.keymap.set('i', '<C-k>', '<ESC>:m .-2<CR>==gi', { noremap = true })
+vim.keymap.set('i', '<C-j>', '<ESC>:m .+1<CR>==gi', { noremap = true, desc = 'Bubble Down' })
+vim.keymap.set('i', '<C-k>', '<ESC>:m .-2<CR>==gi', { noremap = true, desc = 'Bubble Up' })
 
 -- vnoremap <C-j> :m '>+1<CR>gv=gv
 -- vnoremap <C-k> :m '<-2<CR>gv=gv
-vim.keymap.set('v', '<C-k>', ":m '<-2<CR>gv=gv", { noremap = true })
-vim.keymap.set('v', '<C-j>', ":m '>+1<CR>gv=gv", { noremap = true })
+vim.keymap.set('v', '<C-k>', ":m '<-2<CR>gv=gv", { noremap = true, desc = 'Bubble Down' })
+vim.keymap.set('v', '<C-j>', ":m '>+1<CR>gv=gv", { noremap = true, desc = 'Bubble Up' })
 
 vim.o.inccommand = "nosplit"
 
@@ -64,5 +64,13 @@ null_ls.setup({
     null_ls.builtins.formatting.prettierd,
   },
 })
+
+-- nvim-autopairs + nvim-cmp
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+local cmp = require('cmp')
+cmp.event:on(
+  'confirm_done',
+  cmp_autopairs.on_confirm_done()
+)
 
 -- vim: ts=2 sts=2 sw=2 et
