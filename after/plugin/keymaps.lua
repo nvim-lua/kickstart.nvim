@@ -22,14 +22,14 @@ keymap("n", "<C-k>", "<C-w>k", opts)
 keymap("n", "<C-l>", "<C-w>l", opts)
 
 -- Nvimtree
-keymap('n', '<leader>n', ":NvimTreeToggle<cr>", {silent = true, noremap = true, desc = "Toggle [N]vimtree"})
+keymap('n', '<leader>n', ":NvimTreeToggle<cr>", { silent = true, noremap = true, desc = "Toggle [N]vimtree" })
 
 -- UndoTree
 keymap('n', '<leader>u', ":UndotreeToggle<cr>", { desc = "Toggle [U]ndo tree" })
 
 -- Move line
-keymap('v', 'J', ":m '>+1<CR>gv=gv", {noremap = true})
-keymap('v', 'K', ":m '<-2<CR>gv=gv", {noremap = true})
+keymap('v', 'J', ":m '>+1<CR>gv=gv", { noremap = true })
+keymap('v', 'K', ":m '<-2<CR>gv=gv", { noremap = true })
 
 -- Search cursor in the middle
 keymap('n', 'n', "nzzzv")
@@ -49,6 +49,9 @@ keymap('n', "<C-j>", "<cmd>cprev<CR>zz")
 keymap('n', "<leader>k", "<cmd>lnext<CR>zz")
 keymap('n', "<leader>j", "<cmd>lprev<CR>zz")
 
+-- Open folder in workspace in tmux session
+keymap("n", "<leader>op", "<cmd>silent !tmux neww tmux-sessionizer<CR>", { desc = "[O]pen [P]roject" })
+
 -- replace selected word in the file
 keymap("n", "<leader>R", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "[R]eplace words in the file" })
 
@@ -57,3 +60,7 @@ keymap("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make [
 
 -- Do nothing
 keymap("n", "Q", "<nop>")
+
+-- Bufdelete.vim
+keymap("n", "<leader>bd", ":Bdelete<CR>", {desc = "[B]uffer [D]elete"})
+keymap("n", "<leader>bw", ":Bwipeout<CR>", {desc = "[B]uffer [W]ipeout"})
