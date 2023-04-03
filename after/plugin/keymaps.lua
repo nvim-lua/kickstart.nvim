@@ -62,5 +62,8 @@ keymap("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make [
 keymap("n", "Q", "<nop>")
 
 -- Bufdelete.vim
-keymap("n", "<leader>bd", ":Bdelete<CR>", {desc = "[B]uffer [D]elete"})
-keymap("n", "<leader>bw", ":Bwipeout<CR>", {desc = "[B]uffer [W]ipeout"})
+keymap("n", "<leader>bd", ":Bdelete<CR>", { desc = "[B]uffer [D]elete" })
+keymap("n", "<leader>bw", ":Bwipeout<CR>", { desc = "[B]uffer [W]ipeout" })
+
+-- Delete buffer except current
+keymap("n", "<leader>be", ":%bd|e#|bd#<CR>", { silent = true, desc = "[B]uffer Delete [E]xcept" })
