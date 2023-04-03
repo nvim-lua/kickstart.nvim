@@ -39,13 +39,29 @@ vim.keymap.set('v', '<C-j>', ":m '>+1<CR>gv=gv", { noremap = true, desc = 'Bubbl
 vim.o.inccommand = "nosplit"
 
 vim.diagnostic.config({
-  virtual_text = {
-    -- source = "always",  -- Or "if_many"
-    prefix = '●', -- Could be '■', '▎', 'x'
-  },
   severity_sort = true,
+  virtual_text = {
+    source = false,
+    prefix = '●',
+    format = function()
+      return ""
+    end,
+  },
   float = {
-    source = "always", -- Or "if_many"
+    source = "always",
+    -- close_events = { 'BufLeave', 'CursorMoved', 'InsertEnter', 'FocusLost' },
+    format = function(diagnostic)
+      if diagnostic.source == 'eslint' then
+        return string.format(
+          '%s [%s]',
+          diagnostic.message,
+          -- shows the name of the rule
+          diagnostic.user_data.lsp.code
+        )
+      end
+
+      return string.format('%s [%s]', diagnostic.message, diagnostic.source)
+    end,
   },
 })
 
@@ -56,6 +72,8 @@ for type, icon in pairs(signs) do
 end
 
 -- null-ls
+-- @see: https://github.com/jay-babu/mason-null-ls.nvim
+-- might want to just use mason-null-ls. not yet sure what the advantage is.
 
 local null_ls = require("null-ls")
 
