@@ -6,5 +6,6 @@ return {
   'fatih/vim-go',
   'mbbill/undotree',
   'famiu/bufdelete.nvim',
-  'ThePrimeagen/harpoon'
+  'ThePrimeagen/harpoon',
+  'ThePrimeagen/vim-be-good'
 }

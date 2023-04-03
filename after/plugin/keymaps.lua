@@ -67,3 +67,6 @@ keymap("n", "<leader>bw", ":Bwipeout<CR>", { desc = "[B]uffer [W]ipeout" })
 
 -- Delete buffer except current
 keymap("n", "<leader>be", ":%bd|e#|bd#<CR>", { silent = true, desc = "[B]uffer Delete [E]xcept" })
+
+-- Vim Be Good
+keymap("n", "<leader>vbg", ":VimBeGood<CR>", { desc = "[V]im [B]e [G]ood" })
