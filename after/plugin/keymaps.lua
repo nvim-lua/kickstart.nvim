@@ -44,10 +44,10 @@ keymap('v', '<leader>y', "\"+y", { desc = "[Y]ank to clipboard" })
 keymap('n', '<leader>Y', "\"+Y", { desc = "[Y]ank to clipboard" })
 
 -- Quickfix
-keymap('n', "<C-k>", "<cmd>cnext<CR>zz")
-keymap('n', "<C-j>", "<cmd>cprev<CR>zz")
-keymap('n', "<leader>k", "<cmd>lnext<CR>zz")
-keymap('n', "<leader>j", "<cmd>lprev<CR>zz")
+-- keymap('n', "<C-k>", "<cmd>cnext<CR>zz")
+-- keymap('n', "<C-j>", "<cmd>cprev<CR>zz")
+-- keymap('n', "<leader>k", "<cmd>lnext<CR>zz")
+-- keymap('n', "<leader>j", "<cmd>lprev<CR>zz")
 
 -- Open folder in workspace in tmux session
 keymap("n", "<leader>op", "<cmd>silent !tmux neww tmux-sessionizer<CR>", { desc = "[O]pen [P]roject" })
