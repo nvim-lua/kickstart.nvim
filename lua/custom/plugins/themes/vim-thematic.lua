@@ -1,7 +1,7 @@
 return {
-	"preservim/vim-thematic",
-	config = function()
-		vim.cmd([[
+  'preservim/vim-thematic',
+  config = function()
+    vim.cmd [[
 let g:thematic#themes = {
 \ 'afterglow'  : {
 \                  'typeface': 'FuraCode Nerd Font Mono Light',
@@ -46,6 +46,8 @@ let g:thematic#themes = {
 \                },
 \ 'noirbuddy'  : {
 \                },
+\ 'nordic'  : {
+\                },
 \ 'off'  : {
 \                  'typeface': 'Cascadia Code Regular',
 \                },
@@ -80,6 +82,8 @@ let g:thematic#themes = {
 \                  'linespace': 6,
 \                },
 \ 'pinkmare'  : {
+\                },
+\ 'rose-pine'  : {
 \                },
 \ 'sacredforest'  : {
 \                  'typeface': 'FuraCode Nerd Font Mono Light',
@@ -116,7 +120,6 @@ let g:thematic#defaults = {
 \ }
 
 let g:thematic#theme_name = 'catppuccin'
-]])
-	end
+]]
+  end,
 }
-
