@@ -4,12 +4,12 @@ return {
 	build = "deno task --quiet build:fast",
 	init = function()
 		require("peek").setup({
-			auto_load = false,
+			auto_load = true,
 			close_on_bdelete = true,
 			syntax = false,
-			theme = "dark",
+			theme = "light",
 			update_on_change = true,
-            app = {'google-stable-chrome', '--new-window'},
+            app = 'webview',
             filetype = {"markdown"},
 			throttle_at = 200000,
 			throttle_time = "auto",
