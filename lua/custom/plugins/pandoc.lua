@@ -1,9 +1,6 @@
-
 return {
-  "vim-pandoc/vim-pandoc",
-  version = "*",  
-  event = "VeryLazy",
-  dependencies = {
-    'vim-pandoc/vim-pandoc-syntax'
-  },
+  'aspeddro/pandoc.nvim',
+  config = function()
+    require("pandoc").setup {}
+  end,
 }
