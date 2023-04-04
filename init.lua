@@ -233,7 +233,6 @@ vim.o.termguicolors = true
 -- NOTE: you can add any custom options in the `lua/custom/options.lua`
 -- file to avoid any conflict with this file if you're interested in keeping
 -- up-to-date with whatever is in the kickstart repo.
-pcall(require, 'custom/options')
 
 -- [[ Basic Keymaps ]]
 
@@ -248,7 +247,6 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 -- NOTE: you can add any custom keybinding in the `lua/custom/keybindings.lua`
 -- file to avoid any conflict with this file if you're interested in keeping
 -- up-to-date with whatever is in the kickstart repo.
-pcall(require, 'custom/keybindings')
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -509,4 +507,6 @@ cmp.setup {
 -- NOTE: you can add any custom `vim` command in the `lua/custom/commands.lua`
 -- file to avoid any conflict with this file if you're interested in keeping
 -- up-to-date with whatever is in the kickstart repo.
+pcall(require, 'custom/options')
+pcall(require, 'custom/keybindings')
 pcall(require, 'custom/commands')
