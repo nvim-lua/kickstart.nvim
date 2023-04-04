@@ -197,6 +197,7 @@ vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
+vim.o.linebreak = true
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
