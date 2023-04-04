@@ -172,6 +172,12 @@ require('lazy').setup({
     end,
   },
 
+  { -- Jumping between windows
+    'ThePrimeagen/harpoon',
+    dependencies = {
+      'nvim-lua/plenary.nvim'
+    },
+  },
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -230,15 +236,23 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+-- Always keep cursor verical centered
+vim.o.scrolloff = 999
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
--- Remap for dealing with word wrap
-vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+-- Harpoon keymaps
+
+vim.keymap.set('n', '<C-a>', require('harpoon.mark').add_file, { desc = "Add file to harpoon list" })
+vim.keymap.set('n', '<C-e>', require('harpoon.ui').toggle_quick_menu, { desc = "Toggle harpoon quick menu" })
+vim.keymap.set('n', '<leader>1', function() require('harpoon.ui').nav_file(1) end, { desc = "Navigate to file at posistion 1" })
+vim.keymap.set('n', '<leader>2', function() require('harpoon.ui').nav_file(2) end, { desc = "Navigate to file at posistion 2" })
+vim.keymap.set('n', '<leader>3', function() require('harpoon.ui').nav_file(3) end, { desc = "Navigate to file at posistion 3" })
+vim.keymap.set('n', '<leader>4', function() require('harpoon.ui').nav_file(4) end, { desc = "Navigate to file at posistion 4" })
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -288,7 +302,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'help', 'vim' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
