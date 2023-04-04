@@ -244,7 +244,7 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
--- NOTE: you can add any custom keybinding in the `lua/custom/keybindings.lua`
+-- NOTE: you can add any custom keybinding in the `lua/custom/map.lua`
 -- file to avoid any conflict with this file if you're interested in keeping
 -- up-to-date with whatever is in the kickstart repo.
 
@@ -504,9 +504,9 @@ cmp.setup {
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 
--- NOTE: you can add any custom `vim` command in the `lua/custom/commands.lua`
+-- NOTE: you can add any additional custom `vim` config in the `lua/custom/after.lua`
 -- file to avoid any conflict with this file if you're interested in keeping
 -- up-to-date with whatever is in the kickstart repo.
 pcall(require, 'custom/options')
-pcall(require, 'custom/keybindings')
-pcall(require, 'custom/commands')
+pcall(require, 'custom/map')
+pcall(require, 'custom/after')
