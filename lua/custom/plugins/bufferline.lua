@@ -11,7 +11,7 @@ return {
                     offsets = { { filetype = "NvimTree", text = "File Explorer", padding = 1 } },
                     separator_style = "thin", -- | "thick" | "thin" | { 'any', 'any' },
                     always_show_bufferline = true,
-                    sort_by = "insert_after_current"
+                    sort_by = "insert_at_end"
                 }
             }
         end
