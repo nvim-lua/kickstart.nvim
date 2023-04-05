@@ -1,5 +1,6 @@
-print("hello from options.lua")
--- [[ Setting options ]]
+-------------------------------------
+-- Options
+-------------------------------------
 -- See `:help vim.o`
 -- See also https://vimdoc.sourceforge.net/htmldoc/options.html#'incsearch'
 
@@ -41,7 +42,7 @@ vim.bo.tabstop = 8
 vim.g.background = 'dark'
 vim.g.backup = true
 vim.g.belloff = "all"
-vim.g.cmdheight = 2 -- more space in the neovim command line for displaying messages
+vim.g.cmdheight = 2
 vim.g.compatible = false
 vim.g.errorbells = false
 vim.g.guifont = "monospace:h17"
