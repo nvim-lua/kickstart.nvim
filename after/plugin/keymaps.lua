@@ -10,6 +10,8 @@ function keymap(mode, lhs, rhs, opts)
     vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
 
+vim.cmd [[command ClearBufferExceptCurrent silent! execute "%bd|e#|bd#"]]
+
 -- Navigate buffers
 keymap("n", "<S-l>", ":bnext<CR>", opts)
 keymap("n", "<S-h>", ":bprevious<CR>", opts)
@@ -36,18 +38,14 @@ keymap('n', 'n', "nzzzv")
 keymap('n', 'N', "Nzzzv")
 
 -- replace without copy current selected
-keymap('x', '<leader>p', "\"_dp")
+-- keymap('x', '<leader>p', "\"_dp")
+keymap("x", "<leader>p", [["_dP]])
+
 
 -- yank to system clipboard
 keymap('n', '<leader>y', "\"+y", { desc = "[Y]ank to clipboard" })
 keymap('v', '<leader>y', "\"+y", { desc = "[Y]ank to clipboard" })
 keymap('n', '<leader>Y', "\"+Y", { desc = "[Y]ank to clipboard" })
-
--- Quickfix
--- keymap('n', "<C-k>", "<cmd>cnext<CR>zz")
--- keymap('n', "<C-j>", "<cmd>cprev<CR>zz")
--- keymap('n', "<leader>k", "<cmd>lnext<CR>zz")
--- keymap('n', "<leader>j", "<cmd>lprev<CR>zz")
 
 -- Open folder in workspace in tmux session
 keymap("n", "<leader>op", "<cmd>silent !tmux neww tmux-sessionizer<CR>", { desc = "[O]pen [P]roject" })
@@ -66,7 +64,11 @@ keymap("n", "<leader>bd", ":Bdelete<CR>", { desc = "[B]uffer [D]elete" })
 keymap("n", "<leader>bw", ":Bwipeout<CR>", { desc = "[B]uffer [W]ipeout" })
 
 -- Delete buffer except current
-keymap("n", "<leader>be", ":%bd|e#|bd#<CR>", { silent = true, desc = "[B]uffer Delete [E]xcept" })
+-- keymap("n", "<leader>be", ":%bd|e#|bd#<CR>", { silent = true, desc = "[B]uffer Delete [E]xcept" })
+keymap("n", "<leader>be", ":ClearBufferExceptCurrent<CR>", { silent = true, desc = "[B]uffer Delete [E]xcept" })
 
 -- Vim Be Good
 keymap("n", "<leader>vbg", ":VimBeGood<CR>", { desc = "[V]im [B]e [G]ood" })
+
+-- Update source
+keymap("n", "<leader><leader>", ":so<CR>")
