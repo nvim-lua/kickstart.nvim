@@ -245,6 +245,7 @@ vim.o.scrolloff = 999
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
+vim.keymap.set('n', '<leader>pv', '<cmd>Ex<CR>', { desc = "Back to file tree" })
 -- Harpoon keymaps
 
 vim.keymap.set('n', '<C-a>', require('harpoon.mark').add_file, { desc = "Add file to harpoon list" })
