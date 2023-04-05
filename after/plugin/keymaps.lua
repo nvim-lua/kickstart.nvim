@@ -50,6 +50,9 @@ keymap('n', '<leader>Y', "\"+Y", { desc = "[Y]ank to clipboard" })
 -- Open folder in workspace in tmux session
 keymap("n", "<leader>op", "<cmd>silent !tmux neww tmux-sessionizer<CR>", { desc = "[O]pen [P]roject" })
 
+-- Search cheat sheet
+keymap("n", "<leader>ch", "<cmd>silent !tmux neww tmux-cht.sh<CR>", { desc = "[C]heat [S]heet" })
+
 -- replace selected word in the file
 keymap("n", "<leader>R", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "[R]eplace words in the file" })
 
