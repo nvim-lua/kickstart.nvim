@@ -36,6 +36,7 @@ return {
     "kristijanhusak/vim-dirvish-git",
     dependencies = { "justinmk/vim-dirvish", },
   },
+
   {
     "jose-elias-alvarez/null-ls.nvim",
     lazy = true,
