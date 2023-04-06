@@ -85,16 +85,16 @@ local directions = require('hop.hint').HintDirection
 
 vim.keymap.set(
   '',
-  'h',
+  '<leader>h',
   function() hop.hint_char1({ direction = directions.AFTER_CURSOR }) end,
-  { remap = true }
+  { remap = true, desc = '[H]opChar1 forwards' }
 )
 
 vim.keymap.set(
   '',
-  'H',
+  '<leader>H',
   function() hop.hint_char1({ direction = directions.BEFORE_CURSOR }) end,
-  { remap = true }
+  { remap = true, desc = '[H]opChar1 backwards' }
 )
 
 -- vim: ts=2 sts=2 sw=2 et
