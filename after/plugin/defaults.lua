@@ -7,9 +7,7 @@ set.list = true
 set.swapfile = false
 set.writebackup = false
 set.wrap = false
--- vim.o.sessionoptions = "resize,winpos,winsize,buffers,tabpages,folds,curdir,help"
 set.shiftwidth = 2
--- vim.o.showmode = true
 set.splitbelow = true
 set.splitright = true
 set.tabstop = 2
@@ -20,19 +18,10 @@ vim.keymap.set('n', 'H', 'gT', { desc = 'Tab Left' })
 vim.keymap.set('n', 'L', 'gt', { desc = 'Tab Right' })
 
 -- line bubbling
-
--- nnoremap <C-j> :m .+1<CR>==
--- nnoremap <C-k> :m .-2<CR>==
 vim.keymap.set('n', '<C-j>', ':m .+1<CR>==', { noremap = true, desc = 'Bubble Down' })
 vim.keymap.set('n', '<C-k>', ':m .-2<CR>==', { noremap = true, desc = 'Bubble Up' }) -- conflicts with "signature help" from LSP
-
--- inoremap <C-j> <ESC>:m .+1<CR>==gi
--- inoremap <C-k> <ESC>:m .-2<CR>==gi
 vim.keymap.set('i', '<C-j>', '<ESC>:m .+1<CR>==gi', { noremap = true, desc = 'Bubble Down' })
 vim.keymap.set('i', '<C-k>', '<ESC>:m .-2<CR>==gi', { noremap = true, desc = 'Bubble Up' })
-
--- vnoremap <C-j> :m '>+1<CR>gv=gv
--- vnoremap <C-k> :m '<-2<CR>gv=gv
 vim.keymap.set('v', '<C-k>', ":m '<-2<CR>gv=gv", { noremap = true, desc = 'Bubble Down' })
 vim.keymap.set('v', '<C-j>', ":m '>+1<CR>gv=gv", { noremap = true, desc = 'Bubble Up' })
 
@@ -49,13 +38,11 @@ vim.diagnostic.config({
   },
   float = {
     source = "always",
-    -- close_events = { 'BufLeave', 'CursorMoved', 'InsertEnter', 'FocusLost' },
     format = function(diagnostic)
       if diagnostic.source == 'eslint' then
         return string.format(
           '%s [%s]',
           diagnostic.message,
-          -- shows the name of the rule
           diagnostic.user_data.lsp.code
         )
       end
@@ -74,9 +61,7 @@ end
 -- null-ls
 -- @see: https://github.com/jay-babu/mason-null-ls.nvim
 -- might want to just use mason-null-ls. not yet sure what the advantage is.
-
 local null_ls = require("null-ls")
-
 null_ls.setup({
   sources = {
     null_ls.builtins.formatting.prettierd,
@@ -89,6 +74,27 @@ local cmp = require('cmp')
 cmp.event:on(
   'confirm_done',
   cmp_autopairs.on_confirm_done()
+)
+
+-- neogen
+vim.keymap.set('n', '<leader>nf', ":Neogen func<CR>", { noremap = true, desc = '[D]ocument [F]unction' })
+
+-- hop
+local hop = require('hop')
+local directions = require('hop.hint').HintDirection
+
+vim.keymap.set(
+  '',
+  'h',
+  function() hop.hint_char1({ direction = directions.AFTER_CURSOR }) end,
+  { remap = true }
+)
+
+vim.keymap.set(
+  '',
+  'H',
+  function() hop.hint_char1({ direction = directions.BEFORE_CURSOR }) end,
+  { remap = true }
 )
 
 -- vim: ts=2 sts=2 sw=2 et
