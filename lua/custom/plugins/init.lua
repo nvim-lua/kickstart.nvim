@@ -8,7 +8,7 @@ return {
 
   {
     "nvim-tree/nvim-web-devicons",
-    opts = {}
+    lazy = true
   },
 
   {
@@ -84,6 +84,7 @@ return {
       local null_ls = require("null-ls")
       null_ls.setup({
         sources = {
+          null_ls.builtins.formatting.lua_format,
           null_ls.builtins.formatting.prettierd,
         },
       })
