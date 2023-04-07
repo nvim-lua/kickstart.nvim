@@ -47,8 +47,8 @@ keymap('n', '<leader>y', "\"+y", { desc = "[Y]ank to clipboard" })
 keymap('v', '<leader>y', "\"+y", { desc = "[Y]ank to clipboard" })
 keymap('n', '<leader>Y', "\"+Y", { desc = "[Y]ank to clipboard" })
 
--- Open folder in workspace in tmux session
-keymap("n", "<leader>op", "<cmd>silent !tmux neww tmux-sessionizer<CR>", { desc = "[O]pen [P]roject" })
+-- -- Open folder in workspace in tmux session
+-- keymap("n", "<leader>op", "<cmd>silent !tmux neww tmux-sessionizer<CR>", { desc = "[O]pen [P]roject" })
 
 -- Search cheat sheet
 keymap("n", "<leader>ch", "<cmd>silent !tmux neww tmux-cht.sh<CR>", { desc = "[C]heat [S]heet" })

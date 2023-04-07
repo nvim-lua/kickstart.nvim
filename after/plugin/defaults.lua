@@ -10,5 +10,3 @@ vim.opt.scrolloff = 8
 vim.opt.colorcolumn = "80"
 
 vim.opt.swapfile = false
-
-vim.o.cmdheight = 2
