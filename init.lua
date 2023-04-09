@@ -467,18 +467,6 @@ local servers = {
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
-  efm = {
-    init_options = { documentFormatting = true },
-    settings = {
-      rootMarkers = { ".git/" },
-      languages = {
-        prettier = {
-          formatCommand = 'prettierd "${INPUT}"',
-          formatStdin = true,
-        }
-      }
-    }
-  },
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
