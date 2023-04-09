@@ -186,7 +186,7 @@ require('lazy').setup({
     end,
   },
 
-  {  
+  {
     "glepnir/lspsaga.nvim",
     event = "LspAttach",
     dependencies = {
@@ -195,9 +195,17 @@ require('lazy').setup({
       { "nvim-treesitter/nvim-treesitter" }
     },
     config = function()
-      require("lspsaga").setup({})
+      require("lspsaga").setup {
+        lightbulb = {
+          enable = false
+        },
+        request_timeout = 5000
+      }
     end,
   },
+
+  { "onsails/lspkind.nvim" },
+
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
@@ -315,7 +323,8 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'help', 'vim', 'markdown', 'markdown_inline' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'help', 'vim', 'markdown',
+    'markdown_inline' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = true,
@@ -433,9 +442,13 @@ local on_attach = function(_, bufnr)
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, '[W]orkspace [L]ist Folders')
 
-
   -- Toggle outline
-  nkeymap("<leader>o", ":Lspsaga outline<CR>", '[O]utline')
+  nmap("<leader>o", ":Lspsaga outline<CR>", '[O]utline')
+
+  -- Show cursor diagnostic
+  -- nmap("<S-f>", ":Lspsaga show_cursor_diagnostics<CR>", 'Show cursor diagnostics')
+  nmap("<S-f>", ":Lspsaga show_line_diagnostics<CR>", 'Show cursor diagnostics')
+
 
   -- Create a command `:Format` local to the LSP buffer
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
@@ -454,7 +467,18 @@ local servers = {
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
-
+  efm = {
+    init_options = { documentFormatting = true },
+    settings = {
+      rootMarkers = { ".git/" },
+      languages = {
+        prettier = {
+          formatCommand = 'prettierd "${INPUT}"',
+          formatStdin = true,
+        }
+      }
+    }
+  },
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -493,6 +517,7 @@ mason_lspconfig.setup_handlers {
 -- nvim-cmp setup
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
+local lspkind = require 'lspkind'
 
 luasnip.config.setup {}
 
@@ -534,6 +559,11 @@ cmp.setup {
     { name = 'luasnip' },
     { name = 'buffer' },
   },
+  formatting = {
+    format = lspkind.cmp_format({
+      maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+    })
+  }
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`

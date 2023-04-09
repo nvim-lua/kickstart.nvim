@@ -55,6 +55,9 @@ keymap("n", "<leader>ch", "<cmd>silent !tmux neww tmux-cht.sh<CR>", { desc = "[C
 
 -- replace selected word in the file
 keymap("n", "<leader>R", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "[R]eplace words in the file" })
+-- delete line with selected in the file
+keymap("n", "<leader>dl", [[:g/\<<C-r><C-w>\>/d]],
+    { desc = "[D]elete [L]ine with selected word in the file" })
 
 -- Make file executable
 keymap("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make [X]ecutable file" })
