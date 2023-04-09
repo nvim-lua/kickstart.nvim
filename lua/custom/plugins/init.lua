@@ -8,5 +8,7 @@ return {
   'famiu/bufdelete.nvim',
   'ThePrimeagen/harpoon',
   'ThePrimeagen/vim-be-good',
-  'stevearc/dressing.nvim'
+  'stevearc/dressing.nvim',
+  "onsails/lspkind.nvim",
+  "rafamadriz/friendly-snippets"
 }

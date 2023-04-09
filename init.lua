@@ -98,7 +98,7 @@ require('lazy').setup({
   {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
-    dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip', 'hrsh7th/cmp-buffer' },
+    dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip', 'hrsh7th/cmp-buffer', 'hrsh7th/cmp-path' },
   },
 
   -- Useful plugin to show you pending keybinds.
@@ -203,10 +203,6 @@ require('lazy').setup({
       }
     end,
   },
-
-  { "onsails/lspkind.nvim" },
-
-
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -509,6 +505,8 @@ local lspkind = require 'lspkind'
 
 luasnip.config.setup {}
 
+require("luasnip.loaders.from_vscode").lazy_load()
+
 cmp.setup {
   snippet = {
     expand = function(args)
@@ -542,14 +540,16 @@ cmp.setup {
       end
     end, { 'i', 's' }),
   },
-  sources = {
+  sources = cmp.config.sources({
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
     { name = 'buffer' },
-  },
+    { name = 'path' },
+  }),
   formatting = {
     format = lspkind.cmp_format({
       maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+      ellipsis_char = "...",
     })
   }
 }
