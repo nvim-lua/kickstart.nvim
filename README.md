@@ -3,7 +3,7 @@
 ### Python Devbox
 
 Prepare your python development environment in container. This devbox contains neovim with kickstarter.nvim config
-This will have all the plugins in kickstart.nvim installed in it. I have added python debug support and neotree as extra
+I have added python debug support and neotree as extra
 
 ```
 # Build your devbox image
