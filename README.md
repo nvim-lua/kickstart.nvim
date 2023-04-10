@@ -2,7 +2,7 @@
 
 ### Python Devbox
 
-There is a docker file available , using that you can create your development environment
+Prepare your python development environment using neovim with kickstarter.nvim config
 This will have all the plugins in kickstart.nvim installed in it. I have added python debug support and neotree as extra
 
 ```
