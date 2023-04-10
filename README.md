@@ -1,5 +1,29 @@
 # kickstart.nvim
 
+### Python Devbox
+
+There is a docker file available , using that you can create your development environment
+This will have kickstart.nvim plugin installed in it.
+
+```
+docker build -t devbox -f devbox.Dockerfile .
+
+# To run the container in background
+
+docker run -td --name mydevbox -v $(pwd):/workspaces devbox
+# -v $(pwd) is used to create volume inside container . IF you run from the folder where source code is present then your container will have source code in it. You can use this for development
+
+docker exec -it mydevbox /bin/bash
+# To enter into devbox 
+
+# You can do debug using standard keys used in vscode
+F5 - to start debug
+F9 - to toggle debug breakpointer
+F10 - step over
+F11 - step into
+To stop - Shift + f5
+```
+
 ### Introduction
 
 A starting point for Neovim that is:
