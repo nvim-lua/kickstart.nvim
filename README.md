@@ -1,4 +1,4 @@
-# Python Devbox with kickstart.nvim - 
+# Python Devbox with kickstart.nvim 
 
 ### Python Devbox
 
@@ -11,7 +11,7 @@ docker build -t devbox -f devbox.Dockerfile .
 # To run the container in background
 
 docker run -td --name mydevbox -v $(pwd):/workspaces devbox
-# -v $(pwd) is used to create volume inside container . IF you run from the folder where source code is present then your container will have source code in it. You can use this for development
+# -v $(pwd) is used to create volume inside container . IF you run from the folder where your source code is available then your container will have source code in it. You can use this as development box
 
 docker exec -it mydevbox /bin/bash
 # To enter into devbox 
