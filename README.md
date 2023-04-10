@@ -21,7 +21,8 @@ F5 - to start debug
 F9 - to toggle debug breakpointer
 F10 - step over
 F11 - step into
-To stop - Shift + f5
+shift + F11 - step out
+
 ```
 
 ### Introduction
