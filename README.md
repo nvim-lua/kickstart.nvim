@@ -43,7 +43,11 @@ inside container doesn't need debugpy to be installed inside venv
 #### Debug
 <img width="893" alt="image" src="https://user-images.githubusercontent.com/21053120/231185848-1aec925d-bf80-4548-8d70-d3d1760e3563.png">
 
-
+##### Notes:
+```
+I am using Termius terminal emulator.
+Using Fira code font 
+```
 
 ## Few VSCode bindings are done
 ```
@@ -51,3 +55,4 @@ Debugger key binding are like vscode`
 Ctrl+b will toggle neotree(which is file explorer)
 Ctrl+j will toggle terminal (using toggleterm)
 ```
+
