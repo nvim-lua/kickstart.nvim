@@ -34,6 +34,8 @@ But thankfully with the kickstarter.nvim
 inside container doesn't need debugpy to be installed inside venv
 
 ## Few VSCode bindings are done
-Debugger key binding are like vscode
+```
+Debugger key binding are like vscode`
 Ctrl+b will toggle neotree(which is file explorer)
 Ctrl+j will toggle terminal (using toggleterm)
+```
