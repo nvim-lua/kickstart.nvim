@@ -33,6 +33,11 @@ I tried other NEOVIM distro but always stuck at the point where i have to use de
 But thankfully with the kickstarter.nvim 
 inside container doesn't need debugpy to be installed inside venv
 
+## Screenshots
+<img width="914" alt="image" src="https://user-images.githubusercontent.com/21053120/231184071-a42a1585-1a48-4795-885b-d30e85c4407c.png">
+![image](https://user-images.githubusercontent.com/21053120/231184431-b8e5d6b6-7948-4a5f-aeea-5bbf85adb3e6.png)
+
+
 ## Few VSCode bindings are done
 ```
 Debugger key binding are like vscode`
