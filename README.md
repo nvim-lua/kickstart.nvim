@@ -29,5 +29,11 @@ For nvim configuration refer : https://github.com/nvim-lua/kickstart.nvim
 
 ## Debuypy inside venv problem is resolved
 The reason why this Pydevbox is created to solve the problem of installing debugpy inside virtual env.
-I tried other VIM distro but always stuck at the point where i have to use debugpy.But thankfully with the kickstarter.nvim 
+I tried other NEOVIM distro but always stuck at the point where i have to use debugpy.
+But thankfully with the kickstarter.nvim 
 inside container doesn't need debugpy to be installed inside venv
+
+## Few VSCode bindings are done
+Debugger key binding are like vscode
+Ctrl+b will toggle neotree(which is file explorer)
+Ctrl+j will toggle terminal (using toggleterm)
