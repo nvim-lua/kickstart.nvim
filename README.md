@@ -35,7 +35,7 @@ inside container doesn't need debugpy to be installed inside venv
 
 ## Screenshots
 <img width="914" alt="image" src="https://user-images.githubusercontent.com/21053120/231184071-a42a1585-1a48-4795-885b-d30e85c4407c.png">
-![image](https://user-images.githubusercontent.com/21053120/231184431-b8e5d6b6-7948-4a5f-aeea-5bbf85adb3e6.png)
+<img width="632" alt="image" src="https://user-images.githubusercontent.com/21053120/231185219-24d9c6e3-2dfc-4fe6-93e8-138a979723be.png">
 
 
 ## Few VSCode bindings are done
