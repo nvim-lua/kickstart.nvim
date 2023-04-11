@@ -34,8 +34,14 @@ But thankfully with the kickstarter.nvim
 inside container doesn't need debugpy to be installed inside venv
 
 ## Screenshots
+#### screen with terminal and filetree
 <img width="914" alt="image" src="https://user-images.githubusercontent.com/21053120/231184071-a42a1585-1a48-4795-885b-d30e85c4407c.png">
+#### start debug
 <img width="632" alt="image" src="https://user-images.githubusercontent.com/21053120/231185219-24d9c6e3-2dfc-4fe6-93e8-138a979723be.png">
+
+#### Debug
+<img width="893" alt="image" src="https://user-images.githubusercontent.com/21053120/231185848-1aec925d-bf80-4548-8d70-d3d1760e3563.png">
+
 
 
 ## Few VSCode bindings are done
