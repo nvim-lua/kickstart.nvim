@@ -89,7 +89,7 @@ return {
       request = 'launch',
       name = 'My custom launch configuration',
       program = '${file}',
-      cwd = '${fileDirName}'
+      cwd = vim.fn.getcwd()
     })
     
 end,
