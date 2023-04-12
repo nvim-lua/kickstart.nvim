@@ -82,7 +82,15 @@ return {
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
     -- Install python specific config
-    require('dap-python').setup() -- Debug with default settings. 
+    require('dap-python').setup() -- Debug with default settings.
+    -- We can set the config by below mechanism as well
+    table.insert(require('dap').configurations.python, {
+      type = 'python',
+      request = 'launch',
+      name = 'My custom launch configuration',
+      program = '${file}',
+      cwd = '${fileDirName}'
+    })
     
 end,
 }
