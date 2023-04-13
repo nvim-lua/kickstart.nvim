@@ -10,7 +10,7 @@ end
 require('packer').startup(function(use)
   -- Package manager
   use 'wbthomason/packer.nvim'
- 
+
   use {'akinsho/bufferline.nvim', tag = "v3.*", requires = 'nvim-tree/nvim-web-devicons'}
 
   -- AI code completion
@@ -155,8 +155,8 @@ vim.cmd [[colorscheme onedark]]
 vim.o.cursorline = true
 vim.o.cursorcolumn = true
 -- vim.cmd[[highlight CursorColumn ctermbg=0 guibg=lightgrey]]
-vim.cmd[[highlight CursorLine ctermfg=White ctermbg=Yellow cterm=bold guifg=white guibg=slategray gui=bold]]
-vim.cmd[[highlight CursorColumn ctermfg=White ctermbg=Yellow cterm=bold guifg=white guibg=slategray gui=bold]]
+--vim.cmd[[highlight CursorLine ctermfg=White ctermbg=Yellow cterm=bold guifg=white guibg=slategray gui=bold]]
+--vim.cmd[[highlight CursorColumn ctermfg=White ctermbg=Yellow cterm=bold guifg=white guibg=slategray gui=bold]]
 -- vim.cmhighlight guibg=#000050 guifg=fg guibg=#000050 guifg=fg [[highlight CursorLine ctermfg=White ctermbg=Yellow cterm=bold guifg=white guibg=slategray gui=bold]]
 --
 -- highlight CursorColumn ctermfg=White ctermbg=Yellow cterm=bold guifg=white guibg=yellow gui=bold
@@ -477,7 +477,7 @@ cmp.setup {
 require'lspconfig'.grammarly.setup({
     capabilities = capabilities,
     on_attach = on_attach,
-    cmd = { "/home/droscigno/GitHub/grammarly/extension/node_modules/.bin/grammarly-languageserver", "--stdio" },
+    cmd = { "/work/grammarly/extension/node_modules/.bin/grammarly-languageserver", "--stdio" },
     filetypes = { "markdown", "text" },
     init_options = {
         clientId = 'client_BaDkMgx4X19X9UxxYRCXZo',
@@ -485,7 +485,7 @@ require'lspconfig'.grammarly.setup({
 })
 
 -- Use Marksman for markdown
---require'lspconfig'.marksman.setup{}
+require'lspconfig'.marksman.setup{}
 
 -- Set the filetype of *.mdx files to markdown
 require("filetype").setup({
