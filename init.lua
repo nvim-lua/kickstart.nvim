@@ -57,6 +57,15 @@ if not vim.loop.fs_stat(lazypath) then
   }
 end
 vim.opt.rtp:prepend(lazypath)
+-- nvim-tree setup
+
+-- disable netrw at the very start of your init.lua (strongly advised)
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- set termguicolors to enable highlight groups
+vim.opt.termguicolors = true
+-- [end] nvim-tree setup
 
 -- NOTE: Here is where you install your plugins.
 --  You can configure plugins using the `config` key.
@@ -65,9 +74,6 @@ vim.opt.rtp:prepend(lazypath)
 --    as they will be available in your neovim runtime.
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
-
-  -- Catppuccin theme
-  { "catppuccin/nvim", name = "catppuccin" },
 
   -- Git related plugins
   'tpope/vim-fugitive',
@@ -427,6 +433,8 @@ local servers = {
 -- Setup neovim lua configuration
 require('neodev').setup()
 
+-- nvim-tree config empty setup using defaults
+require("nvim-tree").setup()
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
