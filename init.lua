@@ -181,10 +181,9 @@ require('lazy').setup({
   --    up-to-date with whatever is in the kickstart repo.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  --
-  --    An additional note is that if you only copied in the `init.lua`, you can just comment this line
-  --    to get rid of the warning telling you that there are not plugins in `lua/custom/plugins/`.
-  { import = 'custom.plugins' },
+  --    To insall plugins in future, use the below line as syntax, replace custom.plugins with plugin your are
+  --    willing to install. As mentioned, for additional information, visit the github page mentioed above.
+  --{ import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
