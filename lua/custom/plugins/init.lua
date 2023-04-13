@@ -75,8 +75,35 @@ return {
   },
 
   {
+    "folke/trouble.nvim",
+    cond = false,
+    requires = "nvim-tree/nvim-web-devicons",
+    config = function()
+      require("trouble").setup {}
+      vim.keymap.set("n", "<leader>xx", "<cmd>TroubleToggle<cr>",
+        { silent = true, noremap = true }
+      )
+      vim.keymap.set("n", "<leader>xw", "<cmd>TroubleToggle workspace_diagnostics<cr>",
+        { silent = true, noremap = true }
+      )
+      vim.keymap.set("n", "<leader>xd", "<cmd>TroubleToggle document_diagnostics<cr>",
+        { silent = true, noremap = true }
+      )
+      vim.keymap.set("n", "<leader>xl", "<cmd>TroubleToggle loclist<cr>",
+        { silent = true, noremap = true }
+      )
+      vim.keymap.set("n", "<leader>xq", "<cmd>TroubleToggle quickfix<cr>",
+        { silent = true, noremap = true }
+      )
+      vim.keymap.set("n", "gR", "<cmd>TroubleToggle lsp_references<cr>",
+        { silent = true, noremap = true }
+      )
+    end
+  },
+
+  {
     "jose-elias-alvarez/null-ls.nvim",
-    lazy = true,
+    -- cond = false,
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
       -- @see: https://github.com/jay-babu/mason-null-ls.nvim
@@ -84,7 +111,13 @@ return {
       local null_ls = require("null-ls")
       null_ls.setup({
         sources = {
+          null_ls.builtins.code_actions.eslint_d,
+          null_ls.builtins.diagnostics.codespell,
+          -- null_ls.builtins.diagnostics.cspell,
+          -- null_ls.builtins.diagnostics.editorconfig_checker,
+          null_ls.builtins.diagnostics.eslint_d,
           null_ls.builtins.formatting.lua_format,
+          -- null_ls.builtins.formatting.prettier_eslint,
           null_ls.builtins.formatting.prettierd,
         },
       })
