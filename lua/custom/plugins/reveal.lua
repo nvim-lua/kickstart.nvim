@@ -1,21 +1,19 @@
--- RevealInFinder
--- ---------------------------------------------------------------------------
+vim.api.nvim_create_user_command('Reveal',
+  function()
+    -- local sysname = vim.loop.os_uname().sysname
 
-vim.cmd([[
-  function! s:RevealInFinder()
-    if filereadable(expand("%"))
-      let l:command = "xdg-open -R %"
-    elseif getftype(expand("%:p:h")) == "dir"
-      let l:command = "xdg-open %:p:h"
+    local currentBuffer = vim.api.nvim_get_current_buf()
+    local bufName = vim.api.nvim_buf_get_name(currentBuffer)
+    local ftype = vim.fn.getftype(bufName)
+
+    if ftype == "dir" then
+      os.execute("xdg-open " .. bufName)
     else
-      let l:command = "xdg-open ."
-    endif
-      execute ":silent! !" . l:command
-    redraw!
-  endfunction
-
-  command! Reveal call <SID>RevealInFinder()
-]])
+      os.execute("xdg-open " .. vim.fn.expand("%:p:h"))
+    end
+  end,
+  {}
+)
 
 vim.keymap.set('n', '<leader>R', ":Reveal<CR>", { noremap = true, desc = '[R]eveal with xdg-open' })
 

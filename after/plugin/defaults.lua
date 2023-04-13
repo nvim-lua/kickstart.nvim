@@ -13,6 +13,8 @@ set.splitright = true
 set.tabstop = 2
 set.textwidth = 80
 
+vim.o.inccommand = "nosplit"
+
 -- prev/next tab
 vim.keymap.set('n', 'H', 'gT', { desc = 'Tab Left' })
 vim.keymap.set('n', 'L', 'gt', { desc = 'Tab Right' })
@@ -25,7 +27,9 @@ vim.keymap.set('i', '<C-k>', '<ESC>:m .-2<CR>==gi', { noremap = true, desc = 'Bu
 vim.keymap.set('v', '<C-k>', ":m '<-2<CR>gv=gv", { noremap = true, desc = 'Bubble Down' })
 vim.keymap.set('v', '<C-j>', ":m '>+1<CR>gv=gv", { noremap = true, desc = 'Bubble Up' })
 
-vim.o.inccommand = "nosplit"
+-- additional telescope triggers
+vim.keymap.set('n', '<C-t>', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<C-g>', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 
 vim.diagnostic.config({
   severity_sort = true,
