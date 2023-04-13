@@ -118,7 +118,7 @@ Each PR, especially those which increase the line count, should have a descripti
 
 Installation may require installing build tools, and updating the run command for `telescope-fzf-native`
 
-See `telescope-fzf-native` documention for [more details](https://github.com/nvim-telescope/telescope-fzf-native.nvim#installation)
+See `telescope-fzf-native` documentation for [more details](https://github.com/nvim-telescope/telescope-fzf-native.nvim#installation)
 
 This requires:
 
