@@ -23,6 +23,20 @@ F10 - step over
 F11 - step into
 shift + F11 - step out
 
+
+### To install locally
+```
+git clone https://github.com/SamPosh/PyDevbox ~/.config/nvim --depth 1 && nvim
+```
+
+### To uninstall 
+```
+rm -rf ~/.config/nvim
+rm -rf ~/.local/share/nvim
+rm -rf ~/.cache/nvim
+
+```
+
 ```
 This repo is forked from Kickstarter.nvim 
 For nvim configuration refer : https://github.com/nvim-lua/kickstart.nvim
