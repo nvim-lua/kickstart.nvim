@@ -71,3 +71,4 @@ Ctrl+j will toggle terminal (using toggleterm)
 
 ### Problems need to be resolved yet
 copy/paste from the container to outside is not working. I am still trying to figure out a solution
+When a lengthy program runs dap ui closes and debug stop abruptly. I am still trying to figure out a solution
