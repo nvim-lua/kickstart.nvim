@@ -23,7 +23,7 @@ F10 - step over
 F11 - step into
 shift + F11 - step out
 
-
+```
 ### To install locally
 ```
 git clone https://github.com/SamPosh/PyDevbox ~/.config/nvim --depth 1 && nvim
