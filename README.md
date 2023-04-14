@@ -37,7 +37,6 @@ rm -rf ~/.cache/nvim
 
 ```
 
-```
 This repo is forked from Kickstarter.nvim 
 For nvim configuration refer : https://github.com/nvim-lua/kickstart.nvim
 
