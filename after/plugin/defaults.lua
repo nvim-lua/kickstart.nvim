@@ -4,14 +4,16 @@ set.colorcolumn = "80,120"
 set.cursorline = true
 set.expandtab = true
 set.list = true
-set.swapfile = false
-set.writebackup = false
-set.wrap = false
 set.shiftwidth = 2
+-- set.spell = true
+-- set.spelllang = 'en_us'
 set.splitbelow = true
 set.splitright = true
+set.swapfile = false
 set.tabstop = 2
 set.textwidth = 80
+set.wrap = false
+set.writebackup = false
 
 vim.o.inccommand = "nosplit"
 
