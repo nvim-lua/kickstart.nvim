@@ -81,7 +81,7 @@ return {
 }
 ```
 
-This will install the tree plugin and add the command `:NeoTree` for you. You can explore the documentation at [neo-tree.nvim](https://github.com/nvim-neo-tree/neo-tree.nvim) for more information.
+This will install the tree plugin and add the command `:Neotree` for you. You can explore the documentation at [neo-tree.nvim](https://github.com/nvim-neo-tree/neo-tree.nvim) for more information.
 
 #### Example: Adding a file to change default options
 
@@ -118,7 +118,7 @@ Each PR, especially those which increase the line count, should have a descripti
 
 Installation may require installing build tools, and updating the run command for `telescope-fzf-native`
 
-See `telescope-fzf-native` documention for [more details](https://github.com/nvim-telescope/telescope-fzf-native.nvim#installation)
+See `telescope-fzf-native` documentation for [more details](https://github.com/nvim-telescope/telescope-fzf-native.nvim#installation)
 
 This requires:
 
