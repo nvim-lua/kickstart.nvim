@@ -71,7 +71,7 @@ return {
 
   {
     "kristijanhusak/vim-dirvish-git",
-    dependencies = { "justinmk/vim-dirvish", },
+    dependencies = { "justinmk/vim-dirvish" },
   },
 
   {
@@ -103,24 +103,35 @@ return {
 
   {
     "jose-elias-alvarez/null-ls.nvim",
-    -- cond = false,
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
-      -- @see: https://github.com/jay-babu/mason-null-ls.nvim
-      -- might want to just use mason-null-ls. not yet sure what the advantage is.
       local null_ls = require("null-ls")
+
       null_ls.setup({
         sources = {
           null_ls.builtins.code_actions.eslint_d,
           null_ls.builtins.diagnostics.codespell,
-          -- null_ls.builtins.diagnostics.cspell,
-          -- null_ls.builtins.diagnostics.editorconfig_checker,
           null_ls.builtins.diagnostics.eslint_d,
-          null_ls.builtins.formatting.lua_format,
-          -- null_ls.builtins.formatting.prettier_eslint,
           null_ls.builtins.formatting.prettierd,
         },
       })
     end
+  },
+
+  {
+    "jay-babu/mason-null-ls.nvim",
+    cond = false,
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = {
+      "williamboman/mason.nvim",
+      "jose-elias-alvarez/null-ls.nvim",
+    },
+    config = function()
+      require("mason-null-ls").setup({
+        ensure_installed = {},
+        automatic_installation = true,
+        automatic_setup = false,
+      })
+    end,
   }
 }
