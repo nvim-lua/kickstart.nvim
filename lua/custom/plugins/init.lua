@@ -7,6 +7,25 @@ return {
   { "tribela/vim-transparent" },
 
   {
+    "killtheliterate/nvim-reveal",
+    dev = false,
+    config = function()
+      require('nvim-reveal').setup {}
+    end
+  },
+
+  {
+    'norcalli/nvim-base16.lua',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      local base16 = require 'base16'
+
+      base16(base16.themes[vim.env.BASE16_THEME or "3024"], true)
+    end,
+  },
+
+  {
     "nvim-tree/nvim-web-devicons",
     lazy = true
   },
@@ -112,6 +131,7 @@ return {
           null_ls.builtins.code_actions.eslint_d,
           null_ls.builtins.diagnostics.codespell,
           null_ls.builtins.diagnostics.eslint_d,
+          null_ls.builtins.formatting.eslint_d,
           null_ls.builtins.formatting.prettierd,
         },
       })
