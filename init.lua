@@ -46,6 +46,7 @@ vim.g.maplocalleader = ' '
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
+local autocmd = vim.api.nvim_create_autocmd
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system {
     'git',
@@ -56,6 +57,10 @@ if not vim.loop.fs_stat(lazypath) then
     lazypath,
   }
 end
+autocmd('FileType', {
+  pattern = { 'go' },
+  command = 'setlocal indentkeys-=<:> indentkeys-=:'
+})
 vim.opt.rtp:prepend(lazypath)
 
 -- NOTE: Here is where you install your plugins.
@@ -178,6 +183,10 @@ require('lazy').setup({
       'nvim-lua/plenary.nvim'
     },
   },
+
+  { -- go tools
+    'darrikonn/vim-gofmt'
+  },
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -214,6 +223,9 @@ vim.o.clipboard = 'unnamedplus'
 
 -- Enable break indent
 vim.o.breakindent = true
+vim.o.tabstop = 2
+vim.o.sts = 2
+vim.o.sw = 2
 
 -- Save undo history
 vim.o.undofile = true
@@ -238,6 +250,7 @@ vim.o.termguicolors = true
 
 -- Always keep cursor verical centered
 vim.o.scrolloff = 999
+vim.o.relativenumber = true
 
 -- [[ Basic Keymaps ]]
 
@@ -245,7 +258,8 @@ vim.o.scrolloff = 999
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
-vim.keymap.set('n', '<leader>pv', '<cmd>Ex<CR>', { desc = "Back to file tree" })
+vim.keymap.set('n', '<leader>cv', '<cmd>Ex<CR>', { desc = "Back to file tree" })
+vim.keymap.set('n', '<leader>pv', '<cmd>Ex .<CR>', { desc = "Back to file tree one step" })
 -- Harpoon keymaps
 
 vim.keymap.set('n', '<C-a>', require('harpoon.mark').add_file, { desc = "Add file to harpoon list" })
