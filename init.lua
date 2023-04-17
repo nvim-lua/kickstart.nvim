@@ -73,6 +73,14 @@ require('lazy').setup({
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
+  -- Toggle term
+  {'akinsho/toggleterm.nvim', version = "*", config = true},
+
+  -- Barbar installation
+
+  {'romgrk/barbar.nvim',
+    dependencies = 'nvim-tree/nvim-web-devicons'},
+
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   { -- LSP Configuration & Plugins
@@ -86,6 +94,7 @@ require('lazy').setup({
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', opts = {} },
 
+
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
     },
@@ -94,6 +103,12 @@ require('lazy').setup({
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
     dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
+  },
+
+  -- Telescope file browser
+  {
+    "nvim-telescope/telescope-file-browser.nvim",
+    dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
   },
 
   -- Useful plugin to show you pending keybinds.
@@ -112,13 +127,7 @@ require('lazy').setup({
     },
   },
 
-  { -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
-  },
+  { "catppuccin/nvim", name = "catppuccin" }, 
 
   { -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
@@ -228,7 +237,257 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+
+-- Set barbar's options
+require'bufferline'.setup {
+  -- Enable/disable animations
+  animation = false,
+
+  -- Enable/disable auto-hiding the tab bar when there is a single buffer
+  auto_hide = false,
+
+  -- Enable/disable current/total tabpages indicator (top right corner)
+  tabpages = true,
+
+  -- Enables/disable clickable tabs
+  --  - left-click: go to buffer
+  --  - middle-click: delete buffer
+  clickable = true,
+
+  -- Excludes buffers from the tabline
+  exclude_ft = {'javascript'},
+  exclude_name = {'package.json'},
+
+  -- A buffer to this direction will be focused (if it exists) when closing the current buffer.
+  -- Valid options are 'left' (the default) and 'right'
+  focus_on_close = 'left',
+
+  -- Hide inactive buffers and file extensions. Other options are `alternate`, `current`, and `visible`.
+  --hide = {extensions = true, inactive = true},
+
+  -- Disable highlighting alternate buffers
+  highlight_alternate = false,
+
+  -- Disable highlighting file icons in inactive buffers
+  highlight_inactive_file_icons = false,
+
+  -- Enable highlighting visible buffers
+  highlight_visible = true,
+
+  icons = {
+    -- Configure the base icons on the bufferline.
+    buffer_index = false,
+    buffer_number = false,
+    button = '',
+    -- Enables / disables diagnostic symbols
+    diagnostics = {
+      [vim.diagnostic.severity.ERROR] = {enabled = true, icon = 'ﬀ'},
+      [vim.diagnostic.severity.WARN] = {enabled = false},
+      [vim.diagnostic.severity.INFO] = {enabled = false},
+      [vim.diagnostic.severity.HINT] = {enabled = true},
+    },
+    filetype = {
+      -- Sets the icon's highlight group.
+      -- If false, will use nvim-web-devicons colors
+      custom_colors = false,
+
+      -- Requires `nvim-web-devicons` if `true`
+      enabled = true,
+    },
+    separator = {left = '▎', right = ''},
+
+    -- Configure the icons on the bufferline when modified or pinned.
+    -- Supports all the base icon options.
+    modified = {button = '●'},
+    pinned = {button = '車'},
+
+    -- Configure the icons on the bufferline based on the visibility of a buffer.
+    -- Supports all the base icon options, plus `modified` and `pinned`.
+    alternate = {filetype = {enabled = false}},
+    current = {buffer_index = true},
+    inactive = {button = '×'},
+    visible = {modified = {buffer_number = false}},
+  },
+
+  -- If true, new buffers will be inserted at the start/end of the list.
+  -- Default is to insert after current buffer.
+  insert_at_end = false,
+  insert_at_start = false,
+
+  -- Sets the maximum padding width with which to surround each tab
+  maximum_padding = 1,
+
+  -- Sets the minimum padding width with which to surround each tab
+  minimum_padding = 1,
+
+  -- Sets the maximum buffer name length.
+  maximum_length = 30,
+
+  -- If set, the letters for each buffer in buffer-pick mode will be
+  -- assigned based on their name. Otherwise or in case all letters are
+  -- already assigned, the behavior is to assign letters in order of
+  -- usability (see order below)
+  semantic_letters = true,
+
+  -- New buffer letters are assigned in this order. This order is
+  -- optimal for the qwerty keyboard layout but might need adjustement
+  -- for other layouts.
+  letters = 'asdfjkl;ghnmxcvbziowerutyqpASDFJKLGHNMXCVBZIOWERUTYQP',
+
+  -- Sets the name of unnamed buffers. By default format is "[Buffer X]"
+  -- where X is the buffer number. But only a static string is accepted here.
+  no_name_title = nil,
+}
+require("catppuccin").setup({
+    flavour = "mocha", -- latte, frappe, macchiato, mocha
+    background = { -- :h background
+        light = "latte",
+        dark = "mocha",
+    },
+    transparent_background = false,
+    show_end_of_buffer = false, -- show the '~' characters after the end of buffers
+    term_colors = false,
+    dim_inactive = {
+        enabled = false,
+        shade = "dark",
+        percentage = 0.15,
+    },
+    no_italic = false, -- Force no italic
+    no_bold = false, -- Force no bold
+    styles = {
+        comments = { "italic" },
+        conditionals = { "italic" },
+        loops = {},
+        functions = {},
+        keywords = {},
+        strings = {},
+        variables = {},
+        numbers = {},
+        booleans = {},
+        properties = {},
+        types = {},
+        operators = {},
+    },
+    color_overrides = {},
+    custom_highlights = {},
+    integrations = {
+        cmp = true,
+        gitsigns = true,
+        nvimtree = true,
+        telescope = true,
+        notify = false,
+        mini = false,
+        -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+    },
+})
+
+-- setup must be called before loading
+vim.cmd.colorscheme "catppuccin"
+
 -- [[ Basic Keymaps ]]
+local opts = { noremap = true, silent = true }
+
+local term_opts = { silent = true }
+local keymap = vim.api.nvim_set_keymap
+
+
+-- Modes
+--   normal_mode = "n",
+--   insert_mode = "i",
+--   visual_mode = "v",
+--   visual_block_mode = "x",
+--   term_mode = "t",
+--   command_mode = "c",
+
+-- Rebind jk to exit insert mode
+keymap("i", "jk", "<Esc>", opts)
+-- Normal --
+-- Better window navigation
+keymap("n", "<C-h>", "<C-w>h", opts)
+keymap("n", "<C-j>", "<C-w>j", opts)
+keymap("n", "<C-k>", "<C-w>k", opts)
+keymap("n", "<C-l>", "<C-w>l", opts)
+
+keymap("n", "<leader>tt", ":Neotree<CR>", opts)
+keymap("n", "<F2>", ":ToggleTerm<CR>", opts)
+keymap("t", "<F2>", "exit<CR>", term_opts)
+
+-- Resize with arrows
+keymap("n", "<C-Up>", ":resize -2<CR>", opts)
+keymap("n", "<C-Down>", ":resize +2<CR>", opts)
+keymap("n", "<C-Left>", ":vertical resize -2<CR>", opts)
+keymap("n", "<C-Right>", ":vertical resize +2<CR>", opts)
+
+
+-- Visual --
+-- Stay in indent mode
+keymap("v", "<", "<gv", opts)
+keymap("v", ">", ">gv", opts)
+
+-- Move text up and down
+keymap("v", "<A-j>", ":m .+1<CR>==", opts)
+keymap("v", "<A-k>", ":m .-2<CR>==", opts)
+keymap("v", "p", '"_dP', opts)
+
+-- Visual Block --
+-- Move text up and down
+keymap("x", "J", ":move '>+1<CR>gv-gv", opts)
+keymap("x", "K", ":move '<-2<CR>gv-gv", opts)
+keymap("x", "<A-j>", ":move '>+1<CR>gv-gv", opts)
+keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
+
+-- Terminal --
+-- Better terminal navigation
+keymap("t", "<C-h>", "<C-\\><C-N><C-w>h", term_opts)
+keymap("t", "<C-j>", "<C-\\><C-N><C-w>j", term_opts)
+keymap("t", "<C-k>", "<C-\\><C-N><C-w>k", term_opts)
+keymap("t", "<C-l>", "<C-\\><C-N><C-w>l", term_opts)
+
+
+-- Barbar keymaps
+
+local map = vim.api.nvim_set_keymap
+
+-- Move to previous/next
+map('n', '<A-,>', '<Cmd>BufferPrevious<CR>', opts)
+map('n', '<A-.>', '<Cmd>BufferNext<CR>', opts)
+-- Re-order to previous/next
+map('n', '<A-<>', '<Cmd>BufferMovePrevious<CR>', opts)
+map('n', '<A->>', '<Cmd>BufferMoveNext<CR>', opts)
+-- Goto buffer in position...
+map('n', '<A-1>', '<Cmd>BufferGoto 1<CR>', opts)
+map('n', '<A-2>', '<Cmd>BufferGoto 2<CR>', opts)
+map('n', '<A-3>', '<Cmd>BufferGoto 3<CR>', opts)
+map('n', '<A-4>', '<Cmd>BufferGoto 4<CR>', opts)
+map('n', '<A-5>', '<Cmd>BufferGoto 5<CR>', opts)
+map('n', '<A-6>', '<Cmd>BufferGoto 6<CR>', opts)
+map('n', '<A-7>', '<Cmd>BufferGoto 7<CR>', opts)
+map('n', '<A-8>', '<Cmd>BufferGoto 8<CR>', opts)
+map('n', '<A-9>', '<Cmd>BufferGoto 9<CR>', opts)
+map('n', '<A-0>', '<Cmd>BufferLast<CR>', opts)
+-- Pin/unpin buffer
+map('n', '<A-p>', '<Cmd>BufferPin<CR>', opts)
+-- Close buffer
+map('n', '<A-c>', '<Cmd>BufferClose<CR>', opts)
+-- Wipeout buffer
+--                 :BufferWipeout
+-- Close commands
+--                 :BufferCloseAllButCurrent
+--                 :BufferCloseAllButPinned
+--                 :BufferCloseAllButCurrentOrPinned
+--                 :BufferCloseBuffersLeft
+--                 :BufferCloseBuffersRight
+-- Magic buffer-picking mode
+map('n', '<C-p>', '<Cmd>BufferPick<CR>', opts)
+-- Sort automatically by...
+map('n', '<Space>bb', '<Cmd>BufferOrderByBufferNumber<CR>', opts)
+map('n', '<Space>bd', '<Cmd>BufferOrderByDirectory<CR>', opts)
+map('n', '<Space>bl', '<Cmd>BufferOrderByLanguage<CR>', opts)
+map('n', '<Space>bw', '<Cmd>BufferOrderByWindowNumber<CR>', opts)
+
+
+
+
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
@@ -261,6 +520,46 @@ require('telescope').setup {
     },
   },
 }
+
+-- File browser configuration
+-- You don't need to set any of these options.
+-- IMPORTANT!: this is only a showcase of how you can set default options!
+require("telescope").setup {
+  extensions = {
+    file_browser = {
+      theme = "ivy",
+      -- disables netrw and use telescope-file-browser in its place
+      hijack_netrw = true,
+      mappings = {
+        ["i"] = {
+          -- your custom insert mode mappings
+        },
+        ["n"] = {
+          -- your custom normal mode mappings
+        },
+      },
+    },
+  },
+}
+-- To get telescope-file-browser loaded and working with telescope,
+-- you need to call load_extension, somewhere after setup function:
+require("telescope").load_extension "file_browser"
+
+-- File browser keymaps
+vim.api.nvim_set_keymap(
+  "n",
+  "<space>fb",
+  ":Telescope file_browser<CR>",
+  { noremap = true }
+)
+
+-- open file_browser with the path of the current buffer
+vim.api.nvim_set_keymap(
+  "n",
+  "<space>fb",
+  ":Telescope file_browser path=%:p:h select_buffer=true<CR>",
+  { noremap = true }
+)
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
