@@ -13,6 +13,12 @@ return {
   "tpope/vim-repeat",
   "JoosepAlviste/nvim-ts-context-commentstring",
   {
+    "lukas-reineke/virt-column.nvim",
+    opts = {
+      char = "┊"
+    },
+  },
+  {
     "dstein64/vim-startuptime",
     cmd = "StartupTime",
     config = function()
