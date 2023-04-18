@@ -12,6 +12,10 @@ vim.keymap.set('n', '<C-S-PageUp>', ':BufferLineMovePrev<CR>', opts)
 vim.keymap.set('n', '<leader>}', ':BufferLineMoveNext<CR>', opts)
 vim.keymap.set('n', '<leader>{', ':BufferLineMovePrev<CR>', opts)
 
+vim.keymap.set('n', '<leader>bp', ':BufferLineTogglePin<CR>', opts)
+vim.keymap.set('n', '<leader>bP', '<Cmd>BufferLineGroupClose ungrouped<CR>',
+    { silent = true, noremap = true, desc = 'Delete non-pinned buffers' })
+
 for i = 1, 9, 1 do
     vim.keymap.set('n', '<leader>' .. i, '<cmd>BufferLineGoToBuffer ' .. i .. '<CR>', opts)
 end
