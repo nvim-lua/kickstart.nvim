@@ -4,13 +4,11 @@ local opts = { silent = true, noremap = true }
 
 vim.keymap.set('n', '<C-PageDown>', ':BufferLineCycleNext<CR>', opts)
 vim.keymap.set('n', '<C-PageUp>', ':BufferLineCyclePrev<CR>', opts)
-vim.keymap.set('n', '<leader>]', ':BufferLineCycleNext<CR>', opts)
-vim.keymap.set('n', '<leader>[', ':BufferLineCycleNext<CR>', opts)
+vim.keymap.set('n', ']b', ':BufferLineCycleNext<CR>', opts)
+vim.keymap.set('n', '[b', ':BufferLineCyclePrev<CR>', opts)
 
 vim.keymap.set('n', '<C-S-PageDown>', ':BufferLineMoveNext<CR>', opts)
 vim.keymap.set('n', '<C-S-PageUp>', ':BufferLineMovePrev<CR>', opts)
-vim.keymap.set('n', '<leader>}', ':BufferLineMoveNext<CR>', opts)
-vim.keymap.set('n', '<leader>{', ':BufferLineMovePrev<CR>', opts)
 
 vim.keymap.set('n', '<leader>bp', ':BufferLineTogglePin<CR>', opts)
 vim.keymap.set('n', '<leader>bP', '<Cmd>BufferLineGroupClose ungrouped<CR>',
