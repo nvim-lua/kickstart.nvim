@@ -12,8 +12,7 @@ return {
         null_ls.builtins.formatting.black,
         null_ls.builtins.formatting.latexindent,
         null_ls.builtins.formatting.shfmt,
-        null_ls.builtins.code_actions.shellcheck,
-        null_ls.builtins.diagnostics.shellcheck,
+        null_ls.builtins.diagnostics.markdownlint,
       },
     }
   end,

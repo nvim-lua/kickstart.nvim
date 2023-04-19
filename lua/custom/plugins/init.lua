@@ -12,6 +12,7 @@ return {
   "famiu/bufdelete.nvim",
   "tpope/vim-repeat",
   "JoosepAlviste/nvim-ts-context-commentstring",
+  "windwp/nvim-ts-autotag",
   {
     "lukas-reineke/virt-column.nvim",
     opts = {
@@ -110,5 +111,50 @@ return {
     config = function(_, opts)
       require('mini.surround').setup(opts)
     end
+  },
+  {
+    "rmagatti/goto-preview",
+    config = function()
+      require('goto-preview').setup {
+        width = 100,             -- Width of the floating window
+        height = 20,             -- Height of the floating window
+        default_mappings = true, -- Bind default mappings
+        debug = false,           -- Print debug information
+        opacity = nil,           -- 0-100 opacity level of the floating window where 100 is fully transparent.
+        post_open_hook = nil     -- A function taking two arguments, a buffer and a window to be ran as a hook.
+      }
+    end
+  },
+  {
+    "simrat39/symbols-outline.nvim",
+    config = function()
+      require('symbols-outline').setup()
+    end
+  },
+  {
+    "ray-x/lsp_signature.nvim",
+    event = "BufRead",
+    config = function()
+      require("lsp_signature").on_attach()
+    end,
+  },
+  {
+    "ellisonleao/glow.nvim",
+    config = true,
+    cmd = "Glow",
+    ft = {
+      "markdown"
+    },
+  },
+  {
+    "iamcco/markdown-preview.nvim",
+    build = "cd app && npm install",
+    ft = {
+      "markdown"
+    },
+    config = function()
+      vim.g.mkdp_auto_start = 0
+      vim.g.mkdp_filetypes = { "markdown" }
+    end,
   },
 }

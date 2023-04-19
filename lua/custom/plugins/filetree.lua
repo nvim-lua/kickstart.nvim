@@ -6,22 +6,26 @@ return {
     "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
     "MunifTanjim/nui.nvim",
   },
-  config = function()
-    -- Unless you are still migrating, remove the deprecated commands from v1.x
-    vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
-
-    require('neo-tree').setup {
-      window = {
-        position = "float",
+  opts = {
+    window = {
+      position = "float",
+      mappings = {
+        ["<space>"] = "none",
       },
-      filesystem = {
-        filtered_items = {
-          visible = true,
-          hide_dotfiles = false,
-          hide_gitignored = false,
-        },
-        hijack_netrw_behavior = "open_current",
+    },
+    filesystem = {
+      filtered_items = {
+        visible = true,
+        hide_dotfiles = false,
+        hide_gitignored = false,
       },
-    }
+      bind_to_cwd = false,
+      follow_current_file = true,
+      hijack_netrw_behavior = "open_current",
+    },
+  },
+  config = function(_, opts)
+    vim.g.neo_tree_remove_legacy_commands = 1
+    require("neo-tree").setup(opts)
   end,
 }
