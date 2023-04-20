@@ -41,10 +41,9 @@ return {
       --[[
       handlers = {
           python = function()
-            local PYTHON_DIR = require("mason-registry").get_package("debugpy"):get_install_path() .. "/venv/Scripts/python"
             dap.adapters.python = {
               type = "executable",
-              command = PYTHON_DIR, -- use "which python" command and provide the python path
+              command = "/usr/local/bin/python", -- use "which python" command and provide the python path
               args = {
                 "-m",
                 "debugpy.adapter",
@@ -145,7 +144,8 @@ return {
       request = 'launch',
       name = 'My custom launch configuration',
       program = '${file}',
-      cwd = vim.fn.getcwd()
+      cwd = vim.fn.getcwd(),
+      console= "integratedTerminal",       
     })
     
 end,
