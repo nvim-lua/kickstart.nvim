@@ -15,9 +15,9 @@ return {
     },
     filesystem = {
       filtered_items = {
-        visible = true,
-        hide_dotfiles = false,
-        hide_gitignored = false,
+        visible = false,
+        hide_dotfiles = true,
+        hide_gitignored = true,
       },
       bind_to_cwd = false,
       follow_current_file = true,
