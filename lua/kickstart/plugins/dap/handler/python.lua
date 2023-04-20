@@ -1,24 +1,22 @@
-local dap = require('dap')
 return function()
-    local python_install_path = vim.fn.exepath('python')
-    dap.adapters.python = {
-      type = "executable",
-      command = python_install_path, -- use "which python" command will give you python installed path
-      args = {
-        "-m",
-        "debugpy.adapter",
-      },
-    }
-
-    dap.configurations.python = {
-      {
-        type = "python",
-        request = "launch",
-        name = "Launch file",
-        program = "${file}", -- This configuration will launch the current file if used.
-        console= "integratedTerminal",
-      },
-      {
+    --local python_install_path = vim.fn.exepath('python')
+    require('dap-python').setup() -- Debug with default settings.
+    
+    -- We can set additional custom config by below mechanism as well
+    --[[
+    table.insert(require('dap').configurations.python,
+    {
+      type = 'python',
+      request = 'launch',
+      name = 'My custom launch configuration',
+      program = '${file}',
+      cwd = vim.fn.getcwd(),
+      console= "integratedTerminal",
+    })
+    --]]
+    
+    table.insert(require('dap').configurations.python,
+    {
         name= "Pytest: Current File",
         type= "python",
         request= "launch",
@@ -30,7 +28,8 @@ return function()
             "--log-file=test_out.log"
         },
         console= "integratedTerminal",
-      },
+      })
+    table.insert(require('dap').configurations.python,
       {
         name= "Profile python: Current File",
         type= "python",
@@ -42,6 +41,5 @@ return function()
             "${file}"
         },
         console= "integratedTerminal",
-      },
-    }
-  end
+      })
+end
