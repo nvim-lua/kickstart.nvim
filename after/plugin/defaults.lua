@@ -2,6 +2,8 @@ vim.opt.relativenumber = true
 
 vim.opt.expandtab = true
 vim.opt.smarttab = true
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
 
 vim.opt.incsearch = true
 

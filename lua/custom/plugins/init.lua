@@ -4,11 +4,10 @@
 -- See the kickstart.nvim README for more information
 return {
   'fatih/vim-go',
-  'mbbill/undotree',
   'famiu/bufdelete.nvim',
   'ThePrimeagen/harpoon',
   'ThePrimeagen/vim-be-good',
   'stevearc/dressing.nvim',
-  "onsails/lspkind.nvim",
-  "rafamadriz/friendly-snippets"
+  "onsails/lspkind.nvim"
+  -- "rafamadriz/friendly-snippets"
 }

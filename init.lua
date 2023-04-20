@@ -199,9 +199,8 @@ require('lazy').setup({
     config = function()
       require("lspsaga").setup {
         lightbulb = {
-          enable = false
+          enable = true
         },
-        request_timeout = 5000
       }
     end,
   },
@@ -243,7 +242,8 @@ vim.o.clipboard = 'unnamedplus'
 vim.o.breakindent = true
 
 -- Save undo history
-vim.o.undofile = true
+vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
+vim.opt.undofile = true
 
 -- Case insensitive searching UNLESS /C or capital in search
 vim.o.ignorecase = true
@@ -444,7 +444,6 @@ local on_attach = function(_, bufnr)
   nmap("<leader>o", ":Lspsaga outline<CR>", '[O]utline')
 
   -- Show cursor diagnostic
-  -- nmap("<S-f>", ":Lspsaga show_cursor_diagnostics<CR>", 'Show cursor diagnostics')
   nmap("<S-f>", ":Lspsaga show_line_diagnostics<CR>", 'Show cursor diagnostics')
 
 
