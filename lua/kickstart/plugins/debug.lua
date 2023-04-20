@@ -80,7 +80,7 @@ return {
                     "-o",
                     "/tmp/profile.dat",
                     "${file}"
-                }
+                },
                 console= "integratedTerminal",
               },
             }
