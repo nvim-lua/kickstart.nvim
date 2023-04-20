@@ -38,55 +38,11 @@ return {
       -- In below way also we can setup debugger for python
       -- Need to install pip3 install debugpy. In dockerfile it is already there. If you are using configuation alone
       -- without dockerfile then install debugpy or mention the python path where debugpy is installed.
-      --[[
+      
       handlers = {
-          python = function()
-            dap.adapters.python = {
-              type = "executable",
-              command = "/usr/local/bin/python", -- use "which python" command and provide the python path
-              args = {
-                "-m",
-                "debugpy.adapter",
-              },
-            }
-
-            dap.configurations.python = {
-              {
-                type = "python",
-                request = "launch",
-                name = "Launch file",
-                program = "${file}", -- This configuration will launch the current file if used.
-                console= "integratedTerminal",
-              },
-              {
-                name= "Pytest: Current File",
-                type= "python",
-                request= "launch",
-                module= "pytest",
-                args= {
-                    "${file}",
-                    "-sv",
-                    "--log-cli-level=INFO",
-                    "--log-file=tc_medusa.log"
-                },
-                console= "integratedTerminal",
-              },
-              {
-                name= "Profile python: Current File",
-                type= "python",
-                request= "launch",
-                module= "cProfile",
-                args= {
-                    "-o",
-                    "/tmp/profile.dat",
-                    "${file}"
-                },
-                console= "integratedTerminal",
-              },
-            }
-          end,
-        },
-       --]]
+        -- python debug configuration is moved to this file
+        python = require('kickstart.plugins.dap.handler.python'),
+      },
 
       -- You'll need to check that you have the required things installed
       -- online, please don't ask me how to install them :)
@@ -136,7 +92,8 @@ return {
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
-    -- Install python specific config
+    -- Install python specific config can be done below way as well instead of handler
+    --[[
     require('dap-python').setup() -- Debug with default settings.
     -- We can set additional custom config by below mechanism as well
     table.insert(require('dap').configurations.python, {
@@ -147,6 +104,7 @@ return {
       cwd = vim.fn.getcwd(),
       console= "integratedTerminal",       
     })
+    --]]
     
 end,
 }
