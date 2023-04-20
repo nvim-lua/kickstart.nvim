@@ -1,8 +1,9 @@
 local dap = require('dap')
 return function()
+    local python_install_path = vim.fn.exepath('python')
     dap.adapters.python = {
       type = "executable",
-      command = "/usr/local/bin/python", -- use "which python" command and provide the python path
+      command = python_install_path, -- use "which python" command will give you python installed path
       args = {
         "-m",
         "debugpy.adapter",
