@@ -87,7 +87,7 @@ return {
 
     -- Install python specific config
     require('dap-python').setup() -- Debug with default settings.
-    -- We can set the config by below mechanism as well
+    -- We can set additional custom config by below mechanism as well
     table.insert(require('dap').configurations.python, {
       type = 'python',
       request = 'launch',
