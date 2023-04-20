@@ -40,6 +40,12 @@ rm -rf ~/.cache/nvim
 This repo is forked from Kickstarter.nvim 
 For nvim configuration refer : https://github.com/nvim-lua/kickstart.nvim
 
+## Features
+1) It is inside container. So this devbox can act like devcontainer (vscode)
+2) Code block can be collapsed/expanded like vscode
+3) Debugging can be done.
+
+
 ## Debuypy inside venv problem is resolved
 The reason why this Pydevbox is created to solve the problem of installing debugpy inside virtual env.
 I tried other NEOVIM distro but always stuck at the point where i have to use debugpy.
@@ -68,6 +74,12 @@ Debugger key binding are like vscode`
 Ctrl+b will toggle neotree(which is file explorer)
 Ctrl+j will toggle terminal (using toggleterm)
 ```
+
+### Python debug configuration
+Debug configuration is available in this file
+https://github.com/SamPosh/PyDevbox/blob/master/lua/kickstart/plugins/dap/handler/python.lua
+If you want to add additional configuration then you can add it here
+
 
 ### Minor problem need to be resolved yet
 Paste into nvim works fine. But copy from neovim to outside doesn't work. I could not figure out any solution till now.
