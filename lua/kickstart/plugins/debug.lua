@@ -40,10 +40,11 @@ return {
       -- without dockerfile then install debugpy or mention the python path where debugpy is installed.
       --[[
       handlers = {
-          python = function(source_name)
+          python = function()
+            local PYTHON_DIR = require("mason-registry").get_package("debugpy"):get_install_path() .. "/venv/Scripts/python"
             dap.adapters.python = {
               type = "executable",
-              command = "/usr/bin/python3", -- use "which python" command and provide the python path
+              command = PYTHON_DIR, -- use "which python" command and provide the python path
               args = {
                 "-m",
                 "debugpy.adapter",
