@@ -26,7 +26,7 @@ return function()
             "${file}",
             "-sv",
             "--log-cli-level=INFO",
-            "--log-file=tc_medusa.log"
+            "--log-file=test_out.log"
         },
         console= "integratedTerminal",
       },
