@@ -1,3 +1,8 @@
+# Why this project
+I love to use vscode. Lately I love nvim editor as well.
+The initial configuration was a steep learning curve. Thanks to kickstart.nvim which helped me at last.
+Now I have put Neovim and my configuration in dockerfile so that this environment can be used as devbox.
+
 # Python Devbox with kickstart.nvim 
 
 ### Python Devbox
@@ -43,7 +48,7 @@ For nvim configuration refer : https://github.com/nvim-lua/kickstart.nvim
 ## Features
 1) It is inside container. So this devbox can act like devcontainer (vscode)
 2) Code block can be collapsed/expanded like vscode
-3) Debugging can be done.
+3) Debugging can be done for python/Pytest. Also added sample configuration for profiler as well.
 
 
 ## Debuypy inside venv problem is resolved
