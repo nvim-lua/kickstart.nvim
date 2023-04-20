@@ -36,6 +36,8 @@ return {
       -- You can provide additional configuration to the handlers,
       -- see mason-nvim-dap README for more information
       -- In below way also we can setup debugger for python
+      -- Need to install pip3 install debugpy. In dockerfile it is already there. If you are using configuation alone
+      -- without dockerfile then install debugpy or mention the python path where debugpy is installed.
       --[[
       handlers = {
           python = function(source_name)
