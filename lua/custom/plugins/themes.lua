@@ -59,6 +59,7 @@ return {
 		"Shatur/neovim-ayu",
 		'doums/darcula',
 		"sainnhe/gruvbox-material",
+		"Everblush/everblush.vim",
 		config = function()
 		end
 	}

@@ -1,6 +1,6 @@
 --[[
 
-a=====================================================================
+=====================================================================
 ==================== READ THIS BEFORE CONTINUING ==================== =====================================================================
 
 Kickctart.nvim is *not* a distribution.
@@ -406,6 +406,11 @@ require('telescope').setup {
       },
     },
   },
+  pickers = {
+    colorscheme = {
+      enable_preview = true
+    }
+  }
 }
 
 -- Enable telescope fzf native, if installed
