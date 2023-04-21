@@ -501,6 +501,7 @@ mason_lspconfig.setup_handlers {
 
 -- nvim-cmp setup
 local cmp = require 'cmp'
+local cmp_autopairs = require 'nvim-autopairs.completion.cmp'
 local luasnip = require 'luasnip'
 local lspkind = require 'lspkind'
 
@@ -546,6 +547,7 @@ cmp.setup {
     { name = 'luasnip' },
     { name = 'buffer' },
     { name = 'path' },
+    { name = 'rg' }
   }),
   formatting = {
     format = lspkind.cmp_format({
@@ -554,6 +556,10 @@ cmp.setup {
     })
   }
 }
+cmp.event:on(
+  'confirm_done',
+  cmp_autopairs.on_confirm_done()
+)
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

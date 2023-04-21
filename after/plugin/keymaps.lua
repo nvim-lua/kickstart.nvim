@@ -23,8 +23,9 @@ keymap("n", "<C-j>", "<C-w>j", opts)
 keymap("n", "<C-k>", "<C-w>k", opts)
 keymap("n", "<C-l>", "<C-w>l", opts)
 
--- Nvimtree
-keymap('n', '<leader>n', ":NvimTreeToggle<cr>", { silent = true, noremap = true, desc = "Toggle [N]vimtree" })
+-- File Explorer
+-- keymap('n', '<leader>n', ":NvimTreeToggle<cr>", { silent = true, noremap = true, desc = "Toggle [N]vimtree" })
+keymap('n', '<leader>n', ":NeoTreeShowToggle<cr>", { silent = true, noremap = true, desc = "Toggle [N]eoTree" })
 
 -- UndoTree
 keymap('n', '<leader>u', ":UndotreeToggle<cr>", { desc = "Toggle [U]ndo tree" })
@@ -60,7 +61,7 @@ keymap("n", "<leader>dl", [[:g/\<<C-r><C-w>\>/d]],
     { desc = "[D]elete [L]ine with selected word in the file" })
 
 -- Make file executable
-keymap("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make [X]ecutable file" })
+keymap("n", "<leader>X", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make [X]ecutable file" })
 
 -- Do nothing
 keymap("n", "Q", "<nop>")

@@ -12,6 +12,6 @@ cnoreabbrev <expr> lgrep (getcmdtype() ==# ':' && getcmdline() ==# 'lgrep') ? 'L
 
 augroup quickfix
 	autocmd!
-	autocmd QuickFixCmdPost cgetexpr TroubleToggle quickfix
-	autocmd QuickFixCmdPost lgetexpr TroubleToggle loclist
+	autocmd QuickFixCmdPost cgetexpr cwindow
+	autocmd QuickFixCmdPost lgetexpr lwindow
 augroup END
