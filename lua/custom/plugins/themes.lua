@@ -1,9 +1,9 @@
 return {
-
 	{
 		'folke/tokyonight.nvim',
 		priority = 1000,
 		config = function()
+			vim.cmd.colorscheme 'tokyonight'
 		end,
 	},
 
@@ -25,17 +25,27 @@ return {
 				invert_signs = false,
 				invert_tabline = false,
 				invert_intend_guides = false,
-				inverse = true, -- invert background for search, diffs, statuslines and errors
+				inverse = false, -- invert background for search, diffs, statuslines and errors
 				contrast = "hard", -- can be "hard", "soft" or empty string
-				palette_overrides = {},
+				palette_overrides = {
+
+				},
 				overrides = {
-					SignColumn = { bg = "#1d2021" }
+					SignColumn = { bg = "#1d2021" },
+					LspDiagnosticsSignError = { fg = "#cc241d" },
+					LspDiagnosticsSignWarning = { fg = "#d79921" },
+					LspDiagnosticsSignInformation = { fg = "#458588" },
+					LspDiagnosticsSignHint = { fg = "#b16286" },
+					TSAnnotation = { fg = "#A12568" },
+					javaAnnotation = { fg = "#A12568" },
 				},
 				dim_inactive = false,
 				transparent_mode = false,
 			})
-			vim.o.background = "dark"
-			vim.cmd.colorscheme 'gruvbox'
+
+			-- vim.cmd [[highlight Search guifg=#292e42 guibg=#bb9af7]]
+			-- vim.o.background = "dark"
+			-- vim.cmd.colorscheme 'gruvbox'
 		end,
 	},
 	{

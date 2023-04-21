@@ -1,6 +1,6 @@
 --[[
 
-=====================================================================
+a=====================================================================
 ==================== READ THIS BEFORE CONTINUING ==================== =====================================================================
 
 Kickctart.nvim is *not* a distribution.
@@ -98,7 +98,6 @@ require('lazy').setup({
       'folke/neodev.nvim',
     },
   },
-
   {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -128,8 +127,6 @@ require('lazy').setup({
       },
     },
   },
-
-
   {
     -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
@@ -174,6 +171,9 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'mfussenegger/nvim-jdtls',
+  },
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -188,11 +188,12 @@ require('lazy').setup({
   --
   --    An additional note is that if you only copied in the `init.lua`, you can just comment this line
   --    to get rid of the warning telling you that there are not plugins in `lua/custom/plugins/`.
+  --    //wait mason initialize all plugins before import the custom plugins
+  --
   { import = 'custom.plugins' },
 }, {})
 
--- Load custom treesitter grammar for org filetype
-require('orgmode').setup_ts_grammar()
+
 
 -- Treesitter configuration
 require('nvim-treesitter.configs').setup {
@@ -207,17 +208,12 @@ require('nvim-treesitter.configs').setup {
   ensure_installed = { 'org' }, -- Or run :TSUpdate org
 }
 
-require('orgmode').setup({
-  org_agenda_files = { '~/Notes/org/*', '~/my-orgs/**/*' },
-  org_default_notes_file = '~/Notes/org/refile.org',
-})
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
 
 -- Set highlight on search
 vim.o.hlsearch = true
-vim.cmd [[highlight Search guifg=#292e42 guibg=#bb9af7]]
 
 -- Make line numbers default
 vim.wo.number = true
@@ -332,6 +328,11 @@ vim.api.nvim_set_keymap('i', '<C-k>', '<C-W>', { noremap = true, desc = "delete 
 
 vim.api.nvim_set_keymap('n', '<leader>ol', ":!zathura <C-r>-expand('%:r')<cr>.pdf &<cr>",
   { noremap = true, silent = true, desc = "[O]pen [L]atex" })
+
+vim.api.nvim_set_keymap('n', '<leader>k', "", { noremap = true, silent = true, desc = "" })
+
+vim.api.nvim_set_keymap('i', '<C-BS>', "<Esc>hdiwi", { noremap = true, silent = true, desc = "" })
+vim.api.nvim_set_keymap('n', ':wq', "<Cmd>wqa<CR>", { noremap = true, silent = true, desc = "" })
 
 
 -- trucco sul relplace.
@@ -562,6 +563,7 @@ local servers = {
 -- Setup neovim lua configuration
 require('neodev').setup()
 
+
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
@@ -632,6 +634,28 @@ cmp.setup {
     { name = 'luasnip' },
     { name = 'orgmode' },
   },
+
+  require('neorg').setup {
+    load = {
+          ["core.defaults"] = {},
+          ["core.norg.dirman"] = {
+        config = {
+          workspaces = {
+            work = "~/notes/work",
+            home = "~/notes/home",
+          }
+        },
+            ["core.norg.concealer"] = {},
+            ["core.norg.completion"] = {
+          config = {
+            engine = "nvim-cmp"
+          }
+        },
+            ["core.norg.esupports.hop"] = {},
+            ["core.norg.esupports.neorglink"] = {},
+      }
+    }
+  }
 }
 
 
