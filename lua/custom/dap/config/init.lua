@@ -5,3 +5,5 @@ dap_vscode.load_launchjs(nil, {
     lldb = { 'c', 'cpp', 'rust' },
     codelldb = { 'c', 'cpp', 'rust' },
 })
+
+require('custom.dap.config.pwa-node')
