@@ -288,12 +288,6 @@ vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', { noremap = true, silent = true 
 -- Mappa Ctrl+j per spostarsi in basso nel buffer corrente
 vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', { noremap = true, silent = true })
 
--- mappatura per spostarsi a sinistra tra le finestre
-vim.api.nvim_set_keymap('n', '<S-h>', ':BufferPrevious<CR>', { noremap = true, silent = true })
-
--- mappatura per spostarsi a destra tra le finestre
-vim.api.nvim_set_keymap('n', '<S-l>', ':BufferNext<CR>', { noremap = true, silent = true })
-
 -- close the current buffer
 vim.api.nvim_set_keymap('n', '<leader>cb', ':bd<CR>', { noremap = true, silent = true })
 
