@@ -13,6 +13,7 @@ return {
   dependencies = {
     -- Creates a beautiful debugger UI
     'rcarriga/nvim-dap-ui',
+    'theHamsta/nvim-dap-virtual-text',
 
     -- Installs the debug adapters for you
     'williamboman/mason.nvim',
@@ -20,6 +21,7 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+    'mfussenegger/nvim-dap-python',
   },
   config = function()
     local dap = require 'dap'
@@ -83,5 +85,9 @@ return {
 
     -- Install golang specific config
     require('dap-go').setup()
+    -- Install python specific config
+    require('dap-python').setup()
+    -- Setup additional adapter/configuration definitions
+    require('custom.dap')
   end,
 }
