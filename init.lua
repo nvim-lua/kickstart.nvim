@@ -182,6 +182,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
+      'JoosepAlviste/nvim-ts-context-commentstring'
     },
     config = function()
       pcall(require('nvim-treesitter.install').update { with_sync = true })
@@ -381,6 +382,9 @@ require('nvim-treesitter.configs').setup {
         ['<leader>A'] = '@parameter.inner',
       },
     },
+  },
+  context_commentstring = {
+    enable = true,
   },
 }
 

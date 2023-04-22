@@ -12,6 +12,7 @@ return {
   "onsails/lspkind.nvim",
   'lukas-reineke/cmp-rg',
   'onsails/diaglist.nvim',
+  'Bekaboo/deadcolumn.nvim',
   config = function()
     require('diaglist').init()
   end
