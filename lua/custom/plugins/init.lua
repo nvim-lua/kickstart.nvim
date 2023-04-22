@@ -12,7 +12,22 @@ return {
   "famiu/bufdelete.nvim",
   "tpope/vim-repeat",
   "JoosepAlviste/nvim-ts-context-commentstring",
-  "windwp/nvim-ts-autotag",
+  {
+    "windwp/nvim-ts-autotag",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+    },
+    config = function()
+      require('nvim-ts-autotag').setup()
+    end,
+  },
+  {
+    -- snippets
+    'L3MON4D3/LuaSnip',
+    dependencies = {
+      'rafamadriz/friendly-snippets',
+    },
+  },
   {
     "lukas-reineke/virt-column.nvim",
     opts = {
