@@ -66,6 +66,7 @@ return {
     vim.keymap.set('n', '<leader>B', function()
       dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
     end)
+    vim.keymap.set("n", "<F7>", dapui.toggle)
     
     -- Debug breakpoint will be in color
     vim.api.nvim_set_hl(0, "blue",   { fg = "#3d59a1", bg = "#FFFF00" })
@@ -95,8 +96,7 @@ return {
         },
       },
     }
-    
-    
+       
 
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
