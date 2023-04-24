@@ -1,6 +1,6 @@
 # Why this PyDevBox is developed
 I love to use vscode. Lately I love nvim editor as well.
-The initial configuration or neovim was a steep learning curve. Thanks to kickstart.nvim which helped me at last.
+The initial configuration for neovim was a steep learning curve. Thanks to kickstart.nvim which helped me at last.
 Now I have put Neovim and my configuration in dockerfile so that this environment can be used as devbox.
 
 # Python Devbox with kickstart.nvim 
