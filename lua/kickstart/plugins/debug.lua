@@ -66,6 +66,14 @@ return {
     vim.keymap.set('n', '<leader>B', function()
       dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
     end)
+    
+    -- Debug breakpoint will be in color
+    vim.api.nvim_set_hl(0, "blue",   { fg = "#3d59a1", bg = "#FFFF00" })
+    vim.api.nvim_set_hl(0, "green",  { fg = "#9ece6a", bg = "#FFFF00" }) 
+    vim.api.nvim_set_hl(0, "yellow", { fg = "#FAFA33", bg = "#FFFa05" }) 
+    vim.api.nvim_set_hl(0, "black", { fg = "#000000", bg = "#FFFF00" })
+    vim.fn.sign_define('DapBreakpoint',{ text="", texthl='blue',linehl='black', numhl='yellow' })
+    vim.fn.sign_define('DapStopped',{ text="", texthl='green',linehl='black', numhl='yellow' })
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
