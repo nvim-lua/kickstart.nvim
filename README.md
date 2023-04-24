@@ -23,21 +23,25 @@ Distribution Alternatives:
 ### Archive Installation
 * On the home/landing page for the project find the blue "<> CODE" button click it and select Local > Download ZIP.
 * Extract the archive to:
-  ~/.config/nvim (Linux)
-  ??? (MacOS)
-  ??? (Windows)
+  `~/.config/nvim` (Linux)
+  `~/.config/nvim` (MacOS)
+  `~/AppData/Local/nvim/` (Windows)
 * Ensure your extraction method did not extract with a parent folder. For example in ~/.config/nvim you should have init.lua not another folder called kickstart.nvim.
-* Run nvim and allow the kickstart process to download files and set up the basics.
 
 ### GIT Clone Installation
+* From a terminal cd/dir to:
+    `~/.config/nvim` (Linux)
+    `~/.config/nvim` (MacOS)
+    `~/AppData/Local/nvim/` (Windows)
+* run: git clone https://github.com/nvim-lua/kickstart.nvim.git OR: gh repo clone nvim-lua/kickstart.nvim
 
+* Run neovim (from terminal or shortcut) and allow the kickstart process to download files and set up the basics.
+* Once the setup is complete restart Neovim.
+* **You're ready to go!**
 
-* (Recommended) Fork this repo (so that you have your own copy that you can modify).
+* (Recommended/Optional) Fork this repo (so that you have your own copy that you can modify).
 * Clone the kickstart repo into `$HOME/.config/nvim/` (Linux/Mac) or `~/AppData/Local/nvim/` (Windows)
   * If you don't want to include it as a git repo, you can just clone it and then move the files to this location
-* Start Neovim (`nvim`) and allow `lazy.nvim` to complete installation.
-* Restart Neovim
-* **You're ready to go!**
 
 Additional system requirements:
 - Make sure to review the readmes of the plugins if you are experiencing errors. In particular:
