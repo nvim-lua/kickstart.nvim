@@ -11,14 +11,27 @@ A starting point for Neovim that is:
 
 This repo is meant to be used as by **YOU** to begin your Neovim journey; remove the things you don't use and add what you miss.
 
+Kickstart.nvim targets *only* the latest ['stable'](https://github.com/neovim/neovim/releases/tag/stable) and latest ['nightly'](https://github.com/neovim/neovim/releases/tag/nightly) of Neovim. If you are experiencing issues, please make sure you have the latest versions.
+
 Distribution Alternatives:
 - [LazyVim](https://www.lazyvim.org/): A delightful distribution maintained by @folke (the author of lazy.nvim, the package manager used here)
 
 ### Installation
 
-Kickstart.nvim targets *only* the latest ['stable'](https://github.com/neovim/neovim/releases/tag/stable) and latest ['nightly'](https://github.com/neovim/neovim/releases/tag/nightly) of Neovim. If you are experiencing issues, please make sure you have the latest versions.
+* Backup your previous configuration (if any exists)
 
-* Backup your previous configuration
+### Archive Installation
+* On the home/landing page for the project find the blue "<> CODE" button click it and select Local > Download ZIP.
+* Extract the archive to:
+  ~/.config/nvim (Linux)
+  ??? (MacOS)
+  ??? (Windows)
+* Ensure your extraction method did not extract with a parent folder. For example in ~/.config/nvim you should have init.lua not another folder called kickstart.nvim.
+* Run nvim and allow the kickstart process to download files and set up the basics.
+
+### GIT Clone Installation
+
+
 * (Recommended) Fork this repo (so that you have your own copy that you can modify).
 * Clone the kickstart repo into `$HOME/.config/nvim/` (Linux/Mac) or `~/AppData/Local/nvim/` (Windows)
   * If you don't want to include it as a git repo, you can just clone it and then move the files to this location
