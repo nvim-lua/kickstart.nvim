@@ -1,8 +1,9 @@
 # This is devbox which means development environment
-# this will contain neovim with Astrovim distro
+# this will contain neovim with configuration
 
 FROM python:3-slim-buster
 
+# If you need to run from behind the proxy then set the proxy below
 #ENV http_proxy 
 #ENV https_proxy 
 #ENV no_proxy 
