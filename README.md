@@ -128,3 +128,28 @@ This requires:
 {'nvim-telescope/telescope-fzf-native.nvim', build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
 ```
 
+### Try it in Docker
+
+To build it use below command
+```docker build -t devbox -f Dockerfile .```
+
+To run docker in background as detached ,use below command
+
+```docker run -td --name vimbox -v $(pwd):/workspaces devbox```
+
+Note: if you run this container from where your source code folder is then your source code will be available inside container as a volume
+
+Get into container To execute use the below command
+
+``` docker exec -it vimbox /bin/bash ```
+
+Once running inside the container
+open nvim with source code 
+
+ ```nvim /workspaces```
+
+Then wait for all the packages to be installed
+You can install Mason packages . For ex install python related packages using
+
+```:MasonInstall pyright pylint black```
+
