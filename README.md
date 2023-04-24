@@ -27,6 +27,7 @@ F9 - to toggle debug breakpointer
 F10 - step over
 F11 - step into
 shift + F11 - step out
+F7 - to toggle the DapUI. Using this last debug session result can be seen
 
 ```
 ### To install locally
