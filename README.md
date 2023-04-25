@@ -18,8 +18,9 @@ Distribution Alternatives:
 
 ----------------
 
-procedure on linux
-exit from nvim
+Procedure for linux<p>
+ 
+exit from nvim if open<p>
 
 cd $HOME/.config
 mv nvim nvim_old
