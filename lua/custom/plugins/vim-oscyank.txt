@@ -1,0 +1,38 @@
+-- this is for support of clipboard across remote ssh
+-- I need to bring it to lua
+--
+-- This does not have prerequirements on windows. It works if you use windows terminal
+-- and works across ssh sessions. does not currently (apr 2023) work with mremote nor putty
+--
+--
+
+-- Plug 'ojroques/vim-oscyank', {'branch': 'main'}				" enables Clipboard across SSH mgua 8 apr 2023
+--	" OSC52 compatibility is required in ssh terminal and in tmux if used
+--	" see https://github.com/ojroques/vim-oscyank
+--
+
+" the next settings are for OSCYank (see :h oscyank-config) ----------------
+" to copy the line <leader>cc
+" to copy all: ggVG<leader>c	(ggVG selects everything in visual mode)
+" leader-c yanks visually selected
+"
+lua << EOFOSCYANK
+	-- keymapping defined in lua mode
+	vim.keymap.set('n', '<leader>c', '<Plug>OSCYankOperator')
+	vim.keymap.set('n', '<leader>cc', '<leader>c_', {remap = true})
+	vim.keymap.set('v', '<leader>c', '<Plug>OSCYankVisual')
+EOFOSCYANK
+let g:oscyank_max_length = 0  " maximum length of a selection
+let g:oscyank_silent     = 0  " disable message on successful copy
+let g:oscyank_trim       = 1  " trim surrounding whitespaces before copy
+let g:oscyank_osc52      = "\x1b]52;c;%s\x07"  " the OSC52 format string to use
+"The following commands are also available:
+"    :OSCYank(text): copy text text
+"    :OSCYankRegister(register): copy text from register register
+"For instance, to automatically copy text that was yanked into register +:
+autocmd TextYankPost *
+    \ if v:event.operator is 'y' && v:event.regname is '+' |
+    \ execute 'OSCYankRegister +' |
+    \ endif
+"OSCYank cfg end -----------------------------------------------------------
+"
