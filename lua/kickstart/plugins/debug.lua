@@ -58,7 +58,10 @@ return {
 
     -- Basic debugging keymaps, feel free to change to your liking!
     
-    vim.keymap.set('n', '<F5>', dap.continue)
+    vim.keymap.set('n', '<F5>', function()
+      dap.continue()
+      vim.cmd.Neotree('toggle') -- this will toggle the Neo tree during debugging
+    end)
     vim.keymap.set('n', '<F11>', dap.step_into)
     vim.keymap.set('n', '<F10>', dap.step_over)
     vim.keymap.set('n', '<S-F11>', dap.step_out)
