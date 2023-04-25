@@ -25,7 +25,7 @@ Distribution Alternatives:
 * Extract the archive to:
   `~/.config/nvim` (Linux)
   `~/.config/nvim` (MacOS)
-  `%userprofile%\User\YourName\AppData\Local\nvim-data\` (Windows)
+  `%userprofile%\AppData\Local\nvim-data\` (Windows)
 * Ensure your extraction method did not extract with a parent folder. For example in ~/.config/nvim you should have init.lua not another folder called kickstart.nvim.
 
 ### GIT Clone Installation
