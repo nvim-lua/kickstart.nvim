@@ -18,17 +18,19 @@ Distribution Alternatives:
 
 ----------------
 
-Procedure for linux<p>
+<b>Procedure for linux</b><p>
  
-exit from nvim if open<p>
+Exit from nvim if open<p>
 
+<pre> 
 cd $HOME/.config
 mv nvim nvim_old
 mkdir nvim
 cd nvim
 git clone https://github.com/mgua/kickstart.nvim.git .
+</pre>
 
-start nvim
+<p>Start nvim now, and you should see the automatic download and updates by lazy<p>
 
 
 
