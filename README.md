@@ -12,7 +12,7 @@ A possible alternative approach is to use a neovim distribution, like
 - [LazyVim](https://www.lazyvim.org/): maintained by @folke (the author of lazy.nvim package manager)
 
 ## Neovim preparation and Installation for Linux
-### Ubuntu
+#### Ubuntu
 from root:
 - apt update
 - apt upgrade
@@ -24,7 +24,7 @@ from root:
 - (for python development): apt install python3 python3-venv python3-pip 
 - (for perl development): cpan install Neovim::Ext
 
-### Kali
+#### Kali
 from root:
 - apt update
 - apt upgrade
@@ -40,7 +40,7 @@ from root:
 - (for perl development): cpan install Neovim::Ext
 - (To be completed)
 
-### Almalinux
+#### Almalinux
 from root:
 - yum update
 - yum install ripgrep fd-find
@@ -48,7 +48,7 @@ from root:
 - (for python development): yum install python3 python3-venv python3-pip 
 - (for perl development): cpan install Neovim::Ext
 
-## Neovim Kickstart Configuration for any linux distribution (in non privileged user context)
+### Neovim Kickstart Configuration for any linux distribution (in non privileged user context)
 - Exit from nvim if open
 - cd $HOME/.config
 - mv nvim nvim_old
@@ -84,7 +84,7 @@ Actions to be executed from administrator user:
 - (for perl development): winget install StrawberryPerl.StrawberryPerl (then close and reopen shell)
 - (for perl development): cpanm -n Neovim::Ext (or cpan install Neovim::Ext)
 
-## Neovim Kickstart Configuration for Windows (in non privileged user context)
+### Neovim Kickstart Configuration for Windows (in non privileged user context)
 
 (TBC)
 
