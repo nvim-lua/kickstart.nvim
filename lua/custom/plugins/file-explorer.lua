@@ -14,6 +14,7 @@ return {
                 width = 30,
                 mappings = {
                     ["o"] = "open",
+                    ['<S-l>'] = "open",
                     ["F"] = "clear_filter",
                     ['e'] = function() vim.api.nvim_command('Neotree focus filesystem left') end,
                     ['b'] = function() vim.api.nvim_command('Neotree focus buffers left') end,
