@@ -4,9 +4,10 @@
 
 This project is heavily based on TJ DeVries amazing work to promote Neovim adoption and usage.
 Please see the original project nvim-lua/kickstart.nvim
+
 In my neovim journey I recently migrated from vimscript to lua, and I am still in the process of adjusting my setup.
 
-I am working to make this kickstart a standard for my development team, which is easy to deploy on Windows Linux amd MacOSX systems.
+I am working to make this kickstart a standard for my development team, to be deployed on Windows Linux amd MacOSX systems.
 Kickstart is just a configuration procedure. It requires to have several components installed and prepared. In the following notes I will list the preparation activities to be performed on the different operating systems.
 A possible alternative approach is to use a neovim distribution, like 
 - [LazyVim](https://www.lazyvim.org/): maintained by @folke (the author of lazy.nvim package manager)
@@ -57,7 +58,9 @@ from root:
 
 Start nvim now, and you should see the automatic download and updates by lazy
 
---
+## Neovim preparation and Installation for MacOSX
+(To be completed)
+
 
 ## Neovim preparation and Installation for windows
 Actions to be executed from administrator user:
