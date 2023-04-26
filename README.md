@@ -28,6 +28,7 @@ apt install neovim
 apt install python3 python3-venv python3-pip (for python development) 
 cpan install Neovim::Ext (for perl development)
 apt install npm (for node javascript development and to support some language servers/parsers)
+npm install -g neovim (for node integration)
 ```
 
 #### Kali
@@ -46,6 +47,8 @@ ln -s /usr/bin/nvim.appimage /usr/bin/nvim
 apt install python3 python3-venv python3-pip (for python development) 
 cpan install Neovim::Ext (for perl development)
 apt install npm (for node javascript development and to support some language servers/parsers)
+npm install -g neovim
+npm install -g tree-sitter-cli  (this is needed to execute the :TSInstallFromGrammar <language> command within neovim)
 ```
 
 #### Almalinux
@@ -57,6 +60,8 @@ yum install neovim
 yum install python3 python3-pip (for python development)
 cpan install Neovim::Ext (for perl development) 
 yum install npm (for node javascript development and to support some language servers/parsers: this brings in nodejs, nodejs-libs)
+npm install -g neovim
+npm install -g tree-sitter-cli  (this is needed to execute the :TSInstallFromGrammar <language> command within neovim)
 ```
 
 ### Neovim Kickstart Configuration for any linux distribution (in non privileged user context)
@@ -109,6 +114,7 @@ Actions to be executed from administrator user:
   ```
   winget install OpenJS.NodeJS.LTS
   npm install -g neovim (after closing and reopening admin window)
+  npm install -g tree-sitter-cli  (this is needed to execute the :TSInstallFromGrammar <language> command within neovim)
   ```
   - And finally the neovim installation:
   ```
@@ -144,7 +150,7 @@ After configuration, from within nvim, we can proceed to install and activate ad
   - :TSInstall <TAB>
     And choosing all the language we need. My preferences are:
   ```
-  :TSInstall javascript c python perl css lua vim bash php regex html awk sql make cmake sql dockerfile json markdown mermaid yaml 
+  :TSInstall awk bash c cmake cpp dockerfile css html ini json lua make markdown mermaid perl php python regex sql vim yaml
   ```
   - Similar action is to be performed for LSP, whose config is managed via mason plugin. Some plugins like sqlls, intelphense, awk-language-server and others) require nodejs javascript modules to be managed via npm, therefore node installation is pre-required at the system level. 
   ```
