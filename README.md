@@ -65,6 +65,14 @@ mkdir nvim
 cd nvim
 git clone https://github.com/mgua/kickstart.nvim.git .
 ```
+- for python developers, create a dedicated environment for nvim:
+```
+cd
+python3 -m venv venv_nvim
+source ./venv_nvim/bin/activate
+python -m pip install pip --upgrade
+python -m pip install neovim
+```
 - launch nvim, and you should see the automatic download and updates by lazy
 
 ## Neovim preparation and Installation for MacOSX
