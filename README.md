@@ -157,7 +157,7 @@ After configuration, from within nvim, we can proceed to install and activate ad
   :MasonInstall awk_language-server bash-language-server ansible-language-server docker-compose-language-server dockerfile-language-server eslint-lsp html-lsp intelephense json-lsp lua-language-server marksman nginx-language-server perlnavigator pyright python-lsp-server sqlls vim-language-server
   ```
 
-
+# Note: From now on the original documentation is untouched
 
 #### Example: Adding an autopairs plugin
 
