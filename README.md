@@ -55,7 +55,7 @@ npm install -g tree-sitter-cli  (this is needed to execute the :TSInstallFromGra
 from root:
 ```
 yum update
-yum install ripgrep fd-find git gcc make
+yum install ripgrep fd-find git gcc make gcc-c++
 yum install neovim
 yum install python3 python3-pip (for python development)
 cpan install Neovim::Ext (for perl development) 
