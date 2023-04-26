@@ -154,7 +154,7 @@ After configuration, from within nvim, we can proceed to install and activate ad
   ```
   - Similar action is to be performed for LSP, whose config is managed via mason plugin. Some plugins like sqlls, intelphense, awk-language-server and others) require nodejs javascript modules to be managed via npm, therefore node installation is pre-required at the system level. 
   ```
-  :MasonInstall awk_language-server bash-language-server ansible-language-server docker-compose-language-server dockerfile-language-server eslint-lsp html-lsp intelephense json-lsp lua-language-server marksman nginx-language-server perlnavigator pyright python-lsp-server sqlls vim-language-server
+  :MasonInstall awk-language-server bash-language-server ansible-language-server docker-compose-language-service dockerfile-language-server eslint-lsp html-lsp intelephense json-lsp lua-language-server marksman nginx-language-server perlnavigator pyright python-lsp-server sqlls vim-language-server
   ```
 
 # Note: From now on the original documentation is untouched
@@ -166,7 +166,7 @@ In the file: `lua/custom/plugins/autopairs.lua`, add:
 ```lua
 -- File: lua/custom/plugins/autopairs.lua
 
-return {
+return {  
   "windwp/nvim-autopairs",
   config = function()
     require("nvim-autopairs").setup {}
