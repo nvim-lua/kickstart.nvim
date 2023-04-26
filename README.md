@@ -11,11 +11,8 @@ Kickstart is just a configuration procedure. It requires to have several compone
 A possible alternative approach is to use a neovim distribution, like 
 - [LazyVim](https://www.lazyvim.org/): maintained by @folke (the author of lazy.nvim package manager)
 
-## Linux
-
-### Neovim preparation and Installation for Linux
-
-#### Ubuntu
+## Neovim preparation and Installation for Linux
+### Ubuntu
 from root:
 - apt update
 - apt upgrade
@@ -24,8 +21,10 @@ from root:
 - apt update
 - apt install ripgrep fd-find
 - apt install neovim
+- (for python development): apt install python3 python3-venv python3-pip 
+- (for perl development): cpan install Neovim::Ext
 
-#### Kali
+### Kali
 from root:
 - apt update
 - apt upgrade
@@ -37,15 +36,19 @@ from root:
 - chmod +x nvim.appimage
 - cp nvim.appimage /usr/bin/
 - ln -s /usr/bin/nvim.appimage /usr/bin/nvim
+- (for python development): apt install python3 python3-venv python3-pip 
+- (for perl development): cpan install Neovim::Ext
 - (To be completed)
 
-#### Almalinux
+### Almalinux
 from root:
 - yum update
 - yum install ripgrep fd-find
 - yum install neovim
+- (for python development): yum install python3 python3-venv python3-pip 
+- (for perl development): cpan install Neovim::Ext
 
-* Kickstart Configuration (in non privileged user context)*
+## Neovim Kickstart Configuration for any linux distribution (in non privileged user context)
 - Exit from nvim if open
 - cd $HOME/.config
 - mv nvim nvim_old
@@ -57,10 +60,8 @@ Start nvim now, and you should see the automatic download and updates by lazy
 
 --
 
-### Windows
-
 ## Neovim preparation and Installation for windows
-actions to be executed from administrator user:
+Actions to be executed from administrator user:
 1. Chocolatey package manager installation (see https://chocolatey.org/)
 - run the following from powershell admin
 - Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
@@ -68,10 +69,25 @@ actions to be executed from administrator user:
 2. Winget package manager installation ( see https://learn.microsoft.com/en-us/windows/package-manager/winget/ )
 - install winget from microsoft store
 3. from an administrator console, execute:
-- 
+- winget install gnuwin32.tar
+  tar (bsdtar, installed in c:\Windows\WinSxS\.. c:\cygwin64\bin...)
+- winget install gnuwin32.findutils
+	(grep)
+- winget install Microsoft.WindowsTerminal
+	(if not from winget, it can be installed from microsoft https://aka.ms/terminal https://github.com/microsoft/terminal#other-install-methods https://github.com/microsoft/terminal (go on releases on right side...))
+- choco install less bat gzip ripgrep grep fd fzf far netcat curl wget procexp mingw
+(choco installs the tools in c:\ProgramData\chocolatey\bin these tools are needed for lsp config)
+- nerdfonts are a nice to have extension. After font installation, they can be setup in Windows Terminal to be available for neovim interface. 
+- go download nerdfonts https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hack.zip uncompress in a temporary folder. then select all the .ttf files and press right-click then install
+- Open MS terminal, press the top icon on the right of the "+", then choose Profile/Defaults on the left, then Appearance and in font face set Hack Nerd Font
+- (for python development): choco install python
+- (for perl development): winget install StrawberryPerl.StrawberryPerl (then close and reopen shell)
+- (for perl development): cpanm -n Neovim::Ext (or cpan install Neovim::Ext)
 
+## Neovim Kickstart Configuration for Windows (in non privileged user context)
 
-## Kickstart Configuration (in non privileged user context)
+(TBC)
+
 - Exit from nvim if open
 - cd $HOME/App.config
 - mv nvim nvim_old
