@@ -64,7 +64,7 @@ keymap("n", "<leader>dl", [[:g/\<<C-r><C-w>\>/d]],
 keymap("n", "<leader>X", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make [X]ecutable file" })
 
 -- Do nothing
-keymap("n", "Q", "<nop>")
+keymap("n", "Q", "<Nop>")
 
 -- Bufdelete.vim
 keymap("n", "<leader>bd", ":Bdelete!<CR>", { desc = "[B]uffer [D]elete" })
