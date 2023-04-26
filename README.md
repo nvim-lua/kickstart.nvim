@@ -36,17 +36,16 @@ from root:
 - chmod +x nvim.appimage
 - cp nvim.appimage /usr/bin/
 - ln -s /usr/bin/nvim.appimage /usr/bin/nvim
-- (for python development): apt install python3 python3-venv python3-pip 
-- (for perl development): cpan install Neovim::Ext
-- (To be completed)
+- apt install python3 python3-venv python3-pip (for python development) 
+- cpan install Neovim::Ext (for perl development)
 
 #### Almalinux
 from root:
 - yum update
 - yum install ripgrep fd-find
 - yum install neovim
-- (for python development): yum install python3 python3-venv python3-pip 
-- (for perl development): cpan install Neovim::Ext
+- yum install python3 python3-venv python3-pip (for python development)
+- cpan install Neovim::Ext (for perl development) 
 
 ### Neovim Kickstart Configuration for any linux distribution (in non privileged user context)
 - Exit from nvim if open
