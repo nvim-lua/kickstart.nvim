@@ -17,48 +17,55 @@ A possible alternative approach is to use a neovim distribution, like
 ## Neovim preparation and Installation for Linux
 #### Ubuntu
 from root:
-- apt update
-- apt upgrade
-- apt install software-properties-common
-- add-apt-repository ppa:neovim-ppa/stable
-- apt update
-- apt install ripgrep fd-find
-- apt install neovim
-- (for python development): apt install python3 python3-venv python3-pip 
-- (for perl development): cpan install Neovim::Ext
+```
+apt update
+apt upgrade
+apt install software-properties-common
+add-apt-repository ppa:neovim-ppa/stable
+apt update
+apt install ripgrep fd-find
+apt install neovim
+(for python development): apt install python3 python3-venv python3-pip 
+(for perl development): cpan install Neovim::Ext
+```
 
 #### Kali
 from root:
-- apt update
-- apt upgrade
-- apt install ripgrep fd-find 
-- cd
-- mkdir neovim
-- cd neovim
-- curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-- chmod +x nvim.appimage
-- cp nvim.appimage /usr/bin/
-- ln -s /usr/bin/nvim.appimage /usr/bin/nvim
-- apt install python3 python3-venv python3-pip (for python development) 
-- cpan install Neovim::Ext (for perl development)
+```
+apt update
+apt upgrade
+apt install ripgrep fd-find 
+cd
+mkdir neovim
+cd neovim
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+chmod +x nvim.appimage
+cp nvim.appimage /usr/bin/
+ln -s /usr/bin/nvim.appimage /usr/bin/nvim
+apt install python3 python3-venv python3-pip (for python development) 
+cpan install Neovim::Ext (for perl development)
+```
 
 #### Almalinux
 from root:
-- yum update
-- yum install ripgrep fd-find
-- yum install neovim
-- yum install python3 python3-venv python3-pip (for python development)
-- cpan install Neovim::Ext (for perl development) 
+```
+yum update
+yum install ripgrep fd-find
+yum install neovim
+yum install python3 python3-venv python3-pip (for python development)
+cpan install Neovim::Ext (for perl development) 
+```
 
 ### Neovim Kickstart Configuration for any linux distribution (in non privileged user context)
 - Exit from nvim if open
-- cd $HOME/.config
-- mv nvim nvim_old
-- mkdir nvim
-- cd nvim
-- git clone https://github.com/mgua/kickstart.nvim.git .
-
-Start nvim now, and you should see the automatic download and updates by lazy
+```
+cd $HOME/.config
+mv nvim nvim_old
+mkdir nvim
+cd nvim
+git clone https://github.com/mgua/kickstart.nvim.git .
+```
+- launch nvim, and you should see the automatic download and updates by lazy
 
 ## Neovim preparation and Installation for MacOSX
 (To be completed)
