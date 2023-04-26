@@ -122,6 +122,24 @@ Actions to be executed from administrator user:
   (launch nvim)
 ```
 
+# Additional configurations 
+Please edit Python interpreter path to match the interpreter within the dedicated venv_nvim environment
+- this edit is to be carried out in nvim/lua/custom/plugins/additional_keymaps.lua
+- once done execute :checkhealth from nvim to see if there are other issues
+
+# Treesitter and LSP language parser install
+After configuration, from within nvim, we can proceed to install and activate additional language parsers. This can be done with 
+  - :TSInstall <TAB>
+    And choosing all the language we need. My preferences are:
+  ```
+  :TSInstall javascript c python perl css lua vim bash php regex html awk sql make cmake sql dockerfile json markdown mermaid yaml 
+  ```
+  - Similar action is to be performed for LSP, whose config is managed via mason plugin. Some plugins like sqlls, intelphense, awk-language-server and others) require nodejs javascript modules to be managed via npm, therefore node installation is pre-required at the system level. 
+  ```
+  :MasonInstall awk_language-server bash-language-server ansible-language-server docker-compose-language-server dockerfile-language-server eslint-lsp html-lsp intelephense json-lsp lua-language-server marksman nginx-language-server perlnavigator pyright python-lsp-server sqlls vim-language-server
+  ```
+
+
 
 #### Example: Adding an autopairs plugin
 
