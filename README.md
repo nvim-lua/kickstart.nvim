@@ -102,6 +102,15 @@ Actions to be executed from administrator user:
   winget install StrawberryPerl.StrawberryPerl (for perl development)
   cpanm -n Neovim::Ext (or cpan install Neovim::Ext) (for perl development)
   ```
+  - A local node installation may be needed, for some language servers to be run. this requires the following:
+  ```
+  winget install OpenJS.NodeJS.LTS
+  npm install -g neovim (after closing and reopening admin window)
+  ```
+  - And finally the neovim installation:
+  ```
+  winget install neovim
+  ``` 
 
 ### Neovim Kickstart Configuration for Windows (in non privileged user context)
 
