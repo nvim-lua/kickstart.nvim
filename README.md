@@ -25,8 +25,9 @@ add-apt-repository ppa:neovim-ppa/stable
 apt update
 apt install ripgrep fd-find
 apt install neovim
-(for python development): apt install python3 python3-venv python3-pip 
-(for perl development): cpan install Neovim::Ext
+apt install python3 python3-venv python3-pip (for python development) 
+cpan install Neovim::Ext (for perl development)
+apt install npm (for node javascript development and to support some language servers/parsers)
 ```
 
 #### Kali
@@ -44,6 +45,7 @@ cp nvim.appimage /usr/bin/
 ln -s /usr/bin/nvim.appimage /usr/bin/nvim
 apt install python3 python3-venv python3-pip (for python development) 
 cpan install Neovim::Ext (for perl development)
+apt install npm (for node javascript development and to support some language servers/parsers)
 ```
 
 #### Almalinux
@@ -52,8 +54,9 @@ from root:
 yum update
 yum install ripgrep fd-find
 yum install neovim
-yum install python3 python3-venv python3-pip (for python development)
+yum install python3 python3-pip (for python development)
 cpan install Neovim::Ext (for perl development) 
+yum install npm (for node javascript development and to support some language servers/parsers)
 ```
 
 ### Neovim Kickstart Configuration for any linux distribution (in non privileged user context)
