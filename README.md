@@ -1,6 +1,6 @@
 # mgua's kickstart.nvim
 
-### Introduction
+# Introduction
 
 This project is heavily based on TJ DeVries amazing work to promote Neovim adoption and usage.
 Please see the original project nvim-lua/kickstart.nvim
@@ -11,11 +11,11 @@ Kickstart is just a configuration procedure. It requires to have several compone
 A possible alternative approach is to use a neovim distribution, like 
 - [LazyVim](https://www.lazyvim.org/): maintained by @folke (the author of lazy.nvim package manager)
 
-### Linux
+## Linux
 
-## Neovim preparation and Installation for Linux
+### Neovim preparation and Installation for Linux
 
-# Ubuntu
+#### Ubuntu
 from root:
 - apt update
 - apt upgrade
@@ -25,7 +25,7 @@ from root:
 - apt install ripgrep fd-find
 - apt install neovim
 
-# Kali
+#### Kali
 from root:
 - apt update
 - apt upgrade
@@ -39,13 +39,13 @@ from root:
 - ln -s /usr/bin/nvim.appimage /usr/bin/nvim
 - (To be completed)
 
-# Almalinux
+#### Almalinux
 from root:
 - yum update
 - yum install ripgrep fd-find
 - yum install neovim
 
-## Kickstart Configuration (in non privileged user context)
+* Kickstart Configuration (in non privileged user context)*
 - Exit from nvim if open
 - cd $HOME/.config
 - mv nvim nvim_old
