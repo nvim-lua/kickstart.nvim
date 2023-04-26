@@ -14,6 +14,14 @@ Kickstart.nvim is just a configuration procedure. It requires to have several co
 A possible alternative approach is to use a neovim distribution, like 
 - [LazyVim](https://www.lazyvim.org/): maintained by @folke (the author of lazy.nvim package manager)
 
+A specific aspect on which work is needed is the improvement of clipboard integration between neovim running in a terminal session and the operating system from which the user works. While there are several alternative, at the moment I think the best solution is vim-oscyank ( https://github.com/ojroques/vim-oscyank ). This relies on ANSI OSC52 terminal specifications. While this standard is supported in several emulators, it is not ubiquitous. Good news is that is is supported by the new Windows Terminal Emulator. Bad news is that it is apparently unsupported by putty and by mremote.
+I can confirm that this works fine also in integration with Microsoft RDP and Citrix workspace. 
+(This allows things like opening citrix session towards a remote windows system, from my windows11 client, and from there using microsoft terminal ssh-ing a remote system. From there ssh-ing to a linux system where neovim is installed and where the editing takes place, and having yank correctly send back unicode txt excerpt to my windows11 client.)
+
+With this plugin (not currently integrated in this kickstart) I was able to sucessfully yank large text sections from a neovim session running on a remote system (also across jump-hosts and several network restrictions in between) to my windows local clipboard. Transfer in the other direction is quite trivial and SHIFT-INS usually performs the task.
+
+
+
 ## Neovim preparation and Installation for Linux
 #### Ubuntu
 from root:
