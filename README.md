@@ -1,43 +1,85 @@
-# kickstart.nvim
+# mgua's kickstart.nvim
 
 ### Introduction
 
-A starting point for Neovim that is:
+This project is heavily based on TJ DeVries amazing work to promote Neovim adoption and usage.
+Please see the original project nvim-lua/kickstart.nvim
+In my neovim journey I recently migrated from vimscript to lua, and I am still in the process of adjusting my setup.
 
-* Small
-* Single-file (with examples of moving to multi-file)
-* Documented
-* Modular
+I am working to make this kickstart a standard for my development team, which is easy to deploy on Windows Linux amd MacOSX systems.
+Kickstart is just a configuration procedure. It requires to have several components installed and prepared. In the following notes I will list the preparation activities to be performed on the different operating systems.
+A possible alternative approach is to use a neovim distribution, like 
+- [LazyVim](https://www.lazyvim.org/): maintained by @folke (the author of lazy.nvim package manager)
 
-This repo is meant to be used as by **YOU** to begin your Neovim journey; remove the things you don't use and add what you miss.
+### Linux
 
-Distribution Alternatives:
-- [LazyVim](https://www.lazyvim.org/): A delightful distribution maintained by @folke (the author of lazy.nvim, the package manager used here)
+## Neovim preparation and Installation for Linux
 
-### Installation
+# Ubuntu
+from root:
+- apt update
+- apt upgrade
+- apt install software-properties-common
+- add-apt-repository ppa:neovim-ppa/stable
+- apt update
+- apt install ripgrep fd-find
+- apt install neovim
 
-----------------
+# Kali
+from root:
+- apt update
+- apt upgrade
+- apt install ripgrep fd-find 
+- cd
+- mkdir neovim
+- cd neovim
+- curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+- chmod +x nvim.appimage
+- cp nvim.appimage /usr/bin/
+- ln -s /usr/bin/nvim.appimage /usr/bin/nvim
+- (To be completed)
 
-<b>Procedure for linux</b><p>
- 
-Exit from nvim if open<p>
+# Almalinux
+from root:
+- yum update
+- yum install ripgrep fd-find
+- yum install neovim
 
-<pre> 
-cd $HOME/.config
-mv nvim nvim_old
-mkdir nvim
-cd nvim
-git clone https://github.com/mgua/kickstart.nvim.git .
-</pre>
+## Kickstart Configuration (in non privileged user context)
+- Exit from nvim if open
+- cd $HOME/.config
+- mv nvim nvim_old
+- mkdir nvim
+- cd nvim
+- git clone https://github.com/mgua/kickstart.nvim.git .
 
-<p>Start nvim now, and you should see the automatic download and updates by lazy<p>
+Start nvim now, and you should see the automatic download and updates by lazy
+
+--
+
+### Windows
+
+## Neovim preparation and Installation for windows
+actions to be executed from administrator user:
+1. Chocolatey package manager installation (see https://chocolatey.org/)
+- run the following from powershell admin
+- Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+- close and reopen admin window
+2. Winget package manager installation ( see https://learn.microsoft.com/en-us/windows/package-manager/winget/ )
+- install winget from microsoft store
+3. from an administrator console, execute:
+- 
 
 
+## Kickstart Configuration (in non privileged user context)
+- Exit from nvim if open
+- cd $HOME/App.config
+- mv nvim nvim_old
+- mkdir nvim
+- cd nvim
+- git clone https://github.com/mgua/kickstart.nvim.git .
 
-
-
-----------------
-
+--
 
 
 Kickstart.nvim targets *only* the latest ['stable'](https://github.com/neovim/neovim/releases/tag/stable) and latest ['nightly'](https://github.com/neovim/neovim/releases/tag/nightly) of Neovim. If you are experiencing issues, please make sure you have the latest versions.
