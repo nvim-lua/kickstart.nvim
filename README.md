@@ -84,21 +84,23 @@ Actions to be executed from administrator user:
 
 ### Neovim Kickstart Configuration for Windows (in non privileged user context)
 
-- cd %HOMEPATH%	(typically c:\Users\<your-username>\)
-- py -m venv venv_nvim	(for python development, we create a dedicated environment for nvim)
-- .\venv_nvim\Scripts\activate 	(for python)
-- py -m pip install pip --upgrade (for python, upgrade pip)
-- py -m pip install neovim (for python, install neovim python package)
-- mkdir %HOMEPATH%\AppData\Local\nvim\	(to avoid some path not found error)
-- mkdir %HOMEPATH%\AppData\Local\Temp\nvim\ (to avoid some path not found error from lsp)
-- Exit from nvim if open
-- cd %HOMEPATH%\AppData\Local\
-- ren nvim nvim_old
-- mkdir nvim
-- cd nvim
-- git clone https://github.com/mgua/kickstart.nvim.git .
+```
+  cd %HOMEPATH%	(typically c:\Users\<your-username>\)
+  py -m venv venv_nvim	(for python development, we create a dedicated environment for nvim)
+  .\venv_nvim\Scripts\activate 	(for python)
+  py -m pip install pip --upgrade (for python, upgrade pip)
+  py -m pip install neovim (for python, install neovim python package)
+  mkdir %HOMEPATH%\AppData\Local\nvim\	(to avoid some path not found error)
+  mkdir %HOMEPATH%\AppData\Local\Temp\nvim\ (to avoid some path not found error from lsp)
+  (Exit from nvim if open)
+  cd %HOMEPATH%\AppData\Local\
+  ren nvim nvim_old
+  mkdir nvim
+  cd nvim
+  git clone https://github.com/mgua/kickstart.nvim.git .
+  (launch nvim)
+```
 
---
 
 #### Example: Adding an autopairs plugin
 
