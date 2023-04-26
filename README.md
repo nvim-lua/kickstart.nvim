@@ -56,7 +56,7 @@ yum install ripgrep fd-find
 yum install neovim
 yum install python3 python3-pip (for python development)
 cpan install Neovim::Ext (for perl development) 
-yum install npm (for node javascript development and to support some language servers/parsers)
+yum install npm (for node javascript development and to support some language servers/parsers: this brings in nodejs, nodejs-libs)
 ```
 
 ### Neovim Kickstart Configuration for any linux distribution (in non privileged user context)
