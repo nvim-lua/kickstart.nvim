@@ -23,7 +23,7 @@ apt upgrade
 apt install software-properties-common
 add-apt-repository ppa:neovim-ppa/stable
 apt update
-apt install ripgrep fd-find git
+apt install ripgrep fd-find git gcc make
 apt install neovim
 apt install python3 python3-venv python3-pip (for python development) 
 cpan install Neovim::Ext (for perl development)
@@ -36,7 +36,7 @@ from root:
 ```
 apt update
 apt upgrade
-apt install ripgrep fd-find git
+apt install ripgrep fd-find git gcc make
 cd
 mkdir neovim
 cd neovim
@@ -55,7 +55,7 @@ npm install -g tree-sitter-cli  (this is needed to execute the :TSInstallFromGra
 from root:
 ```
 yum update
-yum install ripgrep fd-find git
+yum install ripgrep fd-find git gcc make
 yum install neovim
 yum install python3 python3-pip (for python development)
 cpan install Neovim::Ext (for perl development) 
