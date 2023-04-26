@@ -68,19 +68,25 @@ Start nvim now, and you should see the automatic download and updates by lazy
 Actions to be executed from administrator user:
 1. Chocolatey package manager installation (see https://chocolatey.org/)
   - run the following from powershell admin
-  - Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+  ```
+  Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+  ```
   - close and reopen admin window
 2. Winget package manager installation ( see https://learn.microsoft.com/en-us/windows/package-manager/winget/ )
   - install winget from microsoft store
 3. from an administrator console, execute:
-  - winget install gnuwin32.tar (bsdtar, installed in c:\Windows\WinSxS\.. c:\cygwin64\bin...)
-  - winget install gnuwin32.findutils (grep)
-  - winget install Microsoft.WindowsTerminal (if not from winget, it can be installed from microsoft https://aka.ms/terminal https://github.com/microsoft/terminal#other-install-methods https://github.com/microsoft/terminal (go on releases on right side...))
-  - choco install less bat gzip ripgrep grep fd fzf far netcat curl wget procexp mingw (choco installs the tools in c:\ProgramData\chocolatey\bin these tools are needed for lsp config)
+  ```
+  winget install gnuwin32.tar (bsdtar, installed in c:\Windows\WinSxS\.. c:\cygwin64\bin...)
+  winget install gnuwin32.findutils (grep)
+  winget install Microsoft.WindowsTerminal (if not from winget, it can be installed from microsoft https://aka.ms/terminal https://github.com/microsoft/terminal#other-install-methods https://github.com/microsoft/terminal (go on releases on right side...))
+  choco install less bat gzip ripgrep grep fd fzf far netcat curl wget procexp mingw (choco installs the tools in c:\ProgramData\chocolatey\bin these tools are needed for lsp config)
+  ```
   - nerdfonts are a nice to have extension. After font installation, they can be setup in Windows Terminal to be available for neovim interface. Go download nerdfonts https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hack.zip uncompress in a temporary folder. then select all the .ttf files and press right-click then install. Open MS terminal, press the top icon on the right of the "+", then choose Profile/Defaults on the left, then Appearance and in font face set Hack Nerd Font
-  - choco install python (for python development. (I experienced path issues when using python.org install, maybe due to Anaconda being on my system too)) 
-  - winget install StrawberryPerl.StrawberryPerl (for perl development)
-  - cpanm -n Neovim::Ext (or cpan install Neovim::Ext) (for perl development)
+  ```
+  choco install python (for python development. (I experienced path issues when using python.org install, maybe due to Anaconda being on my system too)) 
+  winget install StrawberryPerl.StrawberryPerl (for perl development)
+  cpanm -n Neovim::Ext (or cpan install Neovim::Ext) (for perl development)
+  ```
 
 ### Neovim Kickstart Configuration for Windows (in non privileged user context)
 
