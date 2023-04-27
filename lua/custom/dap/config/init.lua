@@ -7,3 +7,4 @@ dap_vscode.load_launchjs(nil, {
 })
 
 require('custom.dap.config.pwa-node')
+require('custom.dap.config.firefox')
