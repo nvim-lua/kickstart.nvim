@@ -113,20 +113,6 @@ require('lazy').setup({
     },
   },
   -- {
-  --   'rebelot/kanagawa.nvim',
-  --   priority = 1000,
-  --   config = function()
-  --     vim.cmd.colorscheme 'kanagawa'
-  --   end,
-  -- },
-  -- {
-  --   'ellisonleao/gruvbox.nvim',
-  --   priority = 1000,
-  --   config = function()
-  --     vim.cmd.colorscheme 'gruvbox'
-  --   end,
-  -- },
-  -- {
   --   -- Theme inspired by Atom
   --   'navarasu/onedark.nvim',
   --   priority = 1000,
@@ -138,7 +124,7 @@ require('lazy').setup({
     'rose-pine/neovim',
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'rose-pine-main'
+      -- vim.cmd.colorscheme 'rose-pine-main'
     end,
   },
 
@@ -196,7 +182,6 @@ require('lazy').setup({
       pcall(require('nvim-treesitter.install').update { with_sync = true })
     end,
   },
-
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -344,10 +329,10 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'help', 'vim' },
+  ensure_installed = { 'lua', 'python', 'rust', 'html', 'css', 'javascript', 'help', 'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-  auto_install = true,
+  auto_install = false,
 
   highlight = { enable = true },
   indent = { enable = true, disable = { 'python' } },
@@ -550,5 +535,54 @@ cmp.setup {
   },
 }
 
+require('rose-pine').setup({
+  --- @usage 'auto'|'main'|'moon'|'dawn'
+  variant = 'main',
+  --- @usage 'main'|'moon'|'dawn'
+  dark_variant = 'main',
+  bold_vert_split = false,
+  dim_nc_background = true,
+  disable_background = false,
+  disable_float_background = false,
+  disable_italics = false,
+  --- @usage string hex value or named color from rosepinetheme.com/palette
+  groups = {
+    background = 'base',
+    background_nc = '_experimental_nc',
+    panel = 'surface',
+    panel_nc = 'base',
+    border = 'highlight_med',
+    comment = 'muted',
+    link = 'iris',
+    punctuation = 'subtle',
+    error = 'love',
+    hint = 'iris',
+    info = 'foam',
+    warn = 'gold',
+    headings = {
+      h1 = 'iris',
+      h2 = 'foam',
+      h3 = 'rose',
+      h4 = 'gold',
+      h5 = 'pine',
+      h6 = 'foam',
+    }
+    -- or set all headings at once
+    -- headings = 'subtle'
+  },
+  -- Change specific vim highlight groups
+  -- https://github.com/rose-pine/neovim/wiki/Recipes
+  highlight_groups = {
+    ColorColumn = { bg = 'rose' },
+    -- Blend colours against the "base" background
+    CursorLine = { bg = 'foam', blend = 10 },
+    StatusLine = { fg = 'love', bg = 'love', blend = 10 },
+  }
+})
+
+-- Set colorscheme after options
+vim.cmd('colorscheme rose-pine')
+-- vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+-- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
