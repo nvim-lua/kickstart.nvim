@@ -110,7 +110,7 @@ Actions to be executed from administrator user:
   winget install gnuwin32.tar (bsdtar, installed in c:\Windows\WinSxS\.. c:\cygwin64\bin...)
   winget install gnuwin32.findutils (grep)
   winget install Microsoft.WindowsTerminal (if not from winget, it can be installed from microsoft https://aka.ms/terminal https://github.com/microsoft/terminal#other-install-methods https://github.com/microsoft/terminal (go on releases on right side...))
-  choco install less bat gzip ripgrep grep fd fzf far netcat curl wget procexp mingw make unzip 7z (choco installs the tools in c:\ProgramData\chocolatey\bin these tools are needed for lsp config)
+  choco install less bat gzip ripgrep grep fd fzf far netcat curl wget procexp mingw make unzip (choco installs the tools in c:\ProgramData\chocolatey\bin these tools are needed for lsp config)
   ```
   - nerdfonts are a nice to have extension. After font installation, they can be setup in Windows Terminal to be available for neovim interface. Go download nerdfonts https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hack.zip uncompress in a temporary folder. then select all the .ttf files and press right-click then install. Open MS terminal, press the top icon on the right of the "+", then choose Profile/Defaults on the left, then Appearance and in font face set Hack Nerd Font
   ```
