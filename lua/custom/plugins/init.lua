@@ -81,6 +81,11 @@ return {
         desc = "[D]elete all [N]otifications",
       },
     },
+    config = function()
+      require("notify").setup {
+        background_colour = "#000000",
+      }
+    end,
   },
   {
     "folke/todo-comments.nvim",
