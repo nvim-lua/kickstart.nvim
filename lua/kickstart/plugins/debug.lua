@@ -46,35 +46,35 @@ return {
     }
 
     -- Basic debugging keymaps, feel free to change to your liking!
-    vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/Continue' })
-    vim.keymap.set('n', '<F1>', dap.step_into, { desc = 'Debug: Step Into' })
-    vim.keymap.set('n', '<F2>', dap.step_over, { desc = 'Debug: Step Over' })
-    vim.keymap.set('n', '<F3>', dap.step_out, { desc = 'Debug: Step Out' })
-    vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint, { desc = 'Debug: Toggle Breakpoint' })
-    vim.keymap.set('n', '<leader>B', function()
+    vim.keymap.set('n', '<F5>', dap.continue, { desc = "DAP: Launch/Continue" })
+    vim.keymap.set('n', '<F6>', dap.terminate, { desc = "DAP: Terminate" })
+    vim.keymap.set('n', '<F1>', dap.step_into, { desc = "DAP: Step into" })
+    vim.keymap.set('n', '<F2>', dap.step_over, { desc = "DAP: Step over" })
+    vim.keymap.set('n', '<F3>', dap.step_out, { desc = "DAP: Step out" })
+    vim.keymap.set('n', '<leader>bb', dap.toggle_breakpoint, { desc = "DAP: Toggle Breakpoint" })
+    vim.keymap.set('n', '<leader>bc', function()
+      dap.clear_breakpoints()
+      require("notify")("Breakpoints cleared", "warn")
+    end, { desc = "DAP: Clear Breakpoints" })
+    vim.keymap.set('n', '<leader>bB', function()
       dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
-    end, { desc = 'Debug: Set Breakpoint' })
+    end, { desc = "DAP: Toggle Breakpoint (cond)" })
+
+    local telescope = require('telescope')
+    telescope.load_extension('dap')
+    vim.keymap.set('n', '<leader>sb',
+      telescope.extensions.dap.list_breakpoints,
+      { desc = 'DAP: [S]earch [B]reakpoints' })
+    vim.keymap.set('n', '<leader>sv',
+      telescope.extensions.dap.variables,
+      { desc = 'DAP: [S]earch [V]ariables' })
+    vim.keymap.set('n', '<leader>sF',
+      telescope.extensions.dap.frames,
+      { desc = 'DAP: [S]earch [F]rames' })
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
     dapui.setup {
-      -- Set icons to characters that are more likely to work in every terminal.
-      --    Feel free to remove or use ones that you like more! :)
-      --    Don't feel like these are good choices.
-      icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
-      controls = {
-        icons = {
-          pause = '⏸',
-          play = '▶',
-          step_into = '⏎',
-          step_over = '⏭',
-          step_out = '⏮',
-          step_back = 'b',
-          run_last = '▶▶',
-          terminate = '⏹',
-          disconnect = '⏏',
-        },
-      },
     }
 
     -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
