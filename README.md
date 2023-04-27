@@ -150,7 +150,7 @@ Actions to be executed from administrator user:
 
 # Additional configurations 
 Please edit Python interpreter path to match the interpreter within the dedicated venv_nvim environment
-- this edit is to be carried out in nvim/lua/custom/plugins/additional_keymaps.lua
+- this edit is to be carried out in nvim/lua/custom/plugins/additional_keymaps.lua (windows) or in ~/.config/nvim/lua/custom/plugins/additional_keymaps.lua (linux)
 - once done execute :checkhealth from nvim to see if there are other issues
 
 # Treesitter and LSP language parser install
