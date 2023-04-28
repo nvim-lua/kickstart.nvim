@@ -77,4 +77,10 @@ keymap("n", "<leader>be", ":ClearBufferExceptCurrent<CR>", { silent = true, desc
 -- Vim Be Good
 keymap("n", "<leader>vbg", ":VimBeGood<CR>", { desc = "[V]im [B]e [G]ood" })
 
+-- Git keymap
 keymap("n", "<leader>gs", ":Telescope git_status<CR>", { desc = "[G]it [S]tatus" })
+keymap("n", "<leader>gd", ":Gvdiffsplit!<CR>", { desc = "[G]it [D]iff Vertical Split" })
+keymap("n", "<leader>gD", "<C-W><C-O><CR>", { desc = "[G]it [D]iff Close" })
+keymap("n", "gdh", ":diffget //2<CR>", { desc = "[G]it [D]iff Get [H]Left" })
+keymap("n", "gdl", ":diffget //3<CR>", { desc = "[G]it [D]iff Get [L]Right" })
+keymap("n", "gdp", ":diffput 1<CR>", { desc = "[G]it [D]iff [P]ut" })
