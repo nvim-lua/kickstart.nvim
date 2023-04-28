@@ -11,20 +11,37 @@ A starting point for Neovim that is:
 
 This repo is meant to be used as by **YOU** to begin your Neovim journey; remove the things you don't use and add what you miss.
 
+Kickstart.nvim targets *only* the latest ['stable'](https://github.com/neovim/neovim/releases/tag/stable) and latest ['nightly'](https://github.com/neovim/neovim/releases/tag/nightly) of Neovim. If you are experiencing issues, please make sure you have the latest versions.
+
 Distribution Alternatives:
 - [LazyVim](https://www.lazyvim.org/): A delightful distribution maintained by @folke (the author of lazy.nvim, the package manager used here)
 
 ### Installation
 
-Kickstart.nvim targets *only* the latest ['stable'](https://github.com/neovim/neovim/releases/tag/stable) and latest ['nightly'](https://github.com/neovim/neovim/releases/tag/nightly) of Neovim. If you are experiencing issues, please make sure you have the latest versions.
+* Backup your previous configuration (if any exists)
 
-* Backup your previous configuration
-* (Recommended) Fork this repo (so that you have your own copy that you can modify).
-* Clone the kickstart repo into `$HOME/.config/nvim/` (Linux/Mac) or `~/AppData/Local/nvim/` (Windows)
-  * If you don't want to include it as a git repo, you can just clone it and then move the files to this location
-* Start Neovim (`nvim`) and allow `lazy.nvim` to complete installation.
-* Restart Neovim
+### Archive Installation
+* On the home/landing page for the project find the blue "<> CODE" button click it and select Local > Download ZIP.
+* Extract the archive to:
+  `~/.config/nvim` (Linux)
+  `~/.config/nvim` (MacOS)
+  `%userprofile%\AppData\Local\nvim-data\` (Windows)
+* Ensure your extraction method did not extract with a parent folder. For example in ~/.config/nvim you should have init.lua not another folder called kickstart.nvim.
+
+### GIT Clone Installation
+* From a terminal cd/dir to:
+    `~/.config/nvim` (Linux)
+    `~/.config/nvim` (MacOS)
+    `%userprofile%\AppData\Local\nvim-data\` (Windows)
+
+* run: `git clone https://github.com/nvim-lua/kickstart.nvim.git ~/.config/nvim` OR: gh repo clone nvim-lua/kickstart.nvim
+* Run neovim (from terminal or shortcut) and allow the kickstart process to download files and set up the basics.
+* Once the setup is complete restart Neovim.
 * **You're ready to go!**
+
+* (Recommended/Optional) Fork this repo (so that you have your own copy that you can modify).
+* Clone the kickstart repo into `$HOME/.config/nvim/` (Linux/Mac) or `%userprofile%\AppData\Local\nvim-data\` (Windows)
+  * If you don't want to include it as a git repo, you can just clone it and then move the files to this location
 
 Additional system requirements:
 - Make sure to review the readmes of the plugins if you are experiencing errors. In particular:
@@ -81,7 +98,7 @@ return {
 }
 ```
 
-This will install the tree plugin and add the command `:NeoTree` for you. You can explore the documentation at [neo-tree.nvim](https://github.com/nvim-neo-tree/neo-tree.nvim) for more information.
+This will install the tree plugin and add the command `:Neotree` for you. You can explore the documentation at [neo-tree.nvim](https://github.com/nvim-neo-tree/neo-tree.nvim) for more information.
 
 #### Example: Adding a file to change default options
 
@@ -112,13 +129,13 @@ Each PR, especially those which increase the line count, should have a descripti
   * See [lazy.nvim uninstall](https://github.com/folke/lazy.nvim#-uninstalling) information
 * Are there any cool videos about this plugin?
   * Current iteration of kickstart (coming soon)
-  * Here is one about the previous iteration of kickstart: [video introduction to Kickstart.nvim](https://youtu.be/stqUbv-5u2s).
+  * Here is one about the previous iteration of kickstart: [video introduction to Kickstart.nvim](https://youtu.be/stqUbv-5u2s). Note the install via init.lua no longer works as specified. Please follow the install instructions in this file instead as they're up to date.
 
 ### Windows Installation
 
 Installation may require installing build tools, and updating the run command for `telescope-fzf-native`
 
-See `telescope-fzf-native` documention for [more details](https://github.com/nvim-telescope/telescope-fzf-native.nvim#installation)
+See `telescope-fzf-native` documentation for [more details](https://github.com/nvim-telescope/telescope-fzf-native.nvim#installation)
 
 This requires:
 
