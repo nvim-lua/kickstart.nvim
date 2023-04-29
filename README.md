@@ -122,13 +122,13 @@ Actions to be executed from administrator user:
   ```
   - A local node installation may be needed, for some language servers to be run. this requires the following:
   ```
-  winget install OpenJS.NodeJS.LTS (or choco install nodejs)
+  winget install OpenJS.NodeJS.LTS (or choco install nodejs-lts nodejs.commandline)
   npm install -g neovim (after closing and reopening admin window)
   npm install -g tree-sitter-cli  (this is needed to execute the :TSInstallFromGrammar <language> command within neovim)
   ```
   - And finally the neovim installation:
   ```
-  winget install neovim
+  winget install neovim (or choco install neovim)
   ``` 
 
 
@@ -144,6 +144,8 @@ Installing Microsoft Windows Terminal (wt.exe) was a bit tricky:
 3. Now the tool should be available. You can invoke it with wt.exe
 
 For the other tools proceed using the same procedures listed for Windows 10/11
+On Windows server 2022 I could not install a functional version of nodejs on windows 2022 thru choco, npm version is probably too old and neovim install fails
+
 
 
 ### Neovim Kickstart Configuration for Windows (in non privileged user context)
