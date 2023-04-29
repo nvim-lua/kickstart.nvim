@@ -136,16 +136,20 @@ Actions to be executed from administrator user:
 This operating system is similar to Windows 10/11 but I could not manage to have winget package installer working
 Luckily Chocolatey can install many packages.
 Installing Microsoft Windows Terminal (wt.exe) was a bit tricky:
+
 1. download Microsoft Windows Terminal from github release (on the right): download both preinstall kit and package for windows 10 version x64 architecture (windows11 version doesnt work). Unzip the preinstall kit.
+
 2. Open powershell in administrator mode, and install the vc runtime from the preinstall kit before the package itself
-- import-module appx -UseWindowsPowerShell
-- Add-AppxPackage "C:\users\<your user>\downloads\Microsoft.WindowsTerminal_Win10_1.16.10261.0_8wekyb3d8bbwe.msixbundle_Windows10_PreinstallKit\Microsoft.VCLibs.140.00.UWPDesktop_14.0.30704.0_x64__8wekyb3d8bbwe.appx"
-- Add-AppxPackage "C:\users\<your user>\downloads\Microsoft.WindowsTerminal_Win10_1.16.10261.0_8wekyb3d8bbwe.msixbundle"
+  ``` 
+  import-module appx -UseWindowsPowerShell
+  Add-AppxPackage "C:\users\<your user>\downloads\Microsoft.WindowsTerminal_Win10_1.16.10261.0_8wekyb3d8bbwe.msixbundle_Windows10_PreinstallKit\Microsoft.VCLibs.140.00.UWPDesktop_14.0.30704.0_x64__8wekyb3d8bbwe.appx"
+  Add-AppxPackage "C:\users\<your user>\downloads\Microsoft.WindowsTerminal_Win10_1.16.10261.0_8wekyb3d8bbwe.msixbundle"
+  ```   
+  
 3. Now the tool should be available. You can invoke it with wt.exe
 
-For the other tools proceed using the same procedures listed for Windows 10/11
-On Windows server 2022 I could not install a functional version of nodejs on windows 2022 thru choco, npm version is probably too old and neovim install fails
-
+For the other tools proceed using the same procedures listed for Windows 10/11. On Windows server 2022 I could not install a functional version of nodejs on windows 2022 thru choco, npm version is probably too old and neovim install fails
+Neovim can be installed via choco
 
 
 ### Neovim Kickstart Configuration for Windows (in non privileged user context)
