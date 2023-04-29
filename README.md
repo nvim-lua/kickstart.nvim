@@ -7,9 +7,10 @@ Please see the original project nvim-lua/kickstart.nvim
 
 In my neovim journey I recently migrated from vimscript to lua, and I am still in the process of adjusting my setup.
 
-I am working to make this kickstart a standard for my development team, to be deployed on Windows Linux and MacOSX systems.
+I am working to make this kickstart a standard for my development team, to be deployed on Windows, Linux and MacOSX systems.
 
-Kickstart.nvim is just a configuration procedure. It requires to have several components installed and prepared. In the following notes I will list the preparation activities to be performed on the different operating systems.
+Kickstart.nvim is just a configuration procedure. It requires to have several components installed and prepared. 
+In the following notes I will list the preparation activities to be performed on the different operating systems.
 
 A possible alternative approach is to use a neovim distribution, like 
 - [LazyVim](https://www.lazyvim.org/): maintained by @folke (the author of lazy.nvim package manager)
@@ -106,12 +107,13 @@ Actions to be executed from administrator user:
   - close and reopen admin window
 2. Winget package manager installation ( see https://learn.microsoft.com/en-us/windows/package-manager/winget/ )
   - install winget from microsoft store
-3. from an administrator console, execute:
+3. From an administrator console, execute:
   ```
   winget install gnuwin32.tar (bsdtar, installed in c:\Windows\WinSxS\.. c:\cygwin64\bin...)
   winget install gnuwin32.findutils (grep)
   winget install Microsoft.WindowsTerminal (if not from winget, it can be installed from microsoft https://aka.ms/terminal https://github.com/microsoft/terminal#other-install-methods https://github.com/microsoft/terminal (go on releases on right side...))
   (for windows server 2022 -without winget- see later)
+
   choco install git less bat gzip ripgrep grep fd fzf far netcat curl wget procexp mingw make unzip (choco installs most of the tools in c:\ProgramData\chocolatey\bin)
   ```
   - nerdfonts are a nice to have extension. After font installation, they can be setup in Windows Terminal to be available for neovim interface. Go download nerdfonts https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hack.zip uncompress in a temporary folder. then select all the .ttf files and press right-click then install. Open MS terminal, press the top icon on the right of the "+", then choose Profile/Defaults on the left, then Appearance and in font face set Hack Nerd Font
@@ -133,6 +135,7 @@ Actions to be executed from administrator user:
 
 
 ## Neovim preparation and Installation for Windows Server 2022 (Datacenter Edition)
+
 This operating system is similar to Windows 10/11 but I could not manage to have winget package installer working.
 Luckily Chocolatey can install many packages.
   ``` 
