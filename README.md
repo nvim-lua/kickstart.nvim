@@ -111,18 +111,18 @@ Actions to be executed from administrator user:
   winget install gnuwin32.tar (bsdtar, installed in c:\Windows\WinSxS\.. c:\cygwin64\bin...)
   winget install gnuwin32.findutils (grep)
   winget install Microsoft.WindowsTerminal (if not from winget, it can be installed from microsoft https://aka.ms/terminal https://github.com/microsoft/terminal#other-install-methods https://github.com/microsoft/terminal (go on releases on right side...))
-  (on windows server 2022 -without winget- i managed to install this via choco: choco install microsoft-windows-terminal. then it should be run it once as admin (need to test. executable should be wt.exe))
+  (for windows server 2022 -without winget- see later)
   choco install less bat gzip ripgrep grep fd fzf far netcat curl wget procexp mingw make unzip (choco installs the tools in c:\ProgramData\chocolatey\bin these tools are needed for lsp config)
   ```
   - nerdfonts are a nice to have extension. After font installation, they can be setup in Windows Terminal to be available for neovim interface. Go download nerdfonts https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Hack.zip uncompress in a temporary folder. then select all the .ttf files and press right-click then install. Open MS terminal, press the top icon on the right of the "+", then choose Profile/Defaults on the left, then Appearance and in font face set Hack Nerd Font
   ```
   choco install python (for python development. (I experienced path issues when using python.org install, maybe due to Anaconda being on my system too)) 
-  winget install StrawberryPerl.StrawberryPerl (for perl development)
+  winget install StrawberryPerl.StrawberryPerl (or choco install StrawberryPerl - for perl development)
   cpanm -n Neovim::Ext (or cpan install Neovim::Ext) (for perl development)
   ```
   - A local node installation may be needed, for some language servers to be run. this requires the following:
   ```
-  winget install OpenJS.NodeJS.LTS
+  winget install OpenJS.NodeJS.LTS (or choco install nodejs)
   npm install -g neovim (after closing and reopening admin window)
   npm install -g tree-sitter-cli  (this is needed to execute the :TSInstallFromGrammar <language> command within neovim)
   ```
