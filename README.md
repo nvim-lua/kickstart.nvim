@@ -285,6 +285,8 @@ Each PR, especially those which increase the line count, should have a descripti
 * Are there any cool videos about this plugin?
   * Current iteration of kickstart (coming soon)
   * Here is one about the previous iteration of kickstart: [video introduction to Kickstart.nvim](https://youtu.be/stqUbv-5u2s).
+* Running :checkhealth multiple issues appear related to html syntax  
+  * answer is needed
 
 ### Windows Installation
 
