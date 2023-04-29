@@ -75,7 +75,38 @@ return {
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
     dapui.setup {
+      layouts = { {
+        elements = { {
+          id = "scopes",
+          size = 0.25
+        }, {
+          id = "breakpoints",
+          size = 0.25
+        }, {
+          id = "stacks",
+          size = 0.25
+        }, {
+          id = "watches",
+          size = 0.25
+        } },
+        position = "left",
+        size = 70
+      }, {
+        elements = { {
+          id = "repl",
+          size = 0.5
+        }, {
+          id = "console",
+          size = 0.5
+        } },
+        position = "bottom",
+        size = 12
+      } },
     }
+    vim.keymap.set('n', '<F7>', function()
+      dapui.toggle({ reset = true })
+    end, { desc = "DAP: Toggle UI" })
+
 
     -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
     vim.keymap.set('n', '<F7>', dapui.toggle, { desc = 'Debug: See last session result.' })
