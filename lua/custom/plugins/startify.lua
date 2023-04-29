@@ -1,4 +1,4 @@
 -- the classical startify 
-return { 
+return {
 	'mhinz/vim-startify' 
 	}

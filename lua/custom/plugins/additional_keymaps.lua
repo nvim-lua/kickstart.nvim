@@ -16,6 +16,8 @@ vim.cmd [[
 	"next two lines are the same: in unicode and in equivalente representations
 	"set listchars=eol:⏎,tab:▸·,trail:·,space:·,nbsp:⎵	" center dot: alt-250
 	"set listchars=eol:\\u23ce,tab:\\u25b8\\u2500,trail:\\u00b7,space:\\u00b7,nbsp:\\u23b5
+
+	" alter the following line to adjust to your setup
 	"let g:python3_host_prog='~/venv_nvim/bin/python'						" linux
 	let g:python3_host_prog='c:\Users\mgua0\venv_nvim\Scripts\python.exe'	" windows
 
