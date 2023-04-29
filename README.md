@@ -139,7 +139,7 @@ Luckily Chocolatey can install many packages.
   choco install less bat gzip ripgrep grep fd fzf far netcat curl wget procexp mingw make unzip git python strawberryperl neovim
   cpanm -n Neovim::Ext (or cpan install Neovim::Ext) (for perl development)
   ``` 
-####Microsoft Windows terminal
+#### Microsoft Windows terminal
 Installing Microsoft Windows Terminal (wt.exe) was a bit tricky:
 
 1. download Microsoft Windows Terminal from github release (on the right): download both preinstall kit and package for windows 10 version x64 architecture (windows11 version doesnt work). Unzip the preinstall kit.
@@ -153,7 +153,7 @@ Installing Microsoft Windows Terminal (wt.exe) was a bit tricky:
   
 3. Now the tool should be available. You can invoke it with wt.exe
 
-####Node and related tools
+#### Node and related tools
 On Windows server 2022 I could not install a functional version of npm thru choco, npm version is probably too old and neovim install fails. A workaround is to use yarn in place of npm
 ```   
 choco install nodejs-lts yarn
@@ -162,10 +162,10 @@ yarn global add tree-sitter-cli
 
 ```   
 
-####Other tools
+#### Other tools
 For the other tools, nerdfonts etc... proceed using the same procedures listed for Windows 10/11. 
 
-####neovim 
+#### Neovim 
 Neovim can be installed via choco
 ```   
 choco install neovim
