@@ -132,8 +132,8 @@ Actions to be executed from administrator user:
   ``` 
 
 
-## Neovim preparation and Installation for Windows Server 2022
-This operating system is similar to Windows 10/11 but I could not manage to have winget package installer working
+## Neovim preparation and Installation for Windows Server 2022 (Datacenter Edition)
+This operating system is similar to Windows 10/11 but I could not manage to have winget package installer working.
 Luckily Chocolatey can install many packages.
   ``` 
   choco install less bat gzip ripgrep grep fd fzf far netcat curl wget procexp mingw make unzip git python strawberryperl neovim
