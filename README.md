@@ -95,7 +95,9 @@ python -m pip install neovim
 (To be completed)
 
 
-## Neovim preparation and Installation for windows
+## Neovim preparation and Installation for Windows (Windows 10 / Windows 11)
+(On Windows Server 2022 there are some issues due to present unavailability of stable winget). Choco can partially help.
+
 Actions to be executed from administrator user:
 1. Chocolatey package manager installation (see https://chocolatey.org/)
   - run the following from powershell admin
