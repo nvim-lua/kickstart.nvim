@@ -27,8 +27,9 @@ fi
 export ANDROID_SDK_ROOT=$HOME/Android/Sdk
 PATH=$PATH:$ANDROID_SDK_ROOT/emulator
 PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
-
 export PATH
+
+export EDITOR="nvim"
 
 if [ ! -f $HOME/antigen/antigen.zsh ]; then
     cat <<EOF

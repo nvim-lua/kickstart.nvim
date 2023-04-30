@@ -1,21 +1,18 @@
-return function(use)
-	use("folke/tokyonight.nvim")
-
+return {
 	-- formatting & linting
-	use("jose-elias-alvarez/null-ls.nvim")
+	"jose-elias-alvarez/null-ls.nvim",
 	--	use("jayp0521/mason-null-ls.nvim")
-
-	use({
+	{
 		"kylechui/nvim-surround",
-		tag = "*", -- Use for stability; omit to use `main` branch for the latest features
+		version = "*", -- Use for stability; omit to use `main` branch for the latest features
+		event = "VeryLazy",
 		config = function()
 			require("nvim-surround").setup({
 				-- Configuration here, or leave empty to use defaults
 			})
 		end,
-	})
-
-	use({
+	},
+	{
 		"folke/trouble.nvim",
 		requires = "nvim-tree/nvim-web-devicons",
 		config = function()
@@ -25,5 +22,5 @@ return function(use)
 				-- refer to the configuration section below
 			})
 		end,
-	})
-end
+	},
+}
