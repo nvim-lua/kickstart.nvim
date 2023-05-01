@@ -10,3 +10,5 @@ vim.api.nvim_create_autocmd({"BufLeave", "FocusLost", "InsertEnter"}, {
     group = my_group
   }
 )
+
+return {}
