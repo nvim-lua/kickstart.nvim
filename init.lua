@@ -582,8 +582,11 @@ require('rose-pine').setup({
 
 -- Set colorscheme after options
 vim.cmd('colorscheme habamax')
-vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+-- vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+-- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+--
+-- Fix the matching parenthesis color
 vim.api.nvim_command('hi MatchParen ctermbg=gray guibg=lightblue')
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
