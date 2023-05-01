@@ -135,7 +135,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'rose-pine',
+        theme = 'auto',
         component_separators = '|',
         section_separators = '',
       },
@@ -541,9 +541,9 @@ require('rose-pine').setup({
   --- @usage 'main'|'moon'|'dawn'
   dark_variant = 'main',
   bold_vert_split = false,
-  dim_nc_background = true,
-  disable_background = false,
-  disable_float_background = false,
+  dim_nc_background = false,
+  disable_background = true,
+  disable_float_background = true,
   disable_italics = false,
   --- @usage string hex value or named color from rosepinetheme.com/palette
   groups = {
@@ -581,8 +581,9 @@ require('rose-pine').setup({
 })
 
 -- Set colorscheme after options
-vim.cmd('colorscheme rose-pine')
--- vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
--- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+vim.cmd('colorscheme habamax')
+vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+vim.api.nvim_command('hi MatchParen ctermbg=gray guibg=lightblue')
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
