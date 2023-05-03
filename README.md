@@ -29,6 +29,17 @@ F11 - step into
 shift + F11 - step out
 F7 - to toggle the DapUI. Using this last debug session result can be seen
 
+# Below are some more options frequently used
+Space + gd = Go to definition
+Space + gr = Find references
+Space + rn - Rename a variable - Equal to F2 in vscode
+Space + ds - Display symbols (functions/variable etc)
+Space + sf - Search files( Fuzzy finder) equal to Ctrl+p in vscode
+Space + sw - Search words in file (Equal to Ctrl+shift+f in vscode)
+zR - Expand all fold
+zM - Collapse all folds (we can also use mouse as ufo plugin is installed)
+
+
 ```
 ### To install locally
 ```
