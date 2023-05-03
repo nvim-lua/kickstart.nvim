@@ -5,8 +5,6 @@ set.cursorline = true
 set.expandtab = true
 set.list = true
 set.shiftwidth = 2
--- set.spell = true
--- set.spelllang = 'en_us'
 set.splitbelow = true
 set.splitright = true
 set.swapfile = false
@@ -32,6 +30,10 @@ vim.keymap.set('v', '<C-j>', ":m '>+1<CR>gv=gv", { noremap = true, desc = 'Bubbl
 -- additional telescope triggers
 vim.keymap.set('n', '<C-t>', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<C-g>', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
+vim.keymap.set('n', '<leader>sj', require('telescope.builtin').jumplist, { desc = '[S]earch [J]umplist' })
+vim.keymap.set('n', '<leader>sj', require('telescope.builtin').jumplist, { desc = '[S]earch [J]umplist' })
+vim.keymap.set('n', '<leader>ss', require('telescope.builtin').git_status, { desc = '[S]earch [S]tatus' })
+vim.keymap.set('n', '<leader>sm', require('telescope.builtin').marks, { desc = '[S]earch [M]arks' })
 
 vim.diagnostic.config({
   severity_sort = true,
