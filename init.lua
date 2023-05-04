@@ -412,7 +412,15 @@ end
 local servers = {
   -- clangd = {},
   -- gopls = {},
-  pyright = {},
+  pyright = {
+  python = {
+      analysis = {
+        typeCheckingMode = "off",
+        autoSearchPaths = true,
+        useLibraryCodeForTypes = true
+      }
+    }
+    },
   -- rust_analyzer = {},
   -- tsserver = {},
 
