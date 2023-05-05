@@ -39,6 +39,9 @@ Space + sw - Search words in file (Equal to Ctrl+shift+f in vscode)
 zR - Expand all fold
 zM - Collapse all folds (we can also use mouse as ufo plugin is installed)
 
+:NeoTree will open the file tree (or) Ctrl+b
+:Format will format the python file with black format 
+
 
 ```
 ### To install locally
