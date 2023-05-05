@@ -143,7 +143,7 @@ Luckily Chocolatey can install many packages.
   cpanm -n Neovim::Ext (or cpan install Neovim::Ext) (for perl development)
   ``` 
 #### Microsoft Windows terminal
-Installing Microsoft Windows Terminal (wt.exe) was a bit tricky:
+Installing Microsoft Windows Terminal (wt.exe) was a bit tricky: (as of may 2023 winget tool is not available on Windows server, and choco install microsoft-windows-terminal fails)
 
 1. download Microsoft Windows Terminal from github release (on the right): download both preinstall kit and package for windows 10 version x64 architecture (windows11 version doesnt work). Unzip the preinstall kit.
 
