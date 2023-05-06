@@ -106,3 +106,5 @@ If you want to add additional configuration then you can add it here
 Paste into nvim works fine. But copy from neovim to outside doesn't work. I could not figure out any solution till now.
 So for copying contents i am using alternate solution like cat it and copy it from terminal. This is a minor problem
 
+### To learn vim quickly
+https://medium.com/free-code-camp/how-not-to-be-afraid-of-vim-anymore-ec0b7264b0ae
