@@ -41,6 +41,7 @@ zM - Collapse all folds (we can also use mouse as ufo plugin is installed)
 
 :NeoTree will open the file tree (or) Ctrl+b
 :Format will format the python file with black format 
+:only this will close other except current file
 
 
 ```
