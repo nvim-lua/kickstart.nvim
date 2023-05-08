@@ -1,0 +1,1 @@
+return { 'theniceboy/nvim-deus' }

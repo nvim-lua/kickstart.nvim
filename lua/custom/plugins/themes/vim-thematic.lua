@@ -8,22 +8,40 @@ let g:thematic#themes = {
 \                },
 \ 'anthraxylon'  : {
 \                },
+\ 'aquarium'  : {
+\                },
 \ 'ayu'  : {
+\                },
+\ 'blue-moon'  : {
 \                },
 \ 'bluloco'  : {
 \                },
 \ 'catppuccin'  : {
+\                },
+\ 'deus'  : {
 \                },
 \ 'dracula'  : {
 \                  'typeface': 'FuraCode Nerd Font Mono Light',
 \                },
 \ 'embark'  : {
 \                },
+\ 'everblush'  : {
+\                },
+\ 'falcon'  : {
+\                },
+\ 'gloombuddy'  : {
+\                },
+\ 'hybrid'  : {
+\                },
+\ 'juliana'  : {
+\                },
 \ 'kanagawa'  : {
 \                },
 \ 'leuven'  : {
 \                },
 \ 'lucius'  : {
+\                },
+\ 'malifluous'  : {
 \                },
 \ 'materiam'  : {
 \                },
@@ -38,6 +56,8 @@ let g:thematic#themes = {
 \                },
 \ 'moonfly'  : {
 \                },
+\ 'neon'  : {
+\                },
 \ 'nightfox'  : {
 \                },
 \ 'nightfly'  : {
@@ -48,8 +68,14 @@ let g:thematic#themes = {
 \                },
 \ 'nordic'  : {
 \                },
+\ 'nvimgelion'  : {
+\                },
+\ 'oceanic-next'  : {
+\                },
 \ 'off'  : {
 \                  'typeface': 'Cascadia Code Regular',
+\                },
+\ 'oh-lucy'  : {
 \                },
 \ 'oxocarbon'  : {
 \                },
@@ -83,6 +109,8 @@ let g:thematic#themes = {
 \                },
 \ 'pinkmare'  : {
 \                },
+\ 'rasmus'  : {
+\                },
 \ 'rose-pine'  : {
 \                },
 \ 'sacredforest'  : {
@@ -105,6 +133,8 @@ let g:thematic#themes = {
 \ 'tokyonight-day'  : {
 \                },
 \ 'tokyonight-moon'  : {
+\                },
+\ 'zephyr'  : {
 \                },
 \ }
 
