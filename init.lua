@@ -185,7 +185,7 @@ require('lazy').setup({
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  -- require 'kickstart.plugins.autoformat',
+  require 'kickstart.plugins.autoformat',
   -- require 'kickstart.plugins.debug',
 
   -- NOTE: The import below automatically adds your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -368,6 +368,7 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = "Open diagn
 
 -- Neotree toggle
 vim.keymap.set('n', '<leader>e', '<cmd>Neotree toggle<cr>', { desc = "Toggle Neotree" })
+vim.keymap.set('n', '<leader>o', '<cmd>Neotree focus<cr>', { desc = "Focus Neotree" })
 
 -- LSP settings.
 --  This function gets run when an LSP connects to a particular buffer.
