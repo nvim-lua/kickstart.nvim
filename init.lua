@@ -132,9 +132,9 @@ require('lazy').setup({
     },
   },
 
-  { 'mhinz/vim-startify' },
+ { 'mhinz/vim-startify' },
 
-  { "catppuccin/nvim", name = "catppuccin" }, 
+  { "catppuccin/nvim", name = "catppuccin" },
 
   { -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
@@ -244,6 +244,8 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+-- Setup nvim-devicons
+require'nvim-web-devicons'.get_icons()
 
 -- Set barbar's options
 require'bufferline'.setup {
@@ -285,7 +287,7 @@ require'bufferline'.setup {
     -- Configure the base icons on the bufferline.
     buffer_index = false,
     buffer_number = false,
-    button = '',
+    button = '',
     -- Enables / disables diagnostic symbols
     diagnostics = {
       [vim.diagnostic.severity.ERROR] = {enabled = true, icon = 'ﬀ'},
