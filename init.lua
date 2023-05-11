@@ -35,13 +35,12 @@ I hope you enjoy your Neovim journey,
 
 P.S. You can delete this when you're done too. It's your config now :)
 --]]
-
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
-
--- My custom remaps
-require('remap')
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+vim.g.mapleader = " "
 
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
@@ -69,9 +68,12 @@ require('lazy').setup({
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
+  'MunifTanjim/prettier.nvim',
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
+  'evanleck/vim-svelte',
+  'othree/html5.vim',
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
@@ -93,11 +95,16 @@ require('lazy').setup({
 
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
-    dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
+    dependencies = {
+      'hrsh7th/cmp-nvim-lsp',
+      'L3MON4D3/LuaSnip',
+      'saadparwaiz1/cmp_luasnip',
+      'ray-x/cmp-treesitter',
+    },
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',          opts = {} },
   { -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -117,15 +124,18 @@ require('lazy').setup({
     -- See `:help lualine.txt`
     opts = {
       options = {
-        icons_enabled = false,
+        icons_enabled = true,
         theme = 'onedark',
         component_separators = '|',
-        section_separators = '',
+        section_separators = { left = '', right = '' },
       },
+      sections = {
+        lualine_c = {
+          { 'filename', path = 1 }
+        }
+      }
     },
   },
-
-  -- { "catppuccin/nvim", name = "catppuccin" },
 
   -- { -- Theme inspired by Atom
   --   'navarasu/onedark.nvim',
@@ -134,14 +144,14 @@ require('lazy').setup({
   --     vim.cmd.colorscheme 'onedark'
   --   end,
   -- },
+
   {
     "folke/tokyonight.nvim",
     lazy = true,
-    -- opts = { style = "moon" },
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim',         opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } },
@@ -163,6 +173,9 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
+      'nvim-treesitter/nvim-treesitter-refactor',
+      'mrjones2014/nvim-ts-rainbow',
+      'windwp/nvim-autopairs',
     },
     config = function()
       pcall(require('nvim-treesitter.install').update { with_sync = true })
@@ -195,6 +208,9 @@ require('lazy').setup({
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- set termguicolors to enable highlight groups
+-- My custom remaps
+require('remap')
+
 vim.opt.termguicolors = true
 
 vim.o.guicursor = ""
@@ -205,8 +221,12 @@ vim.o.relativenumber = true
 
 vim.o.mouse = ""
 
--- Set colorscheme after loading it 
+-- Set colorscheme after loading it
 vim.cmd.colorscheme "tokyonight-moon"
+
+-- Transparent background
+-- vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+-- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
 -- Set highlight on search
 vim.o.hlsearch = false
@@ -259,6 +279,12 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })
 
+local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+
+local prettier = require("prettier")
+
+prettier.setup()
+
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
@@ -287,7 +313,7 @@ vim.keymap.set('n', '<leader>/', function()
 end, { desc = '[/] Fuzzily search in current buffer' })
 
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<C-p>', require('telescope.builtin').git_files, { desc = 'Search git project repo'})
+vim.keymap.set('n', '<C-p>', require('telescope.builtin').git_files, { desc = 'Search git project repo' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
@@ -303,6 +329,7 @@ require('nvim-treesitter.configs').setup {
 
   highlight = { enable = true },
   indent = { enable = true, disable = { 'python' } },
+  autopairs = { enable = true },
   incremental_selection = {
     enable = true,
     keymaps = {
@@ -311,6 +338,15 @@ require('nvim-treesitter.configs').setup {
       scope_incremental = '<c-s>',
       node_decremental = '<M-space>',
     },
+  },
+  rainbow = {
+    enable = true,
+    extended_mode = true, -- Highlight also non-parentheses delimiters
+    max_file_lines = 1000,
+  },
+  refactor = {
+    highlight_definitions = { enable = true },
+    navigation = { enable = true },
   },
   textobjects = {
     select = {
@@ -359,8 +395,8 @@ require('nvim-treesitter.configs').setup {
 }
 
 -- Diagnostic keymaps
--- vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
--- vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
 -- vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
 -- vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 
@@ -407,6 +443,17 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
+
+  if _.supports_method("textDocument/formatting") then
+    vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      group = augroup,
+      buffer = bufnr,
+      callback = function()
+        vim.lsp.buf.format()
+      end,
+    })
+  end
 end
 
 -- Enable the following language servers
@@ -419,8 +466,11 @@ local servers = {
   -- gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
-  -- tsserver = {},
-
+  emmet_ls = {},
+  tailwindcss = {},
+  html = {},
+  svelte = {},
+  tsserver = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -469,7 +519,7 @@ cmp.setup {
     end,
   },
   mapping = cmp.mapping.preset.insert {
-    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-d>'] = cmp.mapping.scroll_docs( -4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete {},
     ['<CR>'] = cmp.mapping.confirm {
@@ -488,8 +538,8 @@ cmp.setup {
     ['<S-Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
+      elseif luasnip.jumpable( -1) then
+        luasnip.jump( -1)
       else
         fallback()
       end
@@ -498,21 +548,25 @@ cmp.setup {
   sources = {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
+    { name = 'treesitter' },
   },
 }
 
--- require("nvim-tree").setup({
---   sort_by = "case_sensitive",
---   view = {
---     width = 30,
---   },
---   renderer = {
---     group_empty = true,
---   },
---   filters = {
---     dotfiles = true,
---   },
--- })
+-- nvim-autopairs
+require("nvim-autopairs").setup { check_ts = true }
+
+require("nvim-tree").setup({
+  sort_by = "case_sensitive",
+  view = {
+    width = 30,
+  },
+  renderer = {
+    group_empty = true,
+  },
+  filters = {
+    dotfiles = true,
+  },
+})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
