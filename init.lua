@@ -257,7 +257,7 @@ vim.o.relativenumber = true
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
-
+vim.keymap.set('n', '<leader>sr', ':%s/<C-r><C-w>/<C-r><C-w>/g<Left><Left>', { desc = "Find and replace all words under the cursor" })
 vim.keymap.set('n', '<leader>cv', '<cmd>Ex<CR>', { desc = "Back to file tree" })
 vim.keymap.set('n', '<leader>pv', '<cmd>Ex .<CR>', { desc = "Back to file tree one step" })
 -- Harpoon keymaps
@@ -268,6 +268,9 @@ vim.keymap.set('n', '<leader>1', function() require('harpoon.ui').nav_file(1) en
 vim.keymap.set('n', '<leader>2', function() require('harpoon.ui').nav_file(2) end, { desc = "Navigate to file at posistion 2" })
 vim.keymap.set('n', '<leader>3', function() require('harpoon.ui').nav_file(3) end, { desc = "Navigate to file at posistion 3" })
 vim.keymap.set('n', '<leader>4', function() require('harpoon.ui').nav_file(4) end, { desc = "Navigate to file at posistion 4" })
+vim.keymap.set('n', '<leader>5', function() require('harpoon.ui').nav_file(5) end, { desc = "Navigate to file at posistion 5" })
+vim.keymap.set('n', '<leader>6', function() require('harpoon.ui').nav_file(6) end, { desc = "Navigate to file at posistion 6" })
+vim.keymap.set('n', '<leader>7', function() require('harpoon.ui').nav_file(7) end, { desc = "Navigate to file at posistion 7" })
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -317,7 +320,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vim' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vim', 'go'},
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -441,6 +444,15 @@ local servers = {
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
+  tsserver = {
+    Javascript = {
+      init_options = {
+        preferences = {
+          disableSuggestions = true,
+        },
+      },
+    },
+  },
 
   lua_ls = {
     Lua = {
@@ -500,8 +512,8 @@ cmp.setup {
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
+--      elseif luasnip.expand_or_jumpable() then
+--        luasnip.expand_or_jump()
       else
         fallback()
       end
@@ -509,8 +521,8 @@ cmp.setup {
     ['<S-Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
+--      elseif luasnip.jumpable(-1) then
+--        luasnip.jump(-1)
       else
         fallback()
       end
