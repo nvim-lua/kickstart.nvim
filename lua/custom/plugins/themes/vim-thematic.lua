@@ -25,6 +25,8 @@ let g:thematic#themes = {
 \                },
 \ 'embark'  : {
 \                },
+\ 'eva01'  : {
+\                },
 \ 'everblush'  : {
 \                },
 \ 'falcon'  : {
