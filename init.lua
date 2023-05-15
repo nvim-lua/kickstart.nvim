@@ -45,7 +45,7 @@ vim.g.maplocalleader = ' '
 -- https://jaketrent.com/post/set-node-version-nvim/
 -- need to npm install -g typescript-language-server
 local home_dir = "/home/justinprather"
-local node_bin = "/home/justinprather/.nvm/versions/node/v18.4.0/bin"
+local node_bin = "/.nvm/versions/node/v18.4.0/bin"
 vim.g.node_host_prog = home_dir .. node_bin .. "/node"
 vim.cmd("let $PATH = '" .. home_dir .. node_bin .. ":' . $PATH")
 
@@ -92,7 +92,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',       opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
