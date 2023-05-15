@@ -523,3 +523,42 @@ vim.keymap.set('i', '<A-h>', '<C-d>', { desc="Move (de-indent) text left" });
 vim.keymap.set('x', '<A-l>', '>gv', { desc="Move (indent) text right" });
 vim.keymap.set('x', '<A-h>', '<gv', { desc="Move (de-indent) text left"});
 
+
+-- my basic session management
+vim.api.nvim_create_autocmd({'VimEnter'}, {
+  callback = function ()
+    if vim.fn.filereadable('session.vim') then
+      vim.cmd('source session.vim')
+      vim.notify("Session Restored", vim.log.levels.info, {title = "Sessions"})
+    end
+  end
+})
+
+vim.api.nvim_create_autocmd({'VimLeave'}, {
+  callback = function ()
+    vim.cmd('mks! session.vim')
+  end
+})
+
+-- my basic skeleton implementation
+vim.api.nvim_create_autocmd({'BufNewFile'}, {
+  callback = function (args)
+    local extension = string.match(args.file, '\\.([^\\.])+$')
+    local basename = string.match(args.file, '([^\\/])+$')
+
+    print(vim.inspect(args.file))
+    local function is_file(path)
+      local f=io.open(path, "r")
+      if f~=nil then io.close(f) return true else return false end
+    end
+    if is_file('templates/skeleton.' .. basename) then
+      -- we have a match to a skeleton file
+      vim.cmd(':so templates/skeleton.' .. basename)
+      return
+    end
+    if is_file('templates/skeletoni.' .. extension) then
+      vim.cmd(':so templates/skeleton.' .. extension)
+      return
+    end
+  end
+})
