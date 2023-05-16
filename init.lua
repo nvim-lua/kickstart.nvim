@@ -94,7 +94,7 @@ require('lazy').setup({
   {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
-    dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
+    dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip',"rafamadriz/friendly-snippets", },
   },
 
   -- Useful plugin to show you pending keybinds.
@@ -458,7 +458,7 @@ mason_lspconfig.setup_handlers {
 -- nvim-cmp setup
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
-
+require("luasnip.loaders.from_vscode").lazy_load()
 luasnip.config.setup {}
 
 cmp.setup {
