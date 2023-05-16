@@ -121,7 +121,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'tokyonight',
+        theme = 'kanagawa',
         component_separators = '|',
         section_separators = '',
       },
