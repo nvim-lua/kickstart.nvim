@@ -112,21 +112,21 @@ require('lazy').setup({
       },
     },
   },
-  -- {
-  --   -- Theme inspired by Atom
-  --   'navarasu/onedark.nvim',
-  --   priority = 1000,
-  --   config = function()
-  --     vim.cmd.colorscheme 'onedark'
-  --   end,
-  -- },
   {
-    'rose-pine/neovim',
+    -- Theme inspired by Atom
+    'navarasu/onedark.nvim',
     priority = 1000,
     config = function()
-      -- vim.cmd.colorscheme 'rose-pine-main'
+      vim.cmd.colorscheme 'onedark'
     end,
   },
+  -- {
+  --   'rose-pine/neovim',
+  --   priority = 1000,
+  --   config = function()
+  --     vim.cmd.colorscheme 'rose-pine-main'
+  --   end,
+  -- },
 
   {
     -- Set lualine as statusline
@@ -235,7 +235,7 @@ set.tabstop = 4
 set.softtabstop = 4
 set.shiftwidth = 4
 
-set.wrap = false;
+set.wrap = true;
 set.scrolloff = 8
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -535,58 +535,10 @@ cmp.setup {
   },
 }
 
-require('rose-pine').setup({
-  --- @usage 'auto'|'main'|'moon'|'dawn'
-  variant = 'main',
-  --- @usage 'main'|'moon'|'dawn'
-  dark_variant = 'main',
-  bold_vert_split = false,
-  dim_nc_background = false,
-  disable_background = true,
-  disable_float_background = true,
-  disable_italics = false,
-  --- @usage string hex value or named color from rosepinetheme.com/palette
-  groups = {
-    background = 'base',
-    background_nc = '_experimental_nc',
-    panel = 'surface',
-    panel_nc = 'base',
-    border = 'highlight_med',
-    comment = 'muted',
-    link = 'iris',
-    punctuation = 'subtle',
-    error = 'love',
-    hint = 'iris',
-    info = 'foam',
-    warn = 'gold',
-    headings = {
-      h1 = 'iris',
-      h2 = 'foam',
-      h3 = 'rose',
-      h4 = 'gold',
-      h5 = 'pine',
-      h6 = 'foam',
-    }
-    -- or set all headings at once
-    -- headings = 'subtle'
-  },
-  -- Change specific vim highlight groups
-  -- https://github.com/rose-pine/neovim/wiki/Recipes
-  highlight_groups = {
-    ColorColumn = { bg = 'rose' },
-    -- Blend colours against the "base" background
-    CursorLine = { bg = 'foam', blend = 10 },
-    StatusLine = { fg = 'love', bg = 'love', blend = 10 },
-  }
-})
-
--- Set colorscheme after options
-vim.cmd('colorscheme habamax')
--- vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
--- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
---
+-- If the colorscheme is Habamax, fix parenthesis colors
+-- vim.cmd('colorscheme habamax')
 -- Fix the matching parenthesis color
-vim.api.nvim_command('hi MatchParen ctermbg=gray guibg=lightblue')
+-- vim.api.nvim_command('hi MatchParen ctermbg=gray guibg=lightblue')
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
