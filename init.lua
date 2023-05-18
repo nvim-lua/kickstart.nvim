@@ -279,7 +279,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })
 
-local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+-- local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
 local prettier = require("prettier")
 
@@ -444,16 +444,16 @@ local on_attach = function(_, bufnr)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
 
-  if _.supports_method("textDocument/formatting") then
-    vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      group = augroup,
-      buffer = bufnr,
-      callback = function()
-        vim.lsp.buf.format()
-      end,
-    })
-  end
+  -- if _.supports_method("textDocument/formatting") then
+  --   vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+  --   vim.api.nvim_create_autocmd("BufWritePre", {
+  --     group = augroup,
+  --     buffer = bufnr,
+  --     callback = function()
+  --       vim.lsp.buf.format()
+  --     end,
+  --   })
+  -- end
 end
 
 -- Enable the following language servers
@@ -467,7 +467,7 @@ local servers = {
   -- pyright = {},
   -- rust_analyzer = {},
   emmet_ls = {},
-  tailwindcss = {},
+  -- tailwindcss = {},
   html = {},
   svelte = {},
   tsserver = {},
