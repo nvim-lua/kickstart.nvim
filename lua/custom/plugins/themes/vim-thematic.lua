@@ -109,6 +109,8 @@ let g:thematic#themes = {
 \                },
 \ 'pinkmare'  : {
 \                },
+\ 'purify'  : {
+\                },
 \ 'rasmus'  : {
 \                },
 \ 'rose-pine'  : {
@@ -133,6 +135,8 @@ let g:thematic#themes = {
 \ 'tokyonight-day'  : {
 \                },
 \ 'tokyonight-moon'  : {
+\                },
+\ 'vim-monokai-tasty'  : {
 \                },
 \ 'zephyr'  : {
 \                },
