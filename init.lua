@@ -416,11 +416,17 @@ end
 --
 --  Add any additional override configuration in the following tables. They will be passed to
 --  the `settings` field of the server config. You must look up that documentation yourself.
+--
+--  All servers, downloaded or installed locally, MUST be added and have their `settings`
+--  field configured here, or they will not be set up.
+--  Servers meant to be automatically downloaded and installed should only appear here,
+--  but not in the `system_server_cmds` table right after this. Servers already installed
+--  on your system should appear both here AND the `system_server_cmds`.
 local servers = {
   -- clangd = {},
   -- gopls = {},
-  --  pyright = {},
-  --  rust_analyzer = {},
+  -- pyright = {},
+  -- rust_analyzer = {},
   -- tsserver = {},
 
   lua_ls = {
@@ -431,15 +437,37 @@ local servers = {
   },
 }
 
+-- Commands to launch locally installed servers. All configurations other than launching
+-- command should be set in the `servers` table above.
+--  Only add/uncomment language servers that are already installed locally on your system.
+--  These added servers also MUST be added and configured in the `server` table above.
+--  Servers meant to be downloaded must NOT appear here.
+--  The key of each entry is server name, the value is a command that launches the
+--  server, with the first element being the path to binary and others as arguments.
+--
+--  Using system installed servers allows them to be managed by your distribution's
+--  package manager (instead of Mason) and avoids duplicate installations.
+--  Comment out any language server that is not locally installed, or those you prefer
+--  to redownload rather than using existing installed ones. 
+--  By default no local installation is used, and the table is all commented out.
 local system_server_cmds = {
-  -- clangd = { 'clangd' },
+  --  If the server installed on the system is NOT in PATH, pass the full path.
+  --  Also note that on Windows separators should be '\\'.
+  -- clangd = { 'E:\\LLVM\\bin\\clangd.exe' },
   -- gopls = { '/usr/local/bin/gopls' },
+  --  If the server IS in your PATH, passing the executable name suffice.
   -- pyright = { 'pyright' },
   -- rust_analyzer = { 'rust-analyzer' },
   -- tsserver = { 'tsserver' },
   -- lua_ls = { 'lua-language-server' },
 }
 
+-- Calculate the servers that should be downloaded and installed by Mason.
+-- These are servers the user requested but are not assigned a binary path, i.e.,
+-- inside the `server` table but not the `system_server_cmds` table.
+--
+-- View downloaded servers with :Mason
+-- Locally installed servers are NOT shown in :Mason; only in :LspInfo
 local mason_server_install = {}
 for server_name, _ in pairs(servers) do
   if system_server_cmds[server_name] == nil then
@@ -454,13 +482,15 @@ require('neodev').setup()
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
--- Ensure the servers above are installed
+-- Ensure the servers managed by Mason are installed
 local mason_lspconfig = require 'mason-lspconfig'
 
 mason_lspconfig.setup {
   ensure_installed = mason_server_install
 }
 
+-- The setup handler is called for each Mason-managed server after the server is
+-- activated, either at launch or after downloading and installation finishes.
 mason_lspconfig.setup_handlers {
   function(server_name)
     require('lspconfig')[server_name].setup {
@@ -471,6 +501,9 @@ mason_lspconfig.setup_handlers {
   end,
 }
 
+-- Mason is meant for downloading and installing servers at its own environment
+-- and locally installed servers are not managed by it. They must be activated
+-- manually at launch. Configured language servers can be viewed by :LspInfo
 for server_name, launch_cmd in pairs(system_server_cmds) do
   require('lspconfig')[server_name].setup {
     capabilities = capabilities,
