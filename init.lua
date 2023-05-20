@@ -112,14 +112,7 @@ require('lazy').setup({
       },
     },
   },
-  {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
-  },
+
   -- {
   --   'rose-pine/neovim',
   --   priority = 1000,
@@ -228,7 +221,7 @@ vim.keymap.set("n", "N", "Nzzzv")
 -- About quick fixes
 -- vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
 -- vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
-vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
+-- vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
 -- set tab configuration
 local set = vim.opt -- set options
 set.tabstop = 4
