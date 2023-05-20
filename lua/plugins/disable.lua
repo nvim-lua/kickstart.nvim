@@ -5,4 +5,5 @@ return {
   { "folke/noice.nvim", enabled = false },
   { "indent-blankline.nvim", enabled = false },
   { "mini.indentscope", enabled = false },
+  { "RRethy/vim-illuminate", enabled = false },
 }

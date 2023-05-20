@@ -7,3 +7,4 @@ vim.o.mouse = ""
 vim.o.nu = true
 vim.o.guicursor = ""
 vim.o.cursorline = false
+vim.o.clipboard = ""
