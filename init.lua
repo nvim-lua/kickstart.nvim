@@ -419,8 +419,8 @@ end
 local servers = {
   -- clangd = {},
   -- gopls = {},
-  -- pyright = {},
-  -- rust_analyzer = {},
+  --  pyright = {},
+  --  rust_analyzer = {},
   -- tsserver = {},
 
   lua_ls = {
@@ -430,6 +430,22 @@ local servers = {
     },
   },
 }
+
+local system_server_cmds = {
+  -- clangd = { 'clangd' },
+  -- gopls = { '/usr/local/bin/gopls' },
+  -- pyright = { 'pyright' },
+  -- rust_analyzer = { 'rust-analyzer' },
+  -- tsserver = { 'tsserver' },
+  -- lua_ls = { 'lua-language-server' },
+}
+
+local mason_server_install = {}
+for server_name, _ in pairs(servers) do
+  if system_server_cmds[server_name] == nil then
+    table.insert(mason_server_install, server_name)
+  end
+end
 
 -- Setup neovim lua configuration
 require('neodev').setup()
@@ -442,7 +458,7 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 local mason_lspconfig = require 'mason-lspconfig'
 
 mason_lspconfig.setup {
-  ensure_installed = vim.tbl_keys(servers),
+  ensure_installed = mason_server_install
 }
 
 mason_lspconfig.setup_handlers {
@@ -454,6 +470,15 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
+
+for server_name, launch_cmd in pairs(system_server_cmds) do
+  require('lspconfig')[server_name].setup {
+    capabilities = capabilities,
+    on_attach = on_attach,
+    settings = servers[server_name],
+    cmd = launch_cmd,
+  }
+end
 
 -- nvim-cmp setup
 local cmp = require 'cmp'
