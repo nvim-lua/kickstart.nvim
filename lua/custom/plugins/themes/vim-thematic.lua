@@ -33,6 +33,8 @@ let g:thematic#themes = {
 \                },
 \ 'gloombuddy'  : {
 \                },
+\ 'gotham'  : {
+\                },
 \ 'hybrid'  : {
 \                },
 \ 'juliana'  : {
