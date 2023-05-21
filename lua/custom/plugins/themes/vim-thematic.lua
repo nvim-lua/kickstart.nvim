@@ -20,6 +20,8 @@ let g:thematic#themes = {
 \                },
 \ 'catppuccin'  : {
 \                },
+\ 'challenger_deep'  : {
+\                },
 \ 'deus'  : {
 \                },
 \ 'dracula'  : {
