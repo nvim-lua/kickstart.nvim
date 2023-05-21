@@ -163,5 +163,22 @@ let g:thematic#defaults = {
 
 let g:thematic#theme_name = 'catppuccin'
 ]]
+
+    -- Retrieve all mappings
+    local mappings = vim.api.nvim_get_keymap ''
+
+    -- Iterate through the mappings to find and remove any existing ones for the commands
+    for _, mapping in ipairs(mappings) do
+      if mapping.cmd == 'ThematicRandom' or mapping.cmd == 'ThematicCatppuccino' then
+        -- Remove existing mappings
+        vim.api.nvim_del_keymap(mapping.mode, mapping.lhs)
+      end
+    end
+
+    -- Set new mapping for ThematicRandom
+    vim.api.nvim_set_keymap('n', '<leader>tr', ':ThematicRandom<CR>', { silent = true })
+
+    -- Set new mapping for ThematicCatppuccino
+    vim.api.nvim_set_keymap('n', '<leader>tc', ':Thematic catppuccin<CR>', { silent = true })
   end,
 }

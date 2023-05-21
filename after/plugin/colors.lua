@@ -12,4 +12,4 @@ end
 
 ColorMyPencils()
 
--- vim.cmd [[ ThematicRandom ]]
+vim.cmd 'autocmd BufEnter * ThematicRandom'
