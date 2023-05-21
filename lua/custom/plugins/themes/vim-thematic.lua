@@ -10,6 +10,8 @@ let g:thematic#themes = {
 \                },
 \ 'aquarium'  : {
 \                },
+\ 'aylin'  : {
+\                },
 \ 'ayu'  : {
 \                },
 \ 'blue-moon'  : {
