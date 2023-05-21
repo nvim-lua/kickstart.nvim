@@ -91,6 +91,10 @@ require('lazy').setup({
   },
 
   {
+    'simrat39/rust-tools.nvim',
+  },
+
+  {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
     dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
@@ -179,7 +183,7 @@ require('lazy').setup({
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
   require 'kickstart.plugins.autoformat',
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.debug',
 
   -- NOTE: The import below automatically adds your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
@@ -445,7 +449,14 @@ local servers = {
   -- clangd = {},
   -- gopls = {},
   -- pyright = {},
-  -- rust_analyzer = {},
+  -- rust_analyzer = {
+  --   inlayHints = {
+  --     enabled = true,
+  --     typeHints = {
+  --       enable = true,
+  --     },
+  --   },
+  -- },
   -- tsserver = {},
   -- eslint = {},
   lua_ls = {
@@ -535,3 +546,59 @@ cmp.setup {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+local rt = require("rust-tools")
+
+rt.setup({
+  -- dap = {
+  --   adapter = {
+  --     type = 'server',
+  --     port = "${port}",
+  --     executable = {
+  --       command = codelldb_path,
+  --       args = { "--port", "${port}" },
+  --     }
+  --   }
+  -- },
+  server = {
+    on_attach = function(_, bufnr)
+      local nmap = function(keys, func, desc)
+        if desc then
+          desc = 'LSP: ' .. desc
+        end
+
+        vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
+      end
+
+      nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+
+      nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+      nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+      nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
+      nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
+      nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
+      nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+
+      -- See `:help K` for why this keymap
+      nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+      nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+
+      -- Lesser used LSP functionality
+      nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+      nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
+      nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
+      nmap('<leader>wl', function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+      end, '[W]orkspace [L]ist Folders')
+      -- Hover actions
+      vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
+      -- Code action groups
+      vim.keymap.set("n", "<Leader>ca", rt.code_action_group.code_action_group,
+        { desc = '[C]ode [A]ctions', buffer = bufnr })
+    end,
+  },
+  tools = {
+    hover_actions = {
+      auto_focus = true,
+    },
+  },
+})
