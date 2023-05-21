@@ -121,12 +121,24 @@ require('lazy').setup({
   --    vim.cmd.colorscheme 'no-clown-fiesta'
   --  end,
   -- },
+  -- {
+  --   'aktersnurra/no-clown-fiesta.nvim',
+  --   priority = 10000,
+  --   config = function()
+  --     vim.cmd.colorscheme 'no-clown-fiesta'
+  --   end
+  -- },
   {
-    'aktersnurra/no-clown-fiesta.nvim',
-    priority = 10000,
+    'projekt0n/github-nvim-theme',
+    lazy = false,    -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
-      vim.cmd.colorscheme 'no-clown-fiesta'
-    end
+      require('github-theme').setup({
+        -- ...
+      })
+
+      vim.cmd.colorscheme('github_dark_tritanopia')
+    end,
   },
 
   {
@@ -421,7 +433,7 @@ end
 --  Add any additional override configuration in the following tables. They will be passed to
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
-  -- clangd = {},
+  clangd = {},
   -- gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
