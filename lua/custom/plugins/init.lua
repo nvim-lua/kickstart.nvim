@@ -95,25 +95,32 @@ return {
 
   {
     "folke/trouble.nvim",
-    cond = false,
-    requires = "nvim-tree/nvim-web-devicons",
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
     config = function()
       require("trouble").setup {}
+
       vim.keymap.set("n", "<leader>xx", "<cmd>TroubleToggle<cr>",
         { silent = true, noremap = true }
       )
+
       vim.keymap.set("n", "<leader>xw", "<cmd>TroubleToggle workspace_diagnostics<cr>",
         { silent = true, noremap = true }
       )
+
       vim.keymap.set("n", "<leader>xd", "<cmd>TroubleToggle document_diagnostics<cr>",
         { silent = true, noremap = true }
       )
+
       vim.keymap.set("n", "<leader>xl", "<cmd>TroubleToggle loclist<cr>",
         { silent = true, noremap = true }
       )
+
       vim.keymap.set("n", "<leader>xq", "<cmd>TroubleToggle quickfix<cr>",
         { silent = true, noremap = true }
       )
+
       vim.keymap.set("n", "gR", "<cmd>TroubleToggle lsp_references<cr>",
         { silent = true, noremap = true }
       )
@@ -131,7 +138,7 @@ return {
           null_ls.builtins.code_actions.eslint_d,
           null_ls.builtins.diagnostics.codespell,
           null_ls.builtins.diagnostics.eslint_d,
-          null_ls.builtins.formatting.eslint_d,
+          -- null_ls.builtins.formatting.eslint_d,
           null_ls.builtins.formatting.prettierd,
         },
       })
@@ -153,5 +160,36 @@ return {
         automatic_setup = false,
       })
     end,
-  }
+  },
+
+  {
+    'nvim-treesitter/nvim-treesitter',
+    dependencies = {
+      'JoosepAlviste/nvim-ts-context-commentstring',
+    },
+    config = function()
+      require('nvim-treesitter.configs').setup {
+        ensure_installed = {
+          'css',
+          'html',
+          'javascript',
+          'lua',
+          'python',
+          'scss',
+          'tsx',
+          'typescript',
+          'vim',
+        },
+
+        context_commentstring = {
+          enable = true,
+          enable_autocmd = false,
+        }
+      }
+
+      require('Comment').setup {
+        pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+      }
+    end
+  },
 }
