@@ -32,7 +32,7 @@ Distribution Alternatives:
 * From a terminal cd/dir to:
     `~/.config/nvim` (Linux)
     `~/.config/nvim` (MacOS)
-    `%userprofile%\AppData\Local\nvim-data\` (Windows)
+    `%userprofile%\AppData\Local\nvim\` (Windows)
 
 * run: `git clone https://github.com/nvim-lua/kickstart.nvim.git ~/.config/nvim` OR: gh repo clone nvim-lua/kickstart.nvim
 * Run neovim (from terminal or shortcut) and allow the kickstart process to download files and set up the basics.
