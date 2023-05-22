@@ -28,6 +28,8 @@ let g:thematic#themes = {
 \                },
 \ 'deus'  : {
 \                },
+\ 'dichromatic'  : {
+\                },
 \ 'dracula'  : {
 \                  'typeface': 'FuraCode Nerd Font Mono Light',
 \                },
@@ -38,6 +40,8 @@ let g:thematic#themes = {
 \ 'everblush'  : {
 \                },
 \ 'falcon'  : {
+\                },
+\ 'flattened'  : {
 \                },
 \ 'gloombuddy'  : {
 \                },

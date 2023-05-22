@@ -1,0 +1,1 @@
+return { 'romainl/vim-dichromatic' }
