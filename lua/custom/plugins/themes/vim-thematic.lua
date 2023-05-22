@@ -6,7 +6,11 @@ let g:thematic#themes = {
 \ 'afterglow'  : {
 \                  'typeface': 'FuraCode Nerd Font Mono Light',
 \                },
+\ 'alduin'  : {
+\                },
 \ 'anthraxylon'  : {
+\                },
+\ 'apprentice'  : {
 \                },
 \ 'aquarium'  : {
 \                },
