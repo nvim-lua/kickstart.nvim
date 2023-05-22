@@ -107,7 +107,9 @@ require('lazy').setup({
     },
   },
 
-  { 'folke/which-key.nvim',          opts = {} },
+  -- Useful plugin to show you pending keybinds.
+  { 'folke/which-key.nvim',          opts = {} }
+    
   {
     -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -137,6 +139,7 @@ require('lazy').setup({
   --   end,
   -- },
 
+
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
@@ -163,6 +166,7 @@ require('lazy').setup({
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim',         opts = {} },
+
 
   -- Fuzzy Finder (files, lsp, etc)
   { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
