@@ -7,8 +7,8 @@
 Kickstart.nvim is *not* a distribution.
 
 Kickstart.nvim is a template for your own configuration.
-  The goal is that you can read every line of code, top-to-bottom, and understand
-  what your configuration is doing.
+  The goal is that you can read every line of code, top-to-bottom, understand
+  what your configuration is doing, and modify it to suit your needs.
 
   Once you've done that, you should start exploring, configuring and tinkering to
   explore Neovim!
@@ -34,7 +34,8 @@ I hope you enjoy your Neovim journey,
 - TJ
 
 P.S. You can delete this when you're done too. It's your config now :)
---]] -- Set <space> as the leader key
+--]]
+-- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
@@ -65,41 +66,72 @@ require('lazy').setup({
   'tpope/vim-fugitive', 'tpope/vim-rhubarb', -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth', -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
-  { -- LSP Configuration & Plugins
+  {
+    -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs to stdpath for neovim
-      'williamboman/mason.nvim', 'williamboman/mason-lspconfig.nvim',
+      { 'williamboman/mason.nvim', config = true },
+      'williamboman/mason-lspconfig.nvim',
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      {'j-hui/fidget.nvim', opts = {}}, -- Additional lua configuration, makes nvim stuff amazing!
-      'folke/neodev.nvim'
-    }
-  }, { -- Autocompletion
+      { 'j-hui/fidget.nvim', opts = {} },
+
+      -- Additional lua configuration, makes nvim stuff amazing!
+      'folke/neodev.nvim',
+    },
+  },
+
+  {
+    -- Autocompletion
     'hrsh7th/nvim-cmp',
-    dependencies = {'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip'}
-  }, -- Useful plugin to show you pending keybinds.
-  {'folke/which-key.nvim', opts = {}},
-  { -- Adds git releated signs to the gutter, as well as utilities for managing changes
+    dependencies = {
+      -- Snippet Engine & its associated nvim-cmp source
+      'L3MON4D3/LuaSnip',
+      'saadparwaiz1/cmp_luasnip',
+
+      -- Adds LSP completion capabilities
+      'hrsh7th/cmp-nvim-lsp',
+
+      -- Adds a number of user-friendly snippets
+      'rafamadriz/friendly-snippets',
+    },
+  },
+
+  -- Useful plugin to show you pending keybinds.
+  { 'folke/which-key.nvim', opts = {} },
+  {
+    -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
       -- See `:help gitsigns.txt`
       signs = {
-        add = {text = '+'},
-        change = {text = '~'},
-        delete = {text = '_'},
-        topdelete = {text = '‾'},
-        changedelete = {text = '~'}
-      }
-    }
-  }, { -- Theme inspired by Atom
+        add = { text = '+' },
+        change = { text = '~' },
+        delete = { text = '_' },
+        topdelete = { text = '‾' },
+        changedelete = { text = '~' },
+      },
+      on_attach = function(bufnr)
+        vim.keymap.set('n', '[c', require('gitsigns').prev_hunk, { buffer = bufnr, desc = 'Go to Previous Hunk' })
+        vim.keymap.set('n', ']c', require('gitsigns').next_hunk, { buffer = bufnr, desc = 'Go to Next Hunk' })
+        vim.keymap.set('n', '<leader>ph', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[P]review [H]unk' })
+      end,
+    },
+  },
+
+  {
+    -- Theme inspired by Atom
     'navarasu/onedark.nvim',
     priority = 1000,
     config = function()
       vim.cmd.colorscheme 'onedark'
-    end
-  }, { -- Set lualine as statusline
+    end,
+  },
+
+  {
+    -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
     -- See `:help lualine.txt`
     opts = {
@@ -107,17 +139,27 @@ require('lazy').setup({
         icons_enabled = false,
         theme = 'onedark',
         component_separators = '|',
-        section_separators = ''
-      }
-    }
-  }, { -- Add indentation guides even on blank lines
+        section_separators = '',
+      },
+    },
+  },
+
+  {
+    -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
-    opts = {char = '┊', show_trailing_blankline_indent = false}
-  }, -- "gc" to comment visual regions/lines
-  {'numToStr/Comment.nvim', opts = {}}, -- Fuzzy Finder (files, lsp, etc)
-  {'nvim-telescope/telescope.nvim', version = '*', dependencies = {'nvim-lua/plenary.nvim'}},
+    opts = {
+      char = '┊',
+      show_trailing_blankline_indent = false,
+    },
+  },
+
+  -- "gc" to comment visual regions/lines
+  { 'numToStr/Comment.nvim', opts = {} },
+
+  -- Fuzzy Finder (files, lsp, etc)
+  { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
 
   -- Fuzzy Finder Algorithm which requires local dependencies to be built.
   -- Only load if `make` is available. Make sure you have the system
@@ -129,14 +171,19 @@ require('lazy').setup({
     build = 'make',
     cond = function()
       return vim.fn.executable 'make' == 1
-    end
-  }, { -- Highlight, edit, and navigate code
+    end,
+  },
+
+  {
+    -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
-    dependencies = {'nvim-treesitter/nvim-treesitter-textobjects'},
-    config = function()
-      pcall(require('nvim-treesitter.install').update {with_sync = true})
-    end
-  }, -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects',
+    },
+    build = ':TSUpdate',
+  },
+
+  -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
   -- require 'kickstart.plugins.autoformat', -- require 'kickstart.plugins.debug',
@@ -145,14 +192,12 @@ require('lazy').setup({
   --    up-to-date with whatever is in the kickstart repo.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  --
-  --    An additional note is that if you only copied in the `init.lua`, you can just comment this line
-  --    to get rid of the warning telling you that there are not plugins in `lua/custom/plugins/`.
-  {import = 'custom.plugins'}
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
+-- NOTE: You can change these options as you wish!
 
 -- Set highlight on search
 vim.o.hlsearch = false
@@ -246,7 +291,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics,
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = {'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim'},
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -293,12 +338,12 @@ require('nvim-treesitter.configs').setup {
 }
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
--- vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
+-- vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
--- LSP settings.
+-- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
@@ -365,9 +410,6 @@ require('neodev').setup()
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
--- Setup mason so it can manage external tooling
-require('mason').setup()
-
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
 
@@ -383,10 +425,11 @@ mason_lspconfig.setup_handlers {
   end
 }
 
--- nvim-cmp setup
+-- [[ Configure nvim-cmp ]]
+-- See `:help cmp`
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
-
+require('luasnip.loaders.from_vscode').lazy_load()
 luasnip.config.setup {}
 
 cmp.setup {
@@ -396,6 +439,8 @@ cmp.setup {
     end
   },
   mapping = cmp.mapping.preset.insert {
+    ['<C-n>'] = cmp.mapping.select_next_item(),
+    ['<C-p>'] = cmp.mapping.select_prev_item(),
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete {},
@@ -403,7 +448,7 @@ cmp.setup {
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
+      elseif luasnip.expand_or_locally_jumpable() then
         luasnip.expand_or_jump()
       else
         fallback()
@@ -412,7 +457,7 @@ cmp.setup {
     ['<S-Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
+      elseif luasnip.locally_jumpable(-1) then
         luasnip.jump(-1)
       else
         fallback()
