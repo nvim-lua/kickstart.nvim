@@ -115,6 +115,8 @@ let g:thematic#themes = {
 \                  'font-size': 11,
 \                  'linespace': 6,
 \                },
+\ 'pink-moon'  : {
+\                },
 \ 'pinkmare'  : {
 \                },
 \ 'purify'  : {
