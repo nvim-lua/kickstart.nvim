@@ -142,6 +142,8 @@ let g:thematic#themes = {
 \ 'solarized8'  : {
 \                  'typeface': 'FuraCode Nerd Font Mono Light',
 \                },
+\ 'space-vim-dark'  : {
+\                },
 \ 'tender'  : {
 \                },
 \ 'tokyonight'  : {
