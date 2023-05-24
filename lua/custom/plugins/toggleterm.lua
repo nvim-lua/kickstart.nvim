@@ -6,7 +6,7 @@ return {
 
 		term.setup {
 			size = 20,
-			open_mapping = [[<leader>tf]],
+			open_mapping = [[<c-\>]],
 			shading_factor = 2,
 			direction = 'float',
 			float_opts = {

@@ -37,4 +37,5 @@ o.swapfile = false
 o.scrolloff = 8
 o.colorcolumn = '80'
 
+o.timeoutlen = 500
 
