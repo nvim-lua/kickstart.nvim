@@ -35,6 +35,8 @@ let g:thematic#themes = {
 \                },
 \ 'embark'  : {
 \                },
+\ 'enfocado'  : {
+\                },
 \ 'eva01'  : {
 \                },
 \ 'everblush'  : {
