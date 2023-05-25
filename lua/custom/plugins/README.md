@@ -12,7 +12,7 @@ go install github.com/go-delve/delve/cmd/dlv@latest # for go debug
 
 Substitute Mode
 ```shell
-:V,s/pattern/
+:V:s/pattern/
 ```
 
 Check for key combination
