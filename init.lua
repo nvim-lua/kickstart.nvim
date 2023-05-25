@@ -546,19 +546,21 @@ cmp.setup {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+local extension_path = vim.env.HOME .. '/.local/share/nvim/mason/packages/codelldb/extension/'
+local codelldb_path = extension_path .. 'adapter/codelldb'
+local liblldb_path = extension_path .. 'lldb/lib/liblldb'
+
+-- The liblldb extension is .so for linux and .dylib for macOS
+liblldb_path = liblldb_path .. ".so"
+
 local rt = require("rust-tools")
 
 rt.setup({
-  -- dap = {
-  --   adapter = {
-  --     type = 'server',
-  --     port = "${port}",
-  --     executable = {
-  --       command = codelldb_path,
-  --       args = { "--port", "${port}" },
-  --     }
-  --   }
-  -- },
+  dap = {
+    adapter = require('rust-tools.dap').get_codelldb_adapter(
+      codelldb_path, liblldb_path)
+  },
   server = {
     on_attach = function(_, bufnr)
       local nmap = function(keys, func, desc)
@@ -599,6 +601,18 @@ rt.setup({
   tools = {
     hover_actions = {
       auto_focus = true,
+    },
+    inlay_hints = {
+      -- automatically set inlay hints (type hints)
+      -- default: true
+      auto = true,
+
+      -- Only show inlay hints for the current line
+      only_current_line = true,
+
+      -- whether to show parameter hints with the inlay hints or not
+      -- default: true
+      show_parameter_hints = false,
     },
   },
 })
