@@ -28,15 +28,15 @@ Distribution Alternatives:
   `%userprofile%\AppData\Local\nvim-data\` (Windows)
 * Ensure your extraction method did not extract with a parent folder. For example in ~/.config/nvim you should have init.lua not another folder called kickstart.nvim.
 
-### GIT Clone Installation
+### Git Clone Installation
 * From a terminal cd/dir to:
     `~/.config/nvim` (Linux)
     `~/.config/nvim` (MacOS)
-    `%userprofile%\AppData\Local\nvim-data\` (Windows)
+    `%userprofile%\AppData\Local\nvim\` (Windows)
 
-* run: `git clone https://github.com/nvim-lua/kickstart.nvim.git ~/.config/nvim` OR: gh repo clone nvim-lua/kickstart.nvim
-* Run neovim (from terminal or shortcut) and allow the kickstart process to download files and set up the basics.
-* Once the setup is complete restart Neovim.
+* run: `git clone https://github.com/nvim-lua/kickstart.nvim.git ~/.config/nvim` OR: `gh repo clone nvim-lua/kickstart.nvim`
+* Run Neovim (from terminal or shortcut) and allow lazy.nvim to download files and set up the basics.
+* Once the setup is complete, restart Neovim.
 * **You're ready to go!**
 
 * (Recommended/Optional) Fork this repo (so that you have your own copy that you can modify).
@@ -46,17 +46,18 @@ Distribution Alternatives:
 Additional system requirements:
 - Make sure to review the readmes of the plugins if you are experiencing errors. In particular:
   - [ripgrep](https://github.com/BurntSushi/ripgrep#installation) is required for multiple [telescope](https://github.com/nvim-telescope/telescope.nvim#suggested-dependencies) pickers.
-- See as well [Windows Installation](#Windows-Installation)
+- See [Windows Installation](#Windows-Installation) if you have trouble with `telescope-fzf-native`
 
 ### Configuration And Extension
 
-* Inside of your fork, feel free to modify any file you like! It's your fork!
-* Then there are two primary configuration options available:
-  * Include the `lua/kickstart/plugins/*` files in your configuration.
+* Inside of your copy, feel free to modify any file you like! It's your copy!
+* Feel free to change any of the default options in `init.lua` to better suit your needs.
+* For adding plugins, there are 3 primary options:
   * Add new configuration in `lua/custom/plugins/*` files, which will be auto sourced using `lazy.nvim`
-    * NOTE: To enable this, you need to uncomment `{ import = 'custom.plugins' }` in your `init.lua`
+  * Modify `init.lua` with additional plugins.
+  * Include the `lua/kickstart/plugins/*` files in your configuration.
 
-You can also merge updates/changes from the repo back into your fork, to keep up-to-date with any changes for the default configuration
+You can also merge updates/changes from the repo back into your fork, to keep up-to-date with any changes for the default configuration.
 
 #### Example: Adding an autopairs plugin
 
@@ -67,14 +68,23 @@ In the file: `lua/custom/plugins/autopairs.lua`, add:
 
 return {
   "windwp/nvim-autopairs",
+  -- Optional dependency
+  dependencies = { 'hrsh7th/nvim-cmp' },
   config = function()
     require("nvim-autopairs").setup {}
+    -- If you want to automatically add `(` after selecting a function or method
+    local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+    local cmp = require('cmp')
+    cmp.event:on(
+      'confirm_done',
+      cmp_autopairs.on_confirm_done()
+    )
   end,
 }
 ```
 
 
-This will automatically install `nvim-autopairs` and enable it on startup. For more information, see documentation for [lazy.nvim](https://github.com/folke/lazy.nvim).
+This will automatically install [windwp/nvim-autopairs](https://github.com/windwp/nvim-autopairs) and enable it on startup. For more information, see documentation for [lazy.nvim](https://github.com/folke/lazy.nvim).
 
 #### Example: Adding a file tree plugin
 
@@ -99,16 +109,6 @@ return {
 ```
 
 This will install the tree plugin and add the command `:Neotree` for you. You can explore the documentation at [neo-tree.nvim](https://github.com/nvim-neo-tree/neo-tree.nvim) for more information.
-
-#### Example: Adding a file to change default options
-
-To change default options, you can add a file in the `/after/plugin/` folder (see `:help load-plugins`) to include your own options, keymaps, autogroups, and more. The following is an example `defaults.lua` file (located at `$HOME/.config/nvim/after/plugin/defaults.lua`).
-
-```lua
-vim.opt.relativenumber = true
-
-vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
-```
 
 ### Contribution
 
