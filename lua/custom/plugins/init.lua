@@ -12,6 +12,8 @@ return {
   "famiu/bufdelete.nvim",
   "tpope/vim-repeat",
   "JoosepAlviste/nvim-ts-context-commentstring",
+  "sindrets/diffview.nvim",
+  "rhysd/git-messenger.vim",
   {
     "windwp/nvim-ts-autotag",
     dependencies = {
