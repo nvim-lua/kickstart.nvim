@@ -65,6 +65,8 @@ let g:thematic#themes = {
 \                },
 \ 'melange'  : {
 \                },
+\ 'minimalist'  : {
+\                },
 \ 'modus-operandi'  : {
 \                  'background': 'light',
 \                },
