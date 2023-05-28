@@ -272,6 +272,7 @@ vim.keymap.set('n', '<leader>5', function() require('harpoon.ui').nav_file(5) en
 vim.keymap.set('n', '<leader>6', function() require('harpoon.ui').nav_file(6) end, { desc = "Navigate to file at posistion 6" })
 vim.keymap.set('n', '<leader>7', function() require('harpoon.ui').nav_file(7) end, { desc = "Navigate to file at posistion 7" })
 vim.keymap.set('n', '<leader>8', function() require('harpoon.ui').nav_file(8) end, { desc = "Navigate to file at posistion 8" })
+vim.keymap.set('n', '<leader>9', function() require('harpoon.ui').nav_file(9) end, { desc = "Navigate to file at posistion 9" })
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
