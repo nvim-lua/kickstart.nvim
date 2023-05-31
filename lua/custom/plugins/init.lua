@@ -14,6 +14,7 @@ return {
   "JoosepAlviste/nvim-ts-context-commentstring",
   "sindrets/diffview.nvim",
   "rhysd/git-messenger.vim",
+  "lambdalisue/suda.vim",
   {
     "windwp/nvim-ts-autotag",
     dependencies = {
