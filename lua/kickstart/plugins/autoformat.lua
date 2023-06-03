@@ -5,6 +5,7 @@
 
 return {
   'neovim/nvim-lspconfig',
+
   config = function()
     -- Switch for controlling whether you want autoformatting.
     --  Use :KickstartFormatToggle to toggle autoformatting on or off
@@ -28,11 +29,9 @@ return {
       return _augroups[client.id]
     end
 
-    -- Whenever an LSP attaches to a buffer, we will run this function.
-    --
-    -- See `:help LspAttach` for more information about this autocmd event.
     vim.api.nvim_create_autocmd('LspAttach', {
       group = vim.api.nvim_create_augroup('kickstart-lsp-attach-format', { clear = true }),
+
       -- This is where we attach the autoformatting for reasonable clients
       callback = function(args)
         local client_id = args.data.client_id
@@ -50,8 +49,6 @@ return {
           return
         end
 
-        -- Create an autocmd that will run *before* we save the buffer.
-        --  Run the formatting command for the LSP that has just attached.
         vim.api.nvim_create_autocmd('BufWritePre', {
           group = get_augroup(client),
           buffer = bufnr,
@@ -60,12 +57,7 @@ return {
               return
             end
 
-            vim.lsp.buf.format {
-              async = false,
-              filter = function(c)
-                return c.id == client.id
-              end,
-            }
+            vim.lsp.buf.format { async = false }
           end,
         })
       end,
