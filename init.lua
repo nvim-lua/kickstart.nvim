@@ -130,7 +130,7 @@ require('lazy').setup({
   },
 
   {
-    -- Theme inspired by Atom
+    -- Favorite theme to use
     'folke/tokyonight.nvim',
     priority = 1000,
     config = function()
