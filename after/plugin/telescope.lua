@@ -23,3 +23,6 @@ vim.keymap.set('n', '<leader>sA',
 vim.keymap.set('n', '<leader>sk', telescope_builtin.keymaps,
     { desc = '[S]earch [K]eymaps' }
 )
+vim.keymap.set('n', '<leader>o', require('telescope.builtin').buffers,
+    { desc = '[o] Find existing buffers' }
+)
