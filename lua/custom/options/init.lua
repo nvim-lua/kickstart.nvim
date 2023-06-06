@@ -17,3 +17,6 @@ vim.opt.colorcolumn = '80'
 -- always have a set number of lines
 -- below the screen except at the end of the screen
 vim.opt.scrolloff = 8
+
+vim.opt.splitright = true
+vim.opt.splitbelow = true
