@@ -1,5 +1,6 @@
 local global = vim.g
 local o = vim.o
+local opt = vim.opt
 
 -- Copilot
 global.copilot_assume_mapped = true
@@ -38,4 +39,8 @@ o.scrolloff = 8
 o.colorcolumn = '80'
 
 o.timeoutlen = 500
+
+-- Spell check
+opt.spelllang = 'en_us'
+opt.spell = false
 
