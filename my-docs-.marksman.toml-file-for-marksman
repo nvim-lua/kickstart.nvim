@@ -1,0 +1,9 @@
+# place at root dir of the markdown project, for example:
+# $GITHUB/clickhouse-docs/.marksman.toml
+[core]
+markdown.file_extensions = ["md", "mdx"]
+text_sync = "full"
+
+[code_action]
+toc.enable = false # Enable/disable "Table of Contents" code action
+

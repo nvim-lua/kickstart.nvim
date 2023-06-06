@@ -1,0 +1,19 @@
+# This is to reverse the .gitignore in the ClickHouse-docs repo, as
+# the marksman LSP ignores dirs in the .gitignore when checking
+# for links for markdown files.  This file (.ignore) gets processed
+# after .gitignore, so the negation (`!`) of the path fixes the issue
+# created by copying the files into the clickhouse-docs directory
+# structure
+
+# place at root dir of the markdown project, for example:
+# $GITHUB/clickhouse-docs/.ignore
+
+!docs/en/development
+!docs/en/engines
+!docs/en/getting-started
+!docs/en/interfaces
+!docs/en/operations
+!docs/en/sql-reference
+docs/ru
+docs/zh
+docs/_clients
