@@ -1,0 +1,2 @@
+-- Override hlsearch option value from init.lua
+-- vim.o.hlsearch = true

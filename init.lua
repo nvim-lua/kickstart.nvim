@@ -511,5 +511,9 @@ cmp.setup {
   },
 }
 
+-- Override or set new options, autocmds, etc. in lua files placed in lua/custom/
+-- See lua/custom/example_override.lua
+vim.cmd('runtime! lua/custom/*.lua')
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
