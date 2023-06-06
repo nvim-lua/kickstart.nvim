@@ -430,7 +430,9 @@ local servers = {
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
-
+  --'marksman',
+  --'clangd',
+  marksman = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -510,6 +512,31 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
+
+-- Confgiure the way that diagnostics look
+
+local diagconfig = {
+  -- disable virtual text
+  virtual_text = false,
+  -- show signs
+  signs = true,
+  update_in_insert = true,
+  underline = true,
+  severity_sort = true,
+  float = {
+    focusable = false,
+    style = "minimal",
+    border = "rounded",
+    source = "always",
+    header = "",
+    --prefix = "",
+  },
+}
+
+-- vim.opt.termguicolors = true
+-- require("bufferline").setup{}
+
+vim.diagnostic.config(diagconfig)
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
