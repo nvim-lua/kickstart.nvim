@@ -152,7 +152,7 @@ require('lazy').setup({
     -- See `:help lualine.txt`
     opts = {
       options = {
-        icons_enabled = false,
+        icons_enabled = true,
         theme = 'onedark',
         component_separators = '|',
         section_separators = '',
@@ -475,7 +475,7 @@ cmp.setup {
 }
 
 -- custom settings
-pcall(require('custom'))
+pcall(require('custom.settings'))
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
