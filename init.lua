@@ -106,7 +106,7 @@ require('lazy').setup({
       'hrsh7th/cmp-nvim-lsp',
 
       -- Adds a number of user-friendly snippets
-      'rafamadriz/friendly-snippets',
+      --'rafamadriz/friendly-snippets',
     },
   },
 
@@ -472,8 +472,14 @@ mason_lspconfig.setup_handlers {
 -- See `:help cmp`
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
+
+-- This next line, along with a line earlier which provides a collection 
+-- of snippets from GitHub: 'rafamadriz/friendly-snippets' loads a bunch of snippets.
+-- I prefer to write my own.
+--
 --require('luasnip.loaders.from_vscode').lazy_load()
---require("luasnip.loaders.from_vscode").lazy_load({ paths = { "/home/droscigno/.config/nvim/my-cool-snippets/markdown.json" } })
+require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/snippets/" })
+
 luasnip.config.setup {}
 
 cmp.setup {
