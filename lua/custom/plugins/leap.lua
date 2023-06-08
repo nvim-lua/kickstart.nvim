@@ -8,11 +8,6 @@ return {
 			require('leap').init_highlight(true)
 		end)
 
-		require('leap').opts = {
-
-
-
-
-		}
+		lua = require('leap').opts
 	end
 }

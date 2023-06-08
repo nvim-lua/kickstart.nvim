@@ -1,5 +1,4 @@
 --[[
-
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ==================== =====================================================================
 
@@ -65,7 +64,7 @@ vim.opt.rtp:prepend(lazypath)
 --  You can also configure plugins after the setup call,
 --    as they will be available in your neovim runtime.
 require('lazy').setup({
-  -- NOTE: First, some plugins that don't require any configuration
+  -- NOTE: First, some plugins that don't require any configurationinit
 
   { -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
