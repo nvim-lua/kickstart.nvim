@@ -1,5 +1,10 @@
 # kickstart.nvim
 
+### Quick Install
+```bash
+wget -O - https://raw.githubusercontent.com/jlumley/kickstart.nvim/master/install.bash | bash
+```
+
 ### Introduction
 
 A starting point for Neovim that is:
