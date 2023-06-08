@@ -472,7 +472,8 @@ mason_lspconfig.setup_handlers {
 -- See `:help cmp`
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
-require('luasnip.loaders.from_vscode').lazy_load()
+--require('luasnip.loaders.from_vscode').lazy_load()
+--require("luasnip.loaders.from_vscode").lazy_load({ paths = { "/home/droscigno/.config/nvim/my-cool-snippets/markdown.json" } })
 luasnip.config.setup {}
 
 cmp.setup {
@@ -594,6 +595,11 @@ local diagconfig = {
 -- require("bufferline").setup{}
 
 vim.diagnostic.config(diagconfig)
+
+-- I like search results to be closer to the center
+-- When searching, scroll text so that there
+-- are at least 5 lines above and below result
+vim.o.scrolloff = 5
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
