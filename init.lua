@@ -72,6 +72,9 @@ require('lazy').setup({
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
+  -- Grammar checking
+  'vigoux/ltex-ls.nvim',
+
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   {
@@ -469,7 +472,8 @@ mason_lspconfig.setup_handlers {
 -- See `:help cmp`
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
-require('luasnip.loaders.from_vscode').lazy_load()
+--require('luasnip.loaders.from_vscode').lazy_load()
+--require("luasnip.loaders.from_vscode").lazy_load({ paths = { "/home/droscigno/.config/nvim/my-cool-snippets/markdown.json" } })
 luasnip.config.setup {}
 
 cmp.setup {
@@ -513,6 +517,60 @@ cmp.setup {
   },
 }
 
+-- I want spell checking on in markdown etc.
+vim.api.nvim_create_augroup("spellcheck", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+    group = "spellcheck",
+    pattern = { "gitcommit", "markdown", "mdx" },
+    command = "setlocal spell",
+})
+
+-- configure ltex-ls
+require 'ltex-ls'.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  use_spellfile = false,
+  filetypes = { "latex", "tex", "bib", "markdown", "gitcommit", "text" },
+  settings = {
+    ltex = {
+      enabled = { "latex", "tex", "bib", "markdown", },
+      language = "en",
+      diagnosticSeverity = "information",
+      sentenceCacheSize = 2000,
+      additionalRules = {
+        enablePickyRules = true,
+        motherTongue = "en",
+      },
+      disabledRules = {
+        en = { "EN_QUOTES" }
+      },
+      dictionary = (function()
+        -- For dictionary, search for files in the runtime to have
+        -- and include them as externals the format for them is
+        -- dict/{LANG}.txt
+        --
+        -- Also add dict/default.txt to all of them
+        local files = {}
+        for _, file in ipairs(vim.api.nvim_get_runtime_file("dict/*", true)) do
+          local lang = vim.fn.fnamemodify(file, ":t:r")
+          local fullpath = vim.fs.normalize(file, ":p")
+          files[lang] = { ":" .. fullpath }
+        end
+
+        if files.default then
+          for lang, _ in pairs(files) do
+            if lang ~= "default" then
+              vim.list_extend(files[lang], files.default)
+            end
+          end
+          files.default = nil
+        end
+        return files
+      end)(),
+    },
+  },
+}
+
 -- Confgiure the way that diagnostics look
 
 local diagconfig = {
@@ -537,6 +595,11 @@ local diagconfig = {
 -- require("bufferline").setup{}
 
 vim.diagnostic.config(diagconfig)
+
+-- I like search results to be closer to the center
+-- When searching, scroll text so that there
+-- are at least 5 lines above and below result
+vim.o.scrolloff = 5
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
