@@ -21,10 +21,6 @@ vim.keymap.set("n", "<leader>Y", [["+Y]])
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
 vim.keymap.set("i", "<C-c>", "<Esc>")
-vim.keymap.set({ "i", "x" }, "kj", "<Esc>")
-vim.keymap.set("i", "<C-d>", "<C-o>de")
-vim.keymap.set("i", "<C-h>", "<Backspace>")
-vim.keymap.set("i", "<C-l>", "<Del>")
 
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format,
     { desc = "LSP: format buffer" })
@@ -32,3 +28,6 @@ vim.keymap.set("n", "<leader>f", vim.lsp.buf.format,
 vim.keymap.set("n", "<leader>ru",
     [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
     { desc = "[R]eplace word [U]nder cursor" })
+
+vim.keymap.set("n", "S", ":w<cr>")
+vim.keymap.set("n", "Q", ":q<cr>")

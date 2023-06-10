@@ -12,6 +12,7 @@ return {
   "famiu/bufdelete.nvim",
   "tpope/vim-repeat",
   "tpope/vim-unimpaired",
+  "tpope/vim-rsi",
   "JoosepAlviste/nvim-ts-context-commentstring",
   "sindrets/diffview.nvim",
   "rhysd/git-messenger.vim",
