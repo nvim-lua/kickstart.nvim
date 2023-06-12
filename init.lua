@@ -157,7 +157,7 @@ require('lazy').setup({
       return vim.fn.executable 'make' == 1
     end,
   },
-  
+
   -- Telescope installation for Windows only.
   -- {
   --   'nvim-telescope/telescope-fzf-native.nvim',
@@ -246,6 +246,9 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+-- Bring escape key back in Terminal mode
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
