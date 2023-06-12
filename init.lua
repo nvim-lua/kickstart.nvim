@@ -64,6 +64,7 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
+  'github/copilot.vim',
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
@@ -216,7 +217,7 @@ vim.keymap.set("n", "<A-j>", ":m .+1<CR>==")
 vim.keymap.set("n", "<A-k>", ":m .-2<CR>==")
 
 -- Greatest remap ever
-vim.keymap.set("x", "<A-p>", "\"_dP")
+-- vim.keymap.set("x", "<A-p>", "\"_dP")
 
 -- /hen searching keep cursor in the middle
 vim.keymap.set("n", "n", "nzzzv")
