@@ -42,5 +42,8 @@ o.timeoutlen = 500
 
 -- Spell check
 opt.spelllang = 'en_us'
-opt.spell = false
+opt.spell = true
+
+-- Markdown
+global.mkdp_browser = '/usr/bin/firefox'
 

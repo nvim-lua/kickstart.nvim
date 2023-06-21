@@ -85,7 +85,7 @@ return {
 				},
 			},
 		}
-		vim.keymap.set("n", "<leader>nt", "<CMD>Neotree toggle<CR>")
-		vim.keymap.set("n", "<leader>o", "<CMD>Neotree focus<CR>")
+		vim.keymap.set("n", "<leader>pw" , "<CMD>Neotree toggle<CR>")
+		vim.keymap.set("n", "<leader>cw", "<CMD>Neotree focus<CR>")
 	end,
 }

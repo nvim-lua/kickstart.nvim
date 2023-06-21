@@ -49,3 +49,4 @@ map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 -- Reset highlight
 map("n", "<CR>", "<CMD>noh<CR><CR>")
+
