@@ -70,6 +70,10 @@ require('lazy').setup({
     },
   },
 
+  {
+    'github/copilot.vim',
+  },
+
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
   {
@@ -93,16 +97,7 @@ require('lazy').setup({
     },
   },
 
-  -- {
-  --   -- Theme inspired by Atom
-  --   'navarasu/onedark.nvim',
-  --   priority = 1000,
-  --   config = function()
-  --     vim.cmd.colorscheme 'onedark'
-  --   end,
-  -- },
-
-  {
+ {
     "catppuccin/nvim",
     name = "catppuccin",
     priority = 1000,
@@ -223,6 +218,8 @@ vim.o.termguicolors = true
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
 vim.o.expandtab = true
+
+vim.o.scrolloff = 8
 
 -- [[ Basic Keymaps ]]
 
