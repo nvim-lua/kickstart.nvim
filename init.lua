@@ -97,6 +97,7 @@ require('lazy').setup({
     },
   },
 
+  -- theme
  {
     "catppuccin/nvim",
     name = "catppuccin",
@@ -215,9 +216,10 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
-vim.o.tabstop = 4
-vim.o.shiftwidth = 4
-vim.o.expandtab = true
+-- Think these are set automatically by a plugin instead
+-- vim.o.tabstop = 4
+-- vim.o.shiftwidth = 4
+-- vim.o.expandtab = true
 
 vim.o.scrolloff = 8
 
