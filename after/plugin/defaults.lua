@@ -22,8 +22,8 @@ vim.keymap.set('n', 'L', 'gt', { desc = 'Tab Right' })
 -- line bubbling
 vim.keymap.set('n', '<C-j>', ':m .+1<CR>==', { noremap = true, desc = 'Bubble Down' })
 vim.keymap.set('n', '<C-k>', ':m .-2<CR>==', { noremap = true, desc = 'Bubble Up' }) -- conflicts with "signature help" from LSP
-vim.keymap.set('i', '<C-j>', '<ESC>:m .+1<CR>==gi', { noremap = true, desc = 'Bubble Down' })
-vim.keymap.set('i', '<C-k>', '<ESC>:m .-2<CR>==gi', { noremap = true, desc = 'Bubble Up' })
+-- vim.keymap.set('i', '<C-j>', '<ESC>:m .+1<CR>==gi', { noremap = true, desc = 'Bubble Down' })
+-- vim.keymap.set('i', '<C-k>', '<ESC>:m .-2<CR>==gi', { noremap = true, desc = 'Bubble Up' })
 vim.keymap.set('v', '<C-k>', ":m '<-2<CR>gv=gv", { noremap = true, desc = 'Bubble Down' })
 vim.keymap.set('v', '<C-j>', ":m '>+1<CR>gv=gv", { noremap = true, desc = 'Bubble Up' })
 
@@ -34,6 +34,11 @@ vim.keymap.set('n', '<leader>sj', require('telescope.builtin').jumplist, { desc 
 vim.keymap.set('n', '<leader>sj', require('telescope.builtin').jumplist, { desc = '[S]earch [J]umplist' })
 vim.keymap.set('n', '<leader>ss', require('telescope.builtin').git_status, { desc = '[S]earch [S]tatus' })
 vim.keymap.set('n', '<leader>sm', require('telescope.builtin').marks, { desc = '[S]earch [M]arks' })
+
+-- copilot
+-- vim.g.copilot_no_tab_map = "v:true"
+-- vim.keymap.set('i', '<C-j>', '<silent><script><expr> <C-J> copilot#Accept("<CR>")',
+--   { noremap = true, desc = 'Accept Copilot Suggestion' })
 
 vim.diagnostic.config({
   severity_sort = true,
