@@ -227,6 +227,12 @@ vim.o.termguicolors = true
 
 vim.o.scrolloff = 8
 
+-- Folding with treesitter
+vim.o.foldmethod = 'expr'
+vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.o.foldenable = false  -- start with all folds open
+vim.o.foldlevel = 99
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
