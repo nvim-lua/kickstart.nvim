@@ -49,6 +49,7 @@ vim.g.copilot_filetypes = {
   ["*"] = false,
   ["c"] = true,
   ["c++"] = true,
+  ["cpp"] = true,
   ["go"] = true,
   ["javascript"] = true,
   ["typescript"] = true,
@@ -102,7 +103,12 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim',       opts = {} },
+      {
+          'j-hui/fidget.nvim',
+        	requires = { 'neovim/nvim-lspconfig' },
+		      tag = 'legacy',
+		      config = true,
+      },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
