@@ -1,3 +1,19 @@
+# my edits
+
+Install vale from https://vale.sh
+```bash
+cd ~/Downloads/vale_2.27.0_Linux_64-bit
+sudo mv vale /usr/local/bin/
+```
+
+Install mdl and write-good
+
+```bash
+gem install mdl
+npm install -g write-good
+```
+
+
 # kickstart.nvim
 
 ### Introduction
