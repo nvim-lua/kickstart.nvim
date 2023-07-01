@@ -21,7 +21,7 @@ g.ale_linters = {
   javascript = {'standard'},
   lua = { "selene" },
   json = { "jsonlint" },
-  markdown = { "vale", "mdl", "writegood" },
+  markdown = { "vale", "mdl" },
   yaml = { "yamllint" },
 }
 
