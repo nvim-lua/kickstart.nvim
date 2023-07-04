@@ -1,3 +1,0 @@
-return {
-  'mfussenegger/nvim-dap'
-}
