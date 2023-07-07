@@ -19,5 +19,32 @@ vim.keymap.set('n', '<S-l>', function() vim.cmd.tabnext() end, { desc = 'Move to
 vim.keymap.set('n', '<space>tn', function() vim.cmd.tabnew() end, { desc = 'Create new tab' })
 vim.keymap.set('n', '<space>tc', function() vim.cmd.tabclose() end, { desc = 'Close tab'})
 
+
+-- ToggleTerm
+vim.keymap.set('n', '<space>tt', function() vim.cmd('ToggleTerm direction=float')  end, { desc = 'Open ToggleTerm'})
+vim.keymap.set('n', '<F7>', function() vim.cmd('ToggleTerm')  end, { desc = 'Toggle ToggleTerm'})
+
+-- Lazygit
+local Terminal  = require('toggleterm.terminal').Terminal
+local lazygit = Terminal:new({ cmd = "lazygit", hidden = true })
+local pythonREPL = Terminal:new({ cmd = "python3", hidden = true })
+local haskellREPL = Terminal:new({ cmd = "ghci", hidden = true })
+
+function _lazygit_toggle()
+  lazygit:toggle()
+end
+
+function _pythonREPL_toggle()
+  pythonREPL:toggle()
+end
+
+function _haskellREPL_toggle()
+  haskellREPL:toggle()
+end
+
+vim.keymap.set('n', '<space>tl', "<cmd>lua _lazygit_toggle()<CR>", { desc = 'Toggle Lazygit', noremap = true, silent = true })
+vim.keymap.set('n', '<space>tp', "<cmd>lua _pythonREPL_toggle()<CR>", { desc = 'Toggle Python3 REPL', noremap = true, silent = true })
+vim.keymap.set('n', '<space>th', "<cmd>lua _haskellREPL_toggle()<CR>", { desc = 'Toggle GHCI', noremap = true, silent = true })
+
 return {
 }
