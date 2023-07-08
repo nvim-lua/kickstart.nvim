@@ -8,4 +8,8 @@ return {
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 	},
+	"jose-elias-alvarez/null-ls.nvim",
+	ft = { "python" },
+
+	"jay-babu/mason-null-ls.nvim",
 }
