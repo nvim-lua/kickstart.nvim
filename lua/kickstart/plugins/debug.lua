@@ -20,6 +20,7 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+    "mfussenegger/nvim-dap-python",
   },
   config = function()
     local dap = require 'dap'
@@ -39,21 +40,23 @@ return {
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'debugpy',
       },
     }
-  local wk = require("which-key")
+    local wk = require("which-key")
 
-wk.register({
-    d = {
-    name = "debug",
-  },
-}, { prefix = "<leader>" })
+    wk.register({
+      d = {
+        name = "debug",
+      },
+    }, { prefix = "<leader>" })
 
     -- Basic debugging keymaps, feel free to change to your liking!
     vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/Continue' })
     vim.keymap.set('n', '<leader>de', dap.step_into, { desc = 'Debug: Step Into' })
     vim.keymap.set('n', '<leader>dr', dap.step_over, { desc = 'Debug: Step Over' })
     vim.keymap.set('n', '<leader>do', dap.step_out, { desc = 'Debug: Step Out' })
+    vim.keymap.set('n', '<leader>dq', dap.stop, { desc = 'Debug: Stop' })
     vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint, { desc = 'Debug: Toggle Breakpoint' })
     vim.keymap.set('n', '<leader>dB', function()
       dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
@@ -82,7 +85,7 @@ wk.register({
     }
 
     -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-    vim.keymap.set('n', '<F7>', dapui.toggle, { desc = 'Debug: See last session result.' })
+    vim.keymap.set('n', '<leader>dt', dapui.toggle, { desc = 'Debug: See last session result.' })
 
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
@@ -90,5 +93,10 @@ wk.register({
 
     -- Install golang specific config
     require('dap-go').setup()
+    -- Install python specific config
+    local mason_path = vim.fn.glob(vim.fn.stdpath "data" .. "/mason/")
+    pcall(function()
+      require("dap-python").setup(mason_path .. "packages/debugpy/venv/bin/python")
+    end)
   end,
 }
