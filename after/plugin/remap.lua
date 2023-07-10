@@ -29,7 +29,7 @@ vim.keymap.set("n", "<leader>ru",
     [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
     { desc = "[R]eplace word [U]nder cursor" })
 vim.keymap.set("x", "<leader>r",
-    [["hy:%s/\<C-r>h/<C-r>h/gI<Left><Left><Left>]],
+    [["hy:%s/<C-r>h/<C-r>h/gI<Left><Left><Left>]],
     { desc = "[R]eplace selection" })
 
 vim.keymap.set("n", "S", ":w<cr>")
