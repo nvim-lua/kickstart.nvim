@@ -10,10 +10,6 @@ return {
 	},
 	config = function()
 		require("go").setup()
-
-		local gofmt = require("go.format")
-
-		vim.keymap.set('n', 'gF', gofmt.goimport, { desc = 'Go Import' })
 	end,
 	event = { "CmdlineEnter" },
 	ft = { "go", 'gomod' },

@@ -33,40 +33,10 @@ return {
     local dap_go = require 'dap-go'
 
     -- Install golang specific config
-    dap_go.setup {
-      -- Additional dap configurations can be added.
-      -- dap_configurations accepts a list of tables where each entry
-      -- represents a dap configuration. For more details do:
-      -- :help dap-configuration
-      dap_configurations = {
-        {
-          -- Must be "go" or it will be ignored by the plugin
-          type = "go",
-          name = "Attach remote",
-          mode = "remote",
-          request = "attach",
-        },
-      },
-      -- delve configurations
-      delve = {
-        -- the path to the executable dlv which will be used for debugging.
-        -- by default, this is the "dlv" executable on your PATH.
-        path = "dlv",
-        -- time to wait for delve to initialize the debug session.
-        -- default to 20 seconds
-        initialize_timeout_sec = 20,
-        -- a string that defines the port to start delve debugger.
-        -- default to string "${port}" which instructs nvim-dap
-        -- to start the process in a random available port
-        port = "2345",
-        -- additional args to pass to dlv
-        args = {}
-      },
-    }
+    dap_go.setup()
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
-    -- dapui.setup()
     dapui.setup {
       -- Set icons to characters that are more likely to work in every terminal.
       --    Feel free to remove or use ones that you like more! :)
@@ -85,37 +55,9 @@ return {
           disconnect = "⏏",
         },
       },
-      -- Layouts define sections of the screen to place windows.
-      -- The position can be "left", "right", "top" or "bottom".
-      -- The size specifies the height/width depending on position. It can be an Int
-      -- or a Float. Integer specifies height/width directly (i.e. 20 lines/columns) while
-      -- Float value specifies percentage (i.e. 0.3 - 30% of available lines/columns)
-      -- Elements are the elements shown in the layout (in order).
-      -- Layouts are opened in order so that earlier layouts take priority in window sizing.
-      layouts = {
-        {
-          elements = {
-            -- Elements can be strings or table with id and size keys.
-            { id = "scopes", size = 0.25 },
-            "breakpoints",
-            "stacks",
-            "watches",
-          },
-          size = 40, -- 40 columns
-          position = "left",
-        },
-        {
-          elements = {
-            "repl",
-            -- "console",
-          },
-          size = 0.25, -- 25% of total lines
-          position = "bottom",
-        },
-      },
     }
 
-    -- require('nvim-dap-virtual-text').setup()
+    require('nvim-dap-virtual-text').setup()
     require('mason-nvim-dap').setup {
       -- Makes a best effort to setup the various debuggers with
       -- reasonable debug configurations
@@ -148,12 +90,10 @@ return {
     end, { desc = 'dap breakpoint condition' })
 
     -- toggle to see last session result. Without this ,you can't see session output in case of unhandled exception.
-    vim.keymap.set("n", "<leader>tt", dapui.toggle)
-    vim.keymap.set('n', '<leader>tr', function()
-      dapui.open({ reset = true })
-    end, { desc = 'dap reset ui' })
+    vim.keymap.set("n", "<F7>", dapui.toggle)
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
-    -- dap.listeners.before.event_terminated['dapui_config'] = dapui.close
-    -- dap.listeners.before.event_exited['dapui_config'] = dapui.close
+    dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+    dap.listeners.before.event_exited['dapui_config'] = dapui.close
+
   end,
 }
