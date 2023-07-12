@@ -30,33 +30,10 @@ return {
   config = function()
     local dap = require 'dap'
     local dapui = require 'dapui'
+    local dap_go = require 'dap-go'
 
-    require('mason-nvim-dap').setup {
-      -- Makes a best effort to setup the various debuggers with
-      -- reasonable debug configurations
-      automatic_setup = true,
-
-      -- You can provide additional configuration to the handlers,
-      -- see mason-nvim-dap README for more information
-      handlers = {},
-
-      -- You'll need to check that you have the required things installed
-      -- online, please don't ask me how to install them :)
-      ensure_installed = {
-        -- Update this to ensure that you have the debuggers for the langs you want
-        'delve',
-      },
-    }
-
-    -- Basic debugging keymaps, feel free to change to your liking!
-    vim.keymap.set('n', '<F5>', dap.continue, { desc = 'dap run/continue debug' })
-    vim.keymap.set('n', '<F1>', dap.step_into, { desc = 'dap step into' })
-    vim.keymap.set('n', '<F2>', dap.step_over, { desc = 'dap step over' })
-    vim.keymap.set('n', '<F3>', dap.step_out, { desc = 'dap step out' })
-    vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint, { desc = 'dap toggle breakpoint' })
-    vim.keymap.set('n', '<leader>B', function()
-      dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
-    end, { desc = 'dap breakpoint condition' })
+    -- Install golang specific config
+    dap_go.setup()
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
@@ -79,14 +56,44 @@ return {
         },
       },
     }
+
+    require('nvim-dap-virtual-text').setup()
+    require('mason-nvim-dap').setup {
+      -- Makes a best effort to setup the various debuggers with
+      -- reasonable debug configurations
+      automatic_setup = true,
+
+      -- You can provide additional configuration to the handlers,
+      -- see mason-nvim-dap README for more information
+      handlers = {},
+
+      -- You'll need to check that you have the required things installed
+      -- online, please don't ask me how to install them :)
+      ensure_installed = {
+        -- Update this to ensure that you have the debuggers for the langs you want
+        'delve',
+      },
+    }
+
+    -- Basic debugging keymaps, feel free to change to your liking!
+    vim.keymap.set('n', '<F5>', dap.continue, { desc = 'dap run/continue debug' })
+    vim.keymap.set('n', '<F4>', dap.terminate, { desc = 'dap stop debug' })
+    vim.keymap.set('n', '<F1>', dap.step_into, { desc = 'dap step into' })
+    vim.keymap.set('n', '<F2>', dap.step_over, { desc = 'dap step over' })
+    vim.keymap.set('n', '<F3>', dap.step_out, { desc = 'dap step out' })
+    -- vim.keymap.set('n', '<leader>dr', dap.repl.open, { desc = 'dap open repl' })
+    vim.keymap.set('n', '<leader>td', dap_go.debug_test, { desc = 'dap debug test' })
+    vim.keymap.set('n', '<leader>tl', dap_go.debug_last_test, { desc = 'dap debug last test' })
+    vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint, { desc = 'dap toggle breakpoint' })
+    vim.keymap.set('n', '<leader>B', function()
+      dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+    end, { desc = 'dap breakpoint condition' })
+
     -- toggle to see last session result. Without this ,you can't see session output in case of unhandled exception.
     vim.keymap.set("n", "<F7>", dapui.toggle)
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
-    -- Install golang specific config
-    require('dap-go').setup()
-    require('nvim-dap-virtual-text').setup()
   end,
 }

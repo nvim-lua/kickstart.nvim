@@ -42,8 +42,12 @@ o.timeoutlen = 500
 
 -- Spell check
 opt.spelllang = 'en_us'
-opt.spell = true
+-- opt.spell = true
 
 -- Markdown
 global.mkdp_browser = '/usr/bin/firefox'
 
+-- Fold
+--o.foldmethod = 'syntax'
+o.foldmethod = 'expr'
+o.foldexpr = 'nvim_treesitter#foldexpr()'

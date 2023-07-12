@@ -50,3 +50,15 @@ map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 -- Reset highlight
 map("n", "<CR>", "<CMD>noh<CR><CR>")
 
+-- Hover documentation
+map("n", "K", "<CMD>lua vim.lsp.buf.hover()<CR>")
+vim.keymap.set("n", '<C-k>', vim.lsp.buf.signature_help, { desc = '[S]ignature [D]ocumentation' })
+
+-- Go to referenece
+vim.keymap.set("n", "gr", require('telescope.builtin').lsp_references, { desc = '[G]oto [R]reference' })
+
+vim.keymap.set("n", "gpd", "<CMD>lua require('goto-preview').goto_preview_definition()<CR>", { noremap = true })
+vim.keymap.set("n", "gpt", "<CMD>lua require('goto-preview').goto_preview_type_definition()<CR>", { noremap = true })
+vim.keymap.set("n", "gpi", "<CMD>lua require('goto-preview').goto_preview_implementation()<CR>", { noremap = true })
+vim.keymap.set("n", "gP", "<CMD>lua require('goto-preview').close_all_win()<CR>", { noremap = true })
+vim.keymap.set("n", "gpr", "<CMD>lua require('goto-preview').goto_preview_references()<CR>", { noremap = true })
