@@ -72,6 +72,9 @@ require('lazy').setup({
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
+  -- RC vim tmux navigation
+  'christoomey/vim-tmux-navigator',
+
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   {
@@ -107,6 +110,9 @@ require('lazy').setup({
     },
   },
 
+  -- copilot
+  -- { 'github/copilot.vim', opts = {} },
+
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
   {
@@ -130,11 +136,11 @@ require('lazy').setup({
   },
 
   {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
+    -- RC set nightowl theme
+    'oxfist/night-owl.nvim',
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'onedark'
+      vim.cmd.colorscheme 'night-owl'
     end,
   },
 
@@ -260,6 +266,13 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+-- RC Open new tmux tab 
+vim.keymap.set('n', '<leader>tr', ':silent !tmux split-window -h<CR>', { desc = 'Open new tmux [t]e[r]minal pane in current dir' })
+
+-- RC move selected code
+vim.keymap.set('v', '<C-S-Up>', ":m '/<-2<CR>gv=gv")
+vim.keymap.set('v', '<C-S-Down>', ":m '>+1<CR>gv=gv")
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
