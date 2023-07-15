@@ -111,7 +111,24 @@ require('lazy').setup({
   },
 
   -- copilot
-  -- { 'github/copilot.vim', opts = {} },
+  {
+    'zbirenbaum/copilot.lua',
+    opts = {
+      config = function ()
+        require("copilot").setup({
+          suggestion = { enabled = false },
+          panel = { enabled = false },
+        })
+      end,
+    }
+  },
+
+  {
+    "zbirenbaum/copilot-cmp",
+    config = function ()
+      require("copilot_cmp").setup()
+    end
+  },
 
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
@@ -530,6 +547,7 @@ cmp.setup {
     end, { 'i', 's' }),
   },
   sources = {
+    { name = "copilot", group_index = 2 },
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
   },
