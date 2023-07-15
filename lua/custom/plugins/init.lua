@@ -12,4 +12,5 @@ return {
 	ft = { "python" },
 
 	"jay-babu/mason-null-ls.nvim",
+	"ThePrimeagen/vim-be-good",
 }
