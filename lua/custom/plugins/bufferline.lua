@@ -1,9 +1,8 @@
 -- for tablines
 
-
 return {
 	'akinsho/bufferline.nvim',
-	tag = "v3.*",
+	version = "*",
 	dependencies = { 'nvim-tree/nvim-web-devicons' },
 	config = function()
 		require('bufferline').setup {
