@@ -215,6 +215,9 @@ vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
+-- RC add relative lines numbering
+vim.wo.relativenumber = true;
+vim.o.scrolloff = 12
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -303,7 +306,7 @@ vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { de
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 
--- [[ Configure Treesitter ]]
+-- [[ Configure Treesitter 
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
@@ -418,6 +421,11 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
+
+  vim.api.nvim_create_autocmd("BufWritePre", {
+    buffer = bufnr,
+    command = "EslintFixAll",
+  })
 end
 
 -- Enable the following language servers
@@ -429,8 +437,10 @@ local servers = {
   -- clangd = {},
   -- gopls = {},
   -- pyright = {},
-  -- rust_analyzer = {},
-  -- tsserver = {},
+  html = {},
+  rust_analyzer = {},
+  tsserver = {},
+  eslint = {},
 
   lua_ls = {
     Lua = {
