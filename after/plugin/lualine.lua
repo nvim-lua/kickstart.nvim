@@ -5,7 +5,6 @@ require('lualine').setup {
         section_separators = { left = ' ', right = ' ' },
     },
     extensions = {
-        'toggleterm',
         'trouble',
         'neo-tree',
         'nvim-dap-ui',
