@@ -1,5 +1,7 @@
 # kickstart.nvim
 
+https://github.com/kdheepak/kickstart.nvim/assets/1813121/f3ff9a2b-c31f-44df-a4fa-8a0d7b17cf7b
+
 ### Introduction
 
 A starting point for Neovim that is:
@@ -9,7 +11,7 @@ A starting point for Neovim that is:
 * Documented
 * Modular
 
-This repo is meant to be used as by **YOU** to begin your Neovim journey; remove the things you don't use and add what you miss.
+This repo is meant to be used by **YOU** to begin your Neovim journey; remove the things you don't use and add what you miss.
 
 Kickstart.nvim targets *only* the latest ['stable'](https://github.com/neovim/neovim/releases/tag/stable) and latest ['nightly'](https://github.com/neovim/neovim/releases/tag/nightly) of Neovim. If you are experiencing issues, please make sure you have the latest versions.
 
