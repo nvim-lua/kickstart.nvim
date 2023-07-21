@@ -206,7 +206,10 @@ require('lazy').setup({
   { import = 'custom.plugins' },
 }, {
   concurrency = 10,
-  })
+})
+
+vim.o.wrap = true
+vim.o.relativenumber = true
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
