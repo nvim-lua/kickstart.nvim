@@ -84,7 +84,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
+      { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -108,7 +108,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',          opts = {} },
   {
     -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -122,7 +122,8 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
       on_attach = function(bufnr)
-        vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk, { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
+        vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk,
+          { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
         vim.keymap.set('n', '<leader>gn', require('gitsigns').next_hunk, { buffer = bufnr, desc = '[G]o to [N]ext Hunk' })
         vim.keymap.set('n', '<leader>ph', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[P]review [H]unk' })
       end,
@@ -164,7 +165,7 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim',         opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
@@ -260,17 +261,17 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true})
+vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Window Keymap rebind
-vim.keymap.set('n', "<C-h>", "<C-w>h", {desc = "Move left window"})
-vim.keymap.set('n', "<C-l>", "<C-w>l", {desc = "Move right window"})
-vim.keymap.set('n', "<C-j>", "<C-w>j", {desc = "Move down window"})
-vim.keymap.set('n', "<C-k>", "<C-w>k", {desc = "Move up window"})
-vim.keymap.set("n", "<C-Up>", ":resize -2<CR>", {desc = "resize vertical up"})
-vim.keymap.set("n", "<C-Down>", ":resize +2<CR>", {desc = "resize vertical down"})
-vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", {desc = "resize horizontal right"})
-vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", {desc = "resize horizontal left"})
+vim.keymap.set('n', "<C-h>", "<C-w>h", { desc = "Move left window" })
+vim.keymap.set('n', "<C-l>", "<C-w>l", { desc = "Move right window" })
+vim.keymap.set('n', "<C-j>", "<C-w>j", { desc = "Move down window" })
+vim.keymap.set('n', "<C-k>", "<C-w>k", { desc = "Move up window" })
+vim.keymap.set("n", "<C-Up>", ":resize -2<CR>", { desc = "resize vertical up" })
+vim.keymap.set("n", "<C-Down>", ":resize +2<CR>", { desc = "resize vertical down" })
+vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "resize horizontal right" })
+vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "resize horizontal left" })
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -301,8 +302,8 @@ pcall(require('telescope').load_extension, 'fzf')
 wk.register({
   s = {
     name = "search",
-    },
-  }, {prefix = "<leader>"})
+  },
+}, { prefix = "<leader>" })
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
@@ -403,11 +404,11 @@ local on_attach = function(_, bufnr)
   --
   -- In this case, we create a function that lets us more easily define mappings specific
   -- for LSP related items. It sets the mode, buffer and description for us each time.
-wk.register({
-  l = {
-    name = "LSP",
+  wk.register({
+    l = {
+      name = "LSP",
     },
-  }, {prefix = "<leader>"})
+  }, { prefix = "<leader>" })
   local nmap = function(keys, func, desc)
     if desc then
       desc = 'LSP: ' .. desc
@@ -452,8 +453,8 @@ end
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
   -- clangd = {},
-  -- gopls = {},
-    pyright = {},
+  gopls = {},
+  pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
 
