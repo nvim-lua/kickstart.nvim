@@ -9,7 +9,7 @@ return {
 	config = function()
 		require('neo-tree').setup {
 			window = {
-				position = "float",
+				position = "right",
 				popup = {
 					-- settings that apply to float position only
 					size = { height = "20", width = "95" },

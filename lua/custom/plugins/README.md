@@ -33,3 +33,15 @@ Moving between tabs
 gt # next tab
 gT # previous tab
 ```
+
+### HTTP client
+
+install pynvim
+```
+sudo apt install python3-pynvim
+```
+
+install requests
+```
+sudo apt install python3-requests
+```
