@@ -51,3 +51,4 @@ global.mkdp_browser = '/usr/bin/firefox'
 --o.foldmethod = 'syntax'
 o.foldmethod = 'expr'
 o.foldexpr = 'nvim_treesitter#foldexpr()'
+o.foldlevel = 1
