@@ -13,4 +13,8 @@ return {
 
 	"jay-babu/mason-null-ls.nvim",
 	"ThePrimeagen/vim-be-good",
+	{
+		"nvim-telescope/telescope-file-browser.nvim",
+		dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
+	},
 }
