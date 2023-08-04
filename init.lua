@@ -35,7 +35,6 @@ I hope you enjoy your Neovim journey,
 
 P.S. You can delete this when you're done too. It's your config now :)
 --]]
-
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
@@ -75,7 +74,8 @@ require('lazy').setup({
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
-  { -- LSP Configuration & Plugins
+  {
+    -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs to stdpath for neovim
@@ -84,21 +84,23 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',       opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
     },
   },
 
-  { -- Autocompletion
+  {
+    -- Autocompletion
     'hrsh7th/nvim-cmp',
     dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
-  { -- Adds git releated signs to the gutter, as well as utilities for managing changes
+  { 'folke/which-key.nvim',          opts = {} },
+  {
+    -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
       -- See `:help gitsigns.txt`
@@ -112,7 +114,8 @@ require('lazy').setup({
     },
   },
 
-  { -- Theme inspired by Atom
+  {
+    -- Theme inspired by Atom
     'navarasu/onedark.nvim',
     priority = 1000,
     config = function()
@@ -120,7 +123,8 @@ require('lazy').setup({
     end,
   },
 
-  { -- Set lualine as statusline
+  {
+    -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
     -- See `:help lualine.txt`
     opts = {
@@ -133,7 +137,8 @@ require('lazy').setup({
     },
   },
 
-  { -- Add indentation guides even on blank lines
+  {
+    -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
@@ -144,7 +149,7 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim',         opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } },
@@ -162,7 +167,8 @@ require('lazy').setup({
     end,
   },
 
-  { -- Highlight, edit, and navigate code
+  {
+    -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
@@ -184,9 +190,21 @@ require('lazy').setup({
   --
   --    An additional note is that if you only copied in the `init.lua`, you can just comment this line
   --    to get rid of the warning telling you that there are not plugins in `lua/custom/plugins/`.
-  {'towolf/vim-helm'},
-  {'nvim-tree/nvim-tree.lua'},
-  {'nvim-tree/nvim-web-devicons'},
+  { 'towolf/vim-helm' },
+  { 'nvim-tree/nvim-tree.lua' },
+  { 'nvim-tree/nvim-web-devicons' },
+
+  { 'neovim/nvim-lspconfig' },
+  { 'jose-elias-alvarez/null-ls.nvim' },
+  { 'MunifTanjim/prettier.nvim' },
+  { 'f-person/git-blame.nvim' },
+  {
+    'ldelossa/gh.nvim',
+    dependencies = {
+      'ldelossa/litee.nvim' }
+  },
+  { 'tpope/vim-abolish' },
+
   { import = 'custom.plugins' },
 }, {})
 
@@ -269,6 +287,15 @@ require('telescope').setup {
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
+require("telescope").setup {
+  pickers = {
+    live_grep = {
+      additional_args = function(opts)
+        return { "--hidden" }
+      end
+    },
+  },
+}
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
@@ -439,6 +466,11 @@ require('neodev').setup()
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+require 'cmp'.setup {
+  sources = {
+    { name = 'path' }
+  }
+}
 
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
@@ -456,6 +488,70 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
+
+require 'lspconfig'.terraformls.setup {}
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+  callback = function()
+    vim.lsp.buf.format()
+  end,
+  pattern = { "*.tf", "*.tfvars" },
+})
+
+-- Configure nullls
+local null_ls = require("null-ls")
+
+local group = vim.api.nvim_create_augroup("lsp_format_on_save", { clear = false })
+local event = "BufWritePre" -- or "BufWritePost"
+local async = event == "BufWritePost"
+
+null_ls.setup({
+  on_attach = function(client, bufnr)
+    if client.supports_method("textDocument/formatting") then
+      vim.keymap.set("n", "<Leader>f", function()
+        vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
+      end, { buffer = bufnr, desc = "[lsp] format" })
+
+      -- format on save
+      vim.api.nvim_clear_autocmds({ buffer = bufnr, group = group })
+      vim.api.nvim_create_autocmd(event, {
+        buffer = bufnr,
+        group = group,
+        callback = function()
+          vim.lsp.buf.format({ bufnr = bufnr, async = async })
+        end,
+        desc = "[lsp] format on save",
+      })
+    end
+
+    if client.supports_method("textDocument/rangeFormatting") then
+      vim.keymap.set("x", "<Leader>f", function()
+        vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
+      end, { buffer = bufnr, desc = "[lsp] format" })
+    end
+  end,
+})
+
+-- Configure prettier
+local prettier = require("prettier")
+
+prettier.setup({
+  bin = 'prettier', -- or `'prettierd'` (v0.23.3+)
+  filetypes = {
+    "css",
+    "graphql",
+    "html",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "less",
+    "markdown",
+    "scss",
+    "typescript",
+    "typescriptreact",
+    "yaml",
+  },
+})
+
 
 -- nvim-cmp setup
 local cmp = require 'cmp'
@@ -500,6 +596,125 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
   },
+}
+
+-- Setting up ghvim
+require('litee.lib').setup()
+require('litee.gh').setup({
+  -- deprecated, around for compatability for now.
+  jump_mode   = "invoking",
+  -- remap the arrow keys to resize any litee.nvim windows.
+  map_resize_keys = false,
+  -- do not map any keys inside any gh.nvim buffers.
+  disable_keymaps = false,
+  -- the icon set to use.
+  icon_set = "default",
+  -- any custom icons to use.
+  icon_set_custom = nil,
+  -- whether to register the @username and #issue_number omnifunc completion
+  -- in buffers which start with .git/
+  git_buffer_completion = true,
+  -- defines keymaps in gh.nvim buffers.
+  keymaps = {
+      -- when inside a gh.nvim panel, this key will open a node if it has
+      -- any futher functionality. for example, hitting <CR> on a commit node
+      -- will open the commit's changed files in a new gh.nvim panel.
+      open = "<CR>",
+      -- when inside a gh.nvim panel, expand a collapsed node
+      expand = "zo",
+      -- when inside a gh.nvim panel, collpased and expanded node
+      collapse = "zc",
+      -- when cursor is over a "#1234" formatted issue or PR, open its details
+      -- and comments in a new tab.
+      goto_issue = "gd",
+      -- show any details about a node, typically, this reveals commit messages
+      -- and submitted review bodys.
+      details = "d",
+      -- inside a convo buffer, submit a comment
+      submit_comment = "<C-s>",
+      -- inside a convo buffer, when your cursor is ontop of a comment, open
+      -- up a set of actions that can be performed.
+      actions = "<C-a>",
+      -- inside a thread convo buffer, resolve the thread.
+      resolve_thread = "<C-r>",
+      -- inside a gh.nvim panel, if possible, open the node's web URL in your
+      -- browser. useful particularily for digging into external failed CI
+      -- checks.
+      goto_web = "gx"
+  }
+})
+
+local wk = require("which-key")
+wk.register({
+    g = {
+        name = "+Git",
+        h = {
+            name = "+Github",
+            c = {
+                name = "+Commits",
+                c = { "<cmd>GHCloseCommit<cr>", "Close" },
+                e = { "<cmd>GHExpandCommit<cr>", "Expand" },
+                o = { "<cmd>GHOpenToCommit<cr>", "Open To" },
+                p = { "<cmd>GHPopOutCommit<cr>", "Pop Out" },
+                z = { "<cmd>GHCollapseCommit<cr>", "Collapse" },
+            },
+            i = {
+                name = "+Issues",
+                p = { "<cmd>GHPreviewIssue<cr>", "Preview" },
+            },
+            l = {
+                name = "+Litee",
+                t = { "<cmd>LTPanel<cr>", "Toggle Panel" },
+            },
+            r = {
+                name = "+Review",
+                b = { "<cmd>GHStartReview<cr>", "Begin" },
+                c = { "<cmd>GHCloseReview<cr>", "Close" },
+                d = { "<cmd>GHDeleteReview<cr>", "Delete" },
+                e = { "<cmd>GHExpandReview<cr>", "Expand" },
+                s = { "<cmd>GHSubmitReview<cr>", "Submit" },
+                z = { "<cmd>GHCollapseReview<cr>", "Collapse" },
+            },
+            p = {
+                name = "+Pull Request",
+                c = { "<cmd>GHClosePR<cr>", "Close" },
+                d = { "<cmd>GHPRDetails<cr>", "Details" },
+                e = { "<cmd>GHExpandPR<cr>", "Expand" },
+                o = { "<cmd>GHOpenPR<cr>", "Open" },
+                p = { "<cmd>GHPopOutPR<cr>", "PopOut" },
+                r = { "<cmd>GHRefreshPR<cr>", "Refresh" },
+                t = { "<cmd>GHOpenToPR<cr>", "Open To" },
+                z = { "<cmd>GHCollapsePR<cr>", "Collapse" },
+            },
+            t = {
+                name = "+Threads",
+                c = { "<cmd>GHCreateThread<cr>", "Create" },
+                n = { "<cmd>GHNextThread<cr>", "Next" },
+                t = { "<cmd>GHToggleThread<cr>", "Toggle" },
+            },
+        },
+    },
+}, { prefix = "<leader>" })
+
+local configs = require('lspconfig.configs')
+local lspconfig = require('lspconfig')
+local util = require('lspconfig.util')
+
+if not configs.helm_ls then
+  configs.helm_ls = {
+    default_config = {
+      cmd = {"helm_ls", "serve"},
+      filetypes = {'helm'},
+      root_dir = function(fname)
+        return util.root_pattern('Chart.yaml')(fname)
+      end,
+    },
+  }
+end
+
+lspconfig.helm_ls.setup {
+  filetypes = {"helm"},
+  cmd = {"helm_ls", "serve"},
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`
