@@ -147,3 +147,6 @@ This requires:
 {'nvim-telescope/telescope-fzf-native.nvim', build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
 ```
 
+### Other operating systems Installation
+Installation procedures for different versions of linux and windows are available in this fork: https://github.com/mgua/kickstart.nvim 
+
