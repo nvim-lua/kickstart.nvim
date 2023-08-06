@@ -171,7 +171,7 @@ require('lazy').setup({
     'nvim-telescope/telescope.nvim',
     branch = '0.1.x',
     dependencies = {
-      'nvim-lua/plenary.nvim'
+      'nvim-lua/plenary.nvim',
       -- Fuzzy Finder Algorithm which requires local dependencies to be built.
       -- Only load if `make` is available. Make sure you have the system
       -- requirements installed.
@@ -221,6 +221,12 @@ vim.o.hlsearch = false
 -- Make line numbers default
 vim.wo.number = true
 
+-- relative line numbers
+vim.wo.relativenumber = true
+
+-- set scrolloff 8
+vim.wo.scrolloff=8
+
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
@@ -251,6 +257,7 @@ vim.o.completeopt = 'menuone,noselect'
 
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
+
 
 -- [[ Basic Keymaps ]]
 
@@ -437,8 +444,8 @@ local servers = {
   -- gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
-  -- tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  tsserver = {},
+  html = { filetypes = { 'html', 'twig', 'hbs'} },
 
   lua_ls = {
     Lua = {
