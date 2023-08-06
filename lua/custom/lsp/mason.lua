@@ -12,7 +12,7 @@ local servers = {
     gopls = {},
     -- pyright = {},
     -- rust_analyzer = {},
-    tsserver = {},
+    -- tsserver = {},
     -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
     lua_ls = {
@@ -48,3 +48,20 @@ mason_lspconfig.setup_handlers {
         }
     end
 }
+
+-- import mason-null-ls plugin safely
+local mason_null_ls_status, mason_null_ls = pcall(require, "mason-null-ls")
+if not mason_null_ls_status then
+    return
+end
+
+mason_null_ls.setup({
+    -- List of formatters and linters for Mason to install
+    ensure_installed = {
+        "prettier", -- ts/js formatter
+        "stylua", -- lua formatter
+        "eslint_d", -- ts/js linter
+    },
+    -- auto-install configured formatters & linters (with null-ls)
+    automatic_installation = true,
+})
