@@ -14,6 +14,9 @@ alias vimconfig="GIT_DIR=$HOME/.cfg GIT_WORK_TREE=$HOME nvim"
 alias asdfg="setxkbmap -option ctrl:nocaps dvorak"
 alias aoeu="setxkbmap -option ctrl:nocaps us"
 
+setopt no_share_history
+unsetopt share_history
+
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
@@ -49,8 +52,6 @@ fi
 
 . $HOME/.asdf/asdf.sh
 
-# append completions to fpath
-fpath=(${ASDF_DIR}/completions $fpath)
 # initialise completions with ZSH's compinit
 autoload -Uz compinit && compinit
 
