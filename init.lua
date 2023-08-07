@@ -128,14 +128,15 @@ require('lazy').setup({
     },
   },
 
-  {
+  -- {
     -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
+    -- 'navarasu/onedark.nvim',
     -- priority = 1000,
     -- config = function()
       -- vim.cmd.colorscheme 'onedark'
     -- end,
-  },
+  -- },
+  
 
   {
     -- Set lualine as statusline
@@ -144,7 +145,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'tokyonight-moon',
         component_separators = '|',
         section_separators = '',
       },
