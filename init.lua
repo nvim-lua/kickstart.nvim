@@ -1,42 +1,3 @@
---[[
-
-=====================================================================
-==================== READ THIS BEFORE CONTINUING ====================
-=====================================================================
-
-Kickstart.nvim is *not* a distribution.
-
-Kickstart.nvim is a template for your own configuration.
-  The goal is that you can read every line of code, top-to-bottom, understand
-  what your configuration is doing, and modify it to suit your needs.
-
-  Once you've done that, you should start exploring, configuring and tinkering to
-  explore Neovim!
-
-  If you don't know anything about Lua, I recommend taking some time to read through
-  a guide. One possible example:
-  - https://learnxinyminutes.com/docs/lua/
-
-
-  And then you can explore or search through `:help lua-guide`
-  - https://neovim.io/doc/user/lua-guide.html
-
-
-Kickstart Guide:
-
-I have left several `:help X` comments throughout the init.lua
-You should run that command and read that help section for more information.
-
-In addition, I have some `NOTE:` items throughout the file.
-These are for you, the reader to help understand what is happening. Feel free to delete
-them once you know what you're doing, but they should serve as a guide for when you
-are first encountering a few different constructs in your nvim config.
-
-I hope you enjoy your Neovim journey,
-- TJ
-
-P.S. You can delete this when you're done too. It's your config now :)
---]]
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
@@ -132,11 +93,12 @@ require('lazy').setup({
   },
 
   {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
+    -- Theme inspired by VS Code
+    'Mofiqul/vscode.nvim',
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'onedark'
+      vim.cmd.colorscheme 'vscode'
+      vim.o.background = 'light'
     end,
   },
 
@@ -147,21 +109,10 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'vscode',
         component_separators = '|',
         section_separators = '',
       },
-    },
-  },
-
-  {
-    -- Add indentation guides even on blank lines
-    'lukas-reineke/indent-blankline.nvim',
-    -- Enable `lukas-reineke/indent-blankline.nvim`
-    -- See `:help indent_blankline.txt`
-    opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
     },
   },
 
@@ -210,7 +161,7 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
@@ -223,16 +174,15 @@ vim.o.hlsearch = false
 -- Make line numbers default
 vim.wo.number = true
 
--- Enable mouse mode
-vim.o.mouse = 'a'
+-- Disable mouse mode
+vim.o.mouse = ''
 
--- Sync clipboard between OS and Neovim.
---  Remove this option if you want your OS clipboard to remain independent.
+-- DO NOT sync clipboard between OS and Neovim.
 --  See `:help 'clipboard'`
-vim.o.clipboard = 'unnamedplus'
+vim.o.clipboard = ''
 
--- Enable break indent
-vim.o.breakindent = true
+-- Disable break indent
+vim.o.breakindent = false
 
 -- Save undo history
 vim.o.undofile = true
@@ -254,7 +204,22 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+-- Use some fun characters when displaying invisibles
+vim.opt.listchars = {
+        eol = '↲',
+        space = '⋅',
+        trail = '•',
+        tab = '⇄ ',
+}
+
+-- Recognize specific file names as having a certain language's syntax
+vim.cmd [[
+        autocmd BufNewFile,BufRead Jenkinsfile set syntax=groovy
+]]
+
 -- [[ Basic Keymaps ]]
+
+vim.keymap.set('n', '<C-q>', '<cmd>q!<cr>', { noremap = true, silent = true })
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
@@ -313,7 +278,20 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim' },
+  ensure_installed = {
+    'c',
+    'cpp',
+    'go',
+    'groovy',
+    'java',
+    'lua',
+    'python',
+    'rust',
+    'tsx',
+    'typescript',
+    'vim',
+    'vimdoc',
+  },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -420,6 +398,19 @@ local on_attach = function(_, bufnr)
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, '[W]orkspace [L]ist Folders')
 
+  -- Don't show diagnostics inline
+  vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+          vim.lsp.diagnostic.on_publish_diagnostics, {
+                  virtual_text = false
+          }
+  )
+
+  -- Show diagnostics for line under the cursor
+  vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
+
+  -- Make diagnostics hints more readable with Solarized theme
+  vim.cmd 'hi DiagnosticHint guifg=Gray'
+
   -- Create a command `:Format` local to the LSP buffer
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
@@ -442,10 +433,36 @@ local servers = {
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
+  bashls = {},
+  groovyls = {},
+  intelephense = {},
+  jdtls = {},
+  jsonls = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
+    },
+  },
+  pyright = {},
+  tsserver = {},
+  yamlls = {
+    yaml = {
+      schemas = {
+          kubernetes = "*.yaml",
+          ["http://json.schemastore.org/github-workflow"] = ".github/workflows/*",
+          ["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
+          -- ["http://json.schemastore.org/ansible-stable-2.9"] = "roles/tasks/*.{yml,yaml}",
+          -- ["http://json.schemastore.org/prettierrc"] = ".prettierrc.{yml,yaml}",
+          -- ["http://json.schemastore.org/kustomization"] = "kustomization.{yml,yaml}",
+          -- ["http://json.schemastore.org/ansible-playbook"] = "*play*.{yml,yaml}",
+          -- ["http://json.schemastore.org/chart"] = "Chart.{yml,yaml}",
+          -- ["https://json.schemastore.org/dependabot-v2"] = ".github/dependabot.{yml,yaml}",
+          -- ["https://json.schemastore.org/gitlab-ci"] = "*gitlab-ci*.{yml,yaml}",
+          -- ["https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.1/schema.json"] = "*api*.{yml,yaml}",
+          -- ["https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json"] = "*docker-compose*.{yml,yaml}",
+          -- ["https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json"] = "*flow*.{yml,yaml}",
+      },
     },
   },
 }
