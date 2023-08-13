@@ -10,6 +10,15 @@ return {
 		"MunifTanjim/nui.nvim",
 	},
 	config = function()
-		require('neo-tree').setup {}
+		require('neo-tree').setup {
+			filesystem = {
+				filtered_items = {
+					visible = false,
+					hide_dotfiles = false,
+				}
+			}
+		}
+
+		vim.keymap.set('n', '<leader><space>', ':Neotree toggle<cr>', { desc = '(nvim-tree) File tree' })
 	end,
 }
