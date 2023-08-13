@@ -482,6 +482,9 @@ mason_lspconfig.setup_handlers {
       settings = servers[server_name],
       filetypes = (servers[server_name] or {}).filetypes,
     }
+  end,
+  ["rust_analyzer"] = function()
+    require("rust-tools").setup {}
   end
 }
 
