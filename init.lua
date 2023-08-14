@@ -44,6 +44,8 @@ vim.keymap.set("n", "<Esc>", function()
   vim.notify("")
   -- Removes highlight search
   vim.cmd.noh()
+
+  vim.cmd(':silent! Neotree cancel<cr>')
 end, { silent = true })
 
 -- Split resize
