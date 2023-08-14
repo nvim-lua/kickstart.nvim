@@ -57,12 +57,24 @@ local plugins = {
     opts = {}
   },
 
+  --[[
   {
     -- Theme inspired by Atom
+    --
     'navarasu/onedark.nvim',
     priority = 1000,
     config = function()
       vim.cmd.colorscheme 'onedark'
+    end,
+  },
+  --]]
+
+  {
+    -- Theme inspired by Atom
+    'Mofiqul/dracula.nvim',
+    priority = 1000,
+    config = function()
+      vim.cmd.colorscheme 'dracula'
     end,
   },
 
@@ -73,7 +85,7 @@ local plugins = {
     opts = {
       options = {
         icons_enabled = true,
-        theme = 'onedark',
+        theme = 'dracula',
         component_separators = '|',
         section_separators = { left = '', right = '' },
       },
@@ -135,8 +147,8 @@ local plugins = {
       require('neo-tree').setup {
         filesystem = {
           filtered_items = {
-            visible = false,
-            hide_dotfiles = false,
+            visible = true,
+            hide_hidden = false
           }
         },
       }

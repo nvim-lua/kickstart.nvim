@@ -38,8 +38,13 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })
 
--- Remove highlight search
-vim.keymap.set('n', '<leader>l', ':nohls<cr>', { silent = true })
+-- Esc functionality
+vim.keymap.set("n", "<Esc>", function()
+  -- Clear terminal notification below
+  vim.notify("")
+  -- Removes highlight search
+  vim.cmd.noh()
+end, { silent = true })
 
 -- Split resize
 vim.keymap.set('n', '<C-j>', ':res +1<cr>', { desc = 'Resize split' })
