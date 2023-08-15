@@ -3,6 +3,8 @@
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
@@ -165,6 +167,7 @@ require('lazy').setup({
     require 'lornest.plugins.fugitive',
     require 'lornest.plugins.harpoon',
     require 'lornest.plugins.copilot',
+    require 'lornest.plugins.nvim-tree',
   -- require 'kickstart.plugins.autoformat',
   -- require 'kickstart.plugins.debug',
 
