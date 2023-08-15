@@ -32,10 +32,12 @@ local function applyFoldsAndThenCloseAllFolds(bufnr, providerName)
     -- make sure buffer is attached
     require('ufo').attach(bufnr)
     -- getFolds return Promise if providerName == 'lsp'
-    local ranges = await(require('ufo').getFolds(bufnr, providerName))
-    local ok = require('ufo').applyFolds(bufnr, ranges)
-    if ok then
-      require('ufo').closeFoldsWith(1)
+    local ok, ranges = pcall(await, require('ufo').getFolds(bufnr, providerName))
+    if ok and ranges then
+      ok = require('ufo').applyFolds(bufnr, ranges)
+      if ok then
+        require('ufo').closeFoldsWith(1)
+      end
     end
   end)
 end
@@ -59,18 +61,12 @@ return {
       end,
     },
   },
-  event = "BufReadPost",
-  opts = {
-    provider_selector = function()
-      return { "treesitter", "indent" }
-    end,
-  },
+  event = "VeryLazy",
   init = function()
     vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
     vim.o.foldcolumn = '1'
-    vim.o.foldnestmax = 1
     vim.o.foldlevel = 99
-    vim.o.foldlevelstart = 1
+    vim.o.foldlevelstart = 99
     vim.o.foldenable = true
   end,
   config = function(_, opts)
@@ -82,7 +78,7 @@ return {
 
     require("ufo").setup(newOpts)
 
-    vim.api.nvim_create_autocmd('BufRead', {
+    vim.api.nvim_create_autocmd('BufWinEnter', {
       pattern = '*',
       callback = function(e)
         applyFoldsAndThenCloseAllFolds(e.buf, 'lsp')

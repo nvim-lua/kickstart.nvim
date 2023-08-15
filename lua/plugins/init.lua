@@ -61,6 +61,7 @@ local plugins = {
     -- Theme inspired by Atom
     'Mofiqul/dracula.nvim',
     priority = 1000,
+    lazy = false,
     config = function()
       vim.cmd.colorscheme 'dracula'
     end,
@@ -122,12 +123,15 @@ local plugins = {
     build = ':TSUpdate',
   },
 
+  -- Multiple cursors
   {
     "mg979/vim-visual-multi",
     branch = "master"
   },
 
   -- require plugins with more complex config
+
+  require 'plugins.todo-comments',
 
   require 'plugins.neo-tree',
 
