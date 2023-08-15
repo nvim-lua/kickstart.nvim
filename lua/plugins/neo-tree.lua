@@ -11,7 +11,8 @@ return {
       filesystem = {
         filtered_items = {
           visible = true,
-          hide_hidden = false
+          hide_hidden = false,
+          hide_gitignored = true,
         }
       },
     }
