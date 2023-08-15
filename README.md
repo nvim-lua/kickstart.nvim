@@ -132,6 +132,12 @@ Each PR, especially those which increase the line count, should have a descripti
 * Are there any cool videos about this plugin?
   * Current iteration of kickstart (coming soon)
   * Here is one about the previous iteration of kickstart: [video introduction to Kickstart.nvim](https://youtu.be/stqUbv-5u2s). Note the install via init.lua no longer works as specified. Please follow the install instructions in this file instead as they're up to date.
+* Can I test out this configuration and keep my current config? Yes, kind of.
+  * Clone or otherwise get this repo on your system e.g. `~/code/sandbox/kickstart.nvim`
+  * Start neovim using that file: `nvim -u ~/code/sandbox/kickstart.nvim/init.lua`
+  * NOTE: If your current config uses Lazy you may want to `Clean (X)` existing plugins
+  * NOTE: To add plugins you are limited to modifying `init.lua` as the files in `custom/plugins/` won't be available to neovim because the `-u` option doesn't change neovim's CONFIG DIRECTORY.
+  * NOTE: If you see a message this message at startup: "No specs found for module custom.plugins" you are attempting to customize neovim outside it's CONFIG DIRECTORY.
 
 ### Windows Installation
 
