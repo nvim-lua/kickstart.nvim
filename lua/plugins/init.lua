@@ -57,18 +57,6 @@ local plugins = {
     opts = {}
   },
 
-  --[[
-  {
-    -- Theme inspired by Atom
-    --
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
-  },
-  --]]
-
   {
     -- Theme inspired by Atom
     'Mofiqul/dracula.nvim',
@@ -134,33 +122,19 @@ local plugins = {
     build = ':TSUpdate',
   },
 
-  -- Neo Tree
-  {
-    "nvim-neo-tree/neo-tree.nvim",
-    branch = "v3.x",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-      "MunifTanjim/nui.nvim",
-    },
-    config = function()
-      require('neo-tree').setup {
-        filesystem = {
-          filtered_items = {
-            visible = true,
-            hide_hidden = false
-          }
-        },
-      }
-    end,
-  },
-
   {
     "mg979/vim-visual-multi",
     branch = "master"
   },
 
+  -- require plugins with more complex config
+
+  require 'plugins.neo-tree',
+
+  require 'plugins.nvim-ufo',
+
   require 'kickstart.plugins.autoformat',
+
   -- require 'kickstart.plugins.debug',
 
   -- NOTE: The import below automatically adds your own plugins, configuration, etc from `lua/custom/plugins/*.lua`

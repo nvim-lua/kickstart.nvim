@@ -227,8 +227,18 @@ local on_attach = function(_, bufnr)
   -- tsserver organize imports
   nmap('<leader>oi', organize_imports, 'OrganizeImports')
 
+  -- nvim-ufo mappings
+  nmap("zR", require("ufo").openAllFolds, "Open All Folds")
+  nmap("zM", require("ufo").closeAllFolds, "Close All Folds")
+  nmap("zj", function()
+    local winid = require("ufo").peekFoldedLinesUnderCursor()
+    if not winid then
+      vim.lsp.buf.hover()
+    end
+  end, "Peek At Current Fold")
+
   -- Create a command `:Format` local to the LSP buffer
-  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
+  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function()
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
 end
