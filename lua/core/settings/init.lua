@@ -1,6 +1,8 @@
 -- [[ Setting options ]]
--- See `:help vim.o`
--- NOTE: You can change these options as you wish!
+
+-- Sets <space> as the <leader> key
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
 
 -- Disale Swap Files
 vim.opt.swapfile = false

@@ -1,8 +1,5 @@
---  Here is where you install your plugins.
---  You can configure plugins using the `config` key.
---
---  You can also configure plugins after the setup call,
---  as they will be available in your neovim runtime.
+-- Plugin declarations
+
 local plugins = {
   -- :Git/:G
   'tpope/vim-fugitive',
@@ -23,7 +20,6 @@ local plugins = {
       'williamboman/mason-lspconfig.nvim',
 
       -- Useful status updates for LSP
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       {
         'j-hui/fidget.nvim',
         tag = 'legacy',
@@ -131,22 +127,13 @@ local plugins = {
 
   -- require plugins with more complex config
 
-  require 'plugins.todo-comments',
+  require 'core.plugins.todo-comments',
 
-  require 'plugins.neo-tree',
+  require 'core.plugins.neo-tree',
 
-  require 'plugins.nvim-ufo',
+  require 'core.plugins.nvim-ufo',
 
   require 'kickstart.plugins.autoformat',
-
-  -- require 'kickstart.plugins.debug',
-
-  -- NOTE: The import below automatically adds your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
-  --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
-  --    up-to-date with whatever is in the kickstart repo.
-  --
-  --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  { import = 'custom.plugins' },
 }
 
 local pluginOptions = {}
