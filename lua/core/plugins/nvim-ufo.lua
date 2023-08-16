@@ -78,11 +78,14 @@ return {
 
     require("ufo").setup(newOpts)
 
+    -- NOTE Uncommnt this to apply folds when opening a file
+    --[[
     vim.api.nvim_create_autocmd('BufWinEnter', {
       pattern = '*',
       callback = function(e)
         applyFoldsAndThenCloseAllFolds(e.buf, 'lsp')
       end
     })
+    --]]
   end,
 }
