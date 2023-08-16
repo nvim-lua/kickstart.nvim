@@ -22,15 +22,15 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })
 
--- Esc functionality
-vim.keymap.set("n", "<Esc>", function()
-  -- Clear terminal notification below
-  vim.notify("")
+local function nohClear()
   -- Removes highlight search
   vim.cmd.noh()
+  -- Clear terminal notification below
+  vim.notify("")
+end
 
-  vim.cmd(':silent! Neotree cancel<cr>')
-end, { silent = true })
+vim.keymap.set("n", "<Esc>", nohClear, { silent = true })
+vim.keymap.set("n", "<C-L>", nohClear, { silent = true })
 
 --[[
   NOTE To use Meta key as Option in mac inside iterm

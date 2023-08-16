@@ -1,4 +1,4 @@
--- Neotree mappings
+-- Project tree mappings
 
 return function(buffer)
   local api = require "nvim-tree.api"
