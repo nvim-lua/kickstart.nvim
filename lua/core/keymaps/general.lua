@@ -1,5 +1,7 @@
 -- [[ General Keymaps ]]
 
+local nmap = require 'core.utils'.createNmap()
+
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
 -- Remap for dealing with word wrap
@@ -30,8 +32,16 @@ vim.keymap.set("n", "<Esc>", function()
   vim.cmd(':silent! Neotree cancel<cr>')
 end, { silent = true })
 
+--[[
+  NOTE To use Meta key as Option in mac inside iterm
+  it should be set to work as +ESC in iterm settings
+--]]
+
 -- Split resize
-vim.keymap.set('n', '<C-j>', ':res +1<cr>', { desc = 'Resize split' })
-vim.keymap.set('n', '<C-k>', ':res -1<cr>', { desc = 'Resize split' })
-vim.keymap.set('n', '<C-h>', ':vertical res -1<cr>', { desc = 'Resize split vertically' })
-vim.keymap.set('n', '<C-l>', ':vertical res +1<cr>', { desc = 'Resize split vertically' })
+nmap('<M-j>', ':res +1<cr>', 'Resize split')
+nmap('<M-k>', ':res -1<cr>', 'Resize split')
+nmap('<M-h>', ':vertical res -1<cr>', 'Resize split vertically')
+nmap('<M-l>', ':vertical res +1<cr>', 'Resize split vertically')
+nmap('<M-v>', '<C-w>|<cr>', 'Maximize Split Vertically')
+nmap('<M-s>', '<C-w>_<cr>', 'Maximize Split Horizontally')
+nmap('<M-e>', '<C-w>=<cr>', 'Reset Split Size')
