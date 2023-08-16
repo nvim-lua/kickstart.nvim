@@ -3,6 +3,7 @@ local servers = {
   -- gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
+  eslint = {},
   tsserver = {},
 
   lua_ls = {

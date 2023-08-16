@@ -11,8 +11,14 @@ return function(buffer)
     nowait = true
   })
 
+  --[[
+  --  WARN The docs tell us to call default_on_attach
+  --  but doing it causes issues on git commits or when
+  --  no file is loaded
+  --]]
+
   -- default mappings
-  api.config.mappings.default_on_attach(buffer)
+  -- api.config.mappings.default_on_attach(buffer)
 
   nmap('<leader><space>', api.tree.toggle, 'File Tree')
   nmap('t', api.node.open.tab, 'Toggle Node')
