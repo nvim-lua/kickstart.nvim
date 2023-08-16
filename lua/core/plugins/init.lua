@@ -129,7 +129,8 @@ local plugins = {
 
   require 'core.plugins.todo-comments',
 
-  require 'core.plugins.neo-tree',
+  -- require 'core.plugins.neo-tree',
+  require 'core.plugins.project-tree',
 
   require 'core.plugins.nvim-ufo',
 
