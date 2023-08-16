@@ -26,13 +26,16 @@ return function(buffer)
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, '[W]orkspace [L]ist Folders')
 
-  -- nvim-ufo mappings
-  nmap("zR", require("ufo").openAllFolds, "Open All Folds")
-  nmap("zM", require("ufo").closeAllFolds, "Close All Folds")
-  nmap("zj", function()
+  local function peekAtFold()
     local winid = require("ufo").peekFoldedLinesUnderCursor()
+
     if not winid then
       vim.lsp.buf.hover()
     end
-  end, "Peek At Current Fold")
+  end
+
+  -- nvim-ufo mappings
+  nmap("zR", require("ufo").openAllFolds, "Open All Folds")
+  nmap("zM", require("ufo").closeAllFolds, "Close All Folds")
+  nmap("zj", peekAtFold, "Peek At Current Fold")
 end

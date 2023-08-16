@@ -1,9 +1,5 @@
 -- [[ Setting options ]]
 
--- Sets <space> as the <leader> key
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
-
 -- As in nvim-tree docs
 
 -- disable netrw at the very start of your init.lua
@@ -39,6 +35,9 @@ vim.o.smartcase = true
 
 -- Keep signcolumn on by default
 vim.wo.signcolumn = 'yes'
+
+-- Save undo history
+vim.o.undofile = true
 
 -- Decrease update time
 vim.o.updatetime = 250

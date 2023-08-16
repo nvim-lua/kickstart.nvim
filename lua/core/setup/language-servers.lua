@@ -67,11 +67,6 @@ end
 require('lspconfig').tsserver.setup {
   on_attach = tsserver_on_attach,
   capabilities = capabilities,
-  init_options = {
-    preferences = {
-      disableSuggestions = true
-    }
-  },
   commands = {
     OrganizeImports = {
       organize_imports,

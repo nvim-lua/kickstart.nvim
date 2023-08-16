@@ -1,11 +1,14 @@
 -- Lua quick doc reference https://learnxinyminutes.com/docs/lua/
 
-require "core.settings"
+-- Sets <space> as the <leader> key
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
 
 -- Bootsrap plugin manager
 require "core.bootstrap-plugin-manager"
 
 require "core.plugins"
+require "core.settings"
 require "core.keymaps"
 require "core.setup"
 
