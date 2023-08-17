@@ -93,12 +93,24 @@ require('lazy').setup({
     },
   },
 
+  -- NOTE: A couple of colour schemes that I like.
+
+  -- {
+  --   -- Theme inspired by Atom
+  -- 'navarasu/onedark.nvim',
+  -- priority = 1000,
+  -- config = function()
+  --   vim.cmd.colorscheme 'onedark'
+  --   end,
+  -- },
+
   {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
+    "folke/tokyonight.nvim",
+    lazy = false,
     priority = 1000,
+    opts = {},
     config = function()
-      vim.cmd.colorscheme 'onedark'
+      vim.cmd.colorscheme 'tokyonight'
     end,
   },
 
@@ -109,7 +121,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'tokyonight',
         component_separators = '|',
         section_separators = '',
       },
@@ -167,7 +179,7 @@ require('lazy').setup({
   require 'lornest.plugins.harpoon',
   require 'lornest.plugins.copilot',
   require 'lornest.plugins.nvim-tree',
-  -- require 'kickstart.plugins.autoformat',
+  require 'lornest.plugins.autoformat',
   -- require 'kickstart.plugins.debug',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -184,7 +196,7 @@ require('lazy').setup({
 -- NOTE: You can change these options as you wish!
 
 -- Set highlight on search
-vim.o.hlsearch = true
+vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
