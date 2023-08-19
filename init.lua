@@ -60,6 +60,12 @@ end
 vim.opt.rtp:prepend(lazypath)
 -- nvim-tree setup
 
+-- set ruler
+vim.cmd('set colorcolumn=80')
+
+-- set hybrid relative line numbers
+vim.cmd('set nu rnu')
+
 -- disable netrw at the very start of your init.lua (strongly advised)
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -197,7 +203,12 @@ require('lazy').setup({
       },
     },
   },
-
+  {
+    'nvim-tree/nvim-tree.lua',
+    requires = {
+      'nvim-tree/nvim-web-devicons', -- optional
+    },
+  },
   {
     -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
