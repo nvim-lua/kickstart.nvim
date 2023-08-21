@@ -43,10 +43,15 @@ P.S. You can delete this when you're done too. It's your config now :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- for now turn on LIGHT
+    vim.cmd("set background=light")
+
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
+
+-- vim.fn is bridge to vimscript.   and `system`  is vimscript command
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system {
     'git',
@@ -57,6 +62,7 @@ if not vim.loop.fs_stat(lazypath) then
     lazypath,
   }
 end
+--  vim.opt is like using :set;    :append or :prepend is like vimscript set+=
 vim.opt.rtp:prepend(lazypath)
 
 -- NOTE: Here is where you install your plugins.
@@ -68,7 +74,7 @@ require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
   -- Nvim-R
-  'jalvesaq/Nvim-R', 
+  'jalvesaq/Nvim-R',
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
@@ -87,6 +93,7 @@ require('lazy').setup({
       'williamboman/mason-lspconfig.nvim',
 
       -- Useful status updates for LSP
+      -- NOTE !!  
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
 
@@ -135,11 +142,14 @@ require('lazy').setup({
 
   {
     -- Theme inspired by Atom
+    --[[
+    --      TOO DARK !
     'navarasu/onedark.nvim',
     priority = 1000,
     config = function()
       vim.cmd.colorscheme 'onedark'
     end,
+   --]]
   },
 
   {
