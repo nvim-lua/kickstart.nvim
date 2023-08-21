@@ -44,7 +44,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- for now turn on LIGHT
-    vim.cmd("set background=light")
+vim.cmd 'set background=light'
 
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
@@ -93,7 +93,7 @@ require('lazy').setup({
       'williamboman/mason-lspconfig.nvim',
 
       -- Useful status updates for LSP
-      -- NOTE !!  
+      -- NOTE !!
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
 
@@ -141,6 +141,7 @@ require('lazy').setup({
   },
 
   {
+    -- jr removed:
     -- Theme inspired by Atom
     --[[
     --      TOO DARK !
@@ -150,6 +151,17 @@ require('lazy').setup({
       vim.cmd.colorscheme 'onedark'
     end,
    --]]
+  },
+
+  -- add gruvbox
+  { 'ellisonleao/gruvbox.nvim' },
+
+  -- Configure LazyVim to load gruvbox
+  {
+    'LazyVim/LazyVim',
+    opts = {
+      colorscheme = 'gruvbox',
+    },
   },
 
   {
@@ -228,6 +240,19 @@ require('lazy').setup({
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
+
+-- jr:  HOST
+-- $HOST is shell environmental var, set by initialize.zsh
+local HOST = os.getenv 'HOST' --- which machine?
+if true then
+  print('LUA thinks I am using ' .. vim.inspect(HOST))
+end
+
+if HOST == 'jim-ThinkPad-T480' then
+  vim.cmd [[ set background=light]]
+else
+  vim.cmd [[ set background=dark]] -- acer-desktop
+end
 
 -- Set highlight on search
 vim.o.hlsearch = false
@@ -484,7 +509,7 @@ mason_lspconfig.setup_handlers {
       settings = servers[server_name],
       filetypes = (servers[server_name] or {}).filetypes,
     }
-  end
+  end,
 }
 
 -- [[ Configure nvim-cmp ]]
