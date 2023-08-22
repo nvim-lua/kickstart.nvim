@@ -8,10 +8,10 @@ return {
     config = function()
       -- Lazygit
       local Terminal  = require('toggleterm.terminal').Terminal
-      local defaultTerm = Terminal:new({ cmd = "zsh", hidden = true, orientation = "float" })
-      local lazygit = Terminal:new({ cmd = "lazygit", hidden = true })
-      local pythonREPL = Terminal:new({ cmd = "python3", hidden = true })
-      local haskellREPL = Terminal:new({ cmd = "ghci", hidden = true })
+      local defaultTerm = Terminal:new({ cmd = "zsh", hidden = true, direction = "float" })
+      local lazygit = Terminal:new({ cmd = "lazygit", hidden = true, direction = "float" })
+      local pythonREPL = Terminal:new({ cmd = "python3", hidden = true, direction = "float" })
+      local haskellREPL = Terminal:new({ cmd = "ghci", hidden = true, direction = "float" })
 
       function _defaultterm_toggle()
         defaultTerm:toggle()
@@ -45,7 +45,7 @@ return {
       direction = "float",
       float_opts = {
         border = "curved",
-        highlights = { border = "Normal", background = "Normal" },
+        highlights = { border = "Normal", background = "Dark" },
       },
     },
   },
