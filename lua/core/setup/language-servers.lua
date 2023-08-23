@@ -5,6 +5,7 @@ local servers = {
   -- rust_analyzer = {},
   eslint = {},
   tsserver = {},
+  tailwindcss = {},
 
   lua_ls = {
     Lua = {

@@ -63,6 +63,8 @@ local plugins = {
     end,
   },
 
+  'HiPhish/rainbow-delimiters.nvim',
+
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
