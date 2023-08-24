@@ -225,6 +225,9 @@ vim.o.expandtab = true
 
 -- [[ Basic Keymaps ]]
 
+vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = "Move up half page" })
+vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = "Move down half page" })
+
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
