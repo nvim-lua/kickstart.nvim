@@ -254,11 +254,15 @@ else
   vim.cmd [[ set background=dark]] -- acer-desktop
 end
 
+-- Nvim-R
+  vim.cmd([[let R_assign = 2]])    -- __ becomes left arrow
+
 -- Set highlight on search
 vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
+vim.wo.relativenumber = true
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -515,7 +519,30 @@ mason_lspconfig.setup_handlers {
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
 local cmp = require 'cmp'
+
+
+--
+--   LUASNIP
 local luasnip = require 'luasnip'
+local ls = require 'luasnip'
+local s = ls.snippet
+local sn = ls.snippet_node
+local isn = ls.indent_snippet_node
+local t = ls.text_node
+
+-- HELPER
+local filename = function()
+  return { vim.fn.expand("%:p") }
+end
+
+-- SNIPS
+ls.add_snippets("lua", {
+  s("luaxx", { t("this is lua file!") }),
+  s("sep", t({ "---------------" })),
+})
+---------------
+--
+-- next line:  allows use of snippet collection in vscode (??)
 require('luasnip.loaders.from_vscode').lazy_load()
 luasnip.config.setup {}
 
