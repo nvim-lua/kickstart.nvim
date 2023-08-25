@@ -20,7 +20,9 @@ return {
         hide_gitignored = true,
       },
       bind_to_cwd = false,
-      follow_current_file = true,
+      follow_current_file = {
+        enabled = true,
+      },
       hijack_netrw_behavior = "open_current",
     },
   },
