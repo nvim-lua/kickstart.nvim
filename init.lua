@@ -234,7 +234,8 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  --    jr:  2023-08-25
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
@@ -255,7 +256,7 @@ else
 end
 
 -- Nvim-R
-  vim.cmd([[let R_assign = 2]])    -- __ becomes left arrow
+vim.cmd [[let R_assign = 2]] -- __ becomes left arrow
 
 -- Set highlight on search
 vim.o.hlsearch = false
@@ -520,7 +521,6 @@ mason_lspconfig.setup_handlers {
 -- See `:help cmp`
 local cmp = require 'cmp'
 
-
 --
 --   LUASNIP
 local luasnip = require 'luasnip'
@@ -532,13 +532,13 @@ local t = ls.text_node
 
 -- HELPER
 local filename = function()
-  return { vim.fn.expand("%:p") }
+  return { vim.fn.expand '%:p' }
 end
 
 -- SNIPS
-ls.add_snippets("lua", {
-  s("luaxx", { t("this is lua file!") }),
-  s("sep", t({ "---------------" })),
+ls.add_snippets('lua', {
+  s('luaxx', { t 'this is lua file!' }),
+  s('sep', t { '---------------' }),
 })
 ---------------
 --
