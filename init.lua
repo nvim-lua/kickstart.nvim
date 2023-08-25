@@ -28,6 +28,9 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
+  -- Manipulate surrounding characters
+  'tpope/vim-surround',
+
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
@@ -64,9 +67,6 @@ require('lazy').setup({
 
       -- Adds LSP completion capabilities
       'hrsh7th/cmp-nvim-lsp',
-
-      -- Adds a number of user-friendly snippets
-      'rafamadriz/friendly-snippets',
     },
   },
 
@@ -228,6 +228,9 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+-- Show vertical ruler on column 120
+vim.opt.colorcolumn = { '120' }
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
