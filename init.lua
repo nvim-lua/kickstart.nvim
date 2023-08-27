@@ -231,6 +231,7 @@ vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = "Move down half page" })
 
 vim.keymap.set('n', '<C-j>', ':bnext<CR>', { desc = "Next Buffer" })
 vim.keymap.set('n', '<C-k>', ':bprev<CR>', { desc = "Previous Buffer" })
+vim.keymap.set('n', '<leader>c', ':bdelete<CR>', { desc = "Delete Buffer" })
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
