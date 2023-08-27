@@ -228,6 +228,9 @@ vim.o.expandtab = true
 vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = "Move up half page" })
 vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = "Move down half page" })
 
+vim.keymap.set('n', '<C-j>', ':bnext<CR>', { desc = "Next Buffer" })
+vim.keymap.set('n', '<C-k>', ':bprev<CR>', { desc = "Previous Buffer" })
+
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
@@ -382,7 +385,7 @@ local on_attach = function(_, bufnr)
 
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+  nmap('<M-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
