@@ -1,4 +1,23 @@
 return {
+	{
+		"ThePrimeagen/refactoring.nvim",
+		requires = {
+			{ "nvim-lua/plenary.nvim" },
+			{ "nvim-treesitter/nvim-treesitter" },
+		},
+		config = function()
+			require("refactoring").setup({})
+		end,
+	},
+	{
+		"folke/tokyonight.nvim",
+		lazy = false, -- make sure we load this during startup if it is your main colorscheme
+		priority = 1000, -- make sure to load this before all the other start plugins
+		config = function()
+			-- load the colorscheme here
+			vim.cmd([[colorscheme tokyonight]])
+		end,
+	},
 	-- formatting & linting
 	"jose-elias-alvarez/null-ls.nvim",
 	--	use("jayp0521/mason-null-ls.nvim")
@@ -21,6 +40,12 @@ return {
 				-- or leave it empty to use the default settings
 				-- refer to the configuration section below
 			})
+		end,
+	},
+	{
+		"rafamadriz/friendly-snippets",
+		config = function()
+			require("luasnip.loaders.from_vscode").lazy_load()
 		end,
 	},
 }

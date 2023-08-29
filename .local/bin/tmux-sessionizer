@@ -3,8 +3,8 @@
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$(find ~/.config ~/Development/nurx ~/Development ~/Development/keeps-next ~/Development/keeps-frontend -mindepth 1 -maxdepth 1 -type d | fzf)
-    #selected=$(find ~/.config ~/Development -mindepth 1 -maxdepth 1 -type d | fzf)
+    #selected=$(find ~/.config ~/Development ~/Development/keeps-next ~/Development/keeps-frontend ~/Development/keeps-frontend/bug/**/ -mindepth 1 -maxdepth 1 -type d | fzf)
+    selected=$(find ~/Development/* -mindepth 1 -maxdepth 10 -type d -prune -a ! -name "node_modules" | fzf)
 fi
 
 if [[ -z $selected ]]; then

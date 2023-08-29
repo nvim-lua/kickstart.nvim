@@ -1,6 +1,6 @@
 require("lualine").setup({
 	options = {
-		theme = "onedark",
+		theme = "tokyonight",
 		tabline = {
 			lualine_a = { "buffers" },
 			lualine_b = { "branch" },
