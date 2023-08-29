@@ -27,7 +27,6 @@ vim.opt.rtp:prepend(lazypath)
 --    as they will be available in your neovim runtime.
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
-
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
@@ -95,24 +94,24 @@ require('lazy').setup({
 
   -- NOTE: A couple of colour schemes that I like.
 
-  -- {
-  --   -- Theme inspired by Atom
-  -- 'navarasu/onedark.nvim',
-  -- priority = 1000,
-  -- config = function()
-  --   vim.cmd.colorscheme 'onedark'
-  --   end,
-  -- },
-
   {
-    "folke/tokyonight.nvim",
-    lazy = false,
+    -- Theme inspired by Atom
+    'navarasu/onedark.nvim',
     priority = 1000,
-    opts = {},
     config = function()
-      vim.cmd.colorscheme 'tokyonight'
+      vim.cmd.colorscheme 'onedark'
     end,
   },
+
+  -- {
+  --   "folke/tokyonight.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   opts = {},
+  --   config = function()
+  --     vim.cmd.colorscheme 'tokyonight'
+  --   end,
+  -- },
 
   {
     -- Set lualine as statusline
@@ -120,8 +119,8 @@ require('lazy').setup({
     -- See `:help lualine.txt`
     opts = {
       options = {
-        icons_enabled = false,
-        theme = 'tokyonight',
+        icons_enabled = true,
+        theme = 'onedark',
         component_separators = '|',
         section_separators = '',
       },
@@ -363,12 +362,6 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
-  -- NOTE: Remember that lua is a real programming language, and as such it is possible
-  -- to define small helper and utility functions so you don't have to repeat yourself
-  -- many times.
-  --
-  -- In this case, we create a function that lets us more easily define mappings specific
-  -- for LSP related items. It sets the mode, buffer and description for us each time.
   local nmap = function(keys, func, desc)
     if desc then
       desc = 'LSP: ' .. desc
@@ -418,8 +411,8 @@ local servers = {
   gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
-  -- tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  tsserver = {},
+  html = { filetypes = { 'html', 'twig', 'hbs' } },
 
   lua_ls = {
     Lua = {
@@ -503,4 +496,5 @@ cmp.setup {
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`
+
 -- vim: ts=2 sts=2 sw=2 et
