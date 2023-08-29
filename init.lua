@@ -79,6 +79,11 @@ require('lazy').setup({
   {
     -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
+    config = function()
+      require "custom.plugins.lspconfig"
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+    end,
     dependencies = {
       -- Automatically install LSPs to stdpath for neovim
       { 'williamboman/mason.nvim', config = true },
@@ -421,6 +426,9 @@ local on_attach = function(_, bufnr)
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, '[W]orkspace [L]ist Folders')
 
+  -- Turn on lsp status information
+  require('fidget').setup()
+
   -- Create a command `:Format` local to the LSP buffer
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
@@ -436,19 +444,35 @@ end
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
+  ansiblels = {},
+  azure_pipelines_ls = {},
+  bashls = {},
+  bicep = {},
   clangd = {},
+  dockerls = {},
+  docker_compose_language_service = {},
+  esbonio = {},
   gopls = {},
-  pyright = {},
-  rust_analyzer = {},
-  tsserver = {},
+  helm_ls = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
-
+  jedi_language_server = {},
+  jqls = {},
+  jsonls = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
     },
   },
+  powershell_es = {},
+  pylsp = {},
+  pyright = {},
+  ruff_lsp = {},
+  rust_analyzer = {},
+  terraformls = { filetypes = { 'tf' } },
+  tflint = { filetypes = { 'tf' } },
+  tsserver = {},
+  yamlls = { filetypes = { 'tf' } },
 }
 
 -- Setup neovim lua configuration
