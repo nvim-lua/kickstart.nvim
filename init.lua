@@ -317,6 +317,19 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })
 
+-- tell lua ls that `vim` is global var
+-- require("lspconfig").sumneko_lua.setup({
+require('lspconfig').lua_ls.setup {
+  settings = {
+    Lua = {
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        globals = { 'vim' },
+      },
+    },
+  },
+}
+
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
@@ -511,7 +524,17 @@ mason_lspconfig.setup_handlers {
     require('lspconfig')[server_name].setup {
       capabilities = capabilities,
       on_attach = on_attach,
-      settings = servers[server_name],
+
+      -- fix for lua_ls 'vim' & global
+      -- this line replaced:
+--      settings = servers[server_name],
+      -- but does it break other lsp servers??
+      --
+      settings = {
+        Lua = {
+                diagnostics = { globals = {'vim'} }
+              },
+      },
       filetypes = (servers[server_name] or {}).filetypes,
     }
   end,
