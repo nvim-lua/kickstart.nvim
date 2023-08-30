@@ -1,6 +1,7 @@
 local lisp_dialects = { "clojure", "fennel", "scheme", "lisp" }
 
 return {
+	-- perhaps replace parinfer with guns/vim-sexp and tpope/vim-sexp-mappings-for-regular-people
 	{
 		"gpanders/nvim-parinfer",
 		ft = { unpack(lisp_dialects) },
