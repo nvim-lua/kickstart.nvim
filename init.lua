@@ -102,8 +102,13 @@ require('lazy').setup({
     -- Autocompletion
     'hrsh7th/nvim-cmp',
     dependencies = {
+      'hrsh7th/cmp-nvim-lsp',
       -- Snippet Engine & its associated nvim-cmp source
       'L3MON4D3/LuaSnip',
+      event = "VeryLazy",
+      config = function()
+        require("luasnip.loaders.from_lua").load({ paths = "./snippets" })
+      end,
       'saadparwaiz1/cmp_luasnip',
 
       -- Adds LSP completion capabilities
@@ -228,6 +233,9 @@ vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
+
+-- Make line numbers relative default
+vim.wo.relativenumber = true
 
 -- Enable mouse mode
 vim.o.mouse = 'a'

@@ -1,8 +1,13 @@
 return {
   {
     "jackMort/ChatGPT.nvim",
+    event = "VeryLazy",
     config = function()
-      require("chatgpt").setup()
+      require("chatgpt").setup(
+        {
+          api_key_cmd = "pass show azure/hypera/oai/token",
+        }
+      )
     end,
     dependencies = {
       "MunifTanjim/nui.nvim",
