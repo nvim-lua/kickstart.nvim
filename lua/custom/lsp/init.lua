@@ -5,3 +5,4 @@ end
 
 
 require "custom.lsp.mason"
+require "custom.lsp.null-ls"
