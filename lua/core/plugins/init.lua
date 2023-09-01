@@ -55,6 +55,16 @@ local plugins = {
 
   {
     -- Theme inspired by Atom
+    'navarasu/onedark.nvim',
+    priority = 1000,
+    config = function()
+      vim.cmd.colorscheme 'onedark'
+    end,
+  },
+
+  --[[
+  {
+    -- Theme inspired by Atom
     'Mofiqul/dracula.nvim',
     priority = 1000,
     lazy = false,
@@ -62,6 +72,7 @@ local plugins = {
       vim.cmd.colorscheme 'dracula'
     end,
   },
+  --]]
 
   'HiPhish/rainbow-delimiters.nvim',
 
@@ -71,7 +82,7 @@ local plugins = {
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = {
       options = {
-        theme = 'dracula',
+        theme = 'onedark',
         globalstatus = true,
       },
       sections = {

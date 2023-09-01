@@ -13,7 +13,8 @@ return {
   dependencies = { "nvim-lua/plenary.nvim" },
   lazy = false,
   config = function()
-    local colors = require('dracula').colors()
+    -- local colors = require('dracula').colors()
+    local colors = require('onedark.colors')
 
     require('todo-comments').setup({
       signs = true,      -- show icons in the signs column
