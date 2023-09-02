@@ -91,12 +91,13 @@ require('lazy').setup({
     end,
     dependencies = {
       -- Automatically install LSPs to stdpath for neovim
-      { 'williamboman/mason.nvim', config = true },
+      { 'williamboman/mason.nvim',                  config = true },
       'williamboman/mason-lspconfig.nvim',
+      { "WhoIsSethDaniel/mason-tool-installer.nvim" },
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
+      { 'j-hui/fidget.nvim',                        tag = 'legacy', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -332,7 +333,8 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim' },
+  ensure_installed = { 'bicep', 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc',
+    'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -456,10 +458,11 @@ end
 --
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
+--  URL: https://github.com/williamboman/mason-lspconfig.nvim/blob/main/doc/server-mapping.md
 local servers = {
   ansiblels = {},
   azure_pipelines_ls = {},
-  bashls = {},
+  bashls = { auto_update = true },
   bicep = {},
   clangd = {},
   dockerls = {},
@@ -468,7 +471,6 @@ local servers = {
   gopls = {},
   helm_ls = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
-  jedi_language_server = {},
   jqls = {},
   jsonls = {},
   lua_ls = {
@@ -478,15 +480,88 @@ local servers = {
     },
   },
   powershell_es = {},
-  pylsp = {},
-  pyright = {},
-  ruff_lsp = {},
+  pyright = {
+    python = {
+      analysis = {
+        autoSearchPaths = true,
+        diagnosticMode = "workspace",
+        useLibraryCodeForTypes = true
+      }
+    }
+  },
   rust_analyzer = {},
+  sourcery = {
+    init_options = {
+      --- The Sourcery token for authenticating the user.
+      --- This is retrieved from the Sourcery website and must be
+      --- provided by each user. The extension must provide a
+      --- configuration option for the user to provide this value.
+      token = io.popen("pass sourcery/token", "r"):read("l"),
+
+      --- The extension's name and version as defined by the extension.
+      extension_version = 'vim.lsp',
+
+      --- The editor's name and version as defined by the editor.
+      editor_version = 'vim',
+    },
+  },
   terraformls = { filetypes = { 'tf' } },
   tflint = { filetypes = { 'tf' } },
   tsserver = {},
   yamlls = { filetypes = { 'tf' } },
 }
+
+
+-- Mason tool installer
+local installed, MasonToolInstaller = pcall(require, "mason-tool-installer")
+if not installed then
+  vim.notify("Plugin 'mason-tool-installer' not installed ")
+  return
+end
+
+-- Mason Tool Installer
+MasonToolInstaller.setup({
+  -- a list of all tools you want to ensure are installed upon
+  -- start; they should be the names Mason uses for each tool
+  ensure_installed = {
+    -- you can turn off/on auto_update per tool
+    { "ansible-language-server",         auto_update = true },
+    { "autopep8" },
+    { "autopep8",                        auto_update = true },
+    { "azure-pipelines-language-server", auto_update = true },
+    { "bash-language-server",            auto_update = true },
+    { "bicep-lsp",                       auto_update = true },
+    { "black" },
+    { "black",                           auto_update = true },
+    { "css-lsp" },
+    { "delve",                           auto_update = true },
+    { "docker_compose_language_service", auto_update = true },
+    { "dockerfile-language-server",      auto_update = true },
+    { "editorconfig-checker" },
+    { "helm-ls",                         auto_update = true },
+    { "html-lsp" },
+    { "html-lsp",                        auto_update = true },
+    { "jason-lsp",                       auto_update = true },
+    { "jq-lsp",                          auto_update = true },
+    { "jsonls" },
+    { "lua-language-server",             auto_update = true },
+    { "powershell-editor-service",       auto_update = true },
+    { "prettier" },
+    { "pyright" },
+    { "rust-analyzer" },
+    { "sourcery",                        auto_update = true },
+    { "stylua",                          auto_update = true },
+    { "terraform-ls",                    auto_update = true },
+    { "tflint",                          auto_update = true },
+    { "vim-language-server",             auto_update = true },
+    { "yaml-language-server",            auto_update = true },
+  },
+
+  auto_update = false,
+  run_on_start = true,
+  start_delay = 3000, -- 3 second delay
+  debounce_hours = 5, -- at least 5 hours between attempts to install/update
+})
 
 -- Setup neovim lua configuration
 require('neodev').setup()
