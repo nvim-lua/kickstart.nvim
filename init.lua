@@ -46,6 +46,15 @@ vim.g.maplocalleader = ' '
 -- for now turn on LIGHT
 vim.cmd 'set background=light'
 
+----------------
+-- experimnetal
+----------------
+-- FAILS
+-- 2 windows? change status line for non-current(NC)
+vim.cmd [[
+  highlight StatusLineNC cterm=bold ctermfg=white ctermbg=darkgray
+  ]]
+
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -177,6 +186,9 @@ require('lazy').setup({
       },
     },
   },
+
+  --  bufferline  (becuase? )
+  { 'akinsho/bufferline.nvim', version = '*', dependencies = 'nvim-tree/nvim-web-devicons' },
 
   {
     -- Add indentation guides even on blank lines
@@ -527,13 +539,13 @@ mason_lspconfig.setup_handlers {
 
       -- fix for lua_ls 'vim' & global
       -- this line replaced:
---      settings = servers[server_name],
+      --      settings = servers[server_name],
       -- but does it break other lsp servers??
       --
       settings = {
         Lua = {
-                diagnostics = { globals = {'vim'} }
-              },
+          diagnostics = { globals = { 'vim' } },
+        },
       },
       filetypes = (servers[server_name] or {}).filetypes,
     }
