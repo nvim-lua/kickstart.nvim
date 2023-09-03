@@ -41,8 +41,8 @@ P.S. You can delete this when you're done too. It's your config now :)
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+vim.g.mapleader = ','
+vim.g.maplocalleader = ','
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
@@ -89,11 +89,15 @@ require('lazy').setup({
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', opts = {} },
+      -- { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
     },
   },
+
+  -- Copilot
+  'zbirenbaum/copilot.lua',
 
   {
     -- Autocompletion
@@ -109,11 +113,18 @@ require('lazy').setup({
 
       -- Adds a number of user-friendly snippets
       'rafamadriz/friendly-snippets',
+
+      -- Ultisnip
+      'SirVer/ultisnips',
+      'quangnguyen30192/cmp-nvim-ultisnips',
+
+      -- Copilot
+      'zbirenbaum/copilot-cmp',
     },
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -189,13 +200,27 @@ require('lazy').setup({
     },
   },
 
+  --{
+  --  -- Theme inspired by Atom
+  --  'navarasu/onedark.nvim',
+  --  priority = 1000,
+  --  config = function()
+  --    vim.cmd.colorscheme 'onedark'
+  --  end,
+  --},
   {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
+    -- Source for molokayo
+    'rafi/awesome-vim-colorschemes',
     config = function()
-      vim.cmd.colorscheme 'onedark'
+      vim.cmd.colorscheme 'molokayo'
     end,
+  },
+
+  {
+    'stevearc/oil.nvim',
+    opts = {},
+    -- Optional dependencies
+    dependencies = { "nvim-tree/nvim-web-devicons" },
   },
 
   {
@@ -205,11 +230,20 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'codedark',
         component_separators = '|',
         section_separators = '',
       },
     },
+  },
+
+  -- UndoTree
+  {
+    'mbbill/undotree',
+    opts = {},
+    config = function()
+      vim.g.undotree_WindowLayout = 2
+    end,
   },
 
   {
@@ -257,8 +291,8 @@ require('lazy').setup({
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  -- require 'kickstart.plugins.autoformat',
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.autoformat',
+  require 'kickstart.plugins.debug',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
@@ -267,6 +301,7 @@ require('lazy').setup({
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   -- { import = 'custom.plugins' },
+  'liuchengxu/vista.vim',
 }, {})
 
 -- [[ Setting options ]]
@@ -274,18 +309,25 @@ require('lazy').setup({
 -- NOTE: You can change these options as you wish!
 
 -- Set highlight on search
-vim.o.hlsearch = false
+vim.o.hlsearch = true
 
 -- Make line numbers default
 vim.wo.number = true
 
 -- Enable mouse mode
-vim.o.mouse = 'a'
+vim.o.mouse = ''
+
+--- Disable wrap
+vim.wo.wrap = false
 
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.o.clipboard = 'unnamedplus'
+if vim.fn.has('macunix') then
+  vim.o.clipboard = 'unnamed'
+else
+  vim.o.clipboard = 'unnamedplus'
+end
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -293,9 +335,10 @@ vim.o.breakindent = true
 -- Save undo history
 vim.o.undofile = true
 
+-- MEH, I want control over case sensitivity
 -- Case-insensitive searching UNLESS \C or capital in search
-vim.o.ignorecase = true
-vim.o.smartcase = true
+vim.o.ignorecase = false
+vim.o.smartcase = false
 
 -- Keep signcolumn on by default
 vim.wo.signcolumn = 'yes'
@@ -309,6 +352,9 @@ vim.o.completeopt = 'menuone,noselect'
 
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
+
+-- Folds
+vim.o.foldenable = false
 
 -- [[ Basic Keymaps ]]
 
@@ -423,8 +469,9 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
-
+    ensure_installed = {
+      'go', 'lua', 'python', 'vimdoc', 'vim', 'bash',
+    },
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
 
@@ -564,8 +611,10 @@ require('mason-lspconfig').setup()
 --  define the property 'filetypes' to the map in question.
 local servers = {
   -- clangd = {},
-  -- gopls = {},
-  -- pyright = {},
+  gopls = {},
+  pyright = {},
+  jedi_language_server = {},
+  pylsp = {},
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
@@ -651,11 +700,71 @@ cmp.setup {
     end, { 'i', 's' }),
   },
   sources = {
+    { name = 'copilot' },
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
     { name = 'path' },
   },
 }
 
--- The line beneath this is called `modeline`. See `:help modeline`
+-- FS plugin
+require("oil").setup({
+  colums = {
+    "icon",
+    "permissions",
+    "size",
+  },
+  keymaps = {
+    ["<CR>"] = "actions.select_vsplit",
+    ["<C-s>"] = "actions.select",
+  },
+  view_options = {
+    show_hidden = true
+  }
+})
+
+-- Copilot
+require('copilot').setup({
+  panel = { enabled = false },
+  suggestion = { enabled = false },
+})
+
+require('copilot_cmp').setup()
+
+vim.api.nvim_set_keymap('n', '<Space>', 'za', { noremap = true, silent = true }) -- Indents
+
+-- Configure stuff for VimVista
+vim.api.nvim_set_keymap('n', '<Leader>vv', ':Vista!!<CR>', { noremap = true, desc = "[V]iew [Vista]" })
+
+vim.g.vista_fzf_preview = { 'right:50%' }
+
+-- Set conf for rhubarb
+vim.g.github_enterprise_urls = {
+  'https://github.wdf.sap.corp', 'github.tools.sap'
+}
+
+-- Line at 80
+vim.opt.colorcolumn = "100"
+
+-- Set cursor according modes
+vim.opt.guicursor =
+"n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175"
+
+-- Nullify :W and :Q
+vim.keymap.set("n", "Q", "<nop>")
+vim.keymap.set("n", "W", "<nop>")
+
+-- VBAll
+vim.api.nvim_command("ca vball vertical ball")
+
+-- FormatJson
+vim.api.nvim_command("com! FormatJSON %!jq")
+
+-- Enable UndoTree
+vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
+
+-- Disable background
+vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+
 -- vim: ts=2 sts=2 sw=2 et
