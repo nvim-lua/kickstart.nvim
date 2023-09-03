@@ -46,15 +46,6 @@ vim.g.maplocalleader = ' '
 -- for now turn on LIGHT
 vim.cmd 'set background=light'
 
-----------------
--- experimnetal
-----------------
--- FAILS
--- 2 windows? change status line for non-current(NC)
-vim.cmd [[
-  highlight StatusLineNC cterm=bold ctermfg=white ctermbg=darkgray
-  ]]
-
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -166,12 +157,20 @@ require('lazy').setup({
   { 'ellisonleao/gruvbox.nvim' },
 
   -- Configure LazyVim to load gruvbox
+  --
+  -- 
   {
     'LazyVim/LazyVim',
     opts = {
       colorscheme = 'gruvbox',
     },
   },
+
+ -- lush, tool to edit colorschemes, using lua, tutorials..
+  --
+
+  {
+  'rktjmp/lush.nvim' },
 
   {
     -- Set lualine as statusline
@@ -186,6 +185,7 @@ require('lazy').setup({
       },
     },
   },
+
 
   --  bufferline  (becuase? )
   { 'akinsho/bufferline.nvim', version = '*', dependencies = 'nvim-tree/nvim-web-devicons' },
@@ -441,6 +441,15 @@ require('nvim-treesitter.configs').setup {
     },
   },
 }
+
+-- experimnetal - works!  (2023-09-02)
+-- ... but only small change in status line
+----------------
+-- PURPOSE:   override default colo for color group StatusLineNC
+-- 2 windows? change status line for non-current(NC)
+vim.cmd [[
+  highlight StatusLineNC cterm=bold ctermfg=white ctermbg=darkgray
+  ]]
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
