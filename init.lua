@@ -158,7 +158,7 @@ require('lazy').setup({
 
   -- Configure LazyVim to load gruvbox
   --
-  -- 
+  --
   {
     'LazyVim/LazyVim',
     opts = {
@@ -166,11 +166,20 @@ require('lazy').setup({
     },
   },
 
- -- lush, tool to edit colorschemes, using lua, tutorials..
+  --        hardtime.nvim (nvim advice?) 2023-09-03
   --
+  {
+    'm4xshen/hardtime.nvim',
+    dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
+    opts = {},
+  },
+
+  --        lush, tool to edit colorschemes, using lua, tutorials..
+  --{{{
 
   {
-  'rktjmp/lush.nvim' },
+    'rktjmp/lush.nvim',
+  },
 
   {
     -- Set lualine as statusline
@@ -184,8 +193,7 @@ require('lazy').setup({
         section_separators = '',
       },
     },
-  },
-
+  }, -- }}}
 
   --  bufferline  (becuase? )
   { 'akinsho/bufferline.nvim', version = '*', dependencies = 'nvim-tree/nvim-web-devicons' },
@@ -276,6 +284,7 @@ vim.o.hlsearch = false
 -- Make line numbers default
 vim.wo.number = true
 vim.wo.relativenumber = true
+vim.wo.foldmethod= "marker"
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -305,7 +314,7 @@ vim.o.timeoutlen = 300
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
--- NOTE: You should make sure your terminal supports this
+-- NOTE: You should make sure your terminal supports this (yes: 2023-09-03)
 vim.o.termguicolors = true
 
 -- [[ Basic Keymaps ]]
@@ -318,8 +327,11 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
--- [[ Highlight on yank ]]
--- See `:help vim.highlight.on_yank()`
+vim.keymap.set('n', '<leader>ck', ':e ~/.config/kickstart/init.lua<CR>', { desc = 'Config Kickstart' })
+
+--              [[ Highlight on yank ]]
+--              See `:help vim.highlight.on_yank()`
+--{{{
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
@@ -327,11 +339,44 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
   group = highlight_group,
   pattern = '*',
-})
+})-- }}}
 
--- tell lua ls that `vim` is global var
--- require("lspconfig").sumneko_lua.setup({
-require('lspconfig').lua_ls.setup {
+--             experiment; add my keymaps to which-key
+--             stolen:  REF: https://github.com/hackorum/nfs/blob/master/lua/whichkey-config/init.lua
+--{{{
+local wk = require 'which-key'
+wk.setup {
+  plugins = {
+    marks = false,
+    registers = true,
+    spelling = { enabled = false, suggestions = 20 },
+    presets = {
+      operators = false,
+      motions = false,
+      text_objects = false,
+      windows = false,
+      nav = false,
+--      z = false,
+      g = false,
+    },
+  },
+}
+local mappings = {
+  q = { ':q<cr>', 'Quit - no warn' },
+  Q = { ':wq<cr>', 'Save & Quit' },
+  w = { ':w<cr>', 'Save' },
+  x = { ':bdelete<cr>', 'Close' },
+ -- use <leader>ck  E = { ':e ~/.config/kickstart/init.lua<cr>', 'Edit KICKSTART config' },
+  --  f = { ":Telescope find_files<cr>", "Telescope Find Files" },
+  --   r = { ":Telescope live_grep<cr>", "Telescope Live Grep" },
+}
+local opts = { prefix = '<leader>' }
+wk.register(mappings, opts)
+-- }}}
+--
+--             tell lua ls that `vim` is global var
+--             require("lspconfig").sumneko_lua.setup({
+require('lspconfig').lua_ls.setup {-- {{{
   settings = {
     Lua = {
       diagnostics = {
@@ -340,7 +385,7 @@ require('lspconfig').lua_ls.setup {
       },
     },
   },
-}
+}-- }}}
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
@@ -518,6 +563,7 @@ local servers = {
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
+  -- lua_ls is new name for sumneko_lua
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
