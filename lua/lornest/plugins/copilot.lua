@@ -5,11 +5,11 @@ return {
         event = "InsertEnter",
         config = function()
             require("copilot").setup({
-               suggestion = {
+                suggestion = {
                     enabled = true,
                     auto_trigger = true,
                     keymap = {
-                        accept = "<Right>",
+                        accept = "<S-Right>",
                         accept_word = false,
                         accept_line = false,
                         next = "<A-Down>",
