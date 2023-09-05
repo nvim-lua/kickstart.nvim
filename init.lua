@@ -91,7 +91,15 @@ require('lazy').setup({
     end,
     dependencies = {
       -- Automatically install LSPs to stdpath for neovim
-      { 'williamboman/mason.nvim',                  config = true },
+      {
+        'williamboman/mason.nvim',
+        opts = {
+          ensure_installed = {
+            "typescript-language-server"
+          }
+        },
+        config = true
+      },
       'williamboman/mason-lspconfig.nvim',
       { "WhoIsSethDaniel/mason-tool-installer.nvim" },
 
@@ -541,7 +549,6 @@ MasonToolInstaller.setup({
     { "helm-ls",                         auto_update = true },
     { "html-lsp" },
     { "html-lsp",                        auto_update = true },
-    { "jason-lsp",                       auto_update = true },
     { "jq-lsp",                          auto_update = true },
     { "jsonls" },
     { "lua-language-server",             auto_update = true },
