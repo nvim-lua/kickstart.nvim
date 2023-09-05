@@ -37,8 +37,7 @@ I hope you enjoy your Neovim journey,
 
 P.S. You can delete this when you're done too. It's your config now :)
 --]]
-
--- Set <space> as the leader key
+-- Set , as the leader key, we are not heretics in this household
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ','
@@ -731,6 +730,25 @@ require('copilot').setup({
 
 require('copilot_cmp').setup()
 
+-- Completion
+local cmp = require("cmp")
+
+cmp.setup({
+  mapping = {
+    ["<CR>"] = cmp.mapping({
+      i = function(fallback)
+        if cmp.visible() and cmp.get_active_entry() then
+          cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+        else
+          fallback()
+        end
+      end,
+      s = cmp.mapping.confirm({ select = true }),
+      c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+    }),
+  }
+})
+
 vim.api.nvim_set_keymap('n', '<Space>', 'za', { noremap = true, silent = true }) -- Indents
 
 -- Configure stuff for VimVista
@@ -743,7 +761,7 @@ vim.g.github_enterprise_urls = {
   'https://github.wdf.sap.corp', 'github.tools.sap'
 }
 
--- Line at 80
+-- Line at 100vim.opt.colorcolumn = "100"
 vim.opt.colorcolumn = "100"
 
 -- Set cursor according modes
@@ -766,5 +784,8 @@ vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
 -- Disable background
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+
+-- Correct scroll level
+vim.o.scrolloff = 8
 
 -- vim: ts=2 sts=2 sw=2 et
