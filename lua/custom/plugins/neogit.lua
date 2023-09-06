@@ -9,6 +9,8 @@ return {
   config = function()
     local neogit = require("neogit")
 
+    vim.keymap.set("n", "<leader>gg", neogit.open, { desc = "Open Neogit" })
+
     neogit.setup {
       -- Hides the hints at the top of the status buffer
       disable_hint = true,
