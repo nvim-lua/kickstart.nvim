@@ -33,6 +33,7 @@ return {
     })
   end,
   keys = {
-    { "<leader>o", "<cmd>:NvimTreeFocus<cr>", desc = "Focus NvimTree" }
+    { "<leader>o", "<cmd>:NvimTreeFocus<cr>",    desc = "Focus NvimTree" },
+    { "<leader>F", "<cmd>:NvimTreeFindFile<cr>", desc = "Reveal File in NvimTree" }
   },
 }
