@@ -49,6 +49,13 @@ global.mkdp_browser = '/usr/bin/firefox'
 
 -- Fold
 --o.foldmethod = 'syntax'
-o.foldmethod = 'expr'
-o.foldexpr = 'nvim_treesitter#foldexpr()'
-o.foldlevel = 1
+-- o.foldmethod = 'expr'
+-- o.foldexpr = 'nvim_treesitter#foldexpr()'
+-- o.foldlevel = 1
+-- o.foldnestmax = 1
+-- o.nofoldenable = false
+opt.foldmethod = 'indent'
+opt.foldenable = false
+opt.foldlevel = 99
+global.markdown_folding = 1
+
