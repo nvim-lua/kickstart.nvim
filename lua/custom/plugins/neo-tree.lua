@@ -8,6 +8,16 @@ return {
 	},
 	config = function()
 		require('neo-tree').setup {
+			close_if_last_window = true,
+			event_handlers = {
+				{
+					event = "file_opened",
+					handler = function()
+						require("neo-tree.command").execute({ action = "close" })
+					end
+
+				},
+			},
 			window = {
 				position = "right",
 				popup = {
@@ -85,7 +95,7 @@ return {
 				},
 			},
 		}
-		vim.keymap.set("n", "<leader>pw" , "<CMD>Neotree toggle<CR>")
+		vim.keymap.set("n", "<leader>pw", "<CMD>Neotree toggle<CR>")
 		vim.keymap.set("n", "<leader>cw", "<CMD>Neotree focus<CR>")
 	end,
 }

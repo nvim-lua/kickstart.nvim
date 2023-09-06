@@ -10,7 +10,7 @@ return {
       -- Open request results in a horizontal split
       result_split_horizontal = false,
       -- Skip SSL verification, useful for unknown certificates
-      skip_ssl_verification = false,
+      skip_ssl_verification = true,
       encode_url = false,
       -- Highlight request on run
       highlight = {
