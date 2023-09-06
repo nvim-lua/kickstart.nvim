@@ -13,6 +13,9 @@ return {
     sources = { "filesystem", "buffers", "git_status", "document_symbols" },
     open_files_do_not_replace_types = { "terminal", "Trouble", "qf", "Outline" },
     filesystem = {
+      visible = true, -- This is what you want: If you set this to `true`, all "hide" just mean "dimmed out"
+      hide_dotfiles = false,
+      hide_gitignored = false,
       bind_to_cwd = false,
       follow_current_file = { enabled = true },
       use_libuv_file_watcher = true,
