@@ -27,6 +27,15 @@ return {
 				callback = function() vim.bo.commentstring = ";; %s" end,
 				desc = "Lisp style line comment",
 			})
+
+			vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+				group = vim.api.nvim_create_augroup("repl_is_clojrue_file", { clear = true }),
+				pattern = { "*.repl" },
+				callback = function()
+					vim.cmd([[ set ft=clojure ]])
+				end,
+				desc = "Associate *.repl file as a clojure filetype."
+			})
 		end,
 	},
 }
