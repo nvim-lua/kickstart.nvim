@@ -4,7 +4,7 @@ return {
 	-- perhaps replace parinfer with guns/vim-sexp and tpope/vim-sexp-mappings-for-regular-people
 	{
 		"gpanders/nvim-parinfer",
-		ft = { unpack(lisp_dialects) },
+		ft = lisp_dialects,
 		init = function()
 			vim.g.parinfer_force_balance = true
 			vim.g.parinfer_comment_chars = ";;"
@@ -12,7 +12,7 @@ return {
 	},
 	{
 		"Olical/conjure",
-		ft = { unpack(lisp_dialects) },
+		ft = lisp_dialects,
 		init = function()
 			vim.api.nvim_create_autocmd("BufNewFile", {
 				group = vim.api.nvim_create_augroup("conjure_log_disable_lsp", { clear = true }),
