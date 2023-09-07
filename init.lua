@@ -331,6 +331,7 @@ mason_lspconfig.setup_handlers {
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
 local cmp = require 'cmp'
+local lspkind = require('lspkind')
 local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
 luasnip.config.setup {}
@@ -374,7 +375,19 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
     { name = 'conjure' },
+    { name = 'buffer' }
   },
+  formatting = {
+    format = lspkind.cmp_format({
+      mode = 'symbol_text',
+      menu = ({
+        buffer = "[Buffer]",
+        conjure = "[Conjure]",
+        nvim_lsp = "[LSP]",
+        luasnip = "[LuaSnip]"
+      })
+    })
+  }
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`

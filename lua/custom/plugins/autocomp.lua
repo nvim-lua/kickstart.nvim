@@ -9,10 +9,16 @@ return {
 		-- Adds LSP completion capabilities
 		'hrsh7th/cmp-nvim-lsp',
 
+		-- Adds buffer context
+		'hrsh7th/cmp-buffer',
+
 		-- Adds Conjure cmp
 		'PaterJason/cmp-conjure',
 
 		-- Adds a number of user-friendly snippets
 		'rafamadriz/friendly-snippets',
+
+		-- lspkind formatting
+		'onsails/lspkind.nvim'
 	},
 }
