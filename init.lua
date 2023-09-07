@@ -32,6 +32,9 @@ These are for you, the reader to help understand what is happening. Feel free to
 them once you know what you're doing, but they should serve as a guide for when you
 are first encountering a few different constructs in your nvim config.
 
+TJ's video walks through this !
+<https://www.youtube.com/watch?v=stqUbv-5u2s>
+
 I hope you enjoy your Neovim journey,
 - TJ
 
@@ -84,6 +87,8 @@ require('lazy').setup({
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
+  --  mason -- installs the lsp server
+  --  nvim-lspconfig -- connect LSP  to our setup ?
   {
     -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
@@ -183,8 +188,9 @@ require('lazy').setup({
 
   {
     -- Set lualine as statusline
+    -- See `:help lualine.txt` (opts is same as require('xxxx').setup())
+    --
     'nvim-lualine/lualine.nvim',
-    -- See `:help lualine.txt`
     opts = {
       options = {
         icons_enabled = false,
@@ -278,6 +284,9 @@ end
 -- Nvim-R
 vim.cmd [[let R_assign = 2]] -- __ becomes left arrow
 
+-- always display top/bottom 8 lines
+vim.opt.scrolloff = 8
+vim.opt.colorcolumn = "80"
 
 -- Set highlight on search
 vim.o.hlsearch = false
@@ -330,6 +339,9 @@ vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = tr
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 vim.keymap.set('n', '<leader>ck', ':e ~/.config/kickstart/init.lua<CR>', { desc = 'Config Kickstart' })
+
+--  insert # --------...
+vim.keymap.set("n", "<leader>ic", "yypVr-I# <ESC>", { desc = "[ic]insert comment line"})
 
 --              [[ Highlight on yank ]]
 --              See `:help vim.highlight.on_yank()`
@@ -425,7 +437,9 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
+--
 require('nvim-treesitter.configs').setup {
+
   -- Add languages to be installed here that you want installed for treesitter
   ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim' },
 
@@ -440,7 +454,7 @@ require('nvim-treesitter.configs').setup {
       init_selection = '<c-space>',
       node_incremental = '<c-space>',
       scope_incremental = '<c-s>',
-      node_decremental = '<M-space>',
+      node_decremental = '<M-space>',   -- problem here
     },
   },
   textobjects = {
