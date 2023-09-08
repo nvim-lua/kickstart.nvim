@@ -542,3 +542,6 @@ local bufremove = require("mini.bufremove")
 vim.keymap.set("n", "<leader>c", function() bufremove.delete(nil, false) end, { desc = "Close Buffer" })
 vim.keymap.set("n", "<leader>C", function() bufremove.delete(nil, true) end, { desc = "Force Close Buffer" })
 vim.keymap.set("n", "<leader>n", "<cmd>enew<cr>", { desc = "New Buffer" })
+
+vim.keymap.set({ "n", "i" }, "<A-DOWN>", "<cmd>:m .+1<cr>", { desc = "Move line down" })
+vim.keymap.set({ "n", "i" }, "<A-UP>", "<cmd>:m .-2<cr>", { desc = "Move line up" })
