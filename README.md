@@ -1,7 +1,6 @@
 # PDE based on kickstart.nvim
 
-This repo is my (current) PDE and is subject to periodic changes. To start your own PDE from a base configuration, head over to TJ's kickstart.nvim
-https://github.com/kdheepak/kickstart.nvim/assets/1813121/f3ff9a2b-c31f-44df-a4fa-8a0d7b17cf7b
+This repo is my (current) PDE and is subject to periodic changes. To start your own PDE from a base configuration, head over to TJ's [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim)
 
 You can, of course, feel free to use my setup as is, or fork this repo to adapt from here.
 
