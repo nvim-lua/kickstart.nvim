@@ -68,7 +68,12 @@ require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
   -- Git related plugins
-  'tpope/vim-fugitive',
+  {
+    'tpope/vim-fugitive',
+    config = function()
+      vim.keymap.set('n', '<leader>gb', '<cmd>GBrowse<cr>', { desc = 'Browse on Github' })
+    end
+  },
   'tpope/vim-rhubarb',
 
   -- Detect tabstop and shiftwidth automatically
@@ -220,7 +225,7 @@ require('lazy').setup({
 -- NOTE: You can change these options as you wish!
 
 -- Set highlight on search
--- vim.o.hlsearch = false
+vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
@@ -259,6 +264,10 @@ vim.o.termguicolors = true
 -- remove cmd line height
 vim.o.cmdheight = 0
 
+vim.o.tabstop = 4
+
+vim.o.cursorline = true
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -282,16 +291,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
-require('telescope').setup {
-  defaults = {
-    mappings = {
-      i = {
-        ['<C-u>'] = false,
-        ['<C-d>'] = false,
-      },
-    },
-  },
-}
+require('telescope').setup({})
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
@@ -299,13 +299,9 @@ pcall(require('telescope').load_extension, 'fzf')
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
-vim.keymap.set('n', '<leader>/', function()
-  -- You can pass additional configuration to telescope to change theme, layout, etc.
-  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-    winblend = 10,
-    previewer = false,
-  })
-end, { desc = 'Fuzzily search in current buffer' })
+vim.keymap.set({ 'n', 'v' }, '/', '<Nop>', { silent = true })
+vim.keymap.set('n', '/', require('telescope.builtin').current_buffer_fuzzy_find,
+  { desc = 'Fuzzily search in current buffer' })
 
 vim.keymap.set('n', '<leader>fg', require('telescope.builtin').git_files, { desc = '[F]ind [G]it files' })
 vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[F]ind [F]iles' })
@@ -406,10 +402,11 @@ local on_attach = function(_, bufnr)
   nmap('<leader>lr', vim.lsp.buf.rename, '[L]sp [R]ename')
   nmap('<leader>la', vim.lsp.buf.code_action, '[L]sp code [A]ction')
 
-  nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
-  nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-  nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
-  nmap('gy', vim.lsp.buf.type_definition, '[G]oto T[y]pe Definition')
+  local builtin = require('telescope.builtin')
+  nmap('gd', builtin.lsp_definitions, '[G]oto [D]efinition')
+  nmap('gr', builtin.lsp_references, '[G]oto [R]eferences')
+  nmap('gI', builtin.lsp_implementations, '[G]oto [I]mplementation')
+  nmap('gy', builtin.lsp_type_definitions, '[G]oto T[y]pe Definition')
   nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
   nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
@@ -441,8 +438,8 @@ end
 --  define the property 'filetypes' to the map in question.
 local servers = {
   -- clangd = {},
-  -- gopls = {},
-  -- pyright = {},
+  gopls = {},
+  pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
@@ -543,5 +540,5 @@ vim.keymap.set("n", "<leader>c", function() bufremove.delete(nil, false) end, { 
 vim.keymap.set("n", "<leader>C", function() bufremove.delete(nil, true) end, { desc = "Force Close Buffer" })
 vim.keymap.set("n", "<leader>n", "<cmd>enew<cr>", { desc = "New Buffer" })
 
-vim.keymap.set({ "n", "i" }, "<A-DOWN>", "<cmd>:m .+1<cr>", { desc = "Move line down" })
-vim.keymap.set({ "n", "i" }, "<A-UP>", "<cmd>:m .-2<cr>", { desc = "Move line up" })
+vim.keymap.set({ "n", "i" }, "<A-DOWN>", "<cmd>m .+1<cr>", { desc = "Move line down" })
+vim.keymap.set({ "n", "i" }, "<A-UP>", "<cmd>m .-2<cr>", { desc = "Move line up" })
