@@ -713,10 +713,10 @@ require("oil").setup({
     "permissions",
     "size",
   },
-  keymaps = {
-    ["<CR>"] = "actions.select_vsplit",
-    ["<C-s>"] = "actions.select",
-  },
+  -- keymaps = {
+  --   ["<CR>"] = "actions.select_vsplit",
+  --   ["<C-s>"] = "actions.select",
+  -- },
   view_options = {
     show_hidden = true
   }
