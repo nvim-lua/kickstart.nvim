@@ -1,6 +1,9 @@
 return {
   'neovim/nvim-lspconfig',
   config = function()
+    vim.diagnostic.config({
+      update_in_insert = true
+    })
     require('lspconfig').clangd.setup {}
 
     vim.api.nvim_create_autocmd('LspAttach', {
