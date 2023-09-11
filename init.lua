@@ -459,7 +459,7 @@ local servers = {
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  -- html = { filetypes = { 'html', 'blade' } },
 
   lua_ls = {
     Lua = {
@@ -542,5 +542,13 @@ cmp.setup {
   },
 }
 
--- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
+-- MY KEYMAPS --
+
+-- exit insert mode with lk
+vim.keymap.set("i", "lk", "<esc>")
+
+-- open Netrw
+vim.keymap.set("n", "<leader>x", vim.cmd.Ex)
+
+-- open fugitive in vertical split
+vim.keymap.set('n', '<leader>gs', ':vertical G<CR>')
