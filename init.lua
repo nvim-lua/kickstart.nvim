@@ -339,7 +339,7 @@ vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = tr
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 vim.keymap.set('n', '<leader>ck', ':e ~/.config/kickstart/init.lua<CR>', { desc = 'Config Kickstart' })
-
+vim.keymap.set('n', '<leader>bw', 'i**<esc>Ea**<esc>w', { desc = "[B]old [W]ord" })
 --  insert # --------...
 vim.keymap.set("n", "<leader>ic", "yypVr-I# <ESC>", { desc = "[ic]insert comment line"})
 
@@ -642,7 +642,7 @@ local filename = function()
 end
 
 -- SNIPS
-ls.add_snippets('lua', {      -- for .lua filetype
+ls.add_snippets('all', {      -- `all` all filetypes, `lua` only lua ft
   s('luaxx', { t 'this is lua file!' }),
   s('sep', t { '---------------' }),
 
