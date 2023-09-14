@@ -333,6 +333,14 @@ vim.o.termguicolors = true
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
+-- REF: https://nanotipsforvim.prose.sh/keeping-your-register-clean-from-dd 
+-- if dd action hold content:  keep it
+-- if dd action holds BLANK LINE:  sent to black hold _dd
+vim.keymap.set("n", "dd", function ()
+	if vim.fn.getline(".") == "" then return '"_dd' end
+	return "dd"
+end, {expr = true})
+
 -- vim.keymap.set( {'n', '<leader>]nc', 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
