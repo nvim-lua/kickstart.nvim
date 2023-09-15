@@ -3,5 +3,10 @@
 --
 -- See the kickstart.nvim README for more information
 return {
+  -- toggle diagnostics visibility
   'WhoIsSethDaniel/toggle-lsp-diagnostics.nvim',
+  -- blade support
+  'jwalton512/vim-blade',
+  -- transparent bg
+  'xiyaowong/transparent.nvim',
 }

@@ -147,7 +147,46 @@ require('lazy').setup({
     'navarasu/onedark.nvim',
     priority = 1000,
     config = function()
+      require('onedark').setup {
+        transparent = true,
+      }
       vim.cmd.colorscheme 'onedark'
+    end,
+  },
+  {
+    'rebelot/kanagawa.nvim',
+    priority = 1000,
+    config = function()
+      -- wave / dragon / lotus
+      -- require("kanagawa").load("wave")
+    end,
+  },
+  {
+    'n1ghtmare/noirblaze-vim',
+    priority = 1000,
+    config = function()
+      -- vim.cmd.colorscheme 'noirblaze'
+    end,
+  },
+  {
+    'olivercederborg/poimandres.nvim',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require('poimandres').setup { }
+    end,
+
+    -- optionally set the colorscheme within lazy config
+    init = function()
+      -- vim.cmd("colorscheme poimandres")
+    end
+  },
+  {
+    'ellisonleao/gruvbox.nvim',
+    priority = 1000,
+    config = function()
+      -- vim.o.background = "dark" -- or "light" for light mode
+      -- vim.cmd([[colorscheme gruvbox]])
     end,
   },
 
@@ -459,7 +498,7 @@ local servers = {
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
-  -- html = { filetypes = { 'html', 'blade' } },
+  -- intelephense = { filetypes = { 'blade' } },
 
   lua_ls = {
     Lua = {
@@ -552,3 +591,15 @@ vim.keymap.set("n", "<leader>x", vim.cmd.Ex)
 
 -- open fugitive in vertical split
 vim.keymap.set('n', '<leader>gs', ':vertical G<CR>')
+
+-- transparent bg
+require("transparent").setup({ -- Optional, you don't have to run setup.
+  groups = { -- table: default groups
+    'Normal', 'NormalNC', 'Comment', 'Constant', 'Special', 'Identifier',
+    'Statement', 'PreProc', 'Type', 'Underlined', 'Todo', 'String', 'Function',
+    'Conditional', 'Repeat', 'Operator', 'Structure', 'LineNr', 'NonText',
+    'SignColumn', 'CursorLineNr', 'EndOfBuffer',
+  },
+  extra_groups = {}, -- table: additional groups that should be cleared
+  exclude_groups = {}, -- table: groups you don't want to clear
+})
