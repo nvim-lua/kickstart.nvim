@@ -1,4 +1,3 @@
 require('options')
 require('keymappings')
-require('kickstart-init')
-
+require('plugin-manager')
