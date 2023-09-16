@@ -69,11 +69,21 @@ require('lazy').setup({
   },
 
   {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
+    'ramojus/mellifluous.nvim',
+    -- 'aditya-azad/candle-grey',
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'onedark'
+      require 'mellifluous'.setup({
+        transparent_background = {
+          enabled = true,
+          floating_windows = true,
+          telescope = true,
+          file_tree = true,
+          cursor_line = true,
+          status_line = false
+        },
+      })
+      vim.cmd.colorscheme 'mellifluous'
     end,
   },
 
@@ -120,7 +130,9 @@ require('lazy').setup({
   require 'lornest.plugins.harpoon',
   require 'lornest.plugins.indent-blankline',
   require 'lornest.plugins.lualine',
-  require 'lornest.plugins.nvim-tree',
+  require 'lornest.plugins.oil',
+  -- disabling nvim-tree to try oil instead for a while
+  -- require 'lornest.plugins.nvim-tree',
   -- require 'kickstart.plugins.debug',
 
 }, {})
