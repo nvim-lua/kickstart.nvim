@@ -231,6 +231,21 @@ require('lazy').setup({
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 
+-- Setting textwrapping settings to true
+vim.o.wrap = true
+
+-- Setting linebreak on word boundaries to true
+vim.o.linebreak = true
+
+-- Set colorcolumn to give me a boundary to work with to make things more readable for others
+vim.o.colorcolumn = "80"
+
+-- Set scrollof to make lines around cursor more readable
+vim.o.scrolloff = 8
+
+-- Set relative line numbers
+vim.o.relativenumber = true
+
 -- Set highlight on search
 vim.o.hlsearch = false
 
