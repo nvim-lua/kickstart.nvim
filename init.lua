@@ -218,6 +218,9 @@ require('lazy').setup({
   -- Vim Surround for easier editing
   'tpope/vim-surround',
 
+  -- Adds a whole history of changes made to a file.
+  'mbbill/undotree'
+
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
   --    up-to-date with whatever is in the kickstart repo.
@@ -288,6 +291,9 @@ vim.o.termguicolors = true
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+
+-- Remap to make UndoTreeToggle more convenient
+vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
