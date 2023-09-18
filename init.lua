@@ -123,7 +123,10 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',  opts = {} },
+  { 'folke/which-key.nvim',     opts = {} },
+  -- JQ integration
+  { 'gennaro-tedesco/nvim-jqx', ft = { "json", "yaml" } }, -- Qs with integrations
+  { 'mogelbrod/vim-jsonpath',   ft = { "json", "yaml" } }, -- Shows current JSON path
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -770,6 +773,10 @@ vim.opt.guicursor =
 -- Nullify :W and :Q
 vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "W", "<nop>")
+
+-- JsonPath
+vim.keymap.set("n", "<Leader>json", ":JsonPath<CR>")
+vim.keymap.set("n", "<Leader>qjson", ":JsonPath ")
 
 -- VBAll
 vim.api.nvim_command("ca vball vertical ball")
