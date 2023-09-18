@@ -85,12 +85,9 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
       on_attach = function(bufnr)
-<<<<<<< HEAD
         vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk,
           { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
         vim.keymap.set('n', '<leader>gn', require('gitsigns').next_hunk, { buffer = bufnr, desc = '[G]o to [N]ext Hunk' })
-        vim.keymap.set('n', '<leader>ph', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[P]review [H]unk' })
-=======
         vim.keymap.set('n', '<leader>hp', require('gitsigns').preview_hunk, { buffer = bufnr, desc = 'Preview git hunk' })
 
         -- don't override the built-in and fugitive keymaps
@@ -105,7 +102,6 @@ require('lazy').setup({
           vim.schedule(function() gs.prev_hunk() end)
           return '<Ignore>'
         end, {expr=true, buffer = bufnr, desc = "Jump to previous hunk"})
->>>>>>> 4b31f8ef9e37f8a02739659a0a505927114c77af
       end,
     },
   },
@@ -355,11 +351,7 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-<<<<<<< HEAD
   ensure_installed = { 'c', 'cpp', 'lua', 'python', 'vimdoc', 'vim' },
-=======
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim' },
->>>>>>> 4b31f8ef9e37f8a02739659a0a505927114c77af
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
