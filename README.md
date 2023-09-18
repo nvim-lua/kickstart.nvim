@@ -20,7 +20,7 @@ Distribution Alternatives:
 
 ### Installation
 
-> **NOTE**  
+> **NOTE** 
 > [Backup](#FAQ) your previous configuration (if any exists)
 
 Requirements:
@@ -32,24 +32,17 @@ Neovim's configurations are located under the following paths, depending on your
 
 | OS | PATH |
 | :- | :--- |
-| Linux | `~/.config/nvim` |
-| MacOS | `~/.config/nvim` |
+| Linux | `$XDG_CONFIG_HOME/nvim`, `~/.config/nvim` |
+| MacOS | `$XDG_CONFIG_HOME/nvim`, '~/.config/nvim` |
 | Windows | `%userprofile%\AppData\Local\nvim\` |
 
-#### Archive Installation
-
-* On the home/landing page for the project find the green "`<> CODE`" button click it and select `Local > Download ZIP`.
-* Extract the archive to the appropriate configuration path.
-* Ensure your extraction method did not extract with a parent folder. For example in `~/.config/nvim` you should have `init.lua` not another folder called `kickstart.nvim`.
-
-#### Git Clone Installation
-
-From a terminal `cd`/`dir` to the configuration path and then run: 
+Clone kickstart.nvim:
 
 ```sh
-git clone https://github.com/nvim-lua/kickstart.nvim.git ~/.config/nvim
-# OR
-gh repo clone nvim-lua/kickstart.nvim
+# on Linux and Mac
+git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+# on Windows
+git clone https://github.com/nvim-lua/kickstart.nvim.git %userprofile%\AppData\Local\nvim\ 
 ```
 
 ### Post Installation
@@ -60,7 +53,7 @@ Run the following command and then **you are ready to go**!
 nvim --headless "+Lazy! sync" +qa
 ```
 
-### Recommended Optional
+### Recommended Steps
 
 [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repo (so that you have your own copy that you can modify) and then installing you can install to your machine using the methods above.
 
