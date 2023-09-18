@@ -1,41 +1,3 @@
---[[
-
-=====================================================================
-==================== READ THIS BEFORE CONTINUING ====================
-=====================================================================
-
-Kickstart.nvim is *not* a distribution.
-Kickstart.nvim is a template for your own configuration.
-  The goal is that you can read every line of code, top-to-bottom, understand
-  what your configuration is doing, and modify it to suit your needs.
-
-  Once you've done that, you should start exploring, configuring and tinkering to
-  explore Neovim!
-
-  If you don't know anything about Lua, I recommend taking some time to read through
-  a guide. One possible example:
-  - https://learnxinyminutes.com/docs/lua/
-
-
-  And then you can explore or search through `:help lua-guide`
-  - https://neovim.io/doc/user/lua-guide.html
-
-
-Kickstart Guide:
-
-I have left several `:help X` comments throughout the init.lua
-You should run that command and read that help section for more information.
-
-In addition, I have some `NOTE:` items throughout the file.
-These are for you, the reader to help understand what is happening. Feel free to delete
-them once you know what you're doing, but they should serve as a guide for when you
-are first encountering a few different constructs in your nvim config.
-
-I hope you enjoy your Neovim journey,
-- TJ
-
-P.S. You can delete this when you're done too. It's your config now :)
---]]
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
@@ -76,7 +38,7 @@ require('lazy').setup({
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   {
-    -- LSP Configuration & Plugins
+    -- LSP Configuration & Plugin
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs to stdpath for neovim
@@ -155,7 +117,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'powerline',
+        theme = 'onedark',
         component_separators = '|',
         section_separators = '',
       },
@@ -194,6 +156,7 @@ require('lazy').setup({
           return vim.fn.executable 'make' == 1
         end,
       },
+      'nvim-tree/nvim-web-devicons',
     },
   },
 
@@ -220,68 +183,69 @@ require('lazy').setup({
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   { import = 'custom.plugins' },
 }, {}) -- [[ Setting options ]]
--- See `:help vim.o`
+-- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
 
 -- Set highlight on search
-vim.o.hlsearch = false
+vim.opt.hlsearch = false
 
 -- Make line numbers default
-vim.o.number = true
-vim.o.relativenumber = true
+vim.opt.number = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode
-vim.o.mouse = 'a'
+vim.opt.mouse = 'a'
 
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.o.clipboard = 'unnamedplus'
+vim.opt.clipboard = 'unnamedplus'
 
 -- Enable break indent
-vim.o.breakindent = true
+vim.opt.breakindent = true
 
 -- Indent Configuration
 vim.o.tabstop = 4
-vim.o.softtabstop = 4
-vim.o.shiftwidth = 4
-vim.o.expandtab = true
+vim.opt.softtabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
 
-vim.o.smartindent = true
+vim.opt.smartindent = true
 
 -- Disable line wrap
-vim.o.wrap = false
+vim.opt.wrap = false
 
 -- Save undo history_list
-vim.o.swapfile = false
-vim.o.backup = false
-vim.o.undodir = os.getenv("HOME") .. "/.vim/undodir"
-vim.o.undofile = true
+vim.opt.swapfile = false
+vim.opt.backup = false
+vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
+vim.opt.undofile = true
 
 -- Searching Configuration
-vim.o.incsearch = true
+vim.opt.hlsearch = false
+vim.opt.incsearch = true
 
 -- Case-insensitive searching UNLESS \C or capital in search
-vim.o.ignorecase = true
-vim.o.smartcase = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
 -- Keep signcolumn on by default
 vim.wo.signcolumn = 'yes'
 
 -- Decrease update time
-vim.o.updatetime = 50
-vim.o.timeoutlen = 300
+vim.opt.updatetime = 50
+vim.opt.timeoutlen = 300
 
 -- Set completeopt to have a better completion experience
-vim.o.completeopt = 'menuone,noselect'
+vim.opt.completeopt = 'menuone,noselect'
 
 -- NOTE: You should make sure your terminal supports this
-vim.o.termguicolors = true
+vim.opt.termguicolors = true
 
-vim.o.scrolloff = 10
--- vim.o.isfname:append("@-@")
+vim.opt.scrolloff = 10
+-- vim.opt.isfname:append("@-@")
 
-vim.o.colorcolumn = "80"
+vim.opt.colorcolumn = "80"
 
 -- [[ Basic Keymaps ]]
 
@@ -295,30 +259,31 @@ vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = tr
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Move lines
-vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
-vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
+vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", { silent = true })
+vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { silent = true })
 
 vim.keymap.set('n', 'J', "mzj`z")
-vim.keymap.set('n', '<C-d>', "<C-d>zz")
-vim.keymap.set('n', '<C-u>', "<C-u>zz")
+vim.keymap.set('n', '<C-d>', "<C-d>zz", { desc = "Half Page Jumping Up" })
+vim.keymap.set('n', '<C-u>', "<C-u>zz", { desc = "Half Page Jumping Down" })
 
 -- Keep search line in the middle
-vim.keymap.set('n', 'n', 'nzzzv')
-vim.keymap.set('n', 'N', 'Nzzzv')
+vim.keymap.set('n', 'n', 'nzzzv', { silent = true })
+vim.keymap.set('n', 'N', 'Nzzzv', { silent = true })
 
 -- Quick fix navigation
 vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
 vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
-vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
-vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
+vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz", { desc = "Quick Fix Nav Up" })
+vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz", { desc = "Quick Fix Nav Down" })
 
 -- Copy from plus register
-vim.keymap.set({ 'n', 'v' }, '<leader>y', "\"+y")
+vim.keymap.set({ 'n', 'v' }, '<leader>y', "\"+y", { desc = "Copy to + register" })
 vim.keymap.set('n', '<leader>Y', "\"+Y")
 
 -- Replace current word
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
-vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
+  { desc = "[S]ubstitute Current Word" })
+vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { desc = "Set Current File to Executable", silent = true })
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -361,9 +326,9 @@ end, { desc = '[/] Fuzzily search in current buffer' })
 vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
---vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
+vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sp', function()
-  require('telescope.builtin').grep_string({ search = vim.fn.input("Grep > ") })
+  require('telescope.builtin').grep_string({ search = vim.fn.input("Grep Search > ") })
 end, { desc = '[S]search [P]roject' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
@@ -372,7 +337,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim' },
+  ensure_installed = { 'c', 'cpp', 'lua', 'python', 'vimdoc', 'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -425,10 +390,10 @@ require('nvim-treesitter.configs').setup {
     swap = {
       enable = true,
       swap_next = {
-        ['<leader>a'] = '@parameter.inner',
+        ['<leader>i'] = '@parameter.inner',
       },
       swap_previous = {
-        ['<leader>A'] = '@parameter.inner',
+        ['<leader>I'] = '@parameter.inner',
       },
     },
   },
@@ -496,7 +461,17 @@ end
 local servers = {
   clangd = {},
   -- gopls = {},
-  pyright = {},
+  pyright = {
+    settings = { pyright = { autoImportCompletion = true, } },
+    python = {
+      analysis = {
+        autoSearchPaths = true,
+        diagnosticMode = 'openFilesOnly',
+        useLibraryCodeForTypes = true,
+        typeCheckingMode = 'off',
+      },
+    }
+  },
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
