@@ -86,7 +86,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
+      { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -110,7 +110,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -128,16 +128,16 @@ require('lazy').setup({
 
         -- don't override the built-in and fugitive keymaps
         local gs = package.loaded.gitsigns
-        vim.keymap.set({'n', 'v'}, ']c', function()
+        vim.keymap.set({ 'n', 'v' }, ']c', function()
           if vim.wo.diff then return ']c' end
           vim.schedule(function() gs.next_hunk() end)
           return '<Ignore>'
-        end, {expr=true, buffer = bufnr, desc = "Jump to next hunk"})
-        vim.keymap.set({'n', 'v'}, '[c', function()
+        end, { expr = true, buffer = bufnr, desc = "Jump to next hunk" })
+        vim.keymap.set({ 'n', 'v' }, '[c', function()
           if vim.wo.diff then return '[c' end
           vim.schedule(function() gs.prev_hunk() end)
           return '<Ignore>'
-        end, {expr=true, buffer = bufnr, desc = "Jump to previous hunk"})
+        end, { expr = true, buffer = bufnr, desc = "Jump to previous hunk" })
       end,
     },
   },
@@ -219,7 +219,35 @@ require('lazy').setup({
   'tpope/vim-surround',
 
   -- Adds a whole history of changes made to a file.
-  'mbbill/undotree'
+  'mbbill/undotree',
+
+  -- Add nvim-web-devicons
+  'nvim-tree/nvim-web-devicons',
+
+  -- A pretty list for showing diagnostics, references, telescope results, quickfix and
+  -- location lists to help you solve all the trouble your code is causing.
+  'folke/trouble.nvim',
+  dependencies = { "nvim-tree/nvim-web-devicons" },
+  opts = {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+    -- settings without a patched font or icons
+    {
+      icons = false,
+      fold_open = "v",    -- icon used for open folds
+      fold_closed = ">",  -- icon used for closed folds
+      indent_lines = false, -- add an indent guide below the fold icons
+      signs = {
+        -- icons / text used for a diagnostic
+        error = "error",
+        warning = "warn",
+        hint = "hint",
+        information = "info"
+      },
+      use_diagnostic_signs = false -- enabling this will use the signs defined in your lsp client
+    }
+  },
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
@@ -420,6 +448,17 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous dia
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
+
+vim.keymap.set("n", "<leader>xx", function() require("trouble").open() end, { desc = 'Open trouble' })
+vim.keymap.set("n", "<leader>xw", function() require("trouble").open("workspace_diagnostics") end,
+  { desc = 'Open workspace diagnostics' })
+vim.keymap.set("n", "<leader>xd", function() require("trouble").open("document_diagnostics") end,
+  { desc = 'Open document diagnostics' })
+vim.keymap.set("n", "<leader>xq", function() require("trouble").open("quickfix") end,
+  { desc = 'Open quickfix list diagnostics' })
+vim.keymap.set("n", "<leader>xl", function() require("trouble").open("loclist") end,
+  { desc = 'Open location list diagnostics' })
+vim.keymap.set("n", "gR", function() require("trouble").open("lsp_references") end, { desc = '' })
 
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
