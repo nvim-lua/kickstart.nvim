@@ -20,35 +20,45 @@ Distribution Alternatives:
 
 ### Installation
 
-* Backup your previous configuration (if any exists)
+> **NOTE** 
+> [Backup](#FAQ) your previous configuration (if any exists)
 
-### Archive Installation
-* On the home/landing page for the project find the blue "<> CODE" button click it and select Local > Download ZIP.
-* Extract the archive to:
-  `~/.config/nvim` (Linux)
-  `~/.config/nvim` (MacOS)
-  `%userprofile%\AppData\Local\nvim\` (Windows)
-* Ensure your extraction method did not extract with a parent folder. For example in ~/.config/nvim you should have init.lua not another folder called kickstart.nvim.
+Requirements:
+* Make sure to review the readmes of the plugins if you are experiencing errors. In particular:
+  * [ripgrep](https://github.com/BurntSushi/ripgrep#installation) is required for multiple [telescope](https://github.com/nvim-telescope/telescope.nvim#suggested-dependencies) pickers.
+* See [Windows Installation](#Windows-Installation) if you have trouble with `telescope-fzf-native`
 
-### Git Clone Installation
-* From a terminal cd/dir to:
-    `~/.config/nvim` (Linux)
-    `~/.config/nvim` (MacOS)
-    `%userprofile%\AppData\Local\nvim\` (Windows)
+Neovim's configurations are located under the following paths, depending on your OS:
 
-* Run: `git clone https://github.com/nvim-lua/kickstart.nvim.git ~/.config/nvim` OR: `gh repo clone nvim-lua/kickstart.nvim`
-* Run Neovim (from terminal or shortcut) and allow lazy.nvim to download files and set up the basics.
-* Once the setup is complete, restart Neovim.
-* **You're ready to go!**
+| OS | PATH |
+| :- | :--- |
+| Linux | `$XDG_CONFIG_HOME/nvim`, `~/.config/nvim` |
+| MacOS | `$XDG_CONFIG_HOME/nvim`, '~/.config/nvim` |
+| Windows | `%userprofile%\AppData\Local\nvim\` |
 
-* (Recommended/Optional) Fork this repo (so that you have your own copy that you can modify).
-* Clone the kickstart repo into `$HOME/.config/nvim/` (Linux/Mac) or `%userprofile%\AppData\Local\nvim\` (Windows)
-  * If you don't want to include it as a git repo, you can just clone it and then move the files to this location
+Clone kickstart.nvim:
 
-Additional system requirements:
-- Make sure to review the readmes of the plugins if you are experiencing errors. In particular:
-  - [ripgrep](https://github.com/BurntSushi/ripgrep#installation) is required for multiple [telescope](https://github.com/nvim-telescope/telescope.nvim#suggested-dependencies) pickers.
-- See [Windows Installation](#Windows-Installation) if you have trouble with `telescope-fzf-native`
+```sh
+# on Linux and Mac
+git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+# on Windows
+git clone https://github.com/nvim-lua/kickstart.nvim.git %userprofile%\AppData\Local\nvim\ 
+```
+
+### Post Installation
+
+Run the following command and then **you are ready to go**!
+
+```sh
+nvim --headless "+Lazy! sync" +qa
+```
+
+### Recommended Steps
+
+[Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repo (so that you have your own copy that you can modify) and then installing you can install to your machine using the methods above.
+
+> **NOTE**  
+> Your fork's url will be something like this: `https://github.com/<your_github_username>/kickstart.nvim.git`
 
 ### Configuration And Extension
 
