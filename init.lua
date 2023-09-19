@@ -791,9 +791,6 @@ vim.keymap.set("n", "W", "<nop>")
 vim.keymap.set("n", "<Leader>json", ":JsonPath<CR>")
 vim.keymap.set("n", "<Leader>qjson", ":JsonPath ")
 
--- VBAll
-vim.api.nvim_command("ca vball vertical ball")
-
 -- FormatJson
 vim.api.nvim_command("com! FormatJSON %!jq")
 
