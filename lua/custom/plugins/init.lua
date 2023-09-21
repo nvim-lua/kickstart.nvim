@@ -8,7 +8,4 @@ return {
 
   --"surroundings": parentheses, brackets, quotes, XML tags, and more
   'tpope/vim-surround',
-
-  --wrapper around Neovims native LSP formatting
-  "lukas-reineke/lsp-format.nvim",
 }
