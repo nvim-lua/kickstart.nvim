@@ -4,6 +4,9 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+--import options
+require('config.options')
+
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -19,6 +22,28 @@ if not vim.loop.fs_stat(lazypath) then
   }
 end
 vim.opt.rtp:prepend(lazypath)
+
+local opts = {
+  git = { log = { '--since=3 days ago' } },
+  ui = { custom_keys = { false } },
+  performance = {
+    rtp = {
+      disabled_plugins = {
+        'gzip',
+        -- 'netrwPlugin',
+        'tarPlugin',
+        'tohtml',
+        'tutor',
+        'zipPlugin',
+        'rplugin',
+        'editorconfig',
+        'matchparen',
+        'matchit',
+      },
+    },
+  },
+  checker = { enabled = false },
+}
 
 -- NOTE: Here is where you install your plugins.
 --  You can configure plugins using the `config` key.
@@ -47,7 +72,11 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
+      {
+        'j-hui/fidget.nvim',
+        tag = 'legacy',
+        opts = {}
+      },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -71,7 +100,10 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  {
+    'folke/which-key.nvim',
+    opts = {}
+  },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -89,16 +121,16 @@ require('lazy').setup({
 
         -- don't override the built-in and fugitive keymaps
         local gs = package.loaded.gitsigns
-        vim.keymap.set({'n', 'v'}, ']c', function()
+        vim.keymap.set({ 'n', 'v' }, ']c', function()
           if vim.wo.diff then return ']c' end
           vim.schedule(function() gs.next_hunk() end)
           return '<Ignore>'
-        end, {expr=true, buffer = bufnr, desc = "Jump to next hunk"})
-        vim.keymap.set({'n', 'v'}, '[c', function()
+        end, { expr = true, buffer = bufnr, desc = "Jump to next hunk" })
+        vim.keymap.set({ 'n', 'v' }, '[c', function()
           if vim.wo.diff then return '[c' end
           vim.schedule(function() gs.prev_hunk() end)
           return '<Ignore>'
-        end, {expr=true, buffer = bufnr, desc = "Jump to previous hunk"})
+        end, { expr = true, buffer = bufnr, desc = "Jump to previous hunk" })
       end,
     },
   },
@@ -146,7 +178,11 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  {
+    'numToStr/Comment.nvim',
+    opts = {},
+    lazy = false
+  },
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -192,70 +228,7 @@ require('lazy').setup({
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   { import = 'custom.plugins' },
-}, {}) -- [[ Setting options ]]
--- See `:help vim.opt`
--- NOTE: You can change these options as you wish!
-
--- Set highlight on search
-vim.opt.hlsearch = false
-
--- Make line numbers default
-vim.wo.number = true
-vim.opt.relativenumber = true
-
--- Enable mouse mode
-vim.opt.mouse = 'a'
-
--- Sync clipboard between OS and Neovim.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
-vim.opt.clipboard = 'unnamedplus'
-
--- Enable break indent
-vim.opt.breakindent = true
-
--- Indent Configuration
-vim.o.tabstop = 4
-vim.opt.softtabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.expandtab = true
-
-vim.opt.smartindent = true
-
--- Disable line wrap
-vim.opt.wrap = false
-
--- Save undo history_list
-vim.opt.swapfile = false
-vim.opt.backup = false
-vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
-vim.opt.undofile = true
-
--- Searching Configuration
-vim.opt.hlsearch = false
-vim.opt.incsearch = true
-
--- Case-insensitive searching UNLESS \C or capital in search
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-
--- Keep signcolumn on by default
-vim.wo.signcolumn = 'yes'
-
--- Decrease update time
-vim.opt.updatetime = 50
-vim.opt.timeoutlen = 300
-
--- Set completeopt to have a better completion experience
-vim.opt.completeopt = 'menuone,noselect'
-
--- NOTE: You should make sure your terminal supports this
-vim.opt.termguicolors = true
-
-vim.opt.scrolloff = 10
--- vim.opt.isfname:append("@-@")
-
-vim.opt.colorcolumn = "80"
+}, opts)
 
 -- [[ Basic Keymaps ]]
 
@@ -473,15 +446,18 @@ local servers = {
   clangd = {},
   -- gopls = {},
   pyright = {
-    settings = { pyright = { autoImportCompletion = true, } },
-    python = {
-      analysis = {
-        autoSearchPaths = true,
-        diagnosticMode = 'openFilesOnly',
-        useLibraryCodeForTypes = true,
-        typeCheckingMode = 'off',
+    settings = {
+      pyright = { autoImportCompletion = true, },
+      python = {
+        pythonPath = "/usr/bin/python3",
+        analysis = {
+          autoSearchPaths = true,
+          diagnosticMode = 'openFilesOnly',
+          useLibraryCodeForTypes = true,
+          typeCheckingMode = 'off',
+        },
       },
-    }
+    },
   },
   -- rust_analyzer = {},
   -- tsserver = {},
