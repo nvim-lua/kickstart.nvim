@@ -253,6 +253,7 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', '<leader>sr', ':%s/<C-r><C-w>/<C-r><C-w>/g<Left><Left>', { desc = "Find and replace all words under the cursor" })
 vim.keymap.set('n', '<leader>cv', '<cmd>Ex<CR>', { desc = "Back to file tree one step" })
 vim.keymap.set('n', '<leader>pv', '<cmd>Ex .<CR>', { desc = "Back to file tree root" })
+vim.keymap.set('n', '<leader>ee', 'oif err != nil {<CR>log.Fatalf("%+v\\n", err)<CR>}<CR><esc>kkI<esc>f%i', { desc = "Error check for Go" })
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
