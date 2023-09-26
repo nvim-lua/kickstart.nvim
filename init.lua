@@ -1,5 +1,14 @@
 --[[
 
+TODO:
+-   enhance/fix/understand gza: 2023-09-25 
+    -   Problem seems to be OLD code in ~/.local/share ...
+<https://github.com/folke/lazy.nvim#-uninstalling>
+    -   gza is part of mini.surround (mini.nvim) ? 
+    -   OR, is lazy lazy.nvim loading a plugin?
+    -   verbose nmap gza returns deep in kickstart ... lazy ... lazy.nvim .. core
+    -   disable:vim.g.minisurround_disable: true
+
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
 =====================================================================
@@ -45,6 +54,8 @@ P.S. You can delete this when you're done too. It's your config now :)
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+
+vim.g.minisurround_disable=true
 
 -- for now turn on LIGHT
 vim.cmd 'set background=light'
@@ -146,18 +157,6 @@ require('lazy').setup({
     },
   },
 
-  {
-    -- jr removed:
-    -- Theme inspired by Atom
-    --[[
-    --      TOO DARK !
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
-   --]]
-  },
 
   -- add gruvbox
   { 'ellisonleao/gruvbox.nvim' },
@@ -348,6 +347,8 @@ vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = tr
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 vim.keymap.set('n', '<leader>ck', ':e ~/.config/kickstart/init.lua<CR>', { desc = 'Config Kickstart' })
+vim.keymap.set('n', '<leader>tn', ':e ~/code/docs/tech_notes/300_tech_notes.qmd<CR>', { desc = 'Tech Notes' })
+vim.keymap.set('n', '<leader>mln', ':e ~/code/docs/tech_notes/500_ML_Notes.qmd<CR>', { desc =  'ML Notes' })
 vim.keymap.set('n', '<leader>bw', 'i**<esc>Ea**<esc>w', { desc = "[B]old [W]ord" })
 --  insert # --------...
 vim.keymap.set("n", "<leader>ic", "yypVr-I# <ESC>", { desc = "[ic]insert comment line"})
