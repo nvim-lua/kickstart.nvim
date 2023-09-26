@@ -133,6 +133,8 @@ require('lazy').setup({
         theme = 'auto',
         component_separators = '|',
         section_separators = '',
+        'filename', 
+        path=1,
       },
     },
   },
