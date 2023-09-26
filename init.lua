@@ -108,7 +108,6 @@ require('lazy').setup({
     config = function()
       vim.cmd([[colorscheme oxocarbon]])
     end,
-  
     -- Add in any other configuration; 
     --   event = foo, 
     --   config = bar
@@ -133,7 +132,7 @@ require('lazy').setup({
         theme = 'auto',
         component_separators = '|',
         section_separators = '',
-        'filename', 
+        'filename',
         path=1,
       },
     },
