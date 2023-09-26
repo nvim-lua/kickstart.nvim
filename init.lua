@@ -796,6 +796,9 @@ vim.keymap.set("n", "<Leader>qjson", ":JsonPath ")
 -- FormatJson
 vim.api.nvim_command("com! FormatJSON %!jq")
 
+-- Bind vball
+vim.keymap.set("n", "<Leader>vball", ":vertical ball<CR>")
+
 -- Enable UndoTree
 vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
 
