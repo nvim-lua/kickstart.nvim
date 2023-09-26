@@ -171,7 +171,7 @@ require('nvim-treesitter.configs').setup {
     'c', 'go', 'gomod',
     'gosum', 'gowork', 'lua',
     'vimdoc', 'vim', 'clojure',
-    'commonlisp', 'ocaml' },
+    'commonlisp', 'ocaml', 'zig' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = true,
@@ -294,6 +294,7 @@ local servers = {
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
   clojure_lsp = {},
   ocamllsp = {},
+  zls = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
