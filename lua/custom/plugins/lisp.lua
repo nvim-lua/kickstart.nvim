@@ -2,13 +2,20 @@ local lisp_dialects = { "clojure", "fennel", "scheme", "lisp" }
 
 return {
 	-- perhaps replace parinfer with guns/vim-sexp and tpope/vim-sexp-mappings-for-regular-people
+	-- {
+	-- 	"gpanders/nvim-parinfer",
+	-- 	ft = lisp_dialects,
+	-- 	init = function()
+	-- 		vim.g.parinfer_force_balance = true
+	-- 		vim.g.parinfer_comment_chars = ";;"
+	-- 	end,
+	-- },
 	{
-		"gpanders/nvim-parinfer",
+		"julienvincent/nvim-paredit",
 		ft = lisp_dialects,
-		init = function()
-			vim.g.parinfer_force_balance = true
-			vim.g.parinfer_comment_chars = ";;"
-		end,
+		config = function()
+			require("nvim-paredit").setup()
+		end
 	},
 	{
 		"Olical/conjure",
