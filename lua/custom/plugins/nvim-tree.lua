@@ -12,7 +12,7 @@ return {
       },
     },
     keys = {
-      { "<leader>e",  "<cmd>NvimTreeToggle<cr>", desc = "Nvim[T]ree [T]oggle" },
+      { "<leader>et", "<cmd>NvimTreeToggle<cr>", desc = "Nvim[T]ree [T]oggle" },
       { "<leader>ef", "<cmd>NvimTreeFocus<cr>",  desc = "Nvim[T]ree [F]ocus " },
       { "<leader>eo", "<cmd>NvimTreeOpen<cr>",   desc = "Nvim[T]ree [O]pen" },
       { "<leader>ex", "<cmd>NvimTreeClose<cr>",  desc = "Nvim[T]ree [C]lose" },
