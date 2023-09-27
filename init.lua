@@ -1,3 +1,4 @@
+-- TODO look into tmux sessionizer
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
@@ -31,7 +32,7 @@ require('lazy').setup({
   -- Git related plugins
   "tpope/vim-fugitive",
   'tpope/vim-rhubarb',
-
+  'f-person/git-blame.nvim',
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
@@ -158,6 +159,7 @@ require('lazy').setup({
     branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
+      'nvim-telescope/telescope-ui-select.nvim',
       -- Fuzzy Finder Algorithm which requires local dependencies to be built.
       -- Only load if `make` is available. Make sure you have the system
       -- requirements installed.
@@ -275,6 +277,9 @@ require('telescope').setup {
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
 
+-- Enable telescope ui select 
+require("telescope").load_extension("ui-select")
+
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
@@ -302,6 +307,10 @@ require('nvim-treesitter.configs').setup {
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
+  modules={},
+  sync_install = false,
+  ignore_install = {},
+  parser_install_dir = nil,
 
   highlight = { enable = true },
   indent = { enable = true },
