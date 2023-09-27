@@ -43,6 +43,9 @@ return {
 				end,
 				desc = "Associate *.repl file as a clojure filetype."
 			})
+
+			-- Guile socket repl support
+			vim.g["conjure#filetype#scheme"] = "conjure.client.guile.socket"
 		end,
 	},
 }
