@@ -220,8 +220,15 @@ require('lazy').setup({
     end,
   },
 
+  -- {
+  --   'stevearc/oil.nvim',
+  --   opts = {},
+  --   -- Optional dependencies
+  --   dependencies = { "nvim-tree/nvim-web-devicons" },
+  -- },
+
   {
-    'stevearc/oil.nvim',
+    'nvim-tree/nvim-tree.lua',
     opts = {},
     -- Optional dependencies
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -256,7 +263,10 @@ require('lazy').setup({
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help ibl`
     main = 'ibl',
-    opts = {},
+    opts = {
+      char = '┊',
+      show_trailing_blankline_indent = false,
+    },
   },
 
   -- "gc" to comment visual regions/lines
@@ -725,20 +735,20 @@ cmp.setup {
 }
 
 -- FS plugin
-require("oil").setup({
-  colums = {
-    "icon",
-    "permissions",
-    "size",
-  },
-  -- keymaps = {
-  --   ["<CR>"] = "actions.select_vsplit",
-  --   ["<C-s>"] = "actions.select",
-  -- },
-  view_options = {
-    show_hidden = true
-  }
-})
+-- require("oil").setup({
+--   colums = {
+--     "icon",
+--     "permissions",
+--     "size",
+--   },
+--   -- keymaps = {
+--   --   ["<CR>"] = "actions.select_vsplit",
+--   --   ["<C-s>"] = "actions.select",
+--   -- },
+--   view_options = {
+--     show_hidden = true
+--   }
+-- })
 
 -- Copilot
 require('copilot').setup({
@@ -772,6 +782,15 @@ vim.api.nvim_set_keymap('n', '<Space>', 'za', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>vv', ':Vista!!<CR>', { noremap = true, desc = "[V]iew [Vista]" })
 
 vim.g.vista_fzf_preview = { 'right:50%' }
+
+-- NVIM Tree
+require("nvim-tree").setup()
+vim.api.nvim_set_keymap('n', '<Leader>ntt', ':NvimTreeToggle<CR>', { noremap = true, desc = "[N]Vim [T]ree [T]oggle" })
+vim.api.nvim_set_keymap('n', '<Leader>ntT', ':NvimTreeToggle ', { noremap = true, desc = "[N]Vim [T]ree [T]oggle" })
+vim.api.nvim_set_keymap('n', '<Leader>ntff', ':NvimTreeFindFile<CR>', { noremap = true, desc = "[N]Vim [T]ree [T]oggle" })
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+--
 
 -- Set conf for rhubarb
 vim.g.github_enterprise_urls = {
