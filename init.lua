@@ -170,6 +170,7 @@ require('lazy').setup({
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
+    version = "2.20.8" -- To Avoid the error while accessing Indent Blankline V2
     opts = {
       char = '┊',
       show_trailing_blankline_indent = false,
