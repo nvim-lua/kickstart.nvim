@@ -74,6 +74,26 @@ require('lazy').setup({
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
+  -- my extra plugins
+  {
+    'romgrk/barbar.nvim',
+    dependencies = {
+      'lewis6991/gitsigns.nvim',     -- OPTIONAL: for git status
+      'nvim-tree/nvim-web-devicons', -- OPTIONAL: for file icons
+    },
+    init = function() vim.g.barbar_auto_setup = false end,
+    opts = {
+      -- lazy.nvim will automatically call setup for you. put your options here, anything missing will use the default:
+      -- animation = true,
+      -- insert_at_start = true,
+      -- …etc.
+    },
+    version = '^1.0.0', -- optional: only update when a new 1.x version is released
+  },
+  'godlygeek/tabular',
+  'kdheepak/lazygit.nvim',
+  'tpope/vim-obsession',
+
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   {
@@ -86,7 +106,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
+      { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -110,7 +130,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -128,16 +148,16 @@ require('lazy').setup({
 
         -- don't override the built-in and fugitive keymaps
         local gs = package.loaded.gitsigns
-        vim.keymap.set({'n', 'v'}, ']c', function()
+        vim.keymap.set({ 'n', 'v' }, ']c', function()
           if vim.wo.diff then return ']c' end
           vim.schedule(function() gs.next_hunk() end)
           return '<Ignore>'
-        end, {expr=true, buffer = bufnr, desc = "Jump to next hunk"})
-        vim.keymap.set({'n', 'v'}, '[c', function()
+        end, { expr = true, buffer = bufnr, desc = "Jump to next hunk" })
+        vim.keymap.set({ 'n', 'v' }, '[c', function()
           if vim.wo.diff then return '[c' end
           vim.schedule(function() gs.prev_hunk() end)
           return '<Ignore>'
-        end, {expr=true, buffer = bufnr, desc = "Jump to previous hunk"})
+        end, { expr = true, buffer = bufnr, desc = "Jump to previous hunk" })
       end,
     },
   },
@@ -212,8 +232,8 @@ require('lazy').setup({
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  -- require 'kickstart.plugins.autoformat',
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.autoformat',
+  require 'kickstart.plugins.debug',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
@@ -271,14 +291,55 @@ vim.o.termguicolors = true
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
+vim.keymap.set({ 'n', 'v', 'x', 'i' }, '<c-s>', ':w<CR>', { silent = true })
+
+vim.keymap.set('n', '<leader>gg', '<CMD>LazyGit<CR>', { silent = true, desc = 'Open Lazigit' })
+
+-- vim.keymap.set('n', '<', '<<_', { noremap = true, silent = true })
+-- vim.keymap.set('n', '>', '>>_', { noremap = true, silent = true })
+
+vim.keymap.set('v', '<', '<<gv', { noremap = true, silent = true })
+vim.keymap.set('v', '>', '>>gv', { noremap = true, silent = true })
+
+-- pcall(vim.keymap.del,{'n' , 'v'} , '>iÞ' , nil)
+-- pcall(vim.keymap.del,{'n' , 'v'} , '>aÞ' , nil)
+-- pcall(vim.keymap.del,{'n' , 'v'} , '>Þ'  , nil)
+--
+-- pcall(vim.keymap.del,{'n' , 'v'} , '<iÞ' , nil)
+-- pcall(vim.keymap.del,{'n' , 'v'} , '<aÞ' , nil)
+-- pcall(vim.keymap.del,{'n' , 'v'} , '<Þ'  , nil)
+
+vim.keymap.set('n', '<M-j>', ':m .+1<CR>==', { silent = true })
+vim.keymap.set('x', '<M-j>', ":m '>+1<CR>gv-gv", { silent = true })
+
+vim.keymap.set('n', '<M-k>', ':m .-2<CR>==', { silent = true })
+vim.keymap.set('x', '<M-k>', ":m '<-2<CR>gv-gv", { silent = true })
+
+vim.keymap.set('n', '<m-l>', '<cmd>BufferNext<CR>', { silent = true })
+vim.keymap.set('n', '<m-h>', '<cmd>BufferPrevious<CR>', { silent = true })
+vim.keymap.set('n', '<m-c-l>', '<cmd>BufferMoveNext<CR>', { silent = true })
+vim.keymap.set('n', '<m-c-h>', '<cmd>BufferMovePrevious<CR>', { silent = true })
+vim.keymap.set('n', '<tab>', '<cmd>BufferNext<CR>', { silent = true })
+vim.keymap.set('n', '<s-tab>', '<cmd>BufferPrevious<CR>', { silent = true })
+vim.keymap.set('n', '<leader>c', '<cmd>BufferClose<CR>', { silent = true })
+
+vim.keymap.set({ 'n', 'v' }, '<leader>a:', ":Tab /:<cr>", { silent = true })
+vim.keymap.set({ 'n', 'v' }, '<leader>a,', ":Tab /,<cr>", { silent = true })
+vim.keymap.set({ 'n', 'v' }, '<leader>a=', ":Tab /=<cr>", { silent = true })
+vim.keymap.set({ 'n', 'v' }, '<leader>a|', ":Tab /|<cr>", { silent = true })
+vim.keymap.set({ 'n', 'v' }, '<leader>a ', ":Tab / <cr>", { silent = true })
+vim.keymap.set({ 'n', 'v' }, '<leader>a;', ":Tab /;<cr>", { silent = true })
+
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
--- [[ Highlight on yank ]]
--- See `:help vim.highlight.on_yank()`
-local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
-vim.api.nvim_create_autocmd('TextYankPost', {
+
+
+-- [[ highlight on yank ]]
+-- see `:help vim.highlight.on_yank()`
+local highlight_group = vim.api.nvim_create_augroup('yankhighlight', { clear = true })
+vim.api.nvim_create_autocmd('textyankpost', {
   callback = function()
     vim.highlight.on_yank()
   end,
