@@ -18,6 +18,6 @@ return {
         }
       }
     }
-    vim.keymap.set('n', '<leader>sn', ':Neotree filesystem reveal float git_status<CR>', { noremap = true, silent = true })
+    vim.keymap.set('n', '<leader>sn', ':Neotree filesystem reveal float<CR>', { noremap = true, silent = true })
   end,
 }
