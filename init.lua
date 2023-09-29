@@ -1,47 +1,12 @@
---[[
-
-=====================================================================
-==================== READ THIS BEFORE CONTINUING ====================
-=====================================================================
-
-Kickstart.nvim is *not* a distribution.
-
-Kickstart.nvim is a template for your own configuration.
-  The goal is that you can read every line of code, top-to-bottom, understand
-  what your configuration is doing, and modify it to suit your needs.
-
-  Once you've done that, you should start exploring, configuring and tinkering to
-  explore Neovim!
-
-  If you don't know anything about Lua, I recommend taking some time to read through
-  a guide. One possible example:
-  - https://learnxinyminutes.com/docs/lua/
-
-
-  And then you can explore or search through `:help lua-guide`
-  - https://neovim.io/doc/user/lua-guide.html
-
-
-Kickstart Guide:
-
-I have left several `:help X` comments throughout the init.lua
-You should run that command and read that help section for more information.
-
-In addition, I have some `NOTE:` items throughout the file.
-These are for you, the reader to help understand what is happening. Feel free to delete
-them once you know what you're doing, but they should serve as a guide for when you
-are first encountering a few different constructs in your nvim config.
-
-I hope you enjoy your Neovim journey,
-- TJ
-
-P.S. You can delete this when you're done too. It's your config now :)
---]]
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
@@ -139,16 +104,14 @@ require('lazy').setup({
           return '<Ignore>'
         end, {expr=true, buffer = bufnr, desc = "Jump to previous hunk"})
       end,
+		  current_line_blame = true,
+  		current_line_blame_opts = { delay = 1000, virtual_text_pos = "eol" },
     },
   },
 
   {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
+    'catppuccin/nvim',
+    lazy = true,
   },
 
   {
@@ -158,7 +121,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = "catppuccin",
         component_separators = '|',
         section_separators = '',
       },
@@ -169,10 +132,12 @@ require('lazy').setup({
     -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
-    -- See `:help indent_blankline.txt`
+    -- See `:help indent_blankline.txt` 
+    main = "ibl",
     opts = {
       char = '┊',
-      show_trailing_blankline_indent = false,
+      show_trailing_blankline_indent = true,
+  		space_char_blankline = " ",
     },
   },
 
@@ -222,6 +187,11 @@ require('lazy').setup({
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   -- { import = 'custom.plugins' },
+  { 'karb94/neoscroll.nvim' },
+  { 'nvim-tree/nvim-tree.lua' },
+  { 'akinsho/toggleterm.nvim' },
+  { 'nvim-tree/nvim-web-devicons' },
+  { 'terrortylor/nvim-comment' },
 }, {})
 
 -- [[ Setting options ]]
@@ -303,7 +273,6 @@ require('telescope').setup {
 pcall(require('telescope').load_extension, 'fzf')
 
 -- See `:help telescope.builtin`
-vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader>/', function()
   -- You can pass additional configuration to telescope to change theme, layout, etc.
@@ -313,17 +282,27 @@ vim.keymap.set('n', '<leader>/', function()
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
-vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
+vim.keymap.set('n', '<leader>gs', require('telescope.builtin').git_status, { desc = 'Search [G]it [S]tatus' })
+vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>fw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
-vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]resume' })
+vim.keymap.set('n', '<leader>e', "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<cr>", { desc = '[D]iagnostics' })
+
+vim.diagnostic.config({
+  virtual_text = true,
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = false,
+})
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
+  modules = {},
+  sync_install = true,
+  ignore_install = {},
   -- Add languages to be installed here that you want installed for treesitter
   ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim' },
 
@@ -534,6 +513,149 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
+
+require("neoscroll").setup()
+
+require("catppuccin").setup({
+    flavour = "frappe", -- latte, frappe, macchiato, mocha
+    background = { -- :h background
+        dark = "frappe",
+    },
+    transparent_background = false, -- disables setting the background color.
+
+    color_overrides = {},
+    custom_highlights = {},
+    integrations = {
+        cmp = true,
+        gitsigns = true,
+        nvimtree = true,
+        treesitter = true,
+        notify = false,
+        mini = false,
+    },
+})
+
+-- setup must be called before loading
+vim.cmd.colorscheme "catppuccin"
+
+require("nvim-tree").setup({
+    filters = {
+    dotfiles = false,
+    exclude = { vim.fn.stdpath "config" .. "/lua/custom" },
+  },
+  disable_netrw = true,
+  hijack_netrw = true,
+  hijack_cursor = true,
+  hijack_unnamed_buffer_when_opening = false,
+  sync_root_with_cwd = true,
+  update_focused_file = {
+    enable = true,
+    update_root = false,
+  },
+  view = {
+    adaptive_size = false,
+    side = "left",
+    width = 30,
+    preserve_window_proportions = true,
+  },
+  git = {
+    enable = false,
+    ignore = true,
+  },
+  filesystem_watchers = {
+    enable = true,
+  },
+  actions = {
+    open_file = {
+      resize_window = true,
+    },
+  },
+  renderer = {
+    root_folder_label = false,
+    highlight_git = false,
+    highlight_opened_files = "none",
+
+    indent_markers = {
+      enable = false,
+    },
+
+    icons = {
+      show = {
+        file = true,
+        folder = true,
+        folder_arrow = true,
+        git = false,
+      },
+
+      glyphs = {
+        default = "󰈚",
+        symlink = "",
+        folder = {
+          default = "",
+
+          empty = "",
+          empty_open = "",
+          open = "",
+          symlink = "",
+          symlink_open = "",
+          arrow_open = "",
+          arrow_closed = "",
+        },
+        git = {
+          unstaged = "✗",
+          staged = "✓",
+          unmerged = "",
+          renamed = "➜",
+          untracked = "★",
+          deleted = "",
+          ignored = "◌",
+        },
+      },
+    },
+  },
+})
+
+vim.keymap.set('n', '<leader>n', '<cmd>NvimTreeToggle<cr>', { desc = '[space|n] open explorer file menu' })
+vim.keymap.set('n', '<c-n>', '<cmd>NvimTreeToggle<cr>', { desc = '[C|n] open explorer file menu' })
+
+vim.keymap.set("n", "<c-h>", "<c-w>h", { desc = "window: Focus left" })
+vim.keymap.set("n", "<c-l>", "<c-w>l", { desc = "window: Focus right" })
+vim.keymap.set("n", "<c-j>", "<c-w>j", { desc = "window: Focus down" })
+vim.keymap.set("n", "<c-k>", "<c-w>k", { desc = "window: Focus up" })
+
+vim.keymap.set("t", "<c-h>", "<cmd>wincmd h", { desc = "window: Focus left" })
+vim.keymap.set("t", "<c-l>", "<cmd>wincmd l", { desc = "window: Focus right" })
+vim.keymap.set("t", "<c-j>", "<cmd>wincmd j", { desc = "window: Focus down" })
+vim.keymap.set("t", "<c-k>", "<cmd>wincmd k", { desc = "window: Focus up" })
+
+-- Visual mode
+vim.keymap.set("v", "<S-K>", "<cmd>:m '<-2<CR>gv=gv", { desc = "edit: Move this line up" })
+vim.keymap.set("v", "<S-J>", "<cmd>:m '>+1<CR>gv=gv", { desc = "edit: Move this line down" })
+vim.keymap.set("v", "<<>", "<gv", { desc = "edit: Decrease indent" })
+vim.keymap.set("v", "<>>", ">gv", { desc = "edit: Increase indent" })
+
+require("toggleterm").setup({
+  open_mapping = [[<c-\>]],
+})
+
+require('nvim_comment').setup({
+  -- Linters prefer comment and line to have a space in between markers
+  marker_padding = true,
+  -- should comment out empty or whitespace only lines
+  comment_empty = true,
+  -- trim empty comment whitespace
+  comment_empty_trim_whitespace = true,
+  -- Should key mappings be created
+  create_mappings = true,
+  -- Normal mode mapping left hand side
+  line_mapping = "cl",
+  -- Visual/Operator mapping left hand side
+  operator_mapping = "c",
+  -- Hook function to call before commenting takes place
+  hook = nil
+})
+
+vim.o.laststatus = 0
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
