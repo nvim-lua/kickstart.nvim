@@ -55,7 +55,7 @@ P.S. You can delete this when you're done too. It's your config now :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-vim.g.minisurround_disable=true
+-- vim.g.minisurround_disable=true
 
 -- for now turn on LIGHT
 vim.cmd 'set background=light'
@@ -209,10 +209,12 @@ require('lazy').setup({
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
+    --[[
     opts = {
       char = '┊',
       show_trailing_blankline_indent = false,
     },
+    --]]
   },
 
   -- "gc" to comment visual regions/lines
