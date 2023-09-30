@@ -98,9 +98,9 @@ vim.o.expandtab = true
 vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = "Move up half page" })
 vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = "Move down half page" })
 
-vim.keymap.set('n', '<C-j>', ':bnext<CR>', { desc = "Next Buffer" })
-vim.keymap.set('n', '<C-k>', ':bprev<CR>', { desc = "Previous Buffer" })
-vim.keymap.set('n', '<leader>c', ':bdelete<CR>', { desc = "Delete Buffer" })
+vim.keymap.set('n', '<C-j>', ':bnext<CR>', { desc = "Next Buffer", silent = true })
+vim.keymap.set('n', '<C-k>', ':bprev<CR>', { desc = "Previous Buffer", silent = true })
+vim.keymap.set('n', '<leader>c', ':bdelete<CR>', { desc = "Delete Buffer", silent = true })
 vim.cmd([[ nnoremap <silent> <expr> <CR> {-> v:hlsearch ? "<cmd>nohl\<CR>" : "\<CR>"}() ]])
 
 -- Keymaps for better default experience
