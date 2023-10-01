@@ -4,7 +4,7 @@
 -- See the kickstart.nvim README for more information
 return {
   "olimorris/onedarkpro.nvim",
-  config = function ()
+  config = function()
     local keymap = vim.keymap
 
     -- select all
