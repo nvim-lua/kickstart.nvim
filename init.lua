@@ -529,6 +529,12 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
   },
+  window = {
+    completion = {
+      border = "rounded",
+      winhighlight = "Normal:CmpNormal,CursorLine:MyPmenuSel",
+    },
+  }
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`

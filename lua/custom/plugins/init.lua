@@ -39,15 +39,6 @@ return {
     -- save
     keymap.set('n', 'sw', ':w<CR>', { silent = true })
 
-    require 'cmp'.setup {
-      window = {
-        completion = {
-          border = "rounded",
-          winhighlight = "Normal:CmpNormal,CursorLine:MyPmenuSel",
-        }
-      }
-    }
-
     vim.api.nvim_set_hl(0, 'MyPmenuSel', { bg = 'NONE', fg = '#d55fde' })
     -- gray
     vim.api.nvim_set_hl(0, 'CmpItemAbbrDeprecated', { bg = 'NONE', strikethrough = true, fg = '#808080' })
