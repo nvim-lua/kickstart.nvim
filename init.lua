@@ -498,6 +498,8 @@ vim.opt.termguicolors = true
 require("bufferline").setup{}
 
 require("nvim-tree").setup {}
+
+require("veil").setup {}
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
 local cmp = require 'cmp'
