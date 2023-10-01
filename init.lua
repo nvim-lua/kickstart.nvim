@@ -42,7 +42,6 @@ P.S. You can delete this when you're done too. It's your config now :)
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -142,8 +141,7 @@ require('lazy').setup({
       end,
     },
   },
-
-  {
+ {
     -- Theme inspired by Atom
     'navarasu/onedark.nvim',
     priority = 1000,
@@ -151,7 +149,6 @@ require('lazy').setup({
       vim.cmd.colorscheme 'onedark'
     end,
   },
-
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
@@ -222,11 +219,11 @@ require('lazy').setup({
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
 { import = 'custom.plugins' },
 }, {})
-
+require "evil"
+vim.cmd('set cmdheight=0')
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
-
 -- Set highlight on search
 vim.o.hlsearch = false
 
