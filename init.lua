@@ -492,7 +492,19 @@ mason_lspconfig.setup_handlers {
   end
 }
 vim.opt.termguicolors = true
-require("bufferline").setup{}
+local bufferline = require("bufferline")
+bufferline.setup{
+  options = {
+    offsets = {
+        {
+            filetype = "NvimTree",
+            text = "Virginity",
+            highlight = "Directory",
+            seperator = true,
+        },
+    },
+}
+}
 
 require("nvim-tree").setup {}
 
