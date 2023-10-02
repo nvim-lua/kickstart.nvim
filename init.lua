@@ -1,13 +1,6 @@
 --[[
 
 TODO:
--   enhance/fix/understand gza: 2023-09-25 
-    -   Problem seems to be OLD code in ~/.local/share ...
-<https://github.com/folke/lazy.nvim#-uninstalling>
-    -   gza is part of mini.surround (mini.nvim) ? 
-    -   OR, is lazy lazy.nvim loading a plugin?
-    -   verbose nmap gza returns deep in kickstart ... lazy ... lazy.nvim .. core
-    -   disable:vim.g.minisurround_disable: true
 
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
@@ -329,8 +322,9 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this (yes: 2023-09-03)
 vim.o.termguicolors = true
 
+ ----------------------
 -- [[ Basic Keymaps ]]
-
+ ----------------------
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
@@ -345,15 +339,15 @@ end, {expr = true})
 
 -- vim.keymap.set( {'n', '<leader>]nc', 
 -- Remap for dealing with word wrap
-vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+  vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+  vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
-vim.keymap.set('n', '<leader>ck', ':e ~/.config/kickstart/init.lua<CR>', { desc = 'Config Kickstart' })
-vim.keymap.set('n', '<leader>tn', ':e ~/code/docs/tech_notes/300_tech_notes.qmd<CR>', { desc = 'Tech Notes' })
-vim.keymap.set('n', '<leader>mln', ':e ~/code/docs/tech_notes/500_ML_Notes.qmd<CR>', { desc =  'ML Notes' })
-vim.keymap.set('n', '<leader>bw', 'i**<esc>Ea**<esc>w', { desc = "[B]old [W]ord" })
---  insert # --------...
-vim.keymap.set("n", "<leader>ic", "yypVr-I# <ESC>", { desc = "[ic]insert comment line"})
+  vim.keymap.set('n', '<leader>ck', ':e ~/.config/kickstart/init.lua<CR>', { desc = 'Config Kickstart' })
+  vim.keymap.set('n', '<leader>tn', ':e ~/code/docs/tech_notes/300_tech_notes.qmd<CR>', { desc = 'Tech Notes' })
+  vim.keymap.set('n', '<leader>mln', ':e ~/code/docs/tech_notes/500_ML_Notes.qmd<CR>', { desc =  'ML Notes' })
+  vim.keymap.set('n', '<leader>bw', 'i**<esc>Ea**<esc>w', { desc = "[B]old [W]ord" })
+  --  insert # --------...
+  vim.keymap.set("n", "<leader>ic", "yypVr-I# <ESC>", { desc = "[ic]insert comment line"})
 
 --              [[ Highlight on yank ]]
 --              See `:help vim.highlight.on_yank()`
@@ -367,8 +361,10 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })-- }}}
 
+------------------------------------------------------
 --             experiment; add my keymaps to which-key
 --             stolen:  REF: https://github.com/hackorum/nfs/blob/master/lua/whichkey-config/init.lua
+------------------------------------------------------
 --{{{
 local wk = require 'which-key'
 wk.setup {
@@ -533,6 +529,7 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
+
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
   -- to define small helper and utility functions so you don't have to repeat yourself
   -- many times.
@@ -543,7 +540,6 @@ local on_attach = function(_, bufnr)
     if desc then
       desc = 'LSP: ' .. desc
     end
-
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
