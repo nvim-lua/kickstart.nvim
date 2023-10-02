@@ -93,6 +93,18 @@ require('lazy').setup({
   'godlygeek/tabular',
   'kdheepak/lazygit.nvim',
   'tpope/vim-obsession',
+  {
+    'kyazdani42/nvim-tree.lua',
+    config = function()
+      require('nvim-tree').setup()
+    end,
+  },
+  {
+    'm4xshen/autoclose.nvim',
+    config = function()
+      require('autoclose').setup()
+    end
+  },
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
@@ -294,6 +306,8 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set({ 'n', 'v', 'x', 'i' }, '<c-s>', ':w<CR>', { silent = true })
 
 vim.keymap.set('n', '<leader>gg', '<CMD>LazyGit<CR>', { silent = true, desc = 'Open Lazigit' })
+
+vim.keymap.set('n', '<leader><tab>', '<CMD>NvimTreeToggle<CR>', { silent = true, desc = 'Open Lazigit' })
 
 -- vim.keymap.set('n', '<', '<<_', { noremap = true, silent = true })
 -- vim.keymap.set('n', '>', '>>_', { noremap = true, silent = true })
@@ -595,6 +609,8 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
+
+vim.api.nvim_command [[set tabstop=4]]
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
