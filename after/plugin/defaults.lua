@@ -40,6 +40,9 @@ vim.keymap.set('n', '<leader>sm', require('telescope.builtin').marks, { desc = '
 -- vim.keymap.set('i', '<C-j>', '<silent><script><expr> <C-J> copilot#Accept("<CR>")',
 --   { noremap = true, desc = 'Accept Copilot Suggestion' })
 
+-- autoformatting
+vim.keymap.set('n', '<leader>ft', ':KickstartFormatToggle<CR>', { desc = '[F]ormat [T]oggle' })
+
 vim.diagnostic.config({
   severity_sort = true,
   virtual_text = {
