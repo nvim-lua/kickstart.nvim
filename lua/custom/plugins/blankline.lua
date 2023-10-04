@@ -5,7 +5,11 @@ return {
 	-- See `:help indent_blankline.txt`
 	main = "ibl",
 	opts = {
-		char = '┊',
-		show_trailing_blankline_indent = false,
+		indent = {
+			char = '┊',
+		},
+		whitespace = {
+			remove_blankline_trail = false
+		},
 	},
 }
