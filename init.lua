@@ -1,5 +1,5 @@
+--
 --[[
-
 TODO:
 
 =====================================================================
@@ -112,7 +112,7 @@ require('lazy').setup({
   },
 
   {
-    -- Autocompletion
+    -- Autocompletion;   exist several  `extensions` to nvim-cmp
     'hrsh7th/nvim-cmp',
     dependencies = {
       -- Snippet Engine & its associated nvim-cmp source
@@ -631,10 +631,6 @@ mason_lspconfig.setup_handlers {
   end,
 }
 
--- [[ Configure nvim-cmp ]]
--- See `:help cmp`
-local cmp = require 'cmp'
-
 --
 --   LUASNIP
 local luasnip = require 'luasnip'
@@ -668,6 +664,11 @@ ls.add_snippets('all', {      -- `all` all filetypes, `lua` only lua ft
 require('luasnip.loaders.from_vscode').lazy_load()
 luasnip.config.setup {}
 
+-- nvim-cmp configuration
+-- [[ Configure hrsh7th nvim-cmp ]]
+-- See `:help cmp`
+local cmp = require 'cmp'
+
 cmp.setup {
   snippet = {
     expand = function(args)
@@ -684,6 +685,7 @@ cmp.setup {
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
     },
+    -- TAB selects NEXT item (CR to complete)
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
@@ -703,9 +705,11 @@ cmp.setup {
       end
     end, { 'i', 's' }),
   },
-  sources = {
+  sources = {    -- need nvim-cmp extensions?
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
+    { name = 'path' } ,
+    { name = 'buffer', keyword_length = 5 },
   },
 }
 
