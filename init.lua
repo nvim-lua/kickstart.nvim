@@ -24,11 +24,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- NOTE: Here is where you install your plugins.
---  You can configure plugins using the `config` key.
---
---  You can also configure plugins after the setup call,
---    as they will be available in your neovim runtime.
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
@@ -49,12 +44,8 @@ require('lazy').setup({
       { 'williamboman/mason.nvim', config = true },
       'williamboman/mason-lspconfig.nvim',
 
-      -- Additional lua configuration, makes nvim stuff amazing!
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
-
       -- Useful status updates for LSP
-      'folke/neodev.nvim',
+        'folke/neodev.nvim',
     },
   },
 
@@ -165,8 +156,8 @@ require('lazy').setup({
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  -- require 'kickstart.plugins.autoformat',
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.autoformat',
+  require 'kickstart.plugins.debug',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
@@ -193,7 +184,12 @@ require('lazy').setup({
 vim.o.hlsearch = false
 
 -- Make line numbers default
+vim.wo.relativenumber = true
 vim.wo.number = true
+
+local columns = {80, 120} -- Coloque os números das colunas limite desejadas aqui
+-- Define as colunas de limite
+vim.wo.colorcolumn = table.concat(columns, ',')
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -469,7 +465,7 @@ require('luasnip.loaders.from_vscode').lazy_load()
 luasnip.config.setup {}
 
 cmp.setup {
-  snippet = {
+  snippet ={
     expand = function(args)
       luasnip.lsp_expand(args.body)
     end,
@@ -612,7 +608,7 @@ require("nvim-tree").setup({
 })
 
 vim.keymap.set('n', '<leader>n', '<cmd>NvimTreeToggle<cr>', { desc = '[space|n] open explorer file menu' })
-vim.keymap.set('n', '<c-n>', '<cmd>NvimTreeToggle<cr>', { desc = '[C|n] open explorer file menu' })
+-- vim.keymap.set('n', '<c-n>', '<cmd>NvimTreeToggle<cr>', { desc = '[C|n] open explorer file menu' })
 
 vim.keymap.set("n", "<c-h>", "<c-w>h", { desc = "window: Focus left" })
 vim.keymap.set("n", "<c-l>", "<c-w>l", { desc = "window: Focus right" })
@@ -969,20 +965,14 @@ ins_right {
   color = { fg = colors.green, gui = 'bold' },
 }
 
-ins_right {
-  function()
-    return '▊'
-  end,
-  color = { fg = colors.blue },
-  padding = { left = 1 },
-}
-
 -- Now don't forget to initialize lualine
 lualine.setup(config)
 
 require('onedark').load()
 
 
+-- vim.o.cursorcolumn = true
+-- vim.o.cursorline = true
 vim.o.laststatus = 3
 
 -- The line beneath this is called `modeline`. See `:help modeline`
