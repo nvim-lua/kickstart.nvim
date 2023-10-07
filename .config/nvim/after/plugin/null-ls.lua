@@ -30,7 +30,7 @@ null_ls.setup({
 	debug = false,
 	sources = {
 		formatting.prettier,
-		formatting.stylua,
+		-- formatting.stylua,
 		null_ls.builtins.code_actions.gitsigns,
 		-- setting eslint_d only if we have a ".eslintrc.js" file in the project
 		diagnostics.eslint_d.with({

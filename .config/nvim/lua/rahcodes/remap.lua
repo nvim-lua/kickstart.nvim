@@ -54,23 +54,16 @@ vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 
 -- Save
-nmap("<C-s>", ":wa<Return>")
+nmap("<C-s>", ":wa<CR>")
 
 -- See `:help telescope.builtin`
 vim.keymap.set("n", "<leader>m", require("telescope.builtin").oldfiles, { desc = "[?] Find recently opened files" })
 vim.keymap.set("n", "<leader><space>", require("telescope.builtin").git_files, { desc = "[ ] Find git files" })
-vim.keymap.set("n", "<leader>ps", function()
-  require("telescope.builtin").grep_string({ search = vim.fn.input("Grep > ") })
-end, { desc = "[/] Fuzzily search in current buffer]" })
 
-vim.keymap.set("n", "<leader>sf", require("telescope.builtin").find_files, { desc = "[S]earch [F]iles" })
-vim.keymap.set("n", "<leader>sh", require("telescope.builtin").help_tags, { desc = "[S]earch [H]elp" })
-vim.keymap.set("n", "<leader>sw", require("telescope.builtin").grep_string, { desc = "[S]earch current [W]ord" })
-vim.keymap.set("n", "<leader>sg", require("telescope.builtin").live_grep, { desc = "[S]earch by [G]rep" })
-vim.keymap.set("n", "<leader>sd", require("telescope.builtin").diagnostics, { desc = "[S]earch [D]iagnostics" })
 vim.keymap.set("n", "<leader>gb", require("telescope.builtin").git_branches, { desc = "[G]it [B]ranches" })
 vim.keymap.set("n", "<leader>sb", require("telescope.builtin").buffers, { desc = "[ ] Find existing buffers" })
 
+-- Trouble bindings
 vim.keymap.set("n", "<leader>xx", function() require("trouble").open() end)
 vim.keymap.set("n", "<leader>xw", function() require("trouble").open("workspace_diagnostics") end)
 vim.keymap.set("n", "<leader>xd", function() require("trouble").open("document_diagnostics") end)
