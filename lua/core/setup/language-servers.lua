@@ -4,7 +4,15 @@ local servers = {
   -- pyright = {},
   -- rust_analyzer = {},
   eslint = {},
-  tsserver = {},
+  tsserver = {
+    typescript = {
+      settings = {
+        preferences = {
+          importModuleSpecifierPreference = "non-relative"
+        }
+      }
+    },
+  },
   tailwindcss = {},
 
   lua_ls = {
