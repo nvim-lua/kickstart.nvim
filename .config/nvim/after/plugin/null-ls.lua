@@ -4,6 +4,7 @@ if not setup then
 end
 
 local formatting = null_ls.builtins.formatting
+local diagnostics = null_ls.builtins.diagnostics
 local conditional = function(fn)
 	local utils = require("null-ls.utils").make_conditional_utils()
 	return fn(utils)
@@ -26,11 +27,17 @@ local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 local rubocop = null_ls.builtins.formatting.rubocop
 
 null_ls.setup({
-	debug = true,
+	debug = false,
 	sources = {
 		formatting.prettier,
 		formatting.stylua,
 		null_ls.builtins.code_actions.gitsigns,
+		-- setting eslint_d only if we have a ".eslintrc.js" file in the project
+		diagnostics.eslint_d.with({
+			condition = function(utils)
+				return utils.root_has_file({ '.eslintrc.js' })
+			end
+		}),
 
 		-- Here we set a conditional to call the rubocop formatter. If we have a Gemfile in the project, we call "bundle exec rubocop", if not we only call "rubocop".
 		conditional(function(utils)
