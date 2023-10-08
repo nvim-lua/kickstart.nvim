@@ -172,29 +172,31 @@ require('lazy').setup({
     opts = {},
   },
 
-  --        lush, tool to edit colorschemes, using lua, tutorials..
-  --{{{
+  --        lush, tool to edit colorschemes, using lua, EXCELLENT tutorials..
+  --        (but why need?)
 
-  {
+  {-- {{{
     'rktjmp/lush.nvim',
-  },
+  },-- }}}
 
-  {
-    -- Set lualine as statusline
-    -- See `:help lualine.txt` (opts is same as require('xxxx').setup())
+
+    -- Statusline:   See `:help lualine.txt` (opts is same as require('xxxx').setup())
+  --{{{
     --
+  {
     'nvim-lualine/lualine.nvim',
     opts = {
       options = {
-        icons_enabled = false,
+        icons_enabled = true,
         theme = 'onedark',
         component_separators = '|',
         section_separators = '',
       },
     },
-  }, -- }}}
-
-  --  bufferline  (becuase? )
+  }, -- 
+-- }}}
+  --
+  --  bufferline  (purpose:  pretty up top of TABS/Buffers - first LEARN TABS vs Windows vs TMUX)
   { 'akinsho/bufferline.nvim', version = '*', dependencies = 'nvim-tree/nvim-web-devicons' },
 
   {
@@ -339,8 +341,9 @@ end, {expr = true})
 
 -- vim.keymap.set( {'n', '<leader>]nc', 
 -- Remap for dealing with word wrap
-  vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-  vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+  -- jr 2023-10-07 remove next lines, is this the cause of lines moving up/down??
+  -- vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+  -- vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
   vim.keymap.set('n', '<leader>ck', ':e ~/.config/kickstart/init.lua<CR>', { desc = 'Config Kickstart' })
   vim.keymap.set('n', '<leader>tn', ':e ~/code/docs/tech_notes/300_tech_notes.qmd<CR>', { desc = 'Tech Notes' })
@@ -444,12 +447,19 @@ vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 
 -- [[ Configure Treesitter ]]
--- See `:help nvim-treesitter`
 --
-require('nvim-treesitter.configs').setup {
+-- See `:help nvim-treesitter`{{{
+--
+-- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
+vim.defer_fn(function()
 
-  -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim' },
+-- 2023-10-07 appears to be upstream (nvim-treesitter problem;  I don't know what to do) 
+-- SEE:  https://github.com/nvim-lua/kickstart.nvim/issues/441
+require('nvim-treesitter.configs').setup{
+
+-- Add languages to be installed here that you want installed for treesitter
+  --
+  ensure_installed = { 'lua', 'python', 'javascript', 'vimdoc', 'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -510,7 +520,11 @@ require('nvim-treesitter.configs').setup {
     },
   },
 }
-
+end,0)
+--   end treesitter
+-- }}}
+--
+--
 -- experimnetal - works!  (2023-09-02)
 -- ... but only small change in status line
 ----------------
