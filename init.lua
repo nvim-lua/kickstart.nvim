@@ -235,20 +235,15 @@ local terminal = require("nvterm.terminal")
 
 local ft_cmds = {
   python = "python3 " .. vim.fn.expand('%'),
-  ...
   --<your commands here>
+  c = 'gcc ' .. vim.fn.expand('%'),
 }
-local toggle_modes = { 'n', 't' }
-local mappings = {
-  { 'n',          '<C-l>', function() terminal.send(ft_cmds[vim.bo.filetype]) end },
-  { toggle_modes, '<A-h>', function() terminal.toggle('horizontal') end },
-  { toggle_modes, '<A-v>', function() terminal.toggle('vertical') end },
-  { toggle_modes, '<A-i>', function() terminal.toggle('float') end },
-}
-local opts = { noremap = true, silent = true }
-for _, mapping in ipairs(mappings) do
-  vim.keymap.set(mapping[1], mapping[2], mapping[3], opts)
-end
+
+vim.keymap.set({ 'n', 't' }, '<leader>nt', function() terminal.new 'horizontal' end,
+  { desc = '[N]ew [T]erminal', noremap = true, silent = true })
+
+vim.keymap.set('n', '<leader>fr', function() terminal.send(ft_cmds[vim.bo.filetype], 'horizontal') end,
+  { desc = '[F]ile [R]un', noremap = true, silent = true })
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -498,6 +493,8 @@ local servers = {
   rust_analyzer = {},
   -- tsserver = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
+  java_language_server = {},
+
 
   lua_ls = {
     Lua = {
