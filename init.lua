@@ -278,8 +278,22 @@ else
   vim.cmd [[ set background=dark]] -- acer-desktop
 end
 
--- Nvim-R
+-- [[ Nvim-R ]]
 vim.cmd [[let R_assign = 2]] -- __ becomes left arrow
+
+-- 2023-10-07 another try with R & LSP
+-- 1) Mason to install r language server (takes a while)
+-- 2) Add code below, let g:LanguageClient ... this is <https://github.com/autozimu/LanguageClient-neovim>
+-- 3) no errors, Lsp works for *.R ! 
+-- 
+  --nope   \ 'qmd': ['R', '--slave', '-e', 'languageserver::run()'],  
+-- compare to lua version: https://github.com/neovim/nvim-lspconfig/blob/1028360e0f2f724d93e876df3d22f63c1acd6ff9/lua/lspconfig/server_configurations/r_language_server.lua#L8
+--
+vim.cmd([[
+let g:LanguageClient_serverCommands = {
+    \ 'r': ['R', '--slave', '-e', 'languageserver::run()'],
+    \ }
+]])
 
 -- always display top/bottom 8 lines
 vim.opt.scrolloff = 8
@@ -341,9 +355,9 @@ end, {expr = true})
 
 -- vim.keymap.set( {'n', '<leader>]nc', 
 -- Remap for dealing with word wrap
-  -- jr 2023-10-07 remove next lines, is this the cause of lines moving up/down??
-  -- vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-  -- vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+  -- jr 2023-10-07 Not cause of sticky line
+  vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+  vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
   vim.keymap.set('n', '<leader>ck', ':e ~/.config/kickstart/init.lua<CR>', { desc = 'Config Kickstart' })
   vim.keymap.set('n', '<leader>tn', ':e ~/code/docs/tech_notes/300_tech_notes.qmd<CR>', { desc = 'Tech Notes' })
@@ -541,6 +555,7 @@ vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open float
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
 -- [[ Configure LSP ]]
+-- 
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
 
@@ -600,6 +615,7 @@ local servers = {
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+
 
   -- lua_ls is new name for sumneko_lua
   lua_ls = {
