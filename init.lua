@@ -147,10 +147,11 @@ require('lazy').setup({
     'navarasu/onedark.nvim',
     priority = 1000,
     config = function()
-      require('onedark').setup {
-        transparent = true,
-      }
-      vim.cmd.colorscheme 'onedark'
+      --require('onedark').setup {
+      --  style = 'deep',
+      --  transparent = true,
+      --}
+      --vim.cmd.colorscheme 'onedark'
     end,
   },
   {
@@ -173,7 +174,7 @@ require('lazy').setup({
     lazy = false,
     priority = 1000,
     config = function()
-      require('poimandres').setup { }
+      -- require('poimandres').setup { }
     end,
 
     -- optionally set the colorscheme within lazy config
@@ -185,11 +186,24 @@ require('lazy').setup({
     'ellisonleao/gruvbox.nvim',
     priority = 1000,
     config = function()
-      -- vim.o.background = "dark" -- or "light" for light mode
-      -- vim.cmd([[colorscheme gruvbox]])
+      vim.o.background = "dark" -- or "light" for light mode
+      vim.cmd([[colorscheme gruvbox]])
     end,
   },
+  {
+    'nyoom-engineering/oxocarbon.nvim',
+    priority = 1000,
+    config = function()
+      --[[
+      vim.opt.background = "dark" -- set this to dark or light
+      vim.cmd.colorscheme "oxocarbon"
 
+      -- transparent
+      vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+      vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+      --]]
+    end,
+  },
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
@@ -197,7 +211,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        -- theme = 'onedark',
         component_separators = '|',
         section_separators = '',
       },
@@ -261,6 +275,9 @@ require('lazy').setup({
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   { import = 'custom.plugins' },
+
+  -- jump between files
+  'ThePrimeagen/harpoon',
 }, {})
 
 -- [[ Setting options ]]
@@ -593,6 +610,7 @@ vim.keymap.set("n", "<leader>x", vim.cmd.Ex)
 vim.keymap.set('n', '<leader>gs', ':vertical G<CR>')
 
 -- transparent bg
+--[[
 require("transparent").setup({ -- Optional, you don't have to run setup.
   groups = { -- table: default groups
     'Normal', 'NormalNC', 'Comment', 'Constant', 'Special', 'Identifier',
@@ -603,3 +621,4 @@ require("transparent").setup({ -- Optional, you don't have to run setup.
   extra_groups = {}, -- table: additional groups that should be cleared
   exclude_groups = {}, -- table: groups you don't want to clear
 })
+--]]
