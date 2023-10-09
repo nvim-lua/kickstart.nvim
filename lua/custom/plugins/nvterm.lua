@@ -27,8 +27,6 @@ return {
         close_on_exit = true,
         auto_insert = true,
       },
-      -- Additional Functionality
-      require "nvterm_config.lua"
     })
   end,
 }
