@@ -83,6 +83,7 @@ return {
       ensure_installed = {
         'black',
         'stylua',
+        'debugpy',
       },
     },
   },
