@@ -512,6 +512,14 @@ vim.keymap.set('n', '<leader>tt', '<Cmd>Neotree toggle<CR>', { desc = "Neo[T]ree
 vim.keymap.set('n', '<leader>tr', '<Cmd>Neotree reveal<CR>', { desc = "Neo[T]ree [R]eveal" })
 vim.keymap.set('n', '<leader>ts', '<Cmd>Neotree git_status<CR>', { desc = "Neo[T]ree git [S]tatus" })
 
+-- Trouble
+vim.keymap.set("n", "<leader>xx", function() require("trouble").toggle() end)
+vim.keymap.set("n", "<leader>xw", function() require("trouble").toggle("workspace_diagnostics") end)
+vim.keymap.set("n", "<leader>xd", function() require("trouble").toggle("document_diagnostics") end)
+vim.keymap.set("n", "<leader>xq", function() require("trouble").toggle("quickfix") end)
+vim.keymap.set("n", "<leader>xl", function() require("trouble").toggle("loclist") end)
+vim.keymap.set("n", "gR", function() require("trouble").toggle("lsp_references") end)
+
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
