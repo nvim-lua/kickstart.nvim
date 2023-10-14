@@ -33,7 +33,7 @@ Neovim's configurations are located under the following paths, depending on your
 | OS | PATH |
 | :- | :--- |
 | Linux | `$XDG_CONFIG_HOME/nvim`, `~/.config/nvim` |
-| MacOS | `$XDG_CONFIG_HOME/nvim`, '~/.config/nvim` |
+| MacOS | `$XDG_CONFIG_HOME/nvim`, `~/.config/nvim` |
 | Windows | `%userprofile%\AppData\Local\nvim\` |
 
 Clone kickstart.nvim:
