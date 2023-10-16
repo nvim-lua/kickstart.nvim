@@ -15,6 +15,8 @@ local servers = {
   },
   tailwindcss = {},
 
+  prismals = {},
+
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
