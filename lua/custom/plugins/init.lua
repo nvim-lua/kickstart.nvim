@@ -59,13 +59,6 @@ return {
     dependencies = { 'nvim-tree/nvim-web-devicons' },
   },
 
-  -- Buffer tabs at top
-  {
-    'akinsho/bufferline.nvim',
-    opts = {},
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-  },
-
   -- Searchable command reference with :CheatSheet
   {
     'sudormrfbin/cheatsheet.nvim',
@@ -90,4 +83,7 @@ return {
 
   -- Add inline git history in floating windows
   'rhysd/git-messenger.vim',
+
+  -- vim/tmux navigation
+  'christoomey/vim-tmux-navigator',
 }
