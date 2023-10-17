@@ -280,21 +280,25 @@ else
 end
 
 -- [[ Nvim-R ]]
-vim.cmd [[let R_assign = 2]] -- __ becomes left arrow
-
--- 2023-10-07 another try with R & LSP
--- 1) Mason to install r language server (takes a while)
--- 2) Add code below, let g:LanguageClient ... this is <https://github.com/autozimu/LanguageClient-neovim>
--- 3) no errors, Lsp works for *.R ! 
--- 
-  --nope   \ 'qmd': ['R', '--slave', '-e', 'languageserver::run()'],  
--- compare to lua version: https://github.com/neovim/nvim-lspconfig/blob/1028360e0f2f724d93e876df3d22f63c1acd6ff9/lua/lspconfig/server_configurations/r_language_server.lua#L8
---
-vim.cmd([[
-let g:LanguageClient_serverCommands = {
+vim.cmd([[ let R_args= ['--no-save', '--quiet'] ]])  -- minimize startup
+vim.cmd([[ let R_assign=2 ]])           -- underline becomes left arrow
+vim.cmd([[ let R_enable_comment=1 ]] )  -- toggle comments with xx
+vim.cmd([[let g:LanguageClient_serverCommands = {
     \ 'r': ['R', '--slave', '-e', 'languageserver::run()'],
     \ }
 ]])
+
+--[[
+2023-10-07 another try with R & LSP
+1) Mason to install r language server (takes a while)
+2) Add code below, let g:LanguageClient ... this is <https://github.com/autozimu/LanguageClient-neovim>
+3) no errors, Lsp works for *.R ! 
+
+BUT, can not get r language server to fire up with *.qmd
+  --nope   \ 'qmd': ['R', '--slave', '-e', 'languageserver::run()'],  
+-- compare to lua version: https://github.com/neovim/nvim-lspconfig/blob/1028360e0f2f724d93e876df3d22f63c1acd6ff9/lua/lspconfig/server_configurations/r_language_server.lua#L8
+--]]
+-- 
 
 -- always display top/bottom 8 lines
 vim.opt.scrolloff = 8
@@ -347,8 +351,8 @@ vim.o.termguicolors = true
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
 -- REF: https://nanotipsforvim.prose.sh/keeping-your-register-clean-from-dd 
--- if dd action hold content:  keep it
--- if dd action holds BLANK LINE:  sent to black hold _dd
+-- if dd action holds content:  keep it
+-- if dd action holds BLANK LINE:  sent to black hole _dd
 vim.keymap.set("n", "dd", function ()
 	if vim.fn.getline(".") == "" then return '"_dd' end
 	return "dd"
@@ -359,8 +363,10 @@ end, {expr = true})
   -- jr 2023-10-07 Not cause of sticky line
   vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
   vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+  vim.keymap.set('n', '<C-u>', '<C-u>zz', {desc = 'Move Up, center'})
+  vim.keymap.set('n', '<C-d>', '<C-d>zz', {desc = 'Move Down, center'})
 
-  vim.keymap.set('n', '<leader>ck', ':e ~/.config/kickstart/init.lua<CR>', { desc = 'Config Kickstart' })
+--  vim.keymap.set('n', '<leader>ck', ':e ~/.config/kickstart/init.lua<CR>', { desc = 'Config Kickstart' })
   vim.keymap.set('n', '<leader>tn', ':e ~/code/docs/tech_notes/300_tech_notes.qmd<CR>', { desc = 'Tech Notes' })
   vim.keymap.set('n', '<leader>mln', ':e ~/code/docs/tech_notes/500_ML_Notes.qmd<CR>', { desc =  'ML Notes' })
   vim.keymap.set('n', '<leader>bw', 'i**<esc>Ea**<esc>w', { desc = "[B]old [W]ord" })
@@ -379,6 +385,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })-- }}}
 
+------------------------------------------------------
+--             which-key
 ------------------------------------------------------
 --             experiment; add my keymaps to which-key
 --             stolen:  REF: https://github.com/hackorum/nfs/blob/master/lua/whichkey-config/init.lua
@@ -406,7 +414,12 @@ local mappings = {
   Q = { ':wq<cr>', 'Save & Quit' },
   w = { ':w<cr>', 'Save' },
   x = { ':bdelete<cr>', 'Close' },
+  -- use :RKill to stop R, close terminal (not guaranteed)
+  z1 = { '<C-W>p', 'other window'},
+  z2 = { '<C-W>pAjunk<esc>', 'other window junk'},
+  rk = { ':RKill<CR>', 'RKill , but not guaranteed to close terminal'},
  -- use <leader>ck  E = { ':e ~/.config/kickstart/init.lua<cr>', 'Edit KICKSTART config' },
+  ck = { ':e ~/.config/kickstart/init.lua<cr>', '[ck] Edit KICKSTART config' },
   --  f = { ":Telescope find_files<cr>", "Telescope Find Files" },
   --   r = { ":Telescope live_grep<cr>", "Telescope Live Grep" },
 }
@@ -414,8 +427,11 @@ local opts = { prefix = '<leader>' }
 wk.register(mappings, opts)
 -- }}}
 --
---             tell lua ls that `vim` is global var
+------------------------------------------------------
 --             require("lspconfig").sumneko_lua.setup({
+------------------------------------------------------
+--             tell lua ls that `vim` is global var
+--
 require('lspconfig').lua_ls.setup {-- {{{
   settings = {
     Lua = {
