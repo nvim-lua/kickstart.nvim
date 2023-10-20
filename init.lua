@@ -81,7 +81,11 @@ require('lazy').setup({
       'lewis6991/gitsigns.nvim',     -- OPTIONAL: for git status
       'nvim-tree/nvim-web-devicons', -- OPTIONAL: for file icons
     },
-    init = function() vim.g.barbar_auto_setup = false end,
+    init = function()
+      if not vim.g.started_by_firenvim then
+        vim.g.barbar_auto_setup = false
+      end
+    end,
     opts = {
       -- lazy.nvim will automatically call setup for you. put your options here, anything missing will use the default:
       -- animation = true,
@@ -103,6 +107,16 @@ require('lazy').setup({
     'm4xshen/autoclose.nvim',
     config = function()
       require('autoclose').setup()
+    end
+  },
+  {
+    'glacambre/firenvim',
+
+    -- Lazy load firenvim
+    -- Explanation: https://github.com/folke/lazy.nvim/discussions/463#discussioncomment-4819297
+    lazy = not vim.g.started_by_firenvim,
+    build = function()
+      vim.fn["firenvim#install"](0)
     end
   },
 
@@ -612,5 +626,23 @@ cmp.setup {
 
 vim.api.nvim_command [[set tabstop=4]]
 
+vim.g.firenvim_config = {
+  globalSettings = {
+    alt = "all",
+    takeover = "never",
+  },
+  localSettings = {
+    [".*"] = {
+      cmdline  = "neovim",
+      content  = "text",
+      priority = 0,
+      selector = "textarea",
+      takeover = "never"
+    }
+  }
+}
+if vim.g.started_by_firenvim == true then
+  vim.o.showtabline = 0
+end
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

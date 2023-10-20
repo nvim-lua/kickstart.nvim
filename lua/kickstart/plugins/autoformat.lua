@@ -14,6 +14,20 @@ return {
       print('Setting autoformatting to: ' .. tostring(format_is_enabled))
     end, {})
 
+    local function disableAutoFormat()
+      format_is_enabled = false
+      print('Setting autoformatting to: ' .. tostring(format_is_enabled))
+    end
+
+    -- Command to just disable auto formatting
+    vim.api.nvim_create_user_command('KickstartDisableFormat', disableAutoFormat, {})
+
+
+    vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+      pattern = "*.java",
+      callback = disableAutoFormat
+    })
+
     -- Create an augroup that is used for managing our formatting autocmds.
     --      We need one augroup per client to make sure that multiple clients
     --      can attach to the same buffer without interfering with each other.
