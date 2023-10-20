@@ -149,10 +149,10 @@ Each PR, especially those which increase the line count, should have a descripti
 
 ### Windows Installation
 The easiest way to install a C++ compiler is through the following commands:
-`Install chocolatey: Run choco install mingw in admin powershell.`
-`Refresh the env: refreshenv`
 
-Run refreshenv to refresh to envoriment.
+`Install chocolatey: Run choco install mingw in admin powershell.`
+
+`Refresh the env: refreshenv`
 
 Start Neovim.
 Installation may require installing build tools, and updating the run command for `telescope-fzf-native`
