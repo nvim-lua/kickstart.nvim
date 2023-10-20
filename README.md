@@ -148,7 +148,13 @@ Each PR, especially those which increase the line count, should have a descripti
   * Here is one about the previous iteration of kickstart: [video introduction to Kickstart.nvim](https://youtu.be/stqUbv-5u2s). Note the install via init.lua no longer works as specified. Please follow the install instructions in this file instead as they're up to date.
 
 ### Windows Installation
+The easiest way to install a C++ compiler is through the following commands:
+`Install chocolatey: Run choco install mingw in admin powershell.`
+`Refresh the env: refreshenv`
 
+Run refreshenv to refresh to envoriment.
+
+Start Neovim.
 Installation may require installing build tools, and updating the run command for `telescope-fzf-native`
 
 See `telescope-fzf-native` documentation for [more details](https://github.com/nvim-telescope/telescope-fzf-native.nvim#installation)
