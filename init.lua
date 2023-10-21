@@ -40,7 +40,6 @@ P.S. You can delete this when you're done too. It's your config now :)
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
-require("custom")
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -200,6 +199,7 @@ require('lazy').setup({
 
 -- [[ Theme ]]
 vim.cmd [[colorscheme tokyonight]]
+vim.g.theme = "tokyonight"
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -523,6 +523,9 @@ cmp.setup {
 
 -- [[NvimTree]]
 require("nvim-tree").setup {}
+
+-- [[Other configs]]
+require("custom")
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
