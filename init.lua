@@ -150,12 +150,21 @@ require('lazy').setup({
     },
   },
 
+  -- {
+  --   -- Theme inspired by Atom
+  --   'navarasu/onedark.nvim',
+  --   priority = 1000,
+  --   config = function()
+  --     vim.cmd.colorscheme 'onedark'
+  --   end,
+  -- },
+
   {
     -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
+    'nordtheme/vim',
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'onedark'
+      vim.cmd.colorscheme 'nord'
     end,
   },
 
@@ -227,7 +236,7 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
@@ -239,6 +248,7 @@ vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
+vim.wo.relativenumber = true
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -332,11 +342,19 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
+    modules = {},
+
     -- Add languages to be installed here that you want installed for treesitter
     ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
 
+    -- Install parsers synchronously (only applied to `ensure_installed`)
+    sync_install = false,
+
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
+
+    -- List of parsers to ignore installing (or "all")
+    ignore_install = {},
 
     highlight = { enable = true },
     indent = { enable = true },
