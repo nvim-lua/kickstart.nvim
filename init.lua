@@ -175,7 +175,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'nord',
         component_separators = '|',
         section_separators = '',
       },
@@ -345,7 +345,29 @@ vim.defer_fn(function()
     modules = {},
 
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+    ensure_installed = {
+      'bash',
+      'css',
+      'dockerfile',
+      'elixir',
+      'erlang',
+      'html',
+      'javascript',
+      'jsdoc',
+      'json',
+      'lua',
+      'make',
+      'markdown',
+      'regex',
+      'rust',
+      'scss',
+      'svelte',
+      'tsx',
+      'typescript',
+      'vim',
+      'vimdoc',
+      'vue',
+    },
 
     -- Install parsers synchronously (only applied to `ensure_installed`)
     sync_install = false,
@@ -497,12 +519,37 @@ local servers = {
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
+  bashls = {},
+  cmake = {},
+  cssls = {},
+  cssmodules_ls = {},
+  cucumber_language_server = {},
+  denols = {
+    root_dir = nvim_lsp.util.root_pattern('deno.json', 'deno.jsonc')
+  },
+  diagnosticls = {},
+  docker_compose_language_service = {},
+  dockerls = {},
+  elixirls = {},
+  -- erlangls = {},
+  html = {},
+  jsonls = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
     },
   },
+  rust_analyzer = {},
+  stylelint_lsp = {},
+  svelte = {},
+  tailwindcss = {},
+  tsserver = {
+    root_dir = nvim_lsp.util.root_pattern('package.json', 'tsconfig.json', 'jsconfig.json'),
+  },
+  vimls = {},
+  vuels = {},
+  yamlls = {},
 }
 
 -- Setup neovim lua configuration
