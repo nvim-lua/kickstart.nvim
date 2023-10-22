@@ -393,6 +393,8 @@ require('lazy').setup({
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     -- By default, Telescope is included and acts as your picker for everything.
+-- Configure LSP (Language Server Protocol)
+require('lsp-setup')
 
     -- If you would like to switch to a different picker (like snacks, or fzf-lua)
     -- you can disable the Telescope plugin by setting enabled to false and enable
