@@ -21,3 +21,6 @@ vim.opt.splitbelow = true
 
 -- horizontal cursorline
 vim.opt.cursorline = true
+
+-- disable mouse mode
+vim.o.mouse = ''
