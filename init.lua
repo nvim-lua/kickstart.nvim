@@ -296,6 +296,11 @@ require('telescope').setup {
       },
     },
   },
+  pickers = {
+    buffers = {
+      sort_lastused = true,
+    },
+  },
 }
 
 -- Enable telescope fzf native, if installed
