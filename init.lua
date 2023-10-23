@@ -295,6 +295,9 @@ vim.cmd([[let g:LanguageClient_serverCommands = {
 3) no errors, Lsp works for *.R ! 
 
 BUT, can not get r language server to fire up with *.qmd
+Add to bottom of *.qmd, *.R file: 
+#		/* vim: set filetype=r : */
+
   --nope   \ 'qmd': ['R', '--slave', '-e', 'languageserver::run()'],  
 -- compare to lua version: https://github.com/neovim/nvim-lspconfig/blob/1028360e0f2f724d93e876df3d22f63c1acd6ff9/lua/lspconfig/server_configurations/r_language_server.lua#L8
 --]]
