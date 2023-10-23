@@ -14,6 +14,8 @@ return {
     -- Creates a beautiful debugger UI
     'rcarriga/nvim-dap-ui',
 
+    -- virtual test support
+    'theHamsta/nvim-dap-virtual-text',
     -- Installs the debug adapters for you
     'williamboman/mason.nvim',
     'jay-babu/mason-nvim-dap.nvim',
@@ -83,5 +85,6 @@ return {
 
     -- Install golang specific config
     require('dap-go').setup()
+    require("nvim-dap-virtual-text").setup()
   end,
 }
