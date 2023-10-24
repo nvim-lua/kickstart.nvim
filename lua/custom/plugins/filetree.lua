@@ -1,6 +1,3 @@
--- Unless you are still migrating, remove the deprecated commands from v1.x
-vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
-
 return {
   "nvim-neo-tree/neo-tree.nvim",
   version = "*",
@@ -10,6 +7,16 @@ return {
     "MunifTanjim/nui.nvim",
   },
   config = function ()
-    require('neo-tree').setup {}
+    local neo_tree = require('neo-tree')
+    local command = require('neo-tree.command')
+
+    neo_tree.setup {}
+
+    vim.keymap.set('n', '<leader>ff', function ()
+      command.execute({ action = 'focus', reveal = true })
+    end, { desc = 'Filetree: Open file tree' })
+    vim.keymap.set('n', '<leader>fb', function ()
+      command.execute({ action = 'focus', source = 'buffers', reveal = true })
+    end, { desc = 'Filetree: Open Buffers' })
   end,
 }
