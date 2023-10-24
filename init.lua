@@ -524,9 +524,7 @@ local servers = {
   cssls = {},
   cssmodules_ls = {},
   cucumber_language_server = {},
-  denols = {
-    root_dir = nvim_lsp.util.root_pattern('deno.json', 'deno.jsonc')
-  },
+  denols = {},
   diagnosticls = {},
   docker_compose_language_service = {},
   dockerls = {},
@@ -541,12 +539,12 @@ local servers = {
     },
   },
   rust_analyzer = {},
-  stylelint_lsp = {},
+  stylelint_lsp = {
+    filetypes = { 'css', 'less', 'scss', 'sugarss', 'vue', 'wxss' }
+  },
   svelte = {},
   tailwindcss = {},
-  tsserver = {
-    root_dir = nvim_lsp.util.root_pattern('package.json', 'tsconfig.json', 'jsconfig.json'),
-  },
+  tsserver = {},
   vimls = {},
   vuels = {},
   yamlls = {},
@@ -573,6 +571,7 @@ mason_lspconfig.setup_handlers {
       on_attach = on_attach,
       settings = servers[server_name],
       filetypes = (servers[server_name] or {}).filetypes,
+      root_dir = (servers[server_name] or {}).root_dir,
     }
   end,
 }
