@@ -259,9 +259,10 @@ vim.keymap.set('n', '<leader>Y', 'gg"+yG')
 vim.keymap.set('n', '<leader>d', '"_d')
 vim.keymap.set('v', '<leader>d', '"_d')
 
+-- Needed to sync windows clipboard with wsl
 vim.g.clipboard = {
-  name= 'WslClipboard',
-  copy= {
+  name = 'WslClipboard',
+  copy = {
     ['+'] = 'clip.exe',
     ['*'] = 'clip.exe',
   },
@@ -269,7 +270,7 @@ vim.g.clipboard = {
     ['+'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
     ['*'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
   },
-  cache_enabled= 0,
+  cache_enabled = 0,
 }
 -- Enable break indent
 vim.o.breakindent = true
@@ -314,6 +315,14 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
+
+-- [[ Fugitive ]]
+-- Mappings and configuration for fugitive (git plugin)
+vim.keymap.set("n", "<leader>gs", vim.cmd.Git, { desc = '[G]it [S]tatus' })
+
+-- [[ NeoTree ]]
+-- Configuration for neo tree
+vim.keymap.set('n', '<leader>nn', function() vim.cmd('Neotree toggle') end, { desc = "Toggle [N]eotree" })
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`

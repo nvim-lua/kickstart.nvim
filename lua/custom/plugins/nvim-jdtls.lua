@@ -72,6 +72,11 @@ return {
               enabled = true,
             },
           },
+          inlayHints = {
+            parameterNames = {
+              enabled = "all", -- literals, all, none
+            },
+          },
           configuration = {
             runtimes = {
               {
@@ -122,9 +127,17 @@ return {
         vim.keymap.set("n", "<leader>co", function() require("jdtls").organize_imports() end,
           { buffer = buffer, desc = "LSP: Organize Imports" })
 
-        vim.keymap.set("n", "<leader>ct",
+
+        vim.keymap.set('n', '<leader>ct', function() require('jdtls').test_class() end,
+          { buffer = buffer, desc = 'LSP: Run test class' })
+
+        vim.keymap.set('n', '<leader>cn', function() require('jdtls').test_nearest_method() end,
+          { buffer = buffer, desc = 'LSP: Run nerest test method' })
+
+        vim.keymap.set("n", "<leader>cs",
           function() require("jdtls").pick_test({ bufnr = buffer, after_test = print_test_results }) end,
-          { buffer = buffer, desc = "LSP: Run Test" })
+          { buffer = buffer, desc = "LSP: Run Single Test" })
+
         require("jdtls").setup_dap({ hotcodereplace = "auto" })
         require("jdtls.dap").setup_dap_main_class_configs()
       end
