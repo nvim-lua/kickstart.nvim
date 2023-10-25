@@ -45,3 +45,8 @@ install requests
 ```
 sudo apt install python3-requests
 ```
+
+format json (require jq installed)
+```
+:%!jq .
+```

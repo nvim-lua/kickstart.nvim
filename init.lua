@@ -198,6 +198,15 @@ require('lazy').setup({
         map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', { desc = 'select git hunk' })
       end,
     },
+    config = function()
+      require('gitsigns').setup {
+        current_line_blame = true,
+        current_line_blame_opts = {
+          delay = 1000,
+          virt_text_pos = 'eol',
+        },
+      }
+    end,
   },
 
   {

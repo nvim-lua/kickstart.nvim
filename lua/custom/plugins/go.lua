@@ -9,10 +9,11 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 	},
 	config = function()
-		-- local gofmt = require("go.format")
 		require("go").setup()
 
-		-- vim.keymap.set('n', 'gF', gofmt.goimport, { desc = 'Go Import' })
+		local gofmt = require("go.format")
+
+		vim.keymap.set('n', 'gF', gofmt.goimport, { desc = 'Go Import' })
 	end,
 	event = { "CmdlineEnter" },
 	ft = { "go", 'gomod' },

@@ -2,6 +2,9 @@ local function map(mode, lhs, rhs)
 	vim.keymap.set(mode, lhs, rhs, { silent = true })
 end
 
+-- (conflict with <leader>pw) keep copied stuffs in the buffer when pasting it
+-- map("n", "<leader>p", "\"_dP")
+
 -- Save
 map("n", "<leader>w", "<CMD>update<CR>")
 

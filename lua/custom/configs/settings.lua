@@ -36,7 +36,7 @@ o.swapfile = false
 
 -- Scrolling settings
 o.scrolloff = 8
-o.colorcolumn = '80'
+o.colorcolumn = '120'
 
 o.timeoutlen = 500
 
