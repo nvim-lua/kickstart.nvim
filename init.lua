@@ -326,6 +326,17 @@ vim.o.clipboard = 'unnamedplus'
 -- Enable break indent
 vim.o.breakindent = true
 
+-- Hitting <TAB>  (experimnetal)
+vim.o.ts = 2    -- 1 <TAB> is 2 characters  
+vim.o.sw = 0    -- don't know
+-- tw = maximum width of text (or 0 to disable)
+
+-- <TAB>  becomes all spaces, no <TAB> ch
+vim.o.expandtab   = true
+
+-- don't break within a word
+vim.o.linebreak   = false
+
 -- Save undo history
 vim.o.undofile = true
 
@@ -338,7 +349,8 @@ vim.wo.signcolumn = 'yes'
 
 -- Decrease update time
 vim.o.updatetime = 250
-vim.o.timeoutlen = 300
+vim.o.timeoutlen = 300    -- time mapping waits for next char
+vim.o.ttimeoutlen = 10    -- time <ESC> delays before registers
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
