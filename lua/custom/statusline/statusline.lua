@@ -12,6 +12,7 @@ local separators = (type(sep_style) == "table" and sep_style) or default_sep_ico
 
 local sep_l = separators["left"]
 local sep_r = separators["right"]
+local sep_m = default_sep_icons["block"]["left"]
 
 local function stbufnr()
   return vim.api.nvim_win_get_buf(vim.g.statusline_winid)
@@ -173,8 +174,9 @@ M.LSP_status = function()
 end
 
 M.cwd = function()
-  local dir_icon = "%#St_cwd_icon#" .. "󰉋 "
-  local dir_name = "%#St_cwd_text#" .. " " .. fn.fnamemodify(fn.getcwd(), ":t") .. " "
+  -- local dir_icon = "%#St_cwd_icon#" .. "󰉋 "
+  local dir_icon = "%#St_cwd_sep#" .. sep_m
+  local dir_name = "%#St_file_info#" .. " " .. fn.fnamemodify(fn.getcwd(), ":t") .. " "
   return (vim.o.columns > 85 and ("%#St_cwd_sep#" .. sep_l .. dir_icon .. dir_name)) or ""
 end
 

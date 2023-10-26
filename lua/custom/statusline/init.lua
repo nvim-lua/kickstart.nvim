@@ -1,4 +1,5 @@
 vim.opt.statusline = "%!v:lua.require('custom.statusline.statusline').run()"
+vim.opt.laststatus = 3
 
 function SetColors(theme)
   for hlgroupName, hlgroup_vals in pairs(theme) do
