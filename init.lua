@@ -199,19 +199,23 @@ require('lazy').setup({
   --  bufferline  (purpose:  pretty up top of TABS/Buffers - first LEARN TABS vs Windows vs TMUX)
   { 'akinsho/bufferline.nvim', version = '*', dependencies = 'nvim-tree/nvim-web-devicons' },
 
-  {
     -- Add indentation guides even on blank lines
-    'lukas-reineke/indent-blankline.nvim',
-    -- Enable `lukas-reineke/indent-blankline.nvim`
+  -- 2023-10-26  gives startup errors, but seems to work 
+  -- ???
+{ "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {
     -- :IBLToggle
     -- See `:help indent-blankline.txt`
-    --[[
-    opts = {
       char = '┊',
       show_trailing_blankline_indent = false,
-    },
-    --]]
+    }
   },
+  -- this fixes an issue when jumping from neovim to tmux 
+  -- but also means can not easily change pane size, width, height
+  -- 2023-10-26
+{
+  "christoomey/vim-tmux-navigator",
+  event = "BufReadPre",
+},
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
@@ -425,6 +429,14 @@ wk.setup {
   },
 }
 local mappings = {
+  -- g is an experiment and duplicates done elsewhere
+  g = {
+      name = "temp file",
+      f = {"<cmd>Telescope find_files<cr>", "Find File" }, -- create a binding with label
+		  g = { "<cmd>Telescope live_grep<cr>", "Full Text Search" },
+		  b = { "<cmd>Telescope buffers<cr>", "Buffers" },
+      q = { "<cmd>q<cr>", 'Quit - no warn'},
+	},
   q = { ':q<cr>', 'Quit - no warn' },
   Q = { ':wq<cr>', 'Save & Quit' },
   w = { ':w<cr>', 'Save' },
