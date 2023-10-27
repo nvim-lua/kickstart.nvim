@@ -202,15 +202,18 @@ require('lazy').setup({
 
   {
     -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
+    'sainnhe/sonokai',
     priority = 1000,
     lazy = false,
     config = function()
-      require('onedark').setup {
-        -- Set a style preset. 'dark' is default.
-        style = 'dark', -- dark, darker, cool, deep, warm, warmer, light
-      }
-      require('onedark').load()
+      -- require('onedark').setup {
+      --   -- Set a style preset. 'dark' is default.
+      --   style = 'dark', -- dark, darker, cool, deep, warm, warmer, light
+      -- }
+      -- require('onedark').load()
+      vim.g.sonokai_style = 'maia'
+      vim.g.sonokai_better_performance = 1
+      vim.cmd([[colorscheme sonokai]])
     end,
   },
 
@@ -222,6 +225,7 @@ require('lazy').setup({
       options = {
         icons_enabled = false,
         theme = 'auto',
+        -- theme = 'sonokai',
         component_separators = '|',
         section_separators = '',
       },
