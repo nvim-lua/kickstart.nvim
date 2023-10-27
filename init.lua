@@ -1,5 +1,4 @@
 --[[
-
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
 =====================================================================
@@ -76,29 +75,13 @@ require('lazy').setup({
   'tpope/vim-sleuth',
 
   -- Snippets
-  'SirVer/ultisnips',
+  -- 'SirVer/ultisnips',
   'honza/vim-snippets',
   'natebosch/dartlang-snippets',
   'dart-lang/dart-vim-plugin',
   'morhetz/gruvbox',
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
-  {
-    -- LSP Configuration & Plugins
-    'neovim/nvim-lspconfig',
-    dependencies = {
-      -- Automatically install LSPs to stdpath for neovim
-      { 'williamboman/mason.nvim', config = true },
-      'williamboman/mason-lspconfig.nvim',
-
-      -- Useful status updates for LSP
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
-
-      -- Additional lua configuration, makes nvim stuff amazing!
-      'folke/neodev.nvim',
-    },
-  },
   {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -147,16 +130,6 @@ require('lazy').setup({
       end,
     },
   },
-
-  {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
-  },
-
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
@@ -205,7 +178,6 @@ require('lazy').setup({
       },
     },
   },
-
   {
     -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
@@ -214,21 +186,12 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
   },
-  {
-    'akinsho/flutter-tools.nvim',
-    lazy = false,
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'stevearc/dressing.nvim', -- optional for vim.ui.select
-    },
-    config = true,
-  },
   { 'akinsho/git-conflict.nvim', version = "*", config = true },
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
   -- require 'kickstart.plugins.autoformat',
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.debug',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
@@ -238,83 +201,6 @@ require('lazy').setup({
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   { import = 'custom.plugins' },
 }, {})
-
-local flutterConfig = require("flutter-tools")
-
-flutterConfig.setup {
-  ui = {
-    border = "rounded",
-    notification_style = 'native'
-  },
-  decorations = {
-    statusline = {
-      -- set to true to be able use the 'flutter_tools_decorations.app_version' in your statusline
-      -- this will show the current version of the flutter app from the pubspec.yaml file
-      app_version = true,
-      -- set to true to be able use the 'flutter_tools_decorations.device' in your statusline
-      -- this will show the currently running device if an application was started with a specific
-      -- device
-      device = true,
-      -- set to true to be able use the 'flutter_tools_decorations.project_config' in your statusline
-      -- this will show the currently selected project configuration
-      project_config = true,
-    }
-  },
-  debugger = {           -- integrate with nvim dap + install dart code debugger
-    enabled = false,
-    run_via_dap = false, -- use dap instead of a plenary job to run flutter apps
-    -- if empty dap will not stop on any exceptions, otherwise it will stop on those specified
-    -- see |:help dap.set_exception_breakpoints()| for more info
-    exception_breakpoints = {}
-  },
-  root_patterns = { ".git", "pubspec.yaml" }, -- patterns to find the root of your flutter project
-  fvm = true,                                 -- takes priority over path, uses <workspace>/.fvm/flutter_sdk if enabled
-  widget_guides = {
-    enabled = false,
-  },
-  closing_tags = {
-    highlight = "Comment", -- highlight for the closing tag
-    prefix = "//",         -- character to use for close tag e.g. > Widget
-    enabled = true         -- set to false to disable
-  },
-  dev_log = {
-    enabled = true,
-    notify_errors = false, -- if there is an error whilst running then notify the user
-    open_cmd = "tabedit",  -- command to use to open the log buffer
-  },
-  dev_tools = {
-    autostart = false,         -- autostart devtools server if not detected
-    auto_open_browser = false, -- Automatically opens devtools in the browser
-  },
-  outline = {
-    open_cmd = "30vnew", -- command to use to open the outline buffer
-    auto_open = false    -- if true this will open the outline automatically when it is first populated
-  },
-  lsp = {
-    color = { -- show the derived colours for dart variables
-      enabled = false, -- whether or not to highlight color variables at all, only supported on flutter >= 2.10
-      background = false, -- highlight the background
-      background_color = nil, -- required, when background is transparent (i.e. background_color = { r = 19, g = 17, b = 24},)
-      foreground = false, -- highlight the foreground
-      virtual_text = true, -- show the highlight using virtual text
-      virtual_text_str = "■", -- the virtual text character to highlight
-    },
-    --- OR you can specify a function to deactivate or change or control how the config is created
-    capabilities = function(config)
-      config.specificThingIDontWant = false
-      return config
-    end,
-    -- see the link below for details on each option:
-    -- https://github.com/dart-lang/sdk/blob/master/pkg/analysis_server/tool/lsp_spec/README.md#client-workspace-configuration
-    settings = {
-      showTodos = true,
-      completeFunctionCalls = true,
-      renameFilesWithClasses = "prompt", -- "always"
-      enableSnippets = true,
-      updateImportsOnRename = true,      -- Whether to update imports and other directives when files are renamed. Required for `FlutterRename` command.
-    }
-  }
-}
 
 ---i [[ Setting options ]]
 -- See `:help vim.o`
@@ -326,8 +212,11 @@ vim.o.hlsearch = false
 vim.o.exrc = true
 
 -- Make line numbers default
+-- vim.wo.number = true
 vim.wo.number = true
+vim.wo.relativenumber = true
 
+vim.o.splitbelow = true
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
@@ -425,20 +314,12 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 
 
--- [[ Configure Flutter tools]]
-vim.keymap.set('n', '<leader>r', require('telescope').extensions.flutter.commands, { desc = 'Open command Flutter' })
--- fvm flutter pub get && fvm flutter packages pub ru:build_runner build --delete-conflicting-outputs
-vim.keymap.set('n', '<leader>br', function()
-  vim.api.nvim_command("botright split new")
-  vim.fn.system { 'echo', 'hi' }
-end, { desc = 'Flutter get pub and build runner' })
-
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
   ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim',
-    'dart', 'prisma' },
+    'dart', 'prisma', 'graphql' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -501,26 +382,26 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
+vim.api.nvim_set_keymap('i', 'kj', '<ESC>', { noremap = true })
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
--- Neotree
-vim.keymap.set('n', '<leader>tt', '<Cmd>Neotree toggle<CR>', { desc = "Neo[T]ree [T]oggle" })
-vim.keymap.set('n', '<leader>tr', '<Cmd>Neotree reveal<CR>', { desc = "Neo[T]ree [R]eveal" })
-vim.keymap.set('n', '<leader>ts', '<Cmd>Neotree git_status<CR>', { desc = "Neo[T]ree git [S]tatus" })
 
--- Trouble
-vim.keymap.set("n", "<leader>xx", function() require("trouble").toggle() end)
-vim.keymap.set("n", "<leader>xw", function() require("trouble").toggle("workspace_diagnostics") end)
-vim.keymap.set("n", "<leader>xd", function() require("trouble").toggle("document_diagnostics") end)
-vim.keymap.set("n", "<leader>xq", function() require("trouble").toggle("quickfix") end)
-vim.keymap.set("n", "<leader>xl", function() require("trouble").toggle("loclist") end)
-vim.keymap.set("n", "gR", function() require("trouble").toggle("lsp_references") end)
+-- Buffers
+vim.keymap.set("n", "<leader>n", '<Cmd>bnext<CR>', { desc = "[N]ext buffer" })
+vim.keymap.set("n", "<leader>p", '<Cmd>bprevious<CR>', { desc = "[P]revious buffer" })
+vim.keymap.set("n", "<leader>d", '<Cmd>bdelete<CR>', { desc = "[D]elete buffer" })
+vim.keymap.set("n", "<leader>ot", "<Cmd>20split | te<CR>", { desc = "[O]pen [T]erminal below" })
 
--- [[ Configure LSP ]]
+-- Save file
+vim.keymap.set("n", "<leader>s", '<Cmd>w<CR>', { desc = "[S]ave file" })
+
+-- Quit from terminal
+vim.api.nvim_set_keymap('t', '<Leader><ESC>', '<C-\\><C-n>', { noremap = true })
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
@@ -577,9 +458,11 @@ local servers = {
   -- clangd = {},
   -- gopls = {},
   -- pyright = {},
-  -- rust_analyzer = {},
+  -- rust_analyzer = {}
   tsserver = {},
   prismals = {},
+  graphql = {},
+  -- prettierd = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} }
   lua_ls = {
     Lua = {
@@ -595,32 +478,6 @@ require('neodev').setup()
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
-
-
--- Setup language servers.
-local lspconfig = require('lspconfig')
-
-lspconfig.dartls.setup({
-  cmd = { "dart", "language-server", "--protocol=lsp" },
-  filetypes = { "dart" },
-  init_options = {
-    closingLabels = true,
-    flutterOutline = true,
-    onlyAnalyzeProjectsWithOpenFiles = true,
-    outline = true,
-    suggestFromUnimportedLibraries = true,
-  },
-  -- root_dir = root_pattern("pubspec.yaml"),
-  settings = {
-    dart = {
-      completeFunctionCalls = true,
-      showTodos = true,
-    },
-  },
-  on_attach = function(client, bufnr)
-  end,
-})
-
 
 -- Global mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -678,7 +535,12 @@ mason_lspconfig.setup_handlers {
   end
 }
 
-require("lspconfig").dartls.setup({
+
+-- Setup language servers.
+local lspconfig = require('lspconfig')
+
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+lspconfig.dartls.setup({
   cmd = { "dart", "language-server", "--protocol=lsp" },
   filetypes = { "dart" },
   init_options = {
@@ -688,6 +550,7 @@ require("lspconfig").dartls.setup({
     outline = true,
     suggestFromUnimportedLibraries = true,
   },
+  capabilities = capabilities,
   -- root_dir = root_pattern("pubspec.yaml"),
   settings = {
     dart = {
@@ -695,18 +558,16 @@ require("lspconfig").dartls.setup({
       showTodos = true,
     },
   },
-  on_attach = function(client, bufnr)
-  end,
 })
 
 require("telescope").load_extension("flutter")
-
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
-require('luasnip.loaders.from_vscode').lazy_load()
+-- require('luasnip.loaders.from_vscode').lazy_load()
+require("luasnip.loaders.from_snipmate").lazy_load()
 luasnip.config.setup {}
 
 cmp.setup {
@@ -752,24 +613,3 @@ cmp.setup {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 etc
-require('onedark').setup {
-  colors = {
-    bright_orange = "#ff8800", -- define a new color
-    green = '#00ffaa',         -- redefine an existing color
-  },
-  highlights = {
-    -- ["@keyword"] = { fg = '$green' },
-    ["@string"] = { fmt = 'bold,italic', fg = '$orange' },
-    ["@function"] = { sp = '$yellow' },
-    ["@function.builtin"] = { fg = '#0059ff' },
-    ["@parameter"] = { fg = '$cyan' },
-    ["@variable.builtin"] = { fg = '#00ffff' },
-    ["@type.builtin"] = { fg = '#00ffff' },
-    -- ["@constant"] = { fg = '$purple' }
-    -- ["@constant"] = { fg = '$purple' }
-    -- ["@constant.builtin"] = { fg = '$purple' }
-    -- ["@type"] = { fg = '$purple' }
-  }
-}
-
-require('onedark').load()
