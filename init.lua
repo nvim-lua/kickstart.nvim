@@ -134,10 +134,7 @@ require('lazy').setup({
     main = "ibl",
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
-    opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
-    },
+    opts = {},
   },
 
   -- "gc" to comment visual regions/lines
@@ -385,6 +382,11 @@ vim.keymap.set('n', 'N', 'Nzzzv')
 
 -- Real paste
 vim.keymap.set('x', '<leader>p', '"_dP')
+
+-- Copilot configs
+vim.g.copilot_assume_mapped = true
+vim.g.copilot_no_tab_map = true
+vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 
 -- LSP settings.
 --  This function gets run when an LSP connects to a particular buffer.
