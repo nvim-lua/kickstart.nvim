@@ -271,10 +271,7 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
--- Enhancement: Visual Padding in Neovim
--- The following settings are used to create a visual "padding" effect around the text arena
-vim.wo.number = true  -- Enable line numbering for a left padding effect
-vim.wo.signcolumn = 'yes'  -- Ensure the sign column is always present for consistent padding
+vim.wo.scrolloff = 8
 
 -- [[ Basic Keymaps ]]
 
