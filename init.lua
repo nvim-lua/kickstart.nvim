@@ -526,7 +526,11 @@ cmp.setup {
 }
 
 -- [[NvimTree]]
-require("nvim-tree").setup {}
+require("nvim-tree").setup {
+  update_focused_file = {
+    enable = true
+  }
+}
 
 -- [[Other configs]]
 require("custom")
