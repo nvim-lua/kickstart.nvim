@@ -205,9 +205,11 @@ require('lazy').setup({
 { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {
     -- :IBLToggle
     -- See `:help indent-blankline.txt`
-      char = '┊',
-      show_trailing_blankline_indent = false,
-    }
+    --:help ibl.config.indent.char
+    -- 2023-10-27  jr:  had remove char, show_trail...   <otherwise errors>
+      --char = '┊',     use default
+      -- show_trailing_blankline_indent = false,
+    } -- end opts
   },
   -- this fixes an issue when jumping from neovim to tmux 
   -- but also means can not easily change pane size, width, height
@@ -318,6 +320,7 @@ vim.o.hlsearch = false
 vim.wo.number = true
 vim.wo.relativenumber = true
 vim.wo.foldmethod= "marker"
+vim.wo.foldcolumn= '1'  -- can be '0-9' (string)
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -437,6 +440,12 @@ local mappings = {
 		  b = { "<cmd>Telescope buffers<cr>", "Buffers" },
       q = { "<cmd>q<cr>", 'Quit - no warn'},
 	},
+  t = {
+      name = "telescope",
+      f = {"<cmd>Telescope find_files<cr>", "Find File" }, -- create a binding with label
+      z = {"<cmd>Telescope find_files<cr>", "Find File" , desc="Search Home", pwd='/home/jim'}, -- create a binding with label
+          },
+
   q = { ':q<cr>', 'Quit - no warn' },
   Q = { ':wq<cr>', 'Save & Quit' },
   w = { ':w<cr>', 'Save' },
@@ -499,6 +508,9 @@ end, { desc = '[/] Fuzzily search in current buffer' })
 
 vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
+--vim.keymap.set('n', '<leader>sfh',require("telescope.builtin").find_files(cwd='/home/jim'))    -- ERRORS
+-- :lua require("telescope.builtin").find_files({ cwd = tostring(os.getenv("HOME")), prompt_title="hello"})  -- Works at cLI
+-- :lua  require("telescope.builtin").find_files(cwd={'/home/jim'})    -- how to set cwd
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
