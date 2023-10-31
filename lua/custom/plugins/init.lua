@@ -31,7 +31,12 @@ return {
             vim.opt.termguicolors = true
 
             -- empty setup using defaults
-            require("nvim-tree").setup()
+            require("nvim-tree").setup({
+                view = {
+                    side = 'left',
+                    width = 60
+                }
+            })
             vim.keymap.set('n', '<C-n>', ':NvimTreeFindFileToggle<CR>')
         end
     }
