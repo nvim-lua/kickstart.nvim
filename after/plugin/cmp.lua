@@ -1,5 +1,6 @@
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
+vim.api.nvim_set_hl(0, 'CmpGhostText', { link = 'Comment', default = true })
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
@@ -43,5 +44,9 @@ cmp.setup {
   sources = {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
+    { name = 'path' },
+    {
+      { name = 'buffer' },
+    },
   },
 }
