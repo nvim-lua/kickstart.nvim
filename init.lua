@@ -210,6 +210,7 @@ vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
+vim.api.nvim_set_hl(0, 'LineNr', { fg = "white" })
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
