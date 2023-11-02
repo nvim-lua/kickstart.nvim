@@ -69,6 +69,7 @@ require('lazy').setup({
       -- Automatically install LSPs to stdpath for neovim
       { 'williamboman/mason.nvim', config = true },
       'williamboman/mason-lspconfig.nvim',
+      'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -171,9 +172,18 @@ require('lazy').setup({
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
+    main = "ibl",
     opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
+      indent = {
+        --[[ highlight = highlight ]]
+        char = "┆",
+        smart_indent_cap = true,
+      },
+      whitespace = {
+        --[[ highlight = highlight, ]]
+        remove_blankline_trail = false,
+      },
+      scope = { enabled = true },
     },
   },
 
@@ -211,8 +221,13 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
+      'windwp/nvim-ts-autotag',
     },
     build = ':TSUpdate',
+    -- setup autotag with default options
+    opts = {
+      enable = true,
+    },
   },
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
@@ -321,7 +336,7 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'lua', 'python', 'vimdoc', 'vim' },
+  ensure_installed = { 'c', 'cpp', 'lua', 'python', 'go', 'vimdoc', 'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -432,6 +447,14 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
+
+  -- Enable auto-formatting on save
+  vim.api.nvim_command([[
+    augroup AutoFormatOnSave
+      autocmd!
+      autocmd BufWritePre * :Format
+    augroup END
+  ]])
 end
 
 -- Enable the following language servers
@@ -442,19 +465,98 @@ end
 --
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
+
+-- Function to find the nearest venv path in parent directories.
+local function find_nearest_venv(starting_path)
+  local current_path = starting_path
+  while current_path do
+    local venv_path = current_path .. '/venv/bin/python'
+    if vim.fn.filereadable(venv_path) == 1 then
+      return venv_path
+    end
+    local parent_path = vim.fn.fnamemodify(current_path, ':h')
+    if parent_path == current_path then
+      break
+    end
+    current_path = parent_path
+  end
+  return nil
+end
+
+-- Get the path of the current file.
+local current_file = vim.fn.expand('%:p')
+
+-- Get the venv path for the current project directory.
+local venv_path = find_nearest_venv(current_file)
+
+if venv_path then
+  -- Use the venv path as your Python interpreter.
+  vim.g.python3_host_prog = venv_path
+else
+  -- Fallback to a system-wide Python interpreter.
+  vim.g.python3_host_prog = '/usr/bin/python3'
+end
+
 local servers = {
   clangd = {},
-  -- gopls = {},
-  pyright = {
+  gopls = {
     settings = {
-      pyright = { autoImportCompletion = true, },
-      python = {
-        pythonPath = "/usr/bin/python3",
+      plugins = {
+        revive = {},
+      },
+      gopls = {
+        completeUnimported = true,
+        usePlaceholders = true,
         analysis = {
-          autoSearchPaths = true,
-          diagnosticMode = 'openFilesOnly',
-          useLibraryCodeForTypes = true,
-          typeCheckingMode = 'off',
+          unusedarams = true,
+        },
+      },
+    },
+  },
+  pylsp = {
+    settings = {
+      pylsp = {
+        plugins = {
+          pycodestyle = {
+            ignore = { 'W391' },
+            maxLineLength = 79
+          },
+          flake8 = {},
+          black = {
+            lineLength = 79,
+            -- Configure Black to split lines without specifying a target version
+            blackArgs = {
+              "--line-length",
+              "79",
+              "--exclude",
+              "venv",
+              "--exclude",
+              "env",
+              "--exclude",
+              ".git",
+              "--exclude",
+              ".hg",
+            },
+          },
+          mypy = {
+            enabled = true,
+            command = 'mypy',
+            args = {},
+            diagnostics = true,
+          },
+          isort = {
+            profile = 'black',
+          },
+        },
+        python = {
+          -- Specify the path to your Python interpreter
+          pythonPath = "/usr/bin/python3",
+          analysis = {
+            autoSearchPaths = true,
+            diagnosticMode = 'openFilesOnly',
+            useLibraryCodeForTypes = true,
+            typeCheckingMode = 'on',
+          },
         },
       },
     },
@@ -477,7 +579,18 @@ require('neodev').setup()
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+-- Setup Mason condifuration
+local mason = require 'mason'
 
+mason.setup {
+  ui = {
+    icons = {
+      package_installed = "✓",
+      package_pending = "➜",
+      package_uninstalled = "✗",
+    },
+  },
+}
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
 
@@ -495,6 +608,22 @@ mason_lspconfig.setup_handlers {
     }
   end
 }
+
+-- Setup Linters
+local mason_tool_installer = require("mason-tool-installer")
+
+mason_tool_installer.setup({
+  ensure_installed = {
+    "prettier",
+    "stylua",
+    "isort",
+    "black",
+    "flake8",
+    "mypy",
+    "revive",
+  },
+})
+
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
@@ -544,8 +673,5 @@ cmp.setup {
   },
 }
 
-require("venv-selector").setup({
-  poetry_path = "%~",
-})
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
