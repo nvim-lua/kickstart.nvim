@@ -9,6 +9,8 @@ local plugins = {
   -- Detect tabstop and shiftwidth automatically (Editor Config taken into account)
   'tpope/vim-sleuth',
 
+  'styled-components/vim-styled-components',
+
   -- This is where plugins related to LSP can be installed.
   -- The configuration is done below. Search for lspconfig to find it below.
   {
