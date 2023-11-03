@@ -35,6 +35,8 @@ return {
       group = vim.api.nvim_create_augroup('kickstart-lsp-attach-format', { clear = true }),
       -- This is where we attach the autoformatting for reasonable clients
       callback = function(args)
+        -- dont reformat anything
+        if true then return end
         local client_id = args.data.client_id
         local client = vim.lsp.get_client_by_id(client_id)
         local bufnr = args.buf
@@ -46,7 +48,7 @@ return {
 
         -- Tsserver usually works poorly. Sorry you work with bad languages
         -- You can remove this line if you know what you're doing :)
-        if client.name == 'tsserver' or client.name == 'jsonls' then
+        if client.name == 'tsserver' or client.name == 'jsonls' or client.name == 'html' then
           return
         end
 

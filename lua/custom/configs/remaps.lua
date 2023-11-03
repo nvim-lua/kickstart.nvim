@@ -16,6 +16,7 @@ vim.keymap.set("n", "N", "Nzzzv")
 -- greatest remap ever
 -- paste without adding deleted text to buffer
 vim.keymap.set("x", "<leader>p", [["_dP]])
+vim.keymap.set("x", "<leader>d", [["_d]])
 
 -- next greatest remap ever : asbjornHaland
 -- yank/delete into system clipboard
@@ -35,4 +36,4 @@ vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 -- find/replace word you're on
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 -- make script executable
-vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+vim.keymap.set("n", "<leader>+", "<cmd>!chmod +x %<CR>", { silent = true })
