@@ -333,7 +333,7 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim' },
+    ensure_installed = { 'go', 'lua', 'python', 'vimdoc', 'vim', 'hcl', 'bash', 'yaml', 'terraform' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
@@ -445,6 +445,11 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
+
+  -- Format via LSP on each write
+  vim.api.nvim_create_autocmd({'BufWritePre'}, {
+    callback = vim.lsp.buf.formatting_sync,
+  })
 end
 
 -- document existing key chains
@@ -472,9 +477,10 @@ require('mason-lspconfig').setup()
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
-  -- clangd = {},
   gopls = { 'go' },
   pyright = { 'py' },
+  terraformls = { 'tf', 'tfvars', 'tfvars.tpl' },
+  tflint = { 'tf', 'tfvars', 'tfvars.tpl' },
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
