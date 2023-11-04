@@ -176,6 +176,7 @@ require('lazy').setup({
   -- this fixes an issue when jumping from neovim to tmux
   -- but also means can not easily change pane size, width, height
   -- 2023-10-26
+  -- 2023-10-31 dont' quite undertand behavior, hold off
   {
     "christoomey/vim-tmux-navigator",
     event = "BufReadPre",
@@ -333,6 +334,7 @@ vim.o.termguicolors   = true
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+vim.keymap.set({ 'n', 'v' }, 'q', '<Nop>', { silent = true })
 
 -- REF: https://nanotipsforvim.prose.sh/keeping-your-register-clean-from-dd
 -- if dd action holds content:  keep it
@@ -369,6 +371,10 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 }) -- }}}
 
+-- easier, clearer,  skeleton file
+vim.cmd([[
+autocmd BufNewFile *.qmd r ~/.config/kickstart/skeleton/skeleton.qmd
+]])
 ------------------------------------------------------
 --             which-key
 ------------------------------------------------------
