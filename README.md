@@ -12,3 +12,14 @@ nvim
 ```
 
 that's it.
+
+### Dependencies
+
+If you are on MacOS you might need to install icons
+
+```shell
+brew tap homebrew/cask-fonts
+brew install --cask font-hack-nerd-font
+```
+
+and then use the Hack Nerd font.
