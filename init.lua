@@ -94,8 +94,10 @@ require('lazy').setup({
   {
     'github/copilot.vim',
     config = function()
-      vim.g.copilot_no_tab_map = false
-      vim.keymap.set('i', '<C-J>', [[copilot#Accept("\<CR>")]], { silent = true, expr = true })
+      vim.cmd [[
+        imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
+        let g:copilot_no_tab_map = v:true
+      ]]
     end,
   },
 
@@ -384,7 +386,7 @@ local servers = {
   gopls = {},
   pyright = {},
   rust_analyzer = {},
-  tsserver = {},
+  tsserver = { single_file_support = false },
   eslint = { filetypes = { 'javascript', 'typescript', 'typescriptreact' } },
   html = { filetypes = { 'html', 'twig', 'hbs' } },
   lua_ls = {
@@ -416,6 +418,7 @@ mason_lspconfig.setup_handlers {
       on_attach = on_attach,
       settings = servers[server_name],
       filetypes = (servers[server_name] or {}).filetypes,
+      single_file_support = (servers[server_name] or {}).single_file_support,
     }
   end,
 }
