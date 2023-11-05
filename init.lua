@@ -92,26 +92,6 @@ require('lazy').setup({
   },
 
   {
-    'jacoborus/tender.vim',
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'tender'
-    end,
-  },
-
-  {
-    'nvim-lualine/lualine.nvim',
-    opts = {
-      options = {
-        icons_enabled = true,
-        theme = 'tender',
-        component_separators = '|',
-        section_separators = '',
-      },
-    },
-  },
-
-  {
     'github/copilot.vim',
     config = function()
       vim.g.copilot_no_tab_map = false
