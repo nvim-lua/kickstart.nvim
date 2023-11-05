@@ -100,8 +100,6 @@ require('lazy').setup({
   },
 
   {
-    -- Set lualine as statusline
-    -- See `:help lualine.txt`
     'nvim-lualine/lualine.nvim',
     opts = {
       options = {
@@ -265,10 +263,13 @@ vim.keymap.set('n', '<leader>/', function()
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
+-- From old config
 vim.keymap.set('n', '<leader>o', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
 vim.keymap.set('n', '<leader>O', [[:tabnew<cr><cmd>require('telescope.builtin').git_files()<cr>]],
   { desc = 'Search [G]it [F]iles' })
+vim.keymap.set('n', '<leader>rg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 
+-- New with more semantic meaning XD
 vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
@@ -404,6 +405,7 @@ local servers = {
   pyright = {},
   rust_analyzer = {},
   tsserver = {},
+  eslint = { filetypes = { 'javascript', 'typescript', 'typescriptreact' } },
   html = { filetypes = { 'html', 'twig', 'hbs' } },
   lua_ls = {
     Lua = {
