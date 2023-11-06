@@ -10,7 +10,15 @@ return {
     "MunifTanjim/nui.nvim",
   },
   config = function()
-    require('neo-tree').setup {}
+    require('neo-tree').setup {
+      window = {
+        mappings = {
+          ["<C-t>"] = "open_tabnew",
+          ["<C-x>"] = "open_split",
+          ["<C-v>"] = "open_vsplit",
+        }
+      }
+    }
 
     vim.keymap.set('n', '<leader>a', [[:Neotree reveal_force_cwd<cr>]])
     vim.keymap.set('n', '<leader>A', [[:Neotree toggle reveal_force_cwd<cr>]])
