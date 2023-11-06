@@ -247,7 +247,7 @@ end, { desc = '[/] Fuzzily search in current buffer' })
 
 -- From old config
 vim.keymap.set('n', '<leader>o', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
-vim.keymap.set('n', '<leader>O', [[:tabnew<cr><cmd>require('telescope.builtin').git_files()<cr>]],
+vim.keymap.set('n', '<leader>O', [[:tabnew<cr><cmd>lua require('telescope.builtin').git_files()<cr>]],
   { desc = 'Search [G]it [F]iles' })
 vim.keymap.set('n', '<leader>rg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 
