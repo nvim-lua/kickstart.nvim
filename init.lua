@@ -15,6 +15,11 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+local get_root_dir = function(fname)
+  local util = require("lspconfig.util")
+  return util.root_pattern(".git")(fname) or util.root_pattern("package.json", "tsconfig.json")(fname)
+end
+
 require('lazy').setup({
   -- Git related plugins
   'tpope/vim-fugitive',
@@ -37,6 +42,17 @@ require('lazy').setup({
 
       -- NOTE(taras) WTF is this
       'folke/neodev.nvim',
+    },
+    opts = {
+      servers = {
+        eslint = {
+          root_dir = get_root_dir,
+        },
+        tsserver = {
+          root_dir = get_root_dir,
+          single_file_support = false,
+        },
+      },
     },
   },
 
@@ -386,8 +402,10 @@ local servers = {
   gopls = {},
   pyright = {},
   rust_analyzer = {},
-  tsserver = { single_file_support = false },
-  eslint = { filetypes = { 'javascript', 'typescript', 'typescriptreact' } },
+  tsserver = {},
+  eslint = {
+    filetypes = { 'javascript', 'typescript', 'typescriptreact' },
+  },
   html = { filetypes = { 'html', 'twig', 'hbs' } },
   lua_ls = {
     Lua = {
@@ -418,7 +436,6 @@ mason_lspconfig.setup_handlers {
       on_attach = on_attach,
       settings = servers[server_name],
       filetypes = (servers[server_name] or {}).filetypes,
-      single_file_support = (servers[server_name] or {}).single_file_support,
     }
   end,
 }
