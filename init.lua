@@ -44,28 +44,32 @@ P.S. You can delete this when you're done too. It's your config now :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- Install lazy plugin manager
+-- [[ Install `lazy.nvim` plugin manager ]]
 require('lazy-bootstrap')
 
--- Setup lazy plugin manager - configure plugins
+-- [[ Configure plugins ]]
 require('lazy-plugins')
 
--- Set options
+-- [[ Setting options ]]
 require('options')
 
--- Configure keymaps
+-- [[ Basic Keymaps ]]
 require('keymaps')
 
--- Configure Telescope (fuzzy finder)
+-- [[ Configure Telescope ]]
+-- (fuzzy finder)
 require('telescope-setup')
 
--- Configure Treesitter (syntax parser for highlighting)
+-- [[ Configure Treesitter ]]
+-- (syntax parser for highlighting)
 require('treesitter-setup')
 
--- Configure LSP (Language Server Protocol)
+-- [[ Configure LSP ]]
+-- (Language Server Protocol)
 require('lsp-setup')
 
--- Configure CMP (completion)
+-- [[ Configure nvim-cmp ]]
+-- (completion)
 require('cmp-setup')
 
 -- The line beneath this is called `modeline`. See `:help modeline`
