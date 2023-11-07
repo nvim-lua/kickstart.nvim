@@ -35,6 +35,14 @@ vim.opt.splitright = true
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
 
+-- additional filetypes
+vim.filetype.add({
+  extension = {
+    templ = "templ",
+  },
+})
+
+
 
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
@@ -155,9 +163,8 @@ require('lazy').setup({
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
+    main = 'ibl',
     opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
     },
   },
 
@@ -203,20 +210,20 @@ require('lazy').setup({
       "jose-elias-alvarez/null-ls.nvim",
     },
   },
-  {
-    "ray-x/go.nvim",
-    dependencies = { -- optional packages
-      "ray-x/guihua.lua",
-      "neovim/nvim-lspconfig",
-      "nvim-treesitter/nvim-treesitter",
-    },
-    config = function()
-      require("go").setup()
-    end,
-    event = { "CmdlineEnter" },
-    ft = { "go", 'gomod' },
-    build = ':lua require("go.install").update_all_sync()' -- if you need to install/update all binaries
-  },
+  -- {
+  --   "ray-x/go.nvim",
+  --   dependencies = { -- optional packages
+  --     "ray-x/guihua.lua",
+  --     "neovim/nvim-lspconfig",
+  --     "nvim-treesitter/nvim-treesitter",
+  --   },
+  --   config = function()
+  --     require("go").setup()
+  --   end,
+  --   event = { "CmdlineEnter" },
+  --   ft = { "go", 'gomod' },
+  --   build = ':lua require("go.install").update_all_sync()' -- if you need to install/update all binaries
+  -- },
 
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
@@ -312,14 +319,14 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" },
 
 -- Run gofmt + goimport on save
 
-local format_sync_grp = vim.api.nvim_create_augroup("GoImport", {})
-vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = "*.go",
-  callback = function()
-    require('go.format').goimport()
-  end,
-  group = format_sync_grp,
-})
+-- local format_sync_grp = vim.api.nvim_create_augroup("GoImport", {})
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--   pattern = "*.go",
+--   callback = function()
+--     require('go.format').goimport()
+--   end,
+--   group = format_sync_grp,
+-- })
 
 
 
@@ -492,8 +499,8 @@ end
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
   -- clangd = {},
-  -- gopls = {},
-  -- pyright = {},
+  gopls = {},
+  pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
 
