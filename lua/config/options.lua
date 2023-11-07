@@ -1,7 +1,7 @@
 local opt = vim.opt
 local g = vim.g
 local options = {
-  -- change cursor in insert mode 
+  -- change cursor in insert mode
   guicursor = "",
 
   -- Make line numbers default
@@ -75,11 +75,11 @@ local disabled_built_ins = {
   "gzip",
   "logipat",
   "matchit",
-  -- "netrw",
+  --  "netrw",
   "netrwFileHandlers",
   "loaded_remote_plugins",
   "loaded_tutor_mode_plugin",
-  -- "netrwPlugin",
+  "netrwPlugin",
   "netrwSettings",
   "rrhelper",
   "spellfile_plugin",
@@ -127,11 +127,11 @@ opt.formatoptions = opt.formatoptions
     + "j" -- Auto-remove comments if possible.
     - "2" -- I'm not in gradeschool anymore
 
--- opt.guicursor = {
---   "n-v:block",
---   "i-c-ci-ve:ver25",
---   "r-cr:hor20",
---   "o:hor50",
---   "i:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor",
---   "sm:block-blinkwait175-blinkoff150-blinkon175",
--- }
+opt.guicursor = {
+  "n-v:block",
+  "i-c-ci-ve:ver25",
+  "r-cr:hor20",
+  "o:hor50",
+  "i:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor",
+  "sm:block-blinkwait175-blinkoff150-blinkon175",
+}
