@@ -1,6 +1,6 @@
 local opt = vim.opt
 local g = vim.g
-local options = {
+local opts = {
   -- change cursor in insert mode
   guicursor = "",
 
@@ -54,7 +54,7 @@ local options = {
   pyxversion = 3
 }
 
-for k, v in pairs(options) do
+for k, v in pairs(opts) do
   vim.opt[k] = v
 end
 

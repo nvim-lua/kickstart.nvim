@@ -22,8 +22,18 @@ return {
       end,
     })
 
-    vim.keymap.set("n", "<leader>ml", function()
-      lint.try_lint()
-    end, { desc = "Trigger linting for current file" })
+    local mason_tool_installer = require("mason-tool-installer")
+
+    mason_tool_installer.setup({
+      ensure_installed = {
+        "prettier",
+        "stylua",
+        "isort",
+        "black",
+        "flake8",
+        "mypy",
+        "revive",
+      },
+    })
   end,
 }
