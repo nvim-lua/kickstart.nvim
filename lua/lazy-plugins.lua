@@ -1,4 +1,4 @@
--- [[ Setup lazy plugin manager ]]
+-- [[ Configure plugins ]]
 -- NOTE: Here is where you install your plugins.
 --  You can configure plugins using the `config` key.
 --
