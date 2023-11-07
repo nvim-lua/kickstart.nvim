@@ -85,7 +85,7 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
       on_attach = function(bufnr)
-        vim.keymap.set('n', '<leader>hp', require('gitsigns').preview_hunk, { buffer = bufnr, desc = 'Preview git hunk' })
+        vim.keymap.set('n', '<leader>cp', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[c]hange [p]review' })
 
         -- don't override the built-in and fugitive keymaps
         local gs = package.loaded.gitsigns
@@ -179,8 +179,9 @@ require('lazy').setup({
     },
   },
 
+  -- Add indentation guides even on blank lines
+  --[[ V2
   {
-    -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
@@ -188,6 +189,13 @@ require('lazy').setup({
       char = '┊',
       show_trailing_blankline_indent = false,
     },
+  },
+  --]]
+  -- V3
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    opts = {}
   },
 
   -- "gc" to comment visual regions/lines
@@ -237,8 +245,8 @@ require('lazy').setup({
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   { import = 'custom.plugins' },
 
-  -- jump between files
-  'ThePrimeagen/harpoon',
+  -- jump between files 
+  -- 'ThePrimeagen/harpoon' -- not working with new nvim version,
 }, {})
 
 -- [[ Setting options ]]
@@ -339,7 +347,7 @@ vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]resume' })
 -- vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sh', require("harpoon.ui").toggle_quick_menu, { desc = '[S]earch [H]arpoon' })
+-- vim.keymap.set('n', '<leader>sh', require("harpoon.ui").toggle_quick_menu, { desc = '[S]earch [H]arpoon' })
 
 
 -- [[ Configure Treesitter ]]
@@ -491,6 +499,7 @@ local servers = {
 }
 
 -- harpoon
+--[[
 vim.keymap.set('n', '<leader>m', require("harpoon.mark").add_file, { desc = '[M]ark' });
 vim.keymap.set('n', '<leader>q', function()
   require("harpoon.ui").nav_file(1)
@@ -504,6 +513,7 @@ end, { desc = '[q] Harpoon -> file number 3' })
 vim.keymap.set('n', '<leader>r', function()
   require("harpoon.ui").nav_file(4)
 end, { desc = '[q] Harpoon -> file number 4' })
+--]]
 
 -- Setup neovim lua configuration
 require('neodev').setup()
