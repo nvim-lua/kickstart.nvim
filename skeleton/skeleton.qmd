@@ -1,8 +1,12 @@
-
+---
+title: Loose Leaf
+date: last-modified
+# Quarto requires title, if want date to appear
+---
 
 ```{r}
 
 ```
 
 
-vim:linebreak:nospell:nowrap:cul tw=78 fo=tqlnr foldcolumn=1 cc=+1 filetype=r
+vim:linebreak:nospell:nowrap:cul tw=78 fo=tqlnrc foldcolumn=1 cc=+1 filetype=r
