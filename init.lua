@@ -332,8 +332,10 @@ vim.wo.wrap = false
 --  See `:help 'clipboard'`
 if vim.fn.has('macunix') then
   vim.o.clipboard = 'unnamed'
+  OPEN_CMD = 'open'
 else
   vim.o.clipboard = 'unnamedplus'
+  OPEN_CMD = 'xdg-open'
 end
 
 -- Enable break indent
@@ -816,5 +818,13 @@ vim.api.nvim_create_autocmd('VimLeave', {
   end
 })
 
+-- Fugitive config
+vim.api.nvim_create_user_command(
+  'Browse',
+  function(opts)
+    vim.fn.system { OPEN_CMD, opts.fargs[1] }
+  end,
+  { nargs = 1 }
+)
 
 -- vim: ts=2 sts=2 sw=2 et
