@@ -1,5 +1,4 @@
-print(' this is ./lua/init.lua') --
-
+-- config.lua
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
@@ -124,7 +123,6 @@ require('lazy').setup({
   },
 
   --        hardtime.nvim (nvim advice?) 2023-09-03
-  --
   {
     'm4xshen/hardtime.nvim',
     dependencies = { 'MunifTanjim/nui.nvim', 'nvim-lua/plenary.nvim' },
@@ -369,8 +367,11 @@ require('lspconfig').lua_ls.setup { -- {{{
   },
 } -- }}}
 
+-----------------
+--      TELESCOPE
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
+-----------------
 require('telescope').setup {
   defaults = {
     mappings = {
@@ -406,9 +407,10 @@ vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { de
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 
+---------------------------------
 -- [[ Configure Treesitter ]]
---
 -- See `:help nvim-treesitter`{{{
+---------------------------------
 --
 -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
 vim.defer_fn(function()
@@ -493,14 +495,10 @@ vim.cmd [[
   highlight StatusLineNC cterm=bold ctermfg=white ctermbg=darkgray
   ]]
 
--- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
+----------------------
 -- [[ Configure LSP ]]
---
+----------------------
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
@@ -605,38 +603,6 @@ mason_lspconfig.setup_handlers {
   end,
 }
 
---
---   LUASNIP
-local luasnip = require 'luasnip'
-local ls = require 'luasnip'
-local s = ls.snippet
-local sn = ls.snippet_node
-local isn = ls.indent_snippet_node
-local t = ls.text_node
-local f = ls.function_node
--- HELPER
-local filename = function()
-  return { vim.fn.expand '%:p' }
-end
-
--- SNIPS
-ls.add_snippets('all', { -- `all` all filetypes, `lua` only lua ft
-  s('luaxx', { t 'this is lua file!' }),
-  s('sep', t { '---------------' }),
-
-  -- snip: add file's filename
-  s({
-    trig = "filename",
-    namr = "Filename",
-    dscr = "insert file name",
-  }, {
-    f(filename, {}),
-  }),
-})
----------------
--- next line:  allows use of snippet collection in vscode (??)
-require('luasnip.loaders.from_vscode').lazy_load()
-luasnip.config.setup {}
 
 -- nvim-cmp configuration
 -- [[ Configure hrsh7th nvim-cmp ]]
