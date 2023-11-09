@@ -204,27 +204,20 @@ require('lazy').setup({
     },
   },
 
-  --{
-  --  -- Theme inspired by Atom
-  --  'navarasu/onedark.nvim',
-  --  priority = 1000,
-  --  config = function()
-  --    vim.cmd.colorscheme 'onedark'
-  --  end,
-  --},
   {
-    -- Source for molokayo
-    'rafi/awesome-vim-colorschemes',
+    -- Theme inspired by Atom
+    'navarasu/onedark.nvim',
+    priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'molokayo'
+      vim.cmd.colorscheme 'onedark'
     end,
   },
-
   -- {
-  --   'stevearc/oil.nvim',
-  --   opts = {},
-  --   -- Optional dependencies
-  --   dependencies = { "nvim-tree/nvim-web-devicons" },
+  --   -- Source for molokayo
+  --   'rafi/awesome-vim-colorschemes',
+  --   config = function()
+  --     vim.cmd.colorscheme 'molokayo'
+  --   end,
   -- },
 
   {
@@ -567,9 +560,9 @@ local on_attach = function(_, bufnr)
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
-  -- nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+  nmap('GD', vim.lsp.buf.definition, '[G]oto [D]efinition')
   vim.api.nvim_set_keymap('n', '<leader>gd', '<cmd>lua vim.lsp.buf.definition()<CR><cmd>vsplit<CR>',
-    { noremap = true, silent = true })
+    { noremap = true, silent = true, desc = '[g]oto [d]efinition' })
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
   nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
   nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
@@ -581,7 +574,7 @@ local on_attach = function(_, bufnr)
   nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
-  nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+  nmap('gD', vim.lsp.buf.declaration, '[g]oto [D]eclaration')
   nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
   nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
   nmap('<leader>wl', function()
@@ -736,22 +729,6 @@ cmp.setup {
   }
 }
 
--- FS plugin
--- require("oil").setup({
---   colums = {
---     "icon",
---     "permissions",
---     "size",
---   },
---   -- keymaps = {
---   --   ["<CR>"] = "actions.select_vsplit",
---   --   ["<C-s>"] = "actions.select",
---   -- },
---   view_options = {
---     show_hidden = true
---   }
--- })
-
 -- Copilot
 require('copilot').setup({
   panel = { enabled = false },
@@ -829,5 +806,15 @@ vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
 -- Correct scroll level
 vim.o.scrolloff = 8
+
+-- Exiting with a blinking cursor
+vim.api.nvim_create_autocmd('VimLeave', {
+  once = true,
+  callback = function()
+    vim.opt.guicursor =
+    "n-v-c-i-ci-ve:ver25,r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175"
+  end
+})
+
 
 -- vim: ts=2 sts=2 sw=2 et
