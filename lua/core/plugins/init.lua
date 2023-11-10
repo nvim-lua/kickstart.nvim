@@ -64,6 +64,24 @@ local plugins = {
     end,
   },
 
+  -- JSDoc
+  {
+    "danymat/neogen",
+    dependencies = "nvim-treesitter/nvim-treesitter",
+    config = true,
+    -- Uncomment next line if you want to follow only stable versions
+    version = "*",
+    opts = {
+      languages = {
+        typescript = {
+          template = {
+            annotation_convention = "jsdoc",
+          },
+        },
+      }
+    }
+  },
+
   --[[
   {
     -- Theme inspired by Atom
@@ -147,6 +165,8 @@ local plugins = {
   require 'core.plugins.nvim-ufo',
 
   require 'kickstart.plugins.autoformat',
+
+  require 'core.plugins.lsp-file-operations',
 }
 
 local pluginOptions = {}

@@ -8,6 +8,7 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
+
 -- Stop yanking on paste
 vim.keymap.set('x', 'p', 'P')
 
@@ -31,6 +32,11 @@ end
 
 vim.keymap.set("n", "<Esc>", nohClear, { silent = true })
 vim.keymap.set("n", "<C-L>", nohClear, { silent = true })
+
+local opts = { noremap = true, silent = true }
+
+vim.api.nvim_set_keymap("n", "<Leader>nf", ":lua require('neogen').generate({ type = 'func' })<CR>", opts)
+
 
 --[[
   NOTE To use Meta key as Option in mac inside iterm

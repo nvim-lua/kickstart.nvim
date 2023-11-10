@@ -11,6 +11,7 @@ return function()
     pattern = "NvimTreeSetup",
     callback = function(data)
       on_attach(data.buf)
+      require("lsp-file-operations").setup()
     end,
   })
 
