@@ -152,6 +152,7 @@ require('lazy').setup({
     },
   },
 
+  --[[
   {
     -- Theme inspired by Atom
     'navarasu/onedark.nvim',
@@ -174,6 +175,7 @@ require('lazy').setup({
       },
     },
   },
+  ]]
 
   {
     -- Add indentation guides even on blank lines
@@ -261,7 +263,7 @@ vim.o.ignorecase = true
 vim.o.smartcase = true
 
 -- Keep signcolumn on by default
-vim.wo.signcolumn = 'yes'
+vim.wo.signcolumn = 'auto'
 
 -- Decrease update time
 vim.o.updatetime = 250
@@ -271,7 +273,7 @@ vim.o.timeoutlen = 300
 vim.o.completeopt = 'menuone,noselect'
 
 -- NOTE: You should make sure your terminal supports this
-vim.o.termguicolors = true
+vim.o.termguicolors = false
 
 -- [[ Basic Keymaps ]]
 
