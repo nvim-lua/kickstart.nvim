@@ -110,7 +110,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -447,8 +447,8 @@ local on_attach = function(_, bufnr)
   end, { desc = 'Format current buffer with LSP' })
 
   -- Format via LSP on each write
-  vim.api.nvim_create_autocmd({'BufWritePre'}, {
-    callback = vim.lsp.buf.formatting_sync,
+  vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
+    callback = vim.lsp.buf.formatting_sync
   })
 end
 
