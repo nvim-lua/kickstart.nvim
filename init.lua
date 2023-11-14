@@ -178,7 +178,11 @@ require('lazy').setup({
         theme = 'catppuccin',
         component_separators = '|',
         section_separators = '',
-        ignore_focus = { 'neo-tree', 'neo-tree-popup' },
+        disabled_filetypes = {
+          statusline = { 'neo-tee', 'neo-tree-popup' },
+          winbar = { 'neo-tee', 'neo-tree-popup' },
+        },
+        ignore_focus = { 'neo-tee', 'neo-tree-popup' },
         globalstatus = true,
       },
       sections = {
