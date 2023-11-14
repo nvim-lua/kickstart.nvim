@@ -178,6 +178,8 @@ require('lazy').setup({
         theme = 'catppuccin',
         component_separators = '|',
         section_separators = '',
+        globalstatus = true,
+        ignore_focues = { 'neo-tree', 'neo-tree-popup' }
       },
       sections = {
         lualine_a = { 'mode' },
