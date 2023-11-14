@@ -238,7 +238,21 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim', opts = {
+    toggler = {
+        ---Line-comment toggle keymap
+        line = '<C-_>',
+        ---Block-comment toggle keymap
+        block = 'gbc',
+    },
+    ---LHS of operator-pending mappings in NORMAL and VISUAL mode
+    opleader = {
+        ---Line-comment keymap
+        line = '<C-_>',
+        ---Block-comment keymap
+        block = 'gb',
+    }
+  } },
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -327,6 +341,37 @@ vim.o.completeopt = 'menuone,noselect'
 vim.o.termguicolors = true
 
 -- [[ Basic Keymaps ]]
+
+-- [[vscode like keymaps]]
+local main_modes = {'n','i','v'}
+vim.keymap.set(main_modes,'<C-c>', '"+y', {noremap = true, silent = true})
+
+-- add vscode like telescope
+vim.keymap.set({'i', 'n', 'v'}, '<C-p>', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
+
+-- select all:
+vim.keymap.set({'i', 'n'}, '<C-a>', function() vim.cmd("normal! ggVG") end, {noremap = true, silent = true})
+vim.keymap.set('v', '<C-a>', '<escape>ggVG', {noremap = true, silent = true})
+
+vim.keymap.set(main_modes, '<C-\\>', ':vsplit<CR>', {noremap = true, silent = true})
+vim.keymap.set({'n','v'}, '<C-s>', ":w<CR>", { noremap = true })
+vim.keymap.set('i', '<C-s>', "<escape>:w<CR>a", { noremap = true })
+
+-- delete cuts to a register
+vim.api.nvim_set_keymap('n', 'd', '"ad', { noremap = true })
+vim.api.nvim_set_keymap('v', 'd', '"ad', { noremap = true })
+
+vim.api.nvim_set_keymap('n', 'D', '"aD', { noremap = true })
+vim.api.nvim_set_keymap('v', 'D', '"aD', { noremap = true })
+
+vim.api.nvim_set_keymap('n', '<C-x>', 'x', { noremap = true })
+vim.api.nvim_set_keymap('v', '<C-x>', 'x', { noremap = true })
+
+vim.api.nvim_set_keymap('n', 'x', '"_x', { noremap = true })
+vim.api.nvim_set_keymap('v', 'x', '"_x', { noremap = true })
+
+vim.api.nvim_set_keymap('n', 'X', '"_X', { noremap = true })
+vim.api.nvim_set_keymap('v', 'X', '"_X', { noremap = true })
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
