@@ -179,6 +179,11 @@ require('lazy').setup({
         component_separators = '|',
         section_separators = '',
       },
+      inactive_sections = {
+        lualine_x = { 'encoding', 'fileformat' },
+        lualine_y = { 'progress' },
+        lualine_z = { 'location' },
+      },
     },
   },
 
