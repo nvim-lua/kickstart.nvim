@@ -179,10 +179,10 @@ require('lazy').setup({
         component_separators = '|',
         section_separators = '',
         disabled_filetypes = {
-          statusline = { 'neo-tee', 'neo-tree-popup' },
-          winbar = { 'neo-tee', 'neo-tree-popup' },
+          statusline = { 'neo-tree', 'neo-tree-popup' },
+          winbar = { 'neo-tree', 'neo-tree-popup' },
         },
-        ignore_focus = { 'neo-tee', 'neo-tree-popup' },
+        ignore_focus = { 'neo-tree', 'neo-tree-popup' },
         globalstatus = true,
       },
       sections = {
