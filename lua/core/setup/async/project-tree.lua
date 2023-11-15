@@ -18,5 +18,11 @@ return function()
   require("nvim-tree").setup({
     -- TODO uncomment this in a version that it actually works
     -- on_attach = on_attach
+    view = {
+      width = 40,
+    },
+    filters = {
+      dotfiles = false,
+    },
   })
 end
