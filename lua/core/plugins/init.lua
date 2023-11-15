@@ -167,6 +167,8 @@ local plugins = {
   require 'kickstart.plugins.autoformat',
 
   require 'core.plugins.lsp-file-operations',
+
+  require 'core.plugins.copilot',
 }
 
 local pluginOptions = {}
