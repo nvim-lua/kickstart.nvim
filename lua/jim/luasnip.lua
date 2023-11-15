@@ -8,8 +8,18 @@ local isn = ls.indent_snippet_node
 local t = ls.text_node
 local f = ls.function_node
 -- HELPER
-local filename = function()
+-- 			:p		expand to full path
+-- 			:h		head (last path component removed)
+-- 			:t		tail (last path component only)
+-- 			:r		root (one extension removed)
+-- 			:e		extension only
+-- 			:lua print(vim.fn.expand '%:t') -- actual file only
+local full_filename = function()
   return { vim.fn.expand '%:p' }
+end
+
+local filename = function()
+  return { vim.fn.expand '%:t' }
 end
 
 -- SNIPS
@@ -24,6 +34,13 @@ ls.add_snippets('all', { -- `all` all filetypes, `lua` only lua ft
     dscr = "insert file name",
   }, {
     f(filename, {}),
+  }),
+  s({
+    trig = "long filename",
+    namr = "long Filename",
+    dscr = "insert canonical file name",
+  }, {
+    f(full_filename, {}),
   }),
 })
 ---------------

@@ -8,7 +8,7 @@ require 'jim.config'   -- lua/jim/config.lua
 require 'jim.keymaps'  -- lua/jim/keymaps.lua
 require 'jim.settings' -- lua/jim/settings.lua
 require 'jim.luasnip'  -- lua/jim/luasnip.lua
-
+--
 ---------------------
 -- other config files
 ---------------------

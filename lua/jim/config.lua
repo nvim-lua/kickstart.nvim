@@ -180,8 +180,12 @@ require('lazy').setup({
     event = "BufReadPre",
   },
 
-  -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim',   opts = {} },
+  -------------------
+  --  Comments.nvim
+  -------------------
+  -- 2023-11-12 Comment.nvim keymaps conflict with my Telescope keymaps
+  --  { 'numToStr/Comment.nvim',   opts = {} },
+
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -276,6 +280,12 @@ Add to bottom of *.qmd, *.R file:
 -- compare to lua version: https://github.com/neovim/nvim-lspconfig/blob/1028360e0f2f724d93e876df3d22f63c1acd6ff9/lua/lspconfig/server_configurations/r_language_server.lua#L8
 --]]
 --
+
+
+--  :h 'fo'
+--  where does line belong?
+--  +r comments will be autoadded
+vim.cmd([[ set formatoptions+=r]])
 
 -- always display top/bottom 8 lines
 vim.opt.scrolloff     = 8
@@ -603,11 +613,12 @@ mason_lspconfig.setup_handlers {
   end,
 }
 
-
 -- nvim-cmp configuration
 -- [[ Configure hrsh7th nvim-cmp ]]
 -- See `:help cmp`
 local cmp = require 'cmp'
+local luasnip = require 'luasnip'
+local ls = require 'luasnip'
 
 cmp.setup {
   snippet = {
@@ -625,16 +636,21 @@ cmp.setup {
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
     },
+
+    ---------------------------------------
+    -- TJ says don't use <TAB> this way
+    ---------------------------------------
+    --
     -- TAB selects NEXT item (CR to complete)
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_locally_jumpable() then
-        luasnip.expand_or_jump()
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
+    --     ['<Tab>'] = cmp.mapping(function(fallback)
+    --       if cmp.visible() then
+    --         cmp.select_next_item()
+    --       elseif luasnip.expand_or_locally_jumpable() then
+    --         luasnip.expand_or_jump()
+    --       else
+    --         fallback()
+    --       end
+    --     end, { 'i', 's' }),
     ['<S-Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()

@@ -1,10 +1,18 @@
 ----------------------
+-- EXPERIMENTS:
+----------------------
+-- date
+vim.keymap.set({ 'i', 'v' }, ':w<CR>', '<esc>:w<CR>',
+  { desc = "Write File, in insert modde", silent = false })
+
+----------------------
 -- [[ Basic Keymaps ]]
 ----------------------
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set({ 'n', 'v' }, 'q', '<Nop>', { desc = "<nop>", silent = true })
+
 
 
 --------------------------
@@ -98,17 +106,25 @@ local mappings = {
     -- checkhealth, gb, gc are conflicts
     f = { "<cmd>Telescope find_files<cr>", "Find File" }, -- create a binding with label
     g = { "<cmd>Telescope live_grep<cr>", "Full Text Search" },
-    b = { "<cmd>Telescope buffers<cr>", "Buffers" },
+    -- gb taken by comments plugin
+    bu = { "<cmd>Telescope buffers<cr>", "Telescope [Bu]ffers" },
     q = { "<cmd>q<cr>", 'Quit - no warn' },
   },
   n = {
     name = "my notes",
-    t = { "<cmd>e ~/code/docs/tech_notes/300_tech_notes.qmd<cr>", "[T]ech [Notes]" },
-    m = { "<cmd>e ~/code/docs/tech_notes/500_ML_Notes.qmd<cr>", "[M]L [Notes]" },
     a = { "<cmd>cd ~/code/docs/ALZ/<cr>", "cd [A]LZ [Notes]" },
-
+    m = { "<cmd>e ~/code/docs/tech_notes/500_ML_Notes.qmd<cr>", "[M]L [Notes]" },
+    h = { "<cmd>e ~/code/docs/health_notes/medical_notes.qmd<cr>",
+      "[H]ealth [Notes]" },
+    o = { "<cmd>cd ~/code/docs/misc_files/<cr>", "cd Misc Notes" },
+    t = { "<cmd>e ~/code/docs/tech_notes/300_tech_notes.qmd<cr>", "[T]ech [Notes]" },
     --vim.keymap.set('n', '<leader>tn', ':e ~/code/docs/tech_notes/300_tech_notes.qmd<CR>', { desc = 'Tech Notes' })
     --vim.keymap.set('n', '<leader>mln', ':e ~/code/docs/tech_notes/500_ML_Notes.qmd<CR>', { desc = 'ML Notes' })
+  },
+  r = {
+    name = "extra R cmds",
+    sx = { "<cmd>RStop<CR>", "interrupt R, RStop" },
+    x = { "<cmd>RStop<CR>", "interrupt R, RStop" },
   },
   t = {
     name = "telescope",
