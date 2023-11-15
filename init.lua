@@ -26,6 +26,8 @@ I hope you enjoy your Neovim journey,
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+vim.g.matchparen_timeout = 2
+vim.g.matchparen_insert_timeout = 2
 
 -- Important settings
 vim.opt.relativenumber = true
@@ -80,6 +82,9 @@ require('lazy').setup({
   'tpope/vim-unimpaired',
   -- Why is this not a default?
   'tpope/vim-surround',
+
+  -- Some Primeagen
+  'ThePrimeagen/harpoon',
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
@@ -210,20 +215,20 @@ require('lazy').setup({
       "jose-elias-alvarez/null-ls.nvim",
     },
   },
-  -- {
-  --   "ray-x/go.nvim",
-  --   dependencies = { -- optional packages
-  --     "ray-x/guihua.lua",
-  --     "neovim/nvim-lspconfig",
-  --     "nvim-treesitter/nvim-treesitter",
-  --   },
-  --   config = function()
-  --     require("go").setup()
-  --   end,
-  --   event = { "CmdlineEnter" },
-  --   ft = { "go", 'gomod' },
-  --   build = ':lua require("go.install").update_all_sync()' -- if you need to install/update all binaries
-  -- },
+  {
+    "ray-x/go.nvim",
+    dependencies = { -- optional packages
+      "ray-x/guihua.lua",
+      "neovim/nvim-lspconfig",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    config = function()
+      require("go").setup()
+    end,
+    event = { "CmdlineEnter" },
+    ft = { "go", 'gomod' },
+    build = ':lua require("go.install").update_all_sync()' -- if you need to install/update all binaries
+  },
 
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
@@ -585,6 +590,7 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
