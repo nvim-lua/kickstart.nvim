@@ -448,7 +448,8 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'http', 'json' },
+    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim',
+      'bash', 'http', 'json' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
@@ -561,6 +562,24 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
+
+  vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+    vim.lsp.diagnostic.on_publish_diagnostics, {
+      -- Enable underline, use default values
+      underline = false,
+
+      -- disable virtual text
+      virtual_text = true,
+
+      -- show signs
+      signs = true,
+
+      -- delay update diagnostics
+      update_in_insert = false,
+
+      float = true,
+    }
+  )
 end
 
 -- document existing key chains
@@ -597,15 +616,68 @@ require('mason-lspconfig').setup()
 local servers = {
   -- clangd = {},
   gopls = {
+    filetypes = { 'go', 'gomod', 'gowork', 'gotmpl' },
+    cmd = { 'gopls' },
     gopls = {
-      completeUnimported = true,
-      usePlaceholders = true,
       analyses = {
+        unreachable = true,
+        nilness = true,
         unusedparams = true,
-        showdown = true,
+        useany = true,
+        unusedwrite = true,
+        undeclaredname = true,
+        fillreturns = true,
+        nonewvars = true,
+        fieldalignment = true,
+        shadow = true,
         unusedvariable = true,
+        ST1003 = true,
+        ST1008 = true,
+      },
+      codelenses = {
+        generate = true,   -- show the `go generate` lens.
+        gc_details = true, -- Show a code lens toggling the display of gc's choices.
+        test = true,
+        tidy = true,
+        vendor = true,
+        regenerate_cgo = true,
+        upgrade_dependency = true,
+        run_govulncheck = true,
+      },
+      usePlaceholders = true,
+      completeUnimported = true,
+      staticcheck = true,
+      matcher = 'Fuzzy',
+      diagnosticsDelay = '500ms',
+      symbolMatcher = 'fuzzy',
+      buildFlags = { '-tags', 'integration' },
+      vulncheck = "Imports",
+      hints = {
+        constantValues = true,
+        rangeVariableTypes = true,
       },
     },
+  },
+  ltex = {
+    dictionary = {
+      enabled = { 'tex', 'latex', 'bib', 'markdown', 'go' },
+      language = 'en',
+      diagnosticSeverity = 'information',
+      setenceCacheSize = 2000,
+      additionalRules = {
+        enablePickyRules = true,
+        motherTonque = true,
+      },
+      trace = {
+        server = 'verbose',
+      },
+      dictionary = {},
+      disabledRules = {},
+      hiddenFalsePositives = {},
+    }
+  },
+  grammarly = {
+    filetypes = { 'markdown' },
   },
   -- pyright = {},
   -- rust_analyzer = {},
@@ -703,7 +775,7 @@ cmp.setup {
 -- vim: ts=2 sts=2 sw=2 et
 --
 -- custom settings
-require("custom.configs.settings")
-
--- custom mappings
-require("custom.configs.maps")
+-- require("custom.configs.settings")
+--
+-- -- custom mappings
+-- require("custom.configs.maps")

@@ -3,7 +3,7 @@ return {
   -- enabled = false,
   dependencies = { "nvim-lua/plenary.nvim" },
   commit = "8b62563",
-  ft = "http",
+  ft = { "http", "rest" },
   config = function()
     local rest_nvim = require "rest-nvim"
 
