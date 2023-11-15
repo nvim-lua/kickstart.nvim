@@ -44,6 +44,8 @@ P.S. You can delete this when you're done too. It's your config now :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+vim.o.scrolloff = 10 -- Sets the offset to 10 lines
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -360,6 +362,9 @@ vim.keymap.set(main_modes, '<C-\\>', ':vsplit<CR>', { noremap = true, silent = t
 vim.keymap.set({ 'n', 'v' }, '<C-s>', ":w<CR>", { noremap = true })
 vim.keymap.set('i', '<C-s>', "<escape>:w<CR>a", { noremap = true })
 
+-- vim.keymap.set('i', '<C-_>', "<escape>", { noremap = true })
+
+
 -- delete cuts to a register
 vim.api.nvim_set_keymap('n', 'd', '"ad', { noremap = true })
 vim.api.nvim_set_keymap('v', 'd', '"ad', { noremap = true })
@@ -367,7 +372,8 @@ vim.api.nvim_set_keymap('v', 'd', '"ad', { noremap = true })
 vim.api.nvim_set_keymap('n', 'D', '"aD', { noremap = true })
 vim.api.nvim_set_keymap('v', 'D', '"aD', { noremap = true })
 
-vim.api.nvim_set_keymap('n', '<C-x>', 'x', { noremap = true })
+vim.api.nvim_set_keymap('n', '<C-x>', 'Vx', { noremap = true })
+vim.api.nvim_set_keymap('i', '<C-x>', '<escape>Vxi', { noremap = true })
 vim.api.nvim_set_keymap('v', '<C-x>', 'x', { noremap = true })
 
 vim.api.nvim_set_keymap('n', 'x', '"_x', { noremap = true })
@@ -588,8 +594,9 @@ local on_attach = function(_, bufnr)
   nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
   -- See `:help K` for why this keymap
-  nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+  nmap('<leader>,', vim.lsp.buf.hover, 'Hover Documentation')
+  -- nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+  nmap('<leader>.', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
