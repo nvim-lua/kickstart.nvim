@@ -347,11 +347,6 @@ vim.o.termguicolors = true
 
 -- [[ Basic Keymaps ]]
 
-
--- some helper functions:
-local function toggleComment() require("Comment.api").toggle.linewise.current() end
-
-
 -- [[vscode like keymaps]]
 local main_modes = { 'n', 'i', 'v' }
 vim.keymap.set(main_modes, '<C-c>', '"+y', { noremap = true, silent = true })
@@ -367,7 +362,7 @@ vim.keymap.set(main_modes, '<C-\\>', ':vsplit<CR>', { noremap = true, silent = t
 vim.keymap.set({ 'n', 'v' }, '<C-s>', ":w<CR>", { noremap = true })
 vim.keymap.set('i', '<C-s>', "<escape>:w<CR>a", { noremap = true })
 
-vim.keymap.set('i', '<C-_>', toggleComment, { noremap = true, silent = true })
+vim.keymap.set('i', '<C-_>', require("Comment.api").toggle.linewise.current , { noremap = true, silent = true })
 
 -- delete cuts to a register
 vim.api.nvim_set_keymap('n', 'd', '"ad', { noremap = true })
