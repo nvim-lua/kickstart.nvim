@@ -376,8 +376,8 @@ vim.api.nvim_set_keymap('n', '<C-x>', 'Vx', { noremap = true })
 vim.api.nvim_set_keymap('i', '<C-x>', '<escape>Vxi', { noremap = true })
 vim.api.nvim_set_keymap('v', '<C-x>', 'x', { noremap = true })
 
-vim.api.nvim_set_keymap('n', 'x', '"_x', { noremap = true })
-vim.api.nvim_set_keymap('v', 'x', '"_x', { noremap = true })
+vim.api.nvim_set_keymap('n', 'x', 'd', { noremap = true })
+vim.api.nvim_set_keymap('v', 'x', 'd', { noremap = true })
 
 vim.api.nvim_set_keymap('n', 'X', '"_X', { noremap = true })
 vim.api.nvim_set_keymap('v', 'X', '"_X', { noremap = true })
