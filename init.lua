@@ -445,6 +445,13 @@ local servers = {
       telemetry = { enable = false },
     },
   },
+  jdtls = {
+    init_options = {
+      bundles = {
+        vim.fn.glob('~/Users/joesharp/.m2/repository/com/microsoft/java/com.microsoft.java.debug.plugin/0.50.0/com.microsoft.java.debug.plugin-0.50.0.jar')
+      }
+    }
+  }
 }
 
 -- Setup neovim lua configuration
@@ -523,3 +530,9 @@ cmp.setup {
 vim.wo.relativenumber = true
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+-- Setup OIL
+require("oil").setup()
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+
+-- Setup Java Debugging
