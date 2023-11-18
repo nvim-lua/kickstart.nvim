@@ -385,6 +385,9 @@ vim.api.nvim_set_keymap('v', 'X', '"_X', { noremap = true })
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
+-- add accept copilot suggestion using: ctrl+enter
+vim.g.copilot_no_tab_map = true
+vim.api.nvim_set_keymap("i", '<C-j>', 'copilot#Accept("<CR>")', { silent = true, expr = true })
 
 -- make ctrl+backspace work in vscode
 -- lhs code is associated with whatever terminal (kitty in my case) sends to neovim
