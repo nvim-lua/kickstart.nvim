@@ -126,7 +126,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',   opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -292,7 +292,7 @@ require('lazy').setup({
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  -- require 'kickstart.plugins.autoformat',
+  require 'kickstart.plugins.autoformat',
   -- require 'kickstart.plugins.debug',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -301,7 +301,7 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
@@ -362,7 +362,7 @@ vim.keymap.set(main_modes, '<C-\\>', ':vsplit<CR>', { noremap = true, silent = t
 vim.keymap.set({ 'n', 'v' }, '<C-s>', ":w<CR>", { noremap = true })
 vim.keymap.set('i', '<C-s>', "<escape>:w<CR>a", { noremap = true })
 
-vim.keymap.set('i', '<C-_>', require("Comment.api").toggle.linewise.current , { noremap = true, silent = true })
+vim.keymap.set('i', '<C-_>', require("Comment.api").toggle.linewise.current, { noremap = true, silent = true })
 
 -- delete cuts to a register
 vim.api.nvim_set_keymap('n', 'd', '"ad', { noremap = true })
@@ -385,6 +385,13 @@ vim.api.nvim_set_keymap('v', 'X', '"_X', { noremap = true })
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
+
+-- make ctrl+backspace work in vscode
+-- lhs code is associated with whatever terminal (kitty in my case) sends to neovim
+--you can edit this is terminal config
+--for example:
+--map ctrl+backspace send_text all \x17
+vim.api.nvim_set_keymap('i', '\x17', '<C-\\><C-O>db', { noremap = true, silent = true })
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
