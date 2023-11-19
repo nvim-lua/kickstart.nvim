@@ -169,7 +169,7 @@ vim.keymap.set('n', '<leader>fd', telscopeb.diagnostics, { desc = '[S]earch [D]i
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
   ensure_installed = {
-    'c', 'go', 'gomod',
+    'c', 'cpp', 'go', 'gomod',
     'gosum', 'gowork', 'lua',
     'vimdoc', 'vim', 'clojure',
     'commonlisp', 'ocaml', 'zig' },
