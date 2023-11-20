@@ -1,5 +1,5 @@
 ---
-title: Loose Leaf
+title: skeleton.qmd
 date: last-modified
 # Quarto requires title, if want date to appear
 ---

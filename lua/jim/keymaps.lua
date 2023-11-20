@@ -45,6 +45,16 @@ vim.keymap.set("n", "dd", function()
 end, { expr = true })
 
 
+
+local telescope_home = function()
+  require('telescope.builtin').find_files({ cwd = "/home/jim", hidden = true })
+end
+
+-- telescope - fails
+-- vim.keymap.set('n', '<leader > fz', function() builtin.find_files({ cwd = '/home/jim/' }) end, {})
+vim.keymap.set('n', '<leader>fz', telescope_home, { desc = 'Telescope file_files in home directory' })
+
+
 -- vim.keymap.set( {'n', '<leader>]nc',
 -- Remap for dealing with word wrap
 -- jr 2023-10-07 Not cause of sticky line
@@ -104,11 +114,18 @@ local mappings = {
   g = {
     name = "temp file",
     -- checkhealth, gb, gc are conflicts
-    f = { "<cmd>Telescope find_files<cr>", "Find File" }, -- create a binding with label
-    g = { "<cmd>Telescope live_grep<cr>", "Full Text Search" },
-    -- gb taken by comments plugin
-    bu = { "<cmd>Telescope buffers<cr>", "Telescope [Bu]ffers" },
     q = { "<cmd>q<cr>", 'Quit - no warn' },
+  },
+  f = {
+    name = "find things & Telescope",
+    f = { "<cmd>Telescope find_files<cr>", "Telescope | Find File" }, -- create a binding with label
+    g = { "<cmd>Telescope live_grep<cr>", "Telescope | Full Text Search" },
+    b = { "<cmd>Telescope buffers<cr>", "Telescope [B]uffers" },
+    -- tz is conflict
+    -- fails
+    --
+    -- z = { "<cmd>Telescope find_files<cr>", "Find File", desc = "Search Home", { cwd = '/home/jim' } }, -- create a binding with label
+    -- gb taken by comments plugin
   },
   n = {
     name = "my notes",
@@ -127,10 +144,7 @@ local mappings = {
     x = { "<cmd>RStop<CR>", "interrupt R, RStop" },
   },
   t = {
-    name = "telescope",
-    f = { "<cmd>Telescope find_files<cr>", "Find File" }, -- create a binding with label
-    -- tz is conflict
-    -- z = { "<cmd>Telescope find_files<cr>", "Find File", desc = "Search Home", pwd = '/home/jim' }, -- create a binding with label
+    name = "not in use",
   },
 
   q = { ":q<cr>", "Quit - no warn" },
@@ -143,8 +157,6 @@ local mappings = {
   rk = { ':RKill<CR>', 'RKill , but not guaranteed to close terminal' },
   -- use <leader>ck  E = { ':e ~/.config/kickstart/init.lua<cr>', 'Edit KICKSTART config' },
   ck = { ':e ~/.config/kickstart/init.lua<cr>', '[ck] Edit KICKSTART config' },
-  --  f = { ":Telescope find_files<cr>", "Telescope Find Files" },
-  --   r = { ":Telescope live_grep<cr>", "Telescope Live Grep" },
 }
 
 local opts = { prefix = '<leader>' }
