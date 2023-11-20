@@ -16,10 +16,10 @@ return {
           auto_trigger = true,
           accept = false, -- disable built-in keymapping
           keymap = {
-            accept = "<C-Enter>",
-            next = "<C-n>",
-            prev = "<C-p>",
-            -- dismiss = "<ESC>",
+            accept = "<C-l>",
+            next = "<C-k>",
+            prev = "<C-j>",
+            dismiss = "<C-h>",
           },
         },
       })
