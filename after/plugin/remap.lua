@@ -8,7 +8,7 @@ end
 -- Save
 map("n", "<leader>w", "<CMD>update<CR>")
 
-map("n", "<C-q>", "<CMD>q<CR>")
+map("n", "<leader>q", "<CMD>q<CR>")
 -- Quit
 
 -- Exit insert mode
