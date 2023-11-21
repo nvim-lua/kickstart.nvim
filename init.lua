@@ -251,11 +251,26 @@ require('lazy').setup({
         border = "curved",
         winblend = 0,
         highlights = {
-        border = "Normal",
-        background = "Normal",
+          border = "Normal",
+          background = "Normal",
         },
       },
     }
+  },
+  {
+    'windwp/nvim-autopairs',
+    opts = {},
+  },
+  {
+    'Wansmer/treesj',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    opts = {},
+  },
+  {
+    'nvim-treesitter/nvim-treesitter-context',
+  },
+  {
+    'mg979/vim-visual-multi',
   },
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
@@ -539,15 +554,15 @@ require('which-key').register {
   ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
   --Toggle Term
-    ['<leader>t'] = {
-        name = "[T]erminal",
-        p = { "<cmd>lua _PYTHON_TOGGLE()<cr>", "Python" }, -- Python Terminal
-        f = { "<cmd>ToggleTerm direction=float<cr>", "Float" }, -- Floating Terminal
+  ['<leader>t'] = {
+    name = "[T]erminal",
+    p = { "<cmd>lua _PYTHON_TOGGLE()<cr>", "Python" },      -- Python Terminal
+    f = { "<cmd>ToggleTerm direction=float<cr>", "Float" }, -- Floating Terminal
 
-        -- Play with size according to your needs.
-        h = { "<cmd>ToggleTerm size=10 direction=horizontal<cr>", "Horizontal" }, -- Horizontal Terminal,
-        v = { "<cmd>ToggleTerm size=80 direction=vertical<cr>", "Vertical" }, -- Vertical Terminal
-    },
+    -- Play with size according to your needs.
+    h = { "<cmd>ToggleTerm size=10 direction=horizontal<cr>", "Horizontal" }, -- Horizontal Terminal,
+    v = { "<cmd>ToggleTerm size=80 direction=vertical<cr>", "Vertical" },     -- Vertical Terminal
+  },
 }
 
 -- mason-lspconfig requires that these setup functions are called in this order
@@ -659,7 +674,7 @@ cmp.setup {
 
 -- configure toggleterm
 function _G.set_terminal_keymaps()
-  local opts = {noremap = true}
+  local opts = { noremap = true }
   vim.api.nvim_buf_set_keymap(0, 't', '<esc>', [[<C-\><C-n>]], opts)
   vim.api.nvim_buf_set_keymap(0, 't', 'jk', [[<C-\><C-n>]], opts)
   vim.api.nvim_buf_set_keymap(0, 't', '<C-h>', [[<C-\><C-n><C-W>h]], opts)
@@ -667,13 +682,15 @@ function _G.set_terminal_keymaps()
   vim.api.nvim_buf_set_keymap(0, 't', '<C-k>', [[<C-\><C-n><C-W>k]], opts)
   vim.api.nvim_buf_set_keymap(0, 't', '<C-l>', [[<C-\><C-n><C-W>l]], opts)
 end
+
 vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
 
 local Terminal = require("toggleterm.terminal").Terminal
 local python = Terminal:new({ cmd = "python3", hidden = true })
 
 function _PYTHON_TOGGLE()
- python:toggle()
+  python:toggle()
 end
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
