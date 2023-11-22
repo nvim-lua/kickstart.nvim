@@ -509,7 +509,22 @@ require('mason-lspconfig').setup()
 --  define the property 'filetypes' to the map in question.
 local servers = {
   gopls = { 'go' },
-  pyright = { 'py' },
+  pyright = {
+    filetypes = { 'py' },
+    settings = {
+      pyright = {
+        autoImportCompletion = true,
+      },
+      python = {
+        analysis = {
+          autoSearchPaths = true,
+          diagnosticMode = 'openFilesOnly',
+          useLibraryCodeForTypes = true,
+          typeCheckingMode = 'off'
+        }
+      }
+    }
+  },
   terraformls = { 'tf', 'tfvars', 'tfvars.tpl' },
   tflint = { 'tf', 'tfvars', 'tfvars.tpl' },
   -- rust_analyzer = {},
