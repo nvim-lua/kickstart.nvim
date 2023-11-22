@@ -4,6 +4,7 @@ return {
   branch = '0.1.x',
   dependencies = {
     'nvim-lua/plenary.nvim',
+    'debugloop/telescope-undo.nvim',
     -- Fuzzy Finder Algorithm which requires local dependencies to be built.
     -- Only load if `make` is available. Make sure you have the system
     -- requirements installed.
@@ -19,7 +20,7 @@ return {
     'nvim-tree/nvim-web-devicons',
   },
   config = function()
-    require('telescope').setup {
+    require('telescope').setup({
       defaults = {
         mappings = {
           i = {
@@ -28,7 +29,7 @@ return {
           },
         },
       },
-    }
+    })
     -- Enable telescope fzf native, if installed
     pcall(require('telescope').load_extension, 'fzf')
 
@@ -68,5 +69,7 @@ return {
     end
 
     vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
+
+    -- require("telescope").extensions.undo.undo()
   end,
 }

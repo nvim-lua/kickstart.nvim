@@ -60,17 +60,24 @@ return {
       -- Create a command `:Format` local to the LSP buffer
       vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
         vim.lsp.buf.format()
-      end, { desc = 'Format current buffer with LSP' })
+      end, { desc = 'Format current buffer with LSP and lint' })
 
       -- Enable auto-formatting on save
-      vim.api.nvim_command([[
-        augroup AutoFormatOnSave
-          autocmd!
-          autocmd BufWritePre * :Format
-        augroup END
-      ]])
+      -- vim.api.nvim_command([[
+      --   augroup AutoFormatOnSave
+      --     autocmd!
+      --     autocmd BufWritePre * :Format
+      --   augroup END
+      -- ]])
     end
 
+    -- Setup neovim lua configuration
+    require('neodev').setup()
+
+    -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+    -- Servers configuration
     local servers = {
       clangd = {},
       gopls = {
@@ -82,7 +89,7 @@ return {
             completeUnimported = true,
             usePlaceholders = true,
             analysis = {
-              unusedarams = true,
+              unusedParams = true,
             },
           },
         },
@@ -91,46 +98,39 @@ return {
         settings = {
           pylsp = {
             plugins = {
-              pycodestyle = {
-                ignore = { 'W391' },
-                maxLineLength = 79
+              black = {
+                blackArgs = {
+                  "--line-length", "79",
+                  "--exclude", "venv",
+                  "--exclude", "env",
+                  "--exclude", ".git",
+                  "--exclude", ".hg",
+                },
+                lineLength = 79,
               },
               flake8 = {},
-              black = {
-                lineLength = 79,
-                -- Configure Black to split lines without specifying a target version
-                blackArgs = {
-                  "--line-length",
-                  "79",
-                  "--exclude",
-                  "venv",
-                  "--exclude",
-                  "env",
-                  "--exclude",
-                  ".git",
-                  "--exclude",
-                  ".hg",
-                },
+              isort = {
+                profile = "black",
               },
               mypy = {
-                enabled = true,
-                command = 'mypy',
                 args = {},
+                command = "mypy",
                 diagnostics = true,
+                enabled = true,
               },
-              isort = {
-                profile = 'black',
+              pycodestyle = {
+                ignore = { "W391" },
+                maxLineLength = 79,
               },
             },
             python = {
-              -- Specify the path to your Python interpreter
-              pythonPath = "/usr/bin/python3",
               analysis = {
                 autoSearchPaths = true,
-                diagnosticMode = 'openFilesOnly',
+                diagnosticMode = "openFilesOnly",
+                typeCheckingMode = "strict",
                 useLibraryCodeForTypes = true,
-                typeCheckingMode = 'on',
               },
+              pythonPath = "/usr/local/bin/python3",
             },
           },
         },
@@ -138,7 +138,6 @@ return {
       -- rust_analyzer = {},
       -- tsserver = {},
       -- html = { filetypes = { 'html', 'twig', 'hbs'} },
-
       lua_ls = {
         Lua = {
           workspace = { checkThirdParty = false },
@@ -147,16 +146,8 @@ return {
       },
     }
 
-    -- Setup neovim lua configuration
-    require('neodev').setup()
-
-    -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
-
-    -- Setup Mason condifuration
-    local mason = require 'mason'
-
+    -- Setup Mason configuration
+    local mason = require('mason')
     mason.setup {
       ui = {
         icons = {
@@ -166,13 +157,14 @@ return {
         },
       },
     }
-    -- Ensure the servers above are installed
-    local mason_lspconfig = require 'mason-lspconfig'
 
+    -- Ensure the servers above are installed
+    local mason_lspconfig = require('mason-lspconfig')
     mason_lspconfig.setup {
-      ensure_installed = vim.tbl_keys(servers)
+      ensure_installed = vim.tbl_keys(servers),
     }
 
+    -- Add Mason handlers
     mason_lspconfig.setup_handlers {
       function(server_name)
         require('lspconfig')[server_name].setup {
@@ -183,5 +175,8 @@ return {
         }
       end
     }
+
+    -- Load nvim-cmp after Mason to allow Mason to configure it first
+    require('cmp')
   end
 }

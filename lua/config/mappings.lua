@@ -10,7 +10,9 @@ vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", {
   expr = true, silent = true
 })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", {
-  expr = true, silent = true
+  -- Unmap the 'gp' key for previous word
+  expr = true,
+  silent = true
 })
 
 -- Move lines
@@ -24,6 +26,8 @@ vim.keymap.set('n', '<C-u>', "<C-u>zz", { desc = "Half Page Jumping Down" })
 -- Keep search line in the middle
 vim.keymap.set('n', 'n', 'nzzzv', { silent = true })
 vim.keymap.set('n', 'N', 'Nzzzv', { silent = true })
+-- Unmap the 'p' key for previous word
+vim.api.nvim_set_keymap('n', 'gp', '<Nop>', { noremap = true, silent = true })
 
 -- Quick fix navigation
 vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
@@ -36,8 +40,8 @@ vim.keymap.set({ 'n', 'v' }, '<leader>y', "\"+y", { desc = "Copy to + register" 
 vim.keymap.set('n', '<leader>Y', "\"+Y")
 
 -- Replace current word
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
-  { desc = "[S]ubstitute Current Word" })
+vim.keymap.set("n", "<leader>r", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
+  { desc = "[R]eplace Current Word" })
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { desc = "Set Current File to Executable", silent = true })
 
 -- [ telescope keymaps]
@@ -69,3 +73,14 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous dia
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
+
+-- [[ Highlight on yank ]]
+-- See `:help vim.highlight.on_yank()`
+local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
+vim.api.nvim_create_autocmd('TextYankPost', {
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+  group = highlight_group,
+  pattern = '*',
+})
