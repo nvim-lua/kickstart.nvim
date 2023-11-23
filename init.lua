@@ -196,7 +196,11 @@ require('lazy').setup({
   {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
-    opts = {}
+    opts = {
+      indent = {
+        char = "┊"
+      },
+    }
   },
 
   -- "gc" to comment visual regions/lines
