@@ -192,6 +192,7 @@ require('lazy').setup({
   },
   --]]
   -- V3
+
   {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
@@ -221,6 +222,14 @@ require('lazy').setup({
       },
     },
   },
+
+  --[[
+  -- Github copilot with down sindrome, but free
+  {
+    'Exafunction/codeium.vim',
+    event = 'BufEnter'
+  },
+  --]]
 
   {
     -- Highlight, edit, and navigate code
