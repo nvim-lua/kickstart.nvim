@@ -36,7 +36,12 @@ return {
       end
 
       nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-      nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+      nmap('<leader>ca', function()
+        vim.lsp.buf.code_action(require('telescope.themes').get_dropdown {
+          winblend = 10,
+          previewer = false,
+        })
+      end, '[C]ode [A]ction')
 
       nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
       nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -58,17 +63,17 @@ return {
       end, '[W]orkspace [L]ist Folders')
 
       -- Create a command `:Format` local to the LSP buffer
-      vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-        vim.lsp.buf.format()
-      end, { desc = 'Format current buffer with LSP and lint' })
+      -- vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
+      --   vim.lsp.buf.format()
+      -- end, { desc = 'Format current buffer with LSP and lint' })
 
       -- Enable auto-formatting on save
-      -- vim.api.nvim_command([[
-      --   augroup AutoFormatOnSave
-      --     autocmd!
-      --     autocmd BufWritePre * :Format
-      --   augroup END
-      -- ]])
+      vim.api.nvim_command([[
+        augroup AutoFormatOnSave
+          autocmd!
+          autocmd BufWritePre * :Format
+        augroup END
+      ]])
     end
 
     -- Setup neovim lua configuration

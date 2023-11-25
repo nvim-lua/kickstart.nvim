@@ -54,6 +54,7 @@ vim.keymap.set('n', '<leader>/', function()
     winblend = 10,
     previewer = false,
   })
+  -- require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes'))
 end, { desc = '[/] Fuzzily search in current buffer' })
 
 vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
@@ -72,7 +73,27 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
+
+-- Open the diagnostics location list
+vim.keymap.set('n', '<leader>q', function()
+  vim.diagnostic.setloclist()
+  vim.cmd('lopen')
+end, {
+  noremap = true,
+  silent = true,
+  expr = false,
+  desc = 'Open the diagnostics location list'
+})
+
+-- Close the diagnostics location list
+vim.keymap.set('n', '<leader>qq', function()
+  vim.cmd('lclose')
+end, {
+  noremap = true,
+  silent = true,
+  expr = false,
+  desc = 'Close the diagnostics location list'
+})
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
