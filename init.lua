@@ -71,8 +71,13 @@ require('lazy').setup({
   'tpope/vim-rhubarb',
   -- specific plugins that i installed
   {'akinsho/toggleterm.nvim', version = "*", config = true},
-
-  -- Detect tabstop and shiftwidth automatically
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function() vim.fn["mkdp#util#install"]() end,
+},
+    -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
   -- NOTE: This is where your plugins related to LSP can be installed.
