@@ -160,6 +160,8 @@ require('lazy').setup({
     -- Theme inspired by Atom
     'navarasu/onedark.nvim',
     priority = 1000,
+    transparent = true,
+
     config = function()
       vim.cmd.colorscheme 'onedark'
     end,
@@ -171,8 +173,8 @@ require('lazy').setup({
     -- See `:help lualine.txt`
     opts = {
       options = {
-        icons_enabled = false,
-        theme = 'onedark',
+        icons_enabled = true,
+        theme = 'dracula',
         component_separators = '|',
         section_separators = '',
       },
