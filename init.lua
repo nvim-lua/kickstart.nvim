@@ -616,4 +616,5 @@ cmp.setup {
 
 require "custom.config.treesj-config"
 require "custom.config.toggleterm-config"
+require "custom.config.harpoon-config"
 require "autocmds"

@@ -5,4 +5,6 @@
 return {
 	'mg979/vim-visual-multi',
 	'nvim-treesitter/nvim-treesitter-context',
+	'nvim-lua/plenary.nvim',
+	'ThePrimeagen/harpoon',
 }
