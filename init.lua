@@ -377,7 +377,7 @@ vim.keymap.set('n', '<leader>ss', require('telescope.builtin').lsp_document_symb
 vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
-vim.keymap.set('n', '<leader>f', ':NvimTreeToggle\n', { desc = 'Open [F]iletree' })
+vim.keymap.set('n', '<leader>f', ':NvimTreeToggle\n', { desc = '[F]iletree Toggle' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -388,7 +388,7 @@ vim.defer_fn(function()
     ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-    auto_install = false,
+    auto_install = true,
 
     highlight = { enable = true },
     indent = { enable = true },
@@ -617,4 +617,3 @@ cmp.setup {
 require "custom.config.treesj-config"
 require "custom.config.toggleterm-config"
 require "custom.config.harpoon-config"
-require "autocmds"

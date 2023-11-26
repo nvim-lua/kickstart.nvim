@@ -22,3 +22,11 @@ require("treesj").setup(
 		}
 	}
 )
+
+require('which-key').register {
+	['<leader>c'] = {
+		t = { "<cmd>:lua require('treesj').toggle()<cr>", "[T]oggle" },
+		s = { "<cmd>:lua require('treesj').split()<cr>", "[S]plit" },
+		j = { "<cmd>:lua require('treesj').join()<cr>", "[J]oin" },
+	},
+}
