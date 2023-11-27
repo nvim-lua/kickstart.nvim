@@ -68,7 +68,17 @@ require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
   -- Auto Pair quotes/parens/brackets/etc.
-  'jiangmiao/auto-pairs',
+  {
+    'windwp/nvim-autopairs',
+    event = "InsertEnter",
+    opts = {} -- this is equalent to setup({}) function
+  },
+  -- {
+  --   'vuki656/package-info.nvim',
+  --   dependencies = {
+  --     'MunifTanjim/nui.nvim'
+  --   }
+  -- },
 
   -- VimBeGood, practing and learning vim control
   'ThePrimeagen/vim-be-good',
@@ -216,7 +226,7 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
@@ -386,6 +396,27 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous dia
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
+-- Show dependency versions
+vim.keymap.set({ "n" }, "<LEADER>ns", require("package-info").show, { silent = true, noremap = true })
+
+-- Hide dependency versions
+vim.keymap.set({ "n" }, "<LEADER>nc", require("package-info").hide, { silent = true, noremap = true })
+
+-- Toggle dependency versions
+vim.keymap.set({ "n" }, "<LEADER>nt", require("package-info").toggle, { silent = true, noremap = true })
+
+-- Update dependency on the line
+vim.keymap.set({ "n" }, "<LEADER>nu", require("package-info").update, { silent = true, noremap = true })
+
+-- Delete dependency on the line
+vim.keymap.set({ "n" }, "<LEADER>nd", require("package-info").delete, { silent = true, noremap = true })
+
+-- Install a new dependency
+vim.keymap.set({ "n" }, "<LEADER>ni", require("package-info").install, { silent = true, noremap = true })
+
+-- Install a different dependency version
+vim.keymap.set({ "n" }, "<LEADER>np", require("package-info").change_version, { silent = true, noremap = true })
+
 
 vim.diagnostic.config {
   update_in_insert = true
