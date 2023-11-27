@@ -1,4 +1,4 @@
-lua require('plugins')
+lua require('vscode-plugins')
 
 nnoremap <ESC> :noh<CR>
 nnoremap <C-U>  <PageUp>z.
