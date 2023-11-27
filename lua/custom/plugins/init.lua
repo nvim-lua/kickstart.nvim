@@ -7,4 +7,6 @@ return {
 	'nvim-treesitter/nvim-treesitter-context',
 	'nvim-lua/plenary.nvim',
 	'ThePrimeagen/harpoon',
+	'christoomey/vim-tmux-navigator',
+	'szw/vim-maximizer',
 }
