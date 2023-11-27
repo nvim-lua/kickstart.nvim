@@ -39,14 +39,18 @@ return {
         local client = vim.lsp.get_client_by_id(client_id)
         local bufnr = args.buf
 
-        -- Only attach to clients that support document formatting
-        if not client.server_capabilities.documentFormattingProvider then
-          return
-        end
-
         -- Tsserver usually works poorly. Sorry you work with bad languages
         -- You can remove this line if you know what you're doing :)
         if client.name == 'tsserver' then
+          client.server_capabilities.documentFormattingProvider = false
+        end
+
+        if client.name == 'eslint_ls' then
+          client.server_capabilities.documentFormattingProvider = true
+        end
+
+        -- Only attach to clients that support document formatting
+        if not client.server_capabilities.documentFormattingProvider then
           return
         end
 
