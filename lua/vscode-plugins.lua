@@ -21,7 +21,8 @@ require('lazy').setup({
   {
     'kylechui/nvim-surround',
     opts = { config = {} }
-  }
+  },
+  'Wansmer/treesj',
 })
 
 require('nvim-treesitter.configs').setup({
@@ -38,3 +39,31 @@ require('nvim-treesitter.configs').setup({
     }
   }
 })
+
+local lang_utils = require("treesj.langs.utils")
+local options = {
+  join = { space_in_brackets = false },
+  split = { last_separator = true },
+}
+
+require("treesj").setup(
+  {
+    use_default_keymaps = false,
+    langs = {
+      python = {
+        argument_list = lang_utils.set_preset_for_args(options),
+        assignment = { target_nodes = { "list", "set", "tuple", "dictionary" } },
+        call = { target_nodes = { "argument_list" } },
+        dictionary = lang_utils.set_preset_for_dict(options),
+        list = lang_utils.set_preset_for_list(options),
+        parameters = lang_utils.set_preset_for_args(options),
+        set = lang_utils.set_preset_for_list(options),
+        tuple = lang_utils.set_preset_for_list(options),
+      }
+    }
+  }
+)
+
+vim.keymap.set('n', '<leader>ct', '<cmd>:lua require("treesj").toggle()<cr>')
+vim.keymap.set('n', '<leader>cs', '<cmd>:lua require("treesj").split()<cr>')
+vim.keymap.set('n', '<leader>cj', '<cmd>:lua require("treesj").join()<cr>')
