@@ -1,4 +1,3 @@
-lua require('vscode-plugins')
 
 nnoremap <ESC> :noh<CR>
 nnoremap <C-U>  <PageUp>z.
@@ -42,3 +41,6 @@ noremap <leader>a <Plug>(EasyAlign)ip
             nmap <expr> j MoveCursor('j')
             nmap <expr> k MoveCursor('k')
         endif
+
+lua require('vscode-plugins')
+
