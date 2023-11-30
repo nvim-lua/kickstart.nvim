@@ -4,7 +4,6 @@ return {
 		opts = {
 			version = "*",
 			size = 20,
-			open_mapping = [[c-\]],
 			hide_numbers = true,
 			shading_factor = 2,
 			start_in_insert = true,
