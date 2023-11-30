@@ -1,10 +1,7 @@
-----------------------
--- EXPERIMENTS:
-----------------------
--- date
-vim.keymap.set({ 'i', 'v' }, ':w<CR>', '<esc>:w<CR>',
-  { desc = "Write File, in insert modde", silent = false })
-
+--  Notes
+--  keymaps vs which-key
+--  which-key should pick up any separaely defined keymaps
+--  to maintain groups, however, do this in which-key
 ----------------------
 -- [[ Basic Keymaps ]]
 ----------------------
@@ -12,24 +9,12 @@ vim.keymap.set({ 'i', 'v' }, ':w<CR>', '<esc>:w<CR>',
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set({ 'n', 'v' }, 'q', '<Nop>', { desc = "<nop>", silent = true })
-
+vim.keymap.set({ 'i', 'v' }, ':w<CR>', '<esc>:w<CR>',
+  { desc = "Write File, in insert modde", silent = false })
 
 
 --------------------------
 -- EXPERIMENTAL
---------------------------
-local map = vim.keymap.set
--- not working
-map(
-  "n",
-  "<Leader>cd",
-  "<Cmd>cd! %:h<CR>",
-  { desc = "cd to current buffer path" }
-)
-
--- works
-map("n", "<Leader>..", "<Cmd>cd! ..<CR>", { desc = "cd up a level" })
---------------------------
 --------------------------
 
 
@@ -50,10 +35,10 @@ local telescope_home = function()
   require('telescope.builtin').find_files({ cwd = "/home/jim", hidden = true })
 end
 
+
 -- telescope - fails
 -- vim.keymap.set('n', '<leader > fz', function() builtin.find_files({ cwd = '/home/jim/' }) end, {})
-vim.keymap.set('n', '<leader>fz', telescope_home, { desc = 'Telescope file_files in home directory' })
-
+vim.keymap.set('n', '<leader>sz', telescope_home, { desc = 'Telescope file_files in home directory' })
 
 -- vim.keymap.set( {'n', '<leader>]nc',
 -- Remap for dealing with word wrap
@@ -116,15 +101,12 @@ local mappings = {
     -- checkhealth, gb, gc are conflicts
     q = { "<cmd>q<cr>", 'Quit - no warn' },
   },
-  f = {
-    name = "find things & Telescope",
+  s = {
+    name = "find, search & Telescope",
     f = { "<cmd>Telescope find_files<cr>", "Telescope | Find File" }, -- create a binding with label
     g = { "<cmd>Telescope live_grep<cr>", "Telescope | Full Text Search" },
     b = { "<cmd>Telescope buffers<cr>", "Telescope [B]uffers" },
-    -- tz is conflict
-    -- fails
-    --
-    -- z = { "<cmd>Telescope find_files<cr>", "Find File", desc = "Search Home", { cwd = '/home/jim' } }, -- create a binding with label
+
     -- gb taken by comments plugin
   },
   n = {
@@ -138,16 +120,10 @@ local mappings = {
     --vim.keymap.set('n', '<leader>tn', ':e ~/code/docs/tech_notes/300_tech_notes.qmd<CR>', { desc = 'Tech Notes' })
     --vim.keymap.set('n', '<leader>mln', ':e ~/code/docs/tech_notes/500_ML_Notes.qmd<CR>', { desc = 'ML Notes' })
   },
-  r = {
-    name = "extra R cmds",
-    sx = { "<cmd>RStop<CR>", "interrupt R, RStop" },
-    x = { "<cmd>RStop<CR>", "interrupt R, RStop" },
-  },
   t = {
     name = "not in use",
   },
 
-  q = { ":q<cr>", "Quit - no warn" },
   Q = { ":wq<cr>", "Save & Quit" },
   w = { ":w<cr>", "Save" },
   x = { ":bdelete<cr>", "Close" },
@@ -155,8 +131,8 @@ local mappings = {
   z1 = { '<C-W>p', 'other window' },
   z2 = { '<C-W>pAjunk<esc>', 'other window junk' },
   rk = { ':RKill<CR>', 'RKill , but not guaranteed to close terminal' },
-  -- use <leader>ck  E = { ':e ~/.config/kickstart/init.lua<cr>', 'Edit KICKSTART config' },
   ck = { ':e ~/.config/kickstart/init.lua<cr>', '[ck] Edit KICKSTART config' },
+  cr = { ':e ~/.config/kickstart/lua/jim/Nvim-R.lua<cr>', '[cr] Edit Nvim-R config' },
 }
 
 local opts = { prefix = '<leader>' }

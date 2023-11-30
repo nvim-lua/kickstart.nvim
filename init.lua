@@ -5,10 +5,15 @@
 --
 --  main config file
 require 'jim.config'   -- lua/jim/config.lua
+require 'jim.options'  -- lua/jim/options.lua, basic neovim opts
 require 'jim.cmp'      -- lua/jim/cmp.lua
 require 'jim.keymaps'  -- lua/jim/keymaps.lua
 require 'jim.settings' -- lua/jim/settings.lua
 require 'jim.luasnip'  -- lua/jim/luasnip.lua
+require 'jim.Nvim-R'   -- lua/jim/Nvim-R.lua
+--
+-- installed plugins here:
+-- ~/.local/share/kickstart/lazy/
 --
 ---------------------
 -- other config files

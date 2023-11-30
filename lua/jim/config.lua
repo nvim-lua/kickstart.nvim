@@ -1,21 +1,21 @@
 -- config.lua
--- Set <space> as the leader key
--- See `:help mapleader`
---  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
+-- Set <space> = leader key  ( set first;  See `:help mapleader` )
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- vim.g.minisurround_disable=true
 
--- for now turn on LIGHT
-vim.cmd 'set background=light'
-
--- Install package manager
---    https://github.com/folke/lazy.nvim
---    `:help lazy.nvim.txt` for more info
+--------------------------
+-- Install package manager, lazy.nvim
+--------------------------
+--    https://github.com/folke/lazy.nvim,  `:help lazy.nvim.txt` for more info
+--
+-- stdpath is vimscript; vim.fn says call vimscript from inside lua
+-- :echo stdpath("data") to see
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 
 -- vim.fn is bridge to vimscript.   and `system`  is vimscript command
+--
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system {
     'git',
@@ -26,6 +26,7 @@ if not vim.loop.fs_stat(lazypath) then
     lazypath,
   }
 end
+
 --  vim.opt is like using :set;    :append or :prepend is like vimscript set+=
 vim.opt.rtp:prepend(lazypath)
 
@@ -34,6 +35,7 @@ vim.opt.rtp:prepend(lazypath)
 --
 --  You can also configure plugins after the setup call,
 --    as they will be available in your neovim runtime.
+--
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
@@ -46,26 +48,30 @@ require('lazy').setup({
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
+  -- add gruvbox, must setup 1st;  in options.lua set colorscheme.
+  { 'ellisonleao/gruvbox.nvim' },
+
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   --  mason -- installs the lsp server
   --  nvim-lspconfig -- connect LSP  to our setup ?
   {
     -- LSP Configuration & Plugins
+    -- Need BOTH  nvim-lspconfig and mason?  (SEE Nat Bennett  blog post)
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs to stdpath for neovim
-      { 'williamboman/mason.nvim', config = true },
+      {
+        'williamboman/mason.nvim', config = true },
       'williamboman/mason-lspconfig.nvim',
-
       -- Useful status updates for LSP
       -- NOTE !!
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
+      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
-    },
+    }, -- end dependencies
   },
 
   {
@@ -105,20 +111,6 @@ require('lazy').setup({
         -- vim.keymap.set('n', '<leader>gn', require('gitsigns').next_hunk, { buffer = bufnr, desc = '[G]o to [N]ext Hunk' })
         vim.keymap.set('n', '<leader>ph', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[P]review [H]unk' })
       end,
-    },
-  },
-
-
-  -- add gruvbox
-  { 'ellisonleao/gruvbox.nvim' },
-
-  -- Configure LazyVim to load gruvbox
-  --
-  --
-  {
-    'LazyVim/LazyVim',
-    opts = {
-      colorscheme = 'gruvbox',
     },
   },
 
@@ -250,98 +242,6 @@ else
   vim.cmd [[ set background=dark]] -- acer-desktop
 end
 
--- [[ Nvim-R ]]
-vim.cmd([[ let R_args= ['--no-save', '--quiet'] ]]) -- minimize startup
-vim.cmd([[ let R_assign=2 ]])                       -- underline becomes left arrow
-vim.cmd([[ let R_enable_comment=1 ]])               -- toggle comments with xx
-vim.cmd([[let g:LanguageClient_serverCommands = {
-    \ 'r': ['R', '--slave', '-e', 'languageserver::run()'],
-    \ }
-]])
-
--- 2023-11-03 (experimental filetype)
-vim.cmd([[
-  autocmd BufRead, BufNewFile *.r *.qmd *.rmd setlocal filetype = r
-  ]])
-
---[[
-2023-10-07 another try with R & LSP
-1) Mason to install r language server (takes a while)
-2) Add code below, let g:LanguageClient ... this is <https://github.com/autozimu/LanguageClient-neovim>
-3) no errors, Lsp works for *.R !
-
-BUT, can not get r language server to fire up with *.qmd
-Add to bottom of *.qmd, *.R file:
-#		/* vim: set filetype=r : */
-
-# vim:linebreak:nospell:nowrap:cul tw=78 fo=tqlnrc foldcolumn=1 cc=+1 filetype=r
-
-  --nope   \ 'qmd': ['R', '--slave', '-e', 'languageserver::run()'],
--- compare to lua version: https://github.com/neovim/nvim-lspconfig/blob/1028360e0f2f724d93e876df3d22f63c1acd6ff9/lua/lspconfig/server_configurations/r_language_server.lua#L8
---]]
---
-
-
---  :h 'fo'
---  where does line belong?
---  +r comments will be autoadded
-vim.cmd([[ set formatoptions+=r]])
-
--- always display top/bottom 8 lines
-vim.opt.scrolloff     = 8
-vim.opt.colorcolumn   = "80"
-
--- Set highlight on search
-vim.o.hlsearch        = false
-
--- Make line numbers default
-vim.wo.number         = true
-vim.wo.relativenumber = true
-vim.wo.foldmethod     = "manual" -- cleaner vs "marker"
-vim.wo.foldcolumn     = '1'      -- can be '0-9' (string)
-
--- Enable mouse mode
-vim.o.mouse           = 'a'
-
--- Sync clipboard between OS and Neovim.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
-vim.o.clipboard       = 'unnamedplus'
-
--- Enable break indent
-vim.o.breakindent     = true
-
--- Hitting <TAB>  (experimnetal)
-vim.o.ts              = 2 -- 1 <TAB> is 2 characters
-vim.o.sw              = 0 -- don't know
--- tw = maximum width of text (or 0 to disable)
-
--- <TAB>  becomes all spaces, no <TAB> ch
-vim.o.expandtab       = true
-
--- don't break within a word
-vim.o.linebreak       = false
-
--- Save undo history
-vim.o.undofile        = true
-
--- Case-insensitive searching UNLESS \C or capital in search
-vim.o.ignorecase      = true
-vim.o.smartcase       = true
-
--- Keep signcolumn on by default
-vim.wo.signcolumn     = 'yes'
-
--- Decrease update time
-vim.o.updatetime      = 250
-vim.o.timeoutlen      = 300 -- time mapping waits for next char
-vim.o.ttimeoutlen     = 10  -- time <ESC> delays before registers
-
--- Set completeopt to have a better completion experience
-vim.o.completeopt     = 'menuone,noselect'
-
--- NOTE: You should make sure your terminal supports this (yes: 2023-09-03)
-vim.o.termguicolors   = true
 
 
 --              [[ Highlight on yank ]]
