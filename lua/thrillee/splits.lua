@@ -5,10 +5,10 @@ vim.opt.splitright = true
 vim.keymap.set('n', '||', '<cmd>vsplit<cr>', { desc = 'Vertical Split' })
 vim.keymap.set('n', '--', '<cmd>split<cr>', { desc = 'Horinzontal Split' })
 
-vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Navigate to the left' })
-vim.keymap.set('n', '<C-j>', '<C-w>', { desc = 'Navigate below' })
-vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Navigate up' })
-vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Navigate right' })
+-- vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Navigate to the left' })
+-- vim.keymap.set('n', '<C-j>', '<C-w>', { desc = 'Navigate below' })
+-- vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Navigate up' })
+-- vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Navigate right' })
 
 vim.keymap.set('n', '<leader>sh', '<C-w>h', { desc = 'Navigate to the left' })
 vim.keymap.set('n', '<leader>sw', '<C-w>', { desc = 'Navigate below' })

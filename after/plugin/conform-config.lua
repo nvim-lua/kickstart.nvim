@@ -7,6 +7,9 @@ require('conform').setup {
     javascript = { { 'prettierd', 'prettier' } },
     javascriptreact = { { 'prettier' } },
     typescriptreact = { { 'prettier' } },
+    typescript = { { 'prettier' } },
+    go = { { 'gofumpt', 'goimports-reviser', 'golines' } },
+    java = { 'google-java-format' },
   },
 }
 
