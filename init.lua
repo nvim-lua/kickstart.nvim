@@ -110,13 +110,15 @@ require('lazy').setup({
         end, { expr = true, buffer = bufnr, desc = 'Jump to previous hunk' })
       end,
     },
-    config = function()
-    end
   },
   {
-    "embark-theme/vim",
+    "ray-x/aurora",
     config = function()
-      vim.cmd.colorscheme 'embark'
+      vim.g.aurora_italic = 1 
+      vim.g.aurora_transparent = 1
+      vim.g.aurora_bold = 1
+      vim.g.aurora_darker = 0
+      vim.cmd.colorscheme 'aurora'
     end
   },
   {
@@ -126,7 +128,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'embark',
+        theme = 'aurora',
         component_separators = '|',
         section_separators = '',
       },
