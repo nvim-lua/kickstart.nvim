@@ -241,6 +241,12 @@ vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
+vim.opt.relativenumber = true
+
+vim.opt.cursorline = true
+vim.opt.cursorlineopt = 'number'
+
+vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = 'white' })
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
