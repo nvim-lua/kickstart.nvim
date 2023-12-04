@@ -2,6 +2,9 @@
 --  keymaps vs which-key
 --  which-key should pick up any separaely defined keymaps
 --  to maintain groups, however, do this in which-key
+--
+--  TODO:
+--  R and Which-key:  can not add MY keymaps; don't work in R AND appear in non-R
 ----------------------
 -- [[ Basic Keymaps ]]
 ----------------------
@@ -16,6 +19,8 @@ vim.keymap.set({ 'i', 'v' }, ':w<CR>', '<esc>:w<CR>',
 --------------------------
 -- EXPERIMENTAL
 --------------------------
+-- change to directory of current file automatically
+--vim.cmd([[autocmd BufEnter * lcd %:p:h]])
 
 
 
@@ -131,6 +136,10 @@ local mappings = {
   z1 = { '<C-W>p', 'other window' },
   z2 = { '<C-W>pAjunk<esc>', 'other window junk' },
   rk = { ':RKill<CR>', 'RKill , but not guaranteed to close terminal' },
+
+  -- can not find function
+  -- rcd = { ':call SendRmdChunktoR("echo", "down")<CR>', 'Chunk Down' },
+
   ck = { ':e ~/.config/kickstart/init.lua<cr>', '[ck] Edit KICKSTART config' },
   cr = { ':e ~/.config/kickstart/lua/jim/Nvim-R.lua<cr>', '[cr] Edit Nvim-R config' },
 }
