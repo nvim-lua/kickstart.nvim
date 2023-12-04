@@ -143,7 +143,7 @@ require('lazy').setup({
             gs.next_hunk()
           end)
           return '<Ignore>'
-        end, { expr = true })
+        end, { expr = true, desc = 'Jump to next hunk' })
 
         map({ 'n', 'v' }, '[c', function()
           if vim.wo.diff then
@@ -153,35 +153,37 @@ require('lazy').setup({
             gs.prev_hunk()
           end)
           return '<Ignore>'
-        end, { expr = true })
+        end, { expr = true, desc = 'Jump to previous hunk' })
 
         -- Actions
+        -- visual mode
         map('v', '<leader>hs', function()
           gs.stage_hunk { vim.fn.line '.', vim.fn.line 'v' }
-        end)
+        end, { desc = 'stage git hunk' })
         map('v', '<leader>hr', function()
           gs.reset_hunk { vim.fn.line '.', vim.fn.line 'v' }
-        end)
-
-        map('n', '<leader>hs', gs.stage_hunk)
-        map('n', '<leader>hr', gs.reset_hunk)
-        map('n', '<leader>hS', gs.stage_buffer)
-        map('n', '<leader>hu', gs.undo_stage_hunk)
-        map('n', '<leader>hR', gs.reset_buffer)
-        map('n', '<leader>hp', gs.preview_hunk)
+        end, { desc = 'reset git hunk' })
+        -- normal mode
+        map('n', '<leader>hs', gs.stage_hunk, { desc = 'git stage hunk' })
+        map('n', '<leader>hr', gs.reset_hunk, { desc = 'git reset hunk' })
+        map('n', '<leader>hS', gs.stage_buffer, { desc = 'git Stage buffer' })
+        map('n', '<leader>hu', gs.undo_stage_hunk, { desc = 'undo stage hunk' })
+        map('n', '<leader>hR', gs.reset_buffer, { desc = 'git Reset buffer' })
+        map('n', '<leader>hp', gs.preview_hunk, { desc = 'preview git hunk' })
         map('n', '<leader>hb', function()
-          gs.blame_line { full = true }
-        end)
-        map('n', '<leader>hd', gs.diffthis)
+          gs.blame_line { full = false }
+        end, { desc = 'git blame line' })
+        map('n', '<leader>hd', gs.diffthis, { desc = 'git diff against index' })
         map('n', '<leader>hD', function()
           gs.diffthis '~'
-        end)
+        end, { desc = 'git diff against last commit' })
 
-        map('n', '<leader>tb', gs.toggle_current_line_blame)
-        map('n', '<leader>td', gs.toggle_deleted)
+        -- Toggles
+        map('n', '<leader>tb', gs.toggle_current_line_blame, { desc = 'toggle git blame line' })
+        map('n', '<leader>td', gs.toggle_deleted, { desc = 'toggle git show deleted' })
 
         -- Text object
-        map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+        map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', { desc = 'select git hunk' })
       end,
     },
   },
@@ -525,11 +527,18 @@ require('which-key').register {
   ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
   ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
   ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
-  ['<leader>h'] = { name = 'More git', _ = 'which_key_ignore' },
+  ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
   ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
   ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
+  ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
 }
+-- register which-key VISUAL mode
+-- required for visual <leader>hs (hunk stage) to work
+require('which-key').register({
+  ['<leader>'] = { name = 'VISUAL <leader>' },
+  ['<leader>h'] = { 'Git [H]unk' },
+}, { mode = 'v' })
 
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
