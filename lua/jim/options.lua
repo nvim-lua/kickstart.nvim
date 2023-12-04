@@ -36,7 +36,7 @@ vim.o.mouse           = 'a'
 vim.o.clipboard       = 'unnamedplus'
 
 -- Enable break indent (windows)
-vim.w.breakindent     = true
+vim.wo.breakindent    = true
 
 -- Hitting <TAB>  (experimnetal)
 --

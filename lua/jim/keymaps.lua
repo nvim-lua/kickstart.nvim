@@ -137,10 +137,8 @@ local mappings = {
   z2 = { '<C-W>pAjunk<esc>', 'other window junk' },
   rk = { ':RKill<CR>', 'RKill , but not guaranteed to close terminal' },
 
-  -- can not find function
-  -- rcd = { ':call SendRmdChunktoR("echo", "down")<CR>', 'Chunk Down' },
-
   ck = { ':e ~/.config/kickstart/init.lua<cr>', '[ck] Edit KICKSTART config' },
+  cs = { ':e ~/.config/kickstart/lua/jim/keymaps.lua<cr>', '[ck] Edit KICKSTART keymaps' },
   cr = { ':e ~/.config/kickstart/lua/jim/Nvim-R.lua<cr>', '[cr] Edit Nvim-R config' },
 }
 
