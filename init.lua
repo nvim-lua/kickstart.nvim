@@ -278,6 +278,9 @@ vim.o.hlsearch = false
 -- Make line numbers default
 vim.wo.number = true
 
+-- Display relative line numbers
+vim.o.relativenumber = true
+
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
