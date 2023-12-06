@@ -525,6 +525,11 @@ local servers = {
     rust_analyzer = {},
     pylsp = {},
     ruff_lsp = {},
+    html = {},
+    jsonls = {},
+    marksman = {},
+    powershell_es = {},
+    terraformls = {},
     -- tsserver = {},
     -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
@@ -540,6 +545,7 @@ local servers = {
 
 -- Setup neovim lua configuration
 require('neodev').setup()
+require 'lspconfig'.grammarly.setup {}
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
