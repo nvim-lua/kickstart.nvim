@@ -1,8 +1,6 @@
-
-
 --  This function gets run when an LSP connects to a particular buffer.
 return {
-    on_attach = function(_, bufnr)
+    on_attach = function(client, bufnr)
         -- NOTE: Remember that lua is a real programming language, and as such it is possible
         -- to define small helper and utility functions so you don't have to repeat yourself
         -- many times.
@@ -43,5 +41,14 @@ return {
         vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
             vim.lsp.buf.format()
         end, { desc = 'Format current buffer with LSP' })
+
+        require("lsp_signature").on_attach({
+            bind = true,
+            padding = "",
+            handler_opts = {
+                border = "rounded",
+            },
+            hint_prefix = "󱄑 ",
+        }, bufnr)
     end
 }

@@ -88,6 +88,14 @@ require('lazy').setup({
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
 
+      -- make signature of lsp better
+      {
+        "ray-x/lsp_signature.nvim",
+        event = "VeryLazy",
+        opts = {},
+        config = function(_, opts) require 'lsp_signature'.setup(opts) end
+      },
+
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
     },
@@ -243,32 +251,37 @@ vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
+vim.wo.relativenumber = true
 
 -- Enable mouse mode
-vim.o.mouse = false
+vim.o.mouse = 'a'
 
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 -- vim.o.clipboard = 'unnamedplus'
 --- Copy-paste
-vim.keymap.set('v', '<leader>p', '"_dP')
+vim.keymap.set('n', '<leader>p', '"_dP')
+vim.keymap.set('n', '<leader>p', '"+p')
 vim.keymap.set('n', '<leader>y', '"+y')
 vim.keymap.set('v', '<leader>y', '"+y')
 vim.keymap.set('n', '<leader>Y', 'gg"+yG')
 vim.keymap.set('n', '<leader>d', '"_d')
 vim.keymap.set('v', '<leader>d', '"_d')
 
+
 -- Needed to sync windows clipboard with wsl
 vim.g.clipboard = {
   name = 'WslClipboard',
   copy = {
-    ['+'] = 'clip.exe',
-    ['*'] = 'clip.exe',
+    ['+'] = '/mnt/c/Windows/System32/clip.exe',
+    ['*'] = '/mnt/c/Windows/System32/clip.exe',
   },
   paste = {
-    ['+'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-    ['*'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+    ['+'] =
+    '/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+    ['*'] =
+    '/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
   },
   cache_enabled = 0,
 }
@@ -281,6 +294,24 @@ vim.o.undofile = true
 -- Case-insensitive searching UNLESS \C or capital in search
 vim.o.ignorecase = true
 vim.o.smartcase = true
+
+-- Disable wordwrap be default
+vim.opt.wrap = false
+
+-- Enable wordwrap when writing markdown
+vim.cmd([[
+augroup markdown
+  autocmd!
+  autocmd FileType markdown set wrap
+  autocmd FileType markdown set textwidth=144
+augroup end
+]])
+
+-- Set column
+vim.opt.colorcolumn = "144"
+
+-- Always have lines in the bottom of the file
+vim.opt.scrolloff = 8
 
 -- Keep signcolumn on by default
 vim.wo.signcolumn = 'yes'
@@ -330,11 +361,23 @@ require('telescope').setup {
   defaults = {
     path_display = { shorten = { len = 3, exclude = { 1, 2, 3, -3, -2, -1 } } },
 
+    preview = {
+      hide_on_startup = false -- hide previewer when picker starts
+    },
+
     mappings = {
       i = {
         ['<C-u>'] = false,
-        ['<C-d>'] = false,
+        ['<C-v>'] = false,
+        ['<C-p>'] = require('telescope.actions.layout').toggle_preview,
+        ['<C-d>'] = require('telescope.actions').delete_buffer,
+        ['<C-s>'] = require('telescope.actions').file_vsplit,
       },
+      n = {
+        ['<C-v>'] = false, --
+        ['<C-d>'] = require('telescope.actions').delete_buffer,
+        ['<C-s>'] = require('telescope.actions').file_vsplit,
+      }
     },
   },
 }
@@ -469,6 +512,38 @@ local servers = {
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  yamlls = {
+    yaml = {
+      schemaStore = {
+        -- You must disable built-in schemaStore support if you want to use
+        -- this plugin and its advanced options like `ignore`.
+        enable = false,
+      },
+      schemas = {
+        ["https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json"] =
+        "**/*swagger.{yml,yaml}",
+        ["https://json.schemastore.org/liquibase-3.2.json"] = "**/*Changelog*.{yml,yaml}",
+      },
+      format = {
+        enable = true,
+        singleQuote = false,
+        bracketSpacing = true
+      },
+      validate = true,
+      completion = true,
+      http = {
+        proxy = "http://webproxy.nykreditnet.net:8080",
+      },
+    },
+  },
+  cucumber_language_server = {
+    cucumber = {
+      -- features = { "**/lctest/**/*.feature" },
+      -- glue = {
+      --   "**/lctest/**/stepdef/**/*.java",
+      -- }
+    }
+  },
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -523,6 +598,10 @@ cmp.setup {
       luasnip.lsp_expand(args.body)
     end,
   },
+  window = {
+    completion = cmp.config.window.bordered(),
+    documentation = cmp.config.window.bordered()
+  },
   mapping = cmp.mapping.preset.insert {
     ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-p>'] = cmp.mapping.select_prev_item(),
@@ -530,7 +609,7 @@ cmp.setup {
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete {},
     ['<CR>'] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
+      behavior = cmp.ConfirmBehavior.Insert,
       select = true,
     },
     ['<Tab>'] = cmp.mapping(function(fallback)
