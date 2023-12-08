@@ -617,6 +617,7 @@ cmp.setup {
     sources = {
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
+        { name = 'sourcery' },
     },
 }
 
@@ -627,3 +628,6 @@ require "custom.config.treesj-config"
 require "custom.config.toggleterm-config"
 require "custom.config.harpoon-config"
 require "custom.config.vim-maximizer-config"
+require "custom.config.sourcery-config"
+-- Run :Copilot setup
+require "custom.config.copilot-config"
