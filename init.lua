@@ -115,7 +115,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',          opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -224,7 +224,7 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim',         opts = {} },
+  { 'numToStr/Comment.nvim', opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -428,13 +428,13 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 -- See `:help nvim-treesitter`
 -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
 vim.defer_fn(function()
-require('nvim-treesitter.configs').setup {
-  -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'kdl', 'swift',
-    'sql', 'yaml', 'json' },
+  require('nvim-treesitter.configs').setup {
+    -- Add languages to be installed here that you want installed for treesitter
+    ensure_installed = { 'c', 'go', 'lua', 'python', 'rust', 'vimdoc', 'vim', 'kdl', 'swift',
+      'sql', 'yaml', 'json', 'elixir', 'zig', 'julia' },
 
-  -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-  auto_install = true,
+    -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
+    auto_install = true,
 
     highlight = { enable = true },
     indent = { enable = true },
