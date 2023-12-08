@@ -524,6 +524,7 @@ local servers = {
     -- pyright = {},
     rust_analyzer = {},
     pylsp = {},
+    pyright = {},
     ruff_lsp = {},
     html = {},
     jsonls = {},
