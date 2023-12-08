@@ -169,6 +169,8 @@ local plugins = {
   require 'core.plugins.lsp-file-operations',
 
   require 'core.plugins.copilot',
+
+  require 'core.plugins.markdown-preview',
 }
 
 local pluginOptions = {}
