@@ -37,21 +37,21 @@ Neovim's configurations are located under the following paths, depending on your
 | Windows (cmd)| `%userprofile%\AppData\Local\nvim\` |
 | Windows (powershell)| `$env:USERPROFILE\AppData\Local\nvim\` |
 
-Clone kickstart.nvim:
+clone --branch lolmc kickstart.nvim:
 
 - on Linux and Mac
 ```sh
-git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+git clone --branch lolmc https://github.com/lolmc/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
 ```
 
 - on Windows (cmd)
 ```
-git clone https://github.com/nvim-lua/kickstart.nvim.git %userprofile%\AppData\Local\nvim\ 
+git clone --branch lolmc https://github.com/lolmc/kickstart.nvim.git %userprofile%\AppData\Local\nvim\ 
 ```
 
 - on Windows (powershell)
 ```
-git clone https://github.com/nvim-lua/kickstart.nvim.git $env:USERPROFILE\AppData\Local\nvim\ 
+git clone --branch lolmc https://github.com/lolmc/kickstart.nvim.git $env:USERPROFILE\AppData\Local\nvim\ 
 ```
 
 
@@ -128,7 +128,7 @@ return {
   "nvim-neo-tree/neo-tree.nvim",
   version = "*",
   dependencies = {
-    "nvim-lua/plenary.nvim",
+    "lolmc/plenary.nvim",
     "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
     "MunifTanjim/nui.nvim",
   },
@@ -168,14 +168,14 @@ Each PR, especially those which increase the line count, should have a descripti
   * Here is one about the previous iteration of kickstart: [video introduction to Kickstart.nvim](https://youtu.be/stqUbv-5u2s). Note the install via init.lua no longer works as specified. Please follow the install instructions in this file instead as they're up to date.
 * Why is the kickstart `init.lua` a single file? Wouldn't it make sense to split it into multiple files?
   * The main purpose of kickstart is to serve as a teaching tool and a reference
-    configuration that someone can easily `git clone` as a basis for their own.
+    configuration that someone can easily `git clone --branch lolmc` as a basis for their own.
     As you progress in learning Neovim and Lua, you might consider splitting `init.lua`
     into smaller parts. A fork of kickstart that does this while maintaining the exact
     same functionality is available here:
     * [kickstart-modular.nvim](https://github.com/dam9000/kickstart-modular.nvim)
   * Discussions on this topic can be found here:
-    * [Restructure the configuration](https://github.com/nvim-lua/kickstart.nvim/issues/218)
-    * [Reorganize init.lua into a multi-file setup](https://github.com/nvim-lua/kickstart.nvim/pull/473)
+    * [Restructure the configuration](https://github.com/lolmc/kickstart.nvim/issues/218)
+    * [Reorganize init.lua into a multi-file setup](https://github.com/lolmc/kickstart.nvim/pull/473)
 
 ### Windows Installation
 
