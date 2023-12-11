@@ -210,6 +210,9 @@ require('lazy').setup({
         section_separators = '',
       },
     },
+    dependencies = {
+      'nvim-tree/nvim-web-devicons', opt = true
+    },
   },
 
   {
