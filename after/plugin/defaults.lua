@@ -6,3 +6,6 @@ vim.opt.relativenumber = true
 
 -- Set custom colorscheme [[ NOTE: Never set it to "onedark" cuz it breaks the editor ]]
 vim.cmd.colorscheme 'gruvbox'
+
+vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { noremap = true })
+-- vim.keymap.set('n', '<>', [[]], {})
