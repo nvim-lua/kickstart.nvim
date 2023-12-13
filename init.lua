@@ -75,6 +75,12 @@ require('lazy').setup({
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
+  {
+    'uloco/bluloco.nvim',
+    lazy=false,
+    priority=1000,
+    dependencies={'rktjmp/lush.nvim'},
+  },
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
@@ -188,7 +194,7 @@ require('lazy').setup({
       end,
     },
   },
-
+{ 'codota/tabnine-nvim', build = "./dl_binaries.sh" },
   {
     -- Theme inspired by Atom
     'navarasu/onedark.nvim',
@@ -269,6 +275,17 @@ require('lazy').setup({
   -- { import = 'custom.plugins' },
 }, {})
 
+require("bluloco").setup({
+  style = "auto",
+  transparent = false,
+  italics = false,
+  terminal = vim.fn.has("gui_running") == 1,
+  guicursor = true
+})
+
+vim.opt.termguicolors = true
+vim.cmd('colorscheme bluloco')
+
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
@@ -279,8 +296,7 @@ vim.o.hlsearch = false
 -- Make line numbers default
 vim.wo.number = true
 
--- Enable mouse mode
-vim.o.mouse = 'a'
+vim.opt.mouse = ""
 
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
