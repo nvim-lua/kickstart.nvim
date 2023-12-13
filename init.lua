@@ -19,6 +19,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+
 -- [[ Configure plugins ]]
 -- NOTE: Here is where you install your plugins.
 --  You can configure plugins using the `config` key.
@@ -247,6 +248,8 @@ vim.wo.relativenumber = true
 vim.wo.list = true
 vim.wo.listchars = "tab:»·,trail:·,extends:>,precedes:<,nbsp:."
 vim.wo.colorcolumn = '120'
+vim.wo.wrap = false
+
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -627,10 +630,21 @@ cmp.setup {
 }
 
 vim.cmd [[
-  call quickui#menu#install('&View', [
+  call quickui#menu#install('&Plugins', [
       \ ['&Neotree', ':Neotree'],
+      \ ['&VSP', ':vsp'],
+      \ ['&SP', ':sp'],
       \ ])
 ]]
+
+vim.cmd [[
+  call quickui#menu#install('&IDE', [
+      \ ['&TabNew', ':tabnew'],
+      \ ['&TabNext', ':tabnext'],
+      \ ['&TabPrev', ':tabprev'],
+      \ ])
+]]
+
 
 vim.api.nvim_set_keymap('n', '<leader>m', ':call quickui#menu#open()<CR>', { noremap = true })
 vim.cmd([[ let g:quickui_color_scheme = 'papercol_dark' ]])
