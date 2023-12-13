@@ -244,6 +244,8 @@ vim.wo.number = true
 -- cursorline
 vim.wo.cursorline = true
 
+vim.wo.relativenumber = true
+
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
