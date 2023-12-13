@@ -241,6 +241,9 @@ vim.o.hlsearch = true
 -- Make line numbers default
 vim.wo.number = true
 
+-- cursorline
+vim.wo.cursorline = true
+
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
