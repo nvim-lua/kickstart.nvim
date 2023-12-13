@@ -667,7 +667,6 @@ vim.cmd [[
 ]]
 
 vim.api.nvim_set_keymap('n', '<leader>m', ':call quickui#menu#open()<CR>', { noremap = true })
-vim.g.quickui_color_scheme = 'onedark'
-
+vim.cmd([[ let g:quickui_color_scheme = 'papercol_dark' ]])
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
