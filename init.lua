@@ -230,11 +230,7 @@ require('lazy').setup({
     branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
-<<<<<<< HEAD
-      -- Fuzzy Finder Algorithm which requires local dependencies to be lbuilt.
-=======
       -- Fuzzy Finder Algorithm which requires local dependencies to be built.
->>>>>>> origin/master
       -- Only load if `make` is available. Make sure you have the system
       -- requirements installed.
       {
@@ -271,12 +267,9 @@ require('lazy').setup({
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   -- { import = 'custom.plugins' },
-<<<<<<< HEAD
   {
     'skywind3000/vim-quickui',
   }
-=======
->>>>>>> origin/master
 }, {})
 
 -- [[ Setting options ]]
@@ -284,11 +277,7 @@ require('lazy').setup({
 -- NOTE: You can change these options as you wish!
 
 -- Set highlight on search
-<<<<<<< HEAD
 vim.o.hlsearch = true
-=======
-vim.o.hlsearch = false
->>>>>>> origin/master
 
 -- Make line numbers default
 vim.wo.number = true
@@ -671,7 +660,6 @@ cmp.setup {
   },
 }
 
-<<<<<<< HEAD
 vim.cmd [[
   call quickui#menu#install('&MyMenu', [
       \ ['&MyEntry', 'echo "Hello, world!"'],
@@ -681,7 +669,5 @@ vim.cmd [[
 vim.api.nvim_set_keymap('n', '<leader>m', ':call quickui#menu#open()<CR>', { noremap = true })
 vim.g.quickui_color_scheme = 'onedark'
 
-=======
->>>>>>> origin/master
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
