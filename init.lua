@@ -243,8 +243,10 @@ vim.wo.number = true
 
 -- cursorline
 vim.wo.cursorline = true
-
 vim.wo.relativenumber = true
+vim.wo.list = true
+vim.wo.listchars = "tab:»·,trail:·,extends:>,precedes:<,nbsp:."
+vim.wo.colorcolumn = '120'
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -625,8 +627,8 @@ cmp.setup {
 }
 
 vim.cmd [[
-  call quickui#menu#install('&MyMenu', [
-      \ ['&MyEntry', 'echo "Hello, world!"'],
+  call quickui#menu#install('&View', [
+      \ ['&Neotree', ':Neotree'],
       \ ])
 ]]
 
