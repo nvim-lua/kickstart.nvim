@@ -192,13 +192,10 @@ require('lazy').setup({
     build = ':TSUpdate',
   },
 
-  -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
-  --       These are some example plugins that I've included in the kickstart repository.
-  --       Uncomment any of the lines below to enable them.
   -- require 'kickstart.plugins.autoformat',
   -- require 'kickstart.plugins.debug',
 
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
@@ -555,5 +552,19 @@ cmp.setup {
     { name = 'path' },
   },
 }
+-- Configure Theme
+require('catppuccin').setup({
+	flavour = 'macchiato',
+	no_italic = false,
+	styles = {
+		comments = { 'italic' },
+		conditionals = { 'italic' },
+	},
+	integrations = {
+		treesitter = true,
+	},
+})
+
+vim.cmd.colorscheme 'catppuccin'
 
 -- vim: ts=2 sts=2 sw=2 et
