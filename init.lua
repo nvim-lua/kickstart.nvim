@@ -71,6 +71,8 @@ require('lazy').setup({
 
   -- REMOVE
   "github/copilot.vim",
+  -- "mhartington/formatter.nvim",
+  'stevearc/conform.nvim',
 
   -- Git related plugins
   -- 'tpope/vim-fugitive',
@@ -117,7 +119,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -324,7 +326,7 @@ vim.g.copilot_no_tab_map = true
 -- keymap for opening lazygit
 vim.keymap.set('n', '<leader>g', ':LazyGit<CR>', { desc = 'Open lazygit' })
 
-
+vim.keymap.set('n', '<leader>f', ':Format<CR>', { desc = 'Format current buffer' })
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
@@ -540,11 +542,6 @@ local on_attach = function(_, bufnr)
   nmap('<leader>wl', function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, '[W]orkspace [L]ist Folders')
-
-  -- Create a command `:Format` local to the LSP buffer
-  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-    vim.lsp.buf.format()
-  end, { desc = 'Format current buffer with LSP' })
 end
 
 -- document existing key chains
@@ -675,3 +672,27 @@ cmp.setup {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+--
+require("conform").setup({
+  formatters_by_ft = {
+    lua = { "stylua" },
+    -- Conform will run multiple formatters sequentially
+    python = { "isort", "black" },
+    -- Use a sub-list to run only the first available formatter
+    javascript = { { "prettierd", "prettier" } },
+  },
+})
+
+vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+
+vim.api.nvim_create_user_command("Format", function(args)
+  local range = nil
+  if args.count ~= -1 then
+    local end_line = vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
+    range = {
+      start = { args.line1, 0 },
+      ["end"] = { args.line2, end_line:len() },
+    }
+  end
+  require("conform").format({ async = true, lsp_fallback = true, range = range })
+end, { range = true })
