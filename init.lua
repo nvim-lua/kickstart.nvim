@@ -73,8 +73,9 @@ require('lazy').setup({
   "github/copilot.vim",
 
   -- Git related plugins
-  'tpope/vim-fugitive',
-  'tpope/vim-rhubarb',
+  -- 'tpope/vim-fugitive',
+  -- 'tpope/vim-rhubarb',
+  "kdheepak/lazygit.nvim",
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
@@ -319,6 +320,12 @@ vim.keymap.set('i', '<C-J>', 'copilot#Accept("<CR>")', {
   replace_keycodes = false
 })
 vim.g.copilot_no_tab_map = true
+
+-- keymap for opening lazygit
+vim.keymap.set('n', '<leader>g', ':LazyGit<CR>', { desc = 'Open lazygit' })
+
+
+
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
