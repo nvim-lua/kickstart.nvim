@@ -552,6 +552,10 @@ cmp.setup {
     { name = 'path' },
   },
 }
+-- Configure Oil 
+require('oil').setup()
+vim.keymap.set('n', '<leader>-', '<CMD>Oil --float<CR>', { desc = 'Open current directory' })
+
 -- Configure Theme
 require('catppuccin').setup({
 	flavour = 'macchiato',
