@@ -200,20 +200,33 @@ require('lazy').setup({
 
 -- [[ Setting options ]]
 
--- Set highlight on search
-vim.o.hlsearch = false
+-- Line numbers
+vim.opt.nu = true
+vim.opt.relativenumber = true
 
--- Make line numbers default
-vim.wo.number = true
+-- Highlighting on search
+vim.opt.hlsearch = true
+vim.opt.incsearch = true
 
 -- Enable mouse mode
-vim.o.mouse = 'a'
+vim.opt.mouse = 'a'
 
 -- Sync clipboard between OS and Neovim.
-vim.o.clipboard = 'unnamedplus'
+vim.opt.clipboard = 'unnamedplus'
 
--- Enable break indent
-vim.o.breakindent = true
+-- Handle indentation
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+vim.opt.smartindent = true
+vim.opt.breakindent = true
+
+-- Remove line wrapping
+vim.opt.wrap = false
+
+-- Scroll buffer
+vim.opt.scrolloff = 8
 
 -- Save undo history
 vim.o.undofile = true
