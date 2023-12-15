@@ -1,0 +1,3 @@
+return {
+  "SmiteshP/nvim-navic"
+}

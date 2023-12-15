@@ -227,9 +227,6 @@ require('lazy').setup({
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   { import = 'custom.plugins' },
-  {
-    'skywind3000/vim-quickui',
-  }
 }, {})
 
 -- [[ Setting options ]]
@@ -249,7 +246,9 @@ vim.wo.list = true
 vim.wo.listchars = "tab:»·,trail:·,extends:>,precedes:<,nbsp:."
 vim.wo.colorcolumn = '120'
 vim.wo.wrap = false
-
+vim.opt.cmdheight = 3
+vim.opt.ignorecase = true
+vim.opt.showtabline = 2
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -274,7 +273,7 @@ vim.wo.signcolumn = 'yes'
 
 -- Decrease update time
 vim.o.updatetime = 250
-vim.o.timeoutlen = 300
+vim.o.timeoutlen = 200
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
@@ -630,23 +629,32 @@ cmp.setup {
 }
 
 vim.cmd [[
-  call quickui#menu#install('&Plugins', [
+  call quickui#menu#install('&Window', [
       \ ['&Neotree', ':Neotree'],
-      \ ['&VSP', ':vsp'],
-      \ ['&SP', ':sp'],
+      \ ['&Vertical split', ':vsp'],
+      \ ['&Horizontal split', ':sp'],
       \ ])
 ]]
 
 vim.cmd [[
-  call quickui#menu#install('&IDE', [
-      \ ['&TabNew', ':tabnew'],
-      \ ['&TabNext', ':tabnext'],
-      \ ['&TabPrev', ':tabprev'],
+  call quickui#menu#install('&Tabs', [
+      \ ['&New', ':tabnew'],
+      \ ['Nex&t', ':tabnext'],
+      \ ['&Prev', ':tabprev'],
+      \ ['&Close', ':tabc'],
+      \ ])
+]]
+
+vim.cmd [[
+  call quickui#menu#install('&Commands', [
+      \ ['Re&source Neovim config', ':source %'],
       \ ])
 ]]
 
 
+
 vim.api.nvim_set_keymap('n', '<leader>m', ':call quickui#menu#open()<CR>', { noremap = true })
 vim.cmd([[ let g:quickui_color_scheme = 'papercol_dark' ]])
+vim.g.quickui_color_scheme = 'gruvbox'
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
