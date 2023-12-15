@@ -2,6 +2,8 @@
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+vim.g.quickui_border_style = 3
+vim.g.quickui_color_scheme = 'gruvbox'
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
@@ -628,14 +630,32 @@ cmp.setup {
   },
 }
 
+vim.cmd [[call quickui#menu#install('&File', [
+            \ [ "&New File\tCtrl+n", 'echo 0' ],
+            \ [ "&Open File\t(F3)", 'echo 1' ],
+            \ [ "&Close", 'echo 2' ],
+            \ [ "--", '' ],
+            \ [ "&Save\tCtrl+s", 'echo 3'],
+            \ [ "Save &As", 'echo 4' ],
+            \ [ "Save All", 'echo 5' ],
+            \ [ "--", '' ],
+            \ [ "E&xit\tAlt+x", 'echo 6' ],
+            \ ])
+]]
+vim.cmd [[
+  call quickui#menu#install('&Edit', [
+            \ [ '&Copy', 'echo 1', 'help 1' ],
+            \ [ '&Paste', 'echo 2', 'help 2' ],
+            \ [ '&Find', 'echo 3', 'help 3' ],
+            \ ])
+]]
 vim.cmd [[
   call quickui#menu#install('&Window', [
       \ ['&Neotree', ':Neotree'],
       \ ['&Vertical split', ':vsp'],
-      \ ['&Horizontal split', ':sp'],
+      \ ['Ho&rizontal split', ':sp'],
       \ ])
 ]]
-
 vim.cmd [[
   call quickui#menu#install('&Tabs', [
       \ ['&New', ':tabnew'],
@@ -644,17 +664,24 @@ vim.cmd [[
       \ ['&Close', ':tabc'],
       \ ])
 ]]
-
 vim.cmd [[
-  call quickui#menu#install('&Commands', [
+  call quickui#menu#install('Nvim.&Utils', [
       \ ['Re&source Neovim config', ':source %'],
       \ ])
+]]
+vim.cmd [[
+  call quickui#menu#install('H&elp', [
+			\ ["&Cheatsheet", 'help index', ''],
+			\ ['T&ips', 'help tips', ''],
+			\ ['--',''],
+			\ ["&Tutorial", 'help tutor', ''],
+			\ ['&Quick Reference', 'help quickref', ''],
+			\ ['&Summary', 'help summary', ''],
+			\ ], 10000)
 ]]
 
 
 
 vim.api.nvim_set_keymap('n', '<leader>m', ':call quickui#menu#open()<CR>', { noremap = true })
-vim.cmd([[ let g:quickui_color_scheme = 'papercol_dark' ]])
-vim.g.quickui_color_scheme = 'gruvbox'
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
