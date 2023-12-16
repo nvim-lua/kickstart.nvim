@@ -809,6 +809,12 @@ vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 -- Correct scroll level
 vim.o.scrolloff = 8
 
+-- Correct tabstop
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.softtabstop = 4
+vim.opt.expandtab = true
+
 -- Exiting with a blinking cursor
 vim.api.nvim_create_autocmd('VimLeave', {
   once = true,
