@@ -5,6 +5,11 @@ vim.g.maplocalleader = ' '
 vim.g.quickui_border_style = 3
 vim.g.quickui_color_scheme = 'gruvbox'
 
+-- THEME Choicess:
+_G.THEME_REPO, _G.THEME_NAME = 'navarasu/onedark.nvim', 'onedark'
+--_G.THEME_REPO, _G.THEME_NAME = 'sainnhe/sonokai', 'sonokai'
+--_G.THEME_REPO, _G.THEME_NAME = 'mhartington/oceanic-next', 'OceanicNext'
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -152,11 +157,12 @@ require('lazy').setup({
   },
 
   {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
+    -- Choices:
+    ----'navarasu/onedark.nvim',
+    _G.THEME_REPO,
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'onedark'
+      vim.cmd('colorscheme '.._G.THEME_NAME)
     end,
   },
 
@@ -167,7 +173,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = _G.THEME_NAME,
         component_separators = '|',
         section_separators = '|',
       },
@@ -667,6 +673,13 @@ vim.cmd [[
             \ [ '&Find', 'echo 3', 'help 3' ],
             \ ])
 ]]
+-- vim.cmd [[
+--  call quickui#menu#install('&Search', [
+--             \ [ 'In &File', ':/'],
+--            \ [ '&Remove Highlight', ':noh'],
+--            \ [ 'In &Project', 'echo "undefined"' ],
+--            \ ])
+--]]
 vim.cmd [[
   call quickui#menu#install('&Window', [
       \ ['Open &Neotree', ':Neotree'],
