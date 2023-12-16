@@ -1,3 +1,3 @@
 return {
-  "SmiteshP/nvim-navic"
+  "SmiteshP/nvim-navic",
 }

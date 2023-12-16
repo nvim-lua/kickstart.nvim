@@ -8,5 +8,14 @@ return {
   },
   opts = {
     -- configurations go here
+    theme = {
+      normal = {
+        -- bg = "#000000"
+        bold = true
+      },
+      --dirname = { bg = "#000000" },
+      --basename = { bg = "#888888" },
+      --context = { bg = "#DDDDDD" },
+    }
   },
 }

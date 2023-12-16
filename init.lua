@@ -169,8 +169,26 @@ require('lazy').setup({
         icons_enabled = false,
         theme = 'onedark',
         component_separators = '|',
-        section_separators = '',
+        section_separators = '|',
       },
+      --winbar = {}  -- Not used, because `barbecue.nvim` uses it.
+      tabline = {
+        lualine_a = {'mode', 'branch'},
+        lualine_b = {'filename', 'diff', 'diagnostics'},
+        lualine_c = {'searchcount'},
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = {'windows', 'tabs'},
+      },
+      sections = {
+        lualine_a = {'mode'},
+        lualine_b = {},
+        lualine_c = {},
+        lualine_x = {'encoding', 'fileformat', 'filetype', 'filesize'},
+        lualine_y = {'progress'},
+        lualine_z = {'location', 'windows', 'tabs'}
+      },
+
     },
   },
 
