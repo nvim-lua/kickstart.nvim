@@ -662,14 +662,14 @@ vim.cmd [[call quickui#menu#install('&File', [
 ]]
 vim.cmd [[
   call quickui#menu#install('&Edit', [
-            \ [ '&Copy', 'echo 1', 'help 1' ],
+            \ [ '&Copy', 'echo "define copy"', 'help 1' ],
             \ [ '&Paste', 'echo 2', 'help 2' ],
             \ [ '&Find', 'echo 3', 'help 3' ],
             \ ])
 ]]
 vim.cmd [[
   call quickui#menu#install('&Window', [
-      \ ['&Neotree', ':Neotree'],
+      \ ['Open &Neotree', ':Neotree'],
       \ ['&Vertical split', ':vsp'],
       \ ['Ho&rizontal split', ':sp'],
       \ ])
@@ -678,7 +678,7 @@ vim.cmd [[
   call quickui#menu#install('&Tabs', [
       \ ['&New', ':tabnew'],
       \ ['Nex&t', ':tabnext'],
-      \ ['&Prev', ':tabprev'],
+      \ ['&Previous', ':tabprev'],
       \ ['&Close', ':tabc'],
       \ ])
 ]]
@@ -688,13 +688,15 @@ vim.cmd [[
       \ ])
 ]]
 vim.cmd [[
-  call quickui#menu#install('H&elp', [
+  call quickui#menu#install('Hel&p', [
 			\ ["&Cheatsheet", 'help index', ''],
 			\ ['T&ips', 'help tips', ''],
 			\ ['--',''],
 			\ ["&Tutorial", 'help tutor', ''],
 			\ ['&Quick Reference', 'help quickref', ''],
 			\ ['&Summary', 'help summary', ''],
+      \ ['--', ''],
+      \ ['&Exit', ':qa!']
 			\ ], 10000)
 ]]
 
