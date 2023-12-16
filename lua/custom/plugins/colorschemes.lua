@@ -1,20 +1,20 @@
 return {
 	--Gruvbox colorscheme
-	{
-		"ellisonleao/gruvbox.nvim", priority = 1000, config = true, opts = ...
-	},
+	{ "ellisonleao/gruvbox.nvim", priority = 1000,     config = true,  opts = ... },
 
 	--tokyonight colorscheme
 	{
-		"folke/tokyonight.nvim", priority = 1000
-	},
+		"folke/tokyonight.nvim", priority = 1000 },
 
 	-- lunar-vim colorschemes
-	{
-		"lunarvim/colorschemes", priority = 1000
-	},
+	{ "lunarvim/colorschemes",    priority = 1000 },
 
-	{
-		"rebelot/kanagawa.nvim", priority = 1000
-	}
+	-- kanagawa
+	{ "rebelot/kanagawa.nvim",    priority = 1000 },
+
+	-- latte, frappe, macchiato, mocha
+	{ "catppuccin/nvim",          name = "catppuccin", priority = 1000 },
+
+	-- Theme inspired by Atom
+	{ 'navarasu/onedark.nvim',    priority = 1000, }
 }
