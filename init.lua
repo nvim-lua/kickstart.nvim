@@ -5,10 +5,14 @@ vim.g.maplocalleader = ' '
 vim.g.quickui_border_style = 3
 vim.g.quickui_color_scheme = 'gruvbox'
 
+ACTIVE_THEME = 'onedark'
 -- THEME Choicess:
-_G.THEME_REPO, _G.THEME_NAME = 'navarasu/onedark.nvim', 'onedark'
---_G.THEME_REPO, _G.THEME_NAME = 'sainnhe/sonokai', 'sonokai'
---_G.THEME_REPO, _G.THEME_NAME = 'mhartington/oceanic-next', 'OceanicNext'
+local themes_choices = {
+  onedark = {repo = 'navarasu/onedark.nvim', name = 'onedark'},
+  sonokai = {repo = 'sainnhe/sonokai', name = 'sonokai'},
+  oceanic = {repo = 'mhartington/oceanic-next', name = 'OceanicNext'},
+}
+_G.THEME_REPO, _G.THEME_NAME = themes_choices[ACTIVE_THEME].repo, themes_choices[ACTIVE_THEME].name
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
