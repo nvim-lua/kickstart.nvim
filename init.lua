@@ -5,14 +5,16 @@ vim.g.maplocalleader = ' '
 vim.g.quickui_border_style = 3
 vim.g.quickui_color_scheme = 'gruvbox'
 
-ACTIVE_THEME = 'onedark'
+ACTIVE_THEME = 'nightfox'
 -- THEME Choicess:
 local themes_choices = {
   onedark = {repo = 'navarasu/onedark.nvim', name = 'onedark'},
   sonokai = {repo = 'sainnhe/sonokai', name = 'sonokai'},
   oceanic = {repo = 'mhartington/oceanic-next', name = 'OceanicNext'},
+  nightfox = {repo = 'EdenEast/nightfox.nvim', name = 'nightfox'},
 }
 _G.THEME_REPO, _G.THEME_NAME = themes_choices[ACTIVE_THEME].repo, themes_choices[ACTIVE_THEME].name
+-- These to Global values are used below
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
