@@ -5,3 +5,11 @@ cmp.event:on(
   'confirm_done',
   cmp_autopairs.on_confirm_done()
 )
+-- cmp.setup {
+--   completion = {
+--     autocomplete = true,
+--   },
+--   mapping = {
+--     ['<C-/>'] = cmp.mapping.complete()
+--   }
+-- }

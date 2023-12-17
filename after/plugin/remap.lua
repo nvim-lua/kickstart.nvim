@@ -63,3 +63,7 @@ vim.keymap.set("i", "<F3>", "<C-O>:set spell!<CR>", { silent = true, desc = 'Tog
 
 -- Hide windows
 vim.keymap.set("n", "<leader>hw", "<CMD>only<CR>", { silent = true, desc = 'Hide windows' })
+
+-- delete buffer
+vim.api.nvim_set_keymap('n', '<leader>db', ':bdelete!<CR>',
+  { noremap = true, silent = true, desc = '[D]elete current [B]uffer' })
