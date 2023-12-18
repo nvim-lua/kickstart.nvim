@@ -8,6 +8,12 @@ wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20R
 wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf
 wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
 wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
+
+# Place fonts in 
+/usr/local/share/fonts/
+
+# Then run
+sudo fc-cache -fv
 ```
 
 ## Install command line stuff
@@ -35,6 +41,7 @@ https://github.com/ohmyzsh/ohmyzsh
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
+
 
 ## Powerlevel10k
 https://github.com/romkatv/powerlevel10k#oh-my-zsh
