@@ -297,6 +297,15 @@ require('lazy').setup({
   },
 
   {
+    -- A workspace/context switcher for neovim. It allows you to open directories / folders
+    -- and reset the neovim instance (like in vscode and other editors).
+    -- This is especially useful for neovim-GUI's such as neovide, which you may not want to restart.
+    -- https://github.com/willthbill/opener.nvim/tree/clear-lsp-clients
+    'willthbill/opener.nvim',
+    
+  },
+
+  {
     -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
@@ -437,6 +446,14 @@ require('telescope').setup {
         ['<C-u>'] = false,
         ['<C-d>'] = false,
       },
+    },
+  },
+  extensions = {
+    opener = {
+        hidden = true, -- do not show hidden directories
+        --root_dir = "~", -- search from home directory by default
+        root_dir = "C:\\VS",
+        respect_gitignore = true, -- respect .gitignore files
     },
   },
 }
@@ -639,6 +656,9 @@ require('which-key').register({
   ['<leader>'] = { name = 'VISUAL <leader>' },
   ['<leader>h'] = { 'Git [H]unk' },
 }, { mode = 'v' })
+
+-- Telescope Extensions
+require('opener').setup()
 
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
