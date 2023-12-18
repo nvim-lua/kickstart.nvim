@@ -18,8 +18,9 @@ tmux
 # Shell
 
 ## ZSH (standard with mac)
+
 https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH
-=======
+
 | OS | PATH |
 | :- | :--- |
 | Linux | `$XDG_CONFIG_HOME/nvim`, `~/.config/nvim` |
@@ -79,10 +80,13 @@ The installation of these should be covered by the included .tmux.conf
 To install plugins, use prefix + I (capital )
 https://draculatheme.com/tmux
 
-# Once ZSH is setup, then add this to the bottom of ~/.zshrc to open tmux with new terminals.
+# Tmux Default 
+Once ZSH is setup, then add this to the bottom of ~/.zshrc to open tmux with new terminals.
+```bash
 if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
   exec tmux new-session -A -s main
 fi
+```
 
 # Editor
 
