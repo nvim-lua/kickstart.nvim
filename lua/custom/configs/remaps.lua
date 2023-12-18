@@ -1,8 +1,8 @@
 -- thanks https://github.com/ThePrimeagen/init.lua/blob/master/lua/theprimeagen/remap.lua
 
 -- move hightlighted code
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
-vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+vim.keymap.set("v", "C-P", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "C-N", ":m '<-2<CR>gv=gv")
 
 -- J appends line below to current line but cursor doesn't move
 vim.keymap.set("n", "J", "mzJ`z")
@@ -14,8 +14,9 @@ vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
 -- greatest remap ever
--- paste without adding deleted text to buffer
+-- paste without adding deleted text to register
 vim.keymap.set("x", "<leader>p", [["_dP]])
+-- delete without adding deleted text to register 
 vim.keymap.set("x", "<leader>d", [["_d]])
 
 -- next greatest remap ever : asbjornHaland
@@ -37,3 +38,11 @@ vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 -- make script executable
 vim.keymap.set("n", "<leader>+", "<cmd>!chmod +x %<CR>", { silent = true })
+
+--trouble.nvim
+vim.keymap.set("n", "<leader>xx", function() require("trouble").toggle() end)
+vim.keymap.set("n", "<leader>xw", function() require("trouble").toggle("workspace_diagnostics") end)
+vim.keymap.set("n", "<leader>xd", function() require("trouble").toggle("document_diagnostics") end)
+vim.keymap.set("n", "<leader>xq", function() require("trouble").toggle("quickfix") end)
+vim.keymap.set("n", "<leader>xl", function() require("trouble").toggle("loclist") end)
+vim.keymap.set("n", "gR", function() require("trouble").toggle("lsp_references") end)
