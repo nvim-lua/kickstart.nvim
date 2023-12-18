@@ -19,6 +19,13 @@ tmux
 
 ## ZSH (standard with mac)
 https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH
+=======
+| OS | PATH |
+| :- | :--- |
+| Linux | `$XDG_CONFIG_HOME/nvim`, `~/.config/nvim` |
+| MacOS | `$XDG_CONFIG_HOME/nvim`, `~/.config/nvim` |
+| Windows (cmd)| `%userprofile%\AppData\Local\nvim\` |
+| Windows (powershell)| `$env:USERPROFILE\AppData\Local\nvim\` |
 
 ## Oh-My-Zsh
 The plugin management for ZSH
@@ -34,7 +41,6 @@ https://github.com/romkatv/powerlevel10k#oh-my-zsh
 ```bash
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 ```
-
 In `~/.zshrc`
 ```
 ZSH_THEME="powerlevel10k/powerlevel10k"
@@ -83,10 +89,6 @@ fi
 Install neovim
 
 ## Plugin Management
-
-Using Packer
-https://github.com/wbthomason/packer.nvim#bootstrapping
-
 
 # Important Config Files
 ~/.zshrc
