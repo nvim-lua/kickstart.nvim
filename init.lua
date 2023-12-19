@@ -209,7 +209,7 @@ vim.opt.hlsearch = true
 vim.opt.incsearch = true
 
 -- Enable mouse mode
-vim.opt.mouse = 'a'
+vim.opt.mouse = ''
 
 -- Sync clipboard between OS and Neovim.
 vim.opt.clipboard = 'unnamedplus'
