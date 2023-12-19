@@ -1,6 +1,9 @@
 return {
-  dir = '~/projects/tune.nvim',
+  'thomasmarcel/tune.nvim',
   config = function()
-    require('tune').setup()
+    local tune = require 'tune'
+    tune.setup()
+    tune.pick_random_colorscheme()
   end,
+  priority = 10,
 }
