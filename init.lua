@@ -478,7 +478,7 @@ local servers = {
   -- clangd = {},
   -- gopls = {},
   -- pyright = {},
-  -- rust_analyzer = {},
+  rust_analyzer = { filetypes = {'rust', 'rs'}},
   tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
