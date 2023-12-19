@@ -9,8 +9,8 @@ if has_unnamedplus then
   vim.o.clipboard = 'unnamedplus'
 end
 
-vim.api.nvim_buf_set_keymap(0, 'n', 'y', '"+y', { noremap = true, silent = true })
-vim.api.nvim_buf_set_keymap(0, 'n', 'p', '"+p', { noremap = true, silent = true })
+-- vim.api.nvim_buf_set_keymap(0, 'n', 'y', '"+y', { noremap = true, silent = true })
+-- vim.api.nvim_buf_set_keymap(0, 'n', 'p', '"+p', { noremap = true, silent = true })
 
 local function set_json_filetype()
   if string.match(vim.api.nvim_buf_get_name(0), '%.geojson$') or string.match(vim.api.nvim_buf_get_name(0), '%.json$') then

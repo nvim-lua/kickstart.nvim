@@ -1,0 +1,1 @@
+return { 'ofirgall/ofirkai.nvim' }
