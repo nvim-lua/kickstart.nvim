@@ -89,7 +89,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
+      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim'
@@ -336,7 +336,8 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim',
+      'bash' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
@@ -410,6 +411,7 @@ function OpenNewTerminalWithAdjustedHeight(height)
   vim.cmd('wincmd w')
 end
 
+vim.keymap.set('n', '<leader>f', ':NvimTreeFocus<CR>', { desc = 'Focus on NvimTree' })
 vim.keymap.set('n', '<leader>T', ':lua OpenNewTerminalWithAdjustedHeight(20)<CR>', { desc = 'Open new terminal' })
 vim.keymap.set('t', '<esc>', '<C-\\><C-N>', { desc = 'Exit terminal mode' })
 vim.keymap.set('n', '|', ':vsplit new | terminal<CR>', { desc = 'Split Terminal' })
@@ -419,7 +421,8 @@ vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Move to the window to the left'
 vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to the window to the right' })
 vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move to the window above' })
 vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move to the window below' })
-
+vim.keymap.set('n', '<leader>n', ':tabnext<CR>', { desc = 'Move to the next tab' })
+vim.keymap.set('n', '<leader>p', ':tabprevious<CR>', { desc = ' Move to the previous tab' })
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
