@@ -13,5 +13,11 @@ return {
 
 	-- Theme
 	{ 'catppuccin/nvim', name='catppuccin', priority = 1000 },
+
+	-- Better Comments
+	{
+		'folke/todo-comments.nvim',
+		dependencies = { 'nvim-lua//plenary.nvim' }
+	},
 }
 

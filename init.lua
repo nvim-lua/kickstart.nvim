@@ -551,6 +551,9 @@ cmp.setup {
 require('oil').setup()
 vim.keymap.set('n', '<leader>-', '<CMD>Oil --float<CR>', { desc = 'Open current directory' })
 
+-- Configure Todo-Comments
+require('todo-comments').setup()
+
 -- Configure Theme
 require('catppuccin').setup({
 	flavour = 'macchiato',
@@ -565,5 +568,7 @@ require('catppuccin').setup({
 })
 
 vim.cmd.colorscheme 'catppuccin'
+vim.opt.spell = true
+vim.opt.spelloptions = 'camel'
 
 -- vim: ts=2 sts=2 sw=2 et
