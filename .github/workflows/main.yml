@@ -1,16 +1,13 @@
-# copied from gbprod/yanky.nvim
-name: Integration
-
+name: Integration from gbprod/yanky.nvim
 on:
     push:
-        branches: [master]
+        branches: [main]
     pull_request:
-        branches: [master]
+        branches: [main]
     schedule:
         - cron: '0 7 * * 1'
      # Allows you to run this workflow manually from the Actions tab
     workflow_dispatch:
-  
 
 jobs:
     test:
@@ -20,37 +17,32 @@ jobs:
             matrix:
                 nvim-versions: ['stable', 'nightly']
         steps:
-            - name: Install NeoVim
+            - name: Checkout
+              uses: actions/checkout@v2
             - uses: rhysd/action-setup-vim@v1
               with:
                   neovim: true
                   version: ${{ matrix.nvim-versions }}
-            - name: Checkout
-            - uses: actions/checkout@v3
-            - name: Setup kitckstart and start nvim
+            - name: Setup ‘lua’
+              uses: leafo/gh-actions-lua@v8
+              with:
+                  luaVersion: '5.1.5'
+            - name: Setup ‘luarocks’
+              uses: leafo/gh-actions-luarocks@v4
+            - name: Install dependencies
               run: |
-                ln -sf $GITHUB_WORKSPACE "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
-                touch msg.log
-                nvim --headless -c ':Lazy! sync' -c ':qa' init.lua 2>&1 | tee -a msg.log
-                nvim --headless -c ':checkhealth' -c ':qa' init.lua 2>&1 | tee -a msg.log
-                echo -e '\n++++++++++++++++++++++++++++++'
-                cat msg.log
-                echo -e '++++++++++++++++++++++++++++++\n'
-                grep -i 'error' msg.log
-                if [ $? -eq 0 ]; then
-                  exit 1
-                else
-                    exit 0
-                fi
-
-    stylua-check:
+                  luarocks install luacheck
+            - name: Run linter
+              run: luacheck init.lua lua/
+            - name: Run tests
+              run: |
+                  nvim --headless -u init.lua -c ":qa"
+    stylua:
         name: Check codestyle
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout Code
-              uses: actions/checkout@v4
-            - name: Stylua Check
-              uses: JohnnyMorganz/stylua-action@v3
+            - uses: actions/checkout@v4
+            - uses: JohnnyMorganz/stylua-action@v3
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   version: latest
