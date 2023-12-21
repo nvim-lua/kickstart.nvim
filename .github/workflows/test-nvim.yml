@@ -9,6 +9,8 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+  schedule:
+      - cron: '0 7 * * 1'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -51,9 +53,3 @@ jobs:
           else
               exit 0
           fi
-          
-          
-
-
-          
-          
