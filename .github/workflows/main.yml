@@ -49,12 +49,8 @@ jobs:
                   echo -e '\n+++++++ msg.log ++++++++++++++'
                   cat msg.log
                   echo -e '\n+++++++++ errors: ++++++++++++\n'
-                  grep -i 'error' msg.log
-                  if [ $? -eq 0 ]; then
-                    exit 1
-                  else
-                    exit 0
-                  fi
+                  grepnot(){ ! grep $1 $2; return $?;}
+                  grepnot -i 'error' msg.log # exit with non-zero if "error" match is found
 
     # Check Lua Formatting
     stylua:
