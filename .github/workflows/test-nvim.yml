@@ -29,7 +29,7 @@ jobs:
           # not using apt as repos may lag behind
           curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
           chmod +x nvim.appimage
-          ./nvim.appimage --appimage-extract --quiet
+          ./nvim.appimage --appimage-extract
           sudo mv squashfs-root /
           sudo ln -s /squashfs-root/AppRun /usr/bin/nvim
           nvim --version
