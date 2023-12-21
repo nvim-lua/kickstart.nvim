@@ -1,0 +1,59 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Runs a set of commands using the runners shell
+      - name: Install latest neovim 
+        run: |
+          echo "Finished git checkout in $GITHUB_WORKSPACE"
+          # not using apt as repos may lag behind
+          curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+          chmod +x nvim.appimage
+          ./nvim.appimage --appimage-extract
+          sudo mv squashfs-root /
+          sudo ln -s /squashfs-root/AppRun /usr/bin/nvim
+          nvim --version
+          nvim --headless -c ':checkhealth' -c ':qa'
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - name: Setup kitckstart and start nvim
+        run: |
+          ln -sf $GITHUB_WORKSPACE "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+          touch msg.log
+          nvim --headless -c ':Lazy! sync' -c ':qa' init.lua 2>&1 | tee -a msg.log
+          nvim --headless -c ':checkhealth' -c ':qa' init.lua 2>&1 | tee -a msg.log
+          echo -e '\n++++++++++++++++++++++++++++++'
+          cat msg.log
+          echo -e '++++++++++++++++++++++++++++++\n'
+          grep -i 'error' msg.log
+          if [ $? -eq 0 ]; then
+            exit 1
+          else
+              exit 0
+          fi
+          
+          
+
+
+          
+          
