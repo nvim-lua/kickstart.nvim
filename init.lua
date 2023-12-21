@@ -237,10 +237,12 @@ require('lazy').setup({
 -- NOTE: You can change these options as you wish!
 
 -- Set highlight on search
-vim.o.hlsearch = false
+vim.o.hlsearch = true
 
 -- Make line numbers default
 vim.wo.number = true
+-- be sure to set after gitsigns plugin setup
+vim.o.rnu = true
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -282,6 +284,9 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+-- Map for copy/yank to clipboard 
+vim.keymap.set('v', '<leader>cp', '"+y')
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
@@ -378,7 +383,7 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'ruby', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
@@ -513,10 +518,10 @@ require('mason-lspconfig').setup()
 local servers = {
   -- clangd = {},
   -- gopls = {},
-  -- pyright = {},
+  pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  html = { filetypes = { 'html', 'twig', 'hbs'} },
 
   lua_ls = {
     Lua = {
