@@ -276,6 +276,9 @@ require('lazy').setup({
 -- Set highlight on search
 vim.o.hlsearch = false
 
+--Set relative line numbers
+vim.o.relativenumber = true
+
 -- Make line numbers default
 vim.wo.number = true
 
