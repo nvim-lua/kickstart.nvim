@@ -1,4 +1,4 @@
-name: Integration from gbprod/yanky.nvim
+name: Integration based on gbprod/yanky.nvim
 on:
     push:
         branches: [master]
@@ -18,7 +18,7 @@ jobs:
                 nvim-versions: ['stable', 'nightly']
         steps:
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
             - uses: rhysd/action-setup-vim@v1
               with:
                   neovim: true
@@ -34,9 +34,27 @@ jobs:
                   luarocks install luacheck
             - name: Run linter
               run: luacheck init.lua lua/
-            - name: Run tests
+            - name: Start nvim (no config)
+              run: nvim --headless -u /dev/null -c ":qa"
+            - name: Start nvim (using kickstart)
               run: |
-                  nvim --headless -u init.lua -c ":qa"
+                  ln -sf $GITHUB_WORKSPACE "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+                  echo "${XDG_CONFIG_HOME:-$HOME/.config}"
+                  ls -l "${XDG_CONFIG_HOME:-$HOME/.config}"
+                  touch msg.log
+                  nvim --headless -c ':Lazy! sync'  -c ':qa' init.lua 2>&1 | tee -a msg.log
+                  nvim --headless -c ':checkhealth' -c ':qa' init.lua 2>&1 | tee -a msg.log
+                  echo -e '\n++++++++++++++++++++++++++++++'
+                  cat msg.log
+                  echo -e '++++++++++++++++++++++++++++++\n'
+                  grep -i 'error' msg.log
+                  if [ $? -eq 0 ]; then
+                    exit 1
+                  else
+                      exit 0
+                  fi
+
+    # Check Lua Formatting
     stylua:
         name: Check codestyle
         runs-on: ubuntu-latest
