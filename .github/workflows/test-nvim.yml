@@ -31,9 +31,10 @@ jobs:
           echo "Finished git checkout in $GITHUB_WORKSPACE"
           # not using apt as repos may lag behind
           curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-          chmod u+x nvim.appimage
+          ./nvim.appimage --appimage-extract
+          sudo mv squashfs-root /
+          sudo ln -s /squashfs-root/AppRun /usr/bin/nvim
           ls -la
-          sudo ln -sf $(pwd)/nvim.appimage /usr/local/bin/nvim
           nvim --version
       - name: Setup kitckstart and start nvim
         run: |
