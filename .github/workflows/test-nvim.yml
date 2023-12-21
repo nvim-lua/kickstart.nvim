@@ -26,11 +26,13 @@ jobs:
       - uses: actions/checkout@v3
 
       # Runs a set of commands using the runners shell
-      - name: Install neovim 
+      - name: Install latest neovim 
         run: |
           echo "Finished git checkout in $GITHUB_WORKSPACE"
-          sudo apt update
-          sudo apt install -y neovim
+          # not using apt as repos may lag behind
+          curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+          chmod u+x nvim.appimage
+          ln -sf ./nvim.appimage /usr/local/bin/nvim
           nvim --version
       - name: Setup kitckstart and start nvim
         run: |
