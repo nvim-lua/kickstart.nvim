@@ -35,7 +35,9 @@ jobs:
             - name: Run linter
               run: luacheck init.lua lua/
             - name: Start nvim (no config)
-              run: nvim --headless -u /dev/null -c ":qa"
+              run: |
+                nvim --version
+                nvim --headless -u /dev/null -c ":checkhealth" -c ":qa"
             - name: Start nvim (using kickstart)
               run: |
                   ln -sf $GITHUB_WORKSPACE "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
