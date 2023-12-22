@@ -1,0 +1,65 @@
+name: Integration based on gbprod/yanky.nvim
+on:
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
+    schedule:
+        - cron: '0 7 * * 1'
+     # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
+
+jobs:
+    test:
+        name: Tests
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                nvim-versions: ['stable', 'nightly']
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - uses: rhysd/action-setup-vim@v1
+              with:
+                  neovim: true
+                  version: ${{ matrix.nvim-versions }}
+            - name: Setup ‘lua’
+              uses: leafo/gh-actions-lua@v8
+              with:
+                  luaVersion: '5.1.5'
+            - name: Setup ‘luarocks’
+              uses: leafo/gh-actions-luarocks@v4
+            - name: Install dependencies
+              run: |
+                  luarocks install luacheck
+            - name: Run linter
+              run: luacheck init.lua lua/
+            - name: Start nvim (no config)
+              run: |
+                nvim --version
+                nvim --headless -u /dev/null -c ":checkhealth" -c ":qa"
+            - name: Start nvim (using kickstart)
+              run: |
+                  ln -sf $GITHUB_WORKSPACE "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+                  echo "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+                  ls -l "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+                  touch msg.log
+                  nvim --headless -c ':Lazy! sync'  -c ':qa' init.lua 2>&1 | tee -a msg.log
+                  nvim --headless -c ':checkhealth' -c ':qa' init.lua 2>&1 | tee -a msg.log
+                  echo -e '\n+++++++ msg.log ++++++++++++++'
+                  cat msg.log
+                  echo -e '\n+++++++++ errors: ++++++++++++\n'
+                  grepnot(){ ! grep $1 $2; return $?;}
+                  grepnot -i 'error' msg.log # exit with non-zero if "error" match is found
+
+    # Check Lua Formatting
+    stylua:
+        name: Check codestyle
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: JohnnyMorganz/stylua-action@v3
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  version: latest
+                  args: --check .
