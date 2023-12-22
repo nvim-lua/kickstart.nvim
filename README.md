@@ -42,17 +42,17 @@ Clone kickstart.nvim:
 
 - on Linux and Mac
 ```sh
-git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+git clone https://github.com/dam9000/kickstart-modular.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
 ```
 
 - on Windows (cmd)
 ```
-git clone https://github.com/nvim-lua/kickstart.nvim.git %userprofile%\AppData\Local\nvim\ 
+git clone https://github.com/dam9000/kickstart-modular.nvim.git %userprofile%\AppData\Local\nvim\ 
 ```
 
 - on Windows (powershell)
 ```
-git clone https://github.com/nvim-lua/kickstart.nvim.git $env:USERPROFILE\AppData\Local\nvim\ 
+git clone https://github.com/dam9000/kickstart-modular.nvim.git $env:USERPROFILE\AppData\Local\nvim\ 
 ```
 
 
@@ -77,7 +77,7 @@ nvim --headless "+Lazy! sync" +qa
 [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repo (so that you have your own copy that you can modify) and then installing you can install to your machine using the methods above.
 
 > **NOTE**  
-> Your fork's url will be something like this: `https://github.com/<your_github_username>/kickstart.nvim.git`
+> Your fork's url will be something like this: `https://github.com/<your_github_username>/kickstart-modular.nvim.git`
 
 ### Configuration And Extension
 
@@ -171,9 +171,10 @@ Each PR, especially those which increase the line count, should have a descripti
   * The main purpose of kickstart is to serve as a teaching tool and a reference
     configuration that someone can easily `git clone` as a basis for their own.
     As you progress in learning Neovim and Lua, you might consider splitting `init.lua`
-    into smaller parts. A fork of kickstart that does this while maintaining the exact
-    same functionality is available here:
-    * [kickstart-modular.nvim](https://github.com/dam9000/kickstart-modular.nvim)
+    into smaller parts. *This is the fork of the original project that splits the configuration into smaller parts.* 
+    The original repo that maintains the exact
+    same functionality in a single `init.lua` file is available here:
+    * [kickstart.nvim](https://github.com/dam9000/kickstart-modular.nvim)
   * Discussions on this topic can be found here:
     * [Restructure the configuration](https://github.com/nvim-lua/kickstart.nvim/issues/218)
     * [Reorganize init.lua into a multi-file setup](https://github.com/nvim-lua/kickstart.nvim/pull/473)
