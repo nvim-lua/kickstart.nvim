@@ -1,0 +1,31 @@
+# Vim Motions Practice
+
+hjkl: Move left, down, up, right. Try it now!
+w: Move to next word. Move to "word" in this line.
+b: Move to previous word. Move to "Move" in this line.
+e: Move to end of word. Move to "line" in this line.
+0: Move to beginning of line. Do it now!
+$: Move to end of line. Do it now!
+G: Move to end of file. Do it now!
+gg: Move to beginning of file. Do it now!
+f{char}: Move to next occurrence of {char}. Move to "c" in this line.
+F{char}: Move to previous occurrence of {char}. Move to "M" in this line.
+t{char}: Move to before next occurrence of {char}. Move to before "c" in this line.
+T{char}: Move to after previous occurrence of {char}. Move to after "M" in this line.
+;: Repeat last f, F, t, or T motion. Do it now!
+,: Repeat last f, F, t, or T motion in opposite direction. Do it now!
+H: Move to top of screen. Do it now!
+M: Move to middle of screen. Do it now!
+L: Move to bottom of screen. Do it now!
+z{char}: Scroll the screen and position the current line. zt: top, zz: middle, zb: bottom. Try them now!
+{num}G: Move to line {num}. Move to line 10 now!
+:{num}: Move to line {num}. Move to line 20 now!
+%: Move to matching parenthesis, bracket, or brace. Move to the opening brace in this line {
+^: Move to first non-blank character of the line. Move to the first letter in this line.
+g_: Move to last non-blank character of the line. Move to the last letter in this line.
+/ {pattern}: Search forward for {pattern}. Search for "line" in this file.
+? {pattern}: Search backward for {pattern}. Search for "word" in this file.
+n: Repeat last search in same direction. Do it now!
+N: Repeat last search in opposite direction. Do it now!
+* : Search forward for the word under the cursor. Move to "screen" and search for it.
+# : Search backward for the word under the cursor. Move to "file" and search for it.

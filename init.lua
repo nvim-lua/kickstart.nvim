@@ -163,8 +163,7 @@ require('lazy').setup({
   },
 
   {
-    -- Choices:
-    ----'navarasu/onedark.nvim',
+    -- Neovim Color Theme
     _G.THEME_REPO,
     priority = 1000,
     config = function()
@@ -173,6 +172,7 @@ require('lazy').setup({
   },
 
   {
+    -- TODO: move to plugins
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
     -- See `:help lualine.txt`
@@ -266,7 +266,7 @@ require('lazy').setup({
 -- NOTE: You can change these options as you wish!
 
 -- Set highlight on search
-vim.o.hlsearch = true
+vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
@@ -278,7 +278,7 @@ vim.wo.list = true
 vim.wo.listchars = "tab:»·,trail:·,extends:>,precedes:<,nbsp:."
 vim.wo.colorcolumn = '120'
 vim.wo.wrap = false
-vim.opt.cmdheight = 3
+vim.opt.cmdheight = 2
 vim.opt.ignorecase = true
 vim.opt.showtabline = 2
 
@@ -304,8 +304,8 @@ vim.o.smartcase = true
 vim.wo.signcolumn = 'yes'
 
 -- Decrease update time
-vim.o.updatetime = 250
-vim.o.timeoutlen = 200
+vim.o.updatetime = 150
+vim.o.timeoutlen = 100
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
@@ -687,6 +687,19 @@ vim.cmd [[
 --            \ ])
 --]]
 vim.cmd [[
+  call quickui#menu#install(
+    \ '&Debugger',
+    \ [
+      \ ['Start &Debug', ':lua require("dap").continue()'],
+      \ ['DAP UI: &Toggle', ':lua require("dapui").toggle()'],
+      \ ['--',''],
+      \ ['DAP UI: &Setup', ':lua require("dapui").setup()'],
+      \ ['DAP UI: &Open', ':lua require("dapui").open()'],
+      \ ['DAP UI: &Close', ':lua require("dapui").close()'],
+    \ ]
+  \ )
+]]
+vim.cmd [[
   call quickui#menu#install('&Window', [
       \ ['Open &Neotree', ':Neotree'],
       \ ['&Vertical split', ':vsp'],
@@ -719,8 +732,33 @@ vim.cmd [[
 			\ ], 10000)
 ]]
 
-
-
 vim.api.nvim_set_keymap('n', '<leader>m', ':call quickui#menu#open()<CR>', { noremap = true })
+
+
+vim.keymap.set('n', '<F5>', function() require('dap').continue() end)
+vim.keymap.set('n', '<F10>', function() require('dap').step_over() end)
+vim.keymap.set('n', '<F11>', function() require('dap').step_into() end)
+vim.keymap.set('n', '<F12>', function() require('dap').step_out() end)
+vim.keymap.set('n', '<Leader>b', function() require('dap').toggle_breakpoint() end)
+vim.keymap.set('n', '<Leader>B', function() require('dap').set_breakpoint() end)
+vim.keymap.set('n', '<Leader>lp', function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end)
+vim.keymap.set('n', '<Leader>dr', function() require('dap').repl.open() end)
+vim.keymap.set('n', '<Leader>dl', function() require('dap').run_last() end)
+vim.keymap.set({'n', 'v'}, '<Leader>dh', function()
+  require('dap.ui.widgets').hover()
+end)
+vim.keymap.set({'n', 'v'}, '<Leader>dp', function()
+  require('dap.ui.widgets').preview()
+end)
+vim.keymap.set('n', '<Leader>df', function()
+  local widgets = require('dap.ui.widgets')
+  widgets.centered_float(widgets.frames)
+end)
+vim.keymap.set('n', '<Leader>ds', function()
+  local widgets = require('dap.ui.widgets')
+  widgets.centered_float(widgets.scopes)
+end)
+
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
