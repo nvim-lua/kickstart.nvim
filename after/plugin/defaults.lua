@@ -4,15 +4,13 @@ vim.opt.expandtab = true
 vim.bo.softtabstop = 2
 vim.opt.relativenumber = true
 vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { noremap = true })
+vim.cmd.colorscheme 'gruvbox' -- Set custom colorscheme [[ NOTE: Never set it to "onedark" cuz it breaks the editor ]]
 
--- Set custom colorscheme [[ NOTE: Never set it to "onedark" cuz it breaks the editor ]]
-vim.cmd.colorscheme 'catppuccin'
-
--- custom lualine
+-- Lualine config
 require('lualine').setup {
   options = {
     icons_enabled = true,
-    theme = 'auto',
+    -- theme = 'auto',
     component_separators = { left = '', right = '' },
     section_separators = { left = '', right = '' },
     disabled_filetypes = {
