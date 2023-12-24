@@ -47,7 +47,7 @@ return {
       }
     }
 
-    dashboard.section.header.val = ascii_arts['kraken']
+    dashboard.section.header.val = require("ascii").art.misc.krakens.sleekraken
 
     -- Set menu
     dashboard.section.buttons.val = {
