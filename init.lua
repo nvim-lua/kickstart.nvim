@@ -489,6 +489,9 @@ vim.defer_fn(function()
   }
 end, 0)
 
+
+
+
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
@@ -511,7 +514,7 @@ local on_attach = function(_, bufnr)
 
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-  nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+  nmap('gi', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
   nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
   nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
   nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
@@ -759,6 +762,13 @@ vim.keymap.set('n', '<Leader>ds', function()
   widgets.centered_float(widgets.scopes)
 end)
 
+-- Start Neovim in insert mode by default
+vim.cmd[[autocmd VimEnter * startinsert]]
+-- Map <Esc> to toggle between normal and insert mode
+vim.api.nvim_set_keymap('n', '<Esc>', ':startinsert<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<Esc>', '<C-o>:stopinsert<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('v', '<Esc>', '<C-o>:stopinsert<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('c', '<Esc>', '<C-c>:stopinsert<CR>', { noremap = true, silent = true })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
