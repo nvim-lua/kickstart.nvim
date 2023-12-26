@@ -98,6 +98,7 @@
   "rust.vim": { "branch": "master", "commit": "889b9a7515db477f4cb6808bef1769e53493c578" },
   "sacredforest-vim": { "branch": "master", "commit": "829e8c6f983d832e79c787d5ef1b5c49da0402d9" },
   "sentiment.nvim": { "branch": "main", "commit": "54a6db15b630eccfa98c32a76baf90f21c6f1e40" },
+  "solarized-osaka.nvim": { "branch": "main", "commit": "d3272bc510deecd423833771e443ab0eaf8cd802" },
   "space-vim-theme": { "branch": "master", "commit": "4790dbba31f678f75af4f4c7a1465008542bd979" },
   "tabnine-nvim": { "branch": "master", "commit": "3237a2800fd928477e10d6e122cce09abfb97cc2" },
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "6c921ca12321edaa773e324ef64ea301a1d0da62" },
