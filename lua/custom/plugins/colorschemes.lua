@@ -13,8 +13,8 @@ return {
 	{ "rebelot/kanagawa.nvim",    priority = 1000 },
 
 	-- latte, frappe, macchiato, mocha
-	{ "catppuccin/nvim",          priority = 1000, },
+	{ "catppuccin/catppuccin",          priority = 1000, },
 
 	-- Theme inspired by Atom
-	{ 'navarasu/onedark.nvim',    priority = 1000, }
+	{ 'navarasu/onedark.nvim',    priority = 1000, },
 }
