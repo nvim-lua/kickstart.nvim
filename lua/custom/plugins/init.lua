@@ -3,9 +3,10 @@
 --
 -- See the kickstart.nvim README for more information
 
+vim.opt.colorcolumn = "80,100"
 vim.opt.number = true
 vim.opt.relativenumber = true
 
-vim.opt.colorcolumn = "80,100"
+vim.api.nvim_set_keymap('n', '<leader>cf', ':EslintFixAll<CR>:Neoformat<CR>', { noremap = true, silent = true })
 
 return {}
