@@ -44,6 +44,19 @@ P.S. You can delete this when you're done too. It's your config now :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- Normal mode mapping to toggle folds
+vim.api.nvim_set_keymap('n', '<space>', 'za', { noremap = true, silent = true })
+
+-- Insert mode mapping to exit insert mode using 'jk'
+vim.api.nvim_set_keymap('i', 'jk', '<ESC>', { noremap = true, silent = true })
+
+vim.keymap.set("n", "J", "mzJz")
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
+vim.keymap.set("n", "n", "nzzzv")
+vim.keymap.set("n", "N", "Nzzzv")
+vim.keymap.set("x", "<leader>p", [["_dP]])
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -234,13 +247,9 @@ require('lazy').setup({
       -- Only load if `make` is available. Make sure you have the system
       -- requirements installed.
       {
+        
         'nvim-telescope/telescope-fzf-native.nvim',
-        -- NOTE: If you are having trouble with this installation,
-        --       refer to the README for telescope-fzf-native for more instructions.
         build = 'make',
-        cond = function()
-          return vim.fn.executable 'make' == 1
-        end,
       },
     },
   },
