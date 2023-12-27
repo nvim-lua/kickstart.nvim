@@ -3,10 +3,12 @@
 --
 -- See the kickstart.nvim README for more information
 
-vim.opt.colorcolumn = "80,100"
+vim.opt.colorcolumn = '80,100'
 vim.opt.number = true
 vim.opt.relativenumber = true
 
-vim.api.nvim_set_keymap('n', '<leader>cf', ':EslintFixAll<CR>:Neoformat<CR>', { noremap = true, silent = true })
+require('which-key').register({
+  f = { ':Neoformat<CR>:EslintFixAll<CR>', 'Prettier then eslint' }
+}, { prefix = '<leader>c' })
 
 return {}
