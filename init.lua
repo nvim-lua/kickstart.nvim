@@ -293,6 +293,31 @@ require('lazy').setup({
       },
     },
   },
+  {
+    "abecodes/tabout.nvim",
+    after = { "nvim-cmp" },
+    event = "InsertEnter",
+    opts = {
+      tabkey = '<Tab>',             -- key to trigger tabout, set to an empty string to disable
+      backwards_tabkey = '<S-Tab>', -- key to trigger backwards tabout, set to an empty string to disable
+      act_as_tab = true,            -- shift content if tab out is not possible
+      act_as_shift_tab = false,     -- reverse shift content if tab out is not possible (if your keyboard/terminal supports <S-Tab>)
+      default_tab = '<C-t>',        -- shift default action (only at the beginning of a line, otherwise <TAB> is used)
+      default_shift_tab = '<C-d>',  -- reverse shift default action,
+      enable_backwards = true,      -- well ...
+      -- completion = true,            -- if the tabkey is used in a completion pum
+      tabouts = {
+        { open = "'", close = "'" },
+        { open = '"', close = '"' },
+        { open = '`', close = '`' },
+        { open = '(', close = ')' },
+        { open = '[', close = ']' },
+        { open = '{', close = '}' }
+      },
+      -- ignore_beginning = true, --[[ if the cursor is at the beginning of a filled element it will rather tab out than shift the content ]]
+      exclude = {} -- tabout will ignore these filetypes
+    }
+  },
 
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
@@ -371,19 +396,22 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnos
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
--- [[ substitute ]]
+-- substitute
 
 vim.keymap.set("n", "gr", require('substitute').operator, { noremap = true })
 vim.keymap.set("n", "grr", require('substitute').line, { noremap = true })
 vim.keymap.set("x", "gr", require('substitute').visual, { noremap = true })
 
--- [[ clipboad ]]
+-- clipboad
 vim.keymap.set({ "n", "v" }, "<leader>y", '"+y')
 vim.keymap.set({ "n", "v" }, "<leader>p", '"+p')
 vim.keymap.set({ "n", "v" }, "<leader>gr", function() require('substitute').operator({ register = "+" }) end,
   { noremap = true })
 vim.keymap.set({ "n", "v" }, "<leader>grr", function() require('substitute').line({ register = "+" }) end,
   { noremap = true })
+-- replace word under cursor
+vim.keymap.set({ "n" }, "<leader>rr", '*``cgn')
+
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -482,7 +510,7 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', "haskell" },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
