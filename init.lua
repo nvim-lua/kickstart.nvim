@@ -190,12 +190,13 @@ require('lazy').setup({
   },
 
   {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
+    -- My preferred theme
+    "catppuccin/nvim",
+    name = "catppuccin",
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
+      vim.cmd.colorscheme 'catppuccin'
+    end
   },
 
   {
@@ -278,6 +279,7 @@ vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
+vim.wo.relativenumber = true
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -566,7 +568,19 @@ local servers = {
   -- clangd = {},
   -- gopls = {},
   -- pyright = {},
-  -- rust_analyzer = {},
+  rust_analyzer = {
+    ["rust-analyzer"] = {
+      inlayHints = {
+        locationLinks = false
+      },
+      checkOnSave = {
+        command = "clippy"
+      },
+      diagnostics = {
+        enable = true
+      }
+    }
+  }
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
