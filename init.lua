@@ -172,21 +172,28 @@ require('lazy').setup({
           gitsigns = true,
           mason = true,
           fidget = true,
-          telescope = true
+          telescope = true,
+          treesitter = true,
+          treesitter_context = true,
         },
-        transparent_background = true
+        transparent_background = true,
+        dim_inactive = {
+          enabled = true,
+          shade = "dark",
+          percentage = 0.15,
+        },
       })
-      vim.cmd.colorscheme "catppuccin-frappe"
+      vim.cmd.colorscheme "catppuccin-mocha"
     end
   },
+
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
     -- See `:help lualine.txt`
     opts = {
       options = {
-        icons_enabled = false,
-        theme = 'onedark',
+        icons_enabled = true,
         component_separators = '|',
         section_separators = '',
       },
@@ -233,6 +240,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
+      'nvim-treesitter/nvim-treesitter-context',
     },
     build = ':TSUpdate',
     opts = {
