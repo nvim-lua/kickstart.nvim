@@ -578,9 +578,9 @@ local servers = {
       },
       diagnostics = {
         enable = true
-      }
-    }
-  }
+      },
+    },
+  },
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
