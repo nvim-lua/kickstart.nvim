@@ -1,6 +1,25 @@
-# kickstart.nvim
+# swl_kickstart.nvim
+
+Instructions unique to my dotfiles:
+- create a symlink in $HOME/.config/
+`ln -s /Users/<username>/src/swl_kickstart.nvim /Users/<username>/.config/`
+- launch with `knv`
 
 https://github.com/kdheepak/kickstart.nvim/assets/1813121/f3ff9a2b-c31f-44df-a4fa-8a0d7b17cf7b
+
+## nvim-dap, nvim-dap-python
+
+### set up a virtual env for debugpy requirement as suggested
+
+mkdir .virtualenvs
+cd .virtualenvs
+python -m venv debugpy
+debugpy/bin/python -m pip install debugpy
+
+
+
+
+
 
 ### Introduction
 
