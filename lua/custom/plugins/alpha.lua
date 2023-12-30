@@ -128,7 +128,7 @@ return {
       },
     }
 
-    dashboard.section.header.val = ascii_arts['kraken']-- require("ascii").art.misc.krakens['sleekraken']
+    dashboard.section.header.val = require("ascii").art.misc.krakens['sleekraken']
 
     -- Set menu
     dashboard.section.buttons.val = {
@@ -149,7 +149,7 @@ return {
     dashboard.section.footer.opts.hl = "Conceal"
     dashboard.config.opts.noautocmd = true
 
-    vim.cmd[[autocmd User AlphaReady echo 'ready']]
+    vim.cmd [[autocmd User AlphaReady echo 'ready']]
 
     alpha.setup(dashboard.opts)
   end
