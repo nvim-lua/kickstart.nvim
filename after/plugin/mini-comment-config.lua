@@ -25,6 +25,9 @@ require('mini.comment').setup {
     -- Toggle comment on current line
     comment_line = '++',
 
+    -- Toggle comment on visual selection
+    comment_visual = '++',
+
     -- Define 'comment' textobject (like `dgc` - delete whole comment block)
     textobject = '++',
   },
