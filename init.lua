@@ -49,50 +49,50 @@ vim.g.nightflyTransparent = true
 vim.g.mapleader = " "
 local keymap = vim.keymap
 
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
-vim.keymap.set("v", "K", ":m '<-2<CR>gv)gv")
+keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+keymap.set("v", "K", ":m '<-2<CR>gv)gv")
 
 -- move half page up and down
-vim.keymap.set("n", "<C-d>", "<C-d>zz")
-vim.keymap.set("n", "<C-u>", "<C-u>zz")
+keymap.set("n", "<C-d>", "<C-d>zz")
+keymap.set("n", "<C-u>", "<C-u>zz")
 
-vim.keymap.set("n", "<leader>nh", ":nohl<CR>")
-vim.keymap.set("n", "x", '"_x')
+keymap.set("n", "<leader>nh", ":nohl<CR>")
+keymap.set("n", "x", '"_x')
 
 --increment / decrement numbers in normal mode
-vim.keymap.set("n", "<leader>+", "<C-a>")
-vim.keymap.set("n", "<leader>-", "<C-x>")
+keymap.set("n", "<leader>+", "<C-a>")
+keymap.set("n", "<leader>-", "<C-x>")
 
-vim.keymap.set("n", "n", "nzzzv")
-vim.keymap.set("n", "n", "Nzzzv")
+keymap.set("n", "n", "nzzzv")
+keymap.set("n", "n", "Nzzzv")
 
 --split like a king
-vim.keymap.set("n", "<leader>sd", "<C-w>v")        -- vertically
-vim.keymap.set("n", "<leader>s<leader>", "<C-w>s") -- horizontally
-vim.keymap.set("n", "<leader>se", "<C-w>=")        -- split w/ equal width
-vim.keymap.set("n", "<leader>ss", ":close<CR>")    -- split w/ equal width
+keymap.set("n", "<leader>sd", "<C-w>v")        -- vertically
+keymap.set("n", "<leader>s<leader>", "<C-w>s") -- horizontally
+keymap.set("n", "<leader>se", "<C-w>=")        -- split w/ equal width
+keymap.set("n", "<leader>ss", ":close<CR>")    -- split w/ equal width
 
-vim.keymap.set("n", "<leader>to", ":tabnew<CR>")   -- open new tab
-vim.keymap.set("n", "<leader>tt", ":tabclose<CR>") -- close current tab
-vim.keymap.set("n", "<leader>t.", ":tabn<CR>")     -- go to next tab
-vim.keymap.set("n", "<leader>t,", ":tabp<CR>")     -- go to previous tab
+keymap.set("n", "<leader>to", ":tabnew<CR>")   -- open new tab
+keymap.set("n", "<leader>tt", ":tabclose<CR>") -- close current tab
+keymap.set("n", "<leader>t.", ":tabn<CR>")     -- go to next tab
+keymap.set("n", "<leader>t,", ":tabp<CR>")     -- go to previous tab
 
 
-vim.keymap.set("x", "<leader>p", "\"_dP")
+keymap.set("x", "<leader>p", "\"_dP")
 
-vim.keymap.set("n", "<leader>y", "\"+y")
-vim.keymap.set("v", "<leader>y", "\"+y")
-vim.keymap.set("n", "<leader>Y", "\"+Y")
+keymap.set("n", "<leader>y", "\"+y")
+keymap.set("v", "<leader>y", "\"+y")
+keymap.set("n", "<leader>Y", "\"+Y")
 
-vim.keymap.set("n", "<leader><BS>", "\"+d")
-vim.keymap.set("v", "<leader><BS>", "\"+d")
+keymap.set("n", "<leader><BS>", "\"+d")
+keymap.set("v", "<leader><BS>", "\"+d")
 
 -- vim-maximizer
 
-vim.keymap.set("n", "<leader>sm", ":MaximizerToggle<CR>")
-vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>")
+keymap.set("n", "<leader>sm", ":MaximizerToggle<CR>")
+keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>")
 
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>"
 )
