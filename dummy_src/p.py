@@ -10,6 +10,7 @@ def f(x: int) -> str:
     d = f'Values {x=} {a=} {b=} {c=}'
     logging.error(d)
     logging.exception('FATAL!!!!!!!###!@#')
+    breakpoint()
     return d
 
 

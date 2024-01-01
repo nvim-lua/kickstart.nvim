@@ -304,8 +304,8 @@ vim.o.smartcase = true
 vim.wo.signcolumn = 'yes'
 
 -- Decrease update time
-vim.o.updatetime = 150
-vim.o.timeoutlen = 100
+vim.o.updatetime = 350
+vim.o.timeoutlen = 350
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
@@ -612,13 +612,24 @@ mason_lspconfig.setup_handlers {
 }
 
 -- [[ Configure nvim-cmp ]]
--- See `:help cmp`
+-- See `:help cmp` 
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
 luasnip.config.setup {}
 
 cmp.setup {
+  enabled = function()
+      -- disable completion in comments
+      local context = require 'cmp.config.context'
+      -- keep command mode completion enabled when cursor is in a comment
+      if vim.api.nvim_get_mode().mode == 'c' then
+        return true
+      else
+        return not context.in_treesitter_capture("comment") 
+          and not context.in_syntax_group("Comment")
+      end
+    end,
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
@@ -707,6 +718,9 @@ vim.cmd [[
       \ ['Open &Neotree', ':Neotree'],
       \ ['&Vertical split', ':vsp'],
       \ ['Ho&rizontal split', ':sp'],
+      \ ['--', ''],
+      \ ['Open &Terminal Right', ':botright vnew | terminal'],
+      \ ['Open Terminal &Down', ':belowright new | terminal'],
       \ ])
 ]]
 vim.cmd [[
@@ -763,7 +777,7 @@ vim.keymap.set('n', '<Leader>ds', function()
 end)
 
 -- Start Neovim in insert mode by default
-vim.cmd[[autocmd VimEnter * startinsert]]
+-- vim.cmd[[autocmd VimEnter * startinsert]]
 -- Map <Esc> to toggle between normal and insert mode
 vim.api.nvim_set_keymap('n', '<Esc>', ':startinsert<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('i', '<Esc>', '<C-o>:stopinsert<CR>', { noremap = true, silent = true })
