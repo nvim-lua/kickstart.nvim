@@ -43,6 +43,8 @@ P.S. You can delete this when you're done too. It's your config now :)
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+vim.g.nightflyTransparent = true
+
 -- remaps from remap.lua
 vim.g.mapleader = " "
 local keymap = vim.keymap
@@ -341,7 +343,7 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim',  opts = {} },
+  { 'numToStr/Comment.nvim',      opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -372,6 +374,7 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
   },
+  { 'nvim-treesitter/playground', },
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
