@@ -1,4 +1,11 @@
 --[[
+-- mlabrkic
+-- date: 2024-01M-01 15:21:43
+https://github.com/nvim-lua/kickstart.nvim
+
+commit 4d0dc8d
+fix: restore mason config timing for dap startup (#555)
+https://github.com/nvim-lua/kickstart.nvim/commit/4d0dc8d4b1bd6b94e59f7773158149bb1b0ee5be
 
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
@@ -209,6 +216,14 @@ require('lazy').setup({
         component_separators = '|',
         section_separators = '',
       },
+      -- https://github.com/nvim-lualine/lualine.nvim/wiki/Component-snippets
+      -- mlabrkic  -- column, filename
+      sections = {
+        lualine_c = { function() return [[C:%-c]] end,
+          { 'filename', path = 3, shorting_target = 40, }
+        },
+      },
+
     },
   },
 
