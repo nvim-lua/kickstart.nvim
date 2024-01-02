@@ -89,8 +89,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
-      -- { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
+      { 'j-hui/fidget.nvim',       opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -256,10 +255,7 @@ require('lazy').setup({
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help ibl`
     main = 'ibl',
-    opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
-    },
+    opts = {}
   },
 
   -- "gc" to comment visual regions/lines
@@ -832,5 +828,8 @@ vim.api.nvim_create_user_command(
   end,
   { nargs = 1 }
 )
+
+-- IBL config
+require("ibl").setup()
 
 -- vim: ts=2 sts=2 sw=2 et
