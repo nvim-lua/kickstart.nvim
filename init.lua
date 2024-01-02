@@ -62,22 +62,22 @@ keymap.set("n", "<leader>nh", ":nohl<CR>")
 keymap.set("n", "x", '"_x')
 
 --increment / decrement numbers in normal mode
-keymap.set("n", "<leader>+", "<C-a>")
-keymap.set("n", "<leader>-", "<C-x>")
+--keymap.set("n", "<leader>+", "<C-a>")
+--keymap.set("n", "<leader>-", "<C-x>")
 
 keymap.set("n", "n", "nzzzv")
 keymap.set("n", "n", "Nzzzv")
 
 --split like a king
-keymap.set("n", "<leader>sd", "<C-w>v")        -- vertically
-keymap.set("n", "<leader>s<leader>", "<C-w>s") -- horizontally
-keymap.set("n", "<leader>se", "<C-w>=")        -- split w/ equal width
-keymap.set("n", "<leader>ss", ":close<CR>")    -- split w/ equal width
+keymap.set("n", "<leader>|", "<C-w>v")               -- vertically
+keymap.set("n", "<leader>-<leader>", "<C-w>s")       -- horizontally
+keymap.set("n", "<leader>se", "<C-w>=")              -- split w/ equal width
+keymap.set("n", "<leader>ss", ":close<CR>")          -- split w/ equal width
 
-keymap.set("n", "<leader>to", ":tabnew<CR>")   -- open new tab
-keymap.set("n", "<leader>tt", ":tabclose<CR>") -- close current tab
-keymap.set("n", "<leader>t.", ":tabn<CR>")     -- go to next tab
-keymap.set("n", "<leader>t,", ":tabp<CR>")     -- go to previous tab
+keymap.set("n", "<leader><space>o", ":tabnew<CR>")   -- open new tab
+keymap.set("n", "<leader><space>x", ":tabclose<CR>") -- close current tab
+keymap.set("n", "<leader><space>.", ":tabn<CR>")     -- go to next tab
+keymap.set("n", "<leader><space>,", ":tabp<CR>")     -- go to previous tab
 
 
 keymap.set("x", "<leader>p", "\"_dP")
@@ -91,8 +91,8 @@ keymap.set("v", "<leader><BS>", "\"+d")
 
 -- vim-maximizer
 
-keymap.set("n", "<leader>sm", ":MaximizerToggle<CR>")
-keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>")
+vim.keymap.set("n", "<leader>sm", ":MaximizerToggle<CR>")
+vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>")
 
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>"
 )
@@ -396,7 +396,7 @@ require('lazy').setup({
 -- NOTE: You can change these options as you wish!
 
 -- Set highlight on search
-vim.o.hlsearch = false
+vim.o.hlsearch = true
 
 -- Make line numbers default
 vim.wo.number = true
@@ -513,7 +513,7 @@ vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
+vim.keymap.set('n', '<leader>T', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader>/', function()
   -- You can pass additional configuration to telescope to change theme, layout, etc.
   require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {

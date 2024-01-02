@@ -1,5 +1,4 @@
 vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
-
 return {
     "nvim-neo-tree/neo-tree.nvim",
     version = "*",
@@ -11,5 +10,4 @@ return {
     config = function()
         require('neo-tree').setup {}
     end,
-    "nvim-tree/nvim-web-devicons",
 }
