@@ -58,8 +58,17 @@ lsp.on_attach(function(_, bufnr)
   vim.keymap.set('n', '[d', function()
     vim.diagnostic.goto_next()
   end, opts)
+
   vim.keymap.set('n', ']d', function()
     vim.diagnostic.goto_prev()
+  end, opts)
+
+  vim.keymap.set('n', '<leader>dd', function()
+    vim.diagnostic.setloclist()
+  end, opts)
+
+  vim.keymap.set('n', '<leader>do', function()
+    vim.diagnostic.open_float()
   end, opts)
 
   vim.keymap.set('n', '<leader>ca', function()
