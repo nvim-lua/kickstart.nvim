@@ -4,6 +4,12 @@ wk.register({
     name = "+Git",
     h = {
       name = "+Github",
+      o = {
+        name = "+OpenInGithub",
+        f = { "<cmd>OpenInGHFile", "Open File" },
+        l = { "<cmd>OpenInGHFileLines", "Open Lines" },
+        r = { "<cmd>OpenInGHRepo", "Open Repo" },
+      },
       c = {
         name = "+Commits",
         c = { "<cmd>GHCloseCommit<cr>", "Close" },

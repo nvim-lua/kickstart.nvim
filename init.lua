@@ -64,6 +64,7 @@ require('custom.leader_shortcuts')
 require('custom.treesitter')
 require('custom.which_key')
 require('custom.lsp')
+require('custom.prettier')
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -155,28 +156,6 @@ require 'cmp'.setup {
     { name = 'path' }
   }
 }
-
--- Configure prettier
-local prettier = require("prettier")
-
-prettier.setup({
-  bin = 'prettier', -- or `'prettierd'` (v0.23.3+)
-  filetypes = {
-    "css",
-    "graphql",
-    "html",
-    "javascript",
-    "javascriptreact",
-    "json",
-    "less",
-    "markdown",
-    "scss",
-    "typescript",
-    "typescriptreact",
-    "yaml",
-  },
-})
-
 
 -- nvim-cmp setup
 local cmp = require 'cmp'
