@@ -14,9 +14,6 @@ return {
 	-- latte, frappe, macchiato, mocha
 	{ "catppuccin/catppuccin",    priority = 1000, },
 
-	-- Theme inspired by Atom
-	{ 'navarasu/onedark.nvim',    priority = 1000, },
-
 	--Rosepine (Primeagen)
 	{
 		'rose-pine/neovim',
