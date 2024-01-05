@@ -1,8 +1,8 @@
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.expandtab = true
+vim.go.tabstop = 2
+vim.go.shiftwidth = 2
+vim.go.expandtab = true
 vim.bo.softtabstop = 2
-vim.opt.relativenumber = true
+vim.go.relativenumber = true
 vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { noremap = true })
 vim.cmd.colorscheme 'gruvbox' -- Set custom colorscheme [[ NOTE: Never set it to "onedark" cuz it breaks the editor ]]
 
