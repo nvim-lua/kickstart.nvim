@@ -4,7 +4,7 @@ vim.go.expandtab = true
 vim.bo.softtabstop = 2
 vim.go.relativenumber = true
 vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { noremap = true })
-vim.cmd.colorscheme 'oxocarbon' -- Set custom colorscheme [[ NOTE: Never set it to "onedark" cuz it breaks the editor ]]
+vim.cmd.colorscheme 'rose-pine' -- Set custom colorscheme [[ NOTE: Never set it to "onedark" cuz it breaks the editor ]]
 
 -- Lualine config
 require('lualine').setup {
