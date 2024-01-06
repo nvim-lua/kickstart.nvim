@@ -10,7 +10,7 @@ return {
           disabled_filetypes = { 'javascript', 'typescript', 'json' } -- Use biome
         }),
         null_ls.builtins.formatting.biome,
-        null_ls.builtins.diagnostics.biome,
+        -- null_ls.builtins.diagnostics.biome,
       }
     })
   end
