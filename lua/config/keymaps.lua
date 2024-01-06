@@ -18,3 +18,7 @@ vim.keymap.set("x", "<leader>p", '"_dP')
 -- next greatest remap ever : asbjornHaland
 vim.keymap.set({ "n", "v" }, "<leader>y", '"+y')
 vim.keymap.set("n", "<leader>Y", '"+Y')
+
+vim.keymap.set("n", "<leader>pv", ":Vex<CR>")
+vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
+vim.keymap.set("t", "<C-v><Esc>", "<Esc>")
