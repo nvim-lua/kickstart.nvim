@@ -16,7 +16,11 @@ cd .virtualenvs
 python -m venv debugpy
 debugpy/bin/python -m pip install debugpy
 
+## TODO / explore
 
+### explore:
+
+- neotest - test run viewer
 
 
 

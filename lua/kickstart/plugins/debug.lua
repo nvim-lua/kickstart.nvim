@@ -20,6 +20,9 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+    'suketa/nvim-dap-ruby',
+    'mfussenegger/nvim-dap-python',
+    
   },
   config = function()
     local dap = require 'dap'
@@ -83,5 +86,8 @@ return {
 
     -- Install golang specific config
     require('dap-go').setup()
+    require('dap-ruby').setup()
+    require('dap-ruby').setup()
+    require('dap-python').setup('/Users/stephenleece/.asdf/shims/python')
   end,
 }

@@ -254,29 +254,12 @@ require('lazy').setup({
     build = ':TSUpdate',
   },
 
-  {
-    -- Debug Adapter Protocol client
-    'mfussenegger/nvim-dap',
-  },
-  {
-    -- python specific debugger
-    'mfussenegger/nvim-dap-python',
-  },
-
-  {
-    -- DAP UI
-    'rcarriga/nvim-dap-ui',
-    dependencies = {
-      'mfussenegger/nvim-dap'
-    }
-  },
-
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  -- require 'kickstart.plugins.autoformat',
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.autoformat',
+  require 'kickstart.plugins.debug',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
@@ -683,30 +666,6 @@ cmp.setup {
     { name = 'path' },
   },
 }
-
--- python debugger
-require('dap-python').setup('/Users/stephenleece/.asdf/shims/python')
--- require('dap-python').test_runner = "pytest"
-
--- configure dap ui 
-local dap, dapui = require("dap"), require("dapui")
-dapui.setup()
-dap.listeners.after.event_initialized["dapui_config"] = function()
-  dapui.open()
-end
-dap.listeners.before.event_terminated["dapui_config"] = function()
-  dapui.close()
-end
-dap.listeners.before.event_exited["dapui_config"] = function()
-  dapui.close()
-end
-vim.fn.sign_define('DapBreakpoint',{ text ='🟥', texthl ='', linehl ='', numhl =''})
-vim.fn.sign_define('DapStopped',{ text ='▶️', texthl ='', linehl ='', numhl =''})
-vim.keymap.set('n', '<F5>', require 'dap'.continue)
-vim.keymap.set('n', '<F10>', require 'dap'.step_over)
-vim.keymap.set('n', '<F11>', require 'dap'.step_into)
-vim.keymap.set('n', '<F12>', require 'dap'.step_out)
-vim.keymap.set('n', '<leader>b', require 'dap'.toggle_breakpoint)
 
 
 -- The line beneath this is called `modeline`. See `:help modeline`
