@@ -10,5 +10,6 @@ return {
       }
     })
     require('telescope').load_extension('ui-select')
-  end
+  end,
+  keys = { { '<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction' } },
 }
