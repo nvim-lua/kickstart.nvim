@@ -283,7 +283,7 @@ return {
       local fortunes = {
         ' \nI\'m sick of following my dreams, man. I\'m just going\nto ask where they\'re going and hook up with ’em later.\n \n—Mitch Hedberg',
         ' \nBefore you criticize someone, you should walk a mile in\ntheir shoes. That way when you criticize them, you are a\nmile away from them and you have their shoes. \n \n—Jack Handey',
-        ' \nBefore you marry a person, you should first make them use\na computer with slow Internet to see who they really are.\n \n—Will Ferrell',
+        'Before you marry a person, you should first make them use a computer with slow Internet to see who they really are. —Will Ferrell',
         ' \nCommon sense is like deodorant. The people who need it\nmost never use it.\n \n—Anonymous',
         ' \nHere’s all you have to know about men and women: Women\nare crazy, men are stupid. And the main reason women\nare crazy is that men are stupid.\n \n—George Carlin',
         ' \nCal: “You are really pushing my buttons today.”\nBecky: “Which one is \'mute \'?”\n \n—Waitress, the Musical',
@@ -313,10 +313,10 @@ return {
     --[[local handle = assert(io.popen('fortune -s'))
     local fortune = handle:read("*all")
     handle:close()]]
-    dashboard.section.footer.val = getFortune() -- ('alpha.fortune')()
+    dashboard.section.footer.val = getFortune() -- require('alpha.fortune')()
     dashboard.section.header.opts.hl = "Error"
     dashboard.section.buttons.opts.hl = "Debug"
-    dashboard.section.footer.opts.hl = "Conceal"
+    dashboard.section.footer.opts.hl = "Constant"
     dashboard.config.opts.noautocmd = true
 
     vim.cmd [[autocmd User AlphaReady echo 'ready']]
