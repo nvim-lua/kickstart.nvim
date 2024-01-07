@@ -1,6 +1,6 @@
 return {
   'goolord/alpha-nvim',
-  dependencies = { 'nvim-tree/nvim-web-devicons', 'BlakeJC94/alpha-nvim-fortune' },
+  dependencies = { 'nvim-tree/nvim-web-devicons' }, -- removing fortune from dependencies fixed the highlighting(only for predefined highlights)
   config = function()
     local alpha = require("alpha")
     local dashboard = require("alpha.themes.dashboard")
@@ -313,7 +313,7 @@ return {
     --[[local handle = assert(io.popen('fortune -s'))
     local fortune = handle:read("*all")
     handle:close()]]
-    dashboard.section.footer.val = getFortune() -- require(alpha.fortune)()
+    dashboard.section.footer.val = getFortune() -- ('alpha.fortune')()
     dashboard.section.header.opts.hl = "Error"
     dashboard.section.buttons.opts.hl = "Debug"
     dashboard.section.footer.opts.hl = "Conceal"
