@@ -4,7 +4,6 @@ return {
   config = function()
     local alpha = require("alpha")
     local dashboard = require("alpha.themes.dashboard")
-    local fortune = require("alpha.fortune")
 
     math.randomseed(os.time())
 
@@ -314,7 +313,7 @@ return {
     --[[local handle = assert(io.popen('fortune -s'))
     local fortune = handle:read("*all")
     handle:close()]]
-    dashboard.section.footer.val = getFortune()
+    dashboard.section.footer.val = getFortune() -- require(alpha.fortune)()
     dashboard.section.header.opts.hl = "Error"
     dashboard.section.buttons.opts.hl = "Debug"
     dashboard.section.footer.opts.hl = "Conceal"

@@ -1,1 +1,1 @@
-return { 'MaximilianLloyd/ascii.nvim', dependencies = 'MunifTanjim/nui.nvim' }
+return { 'MaximilianLloyd/ascii.nvim', dependencies = 'MunifTanjim/nui.nvim', lazy = true }
