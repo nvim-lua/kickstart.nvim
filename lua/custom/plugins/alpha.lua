@@ -17,28 +17,6 @@ return (function()
       "      ⢻⣿⣿⣄   ⠈⠻⣿⣿⣿⣷⣿⣿⣿⣿⣿⡟ ⠫⢿⣿⡆     ",
       "       ⠻⣿⣿⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀⣀⣤⣾⡿⠃     ",
     },
-    skull = {
-      '                     .:::!~!!!!!:.',
-      '                  .xUHWH!! !!?M88WHX:.',
-      '                .X*#M@$!!  !X!M$$$$$$WWx:.',
-      '               :!!!!!!?H! :!$!$$$$$$$$$$8X:',
-      '              !!~  ~:~!! :~!$!#$$$$$$$$$$8X:',
-      '             :!~::!H!<   ~.U$X!?R$$$$$$$$MM!',
-      '             ~!~!!!!~~ .:XW$$$U!!?$$$$$$RMM!',
-      '               !:~~~ .:!M"T#$$$$WX??#MRRMMM!',
-      '               ~?WuxiW*`   `"#$$$$8!!!!??!!!',
-      '             :X- M$$$$       `"T#$T~!8$WUXU~',
-      '            :%`  ~#$$$m:        ~!~ ?$$$$$$',
-      '          :!`.-   ~T$$$$8xx.  .xWW- ~""##*"',
-      '.....   -~~:<` !    ~?T#$$@@W@*?$$      /`',
-      'W$@@M!!! .!~~ !!     .:XUW$W!~ `"~:    :',
-      '#"~~`.:x%`!!  !H:   !WM$$$$Ti.: .!WUn+!`',
-      ':::~:!!`:X~ .: ?H.!u "$$$B$$$!W:U!T$$M~',
-      '.~~   :X@!.-~   ?@WTWo("*$$$W$TH$! `',
-      'Wi.~!X$?!-~   :: ?$$$B$Wu("**$RM!',
-      '$R@i.~~ !    ::   ~$$$$$B$$en:``',
-      '?MXT@Wx.~   ::     ~"##*$$$$M'
-    },
     alien = {
       "            :h-                                  Nhy`               ",
       "           -mh.                           h.    `Ndho               ",
@@ -259,6 +237,27 @@ return (function()
       [[⠀⠀⠘⢦⡀⠀⠀⠀⠀⠀⠀⢀⣀⠴⠖⠒⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
       [[⠀⠀⠀⠀⠉⠑⠒⠒⠐⠒⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀]],
     },
+    dragon = {
+      '               ▄▄██████████▄▄             ',
+      '               ▀▀▀   ██   ▀▀▀             ',
+      '       ▄██▄   ▄▄████████████▄▄   ▄██▄     ',
+      '     ▄███▀  ▄████▀▀▀    ▀▀▀████▄  ▀███▄   ',
+      '    ████▄ ▄███▀              ▀███▄ ▄████  ',
+      '   ███▀█████▀▄████▄      ▄████▄▀█████▀███ ',
+      '   ██▀  ███▀ ██████      ██████ ▀███  ▀██ ',
+      '    ▀  ▄██▀  ▀████▀  ▄▄  ▀████▀  ▀██▄  ▀  ',
+      '       ███           ▀▀           ███     ',
+      '       ██████████████████████████████     ',
+      '   ▄█  ▀██  ███   ██    ██   ███  ██▀  █▄ ',
+      '   ███  ███ ███   ██    ██   ███▄███  ███ ',
+      '   ▀██▄████████   ██    ██   ████████▄██▀ ',
+      '    ▀███▀ ▀████   ██    ██   ████▀ ▀███▀  ',
+      '     ▀███▄  ▀███████    ███████▀  ▄███▀   ',
+      '       ▀███    ▀▀██████████▀▀▀   ███▀     ',
+      '         ▀    ▄▄▄    ██    ▄▄▄    ▀       ',
+      '               ▀████████████▀             ',
+    },
+
   }
 
   local _getFortune = function()
@@ -298,7 +297,7 @@ return (function()
       local alpha = require("alpha")
       local dashboard = require("alpha.themes.dashboard")
 
-      dashboard.section.header.val = _ascii_arts['pacman'] -- require("ascii").art.gaming.pacman['basic']
+      dashboard.section.header.val = _ascii_arts['dragon'] -- require("ascii").art.text.slogons['make_cool_stuff']
 
       -- Set menu
       dashboard.section.buttons.val = {
@@ -314,9 +313,9 @@ return (function()
     local fortune = handle:read("*all")
     handle:close()]]
       dashboard.section.footer.val = require('alpha.fortune')()
-      dashboard.section.header.opts.hl = "Error"
-      dashboard.section.buttons.opts.hl = "Debug"
-      dashboard.section.footer.opts.hl = "NonText"
+      dashboard.section.header.opts.hl = "DevIconScss" -- "DeviconNPMrc"(red)
+      dashboard.section.buttons.opts.hl = "debug"
+      dashboard.section.footer.opts.hl = "Comment"
       dashboard.config.opts.noautocmd = true
 
       vim.cmd [[autocmd User AlphaReady echo 'ready']]
