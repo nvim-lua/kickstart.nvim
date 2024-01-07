@@ -117,7 +117,6 @@ require('lazy').setup({
       vim.g.aurora_italic = 1 
       vim.g.aurora_transparent = 1
       vim.g.aurora_bold = 1
-      vim.g.aurora_darker = 0
       vim.cmd.colorscheme 'aurora'
     end
   },
@@ -189,7 +188,7 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
@@ -199,12 +198,35 @@ require('lazy').setup({
 -- Set highlight on search
 vim.o.hlsearch = false
 
--- Make line numbers default
-vim.wo.number = true
-vim.opt.relativenumber = true
+vim.opt.autoread = true
 
 vim.opt.cursorline = true
 vim.opt.cursorlineopt = 'number'
+
+-- Make line numbers default
+vim.opt.nu = true
+vim.opt.relativenumber = true
+
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+
+vim.opt.smartindent = true
+vim.opt.autoindent = true
+
+vim.opt.swapfile = true
+vim.opt.backup = false
+vim.opt.undolevels = true
+
+vim.opt.hlsearch = false
+vim.opt.incsearch = true
+
+vim.opt.scrolloff = 8
+vim.opt.signcolumn = "yes"
+
+vim.opt.updatetime = 2000
+vim.opt.colorcolumn = "80"
 
 vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = 'white' })
 
@@ -343,11 +365,18 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
+    modules = {},
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+    ensure_installed = { 'bash', 'c', 'csv', 'diff', 'elvish', 'git_config', 'git_rebase', 'gitattributes', 'gitcommit', 'gitignore', 'jsonc', 'kconfig', 'lua', 'make', 'markdown', 'query', 'regex', 'toml', 'udev', 'vim', 'vimdoc', 'xml', 'yaml' },
 
+    -- Download languages from ensure_installed synchronously
+    sync_install = false,
+    
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
+
+    -- Languages to ignore installing
+    ignore_install = { },
 
     highlight = { enable = true },
     indent = { enable = true },
@@ -405,6 +434,7 @@ vim.defer_fn(function()
       },
     },
   }
+  vim.treesitter.language.register("bash", "PKGBUILD")
 end, 0)
 
 -- [[ Configure LSP ]]
@@ -477,7 +507,7 @@ require('mason-lspconfig').setup()
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
-  -- clangd = {},
+  clangd = {},
   -- gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
