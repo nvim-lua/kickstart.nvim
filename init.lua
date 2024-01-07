@@ -71,6 +71,7 @@ require('lazy').setup({
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
 
+
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
@@ -149,35 +150,13 @@ require('lazy').setup({
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
-    opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
-    },
+    main = 'ibl',
+    opts = {},
   },
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
 
-  -- Fuzzy Finder (files, lsp, etc)
-  {
-    'nvim-telescope/telescope.nvim',
-    branch = '0.1.x',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      -- Fuzzy Finder Algorithm which requires local dependencies to be built.
-      -- Only load if `make` is available. Make sure you have the system
-      -- requirements installed.
-      {
-        'nvim-telescope/telescope-fzf-native.nvim',
-        -- NOTE: If you are having trouble with this installation,
-        --       refer to the README for telescope-fzf-native for more instructions.
-        build = 'make',
-        cond = function()
-          return vim.fn.executable 'make' == 1
-        end,
-      },
-    },
-  },
   {
     -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
@@ -239,7 +218,7 @@ vim.o.smartcase = true
 vim.wo.signcolumn = 'yes'
 
 -- Decrease update time
-vim.o.updatetime = 250
+vim.o.updatetime = 100
 vim.o.timeoutlen = 300
 
 -- Set completeopt to have a better completion experience
@@ -277,49 +256,18 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end
 })
 
--- [[ Configure Telescope ]]
--- See `:help telescope` and `:help telescope.setup()`
-require('telescope').setup {
-  defaults = {
-    mappings = {
-      i = {
-        ['<C-u>'] = false,
-        ['<C-d>'] = false,
-      },
-    },
+vim.filetype.add({
+  extension = {
+    arb = "json",
   },
-}
-
--- Enable telescope fzf native, if installed
-pcall(require('telescope').load_extension, 'fzf')
-
--- See `:help telescope.builtin`
-vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
-vim.keymap.set('n', '<leader>/', function()
-  -- You can pass additional configuration to telescope to change theme, layout, etc.
-  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-    winblend = 10,
-    previewer = false,
-  })
-end, { desc = '[/] Fuzzily search in current buffer' })
-
-vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
-vim.keymap.set('n', '<leader>gs', require('telescope.builtin').git_status, { desc = 'Search [G]it [S]tatus' })
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
-vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
-
+})
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
   ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim',
-    'dart', 'prisma', 'graphql' },
+    'dart', 'prisma', 'graphql', 'json' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -396,6 +344,7 @@ vim.keymap.set("n", "<leader>n", '<Cmd>bnext<CR>', { desc = "[N]ext buffer" })
 vim.keymap.set("n", "<leader>p", '<Cmd>bprevious<CR>', { desc = "[P]revious buffer" })
 vim.keymap.set("n", "<leader>d", '<Cmd>bdelete<CR>', { desc = "[D]elete buffer" })
 vim.keymap.set("n", "<leader>ot", "<Cmd>20split | te<CR>", { desc = "[O]pen [T]erminal below" })
+vim.keymap.set("n", "<leader>vs", "<Cmd>vs<CR>", { desc = "[V]ertical [S]plit" })
 
 -- Save file
 vim.keymap.set("n", "<leader>s", '<Cmd>w<CR>', { desc = "[S]ave file" })
@@ -462,6 +411,7 @@ local servers = {
   tsserver = {},
   prismals = {},
   graphql = {},
+  clangd = {},
   -- prettierd = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} }
   lua_ls = {
@@ -519,6 +469,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
+local lspconfig = require('lspconfig')
 
 mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
@@ -526,7 +477,7 @@ mason_lspconfig.setup {
 
 mason_lspconfig.setup_handlers {
   function(server_name)
-    require('lspconfig')[server_name].setup {
+    lspconfig[server_name].setup {
       capabilities = capabilities,
       on_attach = on_attach,
       settings = servers[server_name],
@@ -535,32 +486,26 @@ mason_lspconfig.setup_handlers {
   end
 }
 
-
--- Setup language servers.
-local lspconfig = require('lspconfig')
-
 capabilities.textDocument.completion.completionItem.snippetSupport = true
-lspconfig.dartls.setup({
-  cmd = { "dart", "language-server", "--protocol=lsp" },
-  filetypes = { "dart" },
-  init_options = {
-    closingLabels = true,
-    flutterOutline = true,
-    onlyAnalyzeProjectsWithOpenFiles = true,
-    outline = true,
-    suggestFromUnimportedLibraries = true,
-  },
-  capabilities = capabilities,
-  -- root_dir = root_pattern("pubspec.yaml"),
-  settings = {
-    dart = {
-      completeFunctionCalls = true,
-      showTodos = true,
-    },
-  },
-})
-
-require("telescope").load_extension("flutter")
+-- lspconfig.dartls.setup({
+--   cmd = { "dart", "language-server", "--protocol=lsp" },
+--   filetypes = { "dart" },
+--   init_options = {
+--     closingLabels = true,
+--     flutterOutline = true,
+--     onlyAnalyzeProjectsWithOpenFiles = true,
+--     outline = true,
+--     suggestFromUnimportedLibraries = true,
+--   },
+--   capabilities = capabilities,
+--   -- root_dir = root_pattern("pubspec.yaml"),
+--   settings = {
+--     dart = {
+--       completeFunctionCalls = true,
+--       showTodos = true,
+--     },
+--   },
+-- })
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
@@ -576,10 +521,13 @@ cmp.setup {
       luasnip.lsp_expand(args.body)
     end,
   },
+  completion = {
+    completeopt = 'menu,menuone,noinsert',
+  },
   mapping = cmp.mapping.preset.insert {
     ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-p>'] = cmp.mapping.select_prev_item(),
-    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete {},
     ['<CR>'] = cmp.mapping.confirm {
@@ -608,6 +556,7 @@ cmp.setup {
   sources = {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
+    { name = 'path' },
   },
 }
 

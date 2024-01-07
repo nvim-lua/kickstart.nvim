@@ -71,13 +71,14 @@ return {
           config.specificThingIDontWant = false
           return config
         end,
+        analysisExcludedFolders = { "./fvm/" },
         -- see the link below for details on each option:
         -- https://github.com/dart-lang/sdk/blob/master/pkg/analysis_server/tool/lsp_spec/README.md#client-workspace-configuration
         settings = {
           showTodos = true,
           completeFunctionCalls = true,
           renameFilesWithClasses = "prompt", -- "always"
-          enableSnippets = true,
+          -- enableSnippets = true,
           updateImportsOnRename = true,      -- Whether to update imports and other directives when files are renamed. Required for `FlutterRename` command.
         }
       }
@@ -87,6 +88,11 @@ return {
     vim.keymap.set('n', '<leader>br', function()
       vim.cmd('20new')
       vim.cmd('te fvm flutter packages pub run build_runner build --delete-conflicting-outputs')
+      vim.cmd('2sleep | normal G')
+    end)
+    vim.keymap.set('n', '<leader>bt', function()
+      vim.cmd('20new')
+      vim.cmd('te sh scripts/create_clean_lcov_and_generate_html.sh')
       vim.cmd('2sleep | normal G')
     end)
     -- '<Cmd>20new | te fvm flutter pub get && fvm flutter packages pub run build_runner build --delete-conflicting-outputs<CR> | $')

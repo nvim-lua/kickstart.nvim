@@ -18,5 +18,19 @@ return {
         },
       },
     })
+
+    local neotest = require('neotest')
+
+    vim.keymap.set('n', '<leader>tu', function()
+      neotest.summary.toggle()
+    end, { desc = 'Test: [T]oggle [S]ummary unit tests' })
+    vim.keymap.set('n', '<leader>to', function()
+      neotest.output.open()
+    end, { desc = 'Test: [T]oggle [O]utput' })
+
+
+    vim.keymap.set('n', '<leader>rt', function()
+      neotest.run.run()
+    end, { desc = 'Test: [R]un [T]ests' })
   end
 }
