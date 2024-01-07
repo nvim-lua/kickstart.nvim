@@ -76,6 +76,9 @@ require('lazy').setup({
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
+  "nvim-tree/nvim-web-devicons",
+  "github/copilot.vim",
+
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   {
@@ -113,7 +116,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -267,7 +270,7 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
@@ -323,7 +326,7 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
--- Map for copy/yank to clipboard 
+-- Map for copy/yank to clipboard
 vim.keymap.set('v', '<leader>cp', '"+y')
 
 -- Diagnostic keymaps
@@ -574,7 +577,7 @@ local servers = {
   pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
-  html = { filetypes = { 'html', 'twig', 'hbs'} },
+  html = { filetypes = { 'html', 'twig', 'hbs' } },
 
   lua_ls = {
     Lua = {
@@ -587,7 +590,7 @@ local servers = {
 }
 
 -- Setup neovim lua configuration
--- enable type checking for nvim-dap-ui to get type checking, documentation and autocompletion 
+-- enable type checking for nvim-dap-ui to get type checking, documentation and autocompletion
 -- for all API functions
 require('neodev').setup({
   library = { plugins = { "nvim-dap-ui" }, types = true },
@@ -666,6 +669,12 @@ cmp.setup {
     { name = 'path' },
   },
 }
+
+-- Set Copilot related settings
+vim.g.copilot_no_tab_map = true
+vim.g.copilot_assume_mapped = true
+vim.g.copilot_tab_fallback = ""
+vim.api.nvim_set_keymap("i", "<C-g>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 
 
 -- The line beneath this is called `modeline`. See `:help modeline`
