@@ -174,6 +174,4 @@ return {
 
   -- require 'kickstart.plugins.autoformat',
   -- require 'kickstart.plugins.debug',
-
-  { import = 'custom.plugins' },
 };
