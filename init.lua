@@ -368,12 +368,6 @@ cmp.setup {
     { name = 'path' },
   },
 }
--- Configure Oil 
-require('oil').setup()
-vim.keymap.set('n', '<leader>-', '<CMD>Oil --float<CR>', { desc = 'Open current directory' })
-
--- Configure Todo-Comments
-require('todo-comments').setup()
 
 vim.opt.spell = true
 vim.opt.spelloptions = 'camel'
