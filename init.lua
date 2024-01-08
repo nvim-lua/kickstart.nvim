@@ -375,20 +375,6 @@ vim.keymap.set('n', '<leader>-', '<CMD>Oil --float<CR>', { desc = 'Open current 
 -- Configure Todo-Comments
 require('todo-comments').setup()
 
--- Configure Theme
-require('catppuccin').setup({
-	flavour = 'macchiato',
-	no_italic = false,
-	styles = {
-		comments = { 'italic' },
-		conditionals = { 'italic' },
-	},
-	integrations = {
-		treesitter = true,
-	},
-})
-
-vim.cmd.colorscheme 'catppuccin'
 vim.opt.spell = true
 vim.opt.spelloptions = 'camel'
 
