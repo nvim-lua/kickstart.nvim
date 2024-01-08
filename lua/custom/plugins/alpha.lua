@@ -292,6 +292,7 @@ end
 return {
   'goolord/alpha-nvim',
   dependencies = { 'nvim-tree/nvim-web-devicons' }, -- removing fortune from dependencies fixed the highlighting(only for predefined highlights)
+  lazy = false,
   config = function()
     local alpha = require("alpha")
     local dashboard = require("alpha.themes.dashboard")
@@ -313,7 +314,7 @@ return {
     handle:close()]]
     dashboard.section.footer.val = require('alpha.fortune')()
     dashboard.section.header.opts.hl = "DevIconScss" -- "DeviconNPMrc"(red)
-    dashboard.section.buttons.opts.hl = "debug"
+    dashboard.section.buttons.opts.hl = "Debug"
     dashboard.section.footer.opts.hl = "Comment"
     dashboard.config.opts.noautocmd = true
 
