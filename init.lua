@@ -15,6 +15,6 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup('plugins');
-require('lua/settings');
+require('settings');
 
 -- vim: ts=2 sts=2 sw=2 et
