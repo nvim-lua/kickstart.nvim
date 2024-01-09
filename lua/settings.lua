@@ -13,6 +13,10 @@ vim.opt.mouse = ''
 -- Sync clipboard between OS and Neovim.
 vim.opt.clipboard = 'unnamedplus'
 
+-- Enable spell check
+vim.opt.spell = true
+vim.opt.spelloptions = 'camel'
+
 -- FIX: tabs do not seem to be working as expected
 -- Handle indentation
 vim.opt.tabstop = 4
