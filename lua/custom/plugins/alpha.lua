@@ -291,7 +291,7 @@ end
 
 return {
   'goolord/alpha-nvim',
-  dependencies = { 'nvim-tree/nvim-web-devicons' }, -- removing fortune from dependencies fixed the highlighting(only for predefined highlights)
+  dependencies = { 'nvim-tree/nvim-web-devicons', config = true },
   lazy = false,
   config = function()
     local alpha = require("alpha")

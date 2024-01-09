@@ -5,6 +5,7 @@ return {
     'nvim-treesitter/nvim-treesitter-textobjects',
   },
   build = ':TSUpdate',
+  event = { 'BufReadPre', 'BufNewFile' },
   config = function()
     require 'nvim-treesitter.install'.compilers = { 'zig' }
 

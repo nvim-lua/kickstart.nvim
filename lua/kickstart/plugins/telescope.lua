@@ -17,6 +17,7 @@ return {
       end,
     },
   },
+  event = 'VeryLazy',
   config = function()
     -- [[ Configure Telescope ]]
     -- See `:help telescope` and `:help telescope.setup()`
