@@ -16,6 +16,7 @@ return {
     'folke/neodev.nvim',
   },
   event = { 'BufReadPre', 'BufNewFile' },
+  cmd = 'Mason',
   config = function()
     -- [[ Configure LSP ]]
     --  This function gets run when an LSP connects to a particular buffer.
