@@ -15,7 +15,7 @@ return {
 	{ "catppuccin/catppuccin",    priority = 1000, lazy = true },
 
 	-- Theme inspired by Atom
-	{ 'navarasu/onedark.nvim',    priority = 1000, config = true, lazy = true },
+	{ 'navarasu/onedark.nvim',    priority = 1000, lazy = true },
 
 	--Rosepine (Primeagen)
 	{
