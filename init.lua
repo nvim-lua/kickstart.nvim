@@ -3,7 +3,6 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- [[ Install `lazy.nvim` plugin manager ]]
 --    `:help lazy.nvim.txt` for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
@@ -18,17 +17,14 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- Load settings
-require('kickstart.settings')
-require('kickstart.keymaps')
-require('kickstart.yank-highlight')
+-- Load options
+local options = 'vatsal.options.'
+require(options .. 'settings')
+require(options .. 'keymaps')
+require(options .. 'yank-highlight')
 
 -- Load plugins
-require('lazy').setup({
-
-  { import = 'kickstart.plugins' },
-  { import = 'custom.plugins' },
-}, {})
+require('lazy').setup('vatsal.plugins', {})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
