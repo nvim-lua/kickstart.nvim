@@ -3,11 +3,13 @@ return {
   'lukas-reineke/indent-blankline.nvim',
   -- Enable `lukas-reineke/indent-blankline.nvim`
   -- See `:help ibl`
+  dependencies = { 'HiPhish/rainbow-delimiters.nvim' },
   event = { 'BufReadPre', 'BufNewFile' },
   main = 'ibl',
   opts = {
+    scope = { highlight = { 'RainbowDelimiterRed' }, char = '▎', show_start = true },
     exclude = {
-      filetypes = { 'dashboard', 'alpha', 'help', 'nvim-tree', 'lazy', 'mason' },
+      buftypes = { 'dashboard', 'alpha', 'help', 'lazy', 'mason' },
     },
   },
 }
