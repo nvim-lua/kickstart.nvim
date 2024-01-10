@@ -78,6 +78,7 @@ require('lazy').setup({
 
   "nvim-tree/nvim-web-devicons",
   "github/copilot.vim",
+  "ThePrimeagen/harpoon",
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
@@ -542,6 +543,7 @@ end
 
 -- document existing key chains
 require('which-key').register {
+  ['<leader>m'] = { name = 'Harpoon [M]ark file', _ = 'which_key_ignore' },
   ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
   ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
   ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
@@ -670,11 +672,62 @@ cmp.setup {
   },
 }
 
+
+
+-- Harpoon commands
+-- leader a | add file to harpoon marks
+-- C-e | toggle quick menu
+-- C-(zxcv) | nav to each marked file
+vim.keymap.set("n", "<Leader>m", function() require("harpoon.mark").add_file() end, { silent = true })
+vim.keymap.set("n", "<C-e>", function() require("harpoon.ui").toggle_quick_menu() end, { silent = true })
+vim.keymap.set("n", "<C-z>", function() require("harpoon.ui").nav_file(1) end, { silent = true })
+vim.keymap.set("n", "<C-x>", function() require("harpoon.ui").nav_file(2) end, { silent = true })
+vim.keymap.set("n", "<C-c>", function() require("harpoon.ui").nav_file(3) end, { silent = true })
+vim.keymap.set("n", "<C-v>", function() require("harpoon.ui").nav_file(4) end, { silent = true })
+
 -- Set Copilot related settings
 vim.g.copilot_no_tab_map = true
 vim.g.copilot_assume_mapped = true
 vim.g.copilot_tab_fallback = ""
 vim.api.nvim_set_keymap("i", "<C-g>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+
+-- General Keymaps
+-- paste and keep current paste text after pasting over a selection
+vim.keymap.set("x", "<Leader>p", "\"_dP")
+-- Normal Mode
+-- select all text
+vim.keymap.set("n", "<Leader>sa", "ggVG")
+-- open file explorer netrw
+vim.keymap.set("n", "<Leader>pv", ":Ex<CR>")
+vim.keymap.set("n", "<Leader>ex", ":Ex<CR>")
+-- when using J, append subsequent line to current line keeping cursor in place
+vim.keymap.set("n", "J", "mzJ`z")
+-- center cursor with certain commands
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
+vim.keymap.set("n", "n", "nzzzv")
+vim.keymap.set("n", "N", "Nzzzv")
+-- Visual Mode
+-- yank to clipboard
+vim.keymap.set("v", "<Leader>yc", "\"+y")
+-- Move selected lines up or down one line at a time
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+
+
+-- General options
+-- Completion (cmp)
+vim.opt.completeopt = "menu,menuone,noselect"
+
+vim.opt.incsearch = true
+vim.opt.scrolloff = 10
+
+vim.opt.colorcolumn = "80"
+vim.opt.signcolumn = "yes:1"
+vim.opt.equalalways = true -- equal splits automatically
+vim.opt.termguicolors = true
+vim.opt.updatetime = 50
+vim.opt.wrap = true
 
 
 -- The line beneath this is called `modeline`. See `:help modeline`
