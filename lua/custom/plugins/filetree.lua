@@ -10,6 +10,20 @@ return {
     "MunifTanjim/nui.nvim",
   },
   config = function ()
-    require('neo-tree').setup {}
+    require('neo-tree').setup{
+       filesystem = {
+          filtered_items = {
+            visible = true, -- when true, they will just be displayed differently than normal items
+            hide_dotfiles = true,
+            hide_hidden = true,
+            hide_gitignored = true,
+            never_show = {
+              ".git",
+              ".github"
+            }
+          }
+      }
+    }
   end,
+  vim.keymap.set('n', '<leader>ft', '<Cmd>Neotree toggle<CR>', {desc = "Open File Tree"})
 }
