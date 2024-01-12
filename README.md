@@ -71,9 +71,9 @@ If you would prefer to hide this step and run the plugin sync from the command l
 nvim --headless "+Lazy! sync" +qa
 ```
 
-### Introduction
+### Getting Started
 
-To get started, see [Effective Neovim: Instant IDE](https://youtu.be/stqUbv-5u2s), covering the previous version. Note: The install via init.lua is outdated, please follow the install instructions in this file instead. An updated video is coming soon.
+See [Effective Neovim: Instant IDE](https://youtu.be/stqUbv-5u2s), covering the previous version. Note: The install via init.lua is outdated, please follow the install instructions in this file instead. An updated video is coming soon.
 
 ### Recommended Steps
 
