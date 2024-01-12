@@ -198,6 +198,20 @@ require('lazy').setup({
       vim.cmd.colorscheme 'catppuccin'
     end
   },
+  
+  {
+    "tpope/vim-surround"
+  },
+  
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    opts = {},
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    }
+  },
 
   {
     -- Set lualine as statusline
