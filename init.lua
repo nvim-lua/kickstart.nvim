@@ -200,7 +200,11 @@ require('lazy').setup({
   },
   
   {
-    "tpope/vim-surround"
+    "tpope/vim-surround",
+  },
+
+  {
+    "ThePrimeagen/harpoon",
   },
   
   {
