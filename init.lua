@@ -198,6 +198,12 @@ require('lazy').setup({
       vim.cmd.colorscheme 'catppuccin'
     end
   },
+
+  {
+    "windwp/nvim-autopairs",
+    event = "InsertEnter",
+    opts = {},
+  },
   
   {
     "tpope/vim-surround",
