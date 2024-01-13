@@ -81,7 +81,7 @@ require('lazy').setup({
       signs = {
         add = { text = '+' },
         change = { text = '~' },
-        delete = { text = '_' },
+        delete = { text = '-' },
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
@@ -113,8 +113,10 @@ require('lazy').setup({
   },
   {
     "ray-x/aurora",
+    lazy = false,
+    priority = 1000,
     config = function()
-      vim.g.aurora_italic = 1 
+      vim.g.aurora_italic = 1
       vim.g.aurora_transparent = 1
       vim.g.aurora_bold = 1
       vim.cmd.colorscheme 'aurora'
@@ -217,7 +219,7 @@ vim.opt.autoindent = true
 
 vim.opt.swapfile = true
 vim.opt.backup = false
-vim.opt.undolevels = true
+vim.opt.undofile = true
 
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
@@ -226,7 +228,6 @@ vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
 
 vim.opt.updatetime = 2000
-vim.opt.colorcolumn = "80"
 
 vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = 'white' })
 
