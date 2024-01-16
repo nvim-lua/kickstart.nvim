@@ -10,6 +10,7 @@ require('conform').setup {
     typescript = { { 'prettier' } },
     go = { { 'gofumpt', 'goimports-reviser', 'golines' } },
     java = { 'google-java-format' },
+    templ = { 'templ' },
   },
 }
 

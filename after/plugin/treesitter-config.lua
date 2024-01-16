@@ -34,6 +34,7 @@ require('nvim-treesitter.configs').setup {
     'html',
     'javascript',
     'typescript',
+    'templ',
   },
   context_commentstring = {
     enable = true,
