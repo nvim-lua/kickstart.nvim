@@ -598,6 +598,7 @@ local servers = {
   -- clangd = {},
   -- gopls = {},
   -- pyright = {},
+  intelephense = {},
   rust_analyzer = {
     ["rust-analyzer"] = {
       inlayHints = {
