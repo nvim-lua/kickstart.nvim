@@ -8,6 +8,12 @@ wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20R
 wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf
 wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
 wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
+
+# Place fonts in 
+/usr/local/share/fonts/
+
+# Then run
+sudo fc-cache -fv
 ```
 
 ## Install command line stuff
@@ -18,8 +24,9 @@ tmux
 # Shell
 
 ## ZSH (standard with mac)
+
 https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH
-=======
+
 | OS | PATH |
 | :- | :--- |
 | Linux | `$XDG_CONFIG_HOME/nvim`, `~/.config/nvim` |
@@ -34,6 +41,7 @@ https://github.com/ohmyzsh/ohmyzsh
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
+
 
 ## Powerlevel10k
 https://github.com/romkatv/powerlevel10k#oh-my-zsh
@@ -79,10 +87,13 @@ The installation of these should be covered by the included .tmux.conf
 To install plugins, use prefix + I (capital )
 https://draculatheme.com/tmux
 
-# Once ZSH is setup, then add this to the bottom of ~/.zshrc to open tmux with new terminals.
+# Tmux Default 
+Once ZSH is setup, then add this to the bottom of ~/.zshrc to open tmux with new terminals.
+```bash
 if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
   exec tmux new-session -A -s main
 fi
+```
 
 # Editor
 
