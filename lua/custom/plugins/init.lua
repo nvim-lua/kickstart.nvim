@@ -45,5 +45,18 @@ return {
         opts = {},
         -- Optional dependencies
         dependencies = { "nvim-tree/nvim-web-devicons" },
+    },
+    {
+      'jim-fx/sudoku.nvim',
+      cmd = "Sudoku",
+      config = function()
+        require("sudoku").setup({
+          -- configuration ...
+        })
+      end
+    },
+    {
+        'alec-gibson/nvim-tetris',
+        cmd = "Tetris",
     }
 }
