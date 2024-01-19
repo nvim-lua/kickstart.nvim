@@ -198,11 +198,19 @@ require('lazy').setup({
     -- end,
   },
   {
-    'sainnhe/gruvbox-material',
+    "catppuccin/nvim",
+    name = "catppuccin",
     priority = 1000,
     config = function ()
-      vim.cmd.colorscheme 'gruvbox-material'
+      vim.cmd.colorscheme "catppuccin-frappe"
     end
+  },
+  {
+    'sainnhe/gruvbox-material',
+    -- priority = 1000,
+    -- config = function ()
+    --   vim.cmd.colorscheme 'gruvbox-material'
+    -- end
   },
 
   {
