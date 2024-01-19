@@ -72,6 +72,7 @@ require('lazy').setup({
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
+  'ThePrimeagen/git-worktree.nvim',
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
@@ -365,6 +366,9 @@ require('telescope').setup {
   },
 }
 
+require('git-worktree').setup()
+require('telescope').load_extension('git_worktree')
+
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
 
@@ -431,6 +435,8 @@ vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc
 vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
+vim.keymap.set('n', '<leader>sb', "<CMD>lua require('telescope').extensions.git_worktree.git_worktrees()<CR>", { desc = '[S]earch [B]ranches' })
+vim.keymap.set('n', '<leader>sB', "<CMD>lua require('telescope').extensions.git_worktree.create_git_worktree()<CR>", { desc = '[S]earch [B]ranches: Create New' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
