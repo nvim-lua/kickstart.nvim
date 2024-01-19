@@ -24,3 +24,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
+
+-- Format File
+vim.api.nvim_set_keymap('n', '<S-F>', ':Format<CR>', { noremap = true, silent = true })
