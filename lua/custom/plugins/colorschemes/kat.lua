@@ -1,0 +1,1 @@
+return { 'katawful/kat.nvim' }
