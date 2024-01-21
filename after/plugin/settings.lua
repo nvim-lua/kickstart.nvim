@@ -58,3 +58,6 @@ opt.foldmethod = 'indent'
 opt.foldenable = false
 opt.foldlevel = 99
 global.markdown_folding = 1
+
+global.mkdp_markdown_css = '~/markdown.css'
+global.mkdp_highlight_css = ''
