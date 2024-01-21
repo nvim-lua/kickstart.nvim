@@ -33,7 +33,7 @@ return {
 	-- LSP Configuration & Plugins
 	'neovim/nvim-lspconfig',
 	dependencies = {
-		'williamboman/mason.nvim',
+		{ 'williamboman/mason.nvim', config = true },
 		'williamboman/mason-lspconfig.nvim',
 
 		-- Useful status updates for LSP
