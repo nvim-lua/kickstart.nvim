@@ -467,6 +467,7 @@ local servers = {
   tsserver = {},
   terraformls = {},
   svelte = {},
+  texlab = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
   lua_ls = {
