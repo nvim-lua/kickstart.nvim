@@ -34,7 +34,7 @@ return {
         async = false,
         timeout_ms = 1000,
       }
-      vim.cmd('write')
+      vim.cmd 'write'
     end, { desc = 'Format file or range (in visual mode)' })
   end,
 }
