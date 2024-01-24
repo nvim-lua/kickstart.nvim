@@ -88,7 +88,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim',       opts = {} },
+      { 'j-hui/fidget.nvim', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -113,7 +113,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',  opts = {} },
+  { 'folke/which-key.nvim', opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -211,10 +211,11 @@ require('lazy').setup({
       sections = {
         lualine_c = {
           {
-            'filename', path = 4
-          }
-        }
-      }
+            'filename',
+            path = 4,
+          },
+        },
+      },
     },
   },
 
@@ -240,9 +241,10 @@ require('lazy').setup({
       sections = {
         lualine_c = {
           {
-            'filename', path = 4
-          }
-        }
+            'filename',
+            path = 4,
+          },
+        },
       },
       -- Only load if `make` is available. Make sure you have the system
       -- requirements installed.
@@ -365,15 +367,15 @@ require('telescope').setup {
       i = {
         ['<C-u>'] = false,
         ['<C-d>'] = false,
-        ["<C-j>"] = require('telescope.actions').move_selection_next,
-        ["<C-k>"] = require('telescope.actions').move_selection_previous,
-        ["<C-n>"] = require('telescope.actions').cycle_history_next,
-        ["<C-p>"] = require('telescope.actions').cycle_history_prev,
+        ['<C-j>'] = require('telescope.actions').move_selection_next,
+        ['<C-k>'] = require('telescope.actions').move_selection_previous,
+        ['<C-n>'] = require('telescope.actions').cycle_history_next,
+        ['<C-p>'] = require('telescope.actions').cycle_history_prev,
       },
       -- for normal mode
       n = {
-        ["<C-j>"] = require('telescope.actions').move_selection_next,
-        ["<C-k>"] = require('telescope.actions').move_selection_previous,
+        ['<C-j>'] = require('telescope.actions').move_selection_next,
+        ['<C-k>'] = require('telescope.actions').move_selection_previous,
       },
     },
   },
@@ -454,16 +456,16 @@ vim.defer_fn(function()
     -- Add languages to be installed here that you want installed for treesitter
     -- ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
     ensure_installed = {
-      "bash",
-      "javascript",
-      "json",
-      "lua",
-      "typescript",
-      "tsx",
-      "css",
-      "rust",
-      "yaml",
-      "svelte",
+      'bash',
+      'javascript',
+      'json',
+      'lua',
+      'typescript',
+      'tsx',
+      'css',
+      'rust',
+      'yaml',
+      'svelte',
     },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)

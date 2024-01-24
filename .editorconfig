@@ -1,0 +1,164 @@
+# see https://github.com/CppCXY/EmmyLuaCodeStyle
+[*.lua]
+# [basic]
+
+# optional space/tab
+indent_style = space
+# if indent_style is space, this is valid
+indent_size = 2
+# if indent_style is tab, this is valid
+tab_width = 2
+# none/single/double
+quote_style = single
+
+continuation_indent = 2
+## extend option
+# continuation_indent.before_block = 4
+# continuation_indent.in_expr = 4
+# continuation_indent.in_table = 4
+
+# this mean utf8 length , if this is 'unset' then the line width is no longer checked
+# this option decides when to chopdown the code
+max_line_length = 160
+
+# optional crlf/lf/cr/auto, if it is 'auto', in windows it is crlf other platforms are lf
+# in neovim the value 'auto' is not a valid option, please use 'unset' 
+end_of_line = auto
+
+#  none/ comma / semicolon / only_kv_colon
+table_separator_style = comma
+
+#optional keep/never/always/smart
+trailing_table_separator = smart
+
+# keep/remove/remove_table_only/remove_string_only
+call_arg_parentheses = keep
+
+detect_end_of_line = false
+
+# this will check text end with new line
+insert_final_newline = true
+
+# [space]
+space_around_table_field_list = true
+
+space_before_attribute = true
+
+space_before_function_open_parenthesis = false
+
+space_before_function_call_open_parenthesis = false
+
+space_before_closure_open_parenthesis = false
+
+# optional always/only_string/only_table/none
+# or true/false
+space_before_function_call_single_arg = always
+## extend option
+## always/keep/none
+# space_before_function_call_single_arg.table = always
+## always/keep/none
+# space_before_function_call_single_arg.string = always
+
+space_before_open_square_bracket = false
+
+space_inside_function_call_parentheses = false
+
+space_inside_function_param_list_parentheses = false
+
+space_inside_square_brackets = false
+
+# like t[#t+1] = 1
+space_around_table_append_operator = false
+
+ignore_spaces_inside_function_call = false
+
+# detail number or 'keep'
+space_before_inline_comment = 1
+
+# [operator space]
+space_around_math_operator = true
+
+space_after_comma = true
+
+space_after_comma_in_for_statement = true
+
+# true/false or none/always/no_space_asym
+space_around_concat_operator = true
+
+space_around_logical_operator = true
+
+# true/false or none/always/no_space_asym
+space_around_assign_operator = true
+
+# [align]
+
+align_call_args = false
+
+align_function_params = true
+
+align_continuous_assign_statement = true
+
+align_continuous_rect_table_field = true
+
+align_continuous_line_space = 2
+
+align_if_branch = false
+
+# option none / always / contain_curly/
+align_array_table = true
+
+align_continuous_similar_call_args = false
+
+align_continuous_inline_comment = true
+# option none / always / only_call_stmt
+align_chain_expr = none
+
+# [indent]
+
+never_indent_before_if_condition = false
+
+never_indent_comment_on_if_branch = false
+
+keep_indents_on_empty_lines = false
+# [line space]
+
+# The following configuration supports four expressions
+# keep  
+# fixed(n)   
+# min(n)
+# max(n)
+# for eg. min(2)
+
+line_space_after_if_statement = keep
+
+line_space_after_do_statement = keep
+
+line_space_after_while_statement = keep
+
+line_space_after_repeat_statement = keep
+
+line_space_after_for_statement = keep
+
+line_space_after_local_or_assign_statement = keep
+
+line_space_after_function_statement = fixed(2)
+
+line_space_after_expression_statement = keep
+
+line_space_after_comment = keep
+
+line_space_around_block = fixed(1)
+# [line break]
+break_all_list_when_line_exceed = false
+
+auto_collapse_lines = false
+
+break_before_braces = false
+
+# [preference]
+ignore_space_after_colon = false
+
+remove_call_expression_list_finish_comma = false
+# keep / always / same_line / replace_with_newline / never
+end_statement_with_semicolon = keep
+

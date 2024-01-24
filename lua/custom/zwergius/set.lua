@@ -14,11 +14,11 @@ vim.o.hlsearch = false
 vim.opt.incsearch = true
 
 -- Filetype overrides
-vim.filetype.add({
+vim.filetype.add {
   extension = {
     postcss = 'css',
-  }
-})
+  },
+}
 
 -- Autocommand create folder(s) for new file
 vim.cmd 'source ~/.config/nvim/vim/auto-mkdir.vim'
