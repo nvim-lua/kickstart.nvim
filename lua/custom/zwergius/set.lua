@@ -23,9 +23,6 @@ vim.opt.incsearch = true
 -- Scroll buffer
 vim.opt.scrolloff = 8
 
--- not sure
-vim.opt.colorcolumn = '80'
-
 -- Filetype overrides
 vim.filetype.add {
   extension = {

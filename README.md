@@ -144,6 +144,10 @@ return {
 
 This will install the tree plugin and add the command `:Neotree` for you. You can explore the documentation at [neo-tree.nvim](https://github.com/nvim-neo-tree/neo-tree.nvim) for more information.
 
+### Push Fork Changes
+There is a Github workflow that expects .lua files to be formatted by `stylua`, while after enabling `require 'kickstart.plugins.autoformat'` files will automatically be formatted by `lua_ls`.
+In order to pass this workflow it might be necessary to run `npx @johnnymorganz/stylua-bin **/**.lua`
+
 ### Contribution
 
 Pull-requests are welcome. The goal of this repo is not to create a Neovim configuration framework, but to offer a starting template that shows, by example, available features in Neovim. Some things that will not be included:
