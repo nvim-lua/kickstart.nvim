@@ -1,7 +1,7 @@
 tags
 test.sh
 .luarc.json
-nvim
+*.nvim
 lazy-lock.json
 
 # custom
