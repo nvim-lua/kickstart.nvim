@@ -11,6 +11,9 @@ return
     config = function ()
       vim.keymap.set('n', '<leader>o', ':Neotree<CR>', { desc = 'Open file browser' })
       require("neo-tree").setup({
+        window = {
+          position = "float",
+        },
         -- Neotree config
       })
     end
