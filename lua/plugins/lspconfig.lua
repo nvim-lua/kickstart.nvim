@@ -59,14 +59,15 @@ return {
 
 		-- Enable the following language servers
 		local servers = {
-		  rust_analyzer = { filetypes = {'rust', 'rs'}},
-		  tsserver = {},
 		  lua_ls = {
 			Lua = {
 			  workspace = { checkThirdParty = false },
 			  telemetry = { enable = false },
 			},
 		  },
+		  rust_analyzer = { filetypes = {'rust', 'rs'}},
+		  svelte = { filetypes = {'svelte'} },
+		  tsserver = {},
 		}
 
 		-- Setup neovim lua configuration
