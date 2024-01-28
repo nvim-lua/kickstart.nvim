@@ -1,7 +1,7 @@
 return {
-	'sainnhe/everforest',
+	'chriskempson/base16-vim',
 	priority = 1000,
 	config = function()
-		vim.cmd.colorscheme 'everforest'
+		vim.cmd.colorscheme 'base16-bright'
 	end,
 }
