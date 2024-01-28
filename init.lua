@@ -248,7 +248,7 @@ vim.keymap.set('n', '<leader>w', vim.cmd.w, { desc = 'Save buffer' })
 
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
-local on_attach = function(_, bufnr)
+local on_attach = function(client, bufnr)
   -- Create a command `:Format` local to the LSP buffer
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
@@ -283,6 +283,8 @@ local on_attach = function(_, bufnr)
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
   nmap('<M-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+
+  client.server_capabilities.semanticTokensProvider = nil
 end
 
 -- Enable the following language servers
