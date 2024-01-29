@@ -198,7 +198,7 @@ require('lazy').setup({
       require('onedark').setup {
         style = 'dark', -- dark, darker, cool, deep, warm, warmer, light
       }
-      vim.cmd.colorscheme 'onedark'
+      require('onedark').load()
     end,
   },
 
