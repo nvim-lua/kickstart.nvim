@@ -15,9 +15,7 @@ return {
       local mason_registry = require("mason-registry")
       local jdtls_pkg = mason_registry.get_package("jdtls")
       local jdtls_path = jdtls_pkg:get_install_path()
-      local jdtls_bin = jdtls_path .. "/bin/jdtls"
       local equinox_launcher = vim.fn.glob(jdtls_path .. "/plugins/org.eclipse.equinox.launcher_*.jar")
-      -- local equinox = jdtls_path .. "/plugins/org.eclipse.equinox.launcher_1.6.500.v20230717-2134.jar"
 
       local java_test_pkg = mason_registry.get_package("java-test")
       local java_test_path = java_test_pkg:get_install_path()
@@ -30,8 +28,8 @@ return {
       local jar_patterns = {
         java_dbg_path .. "/extension/server/com.microsoft.java.debug.plugin-*.jar",
         -- enable java test, and disable vscode_java_test when version of com.microsoft.java.test.plugin-*.jar is 0.40.0 or higher
-        -- java_test_path .. "/extension/server/*.jar",
-        vscode_java_test_path .. "/*.jar"
+        java_test_path .. "/extension/server/*.jar",
+        --vscode_java_test_path .. "/*.jar"
       }
 
       local bundles = {}
@@ -43,7 +41,7 @@ return {
 
       local settings = {
         java = {
-          signatureHelp = { enabled = true },
+          signatureHelp = { enabled = true, description = { enabled = true } },
           contentProvider = { preferred = 'fernflower' },
           completion = {
             favoriteStaticMembers = {
@@ -63,6 +61,7 @@ return {
             },
           },
           references = {
+            includeAccessors = true,
             includeDecompiledSources = true,
           },
           codeGeneration = {
@@ -73,7 +72,7 @@ return {
           format = {
             enabled = true,
             settings = {
-              url = vim.fn.stdpath("config") .. "/lang_servers/nykredit-java-style.xml",
+              url = vim.fn.stdpath("config") .. "/lang_servers/nykredit_java_style.xml",
               profile = "Nykredit",
             },
           },
@@ -96,24 +95,27 @@ return {
               enabled = "all", -- literals, all, none
             },
           },
+          server = {
+            launchMode = "Hybrid"
+          },
           configuration = {
-            updateBuildConfiguration = "interactive",
+            updateBuildConfiguration = "automatic",
             maven = {
               userSettings = nil,
             },
             runtimes = {
               {
                 name = "JavaSE-1.8",
-                path = "/usr/lib/jvm/java-8-openjdk-amd64",
-              },
-              {
-                name = "JavaSE-11",
-                path = "/usr/lib/jvm/java-11-openjdk-amd64",
+                path = home .. "/.sdkman/candidates/java/8",
                 default = true,
               },
               {
+                name = "JavaSE-11",
+                path = home .. "/.sdkman/candidates/java/11",
+              },
+              {
                 name = "JavaSE-17",
-                path = "/usr/lib/jvm/java-17-openjdk-amd64",
+                path = home .. "/.sdkman/candidates/java/17.0.10-tem",
               },
               -- {
               --   name = "JavaSE-19",
@@ -122,7 +124,10 @@ return {
             }
           },
           project = {
-          },
+            referencedLibraries = {
+              { home .. "/.sdkman/candidates/java/8/lib/tools.jar" }
+            }
+          }
         },
       }
 
@@ -205,66 +210,56 @@ return {
           extendedClientCapabilities = extendedClientCapabilities,
         },
 
+        cmd = {
+          "/.sdkman/candidates/java/17.0.10-tem/bin/java", -- or '/path/to/java17_or_newer/bin/java'
+          -- depends on if `java` is in your $PATH env variable and if it points to the right version.
+
+          "-Declipse.application=org.eclipse.jdt.ls.core.id1",
+          "-Dosgi.bundles.defaultStartLevel=4",
+          "-Declipse.product=org.eclipse.jdt.ls.core.product",
+          "-Dlog.protocol=true",
+          "-Dlog.level=ALL",
+          "-Xmx2g",
+          "-javaagent:" .. jdtls_path .. "/lombok.jar",
+          "--add-modules=ALL-SYSTEM",
+          "--add-opens", "java.base/java.util=ALL-UNNAMED",
+          "--add-opens", "java.base/java.lang=ALL-UNNAMED",
+          "--add-opens", "jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
+          "--add-opens", "jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
+          "--add-opens", "jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
+          "--add-opens", "jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
+          "--add-opens", "jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
+          "--add-opens", "jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
+          "--add-opens", "jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
+          "--add-opens", "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+          "--add-opens", "jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
+          "--add-opens", "jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED",
+          "-jar", equinox_launcher,
+          -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                       ^^^^^^^^^^^^^^
+          -- Must point to the                                                     Change this to
+          -- eclipse.jdt.ls installation                                           the actual version
+
+          -- ??
+          "-configuration", jdtls_path .. "/config_linux",
+          -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^        ^^^^^^
+          -- Must point to the                      Change to one of `linux`, `win` or `mac`
+          -- eclipse.jdt.ls installation            Depending on your system.
+
+          -- See `data directory configuration` section in the README
+          "-data", workspace_folder,
+        },
         -- cmd = {
-        --   --
-        --   -- 				-- ??
-        --   "/usr/lib/jvm/java-17-openjdk-amd64/bin/java", -- or '/path/to/java17_or_newer/bin/java'
-        --   -- depends on if `java` is in your $PATH env variable and if it points to the right version.
-        --
-        --   "-Declipse.application=org.eclipse.jdt.ls.core.id1",
-        --   "-Dosgi.bundles.defaultStartLevel=4",
-        --   "-Declipse.product=org.eclipse.jdt.ls.core.product",
-        --   "-Dlog.protocol=true",
-        --   "-Dlog.level=ALL",
-        --   "-Xmx1g",
-        --   "-javaagent:" .. jdtls_path .. "/lombok.jar",
-        --   "--add-modules=ALL-SYSTEM",
-        --   "--add-opens", "java.base/java.util=ALL-UNNAMED",
-        --   "--add-opens", "java.base/java.lang=ALL-UNNAMED",
-        --   "--add-opens", "jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
-        --   "--add-opens", "jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
-        --   "--add-opens", "jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
-        --   "--add-opens", "jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
-        --   "--add-opens", "jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
-        --   "--add-opens", "jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
-        --   "--add-opens", "jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
-        --   "--add-opens", "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
-        --   "--add-opens", "jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
-        --   "--add-opens", "jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED",
-        --
-        --   -- ??
-        --   "-jar",
-        --   equinox_launcher,
-        --   -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                       ^^^^^^^^^^^^^^
-        --   -- Must point to the                                                     Change this to
-        --   -- eclipse.jdt.ls installation                                           the actual version
-        --
-        --   -- ??
-        --   "-configuration",
-        --   jdtls_path .. "/config_linux",
-        --   -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^        ^^^^^^
-        --   -- Must point to the                      Change to one of `linux`, `win` or `mac`
-        --   -- eclipse.jdt.ls installation            Depending on your system.
-        --
-        --   -- See `data directory configuration` section in the README
+        --   jdtls_bin,
+        --   "--jvm-arg=-javaagent:" .. jdtls_path .. "/lombok.jar",
+        --   "--jvm-arg=-Dlog.level=ALL",
+        --   "--jvm-arg=--add-exports jdk.compiler/com.sun.javac.tree=ALL-UNNAMED",
         --   "-data",
         --   workspace_folder,
         -- },
-        cmd = {
-          jdtls_bin,
-          "--jvm-arg=-javaagent:" .. jdtls_path .. "/lombok.jar",
-          "--jvm-arg=-Dlog.level=ALL",
-          -- "--jvm-arg=--add-opens jdk.compiler/com.sun.javac.tree=ALL-UNNAMED",
-          "-data",
-          workspace_folder,
-        },
         -- -- attach general lsp 'on_attach function'
         on_attach = on_attach,
         capabilities = capabilities,
-        -- we naively believe that the whole project is versioned through git, and therefore
-        root_dir = vim.fs.dirname(
-          vim.fs.find({ ".git" }, { upward = true })[1]
-        ),
+        root_dir = require('jdtls.setup').find_root({ '.git', 'mvnw', 'gradlew' }),
         settings = settings,
         flags = {
           allow_incremental_sync = true,

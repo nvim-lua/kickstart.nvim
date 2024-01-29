@@ -85,6 +85,7 @@ require('lazy').setup({
       -- Automatically install LSPs to stdpath for neovim
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
+      -- to enable linters please use https://github.com/mfussenegger/nvim-lint
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -299,27 +300,25 @@ vim.o.mouse = 'a'
 --  See `:help 'clipboard'`
 -- vim.o.clipboard = 'unnamedplus'
 --- Copy-paste
-vim.keymap.set('n', '<leader>p', '"_dP')
 vim.keymap.set('n', '<leader>p', '"+p')
+vim.keymap.set('v', '<leader>p', '"+p')
 vim.keymap.set('n', '<leader>y', '"+y')
 vim.keymap.set('v', '<leader>y', '"+y')
 vim.keymap.set('n', '<leader>Y', 'gg"+yG')
-vim.keymap.set('n', '<leader>d', '"_d')
-vim.keymap.set('v', '<leader>d', '"_d')
+-- vim.keymap.set('n', '<leader>d', '"_d')
+-- vim.keymap.set('v', '<leader>d', '"_d')
 
 
 -- Needed to sync windows clipboard with wsl
 vim.g.clipboard = {
   name = 'WslClipboard',
   copy = {
-    ['+'] = '/mnt/c/Windows/System32/clip.exe',
-    ['*'] = '/mnt/c/Windows/System32/clip.exe',
+    ['+'] = '/mnt/c/tools/win32yank.exe -i --crlf',
+    ['*'] = '/mnt/c/tools/win32yank.exe -i --crlf',
   },
   paste = {
-    ['+'] =
-    '/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-    ['*'] =
-    '/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+    ['+'] = '/mnt/c/tools/win32yank.exe -o --lf',
+    ['*'] = '/mnt/c/tools/win32yank.exe -o --lf',
   },
   cache_enabled = 0,
 }
@@ -341,7 +340,7 @@ vim.cmd([[
 augroup markdown
   autocmd!
   autocmd FileType markdown set wrap
-  autocmd FileType markdown set textwidth=144
+  autocmd FileType markdown set textwidth=120
 augroup end
 ]])
 
@@ -349,7 +348,7 @@ augroup end
 vim.opt.colorcolumn = "144"
 
 -- Always have lines in the bottom of the file
-vim.opt.scrolloff = 8
+vim.opt.scrolloff = 10
 
 -- Keep signcolumn on by default
 vim.wo.signcolumn = 'yes'
