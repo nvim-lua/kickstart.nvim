@@ -16,6 +16,7 @@ function M.config()
   null_ls.setup({
     debug = false,
     sources = {
+      -- Formatters
       formatting.stylua,
       formatting.black,
       formatting.prettier.with({
@@ -36,9 +37,20 @@ function M.config()
         -- extra_args = { "--no-semi", "--single-quote", "--jsx-single-quote" },
       }),
       formatting.eslint_d,
+
+      -- Linters / Diagnostics
       diagnostics.eslint_d,
       diagnostics.flake8,
-      -- diagnostics.flake8,
+
+      -- diagnostics.revive, -- Golang linter
+      diagnostics.yamllint,
+      diagnostics.jsonlint,
+      diagnostics.shellcheck.with({
+        filetypes = { 'sh', 'zsh' },
+      }),
+      diagnostics.zsh,
+
+      -- Code Actions
       code_actions.eslint_d,
     },
   })
