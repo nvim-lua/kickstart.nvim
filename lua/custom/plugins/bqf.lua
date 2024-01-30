@@ -12,7 +12,7 @@ function M.config()
       auto_preview = true,
       show_title = true,
       delay_syntax = 50,
-      wrap = false,
+      wrap = true,
     },
     func_map = {
       tab = 't',
