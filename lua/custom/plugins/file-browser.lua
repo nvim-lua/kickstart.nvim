@@ -9,7 +9,7 @@ return
       -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
     },
     config = function ()
-      vim.keymap.set('n', '<leader>o', ':Neotree<CR>', { desc = 'Open file browser' })
+      vim.keymap.set('n', '<leader>o', ':Neotree<CR>', { desc = 'Open file browser', silent = true })
       require("neo-tree").setup({
         window = {
           position = "float",
