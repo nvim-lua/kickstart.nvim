@@ -11,7 +11,15 @@ local M = {
 
 function M.config()
   -- setup your go.nvim
-  require('go').setup({})
+  require('go').setup({
+    lsp_keymaps = false, -- disable the lsp keymaps defined by go.nvim. It's true by default
+    lsp_inlay_hints = {
+      enable = true,
+      -- hint style, set to 'eol' for end-of-line hints, 'inlay' for inline hints
+      -- inlay only avalible for 0.10.x
+      style = 'eol',
+    },
+  })
 end
 
 return M
