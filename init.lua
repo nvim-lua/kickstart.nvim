@@ -253,6 +253,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
+      'nvim-treesitter/nvim-treesitter-refactor',
     },
     build = ':TSUpdate',
   },
@@ -269,7 +270,7 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
@@ -313,6 +314,9 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+-- add bufferline
+require("bufferline").setup {}
+
 -- [[ Basic Keymaps ]]
 
 -- REMOVE
@@ -327,6 +331,8 @@ vim.g.copilot_no_tab_map = true
 vim.keymap.set('n', '<leader>g', ':LazyGit<CR>', { desc = 'Open lazygit' })
 
 vim.keymap.set('n', '<leader>f', ':Format<CR>', { desc = 'Format current buffer' })
+
+vim.keymap.set('n', 'f', ':Neotree<CR>', { desc = 'Toggle Neotree' })
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
@@ -501,6 +507,15 @@ vim.defer_fn(function()
         },
       },
     },
+    refactor = {
+      smart_rename = {
+      enable = true,
+      -- Assign keymaps to false to disable them, e.g. `smart_rename = false`.
+      keymaps = {
+        smart_rename = "<leader>r",
+      },
+    },
+    }
   }
 end, 0)
 
@@ -696,3 +711,9 @@ vim.api.nvim_create_user_command("Format", function(args)
   end
   require("conform").format({ async = true, lsp_fallback = true, range = range })
 end, { range = true })
+
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- set termguicolors to enable highlight groups
+vim.opt.termguicolors = true
