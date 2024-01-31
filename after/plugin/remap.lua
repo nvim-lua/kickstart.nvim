@@ -67,3 +67,9 @@ vim.keymap.set("n", "<leader>hw", "<CMD>only<CR>", { silent = true, desc = 'Hide
 -- delete buffer
 vim.api.nvim_set_keymap('n', '<leader>db', ':bdelete!<CR>',
   { noremap = true, silent = true, desc = '[D]elete current [B]uffer' })
+
+-- jump to beginning/end of line
+vim.api.nvim_set_keymap('n', 'H', '^', { noremap = true, silent = true, desc = 'Jump to [H]ome' })
+vim.api.nvim_set_keymap('v', 'H', '^', { noremap = true, silent = true, desc = 'Jump to [H]ome' })
+vim.api.nvim_set_keymap('n', 'L', '$', { noremap = true, silent = true, desc = 'Jump to [L]ast' })
+vim.api.nvim_set_keymap('v', 'L', '$', { noremap = true, silent = true, desc = 'Jump to [L]ast' })
