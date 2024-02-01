@@ -147,8 +147,8 @@ require('lazy').setup({
     'ellisonleao/gruvbox.nvim',
     priority = 1000,
     config = function()
-      vim.o.background = "dark" -- or "light" for light mode
-      vim.cmd([[colorscheme gruvbox]])
+      -- vim.o.background = "dark" -- or "light" for light mode
+      -- vim.cmd([[colorscheme gruvbox]])
     end,
   },
   {
@@ -178,6 +178,18 @@ require('lazy').setup({
       },
     },
   },
+  {
+    'projekt0n/github-nvim-theme',
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
+    config = function()
+      require('github-theme').setup({
+        -- ...
+      })
+
+      vim.cmd('colorscheme github_dark_dimmed')
+    end,
+  },
 
   -- Add indentation guides even on blank lines
   --[[ V2
@@ -193,6 +205,7 @@ require('lazy').setup({
   --]]
   -- V3
 
+  --[[
   {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
@@ -202,7 +215,7 @@ require('lazy').setup({
       },
     }
   },
-
+  --]]
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
 
@@ -367,7 +380,22 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim' },
+  ensure_installed = { 
+    'c',
+    'cpp',
+    'go',
+    'lua',
+    'python',
+    'rust',
+    'tsx',
+    'javascript',
+    'typescript',
+    'vimdoc',
+    'vim', 
+    'markdown',
+    'markdown_inline',
+  },
+
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
