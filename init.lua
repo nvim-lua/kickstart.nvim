@@ -253,6 +253,7 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
   },
+
   { 'ThePrimeagen/vim-be-good' },
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
@@ -368,6 +369,11 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
+  pickers = {
+    find_files = {
+      previewer = false
+    }
+  },
   defaults = {
     mappings = {
       i = {
@@ -380,6 +386,7 @@ require('telescope').setup {
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
+pcall(require('telescope').load_extension, 'file_browser')
 
 -- Telescope live_grep in git root
 -- Function to find the git root directory based on the current buffer's path
@@ -688,6 +695,10 @@ cmp.setup {
     { name = 'luasnip' },
     { name = 'path' },
   },
+}
+
+require('lspconfig').ruby_ls.setup {
+  on_attach = on_attach,
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`
