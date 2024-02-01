@@ -564,7 +564,7 @@ require('mason-lspconfig').setup()
 --  define the property 'filetypes' to the map in question.
 local servers = {
   rust_analyzer = {
-    filetypes = { "rust" }
+    filetypes = { 'rust' },
   },
 
   lua_ls = {
