@@ -4,6 +4,7 @@ on: pull_request_target
 
 jobs:
   stylua-check:
+    if: github.repository == 'nvim-lua/kickstart.nvim'
     name: Stylua Check
     runs-on: ubuntu-latest
     steps:
