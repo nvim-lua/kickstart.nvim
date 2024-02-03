@@ -1,7 +1,7 @@
 return {
-	'chriskempson/base16-vim',
+	'xiantang/darcula-dark.nvim',
 	priority = 1000,
 	config = function()
-		vim.cmd.colorscheme 'base16-bright'
+		vim.cmd.colorscheme 'darcula-dark'
 	end,
 }

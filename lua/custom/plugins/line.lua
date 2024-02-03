@@ -5,7 +5,7 @@ return {
 	opts = {
 		options = {
 			icons_enabled = true,
-			theme = '16color',
+			theme = 'jellybeans',
 			component_separators = '|',
 			section_separators = '',
 		},
