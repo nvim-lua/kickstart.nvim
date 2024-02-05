@@ -105,7 +105,7 @@ require('lazy').setup({
         build = (function()
           -- Build Step is needed for regex support in snippets
           -- This step is not supported in many windows environments
-          -- Remove if your windows setup supports this
+          -- Remove the below condition to re-enable on windows
           if vim.fn.has 'win32' == 1 then
             return
           end
