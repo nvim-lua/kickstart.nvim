@@ -1,13 +1,14 @@
-# kickstart.nvim
+# kickstart-modular.nvim
 
 https://github.com/kdheepak/kickstart.nvim/assets/1813121/f3ff9a2b-c31f-44df-a4fa-8a0d7b17cf7b
 
 ### Introduction
 
+*This is a fork of [nvim-lua/kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim) that moves from a single file to a multi file configuration.*
+
 A starting point for Neovim that is:
 
 * Small
-* Single-file (with examples of moving to multi-file)
 * Documented
 * Modular
 
@@ -41,17 +42,17 @@ Clone kickstart.nvim:
 
 - on Linux and Mac
 ```sh
-git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+git clone https://github.com/dam9000/kickstart-modular.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
 ```
 
 - on Windows (cmd)
 ```
-git clone https://github.com/nvim-lua/kickstart.nvim.git %userprofile%\AppData\Local\nvim\ 
+git clone https://github.com/dam9000/kickstart-modular.nvim.git %userprofile%\AppData\Local\nvim\
 ```
 
 - on Windows (powershell)
 ```
-git clone https://github.com/nvim-lua/kickstart.nvim.git $env:USERPROFILE\AppData\Local\nvim\ 
+git clone https://github.com/dam9000/kickstart-modular.nvim.git $env:USERPROFILE\AppData\Local\nvim\
 ```
 
 
@@ -80,14 +81,14 @@ See [Effective Neovim: Instant IDE](https://youtu.be/stqUbv-5u2s), covering the 
 [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repo (so that you have your own copy that you can modify) and then installing you can install to your machine using the methods above.
 
 > **NOTE**  
-> Your fork's url will be something like this: `https://github.com/<your_github_username>/kickstart.nvim.git`
+> Your fork's url will be something like this: `https://github.com/<your_github_username>/kickstart-modular.nvim.git`
 
 ### Configuration And Extension
 
 * Inside of your copy, feel free to modify any file you like! It's your copy!
 * Feel free to change any of the default options in `init.lua` to better suit your needs.
 * For adding plugins, there are 3 primary options:
-  * Add new configuration in `lua/custom/plugins/*` files, which will be auto sourced using `lazy.nvim` (uncomment the line importing the `custom/plugins` directory in the `init.lua` file to enable this)
+  * Add new configuration in `lua/custom/plugins/*` files, which will be auto sourced using `lazy.nvim` (uncomment the line importing the `custom/plugins` directory in the `lua/lazy-plugins.lua` file to enable this)
   * Modify `init.lua` with additional plugins.
   * Include the `lua/kickstart/plugins/*` files in your configuration.
 
@@ -171,9 +172,10 @@ Each PR, especially those which increase the line count, should have a descripti
   * The main purpose of kickstart is to serve as a teaching tool and a reference
     configuration that someone can easily `git clone` as a basis for their own.
     As you progress in learning Neovim and Lua, you might consider splitting `init.lua`
-    into smaller parts. A fork of kickstart that does this while maintaining the exact
-    same functionality is available here:
-    * [kickstart-modular.nvim](https://github.com/dam9000/kickstart-modular.nvim)
+    into smaller parts. *This is the fork of the original project that splits the configuration into smaller parts.*
+    The original repo that maintains the exact
+    same functionality in a single `init.lua` file is available here:
+    * [kickstart.nvim](https://github.com/dam9000/kickstart-modular.nvim)
   * Discussions on this topic can be found here:
     * [Restructure the configuration](https://github.com/nvim-lua/kickstart.nvim/issues/218)
     * [Reorganize init.lua into a multi-file setup](https://github.com/nvim-lua/kickstart.nvim/pull/473)
@@ -192,3 +194,55 @@ This requires:
 {'nvim-telescope/telescope-fzf-native.nvim', build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
 ```
 
+### Hints And Tips For New Neovimmers
+
+Neovim is a very rich and powerful environment, but it can also feel a bit
+intimidating for new users trying to find their way around, especially if
+they're coming from other environments like Visual Studio Code or a traditional
+IDE.
+
+There's no way this README can provide you with everything you need to know, but
+here are a few tips so you can learn how to learn.
+
+### Use The Help, Luke!
+
+Neovim's help system is incredibly thorough and extensive. You should really
+take a moment to get comfortable navigating through help topics, going back and
+forth, navigating the menus, etc. This won't just help you read the help, it
+will empower you in the rest of your Neovim journey.
+
+You can double click on a topic to drill down, and hit Ctrl-o (Hold down the
+Control key and the 'o' key) to go back.
+
+Read the first page you get when you run :help carefully. it will serve you
+well.
+
+You can also get help on a particular thing by typing ":help <topic>".
+
+Like, let's say we want to learn more about folding, just type ":help folding".
+
+### To The Telescope!
+
+One of the more powerful features you get by installing this project is the
+brilliant Telescope plugin co-written by @tjdevries.
+
+Take a minute to browse through ":help telescope" and get a sense for all the
+amazing superpowers you've gained.
+
+In particular, there are two Telescope features that are incredible for helping
+you understand how to do a particular thing or how to configure a particular
+feature.
+
+If you're not sure what to look for, try ":Telescope help_tags". Let's say we
+want to configure Neovim to automatically word wrap. We might type ":Telescope
+help_tags" and then type w, r, a, p. Notice how the list of results changes with
+each new letter you type? When you're done you've got a screen full of topics
+involving word wrap.
+
+Another common question is "What keys do I hit to make a thing happen?". To get
+an answer, one way is to use ":Telescope keymaps". You'll get the same list of
+results that changes to adapt with each new key you press.
+
+With these hints in mind you should be in good shape to get learning. Remember,
+you are on a journey of discovery here, adapting your programming environment to
+your needs. It will take effort, but the rewards are worth it! :)
