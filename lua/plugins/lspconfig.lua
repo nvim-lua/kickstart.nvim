@@ -1,3 +1,4 @@
+-- Configuration for language servers
 local function keymaps(bufnr)
 	local keymap = function(keys, func, desc)
 	if desc then

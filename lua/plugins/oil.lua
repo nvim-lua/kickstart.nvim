@@ -1,3 +1,4 @@
+-- file browser
 return { 'stevearc/oil.nvim',
 	config = function()
 		require("oil").setup();

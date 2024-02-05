@@ -1,3 +1,4 @@
+-- Informational line at bottom of screen
 return {
 	-- Set lualine as statusline
     'nvim-lualine/lualine.nvim',

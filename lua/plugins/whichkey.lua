@@ -1,3 +1,4 @@
+-- displays command and key chain options and help
 return { 'folke/which-key.nvim', opts = {},
 	config = function()
 		-- document existing key chains

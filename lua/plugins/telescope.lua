@@ -1,3 +1,4 @@
+-- Fuzzy finder
 local function telescope_live_grep_open_files()
 	require('telescope.builtin').live_grep {
 		grep_open_files = true,

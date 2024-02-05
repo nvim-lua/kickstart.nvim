@@ -1,3 +1,4 @@
+-- rust language integrations
 return {
 	'rust-lang/rust.vim',
 	ft = "rust",

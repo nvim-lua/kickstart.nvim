@@ -1,3 +1,4 @@
+-- code token highlighting
 local  text_objects = {
   select = {
     enable = true,
