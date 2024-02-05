@@ -132,6 +132,8 @@ telscope.setup {
     file_ignore_patterns = {
       "node_modules",
       ".idea",
+      "project/target", --https://www.lua.org/pil/20.2.html
+      "target",         --https://www.lua.org/pil/20.2.html
       ".cache",
       ".cpcache",
       "cljs%-runtime" },
