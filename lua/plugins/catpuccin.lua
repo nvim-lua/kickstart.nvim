@@ -14,6 +14,7 @@ return {
 			integrations = {
 				cmp = true,
 				gitsigns = true,
+				harpoon = true,
 				mason = true,
 				telescope = true,
 				treesitter = true,
