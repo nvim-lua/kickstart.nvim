@@ -206,8 +206,7 @@ require('lazy').setup({
     'rebelot/kanagawa.nvim',
     config = function()
       require('kanagawa').setup {
-        -- Set a style preset. 'dark' is default.
-        theme = 'dragon', -- dark, darker, cool, deep, warm, warmer, light
+        theme = 'dragon', -- wave, dragon, lotus
       }
       require('kanagawa').load()
     end,
@@ -294,6 +293,9 @@ vim.o.hlsearch = false
 -- Make line numbers default
 vim.wo.number = true
 
+-- Make relative numbers default
+vim.wo.relativenumber = true
+
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
@@ -325,6 +327,8 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+vim.o.shiftwidth = 4
+vim.o.tabstop = 4
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -546,6 +550,14 @@ local on_attach = function(_, bufnr)
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, '[W]orkspace [L]ist Folders')
 
+  -- Add key map for organising imports
+  nmap('<leader>li', function()
+    vim.lsp.buf.execute_command({
+      command = "_typescript.organizeImports",
+      arguments = {vim.api.nvim_buf_get_name(0)},
+    })
+  end, '[L]ay Out [I]mports')
+
   -- Create a command `:Format` local to the LSP buffer
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
@@ -588,10 +600,10 @@ local servers = {
   -- gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
-  -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
   -- phpactor = {},
-  -- intelephense = {},
+  tsserver = {},
+  intelephense = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
