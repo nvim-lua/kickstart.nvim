@@ -11,7 +11,7 @@ vim.opt.mouse = ''
 
 -- FIX: shared clipboard not working
 -- Sync clipboard between OS and Neovim.
-vim.opt.clipboard = 'unnamedplus'
+vim.opt.clipboard = 'unnamed,unnamedplus'
 
 -- Enable spell check
 vim.opt.spell = true
