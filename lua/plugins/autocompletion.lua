@@ -28,30 +28,30 @@ return {
 		luasnip.config.setup {}
 
 		cmp.setup {
-		  snippet = {
-			expand = function(args)
-			  luasnip.lsp_expand(args.body)
-			end,
-		  },
-		  completion = {
-			completeopt = 'menu,menuone,noinsert',
-		  },
-		  mapping = cmp.mapping.preset.insert {
-			['<C-j>'] = cmp.mapping.select_next_item(),
-			['<C-k>'] = cmp.mapping.select_prev_item(),
-			['<C-u>'] = cmp.mapping.scroll_docs(-4),
-			['<C-d>'] = cmp.mapping.scroll_docs(4),
-			['<C-Space>'] = cmp.mapping.complete {},
-			['<Tab>'] = cmp.mapping.confirm {
-			  behavior = cmp.ConfirmBehavior.Replace,
-			  select = true,
+			snippet = {
+				expand = function(args)
+					luasnip.lsp_expand(args.body)
+				end,
 			},
-		  },
-		  sources = {
-			{ name = 'nvim_lsp' },
-			{ name = 'luasnip' },
-			{ name = 'path' },
-		  },
+			completion = {
+				completeopt = 'menu,menuone,noinsert',
+			},
+			mapping = cmp.mapping.preset.insert {
+				['<C-j>'] = cmp.mapping.select_next_item(),
+				['<C-k>'] = cmp.mapping.select_prev_item(),
+				['<C-u>'] = cmp.mapping.scroll_docs(-4),
+				['<C-d>'] = cmp.mapping.scroll_docs(4),
+				['<C-Space>'] = cmp.mapping.complete {},
+				['<Tab>'] = cmp.mapping.confirm {
+					behavior = cmp.ConfirmBehavior.Replace,
+					select = true,
+				},
+			},
+			sources = {
+				{ name = 'nvim_lsp' },
+				{ name = 'luasnip' },
+				{ name = 'path' },
+			},
 			experimental = {
 				ghost_text = true,
 			}
