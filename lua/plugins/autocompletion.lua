@@ -12,10 +12,18 @@ return {
 
 		-- Adds a number of user-friendly snippets
 		'rafamadriz/friendly-snippets',
+
+		-- Auto-closing brackets, quotes, etc.
+		'windwp/nvim-autopairs',
 	},
 	config = function()
+		local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 		local cmp = require 'cmp'
 		local luasnip = require 'luasnip'
+
+		require('nvim-autopairs').setup();
+		cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
+
 		require('luasnip.loaders.from_vscode').lazy_load()
 		luasnip.config.setup {}
 
