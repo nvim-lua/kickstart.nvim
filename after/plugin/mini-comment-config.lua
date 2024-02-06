@@ -3,7 +3,7 @@ require('mini.comment').setup {
   options = {
     -- Function to compute custom 'commentstring' (optional)
     custom_commentstring = function()
-      return require('ts_context_commentstring.internal').calculate_commentstring() or vim.bo.commentstring
+      return vim.bo.commentstring
     end,
 
     -- Whether to ignore blank lines
