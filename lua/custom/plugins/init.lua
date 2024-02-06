@@ -3,12 +3,17 @@
 --
 -- See the kickstart.nvim README for more information
 return {
-  -- Dracula theme
+  -- Color scheme
   {
-    'Mofiqul/dracula.nvim',
+    'catppuccin/nvim',
+    lazy = false,
+    name = 'catppuccin',
     priority = 1000,
+    opts = {
+      transparent_background = true,
+    },
     config = function()
-      vim.cmd.colorscheme 'dracula'
+      vim.cmd.colorscheme 'catppuccin'
     end,
   },
 
@@ -31,6 +36,11 @@ return {
       formatters_by_ft = {
         lua = { 'stylua' },
         python = { 'black' },
+      },
+      formatters = {
+        black = {
+          prepend_args = { '--preview' },
+        },
       },
       format_on_save = { timeout_ms = 500, lsp_fallback = true },
     },
@@ -86,4 +96,13 @@ return {
 
   -- vim/tmux navigation
   'christoomey/vim-tmux-navigator',
+
+  -- Tint inactive windows
+  { 'miversen33/sunglasses.nvim', opts = {
+    filter_type = 'SHADE',
+    filter_percent = 0.35,
+  } },
+
+  -- Harpoon
+  'ThePrimeagen/harpoon',
 }
