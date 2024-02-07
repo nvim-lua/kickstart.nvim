@@ -32,13 +32,51 @@ return {
 
       -- You can provide additional configuration to the handlers,
       -- see mason-nvim-dap README for more information
-      handlers = {},
+      handlers = {
+        function(config)
+          require('mason-nvim-dap').default_setup(config)
+        end,
+        codelldb = function(config)
+          config.adapters = {
+            type = 'server',
+            host = 'localhost',
+            port = '${port}',
+            executable = {
+              command = 'codelldb',
+              args = {
+                '--port',
+                '${port}',
+              }
+            }
+          }
+          config.configurations = {
+            {
+              type = 'codelldb',
+              request = 'launch',
+              name = 'Launch file',
+              program = function()
+                return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+              end,
+              cwd = '${workspaceFolder}'
+            },
+            {
+              type = 'codelldb',
+              request = 'attach',
+              name = 'Attach to process',
+              processId = require('dap.utils').pick_process,
+              cwd = '${workspaceFolder}',
+            }
+          }
+          require('mason-nvim-dap').default_setup(config)
+        end
+      },
 
       -- You'll need to check that you have the required things installed
       -- online, please don't ask me how to install them :)
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'codelldb',
       },
     }
 
