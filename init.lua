@@ -200,19 +200,6 @@ require('lazy').setup({
     },
   },
 
-  {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    lazy = false,
-    config = function()
-      require('onedark').setup {
-        -- Set a style preset. 'dark' is default.
-        style = 'dark', -- dark, darker, cool, deep, warm, warmer, light
-      }
-      require('onedark').load()
-    end,
-  },
 
   {
     -- Set lualine as statusline
@@ -282,7 +269,7 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+   { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
