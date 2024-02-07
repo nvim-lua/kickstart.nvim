@@ -23,13 +23,9 @@ return {
       local java_dbg_pkg = mason_registry.get_package("java-debug-adapter")
       local java_dbg_path = java_dbg_pkg:get_install_path()
 
-      local vscode_java_test_path = home .. "/.config/nvim/vscode-java-test"
-
       local jar_patterns = {
-        java_dbg_path .. "/extension/server/com.microsoft.java.debug.plugin-*.jar",
-        -- enable java test, and disable vscode_java_test when version of com.microsoft.java.test.plugin-*.jar is 0.40.0 or higher
         java_test_path .. "/extension/server/*.jar",
-        --vscode_java_test_path .. "/*.jar"
+        java_dbg_path .. "/extension/server/com.microsoft.java.debug.plugin-*.jar",
       }
 
       local bundles = {}
@@ -76,33 +72,18 @@ return {
               profile = "Nykredit",
             },
           },
-          autobuild = {
-            enabled = true
-          },
           maven = {
             downloadSources = true,
           },
           rename = {
             enabled = true
           },
-          import = {
-            maven = {
-              enabled = true,
-            },
-          },
           inlayHints = {
             parameterNames = {
               enabled = "all", -- literals, all, none
             },
           },
-          server = {
-            launchMode = "Hybrid"
-          },
           configuration = {
-            updateBuildConfiguration = "automatic",
-            maven = {
-              userSettings = nil,
-            },
             runtimes = {
               {
                 name = "JavaSE-1.8",
@@ -123,11 +104,6 @@ return {
               -- },
             }
           },
-          project = {
-            referencedLibraries = {
-              { home .. "/.sdkman/candidates/java/8/lib/tools.jar" }
-            }
-          }
         },
       }
 

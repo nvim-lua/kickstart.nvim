@@ -668,14 +668,14 @@ local servers = {
       },
     },
   },
-  cucumber_language_server = {
-    cucumber = {
-      -- features = { "**/lctest/**/*.feature" },
-      -- glue = {
-      --   "**/lctest/**/stepdef/**/*.java",
-      -- }
-    }
-  },
+  -- cucumber_language_server = {
+  --   cucumber = {
+  --     features = { "**/lctest/**/*.feature" },
+  --     glue = {
+  --       "**/lctest/**/stepdef/**/*.java",
+  --     }
+  --   }
+  -- },
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
