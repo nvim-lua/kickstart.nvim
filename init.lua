@@ -166,12 +166,14 @@ vim.keymap.set('n', '<leader>fF', function()
   })
 end, { desc = '[S]earch [F]iles (no ignore)' })
 
-vim.keymap.set('n', '<leader>fi', telscopeb.git_files, { desc = 'Search [G]it [F]iles' })
-vim.keymap.set('n', '<leader>ff', telscopeb.find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>fh', telscopeb.help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>fw', telscopeb.grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>fg', telscopeb.live_grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>fd', telscopeb.diagnostics, { desc = '[S]earch [D]iagnostics' })
+vim.keymap.set('n', '<leader>fG', telscopeb.git_files, { desc = '[F]ind [G]it' })
+vim.keymap.set('n', '<leader>ff', telscopeb.find_files, { desc = '[F]ind [F]iles' })
+vim.keymap.set('n', '<leader>fh', telscopeb.help_tags, { desc = '[F]ind [H]elp' })
+vim.keymap.set('n', '<leader>fw', telscopeb.grep_string, { desc = '[F]ind current [W]ord' })
+vim.keymap.set('n', '<leader>fg', telscopeb.live_grep, { desc = '[F]ind [g]rep' })
+vim.keymap.set('n', '<leader>fd', telscopeb.diagnostics, { desc = '[F]ind [D]iagnostics' })
+vim.keymap.set('n', '<leader>fk', telscopeb.keymaps, { desc = '[F]ind [K]eymap' })
+vim.keymap.set('n', '<leader>fc', telscopeb.colorscheme, { desc = '[F]ind [C]olorscheme' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
