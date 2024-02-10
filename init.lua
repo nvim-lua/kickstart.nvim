@@ -448,7 +448,7 @@ local servers = {
   -- clangd = {},
   -- gopls = {},
   -- pyright = {},
-  -- rust_analyzer = {},
+  rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
@@ -474,6 +474,54 @@ mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
 }
 
+local rust_tools_config = {
+  -- executor = require("rust-tools.executors").quickfix,
+
+  inlay_hints = {
+    auto = true,
+    parameter_hints_prefix = "<-",
+    other_hints_prefix = "->",
+  },
+  server = {
+    standalone = false,
+  },
+  dap = function()
+    local install_root_dir = vim.fn.stdpath "data" .. "/mason"
+    local extension_path = install_root_dir .. "/packages/codelldb/extension/"
+    local codelldb_path = extension_path .. "adapter/codelldb"
+    local liblldb_path = extension_path .. "lldb/lib/liblldb.so"
+
+    return {
+      adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path)
+    }
+  end,
+}
+
+local rust_tools_rust_server = {
+  on_attach = on_attach,
+  settings = {
+    -- List of all options:
+    -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
+    ["rust-analyzer"] = {
+      check = {
+        command = "cranky",
+        -- extraArgs = { "--all", "--", "-W", "clippy::all" },
+      },
+
+      -- rust-analyzer.server.extraEnv
+      -- neovim doesn"t have custom client-side code to honor this setting, it doesn't actually work
+      -- https://github.com/neovim/nvim-lspconfig/issues/1735
+      -- it's in init.vim as a real env variable
+      --
+      --	server = {
+      --		extraEnv = {
+      --			CARGO_TARGET_DIR = "target/rust-analyzer-check"
+      --		}
+      --	}
+    },
+  },
+}
+
 mason_lspconfig.setup_handlers {
   function(server_name)
     require('lspconfig')[server_name].setup {
@@ -484,7 +532,12 @@ mason_lspconfig.setup_handlers {
     }
   end,
   ["rust_analyzer"] = function()
-    require("rust-tools").setup {}
+    require("rust-tools").setup {
+      capabilities = capabilities,
+      -- add from https://github.com/Gremious/configs/blob/main/lua/config/lsp.lua#L110
+      tools = rust_tools_config,
+      server = rust_tools_rust_server,
+    }
   end
 }
 

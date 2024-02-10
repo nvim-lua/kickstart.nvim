@@ -5,9 +5,9 @@ return {
 	config = function()
 		local crates = require('crates')
 		crates.setup()
-		require('cmp').setup.buffer({
-			sources = { { name = 'crates' } }
-		})
+		-- require('cmp').setup.buffer({
+		--	sources = { { name = 'crates' } }
+		-- })
 		crates.show()
 	end,
 }
