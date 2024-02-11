@@ -21,6 +21,10 @@ keymap.set("n", "<leader>+", "<C-a>") -- increment
 keymap.set("n", "<leader>-", "<C-x>") -- decrement
 
 -- window management
+keymap.set("n", "<A-h>", "<C-w>h", { silent = true })
+keymap.set("n", "<A-l>", "<C-w>l", { silent = true })
+keymap.set("n", "<A-j>", "<C-w>j", { silent = true })
+keymap.set("n", "<A-k>", "<C-w>k", { silent = true })
 keymap.set("n", "<leader>dv", "<C-w>v") -- split window vertically
 keymap.set("n", "<leader>dh", "<C-w>s") -- split window horizontally
 keymap.set("n", "<leader>de", "<C-w>=") -- make split windows equal width & height
@@ -87,15 +91,15 @@ keymap.set("n", "<leader>rs", ":LspRestart<CR>") -- mapping to restart lsp if ne
 -- move
 local opts = { noremap = true, silent = false }
 -- Normal-mode commands
-keymap.set('n', '<A-j>', ':MoveLine(1)<CR>', opts)
-keymap.set('n', '<A-k>', ':MoveLine(-1)<CR>', opts)
-keymap.set('n', '<A-h>', ':MoveHChar(-1)<CR>', opts)
-keymap.set('n', '<A-l>', ':MoveHChar(1)<CR>', opts)
+keymap.set('n', '<S-A-k>', ':MoveLine(-1)<CR>', opts)
+keymap.set('n', '<S-A-j>', ':MoveLine(1)<CR>', opts)
+-- keymap.set('n', '<A-h>', ':MoveHChar(-1)<CR>', opts)
+-- keymap.set('n', '<A-l>', ':MoveHChar(1)<CR>', opts)
 -- Visual-mode commands
-keymap.set('v', '<A-j>', ':MoveBlock(1)<CR>', opts)
-keymap.set('v', '<A-k>', ':MoveBlock(-1)<CR>', opts)
-keymap.set('v', '<A-h>', ':MoveHBlock(-1)<CR>', opts)
-keymap.set('v', '<A-l>', ':MoveHBlock(1)<CR>', opts)
+keymap.set('v', '<S-A-j>', ':MoveBlock(1)<CR>', opts)
+keymap.set('v', '<S-A-k>', ':MoveBlock(-1)<CR>', opts)
+-- keymap.set('v', '<A-h>', ':MoveHBlock(-1)<CR>', opts)
+-- keymap.set('v', '<A-l>', ':MoveHBlock(1)<CR>', opts)
 
 -- Harpoon
 keymap.set("n", "<leader>a", function() require("harpoon.mark").add_file() end, opts)
