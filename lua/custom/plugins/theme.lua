@@ -1,12 +1,9 @@
 return {
 	{
-		'santos-gabriel-dario/darcula-solid.nvim',
+		'bradcush/nvim-base16',
 		priority = 1000,
-		dependencies = {
-			'rktjmp/lush.nvim'
-		},
 		config = function()
-			vim.cmd.colorscheme 'darcula-solid'
+			vim.cmd.colorscheme 'base16-gruvbox-dark-hard'
 		end,
 	},
 }
