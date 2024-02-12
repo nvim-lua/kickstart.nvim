@@ -600,6 +600,8 @@ mason_lspconfig.setup_handlers {
   end,
 }
 
+-- mason_lspconfig.setup_handlers('java')
+
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
 local cmp = require 'cmp'
