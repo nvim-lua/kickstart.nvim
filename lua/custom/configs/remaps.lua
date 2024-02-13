@@ -16,7 +16,7 @@ vim.keymap.set("n", "N", "Nzzzv")
 -- greatest remap ever
 -- paste without adding deleted text to register
 vim.keymap.set("x", "<leader>p", [["_dP]])
--- delete without adding deleted text to register 
+-- delete without adding deleted text to register
 vim.keymap.set("x", "<leader>d", [["_d]])
 
 -- next greatest remap ever : asbjornHaland
@@ -40,9 +40,12 @@ vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><
 vim.keymap.set("n", "<leader>+", "<cmd>!chmod +x %<CR>", { silent = true })
 
 --trouble.nvim
-vim.keymap.set("n", "<leader>xx", function() require("trouble").toggle() end)
-vim.keymap.set("n", "<leader>xw", function() require("trouble").toggle("workspace_diagnostics") end)
-vim.keymap.set("n", "<leader>xd", function() require("trouble").toggle("document_diagnostics") end)
-vim.keymap.set("n", "<leader>xq", function() require("trouble").toggle("quickfix") end)
-vim.keymap.set("n", "<leader>xl", function() require("trouble").toggle("loclist") end)
-vim.keymap.set("n", "gR", function() require("trouble").toggle("lsp_references") end)
+vim.keymap.set("n", "<leader>xx", function() require("trouble").toggle() end, { desc = 'Open Trouble' })
+vim.keymap.set("n", "<leader>xw", function() require("trouble").toggle("workspace_diagnostics") end,
+  { desc = 'Trouble [w]orkspace Diagnostics' })
+vim.keymap.set("n", "<leader>xd", function() require("trouble").toggle("document_diagnostics") end,
+  { desc = 'Trouble [d]ocument Diagnostics' })
+vim.keymap.set("n", "<leader>xq", function() require("trouble").toggle("quickfix") end, { desc = 'Trouble [q]uickfix' })
+vim.keymap.set("n", "<leader>xl", function() require("trouble").toggle("loclist") end, { desc = 'Trouble [l]oclist' })
+vim.keymap.set("n", "<leader>xR", function() require("trouble").toggle("lsp_references") end,
+  { desc = 'Trouble [g]o to [R]eferences' })
