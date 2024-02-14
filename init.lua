@@ -296,6 +296,9 @@ vim.o.hlsearch = false
 vim.wo.number = true
 vim.wo.relativenumber = true -- Turn on Relative line numbers
 
+-- set scroll buffer higher
+vim.o.scrolloff = 8
+
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
@@ -530,6 +533,9 @@ local on_attach = function(_, bufnr)
   nmap('<leader>ca', function()
     vim.lsp.buf.code_action { context = { only = { 'quickfix', 'refactor', 'source' } } }
   end, '[C]ode [A]ction')
+
+  nmap("<C-u>", "<C-u>zz");
+  nmap("<C-d>", "<C-d>zz");
 
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
