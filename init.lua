@@ -75,6 +75,32 @@ require('lazy').setup({
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
+  {
+    'ThePrimeagen/harpoon',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local ui = require('harpoon.ui')
+      local mark = require('harpoon.mark')
+
+            -- mark page
+      vim.keymap.set('n', '<leader>ha', mark.add_file, { desc = "[H]arpoon [A]dd" })
+
+      -- show menu
+      vim.keymap.set('n', '<leader>hh', ui.toggle_quick_menu, { desc = "[H]arpoon Menu" })
+
+      -- navigation
+      vim.keymap.set('n', '<leader>h1', function() ui.nav_file(1) end, { desc = "[H]arpoon File [1]" })
+      vim.keymap.set('n', '<leader>h2', function() ui.nav_file(2) end, { desc = "[H]arpoon File [2]" })
+      vim.keymap.set('n', '<leader>h3', function() ui.nav_file(3) end, { desc = "[H]arpoon File [3]" })
+      vim.keymap.set('n', '<leader>h4', function() ui.nav_file(4) end, { desc = "[H]arpoon File [4]" })
+      vim.keymap.set('n', '<leader>h5', function() ui.nav_file(5) end, { desc = "[H]arpoon File [5]" })
+      vim.keymap.set('n', '<leader>h6', function() ui.nav_file(6) end, { desc = "[H]arpoon File [6]" })
+      vim.keymap.set('n', '<leader>h7', function() ui.nav_file(7) end, { desc = "[H]arpoon File [7]" })
+      vim.keymap.set('n', '<leader>h8', function() ui.nav_file(8) end, { desc = "[H]arpoon File [8]" })
+      vim.keymap.set('n', '<leader>h9', function() ui.nav_file(9) end, { desc = "[H]arpoon File [9]" })
+      vim.keymap.set('n', '<leader>h0', function() ui.nav_file(0) end, { desc = "[H]arpoon File [0]" })
+    end
+  },
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
