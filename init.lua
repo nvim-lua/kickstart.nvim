@@ -201,16 +201,32 @@ require('lazy').setup({
   },
 
   {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
+    'loctvl842/monokai-pro.nvim',
     priority = 1000,
     lazy = false,
     config = function()
-      require('onedark').setup {
-        -- Set a style preset. 'dark' is default.
-        style = 'dark', -- dark, darker, cool, deep, warm, warmer, light
+      require('monokai-pro').setup {
+        overridePalette = function(filter)
+          return {
+            dark2      = "#101014",
+            dark1      = "#16161E",
+            background = "#36393F",
+            text       = "#f8f8f0",
+            accent1    = "#ff3f4f",
+            accent2    = "#ffb65e",
+            accent3    = "#FFE26E",
+            accent4    = "#5fff5f",
+            accent5    = "#19d1e5",
+            accent6    = "#7ca4ee",
+            dimmed1    = "#bab6c0",
+            dimmed2    = "#f8f8f0",
+            dimmed3    = "#5c6370",
+            dimmed4    = "#4c525c",
+            dimmed5    = "#1e1e2b",
+          }
+        end,       
       }
-      require('onedark').load()
+      require('monokai-pro').load()
     end,
   },
 
