@@ -250,6 +250,18 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })
 
+require('Comment').setup({
+  ignore = '^$',
+  toggler = {
+    line = '<leader>cc',
+    block = '<leader>bc',
+  },
+  opleader = {
+    line = '<leader>c',
+    block = '<leader>b',
+  },
+})
+
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
