@@ -202,15 +202,11 @@ require('lazy').setup({
 
   {
     -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
+    'rebelot/kanagawa.nvim',
     priority = 1000,
     lazy = false,
     config = function()
-      require('onedark').setup {
-        -- Set a style preset. 'dark' is default.
-        style = 'dark', -- dark, darker, cool, deep, warm, warmer, light
-      }
-      require('onedark').load()
+      vim.cmd.colorscheme('kanagawa')
     end,
   },
 
@@ -288,6 +284,11 @@ require('lazy').setup({
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
+
+-- set encoding to UTF-8
+vim.g.encoding = 'UTF-8'
+vim.g.fileencoding = 'UTF-8'
+vim.g.scriptencoding = 'UTF-8'
 
 -- Set highlight on search
 vim.o.hlsearch = false
