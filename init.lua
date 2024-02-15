@@ -355,6 +355,9 @@ vim.o.termguicolors = true
 
 -- [[ Basic Keymaps ]]
 
+-- Open NetRW
+vim.keymap.set('n', '<leader>o-', vim.cmd.Explore, { desc = '[O]pen [-]Directory' })
+
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
