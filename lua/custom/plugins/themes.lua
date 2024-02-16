@@ -50,7 +50,6 @@ return {
         },
       },
     },
-    main = "ibl",
   },
 
   -- Active indent guide and indent text objects. When you're browsing
