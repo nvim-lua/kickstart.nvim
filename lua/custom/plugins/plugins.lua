@@ -16,6 +16,9 @@ return {
     "mg979/vim-visual-multi",
   },
   {
+    "booperlv/nvim-gomove",
+  },
+  {
     "HiPhish/rainbow-delimiters.nvim"
   },
 }
