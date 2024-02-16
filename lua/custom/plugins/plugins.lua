@@ -14,5 +14,8 @@ return {
   },
   {
     "mg979/vim-visual-multi",
-  }
+  },
+  {
+    "HiPhish/rainbow-delimiters.nvim"
+  },
 }
