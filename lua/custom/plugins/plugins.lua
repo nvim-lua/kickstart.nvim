@@ -12,13 +12,7 @@ return {
       -- refer to the configuration section below
     }
   },
-  {
-    "mg979/vim-visual-multi",
-  },
-  {
-    "booperlv/nvim-gomove",
-  },
-  {
-    "HiPhish/rainbow-delimiters.nvim"
-  },
+  { "mg979/vim-visual-multi",         }, 
+  { "HiPhish/rainbow-delimiters.nvim" },
+  { "booperlv/nvim-gomove",           },
 }
