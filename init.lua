@@ -255,9 +255,9 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 
 
 -- Remap for navigating between buffers
-vim.keymap.set('n', '<leader>x', '<cmd>bd<CR>', { silent = true })
-vim.keymap.set('n', '<leader>l', '<cmd>bnext<CR>', { silent = true })
-vim.keymap.set('n', '<leader>h', '<cmd>bprev<CR>', { silent = true })
+-- vim.keymap.set('n', '<leader>x', '<cmd>bd<CR>', { silent = true })
+-- vim.keymap.set('n', '<leader>l', '<cmd>bnext<CR>', { silent = true })
+-- vim.keymap.set('n', '<leader>h', '<cmd>bprev<CR>', { silent = true })
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`

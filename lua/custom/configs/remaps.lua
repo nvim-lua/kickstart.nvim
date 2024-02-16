@@ -49,3 +49,6 @@ vim.keymap.set("n", "<leader>xq", function() require("trouble").toggle("quickfix
 vim.keymap.set("n", "<leader>xl", function() require("trouble").toggle("loclist") end, { desc = 'Trouble [l]oclist' })
 vim.keymap.set("n", "<leader>xR", function() require("trouble").toggle("lsp_references") end,
   { desc = 'Trouble [g]o to [R]eferences' })
+
+-- undotree
+vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
