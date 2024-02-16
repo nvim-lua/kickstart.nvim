@@ -2,3 +2,13 @@ tags
 test.sh
 .luarc.json
 nvim
+lazy/
+luac/
+mason/
+shada
+undo
+log
+luasnip.log
+mason-registry-update
+mason.log
+telescope_history
