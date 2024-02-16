@@ -203,16 +203,11 @@ require('lazy').setup({
   },
 
   {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
+    "ellisonleao/gruvbox.nvim",
     priority = 1000,
     lazy = false,
     config = function()
-      require('onedark').setup {
-        -- Set a style preset. 'dark' is default.
-        style = 'dark', -- dark, darker, cool, deep, warm, warmer, light
-      }
-      require('onedark').load()
+      require('gruvbox').load()
     end,
   },
 
@@ -223,8 +218,8 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'auto',
-        component_separators = '|',
+        theme = 'gruvbox_dark',
+        component_separators = '•',
         section_separators = '',
       },
     },
@@ -313,6 +308,9 @@ vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
+--put both relative and normal lune numbers:
+vim.wo.relativenumber = true
+
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -353,6 +351,15 @@ vim.keymap.set(main_modes, '<C-c>', '"+y', { noremap = true, silent = true })
 
 -- add vscode like telescope
 vim.keymap.set({ 'i', 'n', 'v' }, '<C-p>', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
+
+-- add ctrl+d to select word and enable multiple cursors
+--TODO: fix this
+-- vim.keymap.set({ 'i', 'n', 'v' }, '<C-d>', '<esc><cmd>lua require("multi_cursor").multiple_cursors()<CR>',
+--   { noremap = true, silent = true })
+
+--key bidning for ctrl+enter in insert mode: maps to normal modes o
+--TODO: fix this
+-- vim.keymap.set('i', '<C-<CR>>', '<esc>o', { noremap = true, silent = true })
 
 -- select all:
 vim.keymap.set({ 'i', 'n' }, '<C-a>', function() vim.cmd("normal! ggVG") end, { noremap = true, silent = true })

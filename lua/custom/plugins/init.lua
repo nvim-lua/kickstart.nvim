@@ -3,6 +3,8 @@
 --
 -- See the kickstart.nvim README for more information
 return {
+	"MunifTanjim/prettier.nvim",
+	"mg979/vim-visual-multi",
 	"github/copilot.vim",
 	cmd = "Copilot",
 	event = "InsertEnter",
