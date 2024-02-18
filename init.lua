@@ -211,7 +211,7 @@ require('lazy').setup({
     'nvim-lualine/lualine.nvim',
     -- See `:help lualine.txt`
     dependencies = {
-      'kyazdani42/nvim-web-devicons',
+      'nvim-tree/nvim-web-devicons',
     },
     opts = {
       options = {
@@ -622,6 +622,35 @@ require('mason-lspconfig').setup()
 local servers = {
   clangd = {},
   -- gopls = {},
+  gopls = {
+    gofumpt = true,
+    usePlaceholders = true,
+    completeUnimported = true,
+    matcher = 'Fuzzy',
+    diagnosticsDelay = '200ms',
+    symbolMatcher = 'fuzzy',
+    buildFlags = { '-tags', 'integration' },
+    -- codelenses
+    codelenses = {
+      generate = true, -- show the `go generate` lens.
+      gc_details = true, -- Show a code lens toggling the display of gc's choices.
+      test = true,
+      tidy = true,
+      vendor = true,
+      regenerate_cgo = true,
+      upgrade_dependency = true,
+    },
+    -- hints
+    hints = {
+      assignVariableTypes = true,
+      compositeLiteralFields = true,
+      compositeLiteralTypes = true,
+      constantValues = true,
+      functionTypeParameters = true,
+      parameterNames = true,
+      rangeVariableTypes = true,
+    },
+  },
   pyright = {},
   rust_analyzer = {},
   -- tsserver = {},
