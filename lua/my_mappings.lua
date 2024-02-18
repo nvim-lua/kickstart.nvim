@@ -13,10 +13,12 @@ vim.keymap.set('n','<leader><<','<C-w>10<', {desc = 'Do 10 bigger in horizontal 
 -- ":echo <up> will go to commands that started with echo, instead of just the
 -- "previous.
 -- This should work, I don't understand why it doesn't.
--- vim.keymap.set('c','<expr> <c-n>','wildmenumode() ? <Tab> : <down>', {desc = 'If wildmenu then do down instead of c-n'})
--- vim.keymap.set('c','<expr> <c-p>','wildmenumode() ? <s-Tab> : <up>', {desc = 'If wildmenu then do up instead of c-p'})
-vim.keymap.set('c','<c-n>','<down>', {desc = 'If wildmenu then do down instead of c-n'})
-vim.keymap.set('c','<c-p>','<up>', {desc = 'If wildmenu then do up instead of c-p'})
+-- Lua does not have ternary operator ?, so the idiom is a and b or c for the corresponding 
+-- c a ? b or c, because and has more priority than or.
+vim.keymap.set('c','<c-n>', function() return vim.fn.wildmenumode() == 1 and '<Tab>' or '<down>' end, {expr = true, desc = 'If wildmenu then do down instead of c-n'})
+vim.keymap.set('c','<c-p>', function() return vim.fn.wildmenumode() == 1 and '<s-Tab>' or '<up>' end, {expr = true, desc = 'If wildmenu then do up instead of c-p'})
+-- vim.keymap.set('c','<c-n>','<down>', {desc = 'If wildmenu then do down instead of c-n'})
+-- vim.keymap.set('c','<c-p>','<up>', {desc = 'If wildmenu then do up instead of c-p'})
 
 -- <C-l> redraws the screen in normal mode, this redraws and eliminates highlight
 vim.keymap.set('n','<c-l>',':nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>', {desc = 'Redraw and remove highlight'})
@@ -53,12 +55,10 @@ vim.keymap.set('n','<leader>vth','<C-w>t<C-w>K<C-w>R', {desc = 'Change vertical 
 -- nnoremap <C-x><C-x><C-b> :AsyncRun cd\ $EMV_HOME\ &&\ bms\ build\ -b\ &&\ bms\ test<CR>
 
 -- Select inner word.
-vim.keymap.set('n','<space>','viw', {desc = 'Change vertical split to horizontal'})
+vim.keymap.set('n','<space>','viw', {desc = 'Select inner word'})
 
--- #Navigate location list""""""""""""""""
--- nmap ln :lne<CR>
--- nmap lp  :lp<CR>
--- nnoremap <c-k><c-f> vi{=
+-- #Seleccionar e indentar.
+vim.keymap.set('n', '<c-k><c-f>', 'vi{=', {desc = 'indent inside braces'})
 -- Buffers
 vim.keymap.set('n','bn',':bn<cr>', {desc = 'Next buffer'})
 vim.keymap.set('n','bp',':bp<cr>', {desc = 'Previous buffer'})
@@ -73,8 +73,8 @@ vim.keymap.set('n','cl',':clast<cr>', {desc = 'Last result'})
 vim.keymap.set('n','co',':copen<cr>', {desc = 'Open quicfix list'})
 vim.keymap.set('n','cq',':cclose<cr>', {desc = 'Close quickfix list'})
 -- Location list
-vim.keymap.set('n','ln',':lne<cr>', {desc = 'Change vertical split to horizontal'})
-vim.keymap.set('n','lp',':lp<cr>', {desc = 'Change vertical split to horizontal'})
+-- vim.keymap.set('n','ln',':lne<cr>', {desc = 'Change vertical split to horizontal'})
+-- vim.keymap.set('n','lp',':lp<cr>', {desc = 'Change vertical split to horizontal'})
 
 -- Edit and source vimrc
 vim.keymap.set('n','<leader>sv',':source $MYVIMRC<CR>', {desc = 'Source vimrc file'})
@@ -83,3 +83,9 @@ vim.keymap.set('n','<leader>ev',':e $MYVIMRC<CR>', {desc = 'Change vimrc file'})
 -- Make and recover default session.
 vim.keymap.set('n','<F3>',': mksession! /home/$USER/.vim/files/nacho_vim_session<CR>', {desc = 'Make the default session'})
 vim.keymap.set('n','<F4>',': source! /home/$USER/.vim/files/nacho_vim_session<CR>', {desc = 'Source the default session'})
+
+#Go only to matches in this file, does the same with both mappings
+-- nnoremap ]g :execute "g/\\<" . expand("<cword>") . "\\>"<CR>:let nr = input("Which one: ")<Bar>exe "normal " . nr ."G"<CR>
+-- nnoremap [g :execute "g/\\<" . expand("<cword>") . "\\>"<CR>
+vim.keymap.set('n', ']g', "g/\\<" . expand("<cword>") . "\\>"<CR>:let nr = input("Which one: ")<Bar>exe "normal " . nr ."G"<CR>, { expr = true, desc = 'find this word in file'})
+ 
