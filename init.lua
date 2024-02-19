@@ -131,11 +131,11 @@ telscope.setup {
   defaults = {
     file_ignore_patterns = {
       "node_modules",
-      ".idea",
+      "%.idea",
       "project/target", --https://www.lua.org/pil/20.2.html
       "target",         --https://www.lua.org/pil/20.2.html
-      ".cache",
-      ".cpcache",
+      "%.cache",
+      "%.cpcache",
       "cljs%-runtime" },
     mappings = {
       i = {
