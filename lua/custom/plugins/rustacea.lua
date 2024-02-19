@@ -12,7 +12,7 @@ return {
     {
       '<leader>dr',
       '<cmd>RustLsp debuggables<cr>',
-      'Rust debug',
+      desc = 'Rust debug',
     },
   },
   config = function()
