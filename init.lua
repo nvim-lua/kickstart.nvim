@@ -284,7 +284,7 @@ local on_attach = function(client, bufnr)
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
   nmap('<M-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
-  client.server_capabilities.semanticTokensProvider = nil
+  -- client.server_capabilities.semanticTokensProvider = nil
 end
 
 -- Enable the following language servers
