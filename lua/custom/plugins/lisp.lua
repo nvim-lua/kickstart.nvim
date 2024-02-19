@@ -48,4 +48,5 @@ return {
 			vim.g["conjure#filetype#scheme"] = "conjure.client.guile.socket"
 		end,
 	},
+	{ "udalov/javap-vim", ft = "java" },
 }
