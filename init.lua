@@ -2,7 +2,7 @@
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
-vim.g.maplocalleader = ';'
+vim.g.maplocalleader = '\\'
 
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
@@ -79,7 +79,6 @@ vim.wo.signcolumn = 'yes'
 
 -- Decrease update time
 vim.o.updatetime = 250
-vim.o.timeoutlen = 300
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
@@ -106,6 +105,7 @@ vim.cmd([[ nnoremap <silent> <expr> <CR> {-> v:hlsearch ? "<cmd>nohl\<CR>" : "\<
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+vim.keymap.set({ 'n', 'v' }, '\\', '<Nop>', { silent = true })
 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -130,6 +130,7 @@ local telscopeb = require('telescope.builtin')
 telscope.setup {
   defaults = {
     file_ignore_patterns = {
+      "%.git",
       "node_modules",
       "%.idea",
       "project/target", --https://www.lua.org/pil/20.2.html
@@ -158,6 +159,12 @@ vim.keymap.set('n', '<leader>/', function()
     previewer = false,
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
+
+vim.keymap.set('n', '<leader>fF', function()
+  telscopeb.find_files({
+    no_ignore = true
+  })
+end, { desc = '[S]earch [F]iles (no ignore)' })
 
 vim.keymap.set('n', '<leader>fi', telscopeb.git_files, { desc = 'Search [G]it [F]iles' })
 vim.keymap.set('n', '<leader>ff', telscopeb.find_files, { desc = '[S]earch [F]iles' })
