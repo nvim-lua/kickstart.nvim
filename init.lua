@@ -626,6 +626,8 @@ mason_lspconfig.setup_handlers {
       filetypes = (servers[server_name] or {}).filetypes,
     }
   end,
+  -- rustaceanvim setup rust-analyzer manually
+  ['rust_analyzer'] = function() end,
 }
 
 -- [[ Configure nvim-cmp ]]
