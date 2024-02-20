@@ -100,6 +100,7 @@ vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = "Move down half page" })
 vim.keymap.set('n', '<C-j>', ':bnext<CR>', { desc = "Next Buffer", silent = true })
 vim.keymap.set('n', '<C-k>', ':bprev<CR>', { desc = "Previous Buffer", silent = true })
 vim.keymap.set('n', '<leader>c', ':bdelete<CR>', { desc = "Delete Buffer", silent = true })
+vim.keymap.set('n', '<leader>w', vim.cmd.w, { desc = 'Save buffer' })
 vim.cmd([[ nnoremap <silent> <expr> <CR> {-> v:hlsearch ? "<cmd>nohl\<CR>" : "\<CR>"}() ]])
 
 -- Keymaps for better default experience
@@ -254,7 +255,6 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous dia
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>de', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>dq', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
-vim.keymap.set('n', '<leader>w', vim.cmd.w, { desc = 'Save buffer' })
 
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
