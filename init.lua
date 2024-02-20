@@ -192,10 +192,14 @@ require('lazy').setup({
 
   {
     -- Theme inspired by Atom
+    -- https://github.com/navarasu/onedark.nvim
     'navarasu/onedark.nvim',
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'onedark'
+      require('onedark').setup {
+        transparent = true,
+      }
+      require('onedark').load()
     end,
   },
 
@@ -216,7 +220,7 @@ require('lazy').setup({
   {
     -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
-    -- Enable `lukas-reineke/indent-blankline.nvim`
+    -- Enable `lckas-reineke/indent-blankline.nvim`
     -- See `:help ibl`
     main = 'ibl',
     opts = {},
@@ -583,7 +587,7 @@ local servers = {
     },
   },
   -- tsserver = {},
-  -- astro = {},
+  astro = {},
   -- graphql = {},
   -- svelte = {},
   -- psalm = {},
