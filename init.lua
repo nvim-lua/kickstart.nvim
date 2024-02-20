@@ -587,7 +587,6 @@ local servers = {
   -- svelte = {},
   -- phpactor = {},
   -- volar = {},
-  -- cmake = {},
   -- azure_pipelines_ls = {},
 }
 
