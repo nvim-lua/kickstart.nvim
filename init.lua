@@ -424,7 +424,7 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'go', 'lua', 'python', 'tsx', 'javascript', 'typescript', 'vimdoc', 'bash' },
+    ensure_installed = { 'go', 'lua', 'python', 'tsx', 'javascript', 'typescript', 'vimdoc', 'bash' , 'svelte'},
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
@@ -563,14 +563,16 @@ require('mason-lspconfig').setup()
 --
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
+--  List here: https://github.com/williamboman/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-server
 local servers = {
   -- clangd = {},
-  -- gopls = {},
-  -- pyright = {},
-  -- rust_analyzer = {},
-  -- tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
-
+  gopls = {},
+  marksman = {},
+  docker = {},
+  docker_compose_language_service = {},
+  yamlls = {},
+  bashls = {},
+  html = { filetypes = { 'html', 'twig', 'hbs'} },
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -579,6 +581,14 @@ local servers = {
       -- diagnostics = { disable = { 'missing-fields' } },
     },
   },
+  -- tsserver = {},
+  -- astro = {},
+  -- graphql = {},
+  -- svelte = {},
+  -- phpactor = {},
+  -- volar = {},
+  -- cmake = {},
+  -- azure_pipelines_ls = {},
 }
 
 -- Setup neovim lua configuration
