@@ -16,10 +16,9 @@ sign({ name = 'DiagnosticSignInfo', text = '»' })
 
 -- lspconfig = require 'lspconfig'
 -- lspconfig.tailwindcss.setup({
---   on_attach = on_attach,
---   capabilities = capabilities,
---   filetypes = { "templ", "astro", "javascript", "typescript", "react" },
---   init_options = { userLanguages = { templ = "html" } },
+--   -- on_attach = on_attach,
+--   -- capabilities = capabilities,
+--   filetypes = { "html", "templ", "astro", "javascript", "typescript", "react" },
 -- })
 
 vim.filetype.add({ extension = { templ = "templ" } })
