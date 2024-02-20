@@ -586,7 +586,7 @@ local servers = {
   -- astro = {},
   -- graphql = {},
   -- svelte = {},
-  -- phpactor = {},
+  -- psalm = {},
   -- volar = {},
   -- azure_pipelines_ls = {},
 }
