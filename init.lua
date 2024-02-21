@@ -1,12 +1,26 @@
--- Set <space> as the leader key
--- See `:help mapleader`
---  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ','
+-- [[ Setting options ]]
+vim.g.mapleader = ' '                  -- bindings for global
+vim.g.maplocalleader = ','             -- bindings for local
+vim.o.hlsearch = true
+vim.o.colorcolumn = "80,120"           -- column width
+vim.o.number = true
+vim.o.relativenumber = true            -- relative numbers
+vim.o.mouse = 'a'                      -- enable mouse
+vim.o.clipboard = 'unnamedplus'        -- see :h clipboard
+vim.o.breakindent = true
+vim.o.undofile = true                  -- Save undo history
+vim.o.ignorecase = true                -- Case-insensitive searching
+vim.o.smartcase = true
+vim.wo.signcolumn = 'yes'              -- signcolumn to the left of the numbers
+vim.o.updatetime = 250                 -- Decrease update time
+vim.o.completeopt = 'menuone,noselect' -- a better completion experience
+vim.o.termguicolors = true             -- all the colors
+vim.o.tabstop = 2                      -- Set whitespace to be 2 always
+vim.o.shiftwidth = 2                   -- Set whitespace to be 2 always
+vim.o.softtabstop = 2                  -- Set whitespace to be 2 always
+vim.o.expandtab = true                 -- spaces are better than tabs
 
 -- Install package manager
---    https://github.com/folke/lazy.nvim
---    `:help lazy.nvim.txt` for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system {
@@ -20,99 +34,27 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- NOTE:
 -- configure plugins in the following
--- they can be configured with the `config` key or after they are setup since
--- now they are in the runtime
 require('lazy').setup({
-  -- NOTE: This is where your plugins related to LSP can be installed.
-  --  The configuration is done below. Search for lspconfig to find it below.
-  -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
-  --       These are some example plugins that I've included in the kickstart repository.
-  --       Uncomment any of the lines below to enable them.
   require 'kickstart.plugins.autoformat',
   -- require 'kickstart.plugins.debug',
-
-  -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
-  --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
-  --    up-to-date with whatever is in the kickstart repo.
-  --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  --
-  --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   { import = 'custom.plugins' },
 }, {})
 
--- [[ Setting options ]]
--- See `:help vim.o`
--- NOTE: You can change these options as you wish!
-
--- Set highlight on search
-vim.o.hlsearch = true
-
--- Set Colorcolumn because I like to immpose max lengths for my code
-vim.o.colorcolumn = "80,120"
-
--- Make line numbers default
-vim.o.number = true
-vim.o.relativenumber = true
-
--- Enable mouse mode
-vim.o.mouse = 'a'
-
--- Sync clipboard between OS and Neovim.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
-vim.o.clipboard = 'unnamedplus'
-
--- Enable break indent
-vim.o.breakindent = true
-
--- Save undo history
-vim.o.undofile = true
-
--- Case-insensitive searching UNLESS \C or capital in search
-vim.o.ignorecase = true
-vim.o.smartcase = true
-
--- Keep signcolumn on by default
-vim.wo.signcolumn = 'yes'
-
--- Decrease update time
-vim.o.updatetime = 250
-
--- Set completeopt to have a better completion experience
-vim.o.completeopt = 'menuone,noselect'
-
--- NOTE: You should make sure your terminal supports this
-vim.o.termguicolors = true
-
--- Set whitespace to not be so aggresive
-vim.o.tabstop = 2
-vim.o.softtabstop = 2
-vim.o.shiftwidth = 2
-vim.o.expandtab = true
-
 -- [[ Basic Keymaps ]]
-
-vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = "Move up half page" })
-vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = "Move down half page" })
-
-vim.keymap.set('n', '<C-j>', ':bnext<CR>', { desc = "Next Buffer", silent = true })
-vim.keymap.set('n', '<C-k>', ':bprev<CR>', { desc = "Previous Buffer", silent = true })
-vim.keymap.set('n', '<leader>c', ':bdelete<CR>', { desc = "Delete Buffer", silent = true })
-vim.keymap.set('n', '<leader>w', vim.cmd.w, { desc = 'Save buffer' })
-vim.cmd([[ nnoremap <silent> <expr> <CR> {-> v:hlsearch ? "<cmd>nohl\<CR>" : "\<CR>"}() ]])
-
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
-vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
-
--- Remap for dealing with word wrap
-vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })                         -- silence the normal <Space>
+vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = "Move up half page" })                     -- center while scrolling
+vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = "Move down half page" })                   -- center while scrolling
+vim.keymap.set('n', '<C-j>', ':bnext<CR>', { desc = "Next Buffer", silent = true })         -- easily change buffers
+vim.keymap.set('n', '<C-k>', ':bprev<CR>', { desc = "Previous Buffer", silent = true })     -- easily change buffers
+vim.keymap.set('n', '<leader>c', ':bdelete<CR>', { desc = "Delete Buffer", silent = true }) -- close buffer
+vim.cmd([[ nnoremap <silent> <expr> <CR> {-> v:hlsearch ? "<cmd>nohl\<CR>" : "\<CR>"}() ]]) -- clear the highlighted search with <CR>
+vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })       -- Remap for dealing with word wrap
+vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })       -- Remap for dealing with word wrap
 
 -- [[ Highlight on yank ]]
--- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
@@ -190,7 +132,6 @@ require('nvim-treesitter.configs').setup {
     'zig'
   },
 
-  -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = true,
 
   highlight = { enable = true },
@@ -293,8 +234,6 @@ local on_attach = function(client, bufnr)
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
   nmap('<M-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
-
-  -- client.server_capabilities.semanticTokensProvider = nil
 end
 
 -- Enable the following language servers
@@ -308,7 +247,6 @@ end
 local servers = {
   clangd = {},
   gopls = {},
-  -- pyright = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
   clojure_lsp = {},
   -- ocamllsp = {},
@@ -363,26 +301,22 @@ cmp.setup {
   mapping = cmp.mapping.preset.insert {
     ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-p>'] = cmp.mapping.select_prev_item(),
-    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-d>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete {},
-    ['<CR>'] = cmp.mapping.confirm {
+    ['<C-y>'] = cmp.mapping.confirm {
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
     },
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_locally_jumpable() then
+    ['<C-l>'] = cmp.mapping(function(fallback)
+      if luasnip.expand_or_locally_jumpable() then
         luasnip.expand_or_jump()
       else
         fallback()
       end
     end, { 'i', 's' }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.locally_jumpable(-1) then
+    ['<C-h>'] = cmp.mapping(function(fallback)
+      if luasnip.locally_jumpable(-1) then
         luasnip.jump(-1)
       else
         fallback()
