@@ -36,7 +36,97 @@ vim.opt.rtp:prepend(lazypath)
 
 -- configure plugins in the following
 require('lazy').setup({
-  require 'kickstart.plugins.autoformat',
+  'tpope/vim-sleuth',
+
+  {
+    'stevearc/conform.nvim',
+    event = 'VeryLazy',
+    opts = {
+      format_on_save = {
+        timeout_ms = 500,
+        lsp_fallback = true,
+      },
+      formatters_by_ft = {
+        lua = { 'stylua' },
+        clojure = { 'cljfmt' },
+        go = { 'gofmt', 'goimports' },
+        c = { 'clang_format' },
+      }
+    }
+  },
+
+  { -- Useful plugin to show you pending keybinds.
+    'folke/which-key.nvim',
+    event = 'VeryLazy',
+    init = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 350
+    end,
+    config = function()
+      require('which-key').setup()
+
+      -- document existing key chains
+      require('which-key').register {
+        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
+        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
+        ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
+        ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
+        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
+        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
+        ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
+        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+      }
+    end,
+  },
+
+  {
+    'nvim-telescope/telescope.nvim',
+    event = 'VeryLazy',
+    branch = '0.1.x',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      { -- If encountering errors, see telescope-fzf-native README for install instructions
+        'nvim-telescope/telescope-fzf-native.nvim',
+        -- NOTE: `build` is used to run some command when the plugin is installed/updated.
+        --  This is only run then, not every time Neovim starts up.
+        build = 'make',
+
+        -- NOTE: `cond` is a condition used to determine whether this plugin should be
+        -- installed and loaded.
+        cond = function()
+          return vim.fn.executable 'make' == 1
+        end,
+      },
+      { 'nvim-telescope/telescope-ui-select.nvim' },
+
+      -- Useful for getting pretty icons, but requires special font.
+      --  If you already have a Nerd Font, or terminal set up with fallback fonts
+      --  you can enable this
+      -- { 'nvim-tree/nvim-web-devicons' }
+    },
+    config = function()
+      require('telescope').setup {
+        defaults = {
+          mappings = {
+            i = {
+              ['<C-u>'] = false,
+              ['<C-d>'] = false,
+            }
+          }
+        },
+        extensions = {
+          ['ui-select'] = {
+            require('telescope.themes').get_dropdown(),
+          }
+        },
+      }
+
+      pcall(require('telescop').load_extension, 'fzf')
+      pcall(require('telescop').load_extension, 'fzf')
+    end
+  },
+
+  -- require 'kickstart.plugins.autoformat',
   -- require 'kickstart.plugins.debug',
   { import = 'custom.plugins' },
 }, {})
