@@ -41,6 +41,8 @@ I hope you enjoy your Neovim journey,
 
 P.S. You can delete this when you're done too. It's your config now :)
 
+P.P.S. If you use nix, you can figure out how to install this yourself :)
+
 TODO: Include PDE video link? ;)
 TODO: Include Neovim "Listening To Friendly Manual"? ;)
 --]]
@@ -102,9 +104,6 @@ vim.wo.signcolumn = 'yes'
 vim.o.updatetime = 250
 vim.o.timeoutlen = 300
 
--- Set completeopt to have a better completion experience
-vim.o.completeopt = 'menuone,noselect'
-
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
@@ -155,6 +154,8 @@ require('lazy').setup({
   'tpope/vim-sleuth',
 
   -- Surrounding motions, like "ysiw" (TODO: Write a description for this)
+  -- mini-ai
+  -- mini-surround
   'tpope/vim-surround',
 
   -- NOTE: This is where your plugins related to LSP can be installed.
@@ -164,43 +165,20 @@ require('lazy').setup({
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs to stdpath for neovim
-      -- TODO: It seems that there is some confusion w/ the setup here, so i need to check it out some more
-      { 'williamboman/mason.nvim', opts = {} },
-      { 'williamboman/mason-lspconfig.nvim', opts = {} },
+      'williamboman/mason.nvim',
+      'williamboman/mason-lspconfig.nvim',
 
       -- Additional lua configuration, makes nvim stuff amazing!
-      { 'folke/neodev.nvim', opts = {} },
+      'folke/neodev.nvim',
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', opts = {} },
     },
     config = function()
-      -- Enable the following language servers
-      --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
-      --
-      --  Add any additional override configuration in the following tables. They will be passed to
-      --  the `settings` field of the server config. You must look up that documentation yourself.
-      --
-      --  If you want to override the default filetypes that your language server will attach to you can
-      --  define the property 'filetypes' to the map in question.
-      local servers = {
-        -- clangd = {},
-        -- gopls = {},
-        -- pyright = {},
-        -- rust_analyzer = {},
-        -- tsserver = {},
-        -- html = { filetypes = { 'html', 'twig', 'hbs'} },
-
-        lua_ls = {
-          Lua = {
-            workspace = { checkThirdParty = false },
-            telemetry = { enable = false },
-            -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-            -- diagnostics = { disable = { 'missing-fields' } },
-          },
-        },
-      }
+      -- First, enable neodev. This is helpful for auto-configuring the Lua LSP
+      -- to understand your Neovim environment
+      require('neodev').setup()
 
       --  This function gets run when an LSP connects to a particular buffer.
       local on_attach = function(_, bufnr)
@@ -219,6 +197,9 @@ require('lazy').setup({
         end
 
         -- Important LSP Navigation keybinds
+        --
+        -- Jump to the definition of the word under your cursor.
+        --  To jump back, press <C-T>.
         nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
         nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
         nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
@@ -226,40 +207,79 @@ require('lazy').setup({
         nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
         nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
-        -- Important LSP Action keybinds
+        -- NOTE: This is not Goto Definition, this is Goto Declaration.
+        --  For example, in C this would take you to the header
+        nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+
+        -- Rename the variable under your cursor
         nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+
+        -- Execute a code action, usually your cursor needs to be on top of an error
+        -- or a suggestion from your LSP for this to activate.
         nmap('<leader>ca', function()
           vim.lsp.buf.code_action { context = { only = { 'quickfix', 'refactor', 'source' } } }
         end, '[C]ode [A]ction')
 
         -- See `:help K` for why this keymap
         nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+
+        -- Show the signature of the function you're currently completing.
         nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
-
-        -- Lesser used LSP functionality
-        nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-
-        -- LSP Workspace Management
-        nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
-        nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-        nmap('<leader>wl', function()
-          print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-        end, '[W]orkspace [L]ist Folders')
       end
 
-      -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
+      -- LSP servers and clients are able to communicate to each other what features they support.
+      --  By default, Neovim doesn't support everything that is in the LSP Specification.
+      --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
+      --  So, we create new capabilties with nvim cmp, and then broadcast that to the servers.
       local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
+      -- Enable the following language servers
+      --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
+      --
+      --  Add any additional override configuration in the following tables. Available keys are:
+      --  - cmd (table): Override the default command used to start the server
+      --  - filetypes (table): Override the default list of associated filetypes for the server
+      --  - capabilities (table): TODO
+      --  - settings (table): Override the default settings passed when initializing the server.
+      --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      local servers = {
+        -- clangd = {},
+        -- gopls = {},
+        -- pyright = {},
+        -- rust_analyzer = {},
+        -- tsserver = {},
+        -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+
+        lua_ls = {
+          -- cmd = {...},
+          -- filetypes { ...},
+          -- capabilities = {},
+          settings = {
+            Lua = {
+              workspace = { checkThirdParty = false },
+              telemetry = { enable = false },
+              -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+              -- diagnostics = { disable = { 'missing-fields' } },
+            },
+          },
+        },
+      }
+
       -- Ensure the servers above are installed
+      require('mason').setup()
       require('mason-lspconfig').setup {
         ensure_installed = vim.tbl_keys(servers),
         handlers = {
           function(server_name)
+            local server = servers[server_name] or {}
             require('lspconfig')[server_name].setup {
-              capabilities = capabilities,
+              cmd = server.cmd,
+              settings = server.settings,
+              filetypes = server.filetypes,
               on_attach = on_attach,
-              settings = servers[server_name],
-              filetypes = (servers[server_name] or {}).filetypes,
+              -- TODO: Think about what we wanna do here.
+              -- capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities),
+              capabilities = server.capabilities or capabilities,
             }
           end,
         },
@@ -323,34 +343,37 @@ require('lazy').setup({
           end,
         },
         completion = {
-          completeopt = 'menu,menuone,noinsert',
+          completeopt = 'menu,menuone,noinsert,noselect',
         },
+        -- For an understanding of why these mappings were
+        -- chosen, you will need to read `:help ins-completion`
         mapping = cmp.mapping.preset.insert {
+          -- Select the [n]ext item
           ['<C-n>'] = cmp.mapping.select_next_item(),
+          -- Select the [p]revious item
           ['<C-p>'] = cmp.mapping.select_prev_item(),
-          ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-f>'] = cmp.mapping.scroll_docs(4),
+          -- Accept ([y]es) the completion.
+          --  This will auto-import if your LSP supports it.
+          --  This will expand snippets if the LSP sent a snippet.
+          ['<C-y>'] = cmp.mapping.confirm { select = true },
+          -- Manually trigger a completion from nvim-cmp
           ['<C-Space>'] = cmp.mapping.complete {},
-          ['<CR>'] = cmp.mapping.confirm {
-            behavior = cmp.ConfirmBehavior.Replace,
-            select = true,
-          },
-          ['<Tab>'] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_next_item()
-            elseif luasnip.expand_or_locally_jumpable() then
+          -- Think of <c-l> as moving to the right of your snippet expansion.
+          --  So if you have a snippet that's like:
+          --  function $name($args)
+          --    $body
+          --  end
+          --
+          -- <c-l> will move you to the right of each of the expansion locations.
+          -- <c-h> is similar, except moving you backwards.
+          ['<C-l>'] = cmp.mapping(function()
+            if luasnip.expand_or_locally_jumpable() then
               luasnip.expand_or_jump()
-            else
-              fallback()
             end
           end, { 'i', 's' }),
-          ['<S-Tab>'] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_prev_item()
-            elseif luasnip.locally_jumpable(-1) then
+          ['<C-h>'] = cmp.mapping(function()
+            if luasnip.locally_jumpable(-1) then
               luasnip.jump(-1)
-            else
-              fallback()
             end
           end, { 'i', 's' }),
         },
@@ -380,12 +403,6 @@ require('lazy').setup({
         ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
         ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
       }
-      -- register which-key VISUAL mode
-      -- required for visual <leader>hs (hunk stage) to work
-      require('which-key').register({
-        ['<leader>'] = { name = 'VISUAL <leader>' },
-        ['<leader>h'] = { 'Git [H]unk' },
-      }, { mode = 'v' })
     end,
   },
 
@@ -403,7 +420,7 @@ require('lazy').setup({
     },
   },
 
-  {
+  { -- You can easily change to a different colorscheme.
     'folke/tokyonight.nvim',
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
@@ -413,22 +430,7 @@ require('lazy').setup({
     end,
   },
 
-  -- {
-  --   -- Theme inspired by Atom
-  --   'navarasu/onedark.nvim',
-  --   priority = 1000,
-  --   lazy = false,
-  --   config = function()
-  --     require('onedark').setup {
-  --       -- Set a style preset. 'dark' is default.
-  --       style = 'dark', -- dark, darker, cool, deep, warm, warmer, light
-  --     }
-  --     require('onedark').load()
-  --   end,
-  -- },
-
-  {
-    -- Set lualine as statusline
+  { -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
     -- See `:help lualine.txt`
     opts = {
@@ -462,7 +464,10 @@ require('lazy').setup({
         end,
       },
       { 'nvim-telescope/telescope-ui-select.nvim' },
-      -- { 'nvim-tree/nvim-web-devicons' } -- Useful for getting pretty icons, but requires special font
+      -- Useful for getting pretty icons, but requires special font.
+      --  If you already have a Nerd Font, or terminal set up with fallback fonts
+      --  you can enable this
+      -- { 'nvim-tree/nvim-web-devicons' }
     },
     config = function()
       -- [[ Configure Telescope ]]
@@ -602,6 +607,7 @@ require('lazy').setup({
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
   -- require 'kickstart.plugins.debug',
+  -- require 'kickstart.plugins.indent_line',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
