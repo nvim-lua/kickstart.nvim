@@ -167,8 +167,8 @@ require('lazy').setup({
         end, { desc = 'git diff against last commit' })
 
         -- Toggles
-        map('n', '<leader>tb', gs.toggle_current_line_blame, { desc = 'toggle git blame line' })
-        map('n', '<leader>td', gs.toggle_deleted, { desc = 'toggle git show deleted' })
+        map('n', '<leader>tb', gs.toggle_current_line_blame, { desc = '[T]oggle git [B]lame line' })
+        map('n', '<leader>td', gs.toggle_deleted, { desc = '[T]oggle git [S]how deleted' })
 
         -- Text object
         map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', { desc = 'select git hunk' })
@@ -248,6 +248,14 @@ require('lazy').setup({
     build = ':TSUpdate',
   },
 
+  {
+    "danymat/neogen",
+    dependencies = "nvim-treesitter/nvim-treesitter",
+    config = true,
+    -- Comment next line if you want to follow  unstable versions
+    version = "*"
+  },
+
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -299,10 +307,18 @@ vim.o.updatetime = 250
 vim.o.timeoutlen = 300
 
 -- Set completeopt to have a better completion experience
-vim.o.completeopt = 'menuone,noselect'
+vim.o.completeopt = 'menuone,noselect,preview'
 
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
+
+-- Create new window below instead of above
+vim.o.splitbelow = true
+
+-- Setup the spell checker
+vim.opt.spelllang = 'en_us'
+vim.opt.spell = true
+
 
 -- [[ Basic Keymaps ]]
 
@@ -316,6 +332,8 @@ vim.api.nvim_set_keymap('n', '<C-d>', '<C-d>zz', { noremap = true, silent = true
 vim.api.nvim_set_keymap('n', 'n', 'nzzzv', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'N', 'Nzzzv', { noremap = true, silent = true })
 
+-- Toggle between absolute and relative line numbers
+vim.keymap.set('n', '<leader>tl', ":set number! relativenumber!<cr>", { desc = "[T]oggle [L]ine numbers display" })
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
@@ -616,6 +634,32 @@ mason_lspconfig.setup_handlers {
 -- setup nvim tree
 require("nvim-tree").setup()
 
+
+-- setup docstring generation
+require('neogen').setup({
+  enabled = true,
+  snippet_engine = 'luasnip',
+  languages = {
+    python = {
+      template = { annotation_convention = 'numpydoc' },
+    },
+  },
+
+})
+
+local neomap = function(keys, func, desc)
+  if desc then
+    desc = 'DOC: [N]eogen ' .. desc
+  end
+
+  vim.keymap.set('n', keys, func, { noremap = true, silent = true, desc = desc })
+end
+
+neomap("<leader>nf", ":lua require('neogen').generate()<CR>", "[f]unction")
+neomap("<leader>nF", ":lua require('neogen').generate({type='file'})<CR>", "[F]ile")
+neomap("<leader>nc", ":lua require('neogen').generate({type='class'})<CR>", "[c]lass")
+neomap("<leader>nt", ":lua require('neogen').generate({type='type'})<CR>", "[t]ype")
+
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
 local cmp = require 'cmp'
@@ -631,16 +675,17 @@ cmp.setup {
     end,
   },
   completion = {
-    completeopt = 'menu,menuone,noinsert',
+    completeopt = 'menuone,noinsert,preview',
   },
   mapping = cmp.mapping.preset.insert {
     ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-p>'] = cmp.mapping.select_prev_item(),
+    ['<C-e>'] = cmp.mapping.close(),
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete {},
-    ['<CR>'] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
+    ['<C-y>'] = cmp.mapping.confirm {
+      behavior = cmp.ConfirmBehavior.Insert,
       select = true,
     },
     ['<Tab>'] = cmp.mapping(function(fallback)
@@ -666,7 +711,7 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
     { name = 'path' },
-    { name = 'buffer',  keyword_length = 4 },
+    { name = 'buffer',  keyword_length = 5, max_item_count = 5 },
   },
   formatting = {
     format = lspkind.cmp_format {

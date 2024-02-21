@@ -18,6 +18,7 @@
   "mason-nvim-dap.nvim": { "branch": "main", "commit": "3614a39aae98ccd34124b072939d6283853b3dd2" },
   "mason.nvim": { "branch": "main", "commit": "c43eeb5614a09dc17c03a7fb49de2e05de203924" },
   "neodev.nvim": { "branch": "main", "commit": "bbe17de89345ce40725e721d347c596dc4a02b32" },
+  "neogen": { "branch": "main", "commit": "cb1f384df804c1bf729332c4f728253fe17962d4" },
   "none-ls.nvim": { "branch": "main", "commit": "2d4d4f765da684c92cca714bfd7a395ff6b08333" },
   "nvim-cmp": { "branch": "main", "commit": "04e0ca376d6abdbfc8b52180f8ea236cbfddf782" },
   "nvim-dap": { "branch": "master", "commit": "fc880e82059eb21c0fa896be60146e5f17680648" },
