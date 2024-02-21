@@ -17,7 +17,6 @@ Kickstart.nvim is a template for your own configuration.
   a guide. One possible example:
   - https://learnxinyminutes.com/docs/lua/
 
-
   And then you can explore or search through `:help lua-guide`
   - https://neovim.io/doc/user/lua-guide.html
 
@@ -26,10 +25,18 @@ Kickstart Installation:
 
 Kickstart Guide:
 
+The first thing you should do, is run `:help`.
+  This will open up a help window with some basic information
+  about reading, navigating and searching the builtin help documentation.
+
+  This should be the first place you go to look when you're stuck or confused
+  with something. It's one of my favorite neovim features.
+
+  Additionally, we provide a keymap "<leader>sh" to [s]earch the [h]elp documentation,
+  which is very useful when you're not sure exactly what you're looking for.
+
 I have left several `:help X` comments throughout the init.lua
 You should run that command and read that help section for more information.
-- TODO: Should write a little bit more about how to use help. And also really push them to be reading the help.
-        Could probably add a few more links now as well. Particularly for lazy.nvim keys, which I didn't do.
 
 In addition, I have some `NOTE:` items throughout the file.
 These are for you, the reader to help understand what is happening. Feel free to delete
@@ -41,8 +48,6 @@ I hope you enjoy your Neovim journey,
 
 P.S. You can delete this when you're done too. It's your config now :)
 
-P.P.S. If you use nix, you can figure out how to install this yourself :)
-
 TODO: Include PDE video link? ;)
 TODO: Include Neovim "Listening To Friendly Manual"? ;)
 --]]
@@ -52,22 +57,6 @@ TODO: Include Neovim "Listening To Friendly Manual"? ;)
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-
--- [[ Install `lazy.nvim` plugin manager ]]
---    https://github.com/folke/lazy.nvim
---    `:help lazy.nvim.txt` for more info
-local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system {
-    'git',
-    'clone',
-    '--filter=blob:none',
-    'https://github.com/folke/lazy.nvim.git',
-    '--branch=stable', -- latest stable release
-    lazypath,
-  }
-end
-vim.opt.rtp:prepend(lazypath)
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -107,6 +96,10 @@ vim.o.timeoutlen = 300
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+-- Configure how new splits should be opened
+vim.o.splitright = true
+vim.o.splitbelow = true
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -138,6 +131,21 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- [[ Install `lazy.nvim` plugin manager ]]
+--    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
+local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system {
+    'git',
+    'clone',
+    '--filter=blob:none',
+    'https://github.com/folke/lazy.nvim.git',
+    '--branch=stable', -- latest stable release
+    lazypath,
+  }
+end
+vim.opt.rtp:prepend(lazypath)
+
 -- [[ Configure plugins ]]
 -- NOTE: Here is where you install your plugins.
 --  You can configure plugins using the `config` key.
@@ -147,19 +155,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
-  -- Git related plugins
-  'tpope/vim-fugitive',
-
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
-
-  -- Surrounding motions, like "ysiw" (TODO: Write a description for this)
-  -- mini-ai
-  -- mini-surround
-  'tpope/vim-surround',
-
-  -- NOTE: This is where your plugins related to LSP can be installed.
-  --  The configuration is done below. Search for lspconfig to find it below.
 
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
@@ -189,11 +186,7 @@ require('lazy').setup({
         -- In this case, we create a function that lets us more easily define mappings specific
         -- for LSP related items. It sets the mode, buffer and description for us each time.
         local nmap = function(keys, func, desc)
-          if desc then
-            desc = 'LSP: ' .. desc
-          end
-
-          vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
+          vim.keymap.set('n', keys, func, { buffer = bufnr, desc = 'LSP: ' .. desc })
         end
 
         -- Important LSP Navigation keybinds
@@ -430,18 +423,41 @@ require('lazy').setup({
     end,
   },
 
-  { -- Set lualine as statusline
-    'nvim-lualine/lualine.nvim',
-    -- See `:help lualine.txt`
-    opts = {
-      options = {
-        icons_enabled = false,
-        theme = 'auto',
-        component_separators = '|',
-        section_separators = '',
-      },
-    },
+  { -- Collection of various small independent plugins/modules
+    'echasnovski/mini.nvim',
+    config = function()
+      -- Better Around/Inside textobjects
+      --
+      -- Examples:
+      --  - `af` - around function call
+      --  - `inq` - inside next quote
+      require('mini.ai').setup { n_lines = 500 }
+
+      -- Add/delete/replace surroundings (brackets, quotes, etc.)
+      require('mini.surround').setup()
+
+      -- Simple and easy statusline.
+      --  You could remove this setup call if you don't like it,
+      --  and try some other statusline plugin
+      require('mini.statusline').setup()
+
+      -- ... and there is more!
+      --  Check out: https://github.com/echasnovski/mini.nvim
+    end,
   },
+
+  -- { -- Set lualine as statusline
+  --   'nvim-lualine/lualine.nvim',
+  --   -- See `:help lualine.txt`
+  --   opts = {
+  --     options = {
+  --       icons_enabled = false,
+  --       theme = 'auto',
+  --       component_separators = '|',
+  --       section_separators = '',
+  --     },
+  --   },
+  -- },
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
@@ -493,21 +509,23 @@ require('lazy').setup({
       pcall(require('telescope').load_extension, 'ui-select')
 
       -- See `:help telescope.builtin`
-      vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
-      vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
-      vim.keymap.set('n', '<leader>ss', require('telescope.builtin').builtin, { desc = '[S]earch [S]elect Telescope' })
-      vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
-      vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-      vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-      vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
-      vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
+      local builtin = require 'telescope.builtin'
+      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
+      vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
+      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
+      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
+      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
+      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+      vim.keymap.set('n', '<leader>gf', builtin.git_files, { desc = 'Search [G]it [F]iles' })
+      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to telescope to change theme, layout, etc.
-        require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+        builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
           winblend = 10,
           previewer = false,
         })
@@ -516,7 +534,7 @@ require('lazy').setup({
       -- Also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular pickers
       vim.keymap.set('n', '<leader>s/', function()
-        require('telescope.builtin').live_grep {
+        builtin.live_grep {
           grep_open_files = true,
           prompt_title = 'Live Grep in Open Files',
         }
@@ -526,80 +544,24 @@ require('lazy').setup({
 
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
-    },
     build = ':TSUpdate',
     config = function()
-      -- [[ Configure Treesitter ]]
-      -- See `:help nvim-treesitter`
-      -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
+      -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
+
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup {
-        -- Add languages to be installed here that you want installed for treesitter
-        ensure_installed = { 'c', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
-
         -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-        auto_install = false,
-        -- Install languages synchronously (only applied to `ensure_installed`)
-        sync_install = false,
-        -- You can specify additional Treesitter modules here: -- For example: -- playground = {--enable = true,-- },
+        auto_install = true,
         highlight = { enable = true },
         indent = { enable = true },
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = '<c-space>',
-            node_incremental = '<c-space>',
-            scope_incremental = '<c-s>',
-            node_decremental = '<M-space>',
-          },
-        },
-        textobjects = {
-          select = {
-            enable = true,
-            lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-            keymaps = {
-              -- You can use the capture groups defined in textobjects.scm
-              ['aa'] = '@parameter.outer',
-              ['ia'] = '@parameter.inner',
-              ['af'] = '@function.outer',
-              ['if'] = '@function.inner',
-              ['ac'] = '@class.outer',
-              ['ic'] = '@class.inner',
-            },
-          },
-          move = {
-            enable = true,
-            set_jumps = true, -- whether to set jumps in the jumplist
-            goto_next_start = {
-              [']m'] = '@function.outer',
-              [']]'] = '@class.outer',
-            },
-            goto_next_end = {
-              [']M'] = '@function.outer',
-              [']['] = '@class.outer',
-            },
-            goto_previous_start = {
-              ['[m'] = '@function.outer',
-              ['[['] = '@class.outer',
-            },
-            goto_previous_end = {
-              ['[M'] = '@function.outer',
-              ['[]'] = '@class.outer',
-            },
-          },
-          swap = {
-            enable = true,
-            swap_next = {
-              ['<leader>a'] = '@parameter.inner',
-            },
-            swap_previous = {
-              ['<leader>A'] = '@parameter.inner',
-            },
-          },
-        },
       }
+
+      -- There are additional nvim-treesitter modules that you can use to interact
+      -- with nvim-treesitter. You should go explore a few and see what interests you:
+      --
+      --    - Incremental selection: Included with nvim-treesitter, see :help nvim-treesitter-incremental-selection-mod
+      --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
+      --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
     end,
   },
 
