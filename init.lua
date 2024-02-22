@@ -192,15 +192,18 @@ require('lazy').setup({
     },
   },
 
-  {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
+{
+    'loctvl842/monokai-pro.nvim',
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'onedark'
+      require('monokai-pro').setup({
+        transparent_background = true,
+        filter = "spectrum",
+        devicons = true,
+      })
+      vim.cmd.colorscheme 'monokai-pro'
     end,
   },
-
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
@@ -208,7 +211,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'monokai-pro',
         component_separators = '|',
         section_separators = '',
       },
@@ -269,7 +272,7 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
@@ -586,11 +589,18 @@ require('mason-lspconfig').setup()
 local servers = {
   -- clangd = {},
   -- gopls = {},
+  prismals = { filetypes = { 'prisma' } },
   -- pyright = {},
   -- rust_analyzer = {},
-  -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
-
+  tsserver = {
+    init_options = {
+      preferences = {
+        importModuleSpecifier = 'relative',
+        importModuleSpecifierEnding = 'minimal'
+      }
+    }
+  },
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -621,6 +631,7 @@ mason_lspconfig.setup_handlers {
       capabilities = capabilities,
       on_attach = on_attach,
       settings = servers[server_name],
+      init_options = (servers[server_name] or {}).init_options,
       filetypes = (servers[server_name] or {}).filetypes,
     }
   end,
