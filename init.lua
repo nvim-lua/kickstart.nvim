@@ -85,11 +85,11 @@ vim.g.maplocalleader = ' '
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
--- Set highlight on search
-vim.opt.hlsearch = false
-
 -- Make line numbers default
 vim.opt.number = true
+-- You can also add relative line numbers, for help with jumping.
+--  Experiment for yourself to see if you like it!
+-- vim.opt.relativenumber = true
 
 -- Enable mouse mode
 vim.opt.mouse = 'a'
@@ -126,7 +126,16 @@ vim.opt.splitbelow = true
 vim.opt.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
+-- Preview substitutions live
+vim.opt.inccommand = 'split'
+
 -- [[ Basic Keymaps ]]
+
+-- Set highlight on search
+vim.opt.hlsearch = true
+
+-- Clear highlighting on pressing Escape
+vim.keymap.set('n', '<Esc>', '<esc>:nohlsearch<CR>', { silent = true })
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
@@ -301,7 +310,11 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {},
+        -- defaults = {
+        --   mappings = {
+        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+        --   },
+        -- },
         -- pickers = {}
         extensions = {
           ['ui-select'] = {
@@ -400,47 +413,53 @@ require('lazy').setup({
       require('neodev').setup()
 
       --  This function gets run when an LSP connects to a particular buffer.
-      local on_attach = function(_, bufnr)
-        -- NOTE: Remember that lua is a real programming language, and as such it is possible
-        -- to define small helper and utility functions so you don't have to repeat yourself
-        -- many times.
-        --
-        -- In this case, we create a function that lets us more easily define mappings specific
-        -- for LSP related items. It sets the mode, buffer and description for us each time.
-        local nmap = function(keys, func, desc)
-          vim.keymap.set('n', keys, func, { buffer = bufnr, desc = 'LSP: ' .. desc })
-        end
+      --    That is to say, every time a new file is opened that is associated with
+      --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
+      --    function will be executed to configure the current buffer
+      vim.api.nvim_create_autocmd('LspAttach', {
+        group = vim.api.nvim_create_augroup('custom-lsp-attach', { clear = true }),
+        callback = function(event)
+          -- NOTE: Remember that lua is a real programming language, and as such it is possible
+          -- to define small helper and utility functions so you don't have to repeat yourself
+          -- many times.
+          --
+          -- In this case, we create a function that lets us more easily define mappings specific
+          -- for LSP related items. It sets the mode, buffer and description for us each time.
+          local nmap = function(keys, func, desc)
+            vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+          end
 
-        -- Important LSP Navigation keybinds
-        --
-        -- Jump to the definition of the word under your cursor.
-        --  To jump back, press <C-T>.
-        nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-        nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-        nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-        nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
-        nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-        nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+          -- Important LSP Navigation keybinds
+          --
+          -- Jump to the definition of the word under your cursor.
+          --  To jump back, press <C-T>.
+          nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+          nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+          nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+          nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+          nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
+          nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
-        -- NOTE: This is not Goto Definition, this is Goto Declaration.
-        --  For example, in C this would take you to the header
-        nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+          -- WARN: This is not Goto Definition, this is Goto Declaration.
+          --  For example, in C this would take you to the header
+          nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
-        -- Rename the variable under your cursor
-        nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+          -- Rename the variable under your cursor
+          nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
 
-        -- Execute a code action, usually your cursor needs to be on top of an error
-        -- or a suggestion from your LSP for this to activate.
-        nmap('<leader>ca', function()
-          vim.lsp.buf.code_action { context = { only = { 'quickfix', 'refactor', 'source' } } }
-        end, '[C]ode [A]ction')
+          -- Execute a code action, usually your cursor needs to be on top of an error
+          -- or a suggestion from your LSP for this to activate.
+          nmap('<leader>ca', function()
+            vim.lsp.buf.code_action { context = { only = { 'quickfix', 'refactor', 'source' } } }
+          end, '[C]ode [A]ction')
 
-        -- See `:help K` for why this keymap
-        nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+          -- See `:help K` for why this keymap
+          nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
 
-        -- Show the signature of the function you're currently completing.
-        nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
-      end
+          -- Show the signature of the function you're currently completing.
+          nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+        end,
+      })
 
       -- LSP servers and clients are able to communicate to each other what features they support.
       --  By default, Neovim doesn't support everything that is in the LSP Specification.
@@ -462,8 +481,14 @@ require('lazy').setup({
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
-        -- tsserver = {},
         -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+        --
+        -- If you use something like typescript, where the tooling is as bad as the language,
+        -- then you might need to install and configure something like this:
+        --    https://github.com/pmizio/typescript-tools.nvim
+        --
+        -- If you only have simple needs for typescript, then you can probably just use tsserver
+        -- tsserver = {},
 
         lua_ls = {
           -- cmd = {...},
@@ -495,7 +520,6 @@ require('lazy').setup({
               cmd = server.cmd,
               settings = server.settings,
               filetypes = server.filetypes,
-              on_attach = on_attach,
               -- TODO: Think about what we wanna do here.
               -- capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities),
               capabilities = server.capabilities or capabilities,
