@@ -37,6 +37,18 @@ return {
             print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
         end, '[W]orkspace [L]ist Folders')
 
+        if client.supports_method('textDocument/documentHighlight') then
+            -- Highlighter for variables and such
+            vim.cmd([[
+               " hi LspReferenceRead cterm=bold ctermbg=red guibg=DarkGrey
+               " hi LspReferenceText cterm=bold ctermbg=red guibg=DarkGrey
+               " hi LspReferenceWrite cterm=bold ctermbg=red guibg=DarkGrey
+               augroup LspHighlight
+               autocmd!
+               autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+               autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+               augroup END]])
+        end
         -- Create a command `:Format` local to the LSP buffer
         vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
             vim.lsp.buf.format()

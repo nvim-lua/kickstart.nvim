@@ -9,7 +9,8 @@ return {
   -- },
   {
     "mfussenegger/nvim-jdtls",
-    ft = "java",
+    ft = { "java" },
+    lazy = true,
     config = function()
       local home = os.getenv('HOME')
       local mason_registry = require("mason-registry")
@@ -165,18 +166,6 @@ return {
         vim.cmd("command! -buffer JdtJol lua require('jdtls').jol()")
         vim.cmd("command! -buffer JdtBytecode lua require('jdtls').javap()")
         vim.cmd("command! -buffer JdtJshell lua require('jdtls').jshell()")
-
-        -- Highlighter for variables and such
-        vim.cmd([[
-               " hi LspReferenceRead cterm=bold ctermbg=red guibg=DarkGrey
-               " hi LspReferenceText cterm=bold ctermbg=red guibg=DarkGrey
-               " hi LspReferenceWrite cterm=bold ctermbg=red guibg=DarkGrey
-               augroup LspHighlight
-               autocmd!
-               autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-               autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-               augroup END
-        ]])
       end
 
       -- get the mason install path
@@ -246,7 +235,7 @@ return {
       }
 
       vim.api.nvim_create_autocmd("FileType", {
-        pattern = "java",
+        pattern = { "java" },
         callback = function()
           require("jdtls").start_or_attach(config)
         end,

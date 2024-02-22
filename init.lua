@@ -86,6 +86,8 @@ require('lazy').setup({
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
       -- to enable linters please use https://github.com/mfussenegger/nvim-lint
+      -- "mfussenegger/nvim-lint",
+      -- "rshkarin/mason-nvim-lint",
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -403,22 +405,29 @@ vim.keymap.set('n', '<leader>nn', function() vim.cmd('Neotree toggle') end, { de
 require('telescope').setup {
   defaults = {
     path_display = { shorten = { len = 3, exclude = { 1, 2, 3, -3, -2, -1 } } },
+    layout_strategy = 'horizontal',
+    layout_config = {
+      width = 0.90,
+      preview_width = 0.4
+    },
 
     preview = {
       hide_on_startup = false -- hide previewer when picker starts
     },
 
+    -- https://github.com/nvim-telescope/telescope.nvim?tab=readme-ov-file#default-mappings
     mappings = {
+      -- <C-/>	Show mappings for picker actions (insert mode)
       i = {
-        ['<C-u>'] = false,
-        ['<C-v>'] = false,
+        ['<C-v>'] = false, -- disable original vsplit keymapping
         ['<C-p>'] = require('telescope.actions.layout').toggle_preview,
-        ['<C-d>'] = require('telescope.actions').delete_buffer,
+        ['<C-c>'] = require('telescope.actions').delete_buffer,
         ['<C-s>'] = require('telescope.actions').file_vsplit,
       },
+      -- ?	Show mappings for picker actions (normal mode)
       n = {
-        ['<C-v>'] = false, --
-        ['<C-d>'] = require('telescope.actions').delete_buffer,
+        ['<C-v>'] = false, -- disable original vsplit keymapping
+        ['<C-c>'] = require('telescope.actions').delete_buffer,
         ['<C-s>'] = require('telescope.actions').file_vsplit,
       }
     },
@@ -504,7 +513,10 @@ vim.defer_fn(function()
     auto_install = false,
 
     highlight = { enable = true },
-    indent = { enable = true },
+    indent = {
+      enable = true,
+      disable = { "java" }
+    },
     incremental_selection = {
       enable = true,
       keymaps = {
@@ -561,51 +573,6 @@ vim.defer_fn(function()
   }
 end, 0)
 
--- [[ Configure LSP ]]
---  This function gets run when an LSP connects to a particular buffer.
-local on_attach = function(_, bufnr)
-  -- NOTE: Remember that lua is a real programming language, and as such it is possible
-  -- to define small helper and utility functions so you don't have to repeat yourself
-  -- many times.
-  --
-  -- In this case, we create a function that lets us more easily define mappings specific
-  -- for LSP related items. It sets the mode, buffer and description for us each time.
-  local nmap = function(keys, func, desc)
-    if desc then
-      desc = 'LSP: ' .. desc
-    end
-
-    vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
-  end
-
-  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-  nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-
-  nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-  nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-  nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-  nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
-  nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-  nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
-
-  -- See `:help K` for why this keymap
-  nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
-
-  -- Lesser used LSP functionality
-  nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-  nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
-  nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-  nmap('<leader>wl', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, '[W]orkspace [L]ist Folders')
-
-  -- Create a command `:Format` local to the LSP buffer
-  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-    vim.lsp.buf.format()
-  end, { desc = 'Format current buffer with LSP' })
-end
-
 -- document existing key chains
 require('which-key').register {
   ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
@@ -646,15 +613,15 @@ local servers = {
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
   yamlls = {
     yaml = {
-      schemaStore = {
-        -- You must disable built-in schemaStore support if you want to use
-        -- this plugin and its advanced options like `ignore`.
-        enable = false,
-      },
+      customTags = {},
+      -- schemaStore = {
+      --   -- You must disable built-in schemaStore support if you want to use
+      --   -- this plugin and its advanced options like `ignore`.
+      --   enable = true,
+      -- },
       schemas = {
-        ["https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json"] =
-        "**/*swagger.{yml,yaml}",
-        ["https://json.schemastore.org/liquibase-3.2.json"] = "**/*Changelog*.{yml,yaml}",
+        ["https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v2.0/schema.json"] = { "**/swagger.yaml" },
+        ["https://json.schemastore.org/liquibase-3.2.json"] = { "**/*Changelog*.yml" },
       },
       format = {
         enable = true,
@@ -668,14 +635,26 @@ local servers = {
       },
     },
   },
-  -- cucumber_language_server = {
-  --   cucumber = {
-  --     features = { "**/lctest/**/*.feature" },
-  --     glue = {
-  --       "**/lctest/**/stepdef/**/*.java",
-  --     }
-  --   }
-  -- },
+  lemminx = {
+    xml = {
+      -- server = {
+      --   vmargs = "-Djava.net.useSystemProxies=true "
+      -- }
+    }
+  },
+  cucumber_language_server = {
+    cmd = { os.getenv("HOME") .. "/.nvm/versions/node/v18.19.0/bin/cucumber-language-server", "--stdio" },
+    cucumber = {
+      features = {
+        "**/test/**/*.feature",
+      },
+      glue = {
+        "**/test/**/stepdef/**/*.java",
+      },
+      parameterTypes = {
+      },
+    }
+  },
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -706,14 +685,18 @@ local lsp_settings = require('lsp.keymap')
 mason_lspconfig.setup_handlers {
   function(server_name)
     if server_name == 'jdtls' then
-      -- disable jdtls config from lspconfig. jdtls will be configured by nvim-jdtls since it much more powerful
+      -- We can install jdtls with mason, but we should configure it using nvim-jdtls since it is much more powerful.
+      -- We therefore simply return true, when setting up the server with lspconfig to ignore.
       require('lspconfig')[server_name].setup = function()
         return true
       end
+
+      return
     end
 
     -- enable language servers for all other
     require('lspconfig')[server_name].setup {
+      cmd = (servers[server_name] or {}).cmd,
       capabilities = capabilities,
       on_attach = lsp_settings.on_attach,
       settings = servers[server_name],
@@ -722,6 +705,11 @@ mason_lspconfig.setup_handlers {
   end,
 }
 
+-- nvim-lint
+-- require('mason-nvim-lint').setup({
+--   ensure_installed = { 'sonarlint' },
+-- })
+--
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
 local cmp = require 'cmp'
