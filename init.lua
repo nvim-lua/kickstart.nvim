@@ -508,9 +508,9 @@ require('lazy').setup({
 
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
-      local ensure_installed = vim.tbl_keys(servers)
+      local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua',
+        'stylua', -- Used to format lua code
       })
 
       -- Ensure the servers above are installed
@@ -524,7 +524,7 @@ require('lazy').setup({
               cmd = server.cmd,
               settings = server.settings,
               filetypes = server.filetypes,
-              capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities),
+              capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {}),
             }
           end,
         },
