@@ -131,6 +131,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+vim.filetype.add { extension = { templ = 'templ' } }
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -443,11 +445,25 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        -- gopls = {},
-        -- pyright = {},
+        gopls = {},
+        pyright = {},
         -- rust_analyzer = {},
         -- tsserver = {},
         -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+        html = {
+          filetypes = { 'html', 'templ' },
+        },
+        htmx = {
+          filetypes = { 'html', 'templ' },
+        },
+        tailwindcss = {
+          filetypes = { 'html', 'templ' },
+          init_options = {
+            includeLanguages = { templ = 'html' },
+            userLanguages = { templ = 'html' },
+          },
+        },
+        volar = {},
 
         lua_ls = {
           -- cmd = {...},
@@ -460,6 +476,11 @@ require('lazy').setup({
               -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               -- diagnostics = { disable = { 'missing-fields' } },
             },
+          },
+        },
+        yamlls = {
+          yaml = {
+            keyOrdering = false,
           },
         },
       }
