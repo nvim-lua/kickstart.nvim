@@ -11,7 +11,7 @@
 ========         ||                    ||   | === |          ========
 ========         ||                    ||   |-----|          ========
 ========         ||:Tutor              ||   |:::::|          ========
-========         |'-..................-'|   |____.|          ========
+========         |'-..................-'|   |____o|          ========
 ========         `"")----------------(""`   ___________      ========
 ========        /::::::::::|  |::::::::::\  \ no mouse \     ========
 ========       /:::========|  |==hjkl==:::\  \ required \    ========
@@ -22,19 +22,22 @@
 
 Kickstart.nvim is *not* a distribution.
 
-Kickstart.nvim is a template for your own configuration.
+Kickstart.nvim is a starting point for your own configuration.
   The goal is that you can read every line of code, top-to-bottom, understand
   what your configuration is doing, and modify it to suit your needs.
 
-  Once you've done that, you should start exploring, configuring and tinkering to
-  explore Neovim!
+  Once you've done that, you can start exploring, configuring and tinkering to
+  make Neovim your own! That might mean leaving kickstart just the way it is for a while
+  or immediately breaking it into modular pieces. It's up to you!
 
   If you don't know anything about Lua, I recommend taking some time to read through
-  a guide. One possible example:
-  - https://learnxinyminutes.com/docs/lua/
+  a guide. One possible example which will only take 10-15 minutes:
+    - https://learnxinyminutes.com/docs/lua/
 
-  And then you can explore or search through `:help lua-guide`
-  - https://neovim.io/doc/user/lua-guide.html
+  After understanding a bit more about Lua, you can use `:help lua-guide` as a
+  reference for how Neovim integrates Lua.
+  - :help lua-guide
+  - (or HTML version): https://neovim.io/doc/user/lua-guide.html
 
 Kickstart Guide:
 
@@ -385,9 +388,6 @@ require('lazy').setup({
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
-      -- Additional lua configuration, makes nvim stuff amazing!
-      'folke/neodev.nvim',
-
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', opts = {} },
@@ -417,10 +417,6 @@ require('lazy').setup({
       --
       -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
       -- and elegantly composed help section, :help lsp-vs-treesitter
-
-      -- First, enable neodev. This is helpful for auto-configuring the Lua LSP
-      -- to understand your Neovim environment
-      require('neodev').setup()
 
       --  This function gets run when an LSP connects to a particular buffer.
       --    That is to say, every time a new file is opened that is associated with
@@ -507,7 +503,16 @@ require('lazy').setup({
           -- capabilities = {},
           settings = {
             Lua = {
-              workspace = { checkThirdParty = false },
+              runtime = { version = 'LuaJIT' },
+              workspace = {
+                checkThirdParty = false,
+                library = {
+                  '${3rd}/luv/library',
+                  unpack(vim.api.nvim_get_runtime_file('', true)),
+                },
+                -- If lua_ls is really slow on your computer, you can try this instead:
+                -- library = { vim.env.VIMRUNTIME },
+              },
               telemetry = { enable = false },
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               -- diagnostics = { disable = { 'missing-fields' } },
@@ -677,12 +682,13 @@ require('lazy').setup({
       -- Better Around/Inside textobjects
       --
       -- Examples:
-      --  - ya)  - [Y]ank [A]round [)]parenthen
+      --  - va)  - [V]isually select [A]round [)]parenthen
       --  - yinq - [Y]ank [I]nside [N]ext [']quote
       --  - ci'  - [C]hange [I]nside [']quote
       require('mini.ai').setup { n_lines = 500 }
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
+      --
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
