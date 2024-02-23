@@ -1,30 +1,39 @@
 # kickstart.nvim
 
-### Introduction
+## Introduction
 
 A starting point for Neovim that is:
 
 * Small
-* Single-file (with examples of moving to multi-file)
-* Documented
-* Modular
+* Single-file
+* Completely Documented
 
-This repo is meant to be used by **YOU** to begin your Neovim journey; remove the things you don't use and add what you miss.
+**NOT** a Neovim distribution, but instead a starting point for your configuration.
 
-Kickstart.nvim targets *only* the latest ['stable'](https://github.com/neovim/neovim/releases/tag/stable) and latest ['nightly'](https://github.com/neovim/neovim/releases/tag/nightly) of Neovim. If you are experiencing issues, please make sure you have the latest versions.
+## Installation
 
-Distribution Alternatives:
-- [LazyVim](https://www.lazyvim.org/): A delightful distribution maintained by @folke (the author of lazy.nvim, the package manager used here)
+### Install Neovim
 
-### Installation
+Kickstart.nvim targets *only* the latest
+['stable'](https://github.com/neovim/neovim/releases/tag/stable) and latest
+['nightly'](https://github.com/neovim/neovim/releases/tag/nightly) of Neovim.
+If you are experiencing issues, please make sure you have the latest versions.
+
+### Install External Dependencies
 
 > **NOTE** 
 > [Backup](#FAQ) your previous configuration (if any exists)
 
-Requirements:
-* Make sure to review the readmes of the plugins if you are experiencing errors. In particular:
-  * [ripgrep](https://github.com/BurntSushi/ripgrep#installation) is required for multiple [telescope](https://github.com/nvim-telescope/telescope.nvim#suggested-dependencies) pickers.
-* See [Windows Installation](#Windows-Installation) if you have trouble with `telescope-fzf-native`
+External Requirements:
+- Basic utils: `git`, `make`, `unzip`, C Compiler (`gcc`)
+- [ripgrep](https://github.com/BurntSushi/ripgrep#installation)
+- Language Setup:
+  - If want to write Typescript, you need `npm`
+  - If want to write Golang, you will need `go`
+  - etc.
+
+> **NOTE**
+> See [Windows Installation](#Windows-Installation) to double check any additional Windows notes
 
 Neovim's configurations are located under the following paths, depending on your OS:
 
@@ -36,8 +45,7 @@ Neovim's configurations are located under the following paths, depending on your
 
 Clone kickstart.nvim:
 
-<details>
-  <summary> Linux and Mac </summary>
+<details><summary> Linux and Mac </summary>
 
 ```sh
 git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
@@ -45,8 +53,7 @@ git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HO
 
 </details>
 
-<details>
-  <summary> Windows </summary>
+<details><summary> Windows </summary>
 
 If you're using `cmd.exe`:
 
@@ -62,7 +69,6 @@ git clone https://github.com/nvim-lua/kickstart.nvim.git $env:USERPROFILE\AppDat
 
 </details>
 
-
 ### Post Installation
 
 Start Neovim
@@ -71,17 +77,23 @@ Start Neovim
 nvim
 ```
 
-That's it! Lazy will install all the plugins you have. Use `:Lazy` to view current plugin status.
+That's it! Lazy will install all the plugins you have. Use `:Lazy` to view
+current plugin status.
 
-Read through the `init.lua` file in your configuration folder for more information about extending and exploring Neovim.
+Read through the `init.lua` file in your configuration folder for more
+information about extending and exploring Neovim.
 
 ### Getting Started
 
-See [Effective Neovim: Instant IDE](https://youtu.be/stqUbv-5u2s), covering the previous version. Note: The install via init.lua is outdated, please follow the install instructions in this file instead. An updated video is coming soon.
+See [Effective Neovim: Instant IDE](https://youtu.be/stqUbv-5u2s), covering the
+previous version. Note: The install via init.lua is outdated, please follow the
+install instructions in this file instead. An updated video is coming soon.
 
 ### Recommended Steps
 
-[Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repo (so that you have your own copy that you can modify) and then installing you can install to your machine using the methods above.
+[Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repo
+(so that you have your own copy that you can modify) and then installing you
+can install to your machine using the methods above.
 
 > **NOTE**  
 > Your fork's url will be something like this: `https://github.com/<your_github_username>/kickstart.nvim.git`
@@ -115,10 +127,7 @@ return {
 }
 ```
 
-
-
 </details>
-
 <details>
   <summary>Adding a file tree plugin</summary>
 
