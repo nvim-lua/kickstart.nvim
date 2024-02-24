@@ -18,7 +18,6 @@ function M.config()
     sources = {
       -- Formatters
       formatting.stylua,
-      formatting.black,
       formatting.prettier.with({
         filetypes = {
           'css',

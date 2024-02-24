@@ -544,7 +544,7 @@ end, 0)
 
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
-local on_attach = function(_, bufnr)
+local on_attach = function(client, bufnr)
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
   -- to define small helper and utility functions so you don't have to repeat yourself
   -- many times.
@@ -591,6 +591,12 @@ local on_attach = function(_, bufnr)
       buffer = bufnr,
       command = 'EslintFixAll',
     })
+  end
+
+  -- When using pyright and ruff_lsp, disable hover in favor of Pyright
+  if client.name == 'ruff_lsp' then
+    -- Disable hover in favor of Pyright
+    client.server_capabilities.hoverProvider = false
   end
 end
 
@@ -660,8 +666,19 @@ local servers = {
     },
   },
   bashls = {},
-  ruff_ls = {},
-  pyright = {},
+  ruff_lsp = {},
+  pyright = {
+    pyright = {
+      -- Using Ruff's import organizer
+      disableOrganizeImports = true,
+    },
+    python = {
+      analysis = {
+        -- Ignore all files for analysis to exclusively use Ruff for linting
+        ignore = { '*' },
+      },
+    },
+  },
   rust_analyzer = {},
   -- tsserver = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
