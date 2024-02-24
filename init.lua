@@ -584,6 +584,14 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
+
+  -- Set eslint LSP client to format on save for javascript and typescript files
+  if vim.bo.filetype == 'javascript' or vim.bo.filetype == 'typescript' then
+    vim.api.nvim_create_autocmd('BufWritePre', {
+      buffer = bufnr,
+      command = 'EslintFixAll',
+    })
+  end
 end
 
 -- document existing key chains
@@ -621,7 +629,7 @@ require('mason-lspconfig').setup()
 --  define the property 'filetypes' to the map in question.
 local servers = {
   clangd = {},
-  -- gopls = {},
+  eslint = {},
   gopls = {
     gofumpt = true,
     usePlaceholders = true,
@@ -651,6 +659,8 @@ local servers = {
       rangeVariableTypes = true,
     },
   },
+  bashls = {},
+  ruff_ls = {},
   pyright = {},
   rust_analyzer = {},
   -- tsserver = {},
