@@ -244,7 +244,7 @@ vim.o.hlsearch = false
 -- Make line numbers default
 vim.wo.number = true
 
--- enable relative line numbers
+-- Enable relative line numbers
 vim.wo.relativenumber = true
 
 -- Enable mouse mode
@@ -518,7 +518,16 @@ require('mason-lspconfig').setup()
 local servers = {
   -- clangd = {},
   -- gopls = {},
-  pyright = {},
+  pyright = {
+    python = {
+      analysis = {
+        typeCheckingMode = "strict"
+      }
+    }
+  },
+  
+  clangd = {},
+
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
