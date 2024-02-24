@@ -34,7 +34,7 @@ function M.config()
       show_hidden = true,
     },
   })
-  vim.keymap.set('n', '<BS>', '<CMD>Oil --float<CR>', { desc = 'Open parent directory' })
+  vim.keymap.set('n', '<leader>o', '<CMD>Oil --float<CR>', { desc = 'Open parent directory' })
 end
 
 return M
