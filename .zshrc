@@ -56,3 +56,4 @@ fi
 autoload -Uz compinit && compinit
 
 [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
+[[ $commands[kubectl] ]] && source <(kubectl completion zsh)

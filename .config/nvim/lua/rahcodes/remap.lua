@@ -58,8 +58,6 @@ nmap("<C-s>", ":wa<CR>")
 
 -- See `:help telescope.builtin`
 vim.keymap.set("n", "<leader>m", require("telescope.builtin").oldfiles, { desc = "[?] Find recently opened files" })
-vim.keymap.set("n", "<leader><space>", require("telescope.builtin").git_files, { desc = "[ ] Find git files" })
-
 vim.keymap.set("n", "<leader>gb", require("telescope.builtin").git_branches, { desc = "[G]it [B]ranches" })
 vim.keymap.set("n", "<leader>sb", require("telescope.builtin").buffers, { desc = "[ ] Find existing buffers" })
 
