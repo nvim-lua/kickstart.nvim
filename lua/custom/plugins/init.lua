@@ -4,7 +4,7 @@ return {
 		event = "InsertEnter",
 		opts = {}
 	},
-	{ 'github/copilot.vim' },
+	-- { 'github/copilot.vim' },
 	{
 		'lewis6991/gitsigns.nvim',
 		config = function()
