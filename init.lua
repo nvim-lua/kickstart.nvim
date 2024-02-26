@@ -625,6 +625,9 @@ require('which-key').register({
 require('mason').setup()
 require('mason-lspconfig').setup()
 
+-- Go templ language server, treesitter etc... needs to recongize the .templ file type
+vim.filetype.add({ extension = { templ = 'templ' } })
+
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
 --
@@ -636,6 +639,7 @@ require('mason-lspconfig').setup()
 local servers = {
   clangd = {},
   eslint = {},
+  templ = {},
   gopls = {
     gofumpt = true,
     usePlaceholders = true,
@@ -681,7 +685,10 @@ local servers = {
   },
   rust_analyzer = {},
   -- tsserver = {},
-  html = { filetypes = { 'html', 'twig', 'hbs' } },
+  html = { filetypes = { 'html', 'templ', 'twig', 'hbs' } },
+  htmx = { filetypes = { 'html', 'templ' } },
+  tailwindcss = { filetypes = { 'html', 'templ', 'astro', 'javascript', 'typescript', 'react' } },
+  emmet_ls = { filetypes = { 'html', 'templ', 'astro', 'javascript', 'typescript', 'react' } },
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
