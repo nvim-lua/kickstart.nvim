@@ -82,7 +82,7 @@ require('lazy').setup({
       local ui = require('harpoon.ui')
       local mark = require('harpoon.mark')
 
-            -- mark page
+      -- mark page
       vim.keymap.set('n', '<leader>ha', mark.add_file, { desc = "[H]arpoon [A]dd" })
 
       -- show menu
@@ -114,7 +114,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',       opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -150,7 +150,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -330,6 +330,15 @@ vim.o.mouse = 'a'
 --  See `:help 'clipboard'`
 vim.o.clipboard = 'unnamedplus'
 
+-- Show Whitespace Characters
+vim.opt.list = true
+vim.opt.listchars:append({ eol = '§' });
+vim.opt.listchars:append({ tab = '¤›' });
+vim.opt.listchars:append({ extends = '»' });
+vim.opt.listchars:append({ precedes = '«' });
+vim.opt.listchars:append({ nbsp = '‡' });
+vim.opt.listchars:append({ space = '·' });
+
 -- Enable break indent
 vim.o.breakindent = true
 
@@ -471,7 +480,8 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim',
+      'bash' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
