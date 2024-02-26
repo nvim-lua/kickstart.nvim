@@ -728,7 +728,7 @@ require('lazy').setup({
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
       -- Load the colorscheme here
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'quiet'
 
       -- You can configure highlights by doing something like
       vim.cmd.hi 'Comment gui=none'
