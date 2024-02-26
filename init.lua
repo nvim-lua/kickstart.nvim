@@ -246,7 +246,7 @@ require('lazy').setup({
       local ui = require('harpoon.ui')
       local mark = require('harpoon.mark')
 
-            -- mark page
+      -- mark page
       vim.keymap.set('n', '<leader>ha', mark.add_file, { desc = "[H]arpoon [A]dd" })
 
       -- show menu
@@ -266,12 +266,57 @@ require('lazy').setup({
     end
   },
 
-  -- Here is a more advanced example where we pass configuration
-  -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
-  --    require('gitsigns').setup({ ... })
-  --
-  -- See `:help gitsigns` to understand what the configuration keys do
-  { -- Adds git related signs to the gutter, as well as utilities for managing changes
+  -- NOTE: This is where your plugins related to LSP can be installed.
+  --  The configuration is done below. Search for lspconfig to find it below.
+  {
+    -- LSP Configuration & Plugins
+    'neovim/nvim-lspconfig',
+    dependencies = {
+      -- Automatically install LSPs to stdpath for neovim
+      { 'williamboman/mason.nvim', config = true },
+      'williamboman/mason-lspconfig.nvim',
+
+      -- Useful status updates for LSP
+      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
+      { 'j-hui/fidget.nvim',       opts = {} },
+
+      -- Additional lua configuration, makes nvim stuff amazing!
+      'folke/neodev.nvim',
+    },
+  },
+
+  {
+    -- Autocompletion
+    'hrsh7th/nvim-cmp',
+    dependencies = {
+      -- Snippet Engine & its associated nvim-cmp source
+      {
+        'L3MON4D3/LuaSnip',
+        build = (function()
+          -- Build Step is needed for regex support in snippets
+          -- This step is not supported in many windows environments
+          -- Remove the below condition to re-enable on windows
+          if vim.fn.has 'win32' == 1 then
+            return
+          end
+          return 'make install_jsregexp'
+        end)(),
+      },
+      'saadparwaiz1/cmp_luasnip',
+
+      -- Adds LSP completion capabilities
+      'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-path',
+
+      -- Adds a number of user-friendly snippets
+      'rafamadriz/friendly-snippets',
+    },
+  },
+
+  -- Useful plugin to show you pending keybinds.
+  { 'folke/which-key.nvim',  opts = {} },
+  {
+    -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
       signs = {
@@ -391,6 +436,15 @@ vim.o.mouse = 'a'
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 vim.o.clipboard = 'unnamedplus'
+
+-- Show Whitespace Characters
+vim.opt.list = true
+vim.opt.listchars:append({ eol = '§' });
+vim.opt.listchars:append({ tab = '¤›' });
+vim.opt.listchars:append({ extends = '»' });
+vim.opt.listchars:append({ precedes = '«' });
+vim.opt.listchars:append({ nbsp = '‡' });
+vim.opt.listchars:append({ space = '·' });
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -533,7 +587,8 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim',
+      'bash' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
