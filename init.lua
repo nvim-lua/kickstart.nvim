@@ -542,12 +542,12 @@ require('lazy').setup({
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
-        -- If you use something like typescript, where the tooling is as bad as the language,
-        -- then you might need to install and configure something like this:
+        -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
         --
-        -- If you only have simple needs for typescript, then you can probably just use tsserver
+        -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
+        --
 
         lua_ls = {
           -- cmd = {...},
