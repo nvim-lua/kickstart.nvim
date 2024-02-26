@@ -155,12 +155,6 @@ examples of adding popularly requested plugins.
     into smaller parts. A fork of kickstart that does this while maintaining the
     same functionality is available here:
     * [kickstart-modular.nvim](https://github.com/dam9000/kickstart-modular.nvim)
-  * Discussions on this topic can be found here:
-    * [Restructure the configuration](https://github.com/nvim-lua/kickstart.nvim/issues/218)
-    * [Reorganize init.lua into a multi-file setup](https://github.com/nvim-lua/kickstart.nvim/pull/473)
-
-### Install Recipes
-
 Below you can find OS specific install instructions for Neovim and dependencies.
 
 After installing all the dependencies continue with the [Install Kickstart](#install-kickstart) step.
