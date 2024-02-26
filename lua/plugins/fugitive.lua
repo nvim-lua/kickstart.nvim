@@ -1,3 +1,4 @@
+-- UI for git commands
 return { 'tpope/vim-fugitive',
 	config = function()
 		vim.keymap.set('n', '<leader>gs', '<CMD>Git<CR>', { desc = '[G]it [S]tatus' });

@@ -1,4 +1,8 @@
-return { 'catppuccin/nvim', name='catppuccin', priority = 1000,
+-- Default theme
+return {
+	'catppuccin/nvim',
+	name = 'catppuccin',
+	priority = 1000,
 	config = function()
 		require('catppuccin').setup({
 			flavour = "macchiato",
@@ -8,6 +12,11 @@ return { 'catppuccin/nvim', name='catppuccin', priority = 1000,
 				conditionals = { 'italic' },
 			},
 			integrations = {
+				cmp = true,
+				gitsigns = true,
+				harpoon = true,
+				mason = true,
+				telescope = true,
 				treesitter = true,
 			}
 		})

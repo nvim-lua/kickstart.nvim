@@ -9,9 +9,11 @@ vim.opt.incsearch = true
 -- Enable mouse mode
 vim.opt.mouse = ''
 
--- FIX: shared clipboard not working
 -- Sync clipboard between OS and Neovim.
-vim.opt.clipboard = 'unnamedplus'
+vim.opt.clipboard = 'unnamed,unnamedplus'
+
+-- Enables cursor-line highlighting
+vim.opt.cursorline = true
 
 -- Enable spell check
 vim.opt.spell = true
