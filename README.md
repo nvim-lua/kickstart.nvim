@@ -177,7 +177,7 @@ return {
     into smaller parts. A fork of kickstart that does this while maintaining the exact
     same functionality is available here:
     * [kickstart-modular.nvim](https://github.com/dam9000/kickstart-modular.nvim)
-    *NOTE: This is the fork of the original project that splits the configuration into smaller parts.*
+  * *NOTE: This is the fork that splits the configuration into smaller parts.*
     The original repo with the single `init.lua` file is available here:
     * [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim)
   * Discussions on this topic can be found here:
