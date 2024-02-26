@@ -10,7 +10,7 @@ vim.keymap.set('n', '<leader>cd', vim.diagnostic.open_float, { desc = 'Open floa
 vim.keymap.set('n', '<leader>cD', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
 -- Moving between windows
-vim.cmd.tnoremap('<A-h', [[<C-\><C-N><C-w>h]])
+vim.cmd.tnoremap('<A-h>', [[<C-\><C-N><C-w>h]])
 vim.cmd.tnoremap('<A-h>', [[<C-\><C-N><C-w>h]])
 vim.cmd.tnoremap('<A-j>', [[<C-\><C-N><C-w>j]])
 vim.cmd.tnoremap('<A-k>', [[<C-\><C-N><C-w>k]])
