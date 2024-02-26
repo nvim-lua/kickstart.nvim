@@ -738,6 +738,15 @@ require('lazy').setup({
         auto_install = true,
         highlight = { enable = true },
         indent = { enable = true },
+        incremental_selection = {
+          enable = true,
+          keymaps = {
+            init_selection = 'gnn',
+            node_incremental = 'grn',
+            scope_incremental = 'grc',
+            node_decremental = 'grm',
+          },
+        },
       }
 
       -- There are additional nvim-treesitter modules that you can use to interact
@@ -768,6 +777,13 @@ require('lazy').setup({
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   { import = 'custom.plugins' },
 }, {})
+
+local git_group = vim.api.nvim_create_augroup('Git', { clear = true })
+vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+  command = "0r!git rev-parse --symbolic-full-name --abbrev-ref HEAD | tr '[:lower:]' '[:upper:]' | egrep -o \"^[A-Z][A-Z0-9]+-[0-9]+\"",
+  group = git_group,
+  pattern = vim.fn.expand 'COMMIT_EDITMSG',
+})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
