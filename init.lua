@@ -585,14 +585,6 @@ local on_attach = function(client, bufnr)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
 
-  -- Set eslint LSP client to format on save for javascript and typescript files
-  if vim.bo.filetype == 'javascript' or vim.bo.filetype == 'typescript' then
-    vim.api.nvim_create_autocmd('BufWritePre', {
-      buffer = bufnr,
-      command = 'EslintFixAll',
-    })
-  end
-
   -- When using pyright and ruff_lsp, disable hover in favor of Pyright
   if client.name == 'ruff_lsp' then
     -- Disable hover in favor of Pyright

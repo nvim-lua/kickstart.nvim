@@ -39,6 +39,21 @@ return {
         local client = vim.lsp.get_client_by_id(client_id)
         local bufnr = args.buf
 
+        -- (Special case, has no 'format server_capabilities)
+        -- Set eslint LSP client to format on save.
+        if client.name == 'eslint' then
+          vim.api.nvim_create_autocmd('BufWritePre', {
+            buffer = bufnr,
+            callback = function()
+              if not format_is_enabled then
+                return
+              end
+
+              vim.cmd('EslintFixAll')
+            end,
+          })
+        end
+
         -- Only attach to clients that support document formatting
         if not client.server_capabilities.documentFormattingProvider then
           return
