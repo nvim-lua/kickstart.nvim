@@ -316,6 +316,15 @@ vim.g.encoding = 'UTF-8'
 vim.g.fileencoding = 'UTF-8'
 vim.g.scriptencoding = 'UTF-8'
 
+-- Show Whitespace Characters
+vim.opt.list = true
+vim.opt.listchars:append({ eol = '§' });
+vim.opt.listchars:append({ tab = '¤›' });
+vim.opt.listchars:append({ extends = '»' });
+vim.opt.listchars:append({ precedes = '«' });
+vim.opt.listchars:append({ nbsp = '‡' });
+vim.opt.listchars:append({ space = '·' });
+
 -- Set highlight on search
 vim.o.hlsearch = false
 
