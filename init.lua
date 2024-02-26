@@ -772,7 +772,7 @@ require('lazy').setup({
       require('nvim-treesitter.configs').setup {
         ensure_installed = { 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc' },
         -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-        auto_install = true,
+        auto_install = false,
         highlight = { enable = true },
         indent = { enable = true },
       }
