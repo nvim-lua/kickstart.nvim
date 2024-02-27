@@ -70,6 +70,7 @@ require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
   { 'echasnovski/mini.animate', version = false },
+  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 
   -- Git related plugins
   'tpope/vim-fugitive',
@@ -991,6 +992,8 @@ cmp.setup {
     { name = 'path' },
   },
 }
+
+vim.cmd.colorscheme "catppuccin"
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
