@@ -692,22 +692,22 @@ require('lazy').setup({
     end,
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
-    'folke/tokyonight.nvim',
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
-    config = function()
-      -- Load the colorscheme here
-      vim.cmd.colorscheme 'tokyonight-night'
-
-      -- You can configure highlights by doing something like
-      vim.cmd.hi 'Comment gui=none'
-    end,
-  },
+  -- { -- You can easily change to a different colorscheme.
+  --   -- Change the name of the colorscheme plugin below, and then
+  --   -- change the command in the config to whatever the name of that colorscheme is
+  --   --
+  --   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
+  --   'folke/tokyonight.nvim',
+  --   lazy = false, -- make sure we load this during startup if it is your main colorscheme
+  --   priority = 1000, -- make sure to load this before all the other start plugins
+  --   config = function()
+  --     -- Load the colorscheme here
+  --     vim.cmd.colorscheme 'tokyonight-night'
+  --
+  --     -- You can configure highlights by doing something like
+  --     vim.cmd.hi 'Comment gui=none'
+  --   end,
+  -- },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
@@ -828,11 +828,12 @@ vim.o.termguicolors = true
 
 -- Use some fun characters when displaying invisibles
 vim.opt.listchars = {
-        eol = '↲',
-        space = '⋅',
-        trail = '•',
-        tab = '⇄ ',
+  eol = '↲',
+  space = '⋅',
+  trail = '•',
+  tab = '⇄ ',
 }
+vim.opt.list = false
 
 -- Recognize specific file names as having a certain language's syntax
 vim.cmd [[
@@ -910,20 +911,20 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = {
-    'c',
-    'cpp',
-    'go',
-    'groovy',
-    'java',
-    'lua',
-    'python',
-    'rust',
-    'tsx',
-    'typescript',
-    'vim',
-    'vimdoc',
-  },
+    ensure_installed = {
+      'c',
+      'cpp',
+      'go',
+      'groovy',
+      'java',
+      'lua',
+      'python',
+      'rust',
+      'tsx',
+      'typescript',
+      'vim',
+      'vimdoc',
+    },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
@@ -1017,13 +1018,9 @@ local on_attach = function(_, bufnr)
   nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
   nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
   -- Just show classes and functions
-  nmap(
-    '<leader>ds',
-    function()
-      require('telescope.builtin').lsp_document_symbols({ ignore_symbols = { 'variable', 'constant' } })
-    end,
-    '[D]ocument [S]ymbols'
-  )
+  nmap('<leader>ds', function()
+    require('telescope.builtin').lsp_document_symbols { ignore_symbols = { 'variable', 'constant' } }
+  end, '[D]ocument [S]ymbols')
   nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
   -- See `:help K` for why this keymap
@@ -1039,11 +1036,9 @@ local on_attach = function(_, bufnr)
   end, '[W]orkspace [L]ist Folders')
 
   -- Don't show diagnostics inline
-  vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-          vim.lsp.diagnostic.on_publish_diagnostics, {
-                  virtual_text = false
-          }
-  )
+  vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+    virtual_text = false,
+  })
 
   -- Show diagnostics for line under the cursor
   vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
@@ -1105,19 +1100,19 @@ local servers = {
   yamlls = {
     yaml = {
       schemas = {
-          kubernetes = "*.yaml",
-          ["http://json.schemastore.org/github-workflow"] = ".github/workflows/*",
-          ["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
-          -- ["http://json.schemastore.org/ansible-stable-2.9"] = "roles/tasks/*.{yml,yaml}",
-          -- ["http://json.schemastore.org/prettierrc"] = ".prettierrc.{yml,yaml}",
-          -- ["http://json.schemastore.org/kustomization"] = "kustomization.{yml,yaml}",
-          -- ["http://json.schemastore.org/ansible-playbook"] = "*play*.{yml,yaml}",
-          -- ["http://json.schemastore.org/chart"] = "Chart.{yml,yaml}",
-          -- ["https://json.schemastore.org/dependabot-v2"] = ".github/dependabot.{yml,yaml}",
-          -- ["https://json.schemastore.org/gitlab-ci"] = "*gitlab-ci*.{yml,yaml}",
-          -- ["https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.1/schema.json"] = "*api*.{yml,yaml}",
-          -- ["https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json"] = "*docker-compose*.{yml,yaml}",
-          -- ["https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json"] = "*flow*.{yml,yaml}",
+        kubernetes = '*.yaml',
+        ['http://json.schemastore.org/github-workflow'] = '.github/workflows/*',
+        ['http://json.schemastore.org/github-action'] = '.github/action.{yml,yaml}',
+        -- ["http://json.schemastore.org/ansible-stable-2.9"] = "roles/tasks/*.{yml,yaml}",
+        -- ["http://json.schemastore.org/prettierrc"] = ".prettierrc.{yml,yaml}",
+        -- ["http://json.schemastore.org/kustomization"] = "kustomization.{yml,yaml}",
+        -- ["http://json.schemastore.org/ansible-playbook"] = "*play*.{yml,yaml}",
+        -- ["http://json.schemastore.org/chart"] = "Chart.{yml,yaml}",
+        -- ["https://json.schemastore.org/dependabot-v2"] = ".github/dependabot.{yml,yaml}",
+        -- ["https://json.schemastore.org/gitlab-ci"] = "*gitlab-ci*.{yml,yaml}",
+        -- ["https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.1/schema.json"] = "*api*.{yml,yaml}",
+        -- ["https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json"] = "*docker-compose*.{yml,yaml}",
+        -- ["https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json"] = "*flow*.{yml,yaml}",
       },
     },
   },
