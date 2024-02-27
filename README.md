@@ -183,6 +183,11 @@ return {
 
 Installation may require installing build tools, and updating the run command for `telescope-fzf-native`
 
+Users should follow the [Treesitter Windows
+Installation](https://github.com/nvim-treesitter/nvim-treesitter/wiki/Windows-support)
+instructions to allow Treesitter language extensions to be downloaded from
+Github.
+
 See `telescope-fzf-native` documentation for [more details](https://github.com/nvim-telescope/telescope-fzf-native.nvim#installation)
 
 This requires:

@@ -771,6 +771,9 @@ require('lazy').setup({
     build = ':TSUpdate',
     config = function()
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
+      -- Use precompiled binaries for faster startup.
+      -- This also means Windows users won't fail on startup by default.
+      require('nvim-treesitter.install').prefer_git = false
 
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup {
