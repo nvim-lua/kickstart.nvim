@@ -95,6 +95,10 @@ vim.g.maplocalleader = ' '
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
+-- Spelling
+vim.opt.spelllang = 'en_us'
+vim.opt.spell = true
+
 -- Make line numbers default
 vim.opt.number = true
 -- You can also add relative line numbers, for help with jumping.
@@ -252,8 +256,6 @@ require('lazy').setup({
       },
     },
   },
-
-  { 'catppuccin/nvim', name = 'catppuccin', priority = 1000 },
 
   {
     'iamcco/markdown-preview.nvim',
@@ -542,8 +544,25 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
-        -- gopls = {},
+        clangd = {
+          cmd = {
+            'clangd',
+            '--background-index',
+            '--clang-tidy',
+            '--header-insertion=iwyu',
+            '--completion-style=detailed',
+            '--function-arg-placeholders',
+            '--query-driver=/usr/bin/c++,/usr/bin/g++',
+          },
+          init_options = {
+            usePlaceholders = true,
+            completeUnimported = true,
+            clangdFileStatus = true,
+            semanticHighlighting = true,
+          },
+          flags = { debounce_text_changes = 150 },
+        },
+        gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -625,6 +644,7 @@ require('lazy').setup({
       },
       formatters_by_ft = {
         lua = { 'stylua' },
+        cpp = { 'clang_format' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -733,12 +753,13 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
-    'folke/tokyonight.nvim',
+    'catppuccin/nvim',
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
+    setup = { flavor = 'mocha' },
     config = function()
       -- Load the colorscheme here
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'catppuccin'
 
       -- You can configure highlights by doing something like
       vim.cmd.hi 'Comment gui=none'
@@ -820,36 +841,5 @@ require('lazy').setup({
   { import = 'custom.plugins' },
 }, {})
 
--- Colorscheme
-require('catppuccin').setup {
-  flavor = 'mocha',
-}
-vim.cmd.colorscheme 'catppuccin'
-
--- Spelling
-vim.opt.spelllang = 'en_us'
-vim.opt.spell = true
-
-local lsp = require 'lspconfig'
-lsp['clangd'].setup {
-  capabilities = capabilities,
-  cmd = {
-    'clangd',
-    '--background-index',
-    '--clang-tidy',
-    '--header-insertion=iwyu',
-    '--completion-style=detailed',
-    '--function-arg-placeholders',
-    '--query-driver=/usr/bin/c++,/usr/bin/g++',
-  },
-  init_options = {
-    usePlaceholders = true,
-    completeUnimported = true,
-    clangdFileStatus = true,
-    semanticHighlighting = true,
-  },
-  on_attach = on_attach,
-  flags = { debounce_text_changes = 150 },
-}
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
