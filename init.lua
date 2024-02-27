@@ -610,7 +610,7 @@ local servers = {
   tsserver = {
     init_options = {
       preferences = {
-        importModuleSpecifier = 'relative',
+        importModuleSpecifierPreference = 'relative',
         importModuleSpecifierEnding = 'minimal'
       }
     }
