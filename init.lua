@@ -1040,9 +1040,6 @@ local on_attach = function(_, bufnr)
     virtual_text = false,
   })
 
-  -- Show diagnostics for line under the cursor
-  vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
-
   -- Make diagnostics hints more readable with Solarized theme
   vim.cmd 'hi DiagnosticHint guifg=Gray'
 
