@@ -555,8 +555,12 @@ require('lazy').setup({
         tailwindcss = {
           filetypes = { 'html', 'templ' },
           init_options = {
-            includeLanguages = { templ = 'html' },
             userLanguages = { templ = 'html' },
+          },
+          settings = {
+            includedLanguages = {
+              templ = 'html',
+            },
           },
         },
         volar = {},
@@ -650,11 +654,7 @@ require('lazy').setup({
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
         -- javascript = { { "prettierd", "prettier" } },
-        templ = {
-          cmd = 'templ',
-          args = { 'fmt' },
-          stdin = true,
-        },
+        templ = { 'templ' },
       },
     },
   },
@@ -839,7 +839,7 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.indent_line',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
