@@ -202,7 +202,7 @@ require('lazy').setup({
 vim.o.textwidth = 120
 
 -- Set highlight on search
-vim.o.hlsearch = false
+vim.o.hlsearch = true
 
 -- Make line numbers default
 vim.wo.number = true
@@ -252,6 +252,7 @@ vim.cmd [[
 
 -- [[ Basic Keymaps ]]
 
+-- Close buffer quickly and quietly!
 vim.keymap.set('n', '<C-q>', '<cmd>q!<cr>', { noremap = true, silent = true })
 
 -- Keymaps for better default experience
@@ -261,6 +262,9 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+-- Quickly eliminate search matches
+vim.keymap.set('n', '<leader>nh', '<cmd>nohlsearch<cr>', { silent = true })
 
 -- Show vertical ruler on column 120
 vim.opt.colorcolumn = { '120' }
