@@ -849,7 +849,7 @@ require('lazy').setup {
   --    For additional information see: :help lazy.nvim-lazy.nvim-structuring-your-plugins
   -- { import = 'custom.plugins' },
   { import = 'custom.plugins' },
-}, {})
+}
 
 local git_group = vim.api.nvim_create_augroup('Git', { clear = true })
 vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
