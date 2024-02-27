@@ -101,9 +101,6 @@ require('lazy').setup({
       'folke/neodev.nvim',
     },
   },
-  {
-    'simrat39/rust-tools.nvim'
-  },
 
   {
     -- Autocompletion
@@ -301,6 +298,9 @@ vim.o.mouse = 'a'
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 vim.o.clipboard = 'unnamedplus'
+
+-- Centers the cursor after jumping
+vim.o.scrolloff = 999
 
 -- Enable break indent
 vim.o.breakindent = true
