@@ -70,6 +70,9 @@ require('lazy').setup({
     },
   },
 
+  -- Plugin to autopair brackets
+  { 'windwp/nvim-autopairs', event = 'InsertEnter', opts = {} },
+
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
   {
@@ -192,6 +195,23 @@ vim.keymap.set('n', '<leader>yy', '"+yy', { desc = 'Yank line to system clipboar
 vim.keymap.set('n', '<leader>Y', '"+y$', { desc = 'Yank to end of line to system clipboard' })
 vim.keymap.set('v', '<leader>Y', '"+Y', { desc = 'Yank highlighted lines to system clipboard' })
 
+-- Escape terminal mode
+vim.keymap.set('t', '<Esc>',  '<C-\\><C-n>', { desc = 'Escape terminal mode'})
+
+-- Use ALT+{h,j,k,l} to navigate windows from any mode (see :help terminal)
+vim.keymap.set('t', '<A-h>', '<C-\\><C-N><C-w>h')
+vim.keymap.set('t', '<A-j>', '<C-\\><C-N><C-w>j')
+vim.keymap.set('t', '<A-k>', '<C-\\><C-N><C-w>k')
+vim.keymap.set('t', '<A-l>', '<C-\\><C-N><C-w>l')
+vim.keymap.set('i', '<A-h>', '<C-\\><C-N><C-w>h')
+vim.keymap.set('i', '<A-j>', '<C-\\><C-N><C-w>j')
+vim.keymap.set('i', '<A-k>', '<C-\\><C-N><C-w>k')
+vim.keymap.set('i', '<A-l>', '<C-\\><C-N><C-w>l')
+vim.keymap.set('n', '<A-h>', '<C-w>h')
+vim.keymap.set('n', '<A-j>', '<C-w>j')
+vim.keymap.set('n', '<A-k>', '<C-w>k')
+vim.keymap.set('n', '<A-l>', '<C-w>l')
+
 -- Enable break indent
 vim.o.breakindent = true
 
@@ -218,8 +238,8 @@ vim.o.termguicolors = true
 
 -- Think these are set automatically by a plugin instead
 -- vim.o.tabstop = 4
--- vim.o.shiftwidth = 4
--- vim.o.expandtab = true
+vim.o.shiftwidth = 4
+vim.o.expandtab = true
 
 vim.o.scrolloff = 8
 
@@ -300,7 +320,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim', 'c_sharp' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -419,11 +439,11 @@ end
 --  Add any additional override configuration in the following tables. They will be passed to
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
-  -- clangd = {},
-  -- gopls = {},
+  clangd = {},
+  gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
-  -- tsserver = {},
+  tsserver = {},
 
   lua_ls = {
     Lua = {
