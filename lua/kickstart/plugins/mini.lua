@@ -21,6 +21,9 @@ return {
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
       require('mini.statusline').setup()
+      MiniStatusline.section_location = function()
+        return '%2l:%-2v'
+      end
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
