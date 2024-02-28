@@ -201,26 +201,12 @@ require('lazy').setup({
   },
 
   {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    lazy = false,
-    config = function()
-      require('onedark').setup {
-        -- Set a style preset. 'dark' is default.
-        style = 'dark', -- dark, darker, cool, deep, warm, warmer, light
-      }
-      require('onedark').load()
-    end,
-  },
-
-  {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
     -- See `:help lualine.txt`
     opts = {
       options = {
-        icons_enabled = false,
+        icons_enabled = true,
         theme = 'auto',
         component_separators = '|',
         section_separators = '',
@@ -282,15 +268,17 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 
+vim.cmd.colorscheme("gruvbox")
 -- Set highlight on search
 vim.o.hlsearch = false
+vim.opt.incsearch = true
 
 -- Make line numbers default
 vim.wo.number = true
@@ -317,7 +305,7 @@ vim.o.smartcase = true
 vim.wo.signcolumn = 'yes'
 
 -- Decrease update time
-vim.o.updatetime = 250
+vim.o.updatetime = 200
 vim.o.timeoutlen = 300
 
 -- Set completeopt to have a better completion experience
@@ -326,6 +314,27 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+-- Swap file off
+vim.o.swapfile = false
+vim.opt.backup = false
+
+-- winbar
+vim.o.winbar ="%=%m%h %f"
+
+-- coloumn
+vim.opt.colorcolumn = "80"
+vim.opt.isfname:append("@-@")
+vim.opt.scrolloff = 8
+vim.opt.wrap = false
+vim.opt.cursorline = true
+
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+
+vim.opt.smartindent = true
+--
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -439,12 +448,12 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash','php','sql','html','css' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
     -- Install languages synchronously (only applied to `ensure_installed`)
-    sync_install = false,
+    sync_install = true,
     -- List of parsers to ignore installing
     ignore_install = {},
     -- You can specify additional Treesitter modules here: -- For example: -- playground = {--enable = true,-- },
@@ -505,6 +514,17 @@ vim.defer_fn(function()
       },
     },
   }
+  -- [Oil basic use]
+  vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+
+  -- [Configure neo-tree]
+  -- vim.keymap.set("n", "<leader>O", "<CMD>Neotree<CR>", {desc = "File tree"})
+
+  -- [ Move code without lose your gf]
+  vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+  vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+  -- cancel
+  vim.keymap.set("i", "jj", "<Esc>")
 end, 0)
 
 -- [[ Configure LSP ]]
@@ -586,12 +606,7 @@ require('mason-lspconfig').setup()
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
-  -- clangd = {},
-  -- gopls = {},
-  -- pyright = {},
-  -- rust_analyzer = {},
-  -- tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  html = { filetypes = { 'html', 'twig', 'hbs','php'} },
 
   lua_ls = {
     Lua = {
@@ -601,6 +616,8 @@ local servers = {
       -- diagnostics = { disable = { 'missing-fields' } },
     },
   },
+  intelephense = {},
+  tailwindcss = {},
 }
 
 -- Setup neovim lua configuration
