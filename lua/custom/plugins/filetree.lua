@@ -10,5 +10,6 @@ return {
   },
   config = function ()
     require('neo-tree').setup {}
+    vim.keymap.set('n', 'f', ':Neotree<CR>', { desc = 'Toggle Neotree' })
   end,
 }

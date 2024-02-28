@@ -67,56 +67,12 @@ vim.opt.rtp:prepend(lazypath)
 --  You can also configure plugins after the setup call,
 --    as they will be available in your neovim runtime.
 require('lazy').setup({
-  -- NOTE: First, some plugins that don't require any configuration
-
-  -- REMOVE
-  "github/copilot.vim",
-  -- "mhartington/formatter.nvim",
-  'stevearc/conform.nvim',
-
-  -- Git related plugins
-  -- 'tpope/vim-fugitive',
-  -- 'tpope/vim-rhubarb',
-  "kdheepak/lazygit.nvim",
-
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
-  {
-    -- LSP Configuration & Plugins
-    'neovim/nvim-lspconfig',
-    dependencies = {
-      -- Automatically install LSPs to stdpath for neovim
-      'williamboman/mason.nvim',
-      'williamboman/mason-lspconfig.nvim',
 
-      -- Useful status updates for LSP
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
-
-      -- Additional lua configuration, makes nvim stuff amazing!
-      'folke/neodev.nvim',
-    },
-  },
-
-  {
-    -- Autocompletion
-    'hrsh7th/nvim-cmp',
-    dependencies = {
-      -- Snippet Engine & its associated nvim-cmp source
-      'L3MON4D3/LuaSnip',
-      'saadparwaiz1/cmp_luasnip',
-
-      -- Adds LSP completion capabilities
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-path',
-
-      -- Adds a number of user-friendly snippets
-      'rafamadriz/friendly-snippets',
-    },
-  },
 
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim',  opts = {} },
@@ -319,28 +275,22 @@ require("bufferline").setup {}
 
 -- [[ Basic Keymaps ]]
 
--- REMOVE
-
-vim.keymap.set('i', '<C-J>', 'copilot#Accept("<CR>")', {
-  expr = true,
-  replace_keycodes = false
-})
-vim.g.copilot_no_tab_map = true
-
--- keymap for opening lazygit
-vim.keymap.set('n', '<leader>g', ':LazyGit<CR>', { desc = 'Open lazygit' })
-
 vim.keymap.set('n', '<leader>f', ':Format<CR>', { desc = 'Format current buffer' })
 
-vim.keymap.set('n', 'f', ':Neotree<CR>', { desc = 'Toggle Neotree' })
+
+vim.keymap.set('n', '<A-j>', ':m +1<CR>', { desc = 'Move line down' })
+vim.keymap.set('n', '<A-k>', ':m -2<CR>', { desc = 'Move line down' })
+
+vim.keymap.set('n', '<A-Down>', ':m +1<CR>', { desc = 'Move line down' })
+vim.keymap.set('n', '<A-Up>', ':m -2<CR>', { desc = 'Move line down' })
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
 -- Remap for dealing with word wrap
-vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+vim.keymap.set({ 'n', 'v' }, 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+vim.keymap.set({ 'n', 'v' }, 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
@@ -509,12 +459,12 @@ vim.defer_fn(function()
     },
     refactor = {
       smart_rename = {
-      enable = true,
-      -- Assign keymaps to false to disable them, e.g. `smart_rename = false`.
-      keymaps = {
-        smart_rename = "<leader>r",
+        enable = true,
+        -- Assign keymaps to false to disable them, e.g. `smart_rename = false`.
+        keymaps = {
+          smart_rename = "<leader>r",
+        },
       },
-    },
     }
   }
 end, 0)
@@ -593,8 +543,8 @@ require('mason-lspconfig').setup()
 local servers = {
   -- clangd = {},
   -- gopls = {},
-  -- pyright = {},
-  -- rust_analyzer = {},
+  pyright = {},
+  rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
