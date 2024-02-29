@@ -562,6 +562,9 @@ require('lazy').setup {
                 -- If lua_ls is really slow on your computer, you can try this instead:
                 -- library = { vim.env.VIMRUNTIME },
               },
+              completion = {
+                callSnippet = 'Replace',
+              },
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               -- diagnostics = { disable = { 'missing-fields' } },
             },
