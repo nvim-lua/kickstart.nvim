@@ -587,6 +587,7 @@ require('mason-lspconfig').setup()
 local servers = {
   -- clangd = {},
   gopls = {},
+  tailwindcss = {},
   marksman = {},
   dockerls = {},
   docker_compose_language_service = {},
