@@ -4,6 +4,16 @@ return {
 		name = 'catppuccin',
 		priority = 900,
 		config = function()
+			require('catppuccin').setup({
+				term_colors = true,
+				styles = {
+					comments = { "italic" },
+					conditionals = {},
+				},
+				integrations = {
+					treesitter = true,
+				},
+			})
 			vim.cmd.colorscheme 'catppuccin'
 		end,
 	},
