@@ -472,6 +472,10 @@ vim.defer_fn(function()
           ['if'] = '@function.inner',
           ['ac'] = '@class.outer',
           ['ic'] = '@class.inner',
+          ['ii'] = '@conditional.inner',
+          ['ai'] = '@conditional.outer',
+          ['al'] = '@loop.outer',
+          ['il'] = '@loop.inner',
         },
       },
       move = {
