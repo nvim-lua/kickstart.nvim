@@ -71,6 +71,24 @@ require('lazy').setup({
 
   { 'echasnovski/mini.animate', version = false },
   { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  { "alexghergh/nvim-tmux-navigation" , lazy = false },
+  {
+    "christoomey/vim-tmux-navigator",
+    cmd = {
+      "TmuxNavigateLeft",
+      "TmuxNavigateDown",
+      "TmuxNavigateUp",
+      "TmuxNavigateRight",
+      "TmuxNavigatePrevious",
+    },
+    keys = {
+      { "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>" },
+      { "<c-j>", "<cmd><C-U>TmuxNavigateDown<cr>" },
+      { "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>" },
+      { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
+      { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
+    },
+  },
 
   -- Git related plugins
   'tpope/vim-fugitive',
@@ -592,6 +610,8 @@ vim.o.tabstop = 4
 vim.o.softtabstop = 4
 vim.o.shiftwidth = 4
 vim.o.scrolloff = 8
+vim.o.expandtab = true
+vim.o.relativenumber = true
 
 -- Set highlight on search
 vim.o.hlsearch = false
@@ -654,6 +674,7 @@ vim.keymap.set('n', '<C-l>', ':wincmd l<cr>')
 
 vim.keymap.set('n' , '<leader>o', ':Neotree focus<cr>')
 vim.keymap.set('n' , '<leader>e', ':Neotree toggle<cr>')
+
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
