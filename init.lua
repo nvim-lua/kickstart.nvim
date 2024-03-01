@@ -720,7 +720,9 @@ require('mason-lspconfig').setup()
 local servers = {
   -- clangd = {},
   gopls = {},
-  -- pyright = {},
+  terraformls = {},
+  sqlls = {},
+  pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
   html = { filetypes = { 'html' } },
@@ -759,6 +761,14 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
+
+-- format on save (terraform)
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+  pattern = { "*.tf", "*.tfvars" },
+  callback = function()
+    vim.lsp.buf.format()
+  end
+})
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
