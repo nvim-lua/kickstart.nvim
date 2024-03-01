@@ -7,7 +7,7 @@
 --  event = 'VeryLazy'
 --
 -- which loads which-key after all the UI elements are loaded. Events can be
--- normal autocommands events (:help autocomd-events).
+-- normal autocommands events (`:help autocmd-events`).
 --
 -- Then, because we use the `config` key, the configuration only runs
 -- after the plugin has been loaded:
