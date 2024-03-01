@@ -679,8 +679,8 @@ local servers = {
   -- tsserver = {},
   html = { filetypes = { 'html', 'templ', 'twig', 'hbs' } },
   htmx = { filetypes = { 'html', 'templ' } },
-  tailwindcss = { filetypes = { 'html', 'templ', 'astro', 'javascript', 'typescript', 'react' } },
-  emmet_ls = { filetypes = { 'html', 'templ', 'astro', 'javascript', 'typescript', 'react' } },
+  tailwindcss = { filetypes = { 'html', 'templ', 'astro', 'javascript', 'typescript', 'react', 'typescriptreact', 'javascriptreact' } },
+  emmet_ls = { filetypes = { 'html', 'templ', 'astro', 'javascript', 'typescript', 'react', 'typescriptreact', 'javascriptreact' } },
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
