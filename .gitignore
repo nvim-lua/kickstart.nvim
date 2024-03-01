@@ -1,3 +1,7 @@
-.cfg
-.tool-versions
-undodir
+tags
+test.sh
+.luarc.json
+nvim
+
+spell/
+lazy-lock.json
