@@ -44,6 +44,18 @@ P.S. You can delete this when you're done too. It's your config now :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- OS detection
+if vim.fn.exists("g:os_current") == 0 then
+  if vim.fn.system('uname -s') == "Linux\n" then
+    vim.g.os_current = "Linux"
+  elseif vim.fn.system('uname -s') == "Darwin\n" then
+    vim.g.os_current = "Darwin"
+  else
+    print("Error: the current operating system won't support all of my Vim configurations.")
+    vim.g.os_current = "Other"
+  end
+end
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -106,9 +118,8 @@ require('lazy').setup({
       -- Adds LSP completion capabilities
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
-
-      -- Adds a number of user-friendly snippets
-      'rafamadriz/friendly-snippets',
+      'hrsh7th/cmp-buffer',
+      -- 'minhaz5000/friendly-snippets',
     },
   },
 
@@ -205,7 +216,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'auto',
         component_separators = '|',
         section_separators = '',
       },
@@ -278,6 +289,7 @@ vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
+vim.wo.relativenumber = true
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -289,6 +301,19 @@ vim.o.clipboard = 'unnamedplus'
 
 -- Enable break indent
 vim.o.breakindent = true
+
+-- Enable expandtab to insert spaces instead of tabs
+vim.opt.expandtab = true
+
+-- Set the width of a tab character to 4 spaces
+vim.opt.tabstop = 4
+
+-- Set the number of spaces used for each step of (auto)indent
+vim.opt.shiftwidth = 4
+
+-- Enable smarttab to insert a combination of spaces and tabs intelligently
+vim.opt.smarttab = true
+
 
 -- Save undo history
 vim.o.undofile = true
@@ -315,6 +340,20 @@ vim.o.termguicolors = true
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+
+-- Move current line up and down
+vim.keymap.set('n', '<M-j>', ':m .+1<CR>==', { noremap = true, silent = true })
+vim.keymap.set('n', '<M-k>', ':m .-2<CR>==', { noremap = true, silent = true })
+
+-- Move selected lines up and down
+vim.keymap.set('x', '<M-j>', ':move \'>+<CR>gv=gv', { noremap = true, silent = true })
+vim.keymap.set('x', '<M-k>', ':move \'<-2<CR>gv=gv', { noremap = true, silent = true })
+
+-- easy save file
+vim.keymap.set('n', '<C-s>', ':w<CR>')
+
+-- use U for redo :))
+vim.keymap.set('n', 'U', '<C-r>', {})
 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -520,7 +559,7 @@ local on_attach = function(_, bufnr)
 
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+  nmap('<C-i>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
@@ -613,9 +652,67 @@ mason_lspconfig.setup_handlers {
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
 local cmp = require 'cmp'
-local luasnip = require 'luasnip'
-require('luasnip.loaders.from_vscode').lazy_load()
-luasnip.config.setup {}
+local luasnip = require "luasnip"
+local types = require "luasnip.util.types"
+
+require("luasnip.loaders.from_lua").lazy_load({paths = "~/.config/nvim/LuaSnip/"})
+-- require("luasnip.loaders.from_vscode").lazy_load()
+
+vim.keymap.set('', '<Leader>U', '<Cmd>lua require("luasnip.loaders.from_lua").lazy_load({paths = "~/.config/nvim/LuaSnip/"})<CR><Cmd>echo "Snippets refreshed!"<CR>', { desc = "[U]pdate Snippets"})
+
+luasnip.config.setup({
+  -- Allow autotrigger snippets
+  enable_autosnippets = true,
+  -- This one is cool cause if you have dynamic snippets, it updates as you type!
+  updateevents = "TextChanged,TextChangedI",
+  -- For equivalent of UltiSnips visual selection
+  store_selection_keys = "<Tab>",
+  -- Event on which to check for exiting a snippet's region
+  region_check_events = 'InsertEnter',
+  delete_check_events = 'InsertLeave',
+  ext_opts = {
+    [types.choiceNode] = {
+      active = {
+        virt_text = { { " « ", "NonTest" } },
+      },
+    },
+  },
+})
+
+vim.keymap.set({ "i", "s" }, "<c-j>", function()
+   if luasnip.expand_or_jumpable() then
+    luasnip.expand_or_jump()
+  end
+end, { silent = true })
+
+vim.keymap.set({ "i", "s" }, "<c-k>", function()
+  if luasnip.jumpable(-1) then
+    luasnip.jump(-1)
+  end
+end, { silent = true })
+
+-- <c-l> is selecting within a list of options.
+-- This is useful for choice nodes (introduced in the forthcoming episode 2)
+vim.keymap.set("i", "<c-f>", function()
+  if luasnip.choice_active() then
+    luasnip.change_choice(1)
+  end
+end)
+
+vim.keymap.set("i", "<c-u>", require "luasnip.extras.select_choice")
+
+-- local auto_expand = require("luasnip").expand_auto
+-- luasnip.expand_auto = function(...)
+--     vim.o.undolevels = vim.o.undolevels
+--     auto_expand(...)
+-- end
+
+local has_words_before = function()
+  unpack = unpack or table.unpack
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
 
 cmp.setup {
   snippet = {
@@ -627,20 +724,57 @@ cmp.setup {
     completeopt = 'menu,menuone,noinsert',
   },
   mapping = cmp.mapping.preset.insert {
-    ['<C-n>'] = cmp.mapping.select_next_item(),
-    ['<C-p>'] = cmp.mapping.select_prev_item(),
-    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete {},
-    ['<CR>'] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
+
+    ["<C-n>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Insert },
+    ["<C-p>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Insert },
+    ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+    ["<C-f>"] = cmp.mapping.scroll_docs(4),
+    ["<C-e>"] = cmp.mapping.abort(),
+    ["<c-y>"] = cmp.mapping(
+      cmp.mapping.confirm {
+        behavior = cmp.ConfirmBehavior.Insert,
+        select = true,
+      },
+      { "i", "c" }
+    ),
+    ["<M-y>"] = cmp.mapping(
+      cmp.mapping.confirm {
+        behavior = cmp.ConfirmBehavior.Replace,
+        select = false,
+      },
+      { "i", "c" }
+    ),
+
+    ["<C-Space>"] = cmp.mapping {
+      i = cmp.mapping.complete(),
+      c = function(
+        _ --[[fallback]]
+      )
+        if cmp.visible() then
+          if not cmp.confirm { select = true } then
+            return
+          end
+        else
+          cmp.complete()
+        end
+      end,
     },
+
+    ["<c-q>"] = cmp.mapping.confirm {
+      behavior = cmp.ConfirmBehavior.Replace,
+      select = false,
+    },
+
+    --     -- ["<tab>"] = false,
+    -- ["<tab>"] = cmp.config.disable,
+
     ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_locally_jumpable() then
-        luasnip.expand_or_jump()
+     if cmp.visible() then
+        if #cmp.get_entries() == 1 then
+          cmp.confirm({ select = true })
+        else
+          cmp.select_next_item()
+        end
       else
         fallback()
       end
@@ -648,17 +782,27 @@ cmp.setup {
     ['<S-Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
-      elseif luasnip.locally_jumpable(-1) then
-        luasnip.jump(-1)
       else
         fallback()
       end
     end, { 'i', 's' }),
+
+    -- ['<C-n>'] = cmp.mapping.select_next_item(),
+    -- ['<C-p>'] = cmp.mapping.select_prev_item(),
+    -- ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    -- ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    -- ['<C-Space>'] = cmp.mapping.complete {},
+    -- ['<CR>'] = cmp.mapping.confirm {
+    --   behavior = cmp.ConfirmBehavior.Replace,
+    --   select = true,
+    -- },
+
   },
   sources = {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
-    { name = 'path' },
+    { name = "buffer", keyword_length = 5 },
+    { name = "path" },
   },
 }
 

@@ -25,5 +25,5 @@ return {
       }
     }
   end,
-  vim.keymap.set('n', '<leader>ft', '<Cmd>Neotree toggle<CR>', {desc = "Open File Tree"})
+  vim.keymap.set('n', '<C-t>', '<Cmd>Neotree toggle<CR>', { desc = "Open File Tree" })
 }
