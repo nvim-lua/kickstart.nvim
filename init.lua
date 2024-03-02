@@ -202,10 +202,9 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- See `:help lua-guide-commands-create`
 
 -- Quickly jump to your config with this awesome custom command
--- Try it by starting nvim in a random directory and typing :Config
-vim.api.nvim_create_user_command("Config", function()
-  local path = "~/.config/nvim/" -- You can customize the path here
-  vim.cmd("e" .. path)           -- vim.cmd allows you to execute vim commands from lua
+--  It aliases :e $MYVIMRC
+vim.api.nvim_create_user_command("Cfg", function()
+  vim.cmd("e $MYVIMRC") -- vim.cmd allows you to execute vim commands from lua
 end, {})
 
 -- [[ Install `lazy.nvim` plugin manager ]]
