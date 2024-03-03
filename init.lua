@@ -184,6 +184,10 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- toggleterm
+vim.keymap.set('n', '<A-d>', '<cmd>ToggleTerm<CR>', { silent = true })
+vim.keymap.set('t', '<A-d>', [[<C-\><C-n><cmd>ToggleTerm<CR>]], { silent = true })
+
 -- [[ Basic Autocommands ]]
 --  See :help lua-guide-autocommands
 
@@ -611,10 +615,12 @@ require('lazy').setup {
     'stevearc/conform.nvim',
     opts = {
       notify_on_error = false,
-      format_on_save = {
-        timeout_ms = 500,
-        lsp_fallback = true,
-      },
+      -- format_on_save = {
+      --   timeout_ms = 500,
+      --   lsp_fallback = true,
+      -- },
+      --
+      --
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
@@ -623,6 +629,20 @@ require('lazy').setup {
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
         -- javascript = { { "prettierd", "prettier" } },
+        python = { 'blue' },
+        javascript = { { 'prettierd', 'prettier' } },
+        c = { 'clang_format' },
+      },
+    },
+    keys = {
+      {
+        -- Customize or remove this keymap to your liking
+        '<leader>ff',
+        function()
+          require('conform').format { async = true, lsp_fallback = true }
+        end,
+        mode = '',
+        desc = 'Format buffer',
       },
     },
   },
@@ -726,11 +746,14 @@ require('lazy').setup {
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
     'folke/tokyonight.nvim',
+    -- 'cocopon/iceberg.vim',
+
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
       -- Load the colorscheme here
       vim.cmd.colorscheme 'tokyonight-night'
+      -- vim.cmd.colorscheme 'iceberg'
 
       -- You can configure highlights by doing something like
       vim.cmd.hi 'Comment gui=none'
@@ -812,7 +835,7 @@ require('lazy').setup {
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information see: :help lazy.nvim-lazy.nvim-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`

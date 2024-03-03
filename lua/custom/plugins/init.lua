@@ -2,4 +2,17 @@
 --  I promise not to create any merge conflicts in this directory :)
 --
 -- See the kickstart.nvim README for more information
-return {}
+return {
+  {
+    'akinsho/toggleterm.nvim',
+    version = '*',
+    config = true,
+    opts = {
+      direction = 'float',
+      float_opts = {
+        border = 'curved',
+      },
+      persist_mode = true,
+    },
+  },
+}
