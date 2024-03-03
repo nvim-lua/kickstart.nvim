@@ -38,8 +38,8 @@ return {
       -- online, please don't ask me how to install them :)
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
-        -- 'delve',
-        'chrome-debug-adapter'
+        'delve',
+        'chrome-debug-adapter',
       },
     }
 
@@ -52,7 +52,6 @@ return {
     vim.keymap.set('n', '<leader>B', function()
       dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
     end, { desc = 'Debug: Set Breakpoint' })
-    vim.keymap.set('n', '<leader>dr', function() dap.repl.open() end, { desc = 'Debug: Open Repl' })
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
@@ -85,42 +84,5 @@ return {
 
     -- Install golang specific config
     require('dap-go').setup()
-
-    dap.adapters.chrome = {
-      type = "executable",
-      command = "node",
-      args = { "/Users/giladsher/.local/share/nvim/lazy/vscode-chrome-debug/out/src/chromeDebug.js" } -- TODO adjust
-    }
-
-
-    for _, language in ipairs({ "typescript", "javascript" }) do
-      require("dap").configurations[language] = {
-        {
-          type = "pwa-node",
-          request = "launch",
-          name = "Launch file",
-          program = "${file}",
-          cwd = "${workspaceFolder}",
-        },
-        {
-          type = "pwa-node",
-          request = "attach",
-          name = "Attach",
-          processId = require 'dap.utils'.pick_process,
-          cwd = "${workspaceFolder}",
-        },
-        {
-          name = 'Chrome',
-          type = "chrome",
-          request = "attach",
-          program = "${file}",
-          cwd = vim.fn.getcwd(),
-          sourceMaps = true,
-          protocol = "inspector",
-          port = 9222,
-          webRoot = "${workspaceFolder}"
-        }
-      }
-    end
   end,
 }
