@@ -148,6 +148,66 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- Custom Options
+local opt = vim.opt
+
+-- Set highlight on search
+opt.hlsearch = false
+
+-- Make line numbers default
+opt.number = true
+opt.relativenumber = true
+
+-- Enable mouse mode
+opt.mouse = 'a'
+
+-- Sync clipboard between OS and Neovim.
+--  Remove this option if you want your OS clipboard to remain independent.
+--  See `:help 'clipboard'`
+opt.clipboard = 'unnamedplus'
+
+-- Enable break indent
+opt.breakindent = true
+
+-- Save undo history
+opt.undofile = true
+
+-- Case insensitive searching UNLESS /C or capital in search
+opt.ignorecase = true
+opt.smartcase = true
+
+-- Keep signcolumn on by default
+opt.signcolumn = 'yes'
+
+-- Decrease update time
+opt.updatetime = 250
+opt.timeout = true
+opt.timeoutlen = 300
+
+-- Set completeopt to have a better completion experience
+opt.completeopt = 'menuone,noselect'
+
+-- NOTE: You should make sure your terminal supports this
+opt.termguicolors = true
+
+opt.wildmenu = true
+opt.wildmode = 'longest,list,full'
+opt.showmatch = true
+opt.hlsearch = true
+
+opt.splitbelow = true
+opt.splitright = true
+
+-- not neeeded with sleuth ?
+vim.o.tabstop = 2
+vim.o.expandtab = false
+opt.backspace = 'indent,eol,start'
+
+--opt.tabstop = 2
+vim.o.shiftwidth = 2
+
+--- END custom options
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -183,6 +243,13 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+--- CUSTOM KEYMAPS
+
+-- nvim tree
+vim.keymap.set('n', '<leader>e', vim.cmd.NvimTreeToggle, { desc = 'Toggle [E]xplorer' })
+
+-- END CUSTOM KEYMAPS
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -532,7 +599,7 @@ require('lazy').setup {
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        -- gopls = {},
+        gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -806,7 +873,7 @@ require('lazy').setup {
   --  Here are some example plugins that I've included in the kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -814,7 +881,7 @@ require('lazy').setup {
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`
