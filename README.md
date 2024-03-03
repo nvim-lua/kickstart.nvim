@@ -43,6 +43,8 @@ Neovim's configurations are located under the following paths, depending on your
 | Windows (cmd)| `%userprofile%\AppData\Local\nvim\` |
 | Windows (powershell)| `$env:USERPROFILE\AppData\Local\nvim\` |
 
+### Install Kickstart
+
 Clone kickstart.nvim:
 
 <details><summary> Linux and Mac </summary>
@@ -99,6 +101,8 @@ can install to your machine using the methods above.
 > Your fork's url will be something like this: `https://github.com/<your_github_username>/kickstart.nvim.git`
 
 #### Examples of adding popularly requested plugins
+
+NOTE: You'll need to uncomment the line in the init.lua that turns on loading custom plugins.
 
 <details>
   <summary>Adding autopairs</summary>
@@ -192,3 +196,23 @@ This requires:
 ```lua
 {'nvim-telescope/telescope-fzf-native.nvim', build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
 ```
+
+Alternatively one can install gcc and make which don't require changing the config,
+the easiest way is to use choco:
+
+1. install [chocolatey](https://chocolatey.org/install)
+either follow the instructions on the page or use winget,
+run in cmd as **admin**:
+```
+winget install --accept-source-agreements chocolatey.chocolatey
+```
+
+2. install all requirements using choco, exit previous cmd and
+open a new one so that choco path is set, run in cmd as **admin**:
+```
+choco install -y neovim git ripgrep wget fd unzip gzip mingw make
+```
+
+Then continue with the [Install Kickstart](#Install-Kickstart) step.
+
+
