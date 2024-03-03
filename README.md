@@ -102,6 +102,8 @@ can install to your machine using the methods above.
 
 #### Examples of adding popularly requested plugins
 
+NOTE: You'll need to uncomment the line in the init.lua that turns on loading custom plugins.
+
 <details>
   <summary>Adding autopairs</summary>
 
