@@ -246,8 +246,8 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 
 --- CUSTOM KEYMAPS
 
--- nvim tree
-vim.keymap.set('n', '<leader>e', vim.cmd.NvimTreeToggle, { desc = 'Toggle [E]xplorer' })
+-- WARN: nvim tree does not appear to work
+-- vim.keymap.set('n', '<leader>e', vim.cmd.NvimTreeToggle, { desc = 'Toggle [E]xplorer' })
 
 -- END CUSTOM KEYMAPS
 

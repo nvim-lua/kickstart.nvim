@@ -26,8 +26,8 @@ return {
       { '<C-l>', '<cmd>TmuxNavigateRight<cr>', desc = 'Got to the right pane' },
     },
   },
-  'nvim-tree/nvim-tree.lua',
-  'nvim-tree/nvim-web-devicons',
+  { 'nvim-tree/nvim-tree.lua' },
+  { 'nvim-tree/nvim-web-devicons' },
 
   {
     'utilyre/barbecue.nvim',
