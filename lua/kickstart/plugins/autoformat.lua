@@ -65,6 +65,13 @@ return {
           return
         end
 
+        -- Go Templ formatting
+        -- If filetype is templ, then we need to use the templ LSP client to format
+        -- So we disable the html client formatting capabilities
+        if vim.bo.filetype == 'templ' and client.name == 'html' then
+          client.server_capabilities.documentFormattingProvider = false
+        end
+
         -- Create an autocmd that will run *before* we save the buffer.
         --  Run the formatting command for the LSP that has just attached.
         vim.api.nvim_create_autocmd('BufWritePre', {

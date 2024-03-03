@@ -9,7 +9,7 @@ local M = {
 function M.config()
   -- you can create a custom highlight group for the ghost text with the below command.
   -- change the `highlight` option to `parenhint` if you use this method.
-  vim.api.nvim_exec([[ highlight parenhint guifg='#495659' ]], false)
+  vim.api.nvim_exec([[ highlight parenhint guifg='#56633E' ]], false)
   require('paren-hint').setup({
     -- Include the opening paren in the ghost text
     include_paren = true,
