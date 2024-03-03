@@ -4,9 +4,9 @@
 -- lazy loading plugins that don't need to be loaded immediately at startup.
 --
 -- For example, in the following configuration, we use:
---  event = 'VeryLazy'
+--  event = 'VimEnter'
 --
--- which loads which-key after all the UI elements are loaded. Events can be
+-- which loads which-key before all the UI elements are loaded. Events can be
 -- normal autocommands events (`:help autocmd-events`).
 --
 -- Then, because we use the `config` key, the configuration only runs
@@ -16,7 +16,7 @@
 return {
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
-    event = 'VeryLazy', -- Sets the loading event to 'VeryLazy'
+    event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
       require('which-key').setup()
 
