@@ -21,6 +21,8 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+    'microsoft/vscode-js-debug',
+    'mxsdev/nvim-dap-vscode-js',
   },
 
   config = function()
@@ -37,7 +39,18 @@ return {
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'js',
+        'node2',
+        'cppdbg',
+        'python',
+        'javadbg',
+        'javatest',
       },
+      handlers = {
+        function(config)
+          require('mason-nvim-dap').default_setup(config)
+        end
+      }
     }
 
     -- You can provide additional configuration to the handlers,
@@ -45,14 +58,14 @@ return {
     require('mason-nvim-dap').setup_handlers()
 
     -- Basic debugging keymaps, feel free to change to your liking!
-    vim.keymap.set('n', '<F5>', dap.continue)
-    vim.keymap.set('n', '<F1>', dap.step_into)
-    vim.keymap.set('n', '<F2>', dap.step_over)
-    vim.keymap.set('n', '<F3>', dap.step_out)
-    vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint)
-    vim.keymap.set('n', '<leader>B', function()
+    vim.keymap.set('n', '<F5>', dap.continue, { desc = '[DAP] Continue' })
+    vim.keymap.set('n', '<F1>', dap.step_over, { desc = '[DAP] Over' })
+    vim.keymap.set('n', '<F2>', dap.step_into, { desc = '[DAP] Into' })
+    vim.keymap.set('n', '<F3>', dap.step_out, { desc = '[DAP] Out' })
+    vim.keymap.set('n', '<F6>', dap.toggle_breakpoint, { desc = '[DAP] Breakpoint toggle' })
+    vim.keymap.set('n', '<F7>', function()
       dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
-    end)
+    end, { desc = '[DAP] Conditional Breakpoint' })
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
@@ -79,7 +92,96 @@ return {
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
+    dap.defaults.fallback.exception_breakpoints = {'Notice', 'Warning', 'Error', 'Exception'}
+
     -- Install golang specific config
     require('dap-go').setup()
+
+    -- Install javascript specific config
+    require("dap-vscode-js").setup {
+      debugger_path = vim.fn.stdpath("data") .. "/mason/packages/js-debug-adapter",
+      debugger_cmd = { "js-debug-adapter" },
+      adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" },
+    }
+
+    for _, jsLang in ipairs({'typescript', 'javascript'}) do
+      require("dap").configurations[jsLang] = {
+        {
+          type = "pwa-node",
+          request = "launch",
+          name = "Launch file",
+          program = "${file}",
+          cwd = "${workspaceFolder}",
+        },
+        {
+          type = "pwa-node",
+          request = "attach",
+          name = "Attach",
+          processId = require'dap.utils'.pick_process,
+          cwd = "${workspaceFolder}",
+        },
+        {
+          type = "pwa-node",
+          request = "launch",
+          name = "Debug Jest Tests",
+          -- trace = true, -- include debugger info
+          runtimeExecutable = "node",
+          runtimeArgs = {
+            "./node_modules/jest/bin/jest.js",
+            "--runInBand",
+          },
+          rootPath = "${workspaceFolder}",
+          cwd = "${workspaceFolder}",
+          console = "integratedTerminal",
+          internalConsoleOptions = "neverOpen",
+        },
+        {
+            name = 'Debug Main Process (Electron)',
+            type = 'pwa-node',
+            request = 'launch',
+            program = '${workspaceFolder}/node_modules/.bin/electron',
+            args = {
+                '${workspaceFolder}/dist/index.js',
+            },
+            outFiles = {
+                '${workspaceFolder}/dist/*.js',
+            },
+            resolveSourceMapLocations = {
+                '${workspaceFolder}/dist/**/*.js',
+                '${workspaceFolder}/dist/*.js',
+            },
+            rootPath = '${workspaceFolder}',
+            cwd = '${workspaceFolder}',
+            sourceMaps = true,
+            skipFiles = { '<node_internals>/**' },
+            protocol = 'inspector',
+            console = 'integratedTerminal',
+        },
+        {
+            name = 'Compile & Debug Main Process (Electron)',
+            type = custom_adapter,
+            request = 'launch',
+            preLaunchTask = 'npm run build-ts',
+            program = '${workspaceFolder}/node_modules/.bin/electron',
+            args = {
+                '${workspaceFolder}/dist/index.js',
+            },
+            outFiles = {
+                '${workspaceFolder}/dist/*.js',
+            },
+            resolveSourceMapLocations = {
+                '${workspaceFolder}/dist/**/*.js',
+                '${workspaceFolder}/dist/*.js',
+            },
+            rootPath = '${workspaceFolder}',
+            cwd = '${workspaceFolder}',
+            sourceMaps = true,
+            skipFiles = { '<node_internals>/**' },
+            protocol = 'inspector',
+            console = 'integratedTerminal',
+        },
+      }
+    end
+
   end,
 }
