@@ -232,7 +232,7 @@ require('lazy').setup {
   --    require('Comment').setup({})
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim',    opts = {} },
+  { 'numToStr/Comment.nvim', opts = {} },
 
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following lua:
@@ -267,7 +267,7 @@ require('lazy').setup {
   -- after the plugin has been loaded:
   --  config = function() ... end
 
-  {                     -- Useful plugin to show you pending keybinds.
+  { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
@@ -536,8 +536,10 @@ require('lazy').setup {
         -- pyright = {},
         rust_analyzer = {
           settings = {
-            check = {
-              command = "clippy",
+            ['rust-analyzer'] = {
+              check = {
+                command = 'clippy',
+              },
             },
           },
         },
@@ -611,8 +613,6 @@ require('lazy').setup {
 
   { -- Autoformat
     'stevearc/conform.nvim',
-    event = { "BufWritePre" },
-    cmd = { "ConformInfo" },
     opts = {
       notify_on_error = false,
       format_on_save = {
@@ -620,12 +620,25 @@ require('lazy').setup {
         lsp_fallback = true,
       },
       formatters_by_ft = {
-        lua = { "stylua" },
-        python = { "isort", "black" },
-        javascript = { { "prettierd", "prettier" } },
-        typescript = { { "prettierd", "prettier" } },
-        rust = { "rustfmt" },
-        cpp = { "clang-format" },
+        lua = { 'stylua' },
+        python = { 'isort', 'black' },
+        javascript = { { 'prettierd', 'prettier' } },
+        typescript = { { 'prettierd', 'prettier' } },
+        rust = { 'rustfmt' },
+        cpp = { 'clang-format' },
+      },
+    },
+    event = { 'BufWritePre' },
+    cmd = { 'ConformInfo' },
+    keys = {
+      {
+        -- Customize or remove this keymap to your liking
+        '<leader>f',
+        function()
+          require('conform').format { async = true, lsp_fallback = true }
+        end,
+        mode = '',
+        desc = 'Format buffer',
       },
     },
     init = function()
@@ -733,7 +746,7 @@ require('lazy').setup {
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
     'folke/tokyonight.nvim',
-    lazy = false,    -- make sure we load this during startup if it is your main colorscheme
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
       -- Load the colorscheme here
