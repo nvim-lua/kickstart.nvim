@@ -87,9 +87,7 @@ information about extending and exploring Neovim.
 
 ### Getting Started
 
-See [Effective Neovim: Instant IDE](https://youtu.be/stqUbv-5u2s), covering the
-previous version. Note: The install via init.lua is outdated, please follow the
-install instructions in this file instead. An updated video is coming soon.
+[The Only Video You Need to Get Started with Neovim](https://youtu.be/m8C0Cq9Uv9o)
 
 ### Recommended Steps
 
