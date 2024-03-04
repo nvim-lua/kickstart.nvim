@@ -10,6 +10,8 @@ A starting point for Neovim that is:
 
 **NOT** a Neovim distribution, but instead a starting point for your configuration.
 
+[Video Introduction](https://www.youtube.com/watch?v=m8C0Cq9Uv9o)
+
 ## Installation
 
 ### Install Neovim
