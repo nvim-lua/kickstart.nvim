@@ -1,14 +1,20 @@
+--Personal telescope
+vim.keymap.set('v', '<leader>p', '"_dP', { desc = 'Go to previous diagnostic message' })
 --[[
 
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
+vim.keymap.set('n', '<leader>p', '\"_dP', { desc = 'Go to previous diagnostic message' })
+vim.keymap.set('n', '<leader>p', '\"_dP', { desc = 'Go to previous diagnostic message' })
 =====================================================================
 
-Kickstart.nvim is *not* a distribution.
-
-Kickstart.nvim is a template for your own configuration.
-  The goal is that you can read every line of code, top-to-bottom, understand
-  what your configuration is doing, and modify it to suit your needs.
+=====================================================================
+vim.keymap.set('n', '<leader>p', '\"_dP', { desc = 'Go to previous diagnostic message' })
+vim.keymap.set('n', '<leader>p', '\"_dP', { desc = 'Go to previous diagnostic message' })
+vim.keymap.set('n', '<leader>p', '\"_dP', { desc = 'Go to previous diagnostic message' })
+vim.keymap.set('n', '<leader>p', '\"_dP', { desc = 'Go to previous diagnostic message' })
+vim.keymap.set('n', '<leader>p', '\"_dP', { desc = 'Go to previous diagnostic message' })
+vim.keymap.set('n', '<leader>p', '\"_dP', { desc = 'Go to previous diagnostic message' })
 
   Once you've done that, you should start exploring, configuring and tinkering to
   explore Neovim!
@@ -66,6 +72,7 @@ vim.opt.rtp:prepend(lazypath)
 --
 --  You can also configure plugins after the setup call,
 --    as they will be available in your neovim runtime.
+require('mundy')
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
@@ -208,7 +215,7 @@ require('lazy').setup({
     config = function()
       require('onedark').setup {
         -- Set a style preset. 'dark' is default.
-        style = 'dark', -- dark, darker, cool, deep, warm, warmer, light
+        style = 'deep', -- dark, darker, cool, deep, warm, warmer, light
       }
       require('onedark').load()
     end,
@@ -282,7 +289,7 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
@@ -439,7 +446,7 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+    ensure_installed = { 'go', 'lua', 'vimdoc', 'vim', 'bash', 'hcl', 'terraform' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
@@ -678,6 +685,7 @@ cmp.setup {
     { name = 'luasnip' },
     { name = 'path' },
   },
+  LineNumberColors()
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`
