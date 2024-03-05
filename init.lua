@@ -611,7 +611,7 @@ require('lazy').setup {
         timeout_ms = 500,
         lsp_fallback = true,
       },
-      formatters_by_ft = {
+      formatters = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
