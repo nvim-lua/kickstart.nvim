@@ -629,6 +629,9 @@ require('lazy').setup {
     dependencies = {
       -- Snippet Engine & its associated nvim-cmp source
       {
+        -- nvim-cmp source for neovim Lua API
+        -- so that things like vim.keymap.set, etc. are autocompleted
+        'hrsh7th/cmp-nvim-lua',
         'L3MON4D3/LuaSnip',
         build = (function()
           -- Build Step is needed for regex support in snippets
@@ -708,6 +711,7 @@ require('lazy').setup {
           end, { 'i', 's' }),
         },
         sources = {
+          { name = 'nvim_lua' },
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
