@@ -817,7 +817,6 @@ require('lazy').setup {
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   { import = 'custom.plugins' },
-  vim.keymap.set('n', '<C-b>', ':Neotree toggle last<CR>', { noremap = true, silent = true, desc = 'Toggle neotree' }),
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`
