@@ -466,7 +466,7 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'go', 'lua', 'python', 'tsx', 'javascript', 'typescript', 'vimdoc', 'bash' , 'svelte'},
+    ensure_installed = { 'go', 'lua', 'python', 'tsx', 'javascript', 'typescript', 'vimdoc', 'bash' , 'make', 'php', 'helm', 'yaml'},
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
@@ -611,7 +611,6 @@ require('mason-lspconfig').setup()
 --  define the property 'filetypes' to the map in question.
 --  List here: https://github.com/williamboman/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-server
 local servers = {
-  -- clangd = {},
   gopls = {},
   tailwindcss = {},
   marksman = {},
@@ -628,6 +627,7 @@ local servers = {
       -- diagnostics = { disable = { 'missing-fields' } },
     },
   },
+  helm_ls = {},
   -- tsserver = {},
   astro = {},
   -- graphql = {},
