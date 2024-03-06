@@ -820,6 +820,8 @@ require('lazy').setup({
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   -- { import = 'custom.plugins' },
 }, {
+  -- Make lazy.nvim try to load one of these colorschemes when starting an installation during startup
+  install = { colorscheme = { 'tokyonight-night', 'habamax' } },
   ui = {
     -- If you have a Nerd Font, set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons otherwise define a unicode icons table
