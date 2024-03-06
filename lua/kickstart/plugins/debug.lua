@@ -20,9 +20,11 @@ return {
     -- Installs the debug adapters for you
     'williamboman/mason.nvim',
     'jay-babu/mason-nvim-dap.nvim',
+    -- 'microsoft/vscode-js-debug',
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+    -- 'mxsdev/nvim-dap-vscode-js',
   },
   config = function()
     local dap = require 'dap'
@@ -86,5 +88,6 @@ return {
 
     -- Install golang specific config
     require('dap-go').setup()
+    -- require('nvim-dap-vscode-js').setup()
   end,
 }
