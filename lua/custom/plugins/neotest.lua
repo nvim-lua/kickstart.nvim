@@ -15,6 +15,6 @@ return {
       },
     }
   end,
-  vim.keymap.set('n', 'tt', ':Neotest summary toggle<CR>', { desc = '[T]oggle [T]est explorer' }),
-  vim.keymap.set('n', 'ts', ':Neotest run suite=true<CR>', { desc = '[T]est [S]uite' }),
+  vim.keymap.set('n', '<leader>te', ':Neotest summary toggle<CR>', { desc = '[T]est [E]xplorer' }),
+  vim.keymap.set('n', '<leader>rt', ':Neotest run suite=true<CR>', { desc = '[R]un [T]est suite' }),
 }

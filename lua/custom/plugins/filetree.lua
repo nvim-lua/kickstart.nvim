@@ -12,5 +12,5 @@ return {
   config = function()
     require('neo-tree').setup {}
   end,
-  vim.keymap.set('n', '<C-b>', ':Neotree toggle last<CR>', { noremap = true, silent = true, desc = 'Toggle neotree' }),
+  vim.keymap.set('n', '<leader>tn', ':Neotree toggle last<CR>', { noremap = true, silent = true, desc = '[T]oggle [N]eotree' }),
 }
