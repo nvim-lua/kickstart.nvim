@@ -543,7 +543,6 @@ require('lazy').setup({
         clangd = {},
         gopls = {},
         rust_analyzer = {},
-        jdtls = {},
         tsserver = {},
 
         lua_ls = {

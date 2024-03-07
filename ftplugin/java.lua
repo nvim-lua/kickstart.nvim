@@ -1,4 +1,4 @@
-local root_markers = { 'gradlew', 'pom.xml' }
+local root_markers = { '.git' }
 local root_dir = require('jdtls.setup').find_root(root_markers)
 local home = os.getenv 'HOME'
 
