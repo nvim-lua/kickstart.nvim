@@ -33,6 +33,8 @@ External Requirements:
   - If want to write Typescript, you need `npm`
   - If want to write Golang, you will need `go`
   - etc.
+  - For Java you must install `jdtls` and update the `java.lua` file to relfect where it is installed
+    - jdtls requires Java 17, to manage multiple java versions `jabba` is recommended
 
 > **NOTE**
 > See [Windows Installation](#Windows-Installation) to double check any additional Windows notes
