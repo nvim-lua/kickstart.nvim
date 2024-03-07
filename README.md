@@ -28,7 +28,7 @@ External Requirements:
 - Basic utils: `git`, `make`, `unzip`, C Compiler (`gcc`)
 - [ripgrep](https://github.com/BurntSushi/ripgrep#installation)
 - A [Nerd Font](https://www.nerdfonts.com/): optional, provides various icons
-  - if you have it set `vim.g.have_nerd_font` in `init.lua` to true
+  - If you have one, set `vim.g.have_nerd_font` in `init.lua` to true
 - Language Setup:
   - If want to write Typescript, you need `npm`
   - If want to write Golang, you will need `go`
@@ -65,7 +65,7 @@ If you're using `cmd.exe`:
 git clone https://github.com/nvim-lua/kickstart.nvim.git %userprofile%\AppData\Local\nvim\
 ```
 
-If you're using `powershell.exe`
+If you're using `powershell.exe`:
 
 ```
 git clone https://github.com/nvim-lua/kickstart.nvim.git $env:USERPROFILE\AppData\Local\nvim\
@@ -93,16 +93,16 @@ information about extending and exploring Neovim.
 
 ### Recommended Steps
 
-[Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repo
-(so that you have your own copy that you can modify) and then installing you
-can install to your machine using the methods above.
+Instead of cloning Kickstart directly, [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the repo
+to create your own copy that you can modify. Then clone
+your fork following the installation instructions above.
 
 > **NOTE**
 > Your fork's url will be something like this: `https://github.com/<your_github_username>/kickstart.nvim.git`
 
 #### Examples of adding popularly requested plugins
 
-NOTE: You'll need to uncomment the line in the init.lua that turns on loading custom plugins.
+NOTE: You'll need to uncomment the line `-- { import = 'custom.plugins' },` near the bottom of `init.lua` to enable loading custom plugins.
 
 <details>
   <summary>Adding autopairs</summary>
@@ -161,16 +161,19 @@ return {
 
 ### FAQ
 
-* What should I do if I already have a pre-existing neovim configuration?
+* What should I do if I already have a pre-existing Neovim configuration?
   * You should back it up, then delete all files associated with it.
-  * This includes your existing init.lua and the neovim files in `~/.local` which can be deleted with `rm -rf ~/.local/share/nvim/`
+  * This includes your existing `init.lua` and the Neovim files in `~/.local` which can be deleted with:
+    ```
+    rm -rf ~/.local/share/nvim/
+    ```
 * Can I keep my existing configuration in parallel to kickstart?
-  * Yes! You can use [NVIM_APPNAME](https://neovim.io/doc/user/starting.html#%24NVIM_APPNAME)`=nvim-NAME` to maintain multiple configurations. For example you can install the kickstart configuration in `~/.config/nvim-kickstart` and create an alias:
+  * Yes! You can use [NVIM_APPNAME](https://neovim.io/doc/user/starting.html#%24NVIM_APPNAME)`=nvim-NAME` to maintain multiple configurations. For example, you can install the kickstart configuration in `~/.config/nvim-kickstart` and create an alias:
     ```
     alias nvim-kickstart='NVIM_APPNAME="nvim-kickstart" nvim'
     ```
-    When you run Neovim using `nvim-kickstart` alias it will use the alternative config directory and the matching local directory `~/.local/share/nvim-kickstart`. You can apply this approach to any Neovim distribution that you would like to try out.
-* What if I want to "uninstall" this configuration:
+    When you run Neovim using `nvim-kickstart` alias, it will use the alternative config directory and the matching local directory `~/.local/share/nvim-kickstart`. You can apply this approach to any Neovim distribution that you would like to try out.
+* What if I want to "uninstall" this configuration?
   * See [lazy.nvim uninstall](https://github.com/folke/lazy.nvim#-uninstalling) information
 * Why is the kickstart `init.lua` a single file? Wouldn't it make sense to split it into multiple files?
   * The main purpose of kickstart is to serve as a teaching tool and a reference
@@ -200,14 +203,14 @@ This requires:
 Alternatively one can install gcc and make which don't require changing the config,
 the easiest way is to use choco:
 
-1. install [chocolatey](https://chocolatey.org/install)
+1. Install [chocolatey](https://chocolatey.org/install)
 either follow the instructions on the page or use winget,
 run in cmd as **admin**:
 ```
 winget install --accept-source-agreements chocolatey.chocolatey
 ```
 
-2. install all requirements using choco, exit previous cmd and
+2. Install all requirements using choco, exit previous cmd and
 open a new one so that choco path is set, run in cmd as **admin**:
 ```
 choco install -y neovim git ripgrep wget fd unzip gzip mingw make
