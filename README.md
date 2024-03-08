@@ -21,12 +21,14 @@ If you are experiencing issues, please make sure you have the latest versions.
 
 ### Install External Dependencies
 
-> **NOTE** 
+> **NOTE**
 > [Backup](#FAQ) your previous configuration (if any exists)
 
 External Requirements:
 - Basic utils: `git`, `make`, `unzip`, C Compiler (`gcc`)
 - [ripgrep](https://github.com/BurntSushi/ripgrep#installation)
+- A [Nerd Font](https://www.nerdfonts.com/): optional, provides various icons
+  - if you have it set `vim.g.have_nerd_font` in `init.lua` to true
 - Language Setup:
   - If want to write Typescript, you need `npm`
   - If want to write Golang, you will need `go`
@@ -60,13 +62,13 @@ git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HO
 If you're using `cmd.exe`:
 
 ```
-git clone https://github.com/nvim-lua/kickstart.nvim.git %userprofile%\AppData\Local\nvim\ 
+git clone https://github.com/nvim-lua/kickstart.nvim.git %userprofile%\AppData\Local\nvim\
 ```
 
 If you're using `powershell.exe`
 
 ```
-git clone https://github.com/nvim-lua/kickstart.nvim.git $env:USERPROFILE\AppData\Local\nvim\ 
+git clone https://github.com/nvim-lua/kickstart.nvim.git $env:USERPROFILE\AppData\Local\nvim\
 ```
 
 </details>
@@ -87,9 +89,7 @@ information about extending and exploring Neovim.
 
 ### Getting Started
 
-See [Effective Neovim: Instant IDE](https://youtu.be/stqUbv-5u2s), covering the
-previous version. Note: The install via init.lua is outdated, please follow the
-install instructions in this file instead. An updated video is coming soon.
+[The Only Video You Need to Get Started with Neovim](https://youtu.be/m8C0Cq9Uv9o)
 
 ### Recommended Steps
 
@@ -97,7 +97,7 @@ install instructions in this file instead. An updated video is coming soon.
 (so that you have your own copy that you can modify) and then installing you
 can install to your machine using the methods above.
 
-> **NOTE**  
+> **NOTE**
 > Your fork's url will be something like this: `https://github.com/<your_github_username>/kickstart.nvim.git`
 
 #### Examples of adding popularly requested plugins
@@ -214,5 +214,3 @@ choco install -y neovim git ripgrep wget fd unzip gzip mingw make
 ```
 
 Then continue with the [Install Kickstart](#Install-Kickstart) step.
-
-
