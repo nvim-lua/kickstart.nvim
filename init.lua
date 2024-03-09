@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.opt.number = true
 -- You can also add relative line numbers, for help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -171,6 +171,19 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+
+-- Add ThePrimeAgen's commands
+vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, { desc = '[V]iew Workspace' })
+
+-- Remap blockwise Visual mode
+vim.keymap.set('n', '<leader>v', '<c-v>', { desc = '[V]isual Block Mode' })
+
+-- Neotree keymaps
+vim.keymap.set('n', '<leader>w/', ':Neotree toggle current reveal_force_cwd<cr>', { desc = '[/] toggle current (Neotree)' })
+vim.keymap.set('n', '<leader>wr', ':Neotree toggle reveal<cr>', { desc = 'Toggle [R]eveal (Neotree)' })
+vim.keymap.set('n', '<leader>wd', ':Neotree float reveal_file=<cfile> reveal_force_cwd<cr>', { desc = '[D] float reveal file (Neotree)' })
+vim.keymap.set('n', '<leader>wb', ':Neotree toggle show buffers right<cr>', { desc = 'Toggle [B]uffers (Neotree)' })
+vim.keymap.set('n', '<leader>gs', ':Neotree float git_status<cr>', { desc = 'Show Git [S]tatus (Neotree)' })
 
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
@@ -283,6 +296,7 @@ require('lazy').setup({
         ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
         ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
         ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+        ['<leader>p'] = { name = '[P]lugins', _ = 'which_key_ignore' },
       }
     end,
   },
@@ -810,15 +824,15 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.indent_line',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {
   ui = {
     -- If you have a Nerd Font, set icons to an empty table which will use the
