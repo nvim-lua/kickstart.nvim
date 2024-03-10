@@ -137,7 +137,7 @@ vim.opt.splitbelow = true
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣', space = '·' }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
@@ -147,6 +147,18 @@ vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
+
+-- Number of spaces that a <Tab> in the file counts for.
+vim.opt.tabstop = 4
+
+-- Amount of whitespace used for one level of indentation.
+vim.opt.shiftwidth = 4
+
+-- Use the appropriate number of spaces to insert a <Tab>.
+vim.opt.expandtab = true
+
+-- Highlight column
+vim.opt.colorcolumn = '80'
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
