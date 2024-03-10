@@ -43,10 +43,13 @@ return {
       -- You can set the delay to false to disable cleanup entirely
       -- Note that the cleanup process only starts when none of the oil buffers are currently displayed
       cleanup_delay_ms = 2000,
-      -- Set to true to autosave buffers that are updated with LSP willRenameFiles
-      -- Set to "unmodified" to only save unmodified buffers
-      -- Set to false to turn off autosave
-      lsp_rename_autosave = "unmodified",
+      lsp_file_methods = {
+        -- Time to wait for LSP file operations to complete before skipping
+        timeout_ms = 1000,
+        -- Set to true to autosave buffers that are updated with LSP willRenameFiles
+        -- Set to "unmodified" to only save unmodified buffers
+        autosave_changes = false,
+      },
       -- Constrain the cursor to the editable parts of the oil buffer
       -- Set to `false` to disable, or "name" to keep it on the file names
       constrain_cursor = "editable",
@@ -121,7 +124,7 @@ return {
         -- Width dimensions can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
         -- min_width and max_width can be a single value or a list of mixed integer/float types.
         -- max_width = {100, 0.8} means "the lesser of 100 columns or 80% of total"
-        max_width = {100, 0.8},
+        max_width = 0.9,
         -- min_width = {40, 0.4} means "the greater of 40 columns or 40% of total"
         min_width = { 40, 0.4 },
         -- optionally define an integer/float for the exact width of the preview window
