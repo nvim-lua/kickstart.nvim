@@ -22,4 +22,10 @@ return {
   {
     'nanotee/zoxide.vim',
   },
+  {
+    'rcarriga/nvim-notify',
+    config = function()
+      vim.notify = require 'notify'
+    end,
+  },
 }

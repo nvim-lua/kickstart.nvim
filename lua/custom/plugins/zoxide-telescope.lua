@@ -42,7 +42,7 @@ return {
       t.load_extension 'zoxide'
 
       -- Add a mapping
-      vim.keymap.set('n', '<leader>sD', t.extensions.zoxide.list, { desc = 'zoxide search' })
+      vim.keymap.set('n', '<leader>sz', t.extensions.zoxide.list, { desc = 'zoxide search' })
     end,
   },
 }
