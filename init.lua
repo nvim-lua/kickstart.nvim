@@ -396,14 +396,19 @@ require('lazy').setup({
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
 
-      -- Find files inside hidden folders
-      local opts = {
-        hidden = true,
-      }
-      local function find_files()
-        builtin.find_files(opts)
-      end
-      vim.keymap.set('n', '<leader>hh', find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>hh', function()
+        builtin.find_files {
+          hidden = true,
+        }
+      end, { desc = 'Find files inside hidden folders' })
+
+      vim.keymap.set('n', '<leader>en', function()
+        local cwd = vim.fn.input 'Enter dir: '
+        builtin.find_files {
+          cwd = cwd,
+          prompt_title = 'Project Files',
+        }
+      end, { desc = 'Prompt cwd' })
 
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
