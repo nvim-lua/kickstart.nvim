@@ -1,3 +1,4 @@
+-- TODO: Look into mini starter sessions?
 -- startup screen
 return {
 	'echasnovski/mini.nvim',
@@ -16,5 +17,9 @@ return {
 			},
 			footer = '',
 		})
+
+		vim.keymap.set('n', '<leader>=', function()
+			mini.open()
+		end, { desc = 'Open starter' })
 	end
 }
