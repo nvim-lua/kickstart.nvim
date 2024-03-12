@@ -3,7 +3,14 @@
 --
 -- See the kickstart.nvim README for more information
 --
-return {
+
+local config = {
+  {
+    vim.cmd 'set conceallevel=1',
+  },
+}
+
+local plugins = {
   {
     'jubnzv/mdeval.nvim',
     event = 'VeryLazy',
@@ -29,3 +36,5 @@ return {
     end,
   },
 }
+
+return plugins, config
