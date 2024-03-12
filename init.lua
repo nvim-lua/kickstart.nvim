@@ -43,7 +43,23 @@ P.S. You can delete this when you're done too. It's your config now :)
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-
+vim.g.copilot_no_tab_map = true
+vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+vim.api.nvim_set_keymap("i", "<C-H>", 'copilot#Previous()', { silent = true, expr = true })
+vim.api.nvim_set_keymap("i", "<C-K>", 'copilot#Next()', { silent = true, expr = true })
+vim.g.copilot_filetypes = {
+  ["*"] = false,
+  ["c"] = true,
+  ["c++"] = true,
+  ["go"] = true,
+  ["javascript"] = true,
+  ["typescript"] = true,
+  ["java"] = true,
+  ["lua"] = false,
+  ["ruby"] = true,
+  ["rust"] = true,
+  ["python"] = true,
+}
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
