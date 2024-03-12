@@ -640,9 +640,6 @@ require('lazy').setup({
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
-      -- nvim-cmp source for neovim Lua API
-      -- so that things like vim.keymap.set, etc. are autocompleted
-      'hrsh7th/cmp-nvim-lua',
 
       -- If you want to add a bunch of pre-configured snippets,
       --    you can use this plugin to help you. It even has snippets
@@ -704,7 +701,6 @@ require('lazy').setup({
           end, { 'i', 's' }),
         },
         sources = {
-          { name = 'nvim_lua' },
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
