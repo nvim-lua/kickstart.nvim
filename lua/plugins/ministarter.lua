@@ -12,7 +12,7 @@ return {
 				mini.sections.builtin_actions(),
 			},
 			content_hooks = {
-				mini.gen_hook.adding_bullet('-'),
+				mini.gen_hook.adding_bullet(' '),
 				mini.gen_hook.aligning('center', 'center'),
 			},
 			footer = '',
