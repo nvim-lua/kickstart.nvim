@@ -343,7 +343,7 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
-vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, { desc = 'Show files' })
+-- vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, { desc = 'Show files' })
 vim.keymap.set('n', '<leader>x', '<cmd>!chmod +x %<CR>', { silent = true, desc = 'chmod +x' })
 vim.keymap.set('n', '<C-f>', '<cmd>silent !tmux neww tmux-sessionizer<CR>', { silent = true, desc = 'Open tmux' })
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
