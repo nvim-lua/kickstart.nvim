@@ -195,7 +195,10 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- jk to enter normal mode
 vim.keymap.set('i', 'jk', '<ESC>')
 -- Open Netrw
-vim.keymap.set('n', 'rw', '<cmd>Ex!<CR>')
+-- vim.keymap.set('n', 'rw', '<cmd>Ex!<CR>')
+
+-- Open Neotree
+vim.keymap.set('n', 'nt', '<cmd>:Neotree<CR>')
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
