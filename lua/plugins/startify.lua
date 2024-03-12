@@ -1,4 +1,4 @@
 -- startup screen
 return {
-	'mhinz/vim-startify'
+	-- 'mhinz/vim-startify'
 }
