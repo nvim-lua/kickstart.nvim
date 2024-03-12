@@ -679,6 +679,10 @@ require('lazy').setup({
           -- Select the [p]revious item
           ['<C-p>'] = cmp.mapping.select_prev_item(),
 
+          -- scroll [u]p and [d]own the documentation window
+		      ["<C-u>"] = cmp.mapping.scroll_docs(-4),
+		      ["<C-d>"] = cmp.mapping.scroll_docs(4),
+
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
