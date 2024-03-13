@@ -30,6 +30,9 @@ local config = {
   },
   settings = {
     java = {
+      format = {
+        enabled = false,
+      },
       maven = {
         downloadSources = true,
       },

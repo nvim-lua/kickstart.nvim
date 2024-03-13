@@ -1,0 +1,72 @@
+{
+  "POM Root": {
+    "prefix": "pomr",
+    "body": [
+      "<project xmlns=\"http://maven.apache.org/POM/4.0.0\"",
+      "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"",
+      "         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">",
+      "    <modelVersion>4.0.0</modelVersion>",
+      "    <groupId>${1:com.example}</groupId>",
+      "    <artifactId>${2:my-app}</artifactId>",
+      "    <version>${3:1.0-SNAPSHOT}</version>",
+      "    <packaging>${4:jar}</packaging>",
+      "    <name>${5:My App}</name>",
+      "    <description>${6:My application}</description>",
+      "    <properties>",
+      "        <project.build.sourceEncoding>${7:utf-8}</project.build.sourceEncoding>",
+      "    </properties>",
+      "</project>"
+    ],
+    "description": "Maven POM Root"
+  },
+  "POM Parent": {
+    "prefix": "pomp",
+    "body": [
+      "<parent>",
+      "    <groupId>${1:com.example}</groupId>",
+      "    <artifactId>${2:my-parent}</artifactId>",
+      "    <version>${3:1.0}</version>",
+      "    <relativePath>${4:../pom.xml}</relativePath>",
+      "</parent>"
+    ],
+    "description": "Maven POM Parent"
+  },
+  "POM Dependency": {
+    "prefix": "pomd",
+    "body": [
+      "<dependency>",
+      "    <groupId>${1:com.example}</groupId>",
+      "    <artifactId>${2:my-dependency}</artifactId>",
+      "    <version>${3:1.0}</version>",
+      "</dependency>"
+    ],
+    "description": "Maven POM Dependency"
+  },
+  "POM Plugin": {
+    "prefix": "poml",
+    "body": [
+      "<plugin>",
+      "    <groupId>${1:org.apache.maven.plugins}</groupId>",
+      "    <artifactId>${2:maven-${3:plugin}-plugin}</artifactId>",
+      "    <version>${4:3.0}</version>",
+      "    <!-- <configuration></configuration> -->",
+      "    <!-- <executions></executions> -->",
+      "</plugin>"
+    ],
+    "description": "Maven POM Plugin"
+  },
+  "POM Plugin Execution": {
+    "prefix": "pomle",
+    "body": [
+      "<execution>",
+      "    <id>${1:default-cli}</id>",
+      "    <phase>${2:compile}</phase>",
+      "    <goals>",
+      "        <goal>${3:run}</goal>",
+      "    </goals>",
+      "    <!-- <configuration></configuration> -->",
+      "</execution>"
+    ],
+    "description": "Maven POM Plugin Execution"
+  }
+}

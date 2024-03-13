@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -619,6 +619,7 @@ require('lazy').setup({
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
+        java = { 'google-java-format' },
         javascript = { 'prettier' },
         typescript = { 'prettier' },
         go = { 'gofmt', 'goimports', 'golines', 'gofumpt' },
@@ -655,9 +656,12 @@ require('lazy').setup({
       --    you can use this plugin to help you. It even has snippets
       --    for various frameworks/libraries/etc. but you will have to
       --    set up the ones that are useful for you.
-      -- 'rafamadriz/friendly-snippets',
+      'rafamadriz/friendly-snippets',
     },
     config = function()
+      require('luasnip.loaders.from_vscode').lazy_load()
+      require('luasnip.loaders.from_vscode').lazy_load { paths = './custom-snippets/' }
+
       -- See `:help cmp`
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
@@ -856,7 +860,6 @@ require('lazy').setup({
       vim.keymap.set('n', '<C-n>', ':NvimTreeFindFileToggle<CR>')
     end,
   },
-  { 'nvim-tree/nvim-web-devicons' },
   { 'simrat39/symbols-outline.nvim' },
   { 'github/copilot.vim' },
   {
