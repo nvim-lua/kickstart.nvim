@@ -888,3 +888,6 @@ map({ 'n' }, '<leader>wb', '<cmd>vs<CR>', { desc = 'New [W]orkspace [B]uffer' })
 -- Resize buffer (width)
 -- map({ 'n' }, '<C-m>', '<cmd>vertical res -5^M<CR>', { desc = 'Buffer - width' })
 map({ 'n' }, '<C-m>', '<cmd>vertical res +5^M<CR>', { desc = 'Buffer + width' })
+
+--CarbonNow Screenshot
+map({ 'v' }, '<leader>s', ':CarbonNow<CR>', { desc = '[S]creenshoot with carbon now' })
