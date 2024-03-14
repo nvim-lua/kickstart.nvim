@@ -198,7 +198,7 @@ vim.keymap.set('i', 'kj', '<ESC>')
 -- vim.keymap.set('n', 'rw', '<cmd>Ex!<CR>')
 
 -- Open Neotree
-vim.keymap.set('n', 'nt', '<cmd>:Neotree<CR>')
+vim.keymap.set('n', '<leader>nt', '<cmd>:Neotree<CR>')
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
