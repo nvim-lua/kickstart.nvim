@@ -210,7 +210,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
-    vim.highlight.on_yank { timeout = 100 }
+    vim.highlight.on_yank { timeout = 70 }
   end,
 })
 
@@ -264,10 +264,10 @@ require('lazy').setup({
     'numToStr/Comment.nvim',
     opts = {
       opleader = {
-        ---do comment
-        line = 'dc',
+        ---[M]ake[C]omment
+        line = 'mc',
         ---do block comment
-        block = 'db',
+        block = 'mb',
       },
     },
   },
@@ -808,7 +808,7 @@ require('lazy').setup({
       --
       -- Examples:
       --  - va)  - [V]isually select [A]round [)]paren
-      --  - yinq - [Y]ank [I]nside [N]ext [']quote
+      --  - yin' - [Y]ank [I]nside [N]ext [']quote
       --  - ci'  - [C]hange [I]nside [']quote
       require('mini.ai').setup { n_lines = 500 }
 
@@ -916,6 +916,6 @@ require('lazy').setup({
     },
   },
 })
-
 -- The line beneath this is called `modeline`. See `:help modeline`
+
 -- vim: ts=2 sts=2 sw=2 et
