@@ -193,7 +193,7 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 
 -- CUSTOM KEYBINDINGS
 -- jk to enter normal mode
-vim.keymap.set('i', 'jk', '<ESC>')
+vim.keymap.set('i', 'kj', '<ESC>')
 -- Open Netrw
 -- vim.keymap.set('n', 'rw', '<cmd>Ex!<CR>')
 
@@ -238,6 +238,7 @@ require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
+  'ThePrimeagen/vim-be-good',
   -- NVIM CHATGPT
   --  {
   --    'jackMort/ChatGPT.nvim',
@@ -786,6 +787,11 @@ require('lazy').setup({
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       vim.cmd.colorscheme 'tokyonight-night'
+      -- vim.cmd 'highlight Cursor guifg=#5eaf77 guibg=#5eaf77'
+
+      -- Lets cursor use highlight, n-v-c are modes. i-ci is for changing the cursor to | in insert mode
+      vim.opt.guicursor = 'n-v-c:block-Cursor/lCursor,i-ci:ver25-Cursor/lCursor'
+      vim.cmd 'highlight Cursor guifg=#53b06f guibg=#53b06f'
 
       -- You can configure highlights by doing something like
       vim.cmd.hi 'Comment gui=none'
