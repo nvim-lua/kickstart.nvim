@@ -140,6 +140,8 @@ This will install the tree plugin and add the command `:Neotree` for you. For mo
 In the file: `lua/custom/plugins/filetree.lua`, add:
 
 ```lua
+-- File: lua/custom/plugins/filetree.lua
+
 return {
   "nvim-neo-tree/neo-tree.nvim",
   version = "*",
