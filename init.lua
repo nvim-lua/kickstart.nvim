@@ -633,10 +633,9 @@ require('lazy').setup({
           return 'make install_jsregexp'
         end)(),
         dependencies = {
-          -- If you want to add a bunch of pre-configured snippets,
-          --    you can use this plugin to help you. It even has snippets
-          --    for various frameworks/libraries/etc. but you will have to
-          --    set up the ones that are useful for you.
+          -- `friendly-snippets` contains a variety of premade snippets.
+          --    See the README about individual language/framework/plugin snippets:
+          --    https://github.com/rafamadriz/friendly-snippets
           -- {
           --   'rafamadriz/friendly-snippets',
           --   config = function()
