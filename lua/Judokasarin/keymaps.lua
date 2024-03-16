@@ -3,7 +3,6 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
@@ -28,7 +27,16 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-
+--
+--
+-- [[ Neo-Tree ]]
+vim.keymap.set('n', '<leader>ee', '<Cmd>Neotree toggle show reveal_force_cwd<cr>', { desc = '[e]xplorer' })
+vim.keymap.set('n', '<leader>eg', '<Cmd>Neotree toggle show git_status<cr>', { desc = '[e]xplorer [g]it status' })
+vim.keymap.set('n', '<leader>eb', '<Cmd>Neotree toggle show buffers<cr>', { desc = '[e]xplorer [b]uffers' })
+vim.keymap.set('n', '<leader>ec', '<Cmd>Neotree close<cr>', { desc = '[e]xplorer [b]uffers' })
+--
+--
+--
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -42,4 +50,3 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
-
