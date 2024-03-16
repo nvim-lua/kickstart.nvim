@@ -35,6 +35,9 @@ vim.keymap.set('n', '<leader>eg', '<Cmd>Neotree toggle show git_status<cr>', { d
 vim.keymap.set('n', '<leader>eb', '<Cmd>Neotree toggle show buffers<cr>', { desc = '[e]xplorer [b]uffers' })
 vim.keymap.set('n', '<leader>ec', '<Cmd>Neotree close<cr>', { desc = '[e]xplorer [b]uffers' })
 --
+-- [[ Neo git ]]
+vim.keymap.set('n', '<leader>gs', '<Cmd>Neogit <cr>', { desc = '[g]it [s]tatus' })
+--
 --
 --
 -- [[ Basic Autocommands ]]
