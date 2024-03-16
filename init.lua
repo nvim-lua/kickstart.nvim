@@ -570,6 +570,9 @@ require('lazy').setup {
             },
           },
         },
+        gopls = {},
+        yamlls = {},
+        tsserver = {},
       }
 
       -- Ensure the servers and tools above are installed
