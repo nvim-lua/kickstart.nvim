@@ -103,7 +103,9 @@ vim.opt.number = true
 -- You can also add relative line numbers, for help with jumping.
 --  Experiment for yourself to see if you like it!
 vim.opt.relativenumber = true
-
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
 
@@ -239,16 +241,6 @@ require('lazy').setup({
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
   'ThePrimeagen/vim-be-good',
-  -- NVIM CHATGPT
-  --  {
-  --    'jackMort/ChatGPT.nvim',
-  --    event = 'VeryLazy',
-  --    dependencies = {
-  --      'MunifTanjim/nui.nvim',
-  --      'nvim-lua/plenary.nvim',
-  --      'nvim-telescope/telescope.nvim',
-  --    },
-  --  },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -392,6 +384,13 @@ require('lazy').setup({
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
+          },
+          media_files = {
+            -- filetypes whitelist
+            -- defaults to {"png", "jpg", "mp4", "webm", "pdf"}
+            filetypes = { 'png', 'webp', 'jpg', 'jpeg' },
+            -- find command (defaults to `fd`)
+            find_cmd = 'rg',
           },
         },
       }
@@ -672,7 +671,7 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        -- python = { 'isort', 'black' },
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
@@ -775,23 +774,21 @@ require('lazy').setup({
     end,
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
+  {
+    'rose-pine/neovim',
+    name = 'rose-pine',
+    config = function()
+      require('rose-pine').setup {
+        disable_background = true,
+      }
+    end,
+  },
+
+  {
     'folke/tokyonight.nvim',
     priority = 1000, -- make sure to load this before all the other start plugins
     init = function()
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
-      -- vim.cmd 'highlight Cursor guifg=#5eaf77 guibg=#5eaf77'
-
-      -- Lets cursor use highlight, n-v-c are modes. i-ci is for changing the cursor to | in insert mode
-      vim.opt.guicursor = 'n-v-c:block-Cursor/lCursor,i-ci:ver25-Cursor/lCursor'
-      vim.cmd 'highlight Cursor guifg=#53b06f guibg=#53b06f'
+      vim.cmd.colorscheme 'rose-pine'
 
       -- You can configure highlights by doing something like
       vim.cmd.hi 'Comment gui=none'
