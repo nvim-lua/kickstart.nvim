@@ -25,11 +25,11 @@ alias nvi='NVIM_APPNAME="kickstart-tsorabel" nvim'
 
 What is Kickstart?
 
-  Kickstart.nvim is *not* a distribution.
+ Kickstart.nvim is *not* a distribution.
 
   Kickstart.nvim is a starting point for your own configuration.
-    The goal is that you can read every line of code, top-to-bottom, understand
-    what your configuration is doing, and modify it to suit your needs.
+    The gal is that you can read every line of code, top-to-bottom, understand
+    what our configuration is doing, and modify it to suit your needs.
 
     Once you've done that, you can start exploring, configuring and tinkering to
     make Neovim your own! That might mean leaving kickstart just the way it is for a while
@@ -687,7 +687,7 @@ require('lazy').setup({
         markdown = { 'prettier' },
         graphql = { 'prettier' },
         lua = { 'stylua' },
-        rust = { 'rustfmt' },
+        rust = { 'prettier' },
       },
     },
   },
@@ -944,5 +944,5 @@ map({ 'n' }, '<leader>wb', '<cmd>vs<CR>', { desc = 'New [W]orkspace [B]uffer' })
 -- map({ 'n' }, '<C-m>', '<cmd>vertical res -5^M<CR>', { desc = 'Buffer - width' })
 map({ 'n' }, '<C-m>', '<cmd>vertical res +5^M<CR>', { desc = 'Buffer + width' })
 
---CarbonNow Screenshot
+--Screenshot with carbon now
 map({ 'v' }, '<leader>s', ':CarbonNow<CR>', { desc = '[S]creenshoot with carbon now' })
