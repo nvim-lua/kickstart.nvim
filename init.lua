@@ -133,6 +133,7 @@ vim.keymap.set('n', '<leader>n', '<cmd>Neotree toggle<cr>')
 vim.keymap.set('n', '<leader>c', '<cmd>bd<cr>')
 vim.keymap.set('n', '<leader>h', '<cmd>bprev<cr>')
 vim.keymap.set('n', '<leader>l', '<cmd>bnext<cr>')
+vim.keymap.set('n', '<leader>sv', '<cmd>write<cr>', { desc = 'Sa[v]e File' })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
