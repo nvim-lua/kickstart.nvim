@@ -10,7 +10,7 @@ local M = {
   config = true,
 }
 
--- filetype: NeogitStatus
+-- filetype of neogit window: NeogitStatus
 
 function M.config()
   local neogit = require('neogit')
