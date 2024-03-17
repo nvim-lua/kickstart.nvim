@@ -32,7 +32,7 @@ vim.keymap.set('n', '<leader>d=', '<C-w>=', { noremap = true, silent = true, des
 vim.keymap.set('n', '<Esc>', '<cmd>noh <CR>', { noremap = false, silent = true })
 
 -- fugitive
-vim.keymap.set('n', '<leader>gg', '<cmd>G<cr>', { desc = 'fugitive' })
+-- vim.keymap.set('n', '<leader>gg', '<cmd>G<cr>', { desc = 'fugitive' })
 
 -- magical base64 encoding/decoding
 vim.keymap.set('n', '<M-e>', 'viWy:let @"=system("openssl base64 -A", @")<cr>gv""P', { noremap = true, silent = true })
