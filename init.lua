@@ -546,7 +546,7 @@ local servers = {
   tailwindcss = {},
   tsserver = {},
   vimls = {},
-  vuels = {},
+  volar = {},
   yamlls = {},
 }
 
