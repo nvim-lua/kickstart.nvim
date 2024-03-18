@@ -73,7 +73,7 @@ vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Remap <Esc>
-vim.keymap.set('i', '<C-c>', '<Esc>')
+vim.keymap.set('i', 'jk', '<Esc>')
 
 -- Tabs & indentation
 vim.opt.tabstop = 4
