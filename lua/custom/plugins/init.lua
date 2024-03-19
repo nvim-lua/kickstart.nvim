@@ -15,4 +15,7 @@ return {
       persist_mode = true,
     },
   },
+  {
+    'nvim-treesitter/nvim-treesitter-context'
+  },
 }
