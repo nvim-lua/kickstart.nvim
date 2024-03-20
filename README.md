@@ -48,7 +48,16 @@ Neovim's configurations are located under the following paths, depending on your
 
 ### Install Kickstart
 
-Clone kickstart.nvim:
+#### Recommended Step
+
+[Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repo so that you have your own copy that you can modify, then install by cloning the fork to your machine using one of the commands below, depending on your OS.
+
+> **NOTE**
+> Your fork's url will be something like this: `https://github.com/<your_github_username>/kickstart.nvim.git`
+
+#### Clone kickstart.nvim
+> **NOTE**
+> If following the recommended step above (i.e., forking the repo), replace `nvim-lua` with `<your_github_username>` in the commands below
 
 <details><summary> Linux and Mac </summary>
 
@@ -88,18 +97,6 @@ current plugin status.
 Read through the `init.lua` file in your configuration folder for more
 information about extending and exploring Neovim.
 
-### Getting Started
-
-[The Only Video You Need to Get Started with Neovim](https://youtu.be/m8C0Cq9Uv9o)
-
-### Recommended Steps
-
-[Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repo
-(so that you have your own copy that you can modify) and then install. You
-can install it on your machine using the methods above.
-
-> **NOTE**
-> Your fork's url will be something like this: `https://github.com/<your_github_username>/kickstart.nvim.git`
 
 #### Examples of adding popularly requested plugins
 
@@ -158,6 +155,10 @@ return {
 ```
 
 </details>
+
+### Getting Started
+
+[The Only Video You Need to Get Started with Neovim](https://youtu.be/m8C0Cq9Uv9o)
 
 ### FAQ
 
