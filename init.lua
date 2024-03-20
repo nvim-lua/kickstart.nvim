@@ -385,13 +385,6 @@ require('lazy').setup({
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
           },
-          media_files = {
-            -- filetypes whitelist
-            -- defaults to {"png", "jpg", "mp4", "webm", "pdf"}
-            filetypes = { 'png', 'webp', 'jpg', 'jpeg' },
-            -- find command (defaults to `fd`)
-            find_cmd = 'rg',
-          },
         },
       }
 
@@ -590,7 +583,9 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        -- pyright = {
+        --   filetypes = { 'python' },
+        -- },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -671,11 +666,11 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { 'isort', 'black' },
+        python = { 'isort', 'black' },
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        -- javascript = { { "prettierd", "prettier" } },
+        javascript = { { 'prettierd', 'prettier' } },
       },
     },
   },
@@ -780,6 +775,12 @@ require('lazy').setup({
     config = function()
       require('rose-pine').setup {
         disable_background = true,
+        styles = {
+          bold = true,
+          italic = false,
+        },
+        vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' }),
+        vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' }),
       }
     end,
   },
