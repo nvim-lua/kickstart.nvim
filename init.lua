@@ -430,6 +430,9 @@ end
 
 vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
 
+-- Alias spl for :setlocal spell spelllang=fr_fr
+vim.api.nvim_create_user_command('Spl', function() vim.opt_local.spell = true vim.opt_local.spelllang = 'fr_fr' end, { nargs = 0 })
+
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
