@@ -109,6 +109,8 @@ vim.g.have_nerd_font = true
 -- Make line numbers default
 vim.opt.relativenumber = true
 vim.opt.number = true
+vim.opt.encoding = 'utf-8'
+vim.opt.arabicshape = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
 -- vim.opt.relativenumber = true
