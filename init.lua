@@ -1,91 +1,5 @@
---[[
+--  NOTE: If you experience any errors while trying to install kickstart, run `:checkhealth` for more info
 
-=====================================================================
-==================== READ THIS BEFORE CONTINUING ====================
-=====================================================================
-========                                    .-----.          ========
-========         .----------------------.   | === |          ========
-========         |.-""""""""""""""""""-.|   |-----|          ========
-========         ||                    ||   | === |          ========
-========         ||   KICKSTART.NVIM   ||   |-----|          ========
-========         ||                    ||   | === |          ========
-========         ||                    ||   |-----|          ========
-========         ||:Tutor              ||   |:::::|          ========
-========         |'-..................-'|   |____o|          ========
-========         `"")----------------(""`   ___________      ========
-========        /::::::::::|  |::::::::::\  \ no mouse \     ========
-========       /:::========|  |==hjkl==:::\  \ required \    ========
-========      '""""""""""""'  '""""""""""""'  '""""""""""'   ========
-========                                                     ========
-=====================================================================
-=====================================================================
-
-What is Kickstart?
-
-  Kickstart.nvim is *not* a distribution.
-
-  Kickstart.nvim is a starting point for your own configuration.
-    The goal is that you can read every line of code, top-to-bottom, understand
-    what your configuration is doing, and modify it to suit your needs.
-
-    Once you've done that, you can start exploring, configuring and tinkering to
-    make Neovim your own! That might mean leaving kickstart just the way it is for a while
-    or immediately breaking it into modular pieces. It's up to you!
-
-    If you don't know anything about Lua, I recommend taking some time to read through
-    a guide. One possible example which will only take 10-15 minutes:
-      - https://learnxinyminutes.com/docs/lua/
-
-    After understanding a bit more about Lua, you can use `:help lua-guide` as a
-    reference for how Neovim integrates Lua.
-    - :help lua-guide
-    - (or HTML version): https://neovim.io/doc/user/lua-guide.html
-
-Kickstart Guide:
-
-  TODO: The very first thing you should do is to run the command `:Tutor` in Neovim.
-
-    If you don't know what this means, type the following:
-      - <escape key>
-      - :
-      - Tutor
-      - <enter key>
-
-    (If you already know how the Neovim basics, you can skip this step)
-
-  Once you've completed that, you can continue working through **AND READING** the rest
-  of the kickstart init.lua
-
-  Next, run AND READ `:help`.
-    This will open up a help window with some basic information
-    about reading, navigating and searching the builtin help documentation.
-
-    This should be the first place you go to look when you're stuck or confused
-    with something. It's one of my favorite neovim features.
-
-    MOST IMPORTANTLY, we provide a keymap "<space>sh" to [s]earch the [h]elp documentation,
-    which is very useful when you're not sure exactly what you're looking for.
-
-  I have left several `:help X` comments throughout the init.lua
-    These are hints about where to find more information about the relevant settings,
-    plugins or neovim features used in kickstart.
-
-   NOTE: Look for lines like this
-
-    Throughout the file. These are for you, the reader, to help understand what is happening.
-    Feel free to delete them once you know what you're doing, but they should serve as a guide
-    for when you are first encountering a few different constructs in your nvim config.
-
-If you experience any errors while trying to install kickstart, run `:checkhealth` for more info
-
-I hope you enjoy your Neovim journey,
-- TJ
-
-P.S. You can delete this when you're done too. It's your config now! :)
---]]
-
--- Set <space> as the leader key
--- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -95,13 +9,8 @@ vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
--- NOTE: You can change these options as you wish!
---  For more options, you can see `:help option-list`
-
 -- Make line numbers default
 vim.opt.number = true
--- You can also add relative line numbers, for help with jumping.
---  Experiment for yourself to see if you like it!
 vim.opt.relativenumber = true
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
@@ -113,8 +22,6 @@ vim.opt.mouse = 'a'
 vim.opt.showmode = false
 
 -- Sync clipboard between OS and Neovim.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
 vim.opt.clipboard = 'unnamedplus'
 
 -- Enable break indent
@@ -148,7 +55,7 @@ vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
-vim.opt.cursorline = true
+vim.opt.cursorline = false
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
@@ -160,7 +67,7 @@ vim.opt.scrolloff = 10
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
--- Movj line of code up or down
+-- Move line up or down after highlight
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 
@@ -179,14 +86,14 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
---
+
 --  See `:help wincmd` for a list of all window commands
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
@@ -194,8 +101,9 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- CUSTOM KEYBINDINGS
--- jk to enter normal mode
+-- kj to enter normal mode
 vim.keymap.set('i', 'kj', '<ESC>')
+
 -- Open Netrw
 -- vim.keymap.set('n', '<leader>rw', '<cmd>Ex!<CR>')
 
@@ -206,7 +114,6 @@ vim.keymap.set('n', '<leader>nt', '<cmd>:Neotree<CR>')
 --  See `:help lua-guide-autocommands`
 
 -- Highlight when yanking (copying) text
---  Try it with `yap` in normal mode
 --  See `:help vim.highlight.on_yank()`
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
@@ -217,7 +124,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
---    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
@@ -226,20 +132,41 @@ end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
 -- [[ Configure and install plugins ]]
---
---  To check the current status of your plugins, run
---    :Lazy
---
---  You can press `?` in this menu for help. Use `:q` to close the window
---
---  To update plugins, you can run
---    :Lazy update
---
--- NOTE: Here is where you install your plugins.
 require('lazy').setup({
-  -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   'ThePrimeagen/vim-be-good',
+  {
+    'tjdevries/colorbuddy.nvim',
+    config = function()
+      require('colorbuddy').colorscheme 'tokyonight-night'
+
+      local colorbuddy = require 'colorbuddy'
+      local Color = colorbuddy.Color
+      local Group = colorbuddy.Group
+      local c = colorbuddy.colors
+      local g = colorbuddy.groups
+      local s = colorbuddy.styles
+
+      -- Color.new('white', '#f2e5bc')
+      -- local background_string = '#111111'
+      -- Color.new('background', background_string)
+      -- Color.new('gray0', background_string)
+      --
+      -- Group.new('Normal', c.superwhite, c.gray0)
+
+      -- Group.new('@constant', c.orange, nil, s.none)
+      -- Group.new('@function', c.yellow, nil, s.none)
+      -- Group.new('@function.bracket', g.Normal, g.Normal)
+      -- Group.new('@keyword', c.violet, nil, s.none)
+      -- Group.new('@keyword.faded', g.nontext.fg:light(), nil, s.none)
+      -- Group.new('@property', c.blue)
+      -- Group.new('@variable', c.superwhite, nil)
+      -- Group.new('@variable.builtin', c.purple:light():light(), g.Normal)
+
+      -- I've always liked lua function calls to be blue. I don't know why.
+      -- Group.new('@function.call.lua', c.blue:dark(), nil, nil)
+    end,
+  },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -255,9 +182,9 @@ require('lazy').setup({
     'numToStr/Comment.nvim',
     opts = {
       opleader = {
-        ---[M]ake[C]omment
+        --[M]ake[C]omment
         line = 'mc',
-        ---do block comment
+        -- [M]ake [B]lock comment
         block = 'mb',
       },
     },
@@ -393,12 +320,12 @@ require('lazy').setup({
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
-      --[[
-      vim.keymap.set('n', '<leader>hh', function()
+
+      vim.keymap.set('n', '<leader>ch', function()
         builtin.find_files {
           hidden = true,
         }
-      end, { desc = 'Find files inside hidden folders' }) ]]
+      end, { desc = 'Find files inside hidden folders' })
 
       vim.keymap.set('n', '<leader>en', function()
         local cwd = vim.fn.input 'Enter dir: '
@@ -410,16 +337,16 @@ require('lazy').setup({
 
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      -- vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>gf', builtin.git_files, { desc = '[G]it [F]iles' })
       vim.keymap.set('n', '<leader>gc', builtin.git_commits, { desc = '[G]it [C]ommits' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      -- vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       -- vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       -- vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
       -- vim.keymap.set('n', '<leader>fb', ':Telescope file_browser<CR>', { noremap = true })
 
       -- Slightly advanced example of overriding default behavior and theme
@@ -457,7 +384,13 @@ require('lazy').setup({
 
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim', opts = {
+        notification = {
+          window = {
+            winblend = 0,
+          },
+        },
+      } },
     },
     config = function()
       -- Brief Aside: **What is LSP?**
@@ -779,8 +712,6 @@ require('lazy').setup({
           bold = true,
           italic = false,
         },
-        vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' }),
-        vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' }),
       }
     end,
   },
@@ -839,7 +770,6 @@ require('lazy').setup({
 
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
-    --'nvim-treesitter/nvim-treesitter-context',
     build = ':TSUpdate',
     config = function()
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
@@ -852,19 +782,6 @@ require('lazy').setup({
         highlight = { enable = true },
         indent = { enable = true },
       }
-      --  require('treesitter-context').setup {
-      --    enable = true, -- Enable this plugin
-      --    max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
-      --    min_window_height = 0, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
-      --    line_numbers = true,
-      --    multiline_threshold = 20, -- Maximum number of lines to show for a single context
-      --    trim_scope = 'outer', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
-      --    mode = 'cursor', -- Line used to calculate context. Choices: 'cursor', 'topline'
-      --    separator = nil, -- Separator between context and content. Should be a single character string, like '-'.
-      --    -- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
-      --    zindex = 20, -- The Z-index of the context window
-      --    on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
-      --  }
 
       -- There are additional nvim-treesitter modules that you can use to interact
       -- with nvim-treesitter. You should go explore a few and see what interests you:
@@ -872,6 +789,26 @@ require('lazy').setup({
       --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
       --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+    end,
+  },
+
+  {
+    'nvim-treesitter/nvim-treesitter-context',
+    config = function()
+      require('treesitter-context').setup {
+        enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
+        max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
+        min_window_height = 0, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
+        line_numbers = true,
+        multiline_threshold = 1, -- Maximum number of lines to show for a single context
+        trim_scope = 'outer', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
+        mode = 'cursor', -- Line used to calculate context. Choices: 'cursor', 'topline'
+        -- Separator between context and content. Should be a single character string, like '-'.
+        -- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
+        separator = nil,
+        zindex = 20, -- The Z-index of the context window
+        on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
+      }
     end,
   },
 
