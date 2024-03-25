@@ -1,0 +1,15 @@
+# Remove the line below if you want to inherit .editorconfig settings from higher directories
+root = true
+
+#### Core EditorConfig Options ####
+[*]
+end_of_line = lf
+charset = utf-8
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+tab_width = 4
+trim_trailing_whitespace = true
+
+[*.{yml,yaml,lua,json}]
+indent_size = 2
