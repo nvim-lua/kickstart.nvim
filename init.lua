@@ -196,20 +196,20 @@ vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.expandtab = true
 --
-vim.keymap.set("n", "<leader>v", "<C-v>")
+vim.keymap.set('n', '<leader>v', '<C-v>')
 -- nach komma einen zeilenumruch einfuegen
 vim.keymap.set('n', '<leader>ii', 'f,a<Cr><ESC>')
 vim.keymap.set('n', '<leader>o', 'o<ESC>')
 vim.keymap.set('n', '<leader>O', 'O<ESC>')
-vim.keymap.set("n", "<C-d>", "<C-d>zz")
-vim.keymap.set("n", "<C-u>", "<C-u>zz")
+vim.keymap.set('n', '<C-d>', '<C-d>zz')
+vim.keymap.set('n', '<C-u>', '<C-u>zz')
 -- visual block
-vim.keymap.set("n", "<leader>v", "<C-v>")
+vim.keymap.set('n', '<leader>v', '<C-v>')
 --
-vim.keymap.set("n", "<leader>bn", ":bNext<CR>")
+vim.keymap.set('n', '<leader>bn', ':bNext<CR>')
 -- besten keymaps aller zeiten
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
-vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
+vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -857,8 +857,8 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  { import = 'custom.plugins' },
-  { import = 'custom.functions' },
+  { import = 'private.plugins' },
+  { import = 'private.functions' },
   { import = 'basic.plugins' },
 }, {
   ui = {
