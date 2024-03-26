@@ -552,11 +552,9 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         gopls = {},
-        -- pyright = {},
-        -- intelephense = {},
         phpactor = {},
-        -- rust_analyzer = {},
-        -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
+        
+	-- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
@@ -827,11 +825,16 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information see: :help lazy.nvim-lazy.nvim-structuring-your-plugins
+<<<<<<< HEAD
   { import = 'custom.plugins' },
+=======
+   { import = 'custom.plugins' },
+>>>>>>> 6ecc6f96c43a98f2ed0a64d16d71b5cae8828a54
 }, {})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+<<<<<<< HEAD
 --
 --
 -- Override default Grey Color Line Number with White
@@ -839,3 +842,8 @@ vim.cmd 'highlight LineNr guifg=#ffffff'
 
 -- Hopefully adds Clipboard Support
 vim.o.clipboard = 'unnamedplus'
+=======
+
+-- Override default Grey Color Line Number with White
+vim.cmd 'highlight LineNr guifg=#ffffff'
+>>>>>>> 6ecc6f96c43a98f2ed0a64d16d71b5cae8828a54
