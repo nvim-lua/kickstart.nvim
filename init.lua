@@ -271,37 +271,36 @@ require('lazy').setup({
     end,
   },
 
-  -- NOTE: Plugins can also be configured to run lua code when they are loaded.
-  --
-  -- This is often very useful to both group configuration, as well as handle
-  -- lazy loading plugins that don't need to be loaded immediately at startup.
-  --
-  -- For example, in the following configuration, we use:
-  --  event = 'VeryLazy'
-  --
-  -- which loads which-key after all the UI elements are loaded. Events can be
-  -- normal autocommands events (:help autocomd-events).
-  --
-  -- Then, because we use the `config` key, the configuration only runs
-  -- after the plugin has been loaded:
-  --  config = function() ... end
+    -- NOTE: Plugins can also be configured to run lua code when they are loaded.
+    --
+    -- This is often very useful to both group configuration, as well as handle
+    -- lazy loading plugins that don't need to be loaded immediately at startup.
+    --
+    -- For example, in the following configuration, we use:
+    --  event = 'VeryLazy'
+    --
+    -- which loads which-key after all the UI elements are loaded. Events can be
+    -- normal autocommands events (:help autocomd-events).
+    --
+    -- Then, because we use the `config` key, the configuration only runs
+    -- after the plugin has been loaded:
+    --  config = function() ... end
+    { -- Useful plugin to show you pending keybinds.
+      'folke/which-key.nvim',
+      event = 'VeryLazy', -- Sets the loading event to 'VeryLazy'
+      config = function() -- This is the function that runs, AFTER loading
+        require('which-key').setup()
 
-  { -- Useful plugin to show you pending keybinds.
-    'folke/which-key.nvim',
-    event = 'VeryLazy', -- Sets the loading event to 'VeryLazy'
-    config = function() -- This is the function that runs, AFTER loading
-      require('which-key').setup()
-
-      -- Document existing key chains
-      require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-      }
-    end,
-  },
+        -- Document existing key chains
+        require('which-key').register {
+          ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
+          ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
+          ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
+          ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
+          ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+        }
+      end,
+    },
 
   -- NOTE: Plugins can specify dependencies.
   --
@@ -553,8 +552,8 @@ require('lazy').setup({
         -- clangd = {},
         gopls = {},
         phpactor = {},
-        
-	-- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
+
+        -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
@@ -825,25 +824,17 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information see: :help lazy.nvim-lazy.nvim-structuring-your-plugins
-<<<<<<< HEAD
   { import = 'custom.plugins' },
-=======
-   { import = 'custom.plugins' },
->>>>>>> 6ecc6f96c43a98f2ed0a64d16d71b5cae8828a54
 }, {})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
-<<<<<<< HEAD
---
---
+
 -- Override default Grey Color Line Number with White
 vim.cmd 'highlight LineNr guifg=#ffffff'
 
 -- Hopefully adds Clipboard Support
 vim.o.clipboard = 'unnamedplus'
-=======
 
 -- Override default Grey Color Line Number with White
 vim.cmd 'highlight LineNr guifg=#ffffff'
->>>>>>> 6ecc6f96c43a98f2ed0a64d16d71b5cae8828a54
