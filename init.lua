@@ -120,6 +120,7 @@ vim.opt.breakindent = true
 
 -- Save undo history
 vim.opt.undofile = true
+vim.opt.swapfile = false
 
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 vim.opt.ignorecase = true
@@ -153,6 +154,14 @@ vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
+
+-- Tab set up
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 4
+vim.opt.smartindent = true
+vim.opt.colorcolumn = '80'
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
