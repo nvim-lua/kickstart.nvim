@@ -98,7 +98,7 @@ nvim
 ```
 
 That's it! Lazy will install all the plugins you have. Use `:Lazy` to view
-current plugin status.
+current plugin status. Hit `q` to close the window.
 
 Read through the `init.lua` file in your configuration folder for more
 information about extending and exploring Neovim.
