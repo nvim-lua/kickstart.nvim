@@ -16,7 +16,7 @@ return {
       line_height = '124%',
       line_numbers = true,
       theme = 'verminal',
-      titlebar = 'Made with carbon-now.nvim',
+      titlebar = 'VIM 🚀',
       watermark = false,
       width = '680',
       window_theme = 'sharp',
