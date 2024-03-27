@@ -313,8 +313,8 @@ require('lazy').setup({
       end,
     },
   },
-
-  -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
+  --
+  -- NOTE: Plugins can also be configured to run lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
   -- lazy loading plugins that don't need to be loaded immediately at startup.
