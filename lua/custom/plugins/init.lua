@@ -2,6 +2,24 @@
 --  I promise not to create any merge conflicts in this directory :)
 --
 -- See the kickstart.nvim README for more information
+local function do_custom_commit(prefix)
+  local ok, _ = pcall(vim.cmd, 'G commit -a')
+  if ok then
+    local branch = vim.fn.system "git branch --show-current | tr -d '\n'"
+    local ticket = branch:match '([A-Z]+%-%d+)'
+    vim.cmd 'startinsert'
+    if not ticket then
+      vim.api.nvim_put({ string.format('%s: ', prefix) }, 'c', true, true)
+      return
+    end
+    if prefix == '' then
+      vim.api.nvim_put({ string.format('%s: ', ticket) }, 'c', true, true)
+      return
+    end
+    vim.api.nvim_put({ string.format('%s(%s): ', prefix, ticket) }, 'c', true, true)
+  end
+end
+
 return {
   {
     'christoomey/vim-tmux-navigator',
@@ -140,17 +158,23 @@ return {
     config = function()
       vim.keymap.set('n', '<leader>gb', '<Cmd>Telescope git_branches<CR>', { desc = '[G]it [B]ranches' })
       vim.keymap.set('n', '<leader>gs', '<Cmd>Git<CR>', { desc = '[G]it [S]tatus' })
-      vim.keymap.set('n', '<leader>gc', function()
-        local ok, _ = pcall(vim.cmd, 'G commit -a')
-        if ok then
-          local branch = vim.fn.system "git branch --show-current | tr -d '\n'"
-          local ticket = branch:match '([A-Z]+%-%d+)'
-          vim.cmd 'startinsert'
-          vim.api.nvim_put({ string.format('feat(%s): ', ticket) }, 'c', true, true)
-        end
-      end, { desc = '[G]it [C]ommit' })
+      vim.keymap.set('n', '<leader>gcf', function()
+        do_custom_commit 'feat'
+      end, { desc = '[G]it [C]ommit [F]eat' })
+      vim.keymap.set('n', '<leader>gcc', function()
+        do_custom_commit 'chore'
+      end, { desc = '[G]it [C]ommit [C]hore' })
+      vim.keymap.set('n', '<leader>gcr', function()
+        do_custom_commit 'refactor'
+      end, { desc = '[G]it [C]ommit [R]efactor' })
+      vim.keymap.set('n', '<leader>gce', function()
+        do_custom_commit ''
+      end, { desc = '[G]it [C]ommit [E]mpty' })
+
       vim.keymap.set('n', '<leader>gp', '<Cmd>Git push<CR>', { desc = '[G]it [P]ush' })
       vim.keymap.set('n', '<leader>gf', '<Cmd>Git pull<CR>', { desc = '[G]it [F]pull' })
+      vim.keymap.set('n', '<leader>gd', '<Cmd>Git diff<CR>', { desc = '[G]it [D]iff' })
+      vim.keymap.set('n', '<leader>gl', '<Cmd>Git log<CR>', { desc = '[G]it [L]og' })
     end,
   },
   {

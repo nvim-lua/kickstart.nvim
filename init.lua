@@ -546,7 +546,7 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
         pylsp = {
           settings = {
             pylsp = {
