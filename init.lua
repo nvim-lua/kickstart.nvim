@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.opt.number = true
 -- You can also add relative line numbers, for help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -162,8 +162,12 @@ vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
+vim.keymap.set('n', '[d', function()
+  vim.diagnostic.goto_prev { float = { source = true } }
+end, { desc = 'Go to previous [D]iagnostic message' })
+vim.keymap.set('n', ']d', function()
+  vim.diagnostic.goto_next { float = { source = true } }
+end, { desc = 'Go to next [D]iagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
@@ -320,6 +324,7 @@ require('lazy').setup({
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+      { 'smartpde/telescope-recent-files' },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -375,7 +380,8 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      -- vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader><leader>', "<cmd>lua require('telescope').extensions.recent_files.pick()<CR>", { desc = '[ ] Recent files' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -542,6 +548,21 @@ require('lazy').setup({
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
+        pylsp = {
+          settings = {
+            pylsp = {
+              configurationSources = { 'flake8' },
+              plugins = {
+                mypy = { enabled = true },
+                black = { enabled = true },
+                flake8 = { enabled = true },
+                pycodestyle = { enabled = false },
+                rope_autoimport = { enabled = true },
+                rope_completion = { enabled = true },
+              },
+            },
+          },
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -575,6 +596,34 @@ require('lazy').setup({
       --
       --  You can press `g?` for help in this menu
       require('mason').setup()
+
+      -- PyLSP config: install additional plugins
+      local pylsp = require('mason-registry').get_package 'python-lsp-server'
+      pylsp:on('install:success', function()
+        local function mason_package_path(package)
+          local path = vim.fn.resolve(vim.fn.stdpath 'data' .. '/mason/packages/' .. package)
+          return path
+        end
+
+        local path = mason_package_path 'python-lsp-server'
+        local command = path .. '/venv/bin/pip'
+        local args = {
+          'install',
+          'pylsp-rope',
+          'python-lsp-black',
+          'pyflakes',
+          'python-lsp-ruff',
+          'sqlalchemy-stubs',
+        }
+
+        require('plenary.job')
+          :new({
+            command = command,
+            args = args,
+            cwd = path,
+          })
+          :start()
+      end)
 
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
@@ -616,7 +665,7 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = { 'isort', 'black' },
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
@@ -837,7 +886,7 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {
   ui = {
     -- If you have a Nerd Font, set icons to an empty table which will use the
