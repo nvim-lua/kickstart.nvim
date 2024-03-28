@@ -9,7 +9,7 @@ vim.keymap.set('n', '<leader>is', function()
 	local modified = vim.api.nvim_get_option_value("modified", { buf = bufnr })
 
 	if modified then
-		print('*** Save your changes first!' ***)
+		print('*** Save your changes first! ***')
 		return
 	end
 	local file_name = vim.api.nvim_buf_get_name(0) -- Get file name of file in current buffer
