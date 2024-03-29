@@ -19,7 +19,6 @@
 ========                                                     ========
 =====================================================================
 =====================================================================
-
 What is Kickstart?
 
   Kickstart.nvim is *not* a distribution.
@@ -89,6 +88,9 @@ P.S. You can delete this when you're done too. It's your config now! :)
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+
+-- do not allow swap files
+vim.opt.swapfile = false
 
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = false
@@ -567,6 +569,10 @@ require('lazy').setup({
             usePlaceholders = true,
           },
         },
+        html = {
+          cmd = { 'vscode-html-language-server', '--stdio' },
+          filetypes = { 'html', 'templ' },
+        },
         -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -797,14 +803,15 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
-    -- 'folke/tokyonight.nvim',
-    'sainnhe/gruvbox-material',
+    'folke/tokyonight.nvim',
+    -- 'sainnhe/gruvbox-material',
     priority = 1000, -- make sure to load this before all the other start plugins
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'gruvbox-material'
+      vim.cmd.colorscheme 'tokyonight-storm'
+      -- vim.cmd.colorscheme 'gruvbox-material'
 
       -- You can configure highlights by doing something like
       vim.cmd.hi 'Comment gui=none'
@@ -812,7 +819,7 @@ require('lazy').setup({
   },
 
   -- Highlight todo, notes, etc in comments
-  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = true } },
 
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
