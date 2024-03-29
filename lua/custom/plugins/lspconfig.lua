@@ -73,6 +73,9 @@ return { -- LSP Configuration & Plugins
         --  the definition of its *type*, not where it was *defined*.
         map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
 
+        -- Show signature help
+        -- vim.keymap.set('i', '<C-s>', require 'telescope.builtin', { buffer = event.buf, desc = 'LSP: signature help' })
+
         -- Fuzzy find all the symbols in your current document.
         --  Symbols are things like variables, functions, types, etc.
         map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
@@ -136,7 +139,19 @@ return { -- LSP Configuration & Plugins
     local servers = {
       -- clangd = {},
       -- gopls = {},
-      pyright = {},
+      pyright = {
+        settings = {
+          python = {
+            analysis = {
+              useLibraryCodeForTypes = true,
+              diagnosticSeverityOverrides = {
+                reportUnusedVariable = 'warning', -- or anything
+              },
+              typeCheckingMode = 'off',
+            },
+          },
+        },
+      },
       -- rust_analyzer = {},
       -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
       --
