@@ -289,6 +289,9 @@ vim.o.rnu = true
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
+-- Don't show the mode, since it's already in the status line
+vim.opt.showmode = false
+
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
@@ -330,7 +333,7 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 -- Map for copy/yank to clipboard
 vim.keymap.set('v', '<leader>cp', '"+y')
 
--- Diagnostic keymaps
+-- Diagnostic keymap
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
