@@ -502,7 +502,7 @@ require('lazy').setup({
           map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
           -- Formats the current buffer
-          map('<space>f', function()
+          map('<leader>f', function()
             vim.lsp.buf.format { async = true }
           end, '[F]ormat code')
 
