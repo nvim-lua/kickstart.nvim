@@ -167,9 +167,7 @@ return {
       vim.keymap.set('n', '<leader>gcr', function()
         do_custom_commit 'refactor'
       end, { desc = '[G]it [C]ommit [R]efactor' })
-      vim.keymap.set('n', '<leader>gce', function()
-        do_custom_commit ''
-      end, { desc = '[G]it [C]ommit [E]mpty' })
+      vim.keymap.set('n', '<leader>gce', '<Cmd>Git commit -a<CR>', { desc = '[G]it [C]ommit [E]mpty' })
 
       vim.keymap.set('n', '<leader>gp', '<Cmd>Git push<CR>', { desc = '[G]it [P]ush' })
       vim.keymap.set('n', '<leader>gf', '<Cmd>Git pull<CR>', { desc = '[G]it [F]pull' })
