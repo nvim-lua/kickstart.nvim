@@ -864,6 +864,7 @@ require('lazy').setup({
   { import = 'private.functions' },
   { import = 'basic.plugins' },
   { import = 'linter.plugins' },
+  { import = 'functions' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
