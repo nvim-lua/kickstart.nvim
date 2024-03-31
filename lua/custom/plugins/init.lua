@@ -195,6 +195,7 @@ return {
           },
           shortcut = {},
           project = { enable = false },
+          mru = { cwd_only = true },
           footer = {
             ' ',
             ' 👾 github.com/feakuru 👾 ',
