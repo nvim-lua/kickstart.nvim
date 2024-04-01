@@ -171,6 +171,13 @@ vim.keymap.set('n', '<C-n>', '<Cmd> Neotree toggle<CR>')
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+-- Comment
+vim.keymap.set('n', '<leader>/', function()
+  require('Comment.api').toggle.linewise.current()
+end, { desc = 'Comment Toggle' })
+
+vim.keymap.set('v', '<leader>/', "<ESC><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>", { desc = 'Comment Toggle' })
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
@@ -397,9 +404,12 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      -- NOTE: Git Telescope Mappings
+      vim.keymap.set('n', '<leader>cm', '<cmd>Telescope git_commits<CR>', { desc = 'Telescope Git commits' })
+      vim.keymap.set('n', '<leader>gt', '<cmd>Telescope git_status<CR>', { desc = 'Telescope Git status' })
 
       -- Slightly advanced example of overriding default behavior and theme
-      vim.keymap.set('n', '<leader>/', function()
+      vim.keymap.set('n', '<leader>fz', function()
         -- You can pass additional configuration to telescope to change theme, layout, etc.
         builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
           winblend = 10,
