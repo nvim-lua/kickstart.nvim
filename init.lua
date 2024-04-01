@@ -852,6 +852,14 @@ require('lazy').setup({
       vim.cmd.hi 'Comment gui=none'
     end,
   },
+  {
+    'RRethy/base16-nvim',
+    name = 'base16',
+    priority = 1000,
+    init = function()
+      vim.cmd.hi 'Comment gui=none'
+    end,
+  },
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = true } },
 
@@ -964,7 +972,8 @@ require('lazy').setup({
 })
 
 -- NOTE: color scheme
-vim.cmd.colorscheme 'gruvbox-baby'
+-- vim.cmd.colorscheme 'gruvbox-baby'
+vim.cmd.colorscheme 'base16-gruvbox-material-dark-hard'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
