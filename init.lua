@@ -585,7 +585,6 @@ require('lazy').setup({
                 unusedparams = true,
                 shadow = true,
               },
-              staticcheck = true,
             },
           },
           init_option = {
