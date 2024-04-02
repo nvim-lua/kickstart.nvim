@@ -818,7 +818,10 @@ require('lazy').setup({
     end,
   },
   {
-      'sebdah/vim-delve',
+    'sebdah/vim-delve',
+  },
+  {
+    'github/copilot.vim',
   },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
