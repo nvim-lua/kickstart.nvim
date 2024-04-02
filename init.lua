@@ -614,6 +614,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        go = { 'golines' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -865,5 +866,8 @@ require('lazy').setup({
   },
 })
 
+require('conform').formatters.golines = {
+  prepend_args = { '-w -m 128 --no-reformat-tags' },
+}
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
