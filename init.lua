@@ -184,16 +184,36 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagn
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
--- Tabby keymaps
-vim.api.nvim_set_keymap('n', '<leader>ta', ':$tabnew<CR>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>tc', ':tabclose<CR>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>to', ':tabonly<CR>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>tn', ':tabn<CR>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>tp', ':tabp<CR>', { noremap = true })
--- move current tab to previous position
-vim.api.nvim_set_keymap('n', '<leader>tmp', ':-tabmove<CR>', { noremap = true })
--- move current tab to next position
-vim.api.nvim_set_keymap('n', '<leader>tmn', ':+tabmove<CR>', { noremap = true })
+local keymap = vim.keymap
+local opts = { noremap = true, silent = true }
+-- New tab
+-- Split window
+keymap.set('n', 'ss', ':split<Return>', opts)
+keymap.set('n', 'sv', ':vsplit<Return>', opts)
+-- Resize window
+keymap.set('n', '<C-w><left>', '<C-w><')
+keymap.set('n', '<C-w><right>', '<C-w>>')
+keymap.set('n', '<C-w><up>', '<C-w>+')
+keymap.set('n', '<C-w><down>', '<C-w>-')
+
+-- NOTE: bufferline keymap
+
+--NOTE: " the order of buffers :bnext and :bprevious will not respect the custom ordering
+keymap.set('n', '<tab>', ':BufferLineCycleNext<CR>', opts)
+keymap.set('n', '<s-tab>', ':BufferLineCyclePrev<CR>', opts)
+-- " These commands will move the current buffer backwards or forwards in the bufferline
+-- nnoremap <silent><mymap> :BufferLineMoveNext<CR>
+-- nnoremap <silent><mymap> :BufferLineMovePrev<CR>
+--
+-- " These commands will move the current buffer to the first or the last position in the bufferline
+-- nnoremap <silent><mymap> :lua require'bufferline'.move_to(1)<CR>
+-- nnoremap <silent><mymap> :lua require'bufferline'.move_to(-1)<CR>
+--
+-- " These commands will sort buffers by directory, language, or a custom criteria
+-- nnoremap <silent>be :BufferLineSortByExtension<CR>
+-- nnoremap <silent>bd :BufferLineSortByDirectory<CR>
+-- nnoremap <silent><mymap> :lua require'bufferline'.sort_by(function (buf_a, buf_b) return buf_a.id < buf_b.id end)<CR>
+--
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -407,6 +427,8 @@ require('lazy').setup({
       -- NOTE: Git Telescope Mappings
       vim.keymap.set('n', '<leader>cm', '<cmd>Telescope git_commits<CR>', { desc = 'Telescope Git commits' })
       vim.keymap.set('n', '<leader>gt', '<cmd>Telescope git_status<CR>', { desc = 'Telescope Git status' })
+      -- NOTE: TodoTelescope
+      vim.keymap.set('n', '<leader>tt', '<cmd>TodoTelescope<CR>', { desc = 'TodoTelescope list' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>fz', function()
