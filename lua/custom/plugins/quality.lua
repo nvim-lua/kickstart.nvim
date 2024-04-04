@@ -122,4 +122,23 @@ return {
       require('rose-pine').setup {}
     end,
   },
+  {
+    -- Set lualine as statusline
+    'nvim-lualine/lualine.nvim',
+    -- See `:help lualine.txt`
+    opts = {
+      options = {
+        icons_enabled = false,
+        theme = 'powerline_dark',
+        component_separators = { left = '', right = '' },
+        section_separators = { left = '', right = '' },
+      },
+    },
+  },
+  {
+    'nvim-tree/nvim-web-devicons',
+    setup = function()
+      require('nvim-web-devicons').setup {}
+    end,
+  },
 }
