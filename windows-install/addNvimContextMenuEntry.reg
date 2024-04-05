@@ -1,0 +1,9 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\*\shell\Open In NVim]
+"icon"="C:\\Program Files\\Neovim\\bin\\nvim.ico"
+"position"="top"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\*\shell\Open In NVim\command]
+@="C:\\Program Files\\Neovim\\bin\\nvim-qt.exe %1"
+
