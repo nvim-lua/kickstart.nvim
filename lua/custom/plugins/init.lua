@@ -216,4 +216,7 @@ return {
     end,
     dependencies = { { 'nvim-tree/nvim-web-devicons' } },
   },
+  {
+    'ThePrimeagen/vim-be-good',
+  },
 }
