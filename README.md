@@ -21,9 +21,6 @@ If you are experiencing issues, please make sure you have the latest versions.
 
 ### Install External Dependencies
 
-> **NOTE**
-> [Backup](#FAQ) your previous configuration (if any exists)
-
 External Requirements:
 - Basic utils: `git`, `make`, `unzip`, C Compiler (`gcc`)
 - [ripgrep](https://github.com/BurntSushi/ripgrep#installation)
@@ -38,6 +35,11 @@ External Requirements:
 > See [Install Recipes](#Install-Recipes) for additional Windows and Linux specific notes
 > and quick install snippets
 
+### Install Kickstart
+
+> **NOTE**
+> [Backup](#FAQ) your previous configuration (if any exists)
+
 Neovim's configurations are located under the following paths, depending on your OS:
 
 | OS | PATH |
@@ -46,15 +48,11 @@ Neovim's configurations are located under the following paths, depending on your
 | Windows (cmd)| `%userprofile%\AppData\Local\nvim\` |
 | Windows (powershell)| `$env:USERPROFILE\AppData\Local\nvim\` |
 
-### Install Kickstart
-
 #### Recommended Step
 
 [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repo
 so that you have your own copy that you can modify, then install by cloning the
 fork to your machine using one of the commands below, depending on your OS.
-
-
 
 > **NOTE**
 > Your fork's url will be something like this:
