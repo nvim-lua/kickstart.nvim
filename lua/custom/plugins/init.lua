@@ -176,6 +176,16 @@ return {
     end,
   },
   {
+    'LunarVim/breadcrumbs.nvim',
+    dependencies = {
+      { 'SmiteshP/nvim-navic' },
+    },
+    config = function()
+      require('nvim-navic').setup { lsp = { auto_attach = true, preference = { 'pyright' } } }
+      require('breadcrumbs').setup()
+    end,
+  },
+  {
     'github/copilot.vim',
   },
   {
