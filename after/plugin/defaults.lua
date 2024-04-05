@@ -15,6 +15,7 @@ set.writebackup = false
 
 vim.o.inccommand = "nosplit"
 
+
 -- prev/next tab
 vim.keymap.set('n', 'H', 'gT', { desc = 'Tab Left' })
 vim.keymap.set('n', 'L', 'gt', { desc = 'Tab Right' })
@@ -34,6 +35,30 @@ vim.keymap.set('n', '<leader>sj', require('telescope.builtin').jumplist, { desc 
 vim.keymap.set('n', '<leader>sj', require('telescope.builtin').jumplist, { desc = '[S]earch [J]umplist' })
 vim.keymap.set('n', '<leader>ss', require('telescope.builtin').git_status, { desc = '[S]earch [S]tatus' })
 vim.keymap.set('n', '<leader>sm', require('telescope.builtin').marks, { desc = '[S]earch [M]arks' })
+
+-- Open file in vscode, for WCA and GPT stuff
+vim.api.nvim_create_user_command(
+  'OpenInVSCode',
+  function(opts)
+    -- Using vim.fn.expand('%') to get the current file path
+    local filepath = vim.fn.expand('%:p')     -- ':p' expands to full path
+    -- The command to open VS Code with the current file
+    os.execute('code ' .. filepath)
+  end,
+  { desc = 'Open the current file in Visual Studio Code' }
+)
+
+-- local original_handler = vim.lsp.handlers["textDocument/definition"]
+-- vim.lsp.handlers["textDocument/definition"] = function(err, result, ctx, config)
+--     if result and vim.tbl_islist(result) and #result > 1 then
+--         -- This handles multiple definitions. For example, jump to the first definition:
+--         original_handler(err, {result[1]}, ctx, config)
+--     else
+--         -- Call the original handler otherwise
+--         original_handler(err, result, ctx, config)
+--     end
+-- end
+-- vim.keymap.set('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
 
 -- copilot
 -- vim.g.copilot_no_tab_map = "v:true"

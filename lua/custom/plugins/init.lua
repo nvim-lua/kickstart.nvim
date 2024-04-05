@@ -139,6 +139,9 @@ return {
           null_ls.builtins.diagnostics.eslint_d.with({
             method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
           }),
+          null_ls.builtins.diagnostics.stylelint.with({
+            filetypes = { "scss", "css" },
+          }),
           null_ls.builtins.formatting.prettierd,
         },
       })
