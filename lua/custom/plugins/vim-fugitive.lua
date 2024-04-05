@@ -1,0 +1,5 @@
+return {
+  {
+    'tpope/vim-fugitive',
+  },
+}
