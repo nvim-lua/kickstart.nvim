@@ -84,11 +84,11 @@ I hope you enjoy your Neovim journey,
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
 
-require 'lua/custom/config/global'
-require 'lua/custom/config/options'
-require 'lua/custom/config/keymaps'
-require 'lua/custom/config/api'
-require 'lua/custom/config/filetypes'
+require 'custom.config.global'
+require 'custom.config.options'
+require 'custom.config.keymaps'
+require 'custom.config.api'
+require 'custom.config.filetypes'
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
