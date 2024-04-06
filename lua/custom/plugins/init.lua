@@ -14,6 +14,7 @@ return {
       vim.keymap.set({ 'n' }, '<leader>tt', '<cmd>Tagbar<CR>', { desc = '[T]oggle [T]agbar' })
     end,
   },
+
   {
     'windwp/nvim-ts-autotag',
     ft = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'html', 'markdown' },
@@ -21,8 +22,4 @@ return {
       require('nvim-ts-autotag').setup()
     end,
   },
-
-  --Terminal
-  --
-  -- { 'akinsho/toggleterm.nvim', version = '*', config = true },
 }

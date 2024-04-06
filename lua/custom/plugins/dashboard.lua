@@ -14,6 +14,16 @@ return {
           {
             icon = '󰊳 ',
             icon_hl = 'group',
+            desc = 'Telescope find files',
+            desc_hl = 'group',
+            key = 'f',
+            key_hl = 'group',
+            key_format = ' [%s]', -- `%s` will be substituted with value of `key`
+            action = ':Telescope find_files',
+          },
+          {
+            icon = '󰊳 ',
+            icon_hl = 'group',
             desc = 'Open Harpoon',
             desc_hl = 'group',
             key = 'h',
@@ -22,16 +32,6 @@ return {
             action = function()
               harpoon.ui:toggle_quick_menu(harpoon:list())
             end,
-          },
-          {
-            icon = '󰊳 ',
-            icon_hl = 'group',
-            desc = 'Telescope find files',
-            desc_hl = 'group',
-            key = 'f',
-            key_hl = 'group',
-            key_format = ' [%s]', -- `%s` will be substituted with value of `key`
-            action = ':Telescope find_files',
           },
           {
             icon = '󰊳 ',
