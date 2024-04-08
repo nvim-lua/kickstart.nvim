@@ -1,0 +1,1 @@
+return 'tpope/vim-sleuth'
