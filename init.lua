@@ -20,7 +20,7 @@ vim.opt.rtp:prepend(lazypath)
 --  To update plugins, you can run
 --    :Lazy update
 require('lazy').setup({
-  require 'kickstart.plugins',
+  { import = 'kickstart.plugins' },
   { import = 'custom.plugins' },
 }, {
   ui = {
