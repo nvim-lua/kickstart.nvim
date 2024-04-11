@@ -903,6 +903,7 @@ require('lazy').setup({
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
 <<<<<<< HEAD
+<<<<<<< HEAD
       vim.cmd.colorscheme 'monokai-pro'
 
       -- You can configure highlights by doing something like:
@@ -910,6 +911,15 @@ require('lazy').setup({
 =======
       vim.cmd.colorscheme 'tokyonight-night'
 >>>>>>> ebca680 (perf: load tokyonight.nvim in the intended way (#1360))
+=======
+      vim.cmd.colorscheme 'tokyonight-night'
+=======
+      vim.cmd.colorscheme 'monokai-pro'
+
+      -- You can configure highlights by doing something like:
+      vim.cmd.hi 'Comment gui=none'
+>>>>>>> 9904631 (Feat: added hardtime)
+>>>>>>> 3ddf1d1 (upstream changes)
     end,
   },
 
@@ -996,6 +1006,8 @@ require('lazy').setup({
   -- require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -1009,6 +1021,8 @@ require('lazy').setup({
   -- Or use telescope!
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
   -- you can continue same window with `<space>sr` which resumes last telescope search
+  --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
+  { import = 'custom.plugins' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
