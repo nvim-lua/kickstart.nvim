@@ -92,16 +92,6 @@ vim.g.maplocalleader = ' '
 
 vim.cmd [[command! -nargs=0 Q :q]]
 
--- Define a function to navigate by paragraph without affecting the jump list
-local function navigateByParagraph(direction)
-  -- Send the movement command with 'keepjumps' prefix
-  vim.api.nvim_feedkeys(':keepjumps ' .. direction, 'n', true)
-end
-
--- Define mappings to navigate by paragraph
-vim.api.nvim_set_keymap('n', '{', ':lua navigateByParagraph("{")<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '}', ':lua navigateByParagraph("}")<CR>', { noremap = true, silent = true })
-
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
