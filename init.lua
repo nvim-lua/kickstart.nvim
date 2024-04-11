@@ -376,8 +376,15 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
-      -- my own keymaps:
-      vim.keymap.set('n', '<C-e>', '<Cmd>Neotree toggle<CR>')
+      -- Toggleterm Plugin
+      vim.keymap.set('n', '<leader>tt', '<Cmd>ToggleTerm direction="float"<CR>', { desc = '[T]oggle [T]erminal' })
+
+      -- Barbar Plugin
+      vim.keymap.set('n', '<leader>tn', '<Cmd>BufferNext<CR>', { desc = '[N]ext Tab' })
+      vim.keymap.set('n', '<leader>tp', '<Cmd>BufferPrevious<CR>', { desc = '[P]revious Tab' })
+      -- Neotree:
+      vim.keymap.set('n', '<leader>e', '<Cmd>Neotree toggle<CR>')
+      vim.keymap.set('n', '<leader>er', '<Cmd>Neotree reveal<CR>')
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
