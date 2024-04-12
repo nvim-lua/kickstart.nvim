@@ -7,6 +7,11 @@ return {
     },
     init = function()
       vim.g.barbar_auto_setup = false
+      -- Barbar Plugin
+      vim.keymap.set('n', '<leader>tn', '<Cmd>BufferNext<CR>', { desc = '[N]ext Tab' })
+      vim.keymap.set('n', '<leader>tp', '<Cmd>BufferPrevious<CR>', { desc = '[P]revious Tab' })
+      vim.keymap.set('n', '<C-q>', '<Cmd>BufferClose<CR>')
+      vim.keymap.set('n', '<C-p>', '<Cmd>BufferPick<CR>')
     end,
     opts = {
       -- lazy.nvim will automatically call setup for you. put your options here, anything missing will use the default:
