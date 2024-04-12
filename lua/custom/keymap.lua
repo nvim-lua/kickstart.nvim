@@ -29,12 +29,12 @@ vim.keymap.set('n', '<leader>m', ':make <CR>', { desc = '[M]ake' })
 vim.keymap.set('n', '<leader>su', require('telescope').extensions.undo.undo, { desc = '[S]earch [U]ndo' })
 
 -- Compile markdown to html with pandoc
-vim.keymap.set(
-  'n',
-  '<C-H>',
-  ":! pandoc '%:p' -o /tmp/'%:p:t'.html --template=easy_template.html --toc && /mnt/c/Program\\  Files/Mozilla\\ Firefox/ /tmp/'%:p:t'.html &<CR><CR>",
-  { desc = 'Build [M]arkdown to HTML' }
-)
+-- vim.keymap.set(
+--   'n',
+--   '<C-H>',
+--   ":! pandoc '%:p' -o /tmp/'%:p:t'.html --template=easy_template.html --toc && /mnt/c/Program\\  Files/Mozilla\\ Firefox/ /tmp/'%:p:t'.html &<CR><CR>",
+--   { desc = 'Build [M]arkdown to HTML' }
+-- )
 
 -- Spectre
 vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").toggle()<CR>', {

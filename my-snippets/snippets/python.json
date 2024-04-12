@@ -1,0 +1,9 @@
+{
+	"# type: ignore": {
+		"prefix": "ti",
+		"body": [
+			"  # type: ignore"
+		],
+		"description": "Insert  # type: ignore"
+	}
+}
