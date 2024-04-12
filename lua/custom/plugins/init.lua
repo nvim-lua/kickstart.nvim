@@ -11,4 +11,5 @@ return {
       vim.cmd.colorscheme 'moonfly'
     end,
   },
+  { "nvim-neotest/nvim-nio" }
 }
