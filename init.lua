@@ -93,13 +93,16 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = false
 
+-- disable zig auto format
+vim.g.zig_fmt_autosave = 0
+
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
 -- Make line numbers default
--- vim.opt.number = true
+vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
 vim.opt.relativenumber = true
