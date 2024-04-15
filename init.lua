@@ -646,7 +646,7 @@ require('lazy').setup({
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        json = { 'prettier' },
+        json = { 'prettier', 'prettierd' },
       },
     },
   },
@@ -902,6 +902,7 @@ require('lazy').setup({
       vim.g['pencil#wrapModeDefault'] = 'soft'
     end,
   },
+  { 'christoomey/vim-tmux-navigator' },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
