@@ -273,3 +273,10 @@ sudo dnf install -y gcc make git ripgrep fd-find neovim
 ```
 </details>
 
+<details><summary>Arch Install Steps</summary>
+
+```
+sudo pacman -S --noconfirm gcc make git ripgrep fd neovim
+```
+</details>
+
