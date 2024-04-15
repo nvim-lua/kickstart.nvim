@@ -277,7 +277,19 @@ require('lazy').setup({
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
-      require('which-key').setup()
+      require('which-key').setup({
+        -- some features of which key prevent normal functioning of the key
+        -- this is a bug, so we will disable the problematic features.
+        -- which-key is very useful for those new to vim motions, so it is still included.
+        plugins = {
+          -- this will currently prevent the " keybind from working in normal mode.
+          registers = false, -- shows your registers on " in NORMAL or <C-r> in INSERT mode
+          presets = {
+            -- this will currently prevent the <C-w> keybinds from working in normal mode.
+            windows = false,     -- default bindings on <c-w>
+          },
+        },
+      })
 
       -- Document existing key chains
       require('which-key').register {
