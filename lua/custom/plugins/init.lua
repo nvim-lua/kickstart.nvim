@@ -43,8 +43,11 @@ return {
     },
     config = function()
       require('nvim-tree').setup {
-        vim.keymap.set('n', '<leader>tt', ':NvimTreeToggle\n', { desc = '[T]oggle NVim[T]ree' }),
+        update_focused_file = {
+          enable = true,
+        },
       }
+      vim.keymap.set('n', '<leader>tt', ':NvimTreeToggle\n', { desc = '[T]oggle NVim[T]ree' })
     end,
   },
   {
