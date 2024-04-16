@@ -184,6 +184,12 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+if vim.lsp.inlay_hint then
+  vim.keymap.set('n', '<leader>ih', function()
+    vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled(0))
+  end, { desc = 'Toggle [I]nlay [H]ints' })
+end
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -404,6 +410,9 @@ require('lazy').setup {
 
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
+    opts = {
+      inlay_hints = { enabled = true },
+    },
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for neovim
       'williamboman/mason.nvim',
@@ -545,7 +554,30 @@ require('lazy').setup {
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {},
+        tsserver = {
+          javascript = {
+            inlayHints = {
+              includeInlayEnumMemberValueHints = true,
+              includeInlayFunctionLikeReturnTypeHints = true,
+              includeInlayFunctionParameterTypeHints = true,
+              includeInlayParameterNameHints = 'all',
+              includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+              includeInlayPropertyDeclarationTypeHints = true,
+              includeInlayVariableTypeHints = true,
+            },
+          },
+          typescript = {
+            inlayHints = {
+              includeInlayEnumMemberValueHints = true,
+              includeInlayFunctionLikeReturnTypeHints = true,
+              includeInlayFunctionParameterTypeHints = true,
+              includeInlayParameterNameHints = 'all',
+              includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+              includeInlayPropertyDeclarationTypeHints = true,
+              includeInlayVariableTypeHints = true,
+            },
+          },
+        },
         --
 
         lua_ls = {
@@ -573,9 +605,11 @@ require('lazy').setup {
               diagnostics = { -- disable = { 'missing-fields' } },
                 globals = { 'vim' },
               },
+              hint = { enable = true },
             },
           },
         },
+        ols = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -635,6 +669,7 @@ require('lazy').setup {
     'hrsh7th/nvim-cmp',
     event = 'InsertEnter',
     dependencies = {
+      'nvim-neotest/nvim-nio',
       -- Snippet Engine & its associated nvim-cmp source
       {
         'L3MON4D3/LuaSnip',
