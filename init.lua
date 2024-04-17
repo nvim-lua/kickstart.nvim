@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -189,6 +189,10 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+-- Center cursor after moving half page
+vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Center cursor after down half page' })
+vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Center cursor after down half up' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -283,6 +287,8 @@ require('lazy').setup({
       require('which-key').register {
         ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
         ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
+        ['<leader>h'] = { name = '[H]arpoon', _ = 'which_key_ignore' },
+        ['<leader>l'] = { name = '[L]azy Git', _ = 'which_key_ignore' },
         ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
         ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
         ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
@@ -399,6 +405,71 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
+    end,
+  },
+
+  {
+    'ThePrimeagen/harpoon',
+    branch = 'harpoon2',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local harpoon = require 'harpoon'
+
+      harpoon:setup()
+
+      vim.keymap.set('n', '<leader>ha', function()
+        harpoon:list():add()
+      end, { desc = '[A]dd to list' })
+      vim.keymap.set('n', '<leader>he', function()
+        harpoon.ui:toggle_quick_menu(harpoon:list())
+      end, { desc = '[E]xplorer' })
+
+      vim.keymap.set('n', '<leader>h1', function()
+        harpoon:list():select(1)
+      end, { desc = 'Switch to [1] mark' })
+      vim.keymap.set('n', '<leader>h2', function()
+        harpoon:list():select(2)
+      end, { desc = 'Switch to [2] mark' })
+      vim.keymap.set('n', '<leader>h3', function()
+        harpoon:list():select(3)
+      end, { desc = 'Switch to [3] mark' })
+      vim.keymap.set('n', '<leader>h4', function()
+        harpoon:list():select(4)
+      end, { desc = 'Switch to [4] mark' })
+
+      -- vim.keymap.set('n', '<leader><C-1>', function()
+      --   harpoon:list():replace_at(1)
+      -- end)
+      -- vim.keymap.set('n', '<leader><C-2>', function()
+      --   harpoon:list():replace_at(2)
+      -- end)
+      -- vim.keymap.set('n', '<leader><C-3>', function()
+      --   harpoon:list():replace_at(3)
+      -- end)
+      -- vim.keymap.set('n', '<leader><C-4>', function()
+      --   harpoon:list():replace_at(4)
+      -- end)
+    end,
+  },
+
+  {
+    'zbirenbaum/copilot.lua',
+    cmd = 'Copilot',
+    event = 'InsertEnter',
+    config = function()
+      require('copilot').setup {
+        suggestion = {
+          auto_trigger = true,
+          keymap = {
+            accept = '<C-y>',
+            accept_word = false,
+            accept_line = false,
+            next = '<C-]>',
+            prev = '<C-[>',
+            dismiss = '<C-x>',
+          },
+        },
+      }
     end,
   },
 
@@ -740,18 +811,52 @@ require('lazy').setup({
     end,
   },
 
+  { 'tjdevries/colorbuddy.nvim' },
+
+  { 'rose-pine/neovim', name = 'rose-pine' },
+
+  {
+    'folke/tokyonight.nvim',
+    config = function()
+      require('tokyonight').setup {
+        -- your configuration comes here
+        -- or leave it empty to use the default settings
+        style = 'storm', -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
+        transparent = true, -- Enable this to disable setting the background color
+        terminal_colors = true, -- Configure the colors used when opening a `:terminal` in Neovim
+        styles = {
+          -- Style to be applied to different syntax groups
+          -- Value is any valid attr-list value for `:help nvim_set_hl`
+          comments = { italic = false },
+          keywords = { italic = false },
+          -- Background styles. Can be "dark", "transparent" or "normal"
+          sidebars = 'dark', -- style for sidebars, see below
+          floats = 'dark', -- style for floating windows
+        },
+      }
+    end,
+  },
+
   { -- You can easily change to a different colorscheme.
     -- Change the name of the colorscheme plugin below, and then
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
+    'catppuccin/nvim',
+    name = 'catpuccin',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
+      -- require('rose-pine').setup {
+      --   disable_background = true,
+      --   styles = {
+      --     italic = false,
+      --   },
+      -- }
+
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'catppuccin'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
@@ -798,6 +903,7 @@ require('lazy').setup({
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
+
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
@@ -827,6 +933,36 @@ require('lazy').setup({
       --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
     end,
+  },
+
+  {
+    'max397574/better-escape.nvim',
+    opts = {
+      mapping = { 'jk', 'kj' },
+      timeout = vim.o.timeoutlen,
+      clear_empty_lines = false,
+      keys = '<Esc>',
+    },
+  },
+
+  {
+    'kdheepak/lazygit.nvim',
+    cmd = {
+      'LazyGit',
+      'LazyGitConfig',
+      'LazyGitCurrentFile',
+      'LazyGitFilter',
+      'LazyGitFilterCurrentFile',
+    },
+    -- optional for floating window border decoration
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+    -- setting the keybinding for LazyGit with 'keys' is recommended in
+    -- order to load the plugin when the command is run for the first time
+    keys = {
+      { '<leader>lg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
+    },
   },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
