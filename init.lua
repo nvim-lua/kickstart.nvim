@@ -71,6 +71,7 @@ vim.opt.scrolloff = 8
 -- [[ Eric's Custom Keymaps]]
 
 vim.keymap.set('n', '<leader><leader>', '<cmd>Neotree toggle<CR>')
+vim.keymap.set('n', '<leader><leader>g', '<cmd>Neotree float git_status<CR>')
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
