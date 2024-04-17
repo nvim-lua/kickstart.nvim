@@ -253,7 +253,7 @@ sudo apt install make gcc ripgrep unzip neovim
 ```
 sudo add-apt-repository ppa:neovim-ppa/unstable -y
 sudo apt update
-sudo apt install make gcc ripgrep unzip neovim
+sudo apt install make gcc ripgrep unzip git neovim
 ```
 </details>
 <details><summary>Debian Install Steps</summary>
@@ -269,7 +269,14 @@ sudo apt install -t unstable neovim
 <details><summary>Fedora Install Steps</summary>
 
 ```
-sudo dnf install -y gcc make git ripgrep fd-find neovim
+sudo dnf install -y gcc make git ripgrep fd-find unzip neovim
+```
+</details>
+
+<details><summary>Arch Install Steps</summary>
+
+```
+sudo pacman -S --noconfirm --needed gcc make git ripgrep fd unzip neovim
 ```
 </details>
 
