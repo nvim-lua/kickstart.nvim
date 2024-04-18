@@ -630,6 +630,10 @@ require('lazy').setup({
     opts = {
       notify_on_error = false,
       format_on_save = function(bufnr)
+        -- Do not format on save if you run :KickstartToggleFormatOnSave
+        if vim.g.kickstart_disable_format_on_save then
+          return
+        end
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
@@ -649,6 +653,19 @@ require('lazy').setup({
         -- javascript = { { "prettierd", "prettier" } },
       },
     },
+    init = function()
+      -- if set to true format on save is disabled by default
+      vim.g.kickstart_disable_format_on_save = false
+      -- create a command to toggle format on save
+      vim.api.nvim_create_user_command('KickstartToggleFormatOnSave', function()
+        vim.g.kickstart_disable_format_on_save = not vim.g.kickstart_disable_format_on_save
+        if vim.g.kickstart_disable_format_on_save then
+          print 'format on save is now disabled!'
+        else
+          print 'format on save is now enabled!'
+        end
+      end, {})
+    end,
   },
 
   { -- Autocompletion
