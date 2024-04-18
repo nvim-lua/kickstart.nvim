@@ -28,7 +28,7 @@ return {
         }
       },
       debugger = {           -- integrate with nvim dap + install dart code debugger
-        enabled = false,
+        enabled = true,
         run_via_dap = false, -- use dap instead of a plenary job to run flutter apps
         -- if empty dap will not stop on any exceptions, otherwise it will stop on those specified
         -- see |:help dap.set_exception_breakpoints()| for more info
@@ -79,7 +79,8 @@ return {
           completeFunctionCalls = true,
           renameFilesWithClasses = "prompt", -- "always"
           -- enableSnippets = true,
-          updateImportsOnRename = true,      -- Whether to update imports and other directives when files are renamed. Required for `FlutterRename` command.
+          previewLsp = true,
+          updateImportsOnRename = true, -- Whether to update imports and other directives when files are renamed. Required for `FlutterRename` command.
         }
       }
     }

@@ -219,13 +219,15 @@ vim.wo.signcolumn = 'yes'
 
 -- Decrease update time
 vim.o.updatetime = 100
-vim.o.timeoutlen = 300
+vim.o.timeoutlen = 100
+vim.o.ttimeoutlen = 100
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
+
 
 -- [[ Basic Keymaps ]]
 
@@ -267,7 +269,7 @@ vim.filetype.add({
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
   ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim',
-    'dart', 'prisma', 'graphql', 'json' },
+    'dart', 'prisma', 'graphql', 'json', 'markdown' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
