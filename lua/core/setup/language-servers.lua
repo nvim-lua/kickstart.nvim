@@ -1,6 +1,16 @@
 local servers = {
   -- clangd = {},
-  -- gopls = {},
+  gopls = {
+    go = {
+      analyses = {
+        unusedparams = true,
+      },
+      usePlaceholders = true,
+      completeUnimported = true,
+      staticcheck = true,
+      gofumpt = true,
+    },
+  },
   -- pyright = {},
   -- rust_analyzer = {},
   eslint = {},
