@@ -516,12 +516,23 @@ require('lazy').setup({
           if client and client.server_capabilities.documentHighlightProvider then
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
-              callback = vim.lsp.buf.document_highlight,
+              callback = function()
+                if not vim.lsp.get_client_by_id(event.data.client_id) then
+                  vim.lsp.buf.clear_references()
+                  return true
+                end
+                vim.lsp.buf.document_highlight()
+              end,
             })
 
             vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
               buffer = event.buf,
-              callback = vim.lsp.buf.clear_references,
+              callback = function()
+                if not vim.lsp.get_client_by_id(event.data.client_id) then
+                  return true
+                end
+                vim.lsp.buf.clear_references()
+              end,
             })
           end
 
