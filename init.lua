@@ -470,7 +470,6 @@ require('lazy').setup({
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
         --
-
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
@@ -514,6 +513,12 @@ require('lazy').setup({
             require('lspconfig')[server_name].setup(server)
           end,
         },
+      }
+      -- Godot's LSP - Requires Godot to be running
+      require('lspconfig')['gdscript'].setup {
+        -- cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),
+        cmd = { 'ncat', '127.0.0.1', '6005' },
+        name = 'godot',
       }
     end,
   },
