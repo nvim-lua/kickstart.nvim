@@ -560,7 +560,6 @@ require('lazy').setup({
         -- But for many setups, the LSP (`tsserver`) will work just fine
         vtsls = { refactor_auto_rename = true },
         cssls = {},
-        groovyls = {},
         terraformls = {},
         --
 
