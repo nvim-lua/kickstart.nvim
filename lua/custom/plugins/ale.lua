@@ -4,10 +4,10 @@ return {
     -- Configuration goes here.
     local g = vim.g
     g.ale_fixers = {
-      typescript = { 'prettier_d' },
-      html = { 'prettier_d' },
-      javascript = { 'prettier_d' },
-      typescriptreact = { 'prettier_d' },
+      typescript = { 'prettierd' },
+      html = { 'prettierd' },
+      javascript = { 'prettierd' },
+      typescriptreact = { 'prettierd' },
     }
     g.ale_linters = {
       lua = { 'lua_language_server' },
