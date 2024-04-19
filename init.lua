@@ -57,7 +57,7 @@ vim.opt.splitbelow = true
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
--- vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { tab = '  ', trail = '·', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
@@ -513,6 +513,29 @@ require('lazy').setup({
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
+        },
+      }
+    end,
+  },
+
+  { -- DAP for Godot - https://docs.godotengine.org/en/stable/tutorials/editor/external_editor.html#lsp-dap-support
+    'mfussenegger/nvim-dap',
+    config = function()
+      local dap = require 'dap'
+      dap.adapters.godot = {
+        type = 'server',
+        host = '127.0.0.1',
+        port = 6006,
+      }
+
+      dap.configurations.gdscript = {
+        {
+          launch_game_instance = false,
+          launch_scene = false,
+          name = 'Launch scene',
+          project = '${workspaceFolder}',
+          request = 'launch',
+          type = 'godot',
         },
       }
     end,
