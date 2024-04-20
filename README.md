@@ -199,11 +199,13 @@ sudo apt install make gcc ripgrep unzip git neovim
 
 ```
 sudo apt update
-sudo apt install make gcc ripgrep unzip git
+sudo apt install make gcc ripgrep unzip git curl
 
 # Now we install nvim
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
-sudo rm -rf /opt/nvim
+sudo rm -rf /opt/nvim-linux64
+sudo mkdir -p /opt/nvim-linux64
+sudo chmod a+rX /opt/nvim-linux64
 sudo tar -C /opt -xzf nvim-linux64.tar.gz
 
 # make it available in /usr/local/bin, distro installs to /usr/bin
