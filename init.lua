@@ -515,11 +515,17 @@ require('lazy').setup({
         },
       }
       -- Godot's LSP - Requires Godot to be running
-      require('lspconfig')['gdscript'].setup {
-        -- cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),
-        cmd = { 'ncat', '127.0.0.1', '6005' },
-        name = 'godot',
-      }
+      if vim.fn.has 'win32' == 1 then
+        require('lspconfig')['gdscript'].setup {
+          cmd = { 'ncat', '127.0.0.1', '6005' },
+          name = 'godot',
+        }
+      else
+        require('lspconfig')['gdscript'].setup {
+          cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),
+          name = 'godot',
+        }
+      end
     end,
   },
 
