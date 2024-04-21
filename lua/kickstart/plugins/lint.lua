@@ -6,13 +6,10 @@ return {
     config = function()
       local lint = require 'lint'
       lint.linters_by_ft = {
-        markdown = { 'markdownlint' },
         python = { 'mypy', 'ruff' },
-        yaml = { 'yamllint' },
         cmake = { 'cmakelint' },
         cpp = { 'cppcheck' },
         c = { 'cppcheck' },
-        json = { 'jsonlint' },
         javascript = { 'eslint' },
         css = { 'stylelint' },
         html = { 'tidy' },

@@ -13,6 +13,7 @@ return {
   keys = {
     { '<C-e>', ':Neotree toggle<CR>', { desc = 'NeoTree toggle' } },
     { '<leader>e', ':Neotree reveal<CR>', mode = '', desc = '[E]xplore files' },
+    { '<leader>E', ':Neotree buffers<CR>', mode = '', desc = '[E]xplore buffers' },
   },
   opts = {
     filesystem = {

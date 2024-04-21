@@ -147,9 +147,13 @@ return { -- LSP Configuration & Plugins
       clangd = {
         cmd = {
           'clangd',
-          '--offset-encoding=UTF-8',
+          '--query-driver=/bin/clang-tidy,/usr/bin/**/clang-*,/bin/clang,/bin/clang++,/usr/bin/gcc,/usr/bin/g++',
+          '--clang-tidy',
+          '--clang-tidy-checks=*',
           '--style=file ~/.config/nvim/clang-format',
+          '--background-index',
         },
+        capabilities = capabilities,
       },
       -- gopls = {},
       pyright = {},
@@ -199,6 +203,7 @@ return { -- LSP Configuration & Plugins
     local ensure_installed = vim.tbl_keys(servers or {})
     vim.list_extend(ensure_installed, {
       'stylua', -- Used to format Lua code
+      'cpplint',
       'clangd',
       'clang-format',
       'codelldb',

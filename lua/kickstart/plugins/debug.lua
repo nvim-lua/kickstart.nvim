@@ -90,6 +90,6 @@ return {
 
     -- Install golang specific config
     require('dap-go').setup()
-    require('dap-python').setup()
+    require('dap-python').setup '~/.config/nvim/.venv/bin/python'
   end,
 }
