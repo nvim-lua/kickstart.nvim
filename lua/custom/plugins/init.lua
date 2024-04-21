@@ -3,7 +3,6 @@
 --
 -- See the kickstart.nvim README for more information
 return {
-  { 'nvim-tree/nvim-web-devicons', opts = {} },
   {
     'folke/trouble.nvim',
     config = function()
@@ -29,4 +28,7 @@ return {
       vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
     end,
   },
+  { 'akinsho/toggleterm.nvim', version = '*', opts = {
+    open_mapping = [[<c-\>]],
+  } },
 }
