@@ -11,16 +11,13 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '<C-n>', ':Neotree toggle<CR>', { desc = 'NeoTree toggle' } },
+    { '<C-e>', ':Neotree toggle<CR>', { desc = 'NeoTree toggle' } },
     { '<leader>e', ':Neotree reveal<CR>', mode = '', desc = '[E]xplore files' },
   },
   opts = {
     filesystem = {
       window = {
-        mappings = {
-          ['<C-n>'] = 'toggle',
-          ['<leader>e'] = 'close_window',
-        },
+        mappings = {},
       },
     },
   },
