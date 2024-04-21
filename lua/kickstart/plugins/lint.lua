@@ -7,7 +7,6 @@ return {
       local lint = require 'lint'
       lint.linters_by_ft = {
         python = { 'mypy', 'ruff' },
-        cmake = { 'cmakelint' },
         cpp = { 'cppcheck' },
         c = { 'cppcheck' },
         javascript = { 'eslint' },

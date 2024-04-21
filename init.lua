@@ -146,7 +146,7 @@ vim.opt.termguicolors = true
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+-- vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
@@ -567,8 +567,8 @@ require('lazy').setup({
 
 require 'custom'
 
-vim.api.nvim_create_autocmd('VimEnter', {
+--[[ vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
     vim.cmd 'Trouble'
   end,
-})
+}) ]]
