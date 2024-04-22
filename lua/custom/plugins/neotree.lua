@@ -13,6 +13,7 @@ return {
   end,
   config = function()
     require('neo-tree').setup {
+      close_if_last_window = true,
       default_component_configs = {
         indent = {
           indent_size = 1,
