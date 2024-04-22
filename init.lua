@@ -544,10 +544,7 @@ require('lazy').setup({
         group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
         callback = function(event)
           vim.lsp.buf.clear_references()
-          local cmds = vim.api.nvim_get_autocmds { group = 'kickstart-lsp-highlight', buffer = event.buf }
-          for _, cmd in ipairs(cmds) do
-            vim.api.nvim_del_autocmd(cmd.id)
-          end
+          vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event.buf }
         end,
       })
 
