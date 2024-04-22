@@ -3,6 +3,7 @@ return {
   config = function()
     -- Configuration goes here.
     local g = vim.g
+    g.ale_javascript_prettier_use_local_config = 1
     g.ale_fixers = {
       typescript = { 'prettierd' },
       html = { 'prettierd' },

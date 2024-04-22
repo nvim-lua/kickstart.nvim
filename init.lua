@@ -558,10 +558,16 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
+        -- npm install -g @vtsls/language-server
         vtsls = { refactor_auto_rename = true },
+        -- neccesary for cssls and html
+        -- npm i -g vscode-langservers-extracted
         cssls = {},
         html = {},
+        -- you have to add: npm i -g @olrtg/emmet-language-server
+        emmet_language_server = {},
         terraformls = {},
+        groovyls = {},
         --
 
         lua_ls = {
@@ -717,7 +723,7 @@ require('lazy').setup({
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
           ['<C-Enter>'] = cmp.mapping.confirm { select = true },
-
+          ['<D-^>'] = cmp.mapping.confirm { select = true },
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
           --  completions whenever it has completion options available.
