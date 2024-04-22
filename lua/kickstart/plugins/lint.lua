@@ -6,7 +6,7 @@ return {
     config = function()
       local lint = require 'lint'
       lint.linters_by_ft = {
-        python = { 'mypy', 'ruff' },
+        python = { 'ruff' },
         cpp = { 'cppcheck' },
         c = { 'cppcheck' },
         javascript = { 'eslint' },

@@ -4,7 +4,7 @@ return {
   init = function()
     local opts = { noremap = true, silent = true }
     -- Lua
-    vim.keymap.set('n', '<A-o>', function()
+    vim.keymap.set({ 'n', 't' }, '<A-o>', function()
       require('trouble').toggle()
     end, opts)
 

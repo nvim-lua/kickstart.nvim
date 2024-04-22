@@ -17,9 +17,7 @@ return {
   },
   opts = {
     filesystem = {
-      window = {
-        mappings = {},
-      },
+      window = {},
     },
   },
 }
