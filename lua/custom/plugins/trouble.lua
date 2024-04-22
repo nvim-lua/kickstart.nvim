@@ -4,6 +4,10 @@ return {
   init = function()
     local opts = { noremap = true, silent = true }
     -- Lua
+    vim.keymap.set('n', '<A-o>', function()
+      require('trouble').toggle()
+    end, opts)
+
     vim.keymap.set('n', '<leader>Xx', function()
       require('trouble').toggle()
     end, vim.tbl_extend('force', opts, { desc = '[X] Toggle trouble' }))
