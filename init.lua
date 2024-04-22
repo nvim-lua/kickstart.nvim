@@ -514,25 +514,17 @@ require('lazy').setup({
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.server_capabilities.documentHighlightProvider then
+            local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = true })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
-              callback = function()
-                if not vim.lsp.get_client_by_id(event.data.client_id) then
-                  vim.lsp.buf.clear_references()
-                  return true
-                end
-                vim.lsp.buf.document_highlight()
-              end,
+              group = highlight_augroup,
+              callback = vim.lsp.buf.document_highlight,
             })
 
             vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
               buffer = event.buf,
-              callback = function()
-                if not vim.lsp.get_client_by_id(event.data.client_id) then
-                  return true
-                end
-                vim.lsp.buf.clear_references()
-              end,
+              group = highlight_augroup,
+              callback = vim.lsp.buf.clear_references,
             })
           end
 
@@ -545,6 +537,14 @@ require('lazy').setup({
               vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled())
             end, '[T]oggle Inlay [H]ints')
           end
+        end,
+      })
+
+      vim.api.nvim_create_autocmd('LspDetach', {
+        group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
+        callback = function()
+          vim.lsp.buf.clear_references()
+          vim.api.nvim_del_augroup_by_name 'kickstart-lsp-highlight'
         end,
       })
 
