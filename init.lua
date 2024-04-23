@@ -190,6 +190,12 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- Toggle spell checking
+vim.keymap.set('n', '<leader>ts', function()
+  vim.opt.spell = not vim.o.spell
+  print('Spell checking is', (vim.o.spell and 'enabled' or 'disabled'))
+end, { desc = '[T]oggle [S]pell' })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
