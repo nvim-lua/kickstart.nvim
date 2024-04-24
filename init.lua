@@ -776,7 +776,8 @@ require('lazy').setup({
       vim.cmd.colorscheme 'gruvbox'
 
       -- You can configure highlights by doing something like:
-      vim.o.background = 'light' -- or "light" for light mode
+      vim.o.background = 'dark' -- or "light" for light mode
+      -- vim.o.background = 'light' -- or "light" for light mode
       -- vim.cmd [[colorscheme catppuccin-macchiato]]
     end,
   },
