@@ -18,7 +18,8 @@ local servers = {
     typescript = {
       settings = {
         preferences = {
-          importModuleSpecifierPreference = "non-relative"
+          importModuleSpecifierPreference = "non-relative",
+          preferTypeOnlyAutoImports = true,
         }
       }
     },
