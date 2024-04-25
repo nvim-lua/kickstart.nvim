@@ -160,6 +160,10 @@ vim.opt.wrap = false -- no line wraps
 vim.opt.guifont = 'Fira Code:h12'
 vim.opt.linespace = 5
 
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.api.nvim_exec2('set nofoldenable', {})
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
