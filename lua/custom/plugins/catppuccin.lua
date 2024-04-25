@@ -1,3 +1,4 @@
+return {
   'catppuccin/nvim',
   name = 'catppuccin',
   priority = 1000,
@@ -11,7 +12,12 @@
     vim.cmd.hi 'Comment gui=none'
   end,
   opts = {
-    term_colors = true,
+    dim_inactive = {
+      enabled = true,
+      shade = 'dark',
+      percentage = 0.15,
+    },
+    transparent_background = true,
     --[[ color_overrides = {
       mocha = {
         base = '#000000',

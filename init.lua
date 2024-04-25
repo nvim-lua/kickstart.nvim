@@ -288,7 +288,7 @@ require('lazy').setup({
       -- Document existing key chains
       require('which-key').register {
         ['<leader>x'] = { name = '[X] Close buffer', _ = 'which_key_ignore' },
-        ['<leader>h'] = { name = '[H]arpoon', _ = 'which_key_ignore' },
+        ['<leader>o'] = { name = 'Harp[O]on', _ = 'which_key_ignore' },
         ['<leader>t'] = { name = '[T]oggleTerminal', _ = 'which_key_ignore' },
         ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
         ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
@@ -303,6 +303,7 @@ require('lazy').setup({
       -- visual mode
       require('which-key').register({
         ['<leader>h'] = { 'Git [H]unk' },
+        ['<leader>R'] = { name = '[R]efactor', _ = 'which_key_ignore' },
       }, { mode = 'v' })
     end,
   },
@@ -422,7 +423,7 @@ require('lazy').setup({
     end,
   },
 
-  { -- You can easily change to a different colorscheme.
+  --[[ { -- You can easily change to a different colorscheme.
     -- Change the name of the colorscheme plugin below, and then
     -- change the command in the config to whatever the name of that colorscheme is.
     --
@@ -438,7 +439,8 @@ require('lazy').setup({
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
     end,
-  },
+  }, ]]
+  require 'custom.plugins.catppuccin',
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
