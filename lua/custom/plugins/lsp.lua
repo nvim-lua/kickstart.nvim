@@ -147,6 +147,9 @@ return { -- LSP Configuration & Plugins
       clangd = {
         cmd = {
           'clangd',
+          '--offset-encoding=utf-16',
+          '--background-index',
+          '--style=file -i ~/.config/nvim/.clang-format',
         },
       },
       -- gopls = {},
@@ -196,34 +199,7 @@ return { -- LSP Configuration & Plugins
     -- You can add other tools here that you want Mason to install
     -- for you, so that they are available from within Neovim.
     local ensure_installed = vim.tbl_keys(servers or {})
-    vim.list_extend(ensure_installed, {
-      'stylua', -- Used to format Lua code
-      'cpplint',
-      'clangd',
-      'clang-format',
-      'codelldb',
-      'cmake-language-server',
-      'ruff',
-      'pyright',
-      'prettier',
-      'autopep8',
-      'djlint',
-      'typescript-language-server',
-      'deno',
-    })
+    vim.list_extend(ensure_installed, {})
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-
-    require('mason-lspconfig').setup {
-      handlers = {
-        function(server_name)
-          local server = servers[server_name] or {}
-          -- This handles overriding only values explicitly passed
-          -- by the server configuration above. Useful when disabling
-          -- certain features of an LSP (for example, turning off formatting for tsserver)
-          server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-          require('lspconfig')[server_name].setup(server)
-        end,
-      },
-    }
   end,
 }
