@@ -5,7 +5,7 @@ python3 -m venv .venv
 .venv/bin/pip install debugpy
 
 # Install dependencies
-PKGS=("cppcheck" "clang" "cmake" "npm", "eslint")
+PKGS=("cppcheck" "clang" "cmake" "npm" "eslint")
 
 # Get distro
 distro=$(cat /etc/os-release | grep PRETTY_NAME= | awk '{print $1}' | cut -d \" -f 2)

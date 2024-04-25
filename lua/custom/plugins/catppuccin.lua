@@ -17,7 +17,7 @@ return {
       shade = 'dark',
       percentage = 0.15,
     },
-    transparent_background = true,
+    -- transparent_background = true,
     --[[ color_overrides = {
       mocha = {
         base = '#000000',

@@ -291,6 +291,7 @@ require('lazy').setup({
         ['<leader>o'] = { name = 'Harp[O]on', _ = 'which_key_ignore' },
         ['<leader>t'] = { name = '[T]oggleTerminal', _ = 'which_key_ignore' },
         ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
+        ['<leader>C'] = { name = '[C]term', _ = 'which_key_ignore' },
         ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
         ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
         ['<leader>f'] = { name = '[F]ind', _ = 'which_key_ignore' },
@@ -486,7 +487,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+      ensure_installed = { 'python', 'javascript', 'cpp', 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -538,6 +539,9 @@ require('lazy').setup({
   require 'custom.plugins.toggleterm',
   require 'custom.plugins.refactoring',
   require 'custom.plugins.trouble',
+  require 'custom.plugins.mason',
+  --
+  -- ad hoc lsp line
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
