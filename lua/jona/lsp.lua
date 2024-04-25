@@ -79,9 +79,9 @@ M.on_attach = function(event)
     end, '[T]oggle Inlay [H]ints')
   end
 
-  -- if client.server_capabilities.documentSymbolProvider then
-  --   require('nvim-navic').attach(client, event.buf)
-  -- end
+  if client.server_capabilities.documentSymbolProvider then
+    require('nvim-navic').attach(client, event.buf)
+  end
 end
 
 return M
