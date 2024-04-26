@@ -147,6 +147,8 @@ return { -- LSP Configuration & Plugins
       clangd = {
         cmd = {
           'clangd',
+          '--background-index',
+          '--offset-encoding=utf-16',
         },
       },
       -- gopls = {},
