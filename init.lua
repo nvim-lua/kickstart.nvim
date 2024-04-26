@@ -154,6 +154,10 @@ vim.opt.inccommand = 'split'
 -- Show which line your cursor is on
 vim.opt.cursorline = true
 
+-- EDIT: unsticky comments
+vim.cmd 'autocmd BufEnter * set formatoptions-=cro'
+vim.cmd 'autocmd BufEnter * setlocal formatoptions-=cro'
+
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
@@ -539,6 +543,8 @@ require('lazy').setup({
   require 'custom.plugins.toggleterm',
   require 'custom.plugins.refactoring',
   require 'custom.plugins.trouble',
+  require 'custom.plugins.persistence',
+  -- require 'custom.plugins.dial',
   -- require 'custom.plugins.mason',
   --
   -- ad hoc lsp line
