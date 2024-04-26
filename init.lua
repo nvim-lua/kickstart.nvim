@@ -93,6 +93,8 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = true
 
+vim.g.autoformat = false
+
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
@@ -156,6 +158,7 @@ vim.opt.scrolloff = 10
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
+vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
@@ -193,6 +196,10 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- Center cursor after moving half page
 vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Center cursor after down half page' })
 vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Center cursor after down half up' })
+
+-- buffers
+vim.keymap.set("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
+vim.keymap.set("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -259,7 +266,48 @@ require('lazy').setup({
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
+      vim.keymap.set('n', '<leader>gp', ':Gitsigns preview_hunk<CR>', { desc = 'Preview [H]unk' }),
+      vim.keymap.set('n', '<leader>tb', ':Gitsigns toggle_current_line_blame<CR>', { desc = '[T]oggle [B]lame' }),
     },
+  },
+
+  {
+    'tpope/vim-fugitive',
+    config = function() 
+        vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
+
+        local Sefcik_Fugitive = vim.api.nvim_create_augroup("Sefcik_Fugitive", {})
+
+        local autocmd = vim.api.nvim_create_autocmd
+        autocmd("BufWinEnter", {
+            group = Sefcik_Fugitive,
+            pattern = "*",
+            callback = function()
+                if vim.bo.ft ~= "fugitive" then
+                    return
+                end
+
+                local bufnr = vim.api.nvim_get_current_buf()
+                local opts = {buffer = bufnr, remap = false}
+                vim.keymap.set("n", "<leader>P", function()
+                    vim.cmd.Git('push')
+                end, opts)
+
+                -- rebase always
+                vim.keymap.set("n", "<leader>p", function()
+                    vim.cmd.Git({'pull',  '--rebase'})
+                end, opts)
+
+                -- NOTE: It allows me to easily set the branch i am pushing and any tracking
+                -- needed if i did not set the branch up correctly
+                vim.keymap.set("n", "<leader>t", ":Git push -u origin ", opts);
+            end,
+        })
+
+
+        vim.keymap.set("n", "gu", "<cmd>diffget //2<CR>")
+        vim.keymap.set("n", "gh", "<cmd>diffget //3<CR>")
+    end
   },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
@@ -681,16 +729,17 @@ require('lazy').setup({
     },
     opts = {
       notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
-        return {
-          timeout_ms = 500,
-          lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
-        }
-      end,
+      format_on_save = false,
+      -- format_on_save = function(bufnr)
+      --   -- Disable "format_on_save lsp_fallback" for languages that don't
+      --   -- have a well standardized coding style. You can add additional
+      --   -- languages here or re-enable it for the disabled ones.
+      --   local disable_filetypes = { c = true, cpp = true }
+      --   return {
+      --     timeout_ms = 500,
+      --     lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
+      --   }
+      -- end,
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
@@ -893,7 +942,7 @@ require('lazy').setup({
       -- cursor location to LINE:COLUMN
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_location = function()
-        return '%2l:%-2v'
+        return '%2l/%L:%-2v'
       end
 
       -- ... and there is more!
