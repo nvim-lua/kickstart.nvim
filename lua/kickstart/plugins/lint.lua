@@ -11,7 +11,7 @@ return {
         -- c = { 'cppcheck' },
         javascript = { 'eslint' },
         css = { 'stylelint' },
-        html = { 'tidy' },
+        html = { 'djlint' },
       }
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,
