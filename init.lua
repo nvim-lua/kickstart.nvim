@@ -848,12 +848,12 @@ require('lazy').setup({
       --
       --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
-      --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     end,
   },
 
-  { -- Highlight, edit, and navigate code
-    'nvim-treesitter/treesitter-context',
+  --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
+  {
+    'nvim-treesitter/nvim-treesitter-context',
     config = function()
       require('treesitter-context').setup {
         enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
