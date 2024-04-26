@@ -296,7 +296,7 @@ require('lazy').setup({
         ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
         ['<leader>f'] = { name = '[F]ind', _ = 'which_key_ignore' },
         ['<leader>R'] = { name = '[R]efactor', _ = 'which_key_ignore' },
-        ['<leader>X'] = { name = '[X] Trouble', _ = 'which_key_ignore' },
+        ['<leader>u'] = { name = 'Tro[U]ble', _ = 'which_key_ignore' },
         ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
         ['<leader>H'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
         --['<leader>e'] = { name = '[E]xplore files', _ = 'which_key_ignore' },
