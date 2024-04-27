@@ -579,15 +579,24 @@ require('lazy').setup({
         --
         cssls = {
           settings = {
-            css = { validate = true, lint = {
-              unknownAtRules = 'ignore',
-            } },
-            scss = { validate = true, lint = {
-              unknownAtRules = 'ignore',
-            } },
-            less = { validate = true, lint = {
-              unknownAtRules = 'ignore',
-            } },
+            css = {
+              validate = true,
+              lint = {
+                unknownAtRules = 'ignore',
+              },
+            },
+            scss = {
+              validate = true,
+              lint = {
+                unknownAtRules = 'ignore',
+              },
+            },
+            less = {
+              validate = true,
+              lint = {
+                unknownAtRules = 'ignore',
+              },
+            },
           },
         },
 
@@ -619,7 +628,17 @@ require('lazy').setup({
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
+        'lua-language-server',
+        'stylua',
+        'prettierd',
+        'clangd',
+        'clang-format',
+        'ruff',
+        'pyright',
+        'rust-analyzer',
+        'yaml-language-server',
+        'cspell',
+        'sql-formatter',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -657,10 +676,10 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
+        -- local disable_filetypes = { c = true, cpp = true }
         return {
           timeout_ms = 500,
-          lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
+          --  lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
         }
       end,
       formatters_by_ft = {
@@ -670,7 +689,16 @@ require('lazy').setup({
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        -- javascript = { { "prettierd", "prettier" } },
+        javascript = { { 'prettierd', 'prettier' } },
+        typescript = { { 'prettierd', 'prettier' } },
+        javascriptreact = { { 'prettierd', 'prettier' } },
+        typescriptreact = { { 'prettierd', 'prettier' } },
+        css = { { 'prettierd', 'prettier' } },
+        scc = { { 'prettierd', 'prettier' } },
+        html = { { 'prettierd', 'prettier' } },
+        python = { { 'ruff' } },
+        c = { { 'clang_format' } },
+        cpp = { { 'clang_format' } },
       },
     },
   },
