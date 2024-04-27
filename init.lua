@@ -795,6 +795,35 @@ require('lazy').setup({
       require('copilot_cmp').setup()
     end,
   },
+  {
+    "elixir-tools/elixir-tools.nvim",
+    version = "*",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      local elixir = require("elixir")
+      local elixirls = require("elixir.elixirls")
+
+      elixir.setup {
+        nextls = {enable = true},
+        credo = {},
+        elixirls = {
+          enable = true,
+          settings = elixirls.settings {
+            dialyzerEnabled = false,
+            enableTestLenses = false,
+          },
+          on_attach = function(client, bufnr)
+            vim.keymap.set("n", "<space>fp", ":ElixirFromPipe<cr>", { buffer = true, noremap = true })
+            vim.keymap.set("n", "<space>tp", ":ElixirToPipe<cr>", { buffer = true, noremap = true })
+            vim.keymap.set("v", "<space>em", ":ElixirExpandMacro<cr>", { buffer = true, noremap = true })
+          end,
+        }
+      }
+    end,
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+  },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
