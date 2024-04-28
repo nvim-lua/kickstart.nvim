@@ -879,6 +879,21 @@ require('lazy').setup({
     end,
   },
   { 'christoomey/vim-tmux-navigator' },
+  {
+    'kdheepak/lazygit.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    cmd = {
+      'LazyGit',
+      'LazyGitConfig',
+      'LazyGitCurrentFile',
+      'LazyGitFilter',
+      'LazyGitFilterCurrentFile',
+    },
+    keys = {
+      { '<leader>lg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
+    },
+  },
+  { 'Kachyz/vim-gitmoji' },
   -- { 'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {} },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
