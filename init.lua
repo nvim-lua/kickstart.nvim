@@ -893,7 +893,26 @@ require('lazy').setup({
       { '<leader>lg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
     },
   },
-  { 'Kachyz/vim-gitmoji' },
+  {
+    'evanpurkhiser/image-paste.nvim',
+    config = function()
+      require('image-paste').setup {
+        imgur_client_id = 'ff4ff5566f179e3',
+        paste_script = [[xclip -selection clipboard -t image/png -o]],
+      }
+    end,
+    keys = {
+      {
+        '<leader>p',
+        function()
+          require('image-paste').paste_image()
+        end,
+        mode = 'n',
+        desc = 'Paste image from clipboard',
+      },
+    },
+  },
+
   -- { 'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {} },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
