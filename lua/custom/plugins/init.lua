@@ -3,3 +3,20 @@
 --
 -- See the kickstart.nvim README for more information
 return {}
+
+--[[
+-- Plugins to try: 
+-- https://github.com/ThePrimeagen/refactoring.nvim
+-- https://github.com/stevearc/oil.nvim
+-- https://github.com/debugloop/telescope-undo.nvim
+-- https://github.com/nvim-java/nvim-java
+-- https://github.com/epwalsh/obsidian.nvim
+-- https://github.com/nvim-neotest/neotest
+-- https://github.com/rafcamlet/nvim-luapad
+-- https://github.com/ellisonleao/glow.nvim
+-- https://github.com/Vigemus/iron.nvim
+-- https://github.com/TimUntersberger/neofs
+-- https://github.com/vipul-sharma20/nvim-jira
+-- https://github.com/walterl/centerfold
+-- https://github.com/tricktux/pomodoro.vim/tree/master - but fork it into your own in lua
+--]]
