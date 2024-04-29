@@ -558,7 +558,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        -- npm install -g @vtsls/language-server
+        -- for vtsls npm install -g @vtsls/language-server
         vtsls = { refactor_auto_rename = true },
         -- neccesary for cssls and html
         -- npm i -g vscode-langservers-extracted
@@ -566,7 +566,12 @@ require('lazy').setup({
         html = {},
         -- you have to add: npm i -g @olrtg/emmet-language-server
         emmet_language_server = {},
+        --npm install -g @angular/language-server for angularls
+        angularls = {},
         terraformls = {},
+        --  Go LSP - formatting is done with ale fixer (gofmt)
+        gopls = {},
+        -- Groovy
         groovyls = {},
         --
 

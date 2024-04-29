@@ -9,6 +9,7 @@ return {
       html = { 'prettierd' },
       javascript = { 'prettierd' },
       typescriptreact = { 'prettierd' },
+      go = { 'gofmt' },
     }
     g.ale_linters = {
       lua = { 'lua_language_server' },
