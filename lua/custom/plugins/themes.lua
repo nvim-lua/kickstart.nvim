@@ -9,7 +9,7 @@ return {
       term_colors = true,
       custom_highlights = function(colors)
         return {
-          Comment = { fg = colors.subtext1 },
+          Comment = { fg = colors.overlay0 },
           TabLineSel = { bg = colors.teal },
           CmpBorder = { fg = colors.surface2 },
           StatusLine = { fg = colors.blue },
