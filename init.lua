@@ -927,5 +927,12 @@ require('lazy').setup({
   },
 })
 
+-- Floating terminal with toggleterm
+require('toggleterm').setup {
+  open_mapping = [[<c-\>]],
+  direction = 'float',
+  close_on_exit = true,
+}
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
