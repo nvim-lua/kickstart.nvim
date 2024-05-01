@@ -193,13 +193,9 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- Nvim Tree config
 vim.keymap.set('n', '<M-1>', function()
   local api = require 'nvim-tree.api'
-  print 'run'
   api.tree.toggle()
 end)
 
--- vim.api.nvim_set_keymap('n', '<M-1>', api.tree.toggle, { noremap = true, silent = true })
-
--- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
 -- Highlight when yanking (copying) text
