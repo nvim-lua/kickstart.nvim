@@ -23,6 +23,7 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+    'nicholasmata/nvim-dap-cs',
   },
   config = function()
     local dap = require 'dap'
@@ -32,6 +33,7 @@ return {
       -- Makes a best effort to setup the various debuggers with
       -- reasonable debug configurations
       automatic_setup = true,
+      automatic_installation = true,
 
       -- You can provide additional configuration to the handlers,
       -- see mason-nvim-dap README for more information
@@ -42,6 +44,7 @@ return {
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'netcoredbg',
       },
     }
 
@@ -86,5 +89,6 @@ return {
 
     -- Install golang specific config
     require('dap-go').setup()
+    require('dap-cs').setup()
   end,
 }
