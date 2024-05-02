@@ -90,7 +90,7 @@ P.S. You can delete this when you're done too. It's your config now! :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- Set to true if you have a Nerd Font installed and selected in the terminal
+-- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = false
 
 -- [[ Setting options ]]
@@ -204,6 +204,9 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- Disable auto format on save
+vim.g.disable_auto_format = true
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -286,13 +289,7 @@ require('lazy').setup({
         ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
         ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
         ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-        ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
-        ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
       }
-      -- visual mode
-      require('which-key').register({
-        ['<leader>h'] = { 'Git [H]unk' },
-      }, { mode = 'v' })
     end,
   },
 
@@ -359,6 +356,10 @@ require('lazy').setup({
         --   },
         -- },
         -- pickers = {}
+        -- should be below each other stacked vertically
+        layout_config = {
+          layout_strategy = 'horizontal',
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -412,7 +413,7 @@ require('lazy').setup({
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
-      { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
+      'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
@@ -507,6 +508,9 @@ require('lazy').setup({
           --  For example, in C this would take you to the header.
           map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
+          -- only format changed lines on save
+          vim.api.nvim_buf_set_option(event.buf, 'formatexpr', 'v:lua.vim.lsp.buf.formatting_sync()')
+
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
@@ -514,16 +518,13 @@ require('lazy').setup({
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.server_capabilities.documentHighlightProvider then
-            local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
-              group = highlight_augroup,
               callback = vim.lsp.buf.document_highlight,
             })
 
             vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
               buffer = event.buf,
-              group = highlight_augroup,
               callback = vim.lsp.buf.clear_references,
             })
 
@@ -592,6 +593,11 @@ require('lazy').setup({
             },
           },
         },
+        omnisharp = {
+          cmd = { 'omnisharp', '--languageserver' },
+          filetypes = { 'cs', 'vb', 'cshtml', 'razor', 'html' },
+          root_dir = require('lspconfig.util').root_pattern('*.sln', '*.csproj', '*.fsproj'),
+        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -624,7 +630,29 @@ require('lazy').setup({
       }
     end,
   },
-
+  -- Copilot
+  {
+    'github/copilot.vim',
+    lazy = false,
+  },
+  -- Autopairs
+  {
+    'windwp/nvim-autopairs',
+    event = 'InsertEnter',
+    config = true,
+  },
+  -- LazyGit
+  {
+    'kdheepak/lazygit.nvim',
+    lazy = false,
+    keys = {
+      {
+        '<leader>lg',
+        '<cmd>LazyGit<CR>',
+        desc = '[L]azy [G]it',
+      },
+    },
+  },
   { -- Autoformat
     'stevearc/conform.nvim',
     lazy = false,
@@ -645,9 +673,14 @@ require('lazy').setup({
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
         local disable_filetypes = { c = true, cpp = true }
+
+        if vim.g.disable_auto_format or disable_filetypes[vim.bo[bufnr].filetype] then
+          return false
+        end
+
         return {
           timeout_ms = 500,
-          lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
+          lsp_fallback = true,
         }
       end,
       formatters_by_ft = {
@@ -673,9 +706,6 @@ require('lazy').setup({
           -- Build Step is needed for regex support in snippets.
           -- This step is not supported in many windows environments.
           -- Remove the below condition to re-enable on windows.
-          if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
-            return
-          end
           return 'make install_jsregexp'
         end)(),
         dependencies = {
@@ -729,13 +759,7 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
-
-          -- If you prefer more traditional completion keymaps,
-          -- you can uncomment the following lines
-          --['<CR>'] = cmp.mapping.confirm { select = true },
-          --['<Tab>'] = cmp.mapping.select_next_item(),
-          --['<S-Tab>'] = cmp.mapping.select_prev_item(),
+          ['<CR>'] = cmp.mapping.confirm { select = true },
 
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
@@ -850,8 +874,6 @@ require('lazy').setup({
     config = function(_, opts)
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
 
-      -- Prefer git instead of curl in order to improve connectivity in some environments
-      require('nvim-treesitter.install').prefer_git = true
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup(opts)
 
@@ -876,9 +898,6 @@ require('lazy').setup({
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
