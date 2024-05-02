@@ -414,13 +414,6 @@ require('lazy').setup({
     end,
   },
   {
-    'glepnir/nerdicons.nvim',
-    cmd = 'NerdIcons',
-    config = function()
-      require('nerdicons').setup {}
-    end,
-  },
-  {
     'ibhagwan/fzf-lua',
     -- optional for icon support
     dependencies = { 'nvim-tree/nvim-web-devicons' },
@@ -691,7 +684,7 @@ require('lazy').setup({
     },
     config = function()
       require('nvim-tree').setup {
-        on_attach = ross_nvim_tree_attach,
+        filters = { git_ignored = false, dotfiles = false },
       }
     end,
   },
