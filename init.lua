@@ -678,3 +678,5 @@ vim.keymap.set("i", "lk", "<esc>")
 -- line numbers
 vim.wo.number = true
 vim.wo.relativenumber = true
+
+vim.opt.scrolloff = 10
