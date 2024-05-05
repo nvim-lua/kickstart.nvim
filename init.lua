@@ -134,6 +134,8 @@ vim.keymap.set('n', '<leader>c', '<cmd>bd<cr>')
 vim.keymap.set('n', '<leader>h', '<cmd>bprev<cr>')
 vim.keymap.set('n', '<leader>l', '<cmd>bnext<cr>')
 vim.keymap.set('n', '<leader>sv', '<cmd>write<cr>', { desc = 'Sa[v]e File' })
+-- delete all other buffers
+vim.keymap.set('n', '<leader>C', '<cmd>%bd|e#|bd#<cr>')
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
@@ -796,15 +798,15 @@ require('lazy').setup({
     end,
   },
   {
-    "elixir-tools/elixir-tools.nvim",
-    version = "*",
-    event = { "BufReadPre", "BufNewFile" },
+    'elixir-tools/elixir-tools.nvim',
+    version = '*',
+    event = { 'BufReadPre', 'BufNewFile' },
     config = function()
-      local elixir = require("elixir")
-      local elixirls = require("elixir.elixirls")
+      local elixir = require 'elixir'
+      local elixirls = require 'elixir.elixirls'
 
       elixir.setup {
-        nextls = {enable = true},
+        nextls = { enable = true },
         credo = {},
         elixirls = {
           enable = true,
@@ -813,15 +815,15 @@ require('lazy').setup({
             enableTestLenses = false,
           },
           on_attach = function(client, bufnr)
-            vim.keymap.set("n", "<space>fp", ":ElixirFromPipe<cr>", { buffer = true, noremap = true })
-            vim.keymap.set("n", "<space>tp", ":ElixirToPipe<cr>", { buffer = true, noremap = true })
-            vim.keymap.set("v", "<space>em", ":ElixirExpandMacro<cr>", { buffer = true, noremap = true })
+            vim.keymap.set('n', '<space>fp', ':ElixirFromPipe<cr>', { buffer = true, noremap = true })
+            vim.keymap.set('n', '<space>tp', ':ElixirToPipe<cr>', { buffer = true, noremap = true })
+            vim.keymap.set('v', '<space>em', ':ElixirExpandMacro<cr>', { buffer = true, noremap = true })
           end,
-        }
+        },
       }
     end,
     dependencies = {
-      "nvim-lua/plenary.nvim",
+      'nvim-lua/plenary.nvim',
     },
   },
 
