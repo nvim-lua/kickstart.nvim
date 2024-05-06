@@ -560,6 +560,7 @@ require('lazy').setup({
         pyright = {},
         ruff = {},
         taplo = {}, -- LSP for toml files
+        debugpy = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
