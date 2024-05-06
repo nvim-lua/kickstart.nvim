@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -417,6 +417,7 @@ require('lazy').setup({
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
+      -- NOTE: wow i can type a note too look at mee ooooo
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', opts = {} },
 
@@ -564,6 +565,14 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      -- Ensure the servers and tools above are installed
+      --  To check the current status of installed tools and/or manually install
+      --  other tools, you can run
+      --    :Mason
+      --
+      --  You can press `g?` for help in this menu.
+      require('mason').setup()
+
       local servers = {
         -- clangd = {},
         -- gopls = {},
@@ -593,14 +602,6 @@ require('lazy').setup({
           },
         },
       }
-
-      -- Ensure the servers and tools above are installed
-      --  To check the current status of installed tools and/or manually install
-      --  other tools, you can run
-      --    :Mason
-      --
-      --  You can press `g?` for help in this menu.
-      require('mason').setup()
 
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
@@ -835,7 +836,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
