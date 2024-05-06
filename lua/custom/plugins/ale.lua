@@ -7,6 +7,7 @@ return {
     g.ale_fixers = {
       typescript = { 'prettierd' },
       html = { 'prettierd' },
+      json = { 'prettierd' },
       javascript = { 'prettierd' },
       typescriptreact = { 'prettierd' },
       go = { 'gofmt' },
