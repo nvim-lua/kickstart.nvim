@@ -90,6 +90,10 @@ P.S. You can delete this when you're done too. It's your config now! :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- custom
+vim.keymap.set('i', 'jk', '<Esc>')
+vim.keymap.set('n', '<leader>x', ':Ex<Enter>')
+
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = false
 
@@ -102,7 +106,7 @@ vim.g.have_nerd_font = false
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -113,7 +117,7 @@ vim.opt.showmode = false
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.opt.clipboard = 'unnamedplus'
+-- vim.opt.clipboard = 'unnamedplus'
 
 -- Enable break indent
 vim.opt.breakindent = true
@@ -142,14 +146,14 @@ vim.opt.splitbelow = true
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
-vim.opt.list = true
+vim.opt.list = false
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
-vim.opt.cursorline = true
+vim.opt.cursorline = false
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
@@ -316,7 +320,7 @@ require('lazy').setup({
         -- This is only run then, not every time Neovim starts up.
         build = 'make',
 
-        -- `cond` is a condition used to determine whether this plugin should be
+        -- `cond` is  condition used to determine whether this plugin should be
         -- installed and loaded.
         cond = function()
           return vim.fn.executable 'make' == 1
@@ -718,7 +722,8 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
+          -- ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<tab>'] = cmp.mapping.confirm { select = true },
 
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
@@ -756,6 +761,15 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    priority = 1000,
+    init = function()
+      vim.cmd.colorscheme 'catppuccin'
+    end,
+  },
+
   { -- You can easily change to a different colorscheme.
     -- Change the name of the colorscheme plugin below, and then
     -- change the command in the config to whatever the name of that colorscheme is.
@@ -767,7 +781,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      -- vim.cmd.colorscheme 'tokyonight-moon'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
