@@ -197,6 +197,9 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- Mapping oil to dash
+vim.keymap.set('n', '-', '<CMD>Oil --float<CR>', { desc = 'Open parent directory' })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -348,6 +351,9 @@ require('lazy').setup({
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
           },
+        },
+        pickers = {
+          find_files = { hidden = true },
         },
       }
 
@@ -898,6 +904,7 @@ require('lazy').setup({
     config = function()
       require('image-paste').setup {
         imgur_client_id = 'ff4ff5566f179e3',
+        imgur_client_id = '9e175315e657a12',
         paste_script = [[xclip -selection clipboard -t image/png -o]],
       }
     end,
@@ -911,6 +918,19 @@ require('lazy').setup({
         desc = 'Paste image from clipboard',
       },
     },
+  },
+  {
+    'stevearc/oil.nvim',
+    opts = {},
+    -- Optional dependencies
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require('oil').setup {
+        view_options = {
+          show_hidden = true,
+        },
+      }
+    end,
   },
 
   -- { 'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {} },
