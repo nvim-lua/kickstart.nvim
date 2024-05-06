@@ -204,6 +204,16 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- toggle command to autoformat buffer on save
+-- (can be bind to a key)
+vim.g.format_is_enabled = true
+vim.api.nvim_create_user_command('FormatToggle', function()
+  vim.g.format_is_enabled = not vim.g.format_is_enabled
+  print('Setting autoformatting to: ' .. tostring(vim.g.format_is_enabled))
+end, {
+  desc = 'Toggle autoformatting on save',
+})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -647,7 +657,7 @@ require('lazy').setup({
         local disable_filetypes = { c = true, cpp = true }
         return {
           timeout_ms = 500,
-          lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
+          lsp_fallback = vim.g.format_is_enabled and not disable_filetypes[vim.bo[bufnr].filetype],
         }
       end,
       formatters_by_ft = {
