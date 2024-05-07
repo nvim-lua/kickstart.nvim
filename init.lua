@@ -691,6 +691,8 @@ require('lazy').setup({
         lua = { 'stylua' },
         go = { 'gofmt', 'goimports', 'golines' },
         terraform = { 'terraform_fmt' },
+        json = { 'jsonnetfmt', 'jq' },
+        -- yaml = { 'yq' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
