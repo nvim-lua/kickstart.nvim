@@ -301,8 +301,8 @@ require('lazy').setup({
 
       -- Document existing key chains
       require('which-key').register {
-        ['<leader>q'] = { { "<cmd>confirm q<cr>", "Quit" }, },
-        ['<leader>w'] = { { "<cmd>w!<cr>", "Write" }, },
+        ['<leader>q'] = { { '<cmd>confirm q<cr>', 'Quit' } },
+        ['<leader>w'] = { { '<cmd>w!<cr>', 'Write' } },
         ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
         ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
         ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
@@ -682,7 +682,7 @@ require('lazy').setup({
 
   { -- Autoformat
     'stevearc/conform.nvim',
-    lazy = true,
+    event = 'VimEnter',
     keys = {
       {
         '<leader>f',
@@ -880,7 +880,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
