@@ -162,9 +162,12 @@ vim.opt.scrolloff = 10
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
--- Diagnostic keymaps
+-- My keymaps
 vim.keymap.set('n', '<leader>qq', '<CMD>q!<CR>', { desc = 'Quit all without close' })
 vim.keymap.set('n', '<leader>bd', '<CMD>bd<CR>', { desc = 'Close current buffer' })
+vim.keymap.set('n', '<S-h>', '<CMD>bprev<CR>', { desc = 'Go to previous buffer' })
+vim.keymap.set('n', '<S-l>', '<CMD>bnext<CR>', { desc = 'Go to next buffer' })
+
 vim.keymap.set('n', '<C-s>', '<CMD>w<CR>', { desc = 'Save a file' })
 vim.keymap.set('n', '<leader>e', '<CMD>Oil<CR>', { desc = 'Open folder structure with Oil' })
 vim.keymap.set('n', '<leader>E', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
