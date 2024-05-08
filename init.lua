@@ -593,11 +593,16 @@ require('lazy').setup({
             },
           },
         },
-        omnisharp = {
-          cmd = { 'omnisharp', '--languageserver' },
-          filetypes = { 'cs', 'vb', 'cshtml', 'razor', 'html' },
-          root_dir = require('lspconfig.util').root_pattern('*.sln', '*.csproj', '*.fsproj'),
-        },
+
+        -- currently using csharp-language-server from mason
+
+        -- omnisharp = {
+        --   cmd = { 'omnisharp', '--languageserver' },
+        --   filetypes = { 'cs', 'vb', 'cshtml', 'razor', 'html' },
+        --   root_dir = function(fname)
+        --     return require('lspconfig').util.root_pattern('*.sln', '*.csproj', '*.fsproj', '*.vbproj', '*.vcxproj')(fname) or vim.fn.getcwd()
+        --   end,
+        -- },
       }
 
       -- Ensure the servers and tools above are installed
@@ -890,14 +895,12 @@ require('lazy').setup({
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
 
-  -- NOTE: Next step on your Neovim journey: Add/Configure additional plugins for Kickstart
-  --
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
