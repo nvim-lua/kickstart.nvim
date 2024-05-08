@@ -355,10 +355,59 @@ require('lazy').setup({
         --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
         --   },
         -- },
-        -- pickers = {}
-        -- should be below each other stacked vertically
-        layout_config = {
-          layout_strategy = 'horizontal',
+        -- set all pickers to dropdown
+        pickers = {
+          find_files = {
+            theme = 'dropdown',
+          },
+          live_grep = {
+            theme = 'dropdown',
+          },
+          grep_string = {
+            theme = 'dropdown',
+          },
+          file_browser = {
+            theme = 'dropdown',
+          },
+          old_files = {
+            theme = 'dropdown',
+          },
+          help_tags = {
+            theme = 'dropdown',
+          },
+          keymaps = {
+            theme = 'dropdown',
+          },
+          builtin = {
+            theme = 'dropdown',
+          },
+          lsp_references = {
+            theme = 'dropdown',
+          },
+          lsp_definitions = {
+            theme = 'dropdown',
+          },
+          lsp_implementations = {
+            theme = 'dropdown',
+          },
+          lsp_code_actions = {
+            theme = 'dropdown',
+          },
+          lsp_document_diagnostics = {
+            theme = 'dropdown',
+          },
+          lsp_workspace_diagnostics = {
+            theme = 'dropdown',
+          },
+          lsp_document_symbols = {
+            theme = 'dropdown',
+          },
+          lsp_workspace_symbols = {
+            theme = 'dropdown',
+          },
+          lsp_dynamic_workspace_symbols = {
+            theme = 'dropdown',
+          },
         },
         extensions = {
           ['ui-select'] = {
@@ -898,7 +947,7 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  require 'kickstart.plugins.debug',
+  -- require 'kickstart.plugins.debug',
   require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
 
