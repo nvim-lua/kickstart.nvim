@@ -39,6 +39,8 @@ return {
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'c',
+        'cpp'
       },
     }
 
@@ -51,6 +53,30 @@ return {
     vim.keymap.set('n', '<leader>B', function()
       dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
     end)
+
+    -- LLVM (Low Level Virtual Machine)
+    dap.adapters.lldb = {
+      type = 'executable',
+      command = 'lldb-vscode', -- adjust as needed, must be absolute path
+      --args:    string[],       -- arguments for the command
+      name = 'lldb'
+    }
+
+    dap.configurations.cpp = {
+      {
+        name = "Launch",
+        type = "lldb",
+        request = "launch",
+        program = function()
+          return vim.fn.input('Path to executable: ' .. vim.fn.getcwd() .. '/' .. 'file')
+        end,
+        stopOnEntry = false,
+        args = {},
+        runInTerminal = true,
+      },
+    }
+    dap.configurations.c = dap.configurations.cpp
+    dap.configurations.rust = dap.configurations.cpp
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
