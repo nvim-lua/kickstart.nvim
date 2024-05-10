@@ -87,8 +87,9 @@ return {
     -- Install golang specific config
     require('dap-go').setup {
       delve = {
-        -- On Windows delve must not be run attached or it crashes.
-        detached = vim.loop.os_uname().sysname ~= 'Windows_NT',
+        -- On Windows delve must be run attached or it crashes.
+        -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
+        detached = not vim.fn.has 'win32',
       },
     }
   end,
