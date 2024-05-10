@@ -85,6 +85,11 @@ return {
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
     -- Install golang specific config
-    require('dap-go').setup()
+    require('dap-go').setup {
+      delve = {
+        -- On Windows delve must not be run attached or it crashes.
+        detached = vim.loop.os_uname().sysname ~= 'Windows_NT',
+      },
+    }
   end,
 }
