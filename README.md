@@ -3,7 +3,7 @@
 Instructions unique to my dotfiles:
 - create a symlink in $HOME/.config/
 `ln -s /Users/<username>/src/swl_kickstart.nvim /Users/<username>/.config/`
-- launch with `knv`
+- launch with `kv`
 
 https://github.com/kdheepak/kickstart.nvim/assets/1813121/f3ff9a2b-c31f-44df-a4fa-8a0d7b17cf7b
 
@@ -18,10 +18,14 @@ debugpy/bin/python -m pip install debugpy
 
 ## TODO / explore
 
+- ruby debugging with ruby LSP
+- investigate find and replace within file, within project
+- commenting selection
+
+
 ### explore:
 
 - neotest - test run viewer
-
 
 
 

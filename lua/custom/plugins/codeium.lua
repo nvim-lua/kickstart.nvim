@@ -1,3 +1,7 @@
+vim.g.codeium_no_tab = 1
+-- disable codeium by default
+vim.g.codeium_enabled = false
+
 return {
   'Exafunction/codeium.vim',
   -- event = 'BufEnter',
@@ -20,6 +24,11 @@ return {
 
     vim.keymap.set('i', '<C-o>', function()
       return vim.fn['codeium#Complete']()
+    end, { expr = true, silent = true })
+
+    -- configure codeium#Chat() in insert or normal mode
+    vim.keymap.set('n', '<C-c>', function()
+      return vim.fn['codeium#Chat']()
     end, { expr = true, silent = true })
   end,
 }
