@@ -3,9 +3,6 @@
 --
 -- See the kickstart.nvim README for more information
 return {
-  vim.keymap.set('n', '<space>fb', ':Telescope file_browser path=%:p:h select_buffer=true<CR>'),
-  vim.keymap.set('n', '<space>ng', ':Neogit cwd=%:p:h<CR>'),
-
   require('mini.surround').setup(),
 
   require('mini.pairs').setup(),
