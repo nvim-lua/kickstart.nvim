@@ -1,3 +1,5 @@
+-- Strangeness. Looks like installing LunarVim fixed my issues? Maybe there was a depdencny I needed for LunarVim that I installed that fixed it? --
+
 --[[
 
 =====================================================================
