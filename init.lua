@@ -86,7 +86,7 @@ P.S. You can delete this when you're done too. It's your config now! :)
 vim.opt.termguicolors = true
 
 -- Make the line length 79
-vim.opt.textwidth = 79
+-- vim.opt.textwidth = 79
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -599,7 +599,6 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        gopls = {},
         pyright = {},
         cssls = {},
         cssmodules_ls = {},
@@ -609,6 +608,7 @@ require('lazy').setup({
         jsonls = {},
         tailwindcss = {},
         tsserver = {},
+        prettier = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
