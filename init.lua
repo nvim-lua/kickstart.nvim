@@ -1,3 +1,8 @@
+-- if this file is opened in a vscode, exit from here
+if vim.g.vscode then
+  return
+end
+
 --[[
 
 =====================================================================
