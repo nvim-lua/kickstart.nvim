@@ -15,6 +15,13 @@ return {
   },
   opts = {
     filesystem = {
+      filtered_items = {
+        always_show = {
+          '.gitignore',
+          '.gitlab-ci.yml',
+          '.env',
+        },
+      },
       window = {
         mappings = {
           ['\\'] = 'close_window',
