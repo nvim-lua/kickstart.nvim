@@ -57,3 +57,15 @@ map('n', '<leader>bn', '<Cmd>BufferOrderByName<CR>', opts)
 map('n', '<leader>bd', '<Cmd>BufferOrderByDirectory<CR>', opts)
 map('n', '<leader>bl', '<Cmd>BufferOrderByLanguage<CR>', opts)
 map('n', '<leader>bw', '<Cmd>BufferOrderByWindowNumber<CR>', opts)
+
+vim.api.nvim_create_autocmd('VimEnter', {
+    desc = 'Auto select virtualenv Nvim open',
+    pattern = '*',
+    callback = function()
+      local venv = vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';')
+      if venv ~= '' then
+        require('venv-selector').retrieve_from_cache()
+      end
+    end,
+    once = true,
+  })
