@@ -1,0 +1,6 @@
+return {
+  {
+    'mbbill/undotree',
+    opt = {},
+  },
+}
