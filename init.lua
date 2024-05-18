@@ -192,6 +192,7 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- NOAH
 -- Remap 'jj' to 'Esc' in insert mode
 vim.api.nvim_set_keymap('i', 'jj', '<Esc>', { noremap = true, silent = true })
+require'lspconfig'.pyright.setup{}
 
 
 -- [[ Basic Autocommands ]]
