@@ -83,7 +83,7 @@ git clone https://github.com/nvim-lua/kickstart.nvim.git %userprofile%\AppData\L
 If you're using `powershell.exe`
 
 ```
-git clone https://github.com/nvim-lua/kickstart.nvim.git $env:USERPROFILE\AppData\Local\nvim\
+gimv /home/user/oldname /home/user/newnamet clone https://github.com/nvim-lua/kickstart.nvim.git $env:USERPROFILE\AppData\Local\nvim\
 ```
 
 </details>
