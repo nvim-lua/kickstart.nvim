@@ -779,8 +779,11 @@ require('lazy').setup({
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     'catppuccin/nvim',
-    name = "catppuccin",
+    name = 'catppuccin',
     priority = 1000, -- Make sure to load this before all the other start plugins.
+    opts = {
+      transparent_background = true,
+    },
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
@@ -908,6 +911,6 @@ require('lazy').setup({
     },
   },
 })
-require("lspconfig").pyright.setup({})
+require('lspconfig').pyright.setup {}
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
