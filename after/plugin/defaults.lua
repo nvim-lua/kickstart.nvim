@@ -41,7 +41,7 @@ vim.api.nvim_create_user_command(
   'OpenInVSCode',
   function(opts)
     -- Using vim.fn.expand('%') to get the current file path
-    local filepath = vim.fn.expand('%:p')     -- ':p' expands to full path
+    local filepath = vim.fn.expand('%:p') -- ':p' expands to full path
     -- The command to open VS Code with the current file
     os.execute('code ' .. filepath)
   end,
