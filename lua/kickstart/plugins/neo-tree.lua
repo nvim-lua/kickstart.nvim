@@ -20,6 +20,8 @@ return {
           ['\\'] = 'close_window',
         },
       },
+      hijack_netrw_behavior = 'open_default',
     },
   },
+  lazy = false,
 }
