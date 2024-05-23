@@ -201,26 +201,6 @@ vim.api.nvim_create_autocmd({ 'BufReadPost' }, {
   end,
 })
 
--- Function to set tab width
---[[
-local set_tab_width = function(ft, width)
-  vim.api.nvim_create_autocmd('FileType', {
-    pattern = ft,
-    callback = function()
-      vim.bo.shiftwidth = width
-      vim.bo.tabstop = width
-      --vim.bo.expandtab = true
-    end,
-  })
-end
-]]
---
-
--- Set tabwidth for file types
---set_tab_width('python', 4)
---set_tab_width('c', 4)
---set_tab_width('c++', 2)
-
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
 --  See `:help vim.highlight.on_yank()`
@@ -330,6 +310,39 @@ require('lazy').setup({
   -- you do for a plugin at the top level, you can do for a dependency.
   --
   -- Use the `dependencies` key to specify the dependencies of a particular plugin
+
+  {
+    'nvim-neo-tree/neo-tree.nvim',
+    cmd = 'Neotree',
+    branch = 'v3.x',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
+      'MunifTanjim/nui.nvim',
+      -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+    },
+    keys = {
+      {
+        '<leader>t',
+        function()
+          require('neo-tree.command').execute { toggle = true }
+        end,
+        desc = 'Explorer NeoTree (Root Dir)',
+      },
+    },
+    opts = {
+      event_handlers = {
+        {
+          event = 'neo_tree_buffer_enter',
+          handler = function(arg)
+            vim.cmd [[
+              setlocal relativenumber
+            ]]
+          end,
+        },
+      },
+    },
+  },
 
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
