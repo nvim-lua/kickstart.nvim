@@ -880,7 +880,7 @@ require('lazy').setup({
     config = function()
       require('treesitter-context').setup {
         enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
-        max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
+        max_lines = 1, -- How many lines the window should span. Values <= 0 mean no limit.
         min_window_height = 0, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
         line_numbers = true,
         multiline_threshold = 10, -- Maximum number of lines to show for a single context
@@ -893,6 +893,10 @@ require('lazy').setup({
         on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
       }
     end,
+  },
+  {
+    'mrjones2014/smart-splits.nvim',
+    lazy = false,
   },
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
@@ -938,5 +942,19 @@ require('lazy').setup({
   },
 })
 
--- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
+-- Smart Splits
+vim.keymap.set('n', '<A-h>', require('smart-splits').resize_left)
+vim.keymap.set('n', '<A-j>', require('smart-splits').resize_down)
+vim.keymap.set('n', '<A-k>', require('smart-splits').resize_up)
+vim.keymap.set('n', '<A-l>', require('smart-splits').resize_right)
+-- moving between splits
+vim.keymap.set('n', '<C-h>', require('smart-splits').move_cursor_left)
+vim.keymap.set('n', '<C-j>', require('smart-splits').move_cursor_down)
+vim.keymap.set('n', '<C-k>', require('smart-splits').move_cursor_up)
+vim.keymap.set('n', '<C-l>', require('smart-splits').move_cursor_right)
+vim.keymap.set('n', '<C-\\>', require('smart-splits').move_cursor_previous)
+-- swapping buffers between windows
+vim.keymap.set('n', '<leader><leader>h', require('smart-splits').swap_buf_left)
+vim.keymap.set('n', '<leader><leader>j', require('smart-splits').swap_buf_down)
+vim.keymap.set('n', '<leader><leader>k', require('smart-splits').swap_buf_up)
+vim.keymap.set('n', '<leader><leader>l', require('smart-splits').swap_buf_right)
