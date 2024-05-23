@@ -1,3 +1,9 @@
+-- Oil Setup
+--
+--
+--
+--
+
 -- Strangeness. Looks like installing LunarVim fixed my issues? Maybe there was a depdencny I needed for LunarVim that I installed that fixed it? --
 
 --[[
@@ -229,6 +235,13 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
 
   'hadronized/hop.nvim',
+
+  {
+    'stevearc/oil.nvim',
+    opts = {},
+    -- Optional Dependencies
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+  },
 
   'hrsh7th/nvim-cmp',
   'razzmatazz/csharp-language-server',
@@ -484,6 +497,8 @@ require('lazy').setup({
           --  To jump back, press <C-t>.
           map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
+          map('sf', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+
           -- Find references for the word under your cursor.
           map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
 
@@ -503,6 +518,23 @@ require('lazy').setup({
           -- Fuzzy find all the symbols in your current workspace.
           --  Similar to document symbols, except searches over your entire project.
           map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+
+          -- Fuzzy find all the symbols in your current workspace.
+          --  Similar to document symbols, except searches over your entire project.
+          --
+
+          --map('<leader>df', function ()require('telescope.builtin').lsp_document_symbols{symbols='function'},'[D]ocument [F]unctions')
+          --
+          map('<leader>df', function()
+            require('telescope.builtin').lsp_document_symbols { symbols = 'method' }
+          end, '[D]ocument [F]unctions')
+          --
+          -- vim.keymap.set(
+          --  'n',
+          --  '<leader>df',
+          --  require('telescope.builtin').lsp_document_symbols,
+          --  { buffer = event.buf, desc = 'LSP: ' .. '[D]ocument [F]unctions', symbols = 'function' }
+          --)
 
           -- Rename the variable under your cursor.
           --  Most Language Servers support renaming across files, etc.
@@ -912,5 +944,10 @@ require('lazy').setup({
   },
 })
 
+require('oil').setup()
+
+vim.keymap.set('n', '-', '<CMD>Oil --float<CR>', { desc = 'Open parent directory' })
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+--
