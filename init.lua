@@ -89,10 +89,26 @@ P.S. You can delete this when you're done too. It's your config now! :)
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
-
+vim.g.have_nerd_font = true
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.encoding = 'UTF-8'
+vim.opt.wrap = false
+vim.opt.termguicolors = true
+vim.opt.autoindent = true
+vim.api.nvim_create_augroup('neotree', {})
+vim.api.nvim_create_autocmd('UiEnter', {
+  desc = 'Open Neotree automatically',
+  group = 'neotree',
+  callback = function()
+    if vim.fn.argc() == 0 then
+      vim.cmd 'NvimTreeToggle'
+    end
+  end,
+})
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
@@ -176,10 +192,10 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -673,7 +689,7 @@ require('lazy').setup({
       }
     end,
   },
-
+  { 'anuvyklack/pretty-fold.nvim', config = true },
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
@@ -707,6 +723,7 @@ require('lazy').setup({
         }
       end,
       formatters_by_ft = {
+        cpp = { 'clang_format' },
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
@@ -844,7 +861,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'wildcharm'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
@@ -937,6 +954,23 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
+<<<<<<< HEAD
+=======
+  --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
+  { 'kdheepak/lazygit.nvim' },
+  {
+    'nvim-tree/nvim-tree.lua',
+    config = function()
+      require('nvim-tree').setup {
+        sort_by = 'case_sensitive',
+        view = {
+          width = 30,
+          preserve_window_proportions = true,
+        },
+      }
+    end,
+  },
+>>>>>>> b708f3d (Add files via upload)
   -- { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
