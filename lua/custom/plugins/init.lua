@@ -152,23 +152,6 @@ return {
   },
 
   {
-    "jay-babu/mason-null-ls.nvim",
-    cond = false,
-    event = { "BufReadPre", "BufNewFile" },
-    dependencies = {
-      "williamboman/mason.nvim",
-      "nvimtools/none-ls.nvim",
-    },
-    config = function()
-      require("mason-null-ls").setup({
-        ensure_installed = {},
-        automatic_installation = true,
-        automatic_setup = false,
-      })
-    end,
-  },
-
-  {
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
       'JoosepAlviste/nvim-ts-context-commentstring',

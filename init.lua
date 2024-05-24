@@ -43,6 +43,7 @@ P.S. You can delete this when you're done too. It's your config now :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -478,14 +479,10 @@ require('which-key').register({
 --
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
+--
 local servers = {
-  -- clangd = {},
-  -- gopls = {},
-  -- pyright = {},
-  -- rust_analyzer = {},
-  -- tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
-
+  tsserver = {},
+  denols = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -518,6 +515,26 @@ mason_lspconfig.setup_handlers {
     }
   end
 }
+
+local lspconfig = require 'lspconfig'
+
+lspconfig.denols.setup({
+  root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
+  init_options = {
+    lint = true,
+    unstable = false
+  },
+})
+
+lspconfig.tsserver.setup({
+  root_dir = lspconfig.util.root_pattern("package.json"),
+  on_attach = function(client, bufnr)
+    -- Disable tsserver for deno projects
+    if lspconfig.util.root_pattern("deno.json", "deno.jsonc")(vim.fn.getcwd()) then
+      client.stop()
+    end
+  end,
+})
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
