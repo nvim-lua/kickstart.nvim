@@ -360,6 +360,18 @@ require('lazy').setup({
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
     },
+    config = function() -- this is the function that runs, after loading
+      require('which-key').setup()
+
+      -- document existing key chains
+      require('which-key').register {
+        ['<leader>c'] = { name = '[c]ode', _ = 'which_key_ignore' },
+        ['<leader>d'] = { name = '[d]ocument', _ = 'which_key_ignore' },
+        ['<leader>r'] = { name = '[r]ename', _ = 'which_key_ignore' },
+        ['<leader>s'] = { name = '[s]earch', _ = 'which_key_ignore' },
+        ['<leader>w'] = { name = '[w]orkspace', _ = 'which_key_ignore' },
+      }
+    end,
   },
 
   -- NOTE: Plugins can specify dependencies.
@@ -1052,6 +1064,17 @@ require('lazy').setup({
       -- or leave it empty to use the default settings
       -- refer to the configuration section below
     },
+  },
+  {
+    'stevearc/oil.nvim',
+    opts = {},
+    -- Optional dependencies
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function() -- this is the function that runs, after loading
+      require('oil').setup()
+
+      vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
+    end,
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
