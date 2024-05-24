@@ -1,24 +1,26 @@
 return {
   {
     'b0o/schemastore.nvim',
-    depenencies = {
+    dependencies = {
       { 'neovim/nvim-lspconfig' },
     },
     config = function()
-      require('lspconfig').jsonls.setup {
+      local schemastore = require 'schemastore'
+      local lspconfig = require 'lspconfig'
+      lspconfig.jsonls.setup {
         settigns = {
           json = {
-            schemas = require('schemastore').json.schemas(),
+            schemas = schemastore.json.schemas(),
             validate = {
               enable = true,
             },
           },
         },
       }
-      require('lspconfig').yamlls.setup {
+      lspconfig.yamlls.setup {
         settigns = {
           yaml = {
-            schemas = require('schemastore').yaml.schemas(),
+            schemas = schemastore.yaml.schemas(),
           },
           schemaStore = {
             enable = true,

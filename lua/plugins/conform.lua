@@ -5,7 +5,7 @@ return {
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<C>f',
+        '<leader>f',
         function()
           require('conform').format { async = true, lsp_fallback = true }
         end,
@@ -21,7 +21,8 @@ return {
         typescript = { 'prettier' },
       },
       format_on_save = function(bufnr)
-        local disable_filetypes = {--[[  c = true, cpp = true  ]]
+        local disable_filetypes = {
+          --[[  c = true, cpp = true  ]]
         }
         return {
           timeout_ms = 500,

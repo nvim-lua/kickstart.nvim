@@ -3,8 +3,8 @@ return {
     'mfussenegger/nvim-lint',
     init = function()
       require('lint').linters_by_ft = {
-        javascript = { 'quick-lint-js' },
-        typescript = { 'quick-lint-js' },
+        javascript = { 'eslint_d' },
+        typescript = { 'eslint_d' },
         json = { 'jsonlint' },
         lua = { 'luacheck' },
         go = { 'revive' },

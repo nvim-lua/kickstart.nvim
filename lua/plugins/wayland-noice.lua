@@ -20,15 +20,18 @@ return {
       presets = {
         bottom_search = true,
         command_palette = true,
-        lsp_doc_border = true,
+        lsp_doc_border = false,
         long_message_to_split = true,
         inc_rename = true,
       },
       views = {
+        split = {
+          enter = true,
+        },
         cmdline_popup = {
           border = {
             style = 'none',
-            padding = { 2, 3 },
+            padding = { 2, 1 },
           },
           filter_options = {},
           win_options = {
@@ -44,22 +47,47 @@ return {
           win_options = {
             winhighlight = 'NormalFloat:NormalFloat,FloatBorder:FloatBorder',
           },
+          virtualtext = {
+            hl_group = 'Search',
+          },
         },
       },
       routes = {
+        --        {
+        --          filter = {
+        --            event = 'msg_show',
+        --            kind = 'search_count',
+        --          },
+        --          opts = {
+        --            skip = true,
+        --          },
+        --        },
         {
-          view = 'notify',
-          filter = { event = 'msg_showmode' },
+          view = 'split',
+          filter = {
+            event = { 'msg_show', 'noice' },
+            min_height = 20,
+          },
         },
+      },
+      messages = {
+        enabled = true,
+        view = 'notify',
+        view_error = 'notify',
+        view_warn = 'notify',
+        view_history = 'messages',
+        view_search = 'virtualtext',
+        opts = {},
       },
       notify = {
         enabled = true,
         view = 'notify',
       },
-      messages = {
-        enabled = true,
-        view = 'notify',
-        opts = {},
+      commands = {
+        search = {
+          view = 'popup',
+          filter = { kind = 'search' },
+        },
       },
     },
   },
