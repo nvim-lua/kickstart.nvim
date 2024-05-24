@@ -521,6 +521,16 @@ local lspconfig = require 'lspconfig'
 
 lspconfig.denols.setup({
   root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
+
+  on_attach = function(client, bufnr)
+    -- Disable tsserver for deno projects
+    if lspconfig.util.root_pattern("deno.json", "deno.jsonc")(vim.fn.getcwd()) then
+      client.stop()
+    else
+      on_attach(client, bufnr)
+    end
+  end,
+
   init_options = {
     lint = true,
     unstable = false
@@ -529,22 +539,31 @@ lspconfig.denols.setup({
 
 lspconfig.eslint.setup {
   root_dir = lspconfig.util.root_pattern('.eslintrc', '.eslintrc.js', '.eslintrc.json'),
+
+  -- cmd = { "eslint_d", "--stdio" },
+
   settings = {
     format = { enable = true },
   },
+
   handlers = {
     ['window/showMessageRequest'] = function(_, result)
       return result.message:match('ENOENT') and vim.NIL or result
     end,
   },
+
+  -- on_attach = on_attach
 }
 
 lspconfig.tsserver.setup({
   root_dir = lspconfig.util.root_pattern("package.json"),
+
   on_attach = function(client, bufnr)
     -- Disable tsserver for deno projects
     if lspconfig.util.root_pattern("deno.json", "deno.jsonc")(vim.fn.getcwd()) then
       client.stop()
+    else
+      on_attach(client, bufnr)
     end
   end,
 })
