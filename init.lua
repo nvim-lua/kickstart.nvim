@@ -483,6 +483,7 @@ require('which-key').register({
 local servers = {
   tsserver = {},
   denols = {},
+  eslint = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -525,6 +526,18 @@ lspconfig.denols.setup({
     unstable = false
   },
 })
+
+lspconfig.eslint.setup {
+  root_dir = lspconfig.util.root_pattern('.eslintrc', '.eslintrc.js', '.eslintrc.json'),
+  settings = {
+    format = { enable = true },
+  },
+  handlers = {
+    ['window/showMessageRequest'] = function(_, result)
+      return result.message:match('ENOENT') and vim.NIL or result
+    end,
+  },
+}
 
 lspconfig.tsserver.setup({
   root_dir = lspconfig.util.root_pattern("package.json"),
