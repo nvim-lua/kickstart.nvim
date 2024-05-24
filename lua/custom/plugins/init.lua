@@ -127,43 +127,46 @@ return {
     end
   },
 
-  -- {
-  --   "jose-elias-alvarez/null-ls.nvim",
-  --   dependencies = { "nvim-lua/plenary.nvim" },
-  --   config = function()
-  --     local null_ls = require("null-ls")
-  --
-  --     null_ls.setup({
-  --       sources = {
-  --         null_ls.builtins.diagnostics.codespell,
-  --         null_ls.builtins.diagnostics.eslint_d.with({
-  --           method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
-  --         }),
-  --         null_ls.builtins.diagnostics.stylelint.with({
-  --           filetypes = { "scss", "css" },
-  --         }),
-  --         null_ls.builtins.formatting.prettierd,
-  --       },
-  --     })
-  --   end
-  -- },
+  {
+    "nvimtools/none-ls.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvimtools/none-ls-extras.nvim",
+    },
+    config = function()
+      local null_ls = require("null-ls")
 
-  -- {
-  --   "jay-babu/mason-null-ls.nvim",
-  --   cond = false,
-  --   event = { "BufReadPre", "BufNewFile" },
-  --   dependencies = {
-  --     "williamboman/mason.nvim",
-  --     "jose-elias-alvarez/null-ls.nvim",
-  --   },
-  --   config = function()
-  --     require("mason-null-ls").setup({
-  --       ensure_installed = {},
-  --       automatic_installation = true,
-  --       automatic_setup = false,
-  --     })
-  --   end,
-  -- },
+      null_ls.setup({
+        sources = {
+          null_ls.builtins.diagnostics.codespell,
+          require("none-ls.diagnostics.eslint_d").with({
+            method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
+          }),
+          null_ls.builtins.diagnostics.stylelint.with({
+            filetypes = { "scss", "css" },
+          }),
+          null_ls.builtins.formatting.prettierd,
+        },
+      })
+    end
+  },
+
+  {
+    "jay-babu/mason-null-ls.nvim",
+    cond = false,
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = {
+      "williamboman/mason.nvim",
+      "nvimtools/none-ls.nvim",
+    },
+    config = function()
+      require("mason-null-ls").setup({
+        ensure_installed = {},
+        automatic_installation = true,
+        automatic_setup = false,
+      })
+    end,
+  },
 
   {
     'nvim-treesitter/nvim-treesitter',
@@ -180,6 +183,7 @@ return {
           'lua',
           'python',
           'scss',
+          'svelte',
           'tsx',
           'typescript',
           'vim',
