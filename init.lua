@@ -460,6 +460,15 @@ require('lazy').setup({
     },
   },
   { 'Bilal2453/luvit-meta', lazy = true },
+  {
+    'mfussenegger/nvim-dap',
+    dependencies = {
+      'suketa/nvim-dap-ruby',
+    },
+    config = function()
+      require('dap-ruby').setup()
+    end,
+  },
   { -- Permit to display errors and warnings in the quickfix
     'folke/trouble.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
