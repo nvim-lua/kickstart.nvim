@@ -721,7 +721,7 @@ require('lazy').setup({
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
-      vim.cmd.colorscheme 'catppuccin-frappe'
+      vim.cmd.colorscheme 'catppuccin-mocha'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
