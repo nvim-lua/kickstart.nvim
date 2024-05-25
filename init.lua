@@ -200,7 +200,7 @@ require('lazy').setup({
               runtimes = {
                 {
                   name = 'OpenJDK-Temurin-17',
-                  path = '/opt/jdk-17.0.11+9',
+                  path = '/opt/jdk-17.0.11+9/',
                   default = true,
                 },
               },
