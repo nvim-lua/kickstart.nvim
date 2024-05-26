@@ -18,6 +18,12 @@ vim.g.have_nerd_font = false
 --  Experiment for yourself to see if you like it!
 vim.opt.relativenumber = true
 
+-- Tab settings
+vim.opt.expandtab = true
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+vim.opt.shiftwidth = 4
+
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
 
@@ -145,8 +151,13 @@ vim.opt.rtp:prepend(lazypath)
 --  To update plugins you can run
 --    :Lazy update
 --
+local github_copilot_plugin = require 'plugins.copilot'
+
+--
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
+  github_copilot_plugin,
+
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   --'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
@@ -167,18 +178,18 @@ require('lazy').setup({
   --    require('gitsigns').setup({ ... })
   --
   -- See `:help gitsigns` to understand what the configuration keys do
-  { -- Adds git related signs to the gutter, as well as utilities for managing changes
-    'lewis6991/gitsigns.nvim',
-    opts = {
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
-    },
-  },
+  -- { -- Adds git related signs to the gutter, as well as utilities for managing changes
+  --   'lewis6991/gitsigns.nvim',
+  --   opts = {
+  --     signs = {
+  --       add = { text = '+' },
+  --       change = { text = '~' },
+  --       delete = { text = '_' },
+  --       topdelete = { text = '‾' },
+  --       changedelete = { text = '~' },
+  --     },
+  --   },
+  -- },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
@@ -840,7 +851,7 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
+  -- { import = 'plugins' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
