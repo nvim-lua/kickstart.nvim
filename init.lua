@@ -15,11 +15,14 @@ vim.opt.relativenumber = true
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
+vim.opt.laststatus = 3
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
 
 -- Don't show the mode, since it's already in status line
 vim.opt.showmode = false
+
+vim.opt.swapfile = false
 
 -- Sync clipboard between OS and Neovim.
 vim.opt.clipboard = 'unnamedplus'
@@ -67,6 +70,7 @@ vim.opt.scrolloff = 10
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+vim.keymap.set('n', '<leader><F5>', vim.cmd.UndotreeToggle)
 -- Move line up or down after highlight
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
@@ -134,8 +138,41 @@ vim.opt.rtp:prepend(lazypath)
 -- [[ Configure and install plugins ]]
 require('lazy').setup({
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  'ThePrimeagen/vim-be-good',
+  'mbbill/undotree',
+
+  -- Database
+  'tpope/vim-dadbod',
+  'kristijanhusak/vim-dadbod-ui',
+  'kristijanhusak/vim-dadbod-completion',
+
+  -- best plugin ever
   {
+    'stevearc/oil.nvim',
+    opts = {},
+    -- Optional dependencies
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require('oil').setup {
+        default_file_explorer = true,
+      }
+    end,
+  },
+
+  {
+    'nvim-neo-tree/neo-tree.nvim',
+    version = '*',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
+      'MunifTanjim/nui.nvim',
+    },
+    -- config = function()
+    --   require('neo-tree').setup {}
+    -- end,
+  },
+
+  'ThePrimeagen/vim-be-good',
+  --[[ {
     'tjdevries/colorbuddy.nvim',
     config = function()
       require('colorbuddy').colorscheme 'tokyonight-night'
@@ -166,7 +203,7 @@ require('lazy').setup({
       -- I've always liked lua function calls to be blue. I don't know why.
       -- Group.new('@function.call.lua', c.blue:dark(), nil, nil)
     end,
-  },
+  }, ]]
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -349,6 +386,9 @@ require('lazy').setup({
       -- vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       -- vim.keymap.set('n', '<leader>fb', ':Telescope file_browser<CR>', { noremap = true })
 
+      -- Oil nvim
+      vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
+
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to telescope to change theme, layout, etc.
@@ -376,6 +416,15 @@ require('lazy').setup({
 
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
+    --Configure dartlsp
+    -- local lspconfig = require 'lspconfig'
+    -- lspconfig.dartls.setup {
+    --   cmd = { 'dart', '/home/rapzy/Downloads/Flutter/flutter/bin/cache/dart-sdk/bin/snapshots/analysis_server.dart.snapshot ', '--lsp' },
+    --   capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities()),
+    -- }
+    -- lspconfig.dartls.setup {
+    --   cmd = { '/path/to/dart', 'language-server', '--protocol=lsp' },
+    -- }
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for neovim
       'williamboman/mason.nvim',
@@ -393,6 +442,11 @@ require('lazy').setup({
       } },
     },
     config = function()
+      local lspconfig = require 'lspconfig'
+
+      lspconfig.dartls.setup {
+        cmd = { 'dart', 'language-server', '--protocol=lsp' },
+      }
       -- Brief Aside: **What is LSP?**
       --
       -- LSP is an acronym you've probably heard, but might not understand what it is.
@@ -569,6 +623,11 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format lua code
+        'black',
+        'debugpy',
+        'mypy',
+        'ruff',
+        'pyright',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -589,6 +648,7 @@ require('lazy').setup({
 
   { -- Autoformat
     'stevearc/conform.nvim',
+
     opts = {
       notify_on_error = false,
       format_on_save = {
@@ -597,12 +657,17 @@ require('lazy').setup({
       },
       formatters_by_ft = {
         lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        python = { 'isort', 'black' },
-        --
-        -- You can use a sub-list to tell conform to run *until* a formatter
-        -- is found.
+        -- Conform will run multiple formatters sequentially
+        -- go = { 'goimports', 'gofmt' },
+        python = function(bufnr)
+          if require('conform').get_formatter_info('ruff_format', bufnr).available then
+            return { 'ruff_format' }
+          else
+            return { 'isort', 'black' }
+          end
+        end,
         javascript = { { 'prettierd', 'prettier' } },
+        javascriptreact = { { 'prettierd', 'prettier' } },
         ['*'] = { 'trim_whitespace' },
       },
     },
@@ -699,12 +764,19 @@ require('lazy').setup({
           { name = 'path' },
         },
       }
+      cmp.setup.filetype({ 'sql' }, {
+        sources = {
+          { name = 'vim-dadbod-completion' },
+          { name = 'buffer' },
+        },
+      })
     end,
   },
 
   {
     'rose-pine/neovim',
     name = 'rose-pine',
+    priority = 1000,
     config = function()
       require('rose-pine').setup {
         disable_background = true,
@@ -715,15 +787,83 @@ require('lazy').setup({
       }
     end,
   },
+  {
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    priority = 1000,
+    config = function()
+      require('catppuccin').setup {
+        flavour = 'auto', -- latte, frappe, macchiato, mocha
+        background = { -- :h background
+          light = 'latte',
+          dark = 'mocha',
+        },
+        transparent_background = true, -- disables setting the background color.
+        show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
+        term_colors = false, -- sets terminal colors (e.g. `g:terminal_color_0`)
+        dim_inactive = {
+          enabled = false, -- dims the background color of inactive window
+          shade = 'dark',
+          percentage = 0.15, -- percentage of the shade to apply to the inactive window
+        },
+        no_italic = true, -- Force no italic
+        no_bold = false, -- Force no bold
+        no_underline = false, -- Force no underline
+        --[[ styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
+          -- comments = { 'italic' }, -- Change the style of comments
+          -- conditionals = { 'italic' },
+          loops = {},
+          functions = {},
+          keywords = {},
+          strings = {},
+          variables = {},
+          numbers = {},
+          booleans = {},
+          properties = {},
+          types = {},
+          operators = {},
+          -- miscs = {}, -- Uncomment to turn off hard-coded styles
+        }, ]]
+        color_overrides = {},
+        custom_highlights = {},
+        default_integrations = true,
+        integrations = {
+          cmp = true,
+          gitsigns = true,
+          nvimtree = true,
+          treesitter = true,
+          notify = false,
+          mini = {
+            enabled = true,
+            indentscope_color = '',
+          },
+          -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+        },
+      }
+      vim.cmd.colorscheme 'catppuccin'
+      vim.o.background = 'dark'
 
+      vim.api.nvim_set_hl(0, 'TelescopeNormal', { bg = 'none' }) --Background (inside telescope)
+      vim.api.nvim_set_hl(0, 'TelescopeBorder', { bg = 'none' }) --Weird Borderline
+      vim.api.nvim_set_hl(0, 'NormalNC', { bg = 'none' }) --Background (outside telescope)
+      vim.api.nvim_set_hl(0, 'WinSeparator', { fg = '#ffffff' }) --window separator
+      vim.api.nvim_set_hl(0, 'NotificationInfo', { bg = 'none' }) --window separator
+      vim.api.nvim_set_hl(0, 'NotificationWarning', { bg = 'none' }) --window separator
+      vim.api.nvim_set_hl(0, 'NotificationError', { bg = 'none' }) --window separator
+      -- vim.api.nvim_set_hl(0, 'Normalfloat', { bg = 'none' })
+
+      -- You can configure highlights by doing something like
+      vim.cmd.hi 'Comment gui=none'
+    end,
+  },
   {
     'folke/tokyonight.nvim',
     priority = 1000, -- make sure to load this before all the other start plugins
     init = function()
-      -- vim.cmd.colorscheme 'rose-pine'
-
-      -- You can configure highlights by doing something like
-      vim.cmd.hi 'Comment gui=none'
+      require('tokyonight').setup {
+        transparent = false,
+        terminal_colors = true,
+      }
     end,
   },
 
@@ -753,7 +893,7 @@ require('lazy').setup({
       --  and try some other statusline plugin
       local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
+      statusline.setup { use_icons = true, set_vim_settings = false }
 
       -- You can configure sections in the statusline by overriding their
       -- default behavior. For example, here we set the section for
