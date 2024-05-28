@@ -1,3 +1,0 @@
-return {
-  "Fymyte/rasi.vim"
-}

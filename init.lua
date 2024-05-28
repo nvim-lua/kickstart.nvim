@@ -1,120 +1,34 @@
--- DISABLED FOR NOW
--- @diagnostic disable: missing-fields -- disables annoying warnings
-
--- [[ Options ]]
--- See :help option-list
+--- @diagnostic disable: missing-fields -- disables annoying warnings
 
 -- Must happen before plugins are required
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
--- For custom functions later
-vim.g.have_nerd_font = true
-
-vim.opt.number = true
-vim.opt.relativenumber = true
-
-vim.opt.colorcolumn = "80"
-
--- Only mouse in [h]elp windows
-vim.opt.mouse = "h"
-
--- statusline already shows mode
-vim.opt.showmode = false
-
--- Copy from anywhere
-vim.opt.clipboard = "unnamedplus"
-
--- Visual wrap keeps indentation
-vim.opt.breakindent = true
-
-vim.opt.undofile = true
-
--- Case-insensitive searching UNLESS \C or capital in search
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-
--- Text keeps moving, if not always on
-vim.opt.signcolumn = "yes"
-
-vim.opt.updatetime = 250
--- For which-key
-vim.opt.timeoutlen = 300
-
-vim.opt.list = true
-vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
-
--- Preview substitutions live, as you type!
-vim.opt.inccommand = "split"
-
-vim.opt.cursorline = true
-
-vim.opt.scrolloff = 10
-
-vim.opt.splitright = true
-vim.opt.splitbelow = true
-
--- wrap between words
-vim.o.linebreak = true
-vim.o.expandtab = true
-vim.o.shiftwidth = 4
-vim.o.tabstop = 8
-vim.o.softtabstop = 4
-
--- [[ Basic Keymaps ]]
-vim.opt.hlsearch = true
-vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-
-vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
-
--- Remap for dealing with word wrap
-vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-vim.keymap.set("n", "gk", "v:count == 0 ? 'k' : 'k'", { expr = true, silent = true })
-vim.keymap.set("n", "gj", "v:count == 0 ? 'j' : 'j'", { expr = true, silent = true })
-
--- Diagnostic keymaps
-vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous [D]iagnostic message" })
-vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next [D]iagnostic message" })
-vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rror messages" })
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
-
-vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-
-vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
-vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
-vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
-vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
-
--- [[ Basic Autocommands ]]
--- See ':help lua-guide-autocommands'
-vim.api.nvim_create_autocmd("TextYankPost", {
-  desc = "Highlight when yanking (copying text)",
-  group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
-  callback = function()
-    vim.highlight.on_yank()
-  end,
-})
+require("angryluck.options")
+require("angryluck.keymaps")
+require("angryluck.commands")
 
 -- [[ Install lazy.nvim ]]
-local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system {
+  vim.fn.system({
     "git",
     "clone",
     "--filter=blob:none",
     "https://github.com/folke/lazy.nvim.git",
     "--branch=stable", -- latest stable release
     lazypath,
-  }
+  })
 end
 vim.opt.runtimepath:prepend(lazypath)
 
 -- [[ Plugins ]]
+-- TODO: require("lazy").setup("angryluck.plugins")
 require("lazy").setup({
 
   -- Detect tabstop and shiftwidth automatically
-  "tpope/vim-sleuth",
+  -- Don't like this...
+  -- "tpope/vim-sleuth",
 
   -- "gc" to comment visual regions/lines
   { "numToStr/Comment.nvim", opts = {} },
@@ -139,10 +53,20 @@ require("lazy").setup({
     "folke/which-key.nvim",
     event = "VimEnter",
     config = function()
-      require("which-key").setup()
+      require("which-key").setup({
+        -- Remove this if so many keymaps, that you need to scroll
+        popup_mappings = {
+          scroll_down = "<Nop>",
+          scroll_up = "<Nop>",
+        },
+        -- Doesn't work
+        -- trigger_blacklist = {
+        --   v = { "j", "k", "<C-D>", "<C-U>" },
+        -- },
+      })
 
       -- Document existing key chains
-      require("which-key").register {
+      require("which-key").register({
         -- Naming leader-key-groups
         ["<leader>c"] = { name = "[C]ode", _ = "which_key_ignore" },
         ["<leader>d"] = { name = "[D]ocument", _ = "which_key_ignore" },
@@ -150,7 +74,7 @@ require("lazy").setup({
         ["<leader>s"] = { name = "[S]earch", _ = "which_key_ignore" },
         ["<leader>w"] = { name = "[W]orkspace", _ = "which_key_ignore" },
         ["<leader>o"] = { name = "[O]rgmode", _ = "which_key_ignore" },
-      }
+      })
     end,
   },
 
@@ -165,14 +89,15 @@ require("lazy").setup({
         "nvim-telescope/telescope-fzf-native.nvim",
         build = "make",
         cond = function()
-          return vim.fn.executable "make" == 1
+          return vim.fn.executable("make") == 1
         end,
       },
       { "nvim-telescope/telescope-ui-select.nvim" },
       { "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
+      { "xiyaowong/telescope-emoji.nvim" },
     },
     config = function()
-      require("telescope").setup {
+      require("telescope").setup({
         defaults = {
           mappings = {
             i = { ["<c-enter>"] = "to_fuzzy_refine" },
@@ -183,14 +108,15 @@ require("lazy").setup({
             require("telescope.themes").get_dropdown(),
           },
         },
-      }
+      })
 
       -- Enable telescope fzf native, if installed
       pcall(require("telescope").load_extension, "fzf")
       pcall(require("telescope").load_extension, "ui-select")
+      require("telescope").load_extension("emoji")
 
       -- See `:help telescope.builtin`
-      local builtin = require "telescope.builtin"
+      local builtin = require("telescope.builtin")
       vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
       vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
       vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles" })
@@ -202,29 +128,34 @@ require("lazy").setup({
       vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set("n", "<leader>sg", builtin.git_files, { desc = "[S]earch [G]it Files" })
       vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+
+      vim.keymap.set("n", "<leader>se", ":Telescope emoji<CR>", { desc = "[S]earch [E]mojis" })
       -- Overriding default behavior and theme
       vim.keymap.set("n", "<leader>/", function()
         -- You can pass additional configuration to telescope to change theme, layout, etc.
-        builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown {
+        builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
           winblend = 10,
           previewer = false,
-        })
+        }))
       end, { desc = "[/] Fuzzily search in current buffer" })
 
       -- Also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
       vim.keymap.set("n", "<leader>s/", function()
-        builtin.live_grep {
+        builtin.live_grep({
           grep_open_files = true,
           prompt_title = "Live Grep in Open Files",
-        }
+        })
       end, { desc = "[S]earch [/] in Open Files" })
 
       vim.keymap.set("n", "<leader>sn", function()
-        builtin.find_files { cwd = vim.fn.stdpath "config" }
+        builtin.find_files({ cwd = vim.fn.stdpath("config") })
       end, { desc = "[S]earch [N]eovim files" })
     end,
   },
+
+  -- To add "add to dictionary" to ltex, but doesn't work...
+  -- { "vigoux/ltex-ls.nvim", dependencies = { "neovim/nvim-lspconfig" } },
 
   { -- LSP Configuration & Plugins
     "neovim/nvim-lspconfig",
@@ -292,18 +223,18 @@ require("lazy").setup({
           nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 
           -- Highlight references of word under cursor
-          local client = vim.lsp.get_client_by_id(event.data.client_id)
-          if client and client.server_capabilities.documentHighlightProvider then
-            vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-              buffer = event.buf,
-              callback = vim.lsp.buf.document_highlight,
-            })
-
-            vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-              buffer = event.buf,
-              callback = vim.lsp.buf.clear_references,
-            })
-          end
+          -- local client = vim.lsp.get_client_by_id(event.data.client_id)
+          -- if client and client.server_capabilities.documentHighlightProvider then
+          --   vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+          --     buffer = event.buf,
+          --     callback = vim.lsp.buf.document_highlight,
+          --   })
+          --
+          --   vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+          --     buffer = event.buf,
+          --     callback = vim.lsp.buf.clear_references,
+          --   })
+          -- end
         end,
       })
 
@@ -319,7 +250,7 @@ require("lazy").setup({
       local servers = {
         lua_ls = {
           -- cmd = {...},
-          -- filetypes { ...},
+          -- filetypes = { ...},
           -- capabilities = {},
           settings = {
             Lua = {
@@ -330,15 +261,31 @@ require("lazy").setup({
             },
           },
         },
+        ltex = {
+          filetypes = { "tex" },
+          settings = {
+            dictionary = {
+              ["en-US"] = { "homotopy" },
+            },
+          },
+        },
+        hls = {
+          filetypes = { "haskell", "lhaskell", "cabal" },
+          haskell = {
+            cabalFormattingProvider = "cabalfmt",
+            formattingProvider = "fourmolu",
+          },
+          single_file_suppport = true,
+        },
       }
       --  Use :Mason to install manually
       require("mason").setup()
 
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, { "stylua" })
-      require("mason-tool-installer").setup { ensure_installed = ensure_installed }
+      require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
-      require("mason-lspconfig").setup {
+      require("mason-lspconfig").setup({
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
@@ -349,7 +296,7 @@ require("lazy").setup({
             require("lspconfig")[server_name].setup(server)
           end,
         },
-      }
+      })
     end,
   },
 
@@ -370,6 +317,7 @@ require("lazy").setup({
       formatters_by_ft = {
         lua = { "stylua" },
         haskell = { "fourmolu" },
+        json = { "jq" },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -389,7 +337,7 @@ require("lazy").setup({
         "L3MON4D3/LuaSnip",
         -- build needed for regex support
         build = (function()
-          if vim.fn.has "win32" == 1 or vim.fn.executable "make" == 0 then
+          if vim.fn.has("win32") == 1 or vim.fn.executable("make") == 0 then
             return
           end
           return "make install_jsregexp"
@@ -415,11 +363,11 @@ require("lazy").setup({
       "hrsh7th/cmp-path",
     },
     config = function()
-      local cmp = require "cmp"
-      local luasnip = require "luasnip"
-      luasnip.config.setup { enable_autosnippets = true }
+      local cmp = require("cmp")
+      local luasnip = require("luasnip")
+      luasnip.config.setup({ enable_autosnippets = true })
 
-      cmp.setup {
+      cmp.setup({
         snippet = {
           expand = function(args)
             luasnip.lsp_expand(args.body)
@@ -427,7 +375,7 @@ require("lazy").setup({
         },
         -- old one: completeopt = "menuone,noselect",
         completion = { completeopt = "menu,menuone,noinsert" },
-        mapping = cmp.mapping.preset.insert {
+        mapping = cmp.mapping.preset.insert({
           ["<C-n>"] = cmp.mapping.select_next_item(),
           ["<C-p>"] = cmp.mapping.select_prev_item(),
           ["<C-u>"] = cmp.mapping.scroll_docs(-4),
@@ -435,9 +383,9 @@ require("lazy").setup({
           ["<C-b>"] = cmp.mapping.scroll_docs(-8),
           ["<C-f>"] = cmp.mapping.scroll_docs(8),
           -- Accept ([y]es) the completion
-          ["<C-y>"] = cmp.mapping.confirm { select = true },
+          ["<C-y>"] = cmp.mapping.confirm({ select = true }),
           -- Manually trigger a completion from nvim-cmp (normally not needed)
-          ["<C-Space>"] = cmp.mapping.complete {},
+          ["<C-Space>"] = cmp.mapping.complete({}),
           ["<C-l>"] = cmp.mapping(function()
             if luasnip.expand_or_locally_jumpable() then
               luasnip.expand_or_jump()
@@ -448,14 +396,15 @@ require("lazy").setup({
               luasnip.jump(-1)
             end
           end, { "i", "s" }),
-        },
+        }),
         sources = {
           { name = "nvim_lsp" },
           { name = "luasnip" },
           { name = "path" },
           { name = "neorg" },
+          { name = "orgmode" },
         },
-      }
+      })
     end,
   },
 
@@ -507,14 +456,16 @@ require("lazy").setup({
       -- Examples:
       --  - yinq - [Y]ank [I]nside [N]ext [']quote
       --  - ci'  - [C]hange [I]nside [']quote
-      require("mini.ai").setup { n_lines = 500 }
+      require("mini.ai").setup({ n_lines = 500 })
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
       --
       -- - saiw( - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr('  - [S]urround [R]eplace [)] [']
-      require("mini.surround").setup()
+      --
+      -- nvim-surround is better...
+      -- require("mini.surround").setup {}
 
       --  See 'https://github.com/echasnovski/mini.nvim' for more uses
     end,
@@ -529,6 +480,8 @@ require("lazy").setup({
       "nvim-treesitter/nvim-treesitter-textobjects",
       -- Keeps function description stuck on top
       "nvim-treesitter/nvim-treesitter-context",
+      -- Extra stuff
+      "nvim-treesitter/nvim-treesitter-refactor",
     },
     opts = {
       -- Add languages to be installed here that you want installed for treesitter
@@ -539,17 +492,17 @@ require("lazy").setup({
         "lua",
         "vim",
         "vimdoc",
-        "org",
+        -- "org",
         "norg",
         "markdown",
       },
       ignore_install = { "latex" },
       auto_install = true,
-      indent = { enable = true },
+      -- indent = { enable = true },
       highlight = {
         enable = true,
         disable = { "latex" },
-        additional_vim_regex_highlighting = { "latex", "markdown" },
+        -- additional_vim_regex_highlighting = { "latex", "markdown" },
       },
 
       incremental_selection = {
@@ -607,10 +560,10 @@ require("lazy").setup({
         swap = {
           enable = true,
           swap_next = {
-            ["<leader>a"] = "@parameter.inner",
+            ["<leader>>"] = "@parameter.inner",
           },
           swap_previous = {
-            ["<leader>A"] = "@parameter.inner",
+            ["<leader><"] = "@parameter.inner",
           },
         },
         lsp_interop = {
@@ -620,6 +573,21 @@ require("lazy").setup({
           peek_definition_code = {
             ["<leader>df"] = "@function.outer",
             ["<leader>dF"] = "@class.outer",
+          },
+        },
+      },
+      refactor = {
+        highlight_definitions = {
+          enable = true,
+          -- Set to false if you have an `updatetime` of ~100.
+          clear_on_cursor_move = true,
+        },
+        highlight_current_scope = { enable = true },
+        smart_rename = {
+          enable = true,
+          -- Assign keymaps to false to disable them, e.g. `smart_rename = false`.
+          keymaps = {
+            smart_rename = "grr",
           },
         },
       },
@@ -634,7 +602,8 @@ require("lazy").setup({
   -- require 'kickstart.plugins.debug',
 
   -- For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  { import = "custom.plugins" },
+  { import = "angryluck.plugins" },
+  -- { import = "kickstart.plugins" },
 }, {
   ui = {
     -- Default icons, if no nerd font installed
@@ -655,6 +624,51 @@ require("lazy").setup({
     },
   },
 })
+
+-- require("ltex-ls").setup {
+--   on_attach = on_attach,
+--   capabilities = capabilities,
+--   use_spellfile = false,
+--   filetypes = { "latex", "tex", "bib", "markdown", "gitcommit", "text" },
+--   settings = {
+--     ltex = {
+--       enabled = { "latex", "tex", "bib", "markdown" },
+--       language = "auto",
+--       diagnosticSeverity = "information",
+--       sentenceCacheSize = 2000,
+--       additionalRules = {
+--         enablePickyRules = true,
+--         motherTongue = "fr",
+--       },
+--       disabledRules = {
+--         fr = { "APOS_TYP", "FRENCH_WHITESPACE" },
+--       },
+--       dictionary = (function()
+--         -- For dictionary, search for files in the runtime to have
+--         -- and include them as externals the format for them is
+--         -- dict/{LANG}.txt
+--         --
+--         -- Also add dict/default.txt to all of them
+--         local files = {}
+--         for _, file in ipairs(vim.api.nvim_get_runtime_file("dict/*", true)) do
+--           local lang = vim.fn.fnamemodify(file, ":t:r")
+--           local fullpath = vim.fs.normalize(file, ":p")
+--           files[lang] = { ":" .. fullpath }
+--         end
+--
+--         if files.default then
+--           for lang, _ in pairs(files) do
+--             if lang ~= "default" then
+--               vim.list_extend(files[lang], files.default)
+--             end
+--           end
+--           files.default = nil
+--         end
+--         return files
+--       end)(),
+--     },
+--   },
+-- }
 
 -- modeline
 -- vim: ts=2 sts=4 sw=2 et
