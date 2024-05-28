@@ -234,6 +234,26 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
 
+  {
+    'nvim-orgmode/orgmode',
+    event = 'VeryLazy',
+    ft = { 'org' },
+    config = function()
+      -- Setup orgmode
+      require('orgmode').setup {
+        org_agenda_files = '~/orgfiles/**/*',
+        org_default_notes_file = '~/orgfiles/refile.org',
+      }
+
+      -- NOTE: If you are using nvim-treesitter with `ensure_installed = "all"` option
+      -- add `org` to ignore_install
+      -- require('nvim-treesitter.configs').setup({
+      --   ensure_installed = 'all',
+      --   ignore_install = { 'org' },
+      -- })
+    end,
+  },
+
   'hadronized/hop.nvim',
 
   {
@@ -400,7 +420,9 @@ require('lazy').setup({
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>sf', function()
+        builtin.find_files { hidden = true }
+      end, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
@@ -611,7 +633,7 @@ require('lazy').setup({
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
         -- omnisharp = {},
-        csharp_ls = {},
+        --csharp_ls = {},
 
         --
 
@@ -798,12 +820,13 @@ require('lazy').setup({
         },
         sources = {
 
+          { name = 'orgmode' },
           { name = 'nvim_lua' },
           { name = 'nvim_lsp' },
           { name = 'path' },
           { name = 'luasnip' },
           { name = 'buffer' },
-          { name = 'csharp_ls' },
+          --{ name = 'csharp_ls' },
         },
       }
     end,
@@ -944,9 +967,13 @@ require('lazy').setup({
   },
 })
 
-require('oil').setup()
+require('oil').setup {
+  view_options = {
+    show_hidden = true,
+  },
+}
 
-vim.keymap.set('n', '-', '<CMD>Oil --float<CR>', { desc = 'Open parent directory' })
+vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
