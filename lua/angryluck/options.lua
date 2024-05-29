@@ -50,7 +50,7 @@ vim.opt.splitbelow = true
 
 -- wrap between words
 vim.opt.linebreak = true
-
+vim.opt.showbreak = "↪ "
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 4
 vim.opt.tabstop = 8

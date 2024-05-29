@@ -42,18 +42,15 @@ return {
   -- "." repeats plugincommands
   "tpope/vim-repeat",
 
-  -- {
-  --   "ggandor/leap.nvim",
-  --   -- opts = {},
-  --   config = function()
-  --     require("leap").create_default_mappings()
-  --   end,
-  -- },
-
   {
     "folke/flash.nvim",
     event = "VeryLazy",
-    opts = {},
+    opts = {
+      modes = {
+        -- enhanced f, F, t, T motions - fix lat8r
+        char = { enabled = false },
+      },
+    },
     keys = {
       -- stylua: ignore start
       { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash", },
@@ -65,8 +62,7 @@ return {
     },
   },
 
-  -- Edit files like nvim buffer
-  {
+  { -- Edit files like nvim buffer
     "stevearc/oil.nvim",
     opts = {},
     -- Optional dependencies
@@ -75,4 +71,38 @@ return {
       require("oil").setup()
     end,
   },
+
+  -- "gc" to comment visual regions/lines
+  { "numToStr/Comment.nvim", opts = {}, lazy = false },
+
+  { -- Highlight todo, notes, etc in comments
+    "folke/todo-comments.nvim",
+    event = "VimEnter",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = { signs = false },
+  },
+
+  -- [ GRAVEYARD ]
+  -- Plugins I don't use anymore
+  --------------------------------------------------
+
+  -- "tpope/vim-sleuth"
+
+  -- {
+  --   -- Add indentation guides even on blank lines
+  --   "lukas-reineke/indent-blankline.nvim",
+  --   main = "ibl",
+  --   opts = {
+  --     -- char = "┊",
+  --     -- show_trailing_blankline_indent = false,
+  --   },
+  -- },
+
+  -- {
+  --   "ggandor/leap.nvim",
+  --   -- opts = {},
+  --   config = function()
+  --     require("leap").create_default_mappings()
+  --   end,
+  -- },
 }
