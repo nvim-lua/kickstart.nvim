@@ -3,13 +3,12 @@
 --
 -- See the kickstart.nvim README for more information
 vim.opt.relativenumber = true
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
-return {
-  -- require 'kickstart.plugins.debug',
+require('lazy').setup {
   require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
-  require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 }
+
+return {}
