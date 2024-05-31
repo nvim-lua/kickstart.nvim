@@ -77,7 +77,6 @@ return {
         local filepath = node:get_id()
         local filename = node.name
         local modify = vim.fn.fnamemodify
-
         local vals = {
           ['BASENAME'] = modify(filename, ':r'),
           ['EXTENSION'] = modify(filename, ':e'),

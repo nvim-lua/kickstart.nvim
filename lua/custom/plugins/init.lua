@@ -5,6 +5,7 @@
 vim.opt.relativenumber = true
 vim.g.have_nerd_font = true
 
+require 'custom.mappings'
 require('lazy').setup {
   require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.autopairs',
