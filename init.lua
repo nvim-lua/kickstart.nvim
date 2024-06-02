@@ -593,9 +593,14 @@ require('lazy').setup({
           },
         },
 
+        -- Rubocop LSP
         rubocop = {},
 
+        -- TailwindCSS LSP
         tailwindcss = {},
+
+        -- ESLint LSP
+        eslint = {},
       }
 
       -- Ensure the servers and tools above are installed
