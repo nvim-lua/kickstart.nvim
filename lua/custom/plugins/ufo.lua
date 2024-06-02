@@ -10,6 +10,12 @@ return {
     -- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
     vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
     vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+    vim.keymap.set('n', 'zK', function()
+      local winid = require('ufo').peekFoldedLinesUnderCursor()
+      if not winid then
+        vim.lsp.but.hover()
+      end
+    end, { desc = 'Peek Fold' })
 
     -- Option 2: nvim lsp as LSP client
     -- Tell the server the capability of foldingRange,
