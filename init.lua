@@ -886,10 +886,6 @@ require('lazy').setup({
         additional_vim_regex_highlighting = { 'ruby' },
       },
       indent = { enable = true, disable = { 'ruby' } },
-      autotag = {
-        enable = true,
-        filetypes = { 'html', 'xml', 'javascriptreact', 'typescriptreact' },
-      },
     },
     config = function(_, opts)
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
