@@ -66,3 +66,11 @@ vim.keymap.set('n', 'N', 'Nzzzv')
 
 vim.keymap.set('x', '<leader>p', [["_dP]], { desc = '[P]aste and keep the copy buffer' })
 vim.keymap.set('n', '<leader>rc', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = '[R]ename [C]urrent word' })
+-- end Primeagen
+
+vim.keymap.set('n', '<leader>n', '<cmd>enew<cr>', { desc = '[N]ew File' })
+vim.keymap.set('n', '<leader>Q', '<cmd>qall<cr>', { desc = '[Q]uit all' })
+
+-- Stay in indent mode
+vim.keymap.set('v', '<S-Tab>', '<gv', { desc = 'Unindent line' })
+vim.keymap.set('v', '<Tab>', '>gv', { desc = 'Indent line' })
