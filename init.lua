@@ -575,13 +575,21 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        -- tsserver = {},
-        -- angularls = {},
+        tsserver = {},
+        angularls = {
+          config = {
+            root_dir = require('lspconfig.util').root_pattern('angular.json', 'project.json'),
+          },
+        },
         -- css_variables = {},
-        -- cssls = {},
-        -- html = {},
+        cssls = {},
+        html = {},
         -- htmx = {},
-        -- tailwindcss = {},
+        tailwindcss = {},
+        eslint = {
+          cwd = require('lspconfig.util').root_pattern('package.json', '.eslintrc.json', '.eslintrc'),
+          require_cwd = true,
+        },
         --
 
         lua_ls = {
@@ -663,7 +671,17 @@ require('lazy').setup({
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        -- javascript = { { "prettierd", "prettier" } },
+        javascript = {
+          { 'prettierd', 'prettier' },
+        },
+      },
+      formatters = {
+        prettier = {
+          cwd = function()
+            return require('conform.util').root_file { 'package.json', '.prettierrc', '.prettierrc.json', '.prettierrc.js' }
+          end,
+          require_cwd = true,
+        },
       },
     },
   },

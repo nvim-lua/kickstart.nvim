@@ -7,4 +7,11 @@ vim.bo.tabstop = 4
 vim.bo.shiftwidth = 4
 vim.bo.expandtab = false
 
-return {}
+return {
+  {
+    'tpope/vim-fugitive',
+    lazy = false,
+  },
+}
+
+-- vim: tabstop=4 shiftwidth=4 noexpandtab
