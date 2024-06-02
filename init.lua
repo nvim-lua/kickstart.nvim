@@ -594,6 +594,8 @@ require('lazy').setup({
         },
 
         rubocop = {},
+
+        tailwindcss = {},
       }
 
       -- Ensure the servers and tools above are installed
