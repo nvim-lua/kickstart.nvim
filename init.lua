@@ -784,6 +784,17 @@ require('lazy').setup({
     priority = 1000, -- Make sure to load this before all the other start plugins.
     opts = {
       transparent_background = true,
+      integrations = {
+        cmp = true,
+        gitsigns = true,
+        nvimtree = true,
+        treesitter = true,
+        notify = false,
+        mini = {
+          enabled = true,
+          indentscope_color = '',
+        },
+      },
     },
     init = function()
       -- Load the colorscheme here.
