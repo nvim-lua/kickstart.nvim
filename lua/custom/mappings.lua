@@ -74,3 +74,5 @@ vim.keymap.set('n', '<leader>Q', '<cmd>qall<cr>', { desc = '[Q]uit all' })
 -- Stay in indent mode
 vim.keymap.set('v', '<S-Tab>', '<gv', { desc = 'Unindent line' })
 vim.keymap.set('v', '<Tab>', '>gv', { desc = 'Indent line' })
+
+vim.keymap.set('n', '<C-a>', 'ggVG%')
