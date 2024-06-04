@@ -20,8 +20,8 @@ vim.keymap.set('n', '<M-,>', ':bp<cr>', { desc = 'Go to the previous buffer' })
 vim.keymap.set('n', '<M-n>', ':enew<cr>', { desc = 'Go to the previous buffer' })
 vim.keymap.set('n', '<M-w>', ':bd<cr>', { desc = 'Go to the previous buffer' })
 
-vim.keymap.set('v', 'J', "m: '>+1<cr>gv=gv")
-vim.keymap.set('v', 'K', "m: '<-2<cr>gv=gv")
+vim.keymap.set('v', 'J', ":m '>+1<cr>gv=gv")
+vim.keymap.set('v', 'K', ":m '<-2<cr>gv=gv")
 
 vim.keymap.set('n', 'Y', 'yg$')
 vim.keymap.set('n', 'J', 'mzJ`z')
