@@ -168,6 +168,10 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagn
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
+-- new line on shift enter
+vim.keymap.set('n', '<CR>', 'm`o<Esc>``')
+vim.keymap.set('n', '<S-CR>', 'm`O<Esc>``')
+
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -892,7 +896,7 @@ require('lazy').setup({
     config = function()
       require('treesitter-context').setup {
         enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
-        max_lines = 1, -- How many lines the window should span. Values <= 0 mean no limit.
+        max_lines = 3, -- How many lines the window should span. Values <= 0 mean no limit.
         min_window_height = 0, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
         line_numbers = true,
         multiline_threshold = 10, -- Maximum number of lines to show for a single context
