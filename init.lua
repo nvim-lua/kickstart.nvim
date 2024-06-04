@@ -1,89 +1,3 @@
---[[
-
-=====================================================================
-==================== READ THIS BEFORE CONTINUING ====================
-=====================================================================
-========                                    .-----.          ========
-========         .----------------------.   | === |          ========
-========         |.-""""""""""""""""""-.|   |-----|          ========
-========         ||                    ||   | === |          ========
-========         ||   KICKSTART.NVIM   ||   |-----|          ========
-========         ||                    ||   | === |          ========
-========         ||                    ||   |-----|          ========
-========         ||:Tutor              ||   |:::::|          ========
-========         |'-..................-'|   |____o|          ========
-========         `"")----------------(""`   ___________      ========
-========        /::::::::::|  |::::::::::\  \ no mouse \     ========
-========       /:::========|  |==hjkl==:::\  \ required \    ========
-========      '""""""""""""'  '""""""""""""'  '""""""""""'   ========
-========                                                     ========
-=====================================================================
-=====================================================================
-
-What is Kickstart?
-
-  Kickstart.nvim is *not* a distribution.
-
-  Kickstart.nvim is a starting point for your own configuration.
-    The goal is that you can read every line of code, top-to-bottom, understand
-    what your configuration is doing, and modify it to suit your needs.
-
-    Once you've done that, you can start exploring, configuring and tinkering to
-    make Neovim your own! That might mean leaving Kickstart just the way it is for a while
-    or immediately breaking it into modular pieces. It's up to you!
-
-    If you don't know anything about Lua, I recommend taking some time to read through
-    a guide. One possible example which will only take 10-15 minutes:
-      - https://learnxinyminutes.com/docs/lua/
-
-    After understanding a bit more about Lua, you can use `:help lua-guide` as a
-    reference for how Neovim integrates Lua.
-    - :help lua-guide
-    - (or HTML version): https://neovim.io/doc/user/lua-guide.html
-
-Kickstart Guide:
-
-  TODO: The very first thing you should do is to run the command `:Tutor` in Neovim.
-
-    If you don't know what this means, type the following:
-      - <escape key>
-      - :
-      - Tutor
-      - <enter key>
-
-    (If you already know the Neovim basics, you can skip this step.)
-
-  Once you've completed that, you can continue working through **AND READING** the rest
-  of the kickstart init.lua.
-
-  Next, run AND READ `:help`.
-    This will open up a help window with some basic information
-    about reading, navigating and searching the builtin help documentation.
-
-    This should be the first place you go to look when you're stuck or confused
-    with something. It's one of my favorite Neovim features.
-
-    MOST IMPORTANTLY, we provide a keymap "<space>sh" to [s]earch the [h]elp documentation,
-    which is very useful when you're not exactly sure of what you're looking for.
-
-  I have left several `:help X` comments throughout the init.lua
-    These are hints about where to find more information about the relevant settings,
-    plugins or Neovim features used in Kickstart.
-
-   NOTE: Look for lines like this
-
-    Throughout the file. These are for you, the reader, to help you understand what is happening.
-    Feel free to delete them once you know what you're doing, but they should serve as a guide
-    for when you are first encountering a few different constructs in your Neovim config.
-
-If you experience any errors while trying to install kickstart, run `:checkhealth` for more info.
-
-I hope you enjoy your Neovim journey,
-- TJ
-
-P.S. You can delete this when you're done too. It's your config now! :)
---]]
-
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -91,7 +5,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -240,9 +154,23 @@ require('lazy').setup({
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
 
+  {
+    'quarto-dev/quarto-nvim',
+    opts = {},
+    dependencies = {
+      'jmbuhr/otter.nvim',
+      opts = {},
+    },
+  },
+  {
+    'supermaven-inc/supermaven-nvim',
+    config = function()
+      require('supermaven-nvim').setup {}
+    end,
+  },
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
-  --    require('gitsigns').setup({ ... })
+  --   require('gitsigns').setup({ ... })
   --
   -- See `:help gitsigns` to understand what the configuration keys do
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
@@ -257,7 +185,24 @@ require('lazy').setup({
       },
     },
   },
-
+  {
+    'gbprod/yanky.nvim',
+    dependencies = {
+      'kkharji/sqlite.lua',
+    },
+    opts = {
+      highlight = {
+        timer = 0,
+      },
+    },
+    keys = {
+      { 'p', '<Plug>(YankyPutAfter)', mode = { 'n', 'x' } },
+      { 'P', '<Plug>(YankyPutBefore)', mode = { 'n', 'x' } },
+      { '<c-n>', '<Plug>(YankyCycleForward)' },
+      { '<c-p>', '<Plug>(YankyCycleBackward)' },
+      { '<leader>p', 'a<space><esc><Plug>(YankyPutAfter)' },
+    },
+  },
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
@@ -422,7 +367,7 @@ require('lazy').setup({
 
       -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
       -- used for completion, annotations and signatures of Neovim apis
-      { 'folke/neodev.nvim', opts = {} },
+      --  { 'folke/neodev.nvim', opts = {} },
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -565,9 +510,11 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
+
         -- clangd = {},
-        -- gopls = {},
-        -- pyright = {},
+        templ = {},
+        gopls = {},
+        pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -575,9 +522,10 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        -- tsserver = {},
+        tsserver = {},
         --
-
+        html = {},
+        tailwindcss = {},
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
@@ -768,6 +716,7 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+          { name = 'otter' },
         },
       }
     end,
@@ -779,6 +728,13 @@ require('lazy').setup({
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     'folke/tokyonight.nvim',
+    opts = {
+      transparent = true,
+      styles = {
+        sidebars = 'transparent',
+        floats = 'transparent',
+      },
+    },
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
       -- Load the colorscheme here.
@@ -835,7 +791,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'go', 'python', 'templ' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -873,19 +829,28 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
+  { 'LazyVim/LazyVim', import = 'lazyvim.plugins' },
+  { import = 'lazyvim.plugins.extras.coding.codeium' },
+  -- { import = 'lazyvim.plugins.extras.coding.native_snippets' },
+
+  -- { import = 'lazyvim.plugins.extras' },
+  --{ import = 'plugins' },
+
+  -- { import = ''},
+
+  { import = 'custom.plugins' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
@@ -910,3 +875,85 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+--
+--#region
+local custom_format = function()
+  if vim.bo.filetype == 'templ' then
+    local bufnr = vim.api.nvim_get_current_buf()
+    local filename = vim.api.nvim_buf_get_name(bufnr)
+    local cmd = 'templ fmt ' .. vim.fn.shellescape(filename)
+
+    vim.fn.jobstart(cmd, {
+      on_exit = function()
+        -- Reload the buffer only if it's still the current buffer
+        if vim.api.nvim_get_current_buf() == bufnr then
+          vim.cmd 'e!'
+        end
+      end,
+    })
+  else
+    vim.lsp.buf.format()
+  end
+end
+
+local on_attach = function(client, bufnr)
+  local opts = { buffer = bufnr, remap = false }
+  -- other configuration options
+  vim.keymap.set('n', '<leader>lf', custom_format, opts)
+end
+local lspconfig = require 'lspconfig'
+
+-- Use a loop to conveniently call 'setup' on multiple servers and
+-- map buffer local keybindings when the language server attaches
+
+local servers = { 'gopls', 'ccls', 'cmake', 'tsserver', 'templ' }
+for _, lsp in ipairs(servers) do
+  lspconfig[lsp].setup {
+    on_attach = on_attach,
+    capabilities = capabilities,
+  }
+end
+
+lspconfig.tailwindcss.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = { 'templ', 'astro', 'javascript', 'typescript', 'react' },
+  init_options = { userLanguages = { templ = 'html' } },
+}
+
+vim.filetype.add { extension = { templ = 'templ' } }
+
+lspconfig.html.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = { 'html', 'templ' },
+}
+vim.api.nvim_create_autocmd({ 'BufWritePre' }, { pattern = { '*.templ' }, callback = vim.lsp.buf.format })
+
+vim.api.nvim_create_autocmd({ 'BufWritePre' }, { pattern = { '*.templ' }, callback = custom_format })
+
+local templ_format = function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local filename = vim.api.nvim_buf_get_name(bufnr)
+  local cmd = 'templ fmt ' .. vim.fn.shellescape(filename)
+
+  vim.fn.jobstart(cmd, {
+    on_exit = function()
+      -- Reload the buffer only if it's still the current buffer
+      if vim.api.nvim_get_current_buf() == bufnr then
+        vim.cmd 'e!'
+      end
+    end,
+  })
+end
+require('supermaven-nvim').setup {
+  keymaps = {
+    accept_suggestion = '<Tab>',
+    clear_suggestion = '<C-]>',
+  },
+  ignore_filetypes = { cpp = true },
+  color = {
+    suggestion_color = '#ffffff',
+    cterm = 244,
+  },
+}
