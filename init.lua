@@ -154,7 +154,8 @@ vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
-
+-- popup menu color
+vim.opt.pumblend = 50
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -730,7 +731,7 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<Tab>'] = cmp.mapping.confirm { select = true },
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
@@ -784,6 +785,7 @@ require('lazy').setup({
     priority = 1000, -- Make sure to load this before all the other start plugins.
     opts = {
       transparent_background = true,
+      default_integrations = true,
       integrations = {
         cmp = true,
         gitsigns = true,
@@ -793,6 +795,26 @@ require('lazy').setup({
         mini = {
           enabled = true,
           indentscope_color = '',
+        },
+        native_lsp = {
+          enabled = true,
+          virtual_text = {
+            errors = { 'italic' },
+            hints = { 'italic' },
+            warnings = { 'italic' },
+            information = { 'italic' },
+            ok = { 'italic' },
+          },
+          underlines = {
+            errors = { 'underline' },
+            hints = { 'underline' },
+            warnings = { 'underline' },
+            information = { 'underline' },
+            ok = { 'underline' },
+          },
+          inlay_hints = {
+            background = true,
+          },
         },
       },
     },
