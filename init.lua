@@ -607,6 +607,9 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'emmet-language-server', --html,css, language server
+        'prettier', --html,css,javascript etc formatter
+        'prettierd', --javascript formatter
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -657,7 +660,17 @@ require('lazy').setup({
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        -- javascript = { { "prettierd", "prettier" } },
+        typescript = { 'prettier' },
+        javascriptreact = { 'prettier' },
+        typescriptreact = { 'prettier' },
+        svelte = { 'prettier' },
+        css = { 'prettier' },
+        html = { 'prettier' },
+        json = { 'prettier' },
+        yaml = { 'prettier' },
+        markdown = { 'prettier' },
+        graphql = { 'prettier' },
+        javascript = { { 'prettierd', 'prettier' } },
       },
     },
   },
