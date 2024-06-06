@@ -132,7 +132,6 @@ vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 vim.keymap.set('i', 'jj', '<esc>')
-vim.keymap.set('n', '<leader>n', '<cmd>Neotree toggle<cr>')
 vim.keymap.set('n', '<leader>c', '<cmd>bd<cr>')
 vim.keymap.set('n', '<leader>h', '<cmd>bprev<cr>')
 vim.keymap.set('n', '<leader>l', '<cmd>bnext<cr>')
@@ -775,6 +774,10 @@ require('lazy').setup({
         highlight = { enable = true },
         indent = { enable = true },
       }
+
+      vim.api.nvim_set_option('foldenable', false)
+      vim.api.nvim_set_option('foldmethod', 'expr')
+      vim.api.nvim_set_option('foldexpr', 'nvim_treesitter#foldexpr()')
 
       -- There are additional nvim-treesitter modules that you can use to interact
       -- with nvim-treesitter. You should go explore a few and see what interests you:

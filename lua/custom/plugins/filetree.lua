@@ -1,14 +1,13 @@
-vim.cmd [[ let g:neo_tree_remove_legacy_commands = 1 ]]
-
 return {
-  'nvim-neo-tree/neo-tree.nvim',
+  'preservim/nerdtree',
   version = '*',
   dependencies = {
-    'nvim-lua/plenary.nvim',
-    'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
-    'MunifTanjim/nui.nvim',
+    'ryanoasis/vim-devicons',
   },
-  config = function()
-    require('neo-tree').setup {}
+  keys = {
+    { '<leader>n', '<cmd>NERDTreeToggle<cr>' },
+  },
+  init = function()
+    vim.g.NERDTreeShowLineNumbers = 1
   end,
 }
