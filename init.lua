@@ -515,7 +515,7 @@ require('lazy').setup({
         -- clangd = {},
         -- gopls = {},
         pyright = {},
-        -- rust_analyzer = {},
+        rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -638,6 +638,15 @@ require('lazy').setup({
         },
       },
       'saadparwaiz1/cmp_luasnip',
+      {
+        'Saecki/crates.nvim',
+        event = { 'BufRead Cargo.toml' },
+        opts = {
+          completion = {
+            cmp = { enabled = true },
+          },
+        },
+      },
 
       -- Adds other completion capabilities.
       --  nvim-cmp does not ship with all sources by default. They are split
@@ -715,6 +724,7 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+          { name = 'crates' },
         },
       }
     end,
@@ -788,6 +798,15 @@ require('lazy').setup({
     end,
   },
   {
+    'Saecki/crates.nvim',
+    event = { 'BufRead Cargo.toml' },
+    opts = {
+      completion = {
+        cmp = { enabled = true },
+      },
+    },
+  },
+  {
     'Exafunction/codeium.nvim',
     dependencies = {
       'nvim-lua/plenary.nvim',
@@ -801,7 +820,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'ron', 'rust' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
