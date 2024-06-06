@@ -1,5 +1,5 @@
 require 'set'
-require 'keymaps'
+require 'remap'
 require 'autocommands'
 require 'plugins'
 
