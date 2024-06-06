@@ -28,3 +28,31 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+-- Enable moving highlighted lines
+vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
+vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
+
+-- Open file tree
+vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
+
+-- Keep cursor in place when appending next line
+vim.keymap.set('n', 'J', 'mzJ`z')
+
+-- Keep highlighted search term in the center of the screen
+vim.keymap.set('n', 'n', 'nzzzv')
+vim.keymap.set('n', 'N', 'Nzzzv')
+
+-- Replace highlighted text with yanked one
+vim.keymap.set('x', '<leader>p', '"_dP')
+
+-- Make sure yanking works with d
+vim.keymap.set('n', '<leader>d', '"_d')
+vim.keymap.set('v', '<leader>d', '"_d')
+
+vim.keymap.set('n', '<C-k>', '<cmd>cnext<CR>zz')
+vim.keymap.set('n', '<C-j>', '<cmd>cprev<CR>zz')
+vim.keymap.set('n', '<leader>k', '<cmd>lnext<CR>zz')
+vim.keymap.set('n', '<leader>j', '<cmd>lprev<CR>zz')
+
+vim.keymap.set('n', '<leader>g', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
