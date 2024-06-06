@@ -11,8 +11,6 @@ vim.opt.relativenumber = true
 
 vim.opt.termguicolors = true
 
-vim.opt.updatetime = 50
-
 vim.opt.colorcolumn = '100'
 
 vim.g.have_nerd_font = false
@@ -32,9 +30,9 @@ vim.opt.clipboard = 'unnamedplus'
 
 -- Enable break indent
 vim.opt.breakindent = true
-vim.opt.tabstop = 4
-vim.opt.softtabstop = 4
-vim.shiftwidth = 4
+vim.opt.tabstop = 2
+vim.opt.softtabstop = 2
+vim.shiftwidth = 2
 vim.opt.expandtab = true
 vim.opt.smartindent = true
 
@@ -53,7 +51,7 @@ vim.opt.smartcase = true
 vim.opt.signcolumn = 'yes'
 
 -- Decrease update time
-vim.opt.updatetime = 250
+vim.opt.updatetime = 50
 
 -- Decrease mapped sequence wait time
 -- Displays which-key popup sooner
