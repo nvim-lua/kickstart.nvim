@@ -890,6 +890,7 @@ require('lazy').setup({
         'lua',
         'luadoc',
         'markdown',
+        'markdown_inline',
         'vim',
         'vimdoc',
         'go',
@@ -898,6 +899,9 @@ require('lazy').setup({
         'gosum',
         'hcl',
         'terraform',
+        'dockerfile',
+        'gitignore',
+        'json',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
