@@ -8,7 +8,7 @@ return {
       local schemastore = require 'schemastore'
       local lspconfig = require 'lspconfig'
       lspconfig.jsonls.setup {
-        settigns = {
+        settings = {
           json = {
             schemas = schemastore.json.schemas(),
             validate = {
@@ -18,7 +18,7 @@ return {
         },
       }
       lspconfig.yamlls.setup {
-        settigns = {
+        settings = {
           yaml = {
             schemas = schemastore.yaml.schemas(),
           },

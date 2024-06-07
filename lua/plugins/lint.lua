@@ -15,6 +15,7 @@ return {
       vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
         group = lint_augroup,
         callback = function()
+          require('lint').try_lint 'codespell'
           require('lint').try_lint()
         end,
       })

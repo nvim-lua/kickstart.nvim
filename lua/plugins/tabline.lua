@@ -16,10 +16,10 @@ return {
         show_tabs_always = true, -- this shows tabs only when there are more than one tab or if the first tab is named
         show_devicons = true, -- this shows devicons in buffer section
         colored = true,
-        show_bufnr = false, -- this appends [bufnr] to buffer section,
+        show_bufnr = true, -- this appends [bufnr] to buffer section,
         tabline_show_last_separator = true,
         show_filename_only = true, -- shows base filename only instead of relative path in filename
-        modified_icon = '+ ', -- change the default modified icon
+        modified_icon = 'single', -- change the default modified icon
         modified_italic = true, -- set to true by default; this determines whether the filename turns italic if modified
         show_tabs_only = false, -- this shows only tabs instead of tabs + buffers
       },

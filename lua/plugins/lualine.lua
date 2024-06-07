@@ -4,9 +4,13 @@ return {
     dependencies = {
       { 'nvim-tree/nvim-web-devicons' },
       { 'folke/noice.nvim' },
+      { 'arkav/lualine-lsp-progress' },
     },
     config = function()
-      local noice = require 'noice'
+      local colors = {
+        gray = '#6c7086',
+        purple = '#cba6f7',
+      }
 
       require('lualine').setup {
         options = {
@@ -19,17 +23,17 @@ return {
             {
               'mode',
               separator = { left = '' },
-              fmt = function(_, context)
-                local winnr = vim.fn.tabpagewinnr(context.tabnr)
-                local ok, val = pcall(vim.api.nvim_win_get_var, winnr, 'nnn')
-                if ok and val then
+              fmt = function(_, _)
+                -- local winnr = vim.fn.tab (context.tabnr)
+                -- vim.fn.winbufnr(winnr)
+                local val = require('fancyutil').get_oil_nnn()
+                if val then
                   return 'nnn'
                 end
               end,
-              color = function(section)
-                local winnr = vim.api.nvim_get_current_win()
-                local ok, val = pcall(vim.api.nvim_win_get_var, winnr, 'nnn')
-                if ok and val then
+              color = function(_)
+                local val = require('fancyutil').get_oil_nnn()
+                if val == true then
                   return { fg = '#054fca' }
                 end
                 return {}
@@ -38,18 +42,16 @@ return {
           },
           lualine_x = {
             {
-              noice.api.status.message.get_hl,
-              cond = noice.api.status.message.has,
-            },
-            {
-              noice.api.status.command.get_hl,
-              cond = noice.api.status.command.has,
-              color = { fg = '#ff0000' },
-            },
-            {
-              noice.api.status.mode.get,
-              cond = noice.api.status.mode.has,
-              color = { fg = '#00ff00' },
+              'lsp_progress',
+              display_components = { 'lsp_client_name', { 'title', 'percentage', 'message' } },
+              colors = {
+                percentage = colors.gray,
+                title = colors.gray,
+                message = colors.gray,
+                spinner = colors.gray,
+                lsp_client_name = colors.purple,
+                use = true,
+              },
             },
           },
           lualine_z = {

@@ -24,6 +24,7 @@ return {
       'saadparwaiz1/cmp_luasnip',
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-nvim-lsp-signature-help',
     },
     config = function()
       -- See `:help cmp`
@@ -88,6 +89,7 @@ return {
         sources = cmp.config.sources({
           { name = 'nvim_lsp_signature_help' },
           { name = 'nvim_lsp' },
+          { name = 'lazydev' },
           { name = 'luasnip' },
           { name = 'path' },
           { name = 'nvim_lua' },

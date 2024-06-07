@@ -5,12 +5,21 @@ return {
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-      'folke/neodev.nvim',
+      'folke/lazydev.nvim',
       { 'j-hui/fidget.nvim' },
     },
     config = function()
-      require 'plugins.neodev'
+      require('lazydev').setup {}
       require('neoconf').setup {}
+      vim.diagnostic.config {
+        update_in_insert = true,
+        float = {
+          focusable = false,
+        },
+        signs = true,
+        underline = true,
+        virtual_text = false,
+      }
 
       --    function will be executed to configure the current buffer
       vim.api.nvim_create_autocmd('LspAttach', {
@@ -46,22 +55,13 @@ return {
         tsserver = {},
         lua_ls = {
           settings = {
-            lua = {
+            Lua = {
               runtime = {
                 version = 'LuaJIT',
               },
               workspace = {
                 checkthirdparty = { lazyPlugins },
-
-                library = {
-                  vim.env.VIMRUNTIME,
-                  --   -- depending on the usage, you might want to add additional paths here.
-                  --   -- "${3rd}/luv/library"
-                  --   -- "${3rd}/busted/library",
-                  -- },
-                  -- or pull in all of 'runtimepath'. note: this is a lot slower
-                },
-                -- library = vim.tbl_extend('force', vim.api.nvim_get_runtime_file('', true), { vim.env.VIMRUNTIME }),
+                library = vim.tbl_extend('force', vim.api.nvim_get_runtime_file('', true), { vim.env.VIMRUNTIME }),
               },
               completion = {
                 callSnippet = 'Replace',
@@ -76,6 +76,7 @@ return {
         },
         jsonls = {},
         yamlls = {},
+        eslint_d = {},
       }
 
       --  You can press `g?` for help in this menu.
@@ -89,17 +90,11 @@ return {
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for tsserver)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
         },
       }
     end,
-    settings = {
-      Lua = {},
-    },
   },
 }

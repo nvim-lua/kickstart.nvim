@@ -20,7 +20,7 @@ return {
       end, { desc = '[T]oggle [N]umbers' })
 
       vim.keymap.set('n', '<leader>tw', function()
-        vim.opt.warp = not vim.opt.warp._value
+        vim.opt.wrap = not vim.opt.wrap._value
       end, { desc = '[T]oggle [W]rap Lines' })
     end,
   },
