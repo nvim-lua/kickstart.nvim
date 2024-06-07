@@ -129,7 +129,7 @@ vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 
 -- setup command for ctrl-backspace - delete whole word
 -- vim.api.nvim_set_keymap('i', '<C-H>', '<C-w>', { noremap = true, silent = true })
--- vim.keymap.set('i', '<C-BS>', '<C-w>', { noremap = true, silent = false })
+vim.keymap.set('i', 'C-H', '<C-w>', { noremap = true, silent = true })
 
 -- replace the current word
 vim.keymap.set('n', '<leader>rw', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])

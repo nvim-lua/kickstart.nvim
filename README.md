@@ -1,5 +1,8 @@
 # kickstart.nvim
 
+## TODOs:
+ - Apply telescope file path options from old config.
+
 ## Introduction
 
 A starting point for Neovim that is:
