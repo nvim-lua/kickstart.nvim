@@ -82,5 +82,6 @@ return {
 		opts = {
 			restriction_mode = 'hint',
 		},
+		enabled = false,
 	},
 }
