@@ -321,6 +321,26 @@ require('lazy').setup({
       -- do as well as how to actually do it!
 
       -- [[ Configure Telescope ]]
+      -- [[ Configure file pickers ]]
+      local function filenameFirst(_, path)
+        local tail = vim.fs.basename(path)
+        local parent = vim.fs.dirname(path)
+        if parent == '.' then
+          return tail
+        end
+        return string.format('%s\t\t\t\t\t%s', tail, parent)
+      end
+
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'TelescopeResults',
+        callback = function(ctx)
+          vim.api.nvim_buf_call(ctx.buf, function()
+            vim.fn.matchadd('TelescopeParent', '\t\t.*$')
+            vim.api.nvim_set_hl(0, 'TelescopeParent', { link = 'Comment' })
+          end)
+        end,
+      })
+
       -- See `:help telescope` and `:help telescope.setup()`
       require('telescope').setup {
         -- You can put your default mappings / updates / etc. in here
@@ -331,7 +351,13 @@ require('lazy').setup({
         --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
         --   },
         -- },
-        -- pickers = {}
+        pickers = {
+          git_status = { path_display = filenameFirst },
+          git_files = { path_display = filenameFirst },
+          find_files = { path_display = filenameFirst },
+          file_browser = { path_display = filenameFirst },
+          oldfiles = { path_display = filenameFirst },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
