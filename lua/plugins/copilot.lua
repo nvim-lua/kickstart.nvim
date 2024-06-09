@@ -1,3 +1,17 @@
+local COPILOT_ENABLED = false
+
+vim.keymap.set('n', '<F8>', function()
+  if COPILOT_ENABLED then
+    vim.cmd 'Copilot disable'
+    COPILOT_ENABLED = false
+    print 'Copilot disabled'
+  else
+    vim.cmd 'Copilot enable'
+    COPILOT_ENABLED = true
+    print 'Copilot enabled'
+  end
+end, { noremap = true, silent = true })
+
 return {
   'zbirenbaum/copilot.lua',
   cmd = 'Copilot',
@@ -6,8 +20,11 @@ return {
     local copilot = require 'copilot'
     local suggestion = require 'copilot.suggestion'
 
+    -- disable copilot by default
     copilot.setup {
       suggestion = {
+        enabled = COPILOT_ENABLED,
+        auto_trigger = true,
         keymap = {
           accept = '<Tab>',
           next = '<S-Tab>',
@@ -28,7 +45,5 @@ return {
 
     -- Map <Tab> to the global tab_complete function
     vim.api.nvim_set_keymap('i', '<Tab>', 'v:lua.tab_complete()', { expr = true, noremap = true, silent = true })
-
-    suggestion.toggle_auto_trigger()
   end,
 }
