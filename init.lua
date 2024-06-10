@@ -985,13 +985,7 @@ require('lazy').setup({
       },
       indent = { enable = true, disable = { 'ruby' } },
     },
-    dependencies = {
-      {
-        'windwp/nvim-ts-autotag',
 
-        opts = { enable_close_on_slash = true, filetypes = { 'html', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue', 'xml' } },
-      },
-    },
     config = function(_, opts)
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
 
