@@ -558,15 +558,6 @@ return {
       }
     end,
   },
-  {
-    'catppuccin/nvim',
-    name = 'catppuccin',
-    priority = 1000,
-    flavour = 'mocha',
-    init = function()
-      vim.cmd.colorscheme 'catppuccin'
-    end,
-  },
 
   --{ -- You can easily change to a different colorscheme.
   -- Change the name of the colorscheme plugin below, and then
@@ -577,7 +568,7 @@ return {
   --  priority = 1000, -- Make sure to load this before all the other start plugins.
   --  init = function()
   -- Load the colorscheme here.
-  -- Like many other themes, this one has different styles, and you could load
+  -- Like many other themes, this one has different styles, and you could loadplugins
   -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
   --   vim.cmd.colorscheme 'tokyonight-night'
 
