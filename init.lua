@@ -558,8 +558,17 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        pyright = {},
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                typeCheckingMode = "off"
+              }
+            }
+          }
+        },
         ruff = {},
+        mypy = {},
         taplo = {}, -- LSP for toml files
         debugpy = {},
         -- dart-debug-adapter = {},
