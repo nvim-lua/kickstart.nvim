@@ -196,8 +196,6 @@ vim.keymap.set('n', '<leader>wc', '<C-w>c', { desc = '[C]lose window' })
 vim.keymap.set('n', '<leader>w+', '<C-w>+', { desc = 'Increase size' })
 vim.keymap.set('n', '<leader>w-', '<C-w>-', { desc = 'Decrease size' })
 
-vim.keymap.set('n', '<leader>n', ':Neotree<cr>', { desc = 'Open Neotree' })
-
 -- vim.keymap.set('n', '<leader>wh', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 -- vim.keymap.set('n', '<leader>wl', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 -- vim.keymap.set('n', '<leader>wj', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
