@@ -1,6 +1,7 @@
 return {
   {
     'NeogitOrg/neogit',
+    version = 'v0.0.1', -- Version required for nvim 0.9.5
     dependencies = {
       'nvim-lua/plenary.nvim',
       'sindrets/diffview.nvim',
