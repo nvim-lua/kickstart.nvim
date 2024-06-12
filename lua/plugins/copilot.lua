@@ -1,4 +1,4 @@
-local COPILOT_ENABLED = false
+local COPILOT_ENABLED = true
 
 vim.keymap.set('n', '<F8>', function()
   if COPILOT_ENABLED then
