@@ -6,4 +6,5 @@
 return {
   require 'custom.plugins.toggleterm',
   require 'custom.plugins.cokeline',
+  require 'custom.plugins.alpha',
 }
