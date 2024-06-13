@@ -1,0 +1,3 @@
+return {
+  'lambdalisue/vim-suda',
+}
