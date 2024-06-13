@@ -28,5 +28,18 @@ return { -- Highlight, edit, and navigate code
     --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+    --
+
+    local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
+    parser_config.idcl = {
+      install_info = {
+        url = '/home/jhe/src/tree-sitter-idcl', -- Path to the tree-sitter-idcl repo
+        files = { 'src/parser.c' },
+        -- optional entries:
+        branch = 'master', -- default branch in case of git repo if different from master
+        generate_requires_npm = false, -- if stand-alone parser without npm dependencies
+        requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
+      },
+    }
   end,
 }

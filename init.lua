@@ -69,8 +69,6 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
-vim.g.copilot_suggestions = 5
-
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -123,6 +121,13 @@ if not vim.loop.fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
+-- !!!!!!!!!!!!!!!!!!!!! --
+vim.filetype.add {
+  pattern = {
+    ['.*idcl'] = 'idcl',
+  },
+}
+
 -- [[ Configure and install plugins ]]
 --  To check the current status of your plugins, run
 --    :Lazy
@@ -154,11 +159,11 @@ require('lazy').setup({
   },
 })
 
-local lspconfig = require 'lspconfig'
-
--- Disable diagnostics and warnings for clangd
-lspconfig.clangd.setup {
-  handlers = {
-    ['textDocument/publishDiagnostics'] = function() end,
-  },
-}
+-- local lspconfig = require 'lspconfig'
+--
+-- -- Disable diagnostics and warnings for clangd
+-- lspconfig.clangd.setup {
+--   handlers = {
+--     ['textDocument/publishDiagnostics'] = function() end,
+--   },
+-- }

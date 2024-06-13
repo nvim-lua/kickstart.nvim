@@ -155,11 +155,7 @@ return { -- LSP Configuration & Plugins
     --  - settings (table): Override the default settings passed when initializing the server.
     --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
     local servers = {
-      clangd = {
-        diagnostics = {
-          enable = false,
-        },
-      },
+      clangd = {},
       -- gopls = {},
       pyright = {},
       -- rust_analyzer = {},
@@ -214,6 +210,15 @@ return { -- LSP Configuration & Plugins
           server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
           require('lspconfig')[server_name].setup(server)
         end,
+      },
+    }
+
+    local lspconfig = require 'lspconfig'
+
+    -- Disable diagnostics and warnings for clangd
+    lspconfig.clangd.setup {
+      handlers = {
+        ['textDocument/publishDiagnostics'] = function() end,
       },
     }
   end,
