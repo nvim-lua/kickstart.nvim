@@ -9,4 +9,5 @@ return {
   require 'custom.plugins.alpha',
   require 'custom.plugins.typescript-tools',
   require 'custom.plugins.tsc',
+  require 'custom.plugins.themes',
 }
