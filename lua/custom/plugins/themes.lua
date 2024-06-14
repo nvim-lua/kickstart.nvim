@@ -4,8 +4,8 @@ return {
     name = 'catppuccin',
     priority = 1000,
     init = function()
-      --[[ vim.cmd.colorscheme 'catppuccin-mocha' ]]
-      --[[ vim.cmd.hi 'Comment gui=none' ]]
+      -- vim.cmd.colorscheme 'catppuccin-mocha'
+      -- vim.cmd.hi 'Comment gui=none'
     end,
   },
   {
@@ -13,8 +13,8 @@ return {
     name = 'kanagawa',
     priority = 1000,
     init = function()
-      vim.cmd.colorscheme 'kanagawa'
-      vim.cmd.hi 'Comment gui=none'
+      -- vim.cmd.colorscheme 'kanagawa'
+      -- vim.cmd.hi 'Comment gui=none'
     end,
   },
   {
