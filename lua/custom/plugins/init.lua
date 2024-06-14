@@ -55,4 +55,10 @@ return {
       -- refer to the configuration section below
     },
   },
+  {
+    'github/copilot.vim',
+  },
+  {
+    'tpope/vim-sleuth',
+  },
 }

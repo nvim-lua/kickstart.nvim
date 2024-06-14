@@ -317,6 +317,9 @@ require('lazy').setup {
         changedelete = { text = '~' },
       },
     },
+    -- towolf/vim-helm provides basic syntax highlighting and filetype detection
+    -- ft = 'helm' is important to not start yamlls
+    { 'towolf/vim-helm', ft = 'helm' },
   },
 
   -- NOTE: Plugins can also be configured to run lua code when they are loaded.
@@ -637,6 +640,13 @@ require('lazy').setup {
             },
           },
         },
+
+        helm_ls = {
+          settings = {
+            ['helm-ls'] = {},
+            filetypes = { 'yaml', 'helm' },
+          },
+        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -882,6 +892,13 @@ require('lazy').setup {
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   { import = 'custom.plugins' },
+}
+
+-- Custom Filetypes
+vim.filetype.add {
+  extensions = {
+    yaml = 'helm-ls',
+  },
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`
