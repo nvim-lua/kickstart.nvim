@@ -32,6 +32,7 @@ return { -- Autoformat
       css = { "prettier" },
       scss = { "prettier" },
       php = { "php-cs-fixer" },
+      json = { "prettier" },
       -- Conform can also run multiple formatters sequentially
       python = { "isort", "black" },
     },
@@ -46,12 +47,6 @@ return { -- Autoformat
           return vim.fs.find({ "dprint.json" }, { path = ctx.filename, upward = true })[1]
         end,
       },
-      prettier = {
-        condition = function(ctx)
-          return vim.fs.find({ ".prettierrc" }, { path = ctx.filename, upward = true })[1]
-        end,
-      },
-      --
       -- Example of using shfmt with extra args
       shfmt = {
         extra_args = { "-i", "2", "-ci" },
