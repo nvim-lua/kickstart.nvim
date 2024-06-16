@@ -46,7 +46,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
     --  - Normal mode: ?
     --
     -- This opens a window that shows you all of the keymaps for the current
-    -- Telescope picker. This is really useful to discover what Telescope can
+    -- Telescope builtin.lsp_workspace_symbolspicker. This is really useful to discover what Telescope can
     -- do as well as how to actually do it!
 
     -- [[ Configure Telescope ]]
@@ -60,7 +60,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
       --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
       --   },
       -- },
-      -- pickers = {}
+      -- pickers = {},
       extensions = {
         ["ui-select"] = {
           require("telescope.themes").get_dropdown(),
@@ -84,6 +84,8 @@ return { -- Fuzzy Finder (files, lsp, etc)
     vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
     vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
     vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+    vim.keymap.set("n", "<leader>sp", builtin.lsp_workspace_symbols, { desc = "[S]earch [P]roject" })
+    vim.keymap.set("n", "<leader>so", builtin.lsp_document_symbols, { desc = "[S]earch [O]utline" })
 
     -- Slightly advanced example of overriding default behavior and theme
     vim.keymap.set("n", "<leader>/", function()
