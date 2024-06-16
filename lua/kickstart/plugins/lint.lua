@@ -3,13 +3,40 @@ return {
   { -- Linting
     'mfussenegger/nvim-lint',
     event = { 'BufReadPre', 'BufNewFile' },
+    -- init = function()
+    --   require('lint').linters.eslint.args = { '--fix' }
+    -- end,
+    -- init = function()
+    --   require('lint').linters.eslint.args = {
+    --     '--fix',
+    --     '--format',
+    --     'json',
+    --     '--stdin',
+    --     '--stdin-filename',
+    --     function()
+    --       return vim.api.nvim_buf_get_name(0)
+    --     end,
+    --   }
+    -- end,
     config = function()
       local lint = require 'lint'
       lint.linters_by_ft = {
         markdown = { 'markdownlint' },
+        typescript = { 'eslint' },
+        javascript = { 'eslint' },
       }
 
-      -- To allow other plugins to add linters to require('lint').linters_by_ft,
+      -- lint.linters.eslint.args = {
+      --   '--fix',
+      --   '--format',
+      --   'json',
+      --   '--stdin',
+      --   '--stdin-filename',
+      --   function()
+      --     return vim.api.nvim_buf_get_name(0)
+      --   end,
+      -- }
+      -- -- To allow other plugins to add linters to require('lint').linters_by_ft,
       -- instead set linters_by_ft like this:
       -- lint.linters_by_ft = lint.linters_by_ft or {}
       -- lint.linters_by_ft['markdown'] = { 'markdownlint' }

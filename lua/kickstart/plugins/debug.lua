@@ -23,6 +23,10 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+    'mxsdev/nvim-dap-vscode-js',
+
+    -- Virtual text
+    'theHamsta/nvim-dap-virtual-text',
   },
   keys = {
     -- Basic debugging keymaps, feel free to change to your liking!
@@ -98,6 +102,19 @@ return {
       },
     }
 
+    -- Basic debugging keymaps, feel free to change to your liking!
+    vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/Continue' })
+    vim.keymap.set('n', '<F1>', dap.step_into, { desc = 'Debug: Step Into' })
+    vim.keymap.set('n', '<F2>', dap.step_over, { desc = 'Debug: Step Over' })
+    vim.keymap.set('n', '<F3>', dap.step_out, { desc = 'Debug: Step Out' })
+    vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint, { desc = 'Debug: Toggle Breakpoint' })
+    vim.keymap.set('n', '<leader>B', function()
+      dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+    end, { desc = 'Debug: Set Breakpoint' })
+
+    -- Dap virtual text setup
+    require('nvim-dap-virtual-text').setup()
+
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
     dapui.setup {
@@ -136,13 +153,49 @@ return {
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
-    -- Install golang specific config
-    require('dap-go').setup {
-      delve = {
-        -- On Windows delve must be run attached or it crashes.
-        -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
-        detached = vim.fn.has 'win32' == 0,
-      },
+    require('dap-vscode-js').setup {
+      -- node_path = "node", -- Path of node executable. Defaults to $NODE_PATH, and then "node"
+      debugger_path = vim.fn.stdpath 'data' .. '/lazy/vscode-js-debug',
+      -- debugger_cmd = { "extension" }, -- Command to use to launch the debug server. Takes precedence over `node_path` and `debugger_path`.
+      adapters = { 'pwa-node', 'pwa-msedge', 'node-terminal', 'pwa-extensionHost', 'node' }, -- which adapters to register in nvim-dap
+      -- log_file_path = "(stdpath cache)/dap_vscode_js.log" -- Path for file logging
+      -- log_file_level = false -- Logging level for output to file. Set to false to disable file logging.
+      -- log_console_level = vim.log.levels.ERROR -- Logging level for output to console. Set to false to disable console output.
     }
+
+    local js_based_languages = { 'typescript', 'javascript' }
+
+    for _, language in ipairs(js_based_languages) do
+      require('dap').configurations[language] = {
+        {
+          type = 'pwa-node',
+          request = 'launch',
+          name = 'Launch file',
+          program = '${file}',
+          cwd = '${workspaceFolder}',
+        },
+        {
+          type = 'pwa-node',
+          request = 'attach',
+          name = 'Attach',
+          processId = require('dap.utils').pick_process,
+          cwd = '${workspaceFolder}',
+        },
+        {
+          type = 'pwa-node',
+          request = 'launch',
+          name = 'Debug Jest Tests',
+          env = { NODE_OPTIONS = '--experimental-vm-modules', ENV = 'test' },
+          runtimeExecutable = 'node',
+          runtimeArgs = {
+            './node_modules/jest/bin/jest.js',
+          },
+          rootPath = '${workspaceFolder}',
+          cwd = '${workspaceFolder}',
+          console = 'integratedTerminal',
+          internalConsoleOptions = 'neverOpen',
+        },
+      }
+    end
   end,
 }
