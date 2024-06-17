@@ -32,7 +32,7 @@ return {
     require('mason-nvim-dap').setup {
       -- Makes a best effort to setup the various debuggers with
       -- reasonable debug configurations
-      automatic_setup = true,
+      automatic_setup = false,
 
       -- You'll need to check that you have the required things installed
       -- online, please don't ask me how to install them :)
@@ -92,7 +92,7 @@ return {
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
-    dap.defaults.fallback.exception_breakpoints = {'Notice', 'Warning', 'Error', 'Exception'}
+    dap.defaults.fallback.exception_breakpoints = { 'Notice', 'Warning', 'Error', 'Exception' }
 
     -- Install golang specific config
     require('dap-go').setup()
@@ -104,7 +104,7 @@ return {
       adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" },
     }
 
-    for _, jsLang in ipairs({'typescript', 'javascript'}) do
+    for _, jsLang in ipairs({ 'typescript', 'javascript' }) do
       require("dap").configurations[jsLang] = {
         {
           type = "pwa-node",
@@ -117,7 +117,7 @@ return {
           type = "pwa-node",
           request = "attach",
           name = "Attach",
-          processId = require'dap.utils'.pick_process,
+          processId = require 'dap.utils'.pick_process,
           cwd = "${workspaceFolder}",
         },
         {
@@ -136,52 +136,51 @@ return {
           internalConsoleOptions = "neverOpen",
         },
         {
-            name = 'Debug Main Process (Electron)',
-            type = 'pwa-node',
-            request = 'launch',
-            program = '${workspaceFolder}/node_modules/.bin/electron',
-            args = {
-                '${workspaceFolder}/dist/index.js',
-            },
-            outFiles = {
-                '${workspaceFolder}/dist/*.js',
-            },
-            resolveSourceMapLocations = {
-                '${workspaceFolder}/dist/**/*.js',
-                '${workspaceFolder}/dist/*.js',
-            },
-            rootPath = '${workspaceFolder}',
-            cwd = '${workspaceFolder}',
-            sourceMaps = true,
-            skipFiles = { '<node_internals>/**' },
-            protocol = 'inspector',
-            console = 'integratedTerminal',
+          name = 'Debug Main Process (Electron)',
+          type = 'pwa-node',
+          request = 'launch',
+          program = '${workspaceFolder}/node_modules/.bin/electron',
+          args = {
+            '${workspaceFolder}/dist/index.js',
+          },
+          outFiles = {
+            '${workspaceFolder}/dist/*.js',
+          },
+          resolveSourceMapLocations = {
+            '${workspaceFolder}/dist/**/*.js',
+            '${workspaceFolder}/dist/*.js',
+          },
+          rootPath = '${workspaceFolder}',
+          cwd = '${workspaceFolder}',
+          sourceMaps = true,
+          skipFiles = { '<node_internals>/**' },
+          protocol = 'inspector',
+          console = 'integratedTerminal',
         },
         {
-            name = 'Compile & Debug Main Process (Electron)',
-            type = custom_adapter,
-            request = 'launch',
-            preLaunchTask = 'npm run build-ts',
-            program = '${workspaceFolder}/node_modules/.bin/electron',
-            args = {
-                '${workspaceFolder}/dist/index.js',
-            },
-            outFiles = {
-                '${workspaceFolder}/dist/*.js',
-            },
-            resolveSourceMapLocations = {
-                '${workspaceFolder}/dist/**/*.js',
-                '${workspaceFolder}/dist/*.js',
-            },
-            rootPath = '${workspaceFolder}',
-            cwd = '${workspaceFolder}',
-            sourceMaps = true,
-            skipFiles = { '<node_internals>/**' },
-            protocol = 'inspector',
-            console = 'integratedTerminal',
+          name = 'Compile & Debug Main Process (Electron)',
+          type = custom_adapter,
+          request = 'launch',
+          preLaunchTask = 'npm run build-ts',
+          program = '${workspaceFolder}/node_modules/.bin/electron',
+          args = {
+            '${workspaceFolder}/dist/index.js',
+          },
+          outFiles = {
+            '${workspaceFolder}/dist/*.js',
+          },
+          resolveSourceMapLocations = {
+            '${workspaceFolder}/dist/**/*.js',
+            '${workspaceFolder}/dist/*.js',
+          },
+          rootPath = '${workspaceFolder}',
+          cwd = '${workspaceFolder}',
+          sourceMaps = true,
+          skipFiles = { '<node_internals>/**' },
+          protocol = 'inspector',
+          console = 'integratedTerminal',
         },
       }
     end
-
   end,
 }

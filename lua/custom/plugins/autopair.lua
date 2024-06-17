@@ -1,3 +1,0 @@
-return {
-  'jiangmiao/auto-pairs'
-}
