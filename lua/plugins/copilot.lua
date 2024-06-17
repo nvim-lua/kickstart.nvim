@@ -1,17 +1,3 @@
-local COPILOT_ENABLED = true
-
-vim.keymap.set('n', '<F8>', function()
-  if COPILOT_ENABLED then
-    vim.cmd 'Copilot disable'
-    COPILOT_ENABLED = false
-    print 'Copilot disabled'
-  else
-    vim.cmd 'Copilot enable'
-    COPILOT_ENABLED = true
-    print 'Copilot enabled'
-  end
-end, { noremap = true, silent = true })
-
 return {
   'zbirenbaum/copilot.lua',
   cmd = 'Copilot',
@@ -23,7 +9,7 @@ return {
     -- disable copilot by default
     copilot.setup {
       suggestion = {
-        enabled = COPILOT_ENABLED,
+        enabled = true,
         auto_trigger = true,
         keymap = {
           accept = '<Tab>',
