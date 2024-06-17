@@ -217,6 +217,7 @@ local function close_neo_tree()
   require('neo-tree.sources.manager').close_all()
   vim.notify 'closed all'
 end
+
 --
 -- [[ Configure and install plugins ]]
 --
@@ -248,12 +249,13 @@ require('lazy').setup({
   -- Auto-save sessions
   {
     'rmagatti/auto-session',
+    enabled = true,
     lazy = false,
     opts = {
       log_level = 'error',
       auto_session_suppress_dirs = { '~/', '/' },
-      auto_session_enable_last_session = true,
-      auto_session_root_dir = '~/.local/state/nvim/sessions/',
+      auto_session_enable_last_session = false,
+      -- auto_session_root_dir = '~/.local/state/nvim/sessions/',
       bypass_session_save_file_types = { 'neo-tree' },
       pre_save_cmds = {
         close_neo_tree,
@@ -933,6 +935,7 @@ require('lazy').setup({
   },
   {
     'nvim-neo-tree/neo-tree.nvim',
+    enabled = true,
     branch = 'v3.x',
     cmd = 'Neotree',
     dependencies = {
@@ -1144,6 +1147,22 @@ require('lazy').setup({
       --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
       --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+      local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
+
+      parser_config.blade = {
+        install_info = {
+          url = 'https://github.com/EmranMR/tree-sitter-blade',
+          files = { 'src/parser.c' },
+          branch = 'main',
+        },
+        filetype = 'blade',
+      }
+
+      vim.filetype.add {
+        pattern = {
+          ['.*%.blade%.php'] = 'blade',
+        },
+      }
     end,
   },
 
