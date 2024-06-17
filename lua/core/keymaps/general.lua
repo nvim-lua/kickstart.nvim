@@ -44,10 +44,10 @@ vim.api.nvim_set_keymap("n", "<Leader>nf", ":lua require('neogen').generate({ ty
 --]]
 
 -- Split resize
-nmap('<M-j>', ':res +1<cr>', 'Resize split')
-nmap('<M-k>', ':res -1<cr>', 'Resize split')
-nmap('<M-h>', ':vertical res -1<cr>', 'Resize split vertically')
-nmap('<M-l>', ':vertical res +1<cr>', 'Resize split vertically')
-nmap('<M-v>', '<C-w>|<cr>', 'Maximize Split Vertically')
-nmap('<M-s>', '<C-w>_<cr>', 'Maximize Split Horizontally')
-nmap('<M-e>', '<C-w>=<cr>', 'Reset Split Size')
+--  nmap('<M-j>', ':res +1<cr>', 'Resize split')
+--  nmap('<M-k>', ':res -1<cr>', 'Resize split')
+--  nmap('<M-h>', ':vertical res -1<cr>', 'Resize split vertically')
+--  nmap('<M-l>', ':vertical res +1<cr>', 'Resize split vertically')
+--  nmap('<M-v>', '<C-w>|<cr>', 'Maximize Split Vertically')
+--  nmap('<M-s>', '<C-w>_<cr>', 'Maximize Split Horizontally')
+--  nmap('<M-e>', '<C-w>=<cr>', 'Reset Split Size')
