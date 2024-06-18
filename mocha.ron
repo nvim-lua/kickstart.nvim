@@ -17,7 +17,7 @@
     commit_author: Some(Rgb(116, 199, 236)),
     danger_fg: Some(Rgb(243, 139, 168)),
     push_gauge_bg: Some(Rgb(137, 180, 250)),
-    push_gauge_fg: some(Rgb(30, 30, 46)),
+    push_gauge_fg: Some(Rgb(30, 30, 46)),
     tag_fg: Some(Rgb(245, 224, 220)),
     branch_fg: Some(Rgb(148, 226, 213))
 )

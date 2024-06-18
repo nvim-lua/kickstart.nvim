@@ -30,6 +30,20 @@ return {
               return MiniHipatterns.compute_hex_color_group(correct, 'bg')
             end,
           },
+          rgb = {
+            pattern = '()Rgb%(%s*%d+,%s*%d+,%s*%d+%s*%)()',
+            group = function(_, _, data)
+              local _, _, r, g, b = data.full_match:find 'Rgb%(%s*(%d+),%s*(%d+),%s*(%d+)%s*%)'
+              local correct = string.format('#%02x%02x%02x', r, g, b)
+              if correct:len() ~= 7 then
+                return
+              end
+              return MiniHipatterns.compute_hex_color_group(correct, 'bg')
+            end,
+            extmark_opts = {
+              priority = 210,
+            },
+          },
         },
       }
 

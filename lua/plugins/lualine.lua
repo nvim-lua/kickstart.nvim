@@ -1,3 +1,28 @@
+local function get_oil_extension()
+  local oil_ext = vim.deepcopy(require 'lualine.extensions.oil')
+  oil_ext.sections.lualine_z = {
+    {
+      'mode',
+      separator = { left = '', right = '' },
+      fmt = function(mode, context)
+        local winnr = vim.fn.tabpagewinnr(context.tabnr)
+        local val = require('fancyutil').get_oil_nnn(winnr)
+        if val then
+          return 'nnn'
+        end
+        return mode
+      end,
+      color = function()
+        local val = require('fancyutil').get_oil_nnn()
+        if val then
+          return { fg = '#054fca', bg = '#ff98dd' }
+        end
+      end,
+    },
+  }
+  return oil_ext
+end
+
 return {
   {
     'nvim-lualine/lualine.nvim',
@@ -18,32 +43,41 @@ return {
           component_separators = '',
           section_separators = { left = '', right = '' },
         },
+        tabline = {
+          lualine_a = {},
+          lualine_b = {},
+          lualine_c = {
+            '%=',
+            {
+              'filename',
+              file_status = true,
+              path = 3,
+              symbols = {
+                modified = '', -- Text to show when the file is modified.
+                readonly = '󰌾', -- Text to show when the file is non-modifiable or readonly.
+                unnamed = '[No Name]', -- Text to show for unnamed buffers.
+                newfile = '[New]', -- Text to show for newly created file before first write
+              },
+            },
+          },
+          lualine_x = {
+            { 'filetype' },
+            { 'fileformat' },
+          },
+          lualine_y = {},
+          lualine_z = {},
+        },
         sections = {
           lualine_a = {
             {
               'mode',
-              separator = { left = '' },
-              fmt = function(_, _)
-                -- local winnr = vim.fn.tab (context.tabnr)
-                -- vim.fn.winbufnr(winnr)
-                local val = require('fancyutil').get_oil_nnn()
-                if val then
-                  return 'nnn'
-                end
-              end,
-              color = function(_)
-                local val = require('fancyutil').get_oil_nnn()
-                if val == true then
-                  return { fg = '#054fca' }
-                end
-                return {}
-              end,
+              separator = { left = '', right = '' },
             },
           },
           lualine_x = {
             {
               'lsp_progress',
-              display_components = { 'lsp_client_name', { 'title', 'percentage', 'message' } },
+              display_components = { 'lsp_client_name', 'spinner', { 'title', 'percentage', 'message' } },
               colors = {
                 percentage = colors.gray,
                 title = colors.gray,
@@ -52,35 +86,25 @@ return {
                 lsp_client_name = colors.purple,
                 use = true,
               },
+              timer = {
+                progress_enddelay = 1500,
+                spinner = 1500,
+                lsp_client_enddelay = 2500,
+              },
             },
           },
           lualine_z = {
             {
               'location',
-              separator = { right = '' },
-              left_padding = 2,
+              separator = { left = '', right = '' },
             },
           },
         },
         extensions = {
-          'oil',
+          get_oil_extension(),
           'lazy',
         },
       }
-
-      --      vim.api.nvim_create_autocmd({ 'BufEnter' }, {
-      --        callback = function(ev)
-      --          local filetype = vim.api.nvim_get_option_value('filetype', { buf = ev.buf })
-      --
-      --          print(string.format('event fired: %s', filetype))
-      --          if filetype == 'oil' then
-      --            local ok, value = pcall(vim.api.nvim_buf_get_var, ev.buf, 'nnn')
-      --            if not ok then
-      --              vim.api.nvim_buf_set_var(ev.buf, 'nnn', true)
-      --            end
-      --          end
-      --        end,
-      --      })
     end,
   },
 }

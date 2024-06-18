@@ -1,0 +1,1 @@
+function FancyWrapper(ptr: NativePointer);

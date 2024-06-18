@@ -6,11 +6,11 @@ return {
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       'folke/lazydev.nvim',
+      'b0o/schemastore.nvim',
       { 'j-hui/fidget.nvim' },
     },
     config = function()
       require('lazydev').setup {}
-      require('neoconf').setup {}
       vim.diagnostic.config {
         update_in_insert = true,
         float = {
@@ -20,6 +20,11 @@ return {
         underline = true,
         virtual_text = false,
       }
+
+      vim.fn.sign_define('DiagnosticSignError', { text = '', texthl = 'DiagnosticSignError' })
+      vim.fn.sign_define('DiagnosticSignWarn', { text = '', texthl = 'DiagnosticSignWarn' })
+      vim.fn.sign_define('DiagnosticSignInfo', { text = '', texthl = 'DiagnosticSignInfo' })
+      vim.fn.sign_define('DiagnosticSignHint', { text = '', texthl = 'DiagnosticSignHint' })
 
       --    function will be executed to configure the current buffer
       vim.api.nvim_create_autocmd('LspAttach', {
@@ -48,6 +53,7 @@ return {
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
       capabilities.textDocument.completion.completionItem.snippetSupport = true
+      capabilities.textDocument.callHierarchy.dynamicRegistration = true
 
       local lazyPlugins = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
       local servers = {
@@ -74,9 +80,39 @@ return {
             },
           },
         },
-        jsonls = {},
-        yamlls = {},
+        jsonls = {
+          settings = {
+            json = {
+              schemas = require('schemastore').json.schemas(),
+              validate = {
+                enable = true,
+              },
+            },
+          },
+        },
+        yamlls = {
+          settings = {
+            yaml = {
+              schemas = require('schemastore').yaml.schemas(),
+            },
+            schemaStore = {
+              enable = true,
+            },
+          },
+        },
         eslint_d = {},
+        pylsp = {
+          settings = {
+            pylsp = {
+              plugins = {
+                pycodestyle = {
+                  ignore = { 'W391' },
+                  maxLineLength = 120,
+                },
+              },
+            },
+          },
+        },
       }
 
       --  You can press `g?` for help in this menu.

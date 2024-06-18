@@ -1,11 +1,11 @@
 -- init module
 local _M = {}
 
---- @param bufnr integer | nil
+--- @param winnr integer | nil
 --- @return true | false | nil
-function _M.get_oil_nnn(bufnr)
-  bufnr = bufnr or 0
-  local ok, value = pcall(vim.api.nvim_buf_get_var, bufnr, 'nnn')
+function _M.get_oil_nnn(winnr)
+  winnr = winnr or 0
+  local ok, value = pcall(vim.api.nvim_win_get_var, winnr, 'nnn')
   if not ok then
     return nil
   end
@@ -14,6 +14,12 @@ function _M.get_oil_nnn(bufnr)
   end
   return false
 end
-vim.fn.get_oil_nnn = _M.get_oil_nnn
+
+--- @param val boolean
+--- @param winnr integer | nil
+function _M.set_oil_nnn(val, winnr)
+  winnr = winnr or 0
+  vim.api.nvim_win_set_var(winnr, 'nnn', val)
+end
 
 return _M
