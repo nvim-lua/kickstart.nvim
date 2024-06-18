@@ -372,6 +372,7 @@ require('lazy').setup({
         tsserver = {},
         csharp_ls = {},
         netcoredbg = {},
+        clangd = {},
         --
 
         lua_ls = {
@@ -403,6 +404,12 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'clangd',
+        'clang-format',
+        'csharp_ls',
+        'lua_ls',
+        'omnisharp',
+        'tsserver',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
