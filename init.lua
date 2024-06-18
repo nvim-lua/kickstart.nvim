@@ -99,7 +99,7 @@ vim.g.maplocalleader = ' '
 vim.opt.number = true
 -- You can also add relative line numbers, for help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -154,6 +154,9 @@ vim.opt.scrolloff = 10
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
@@ -221,6 +224,7 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup {
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  'tpope/vim-fugitive', -- Git commands in nvim
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -290,6 +294,9 @@ require('lazy').setup {
   -- you do for a plugin at the top level, you can do for a dependency.
   --
   -- Use the `dependencies` key to specify the dependencies of a particular plugin
+  {
+    'github/copilot.vim',
+  },
 
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
@@ -543,6 +550,24 @@ require('lazy').setup {
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
         --
+        intelephense = {},
+        terraformls = {},
+        templ = {
+          filetypes = { 'templ' },
+        },
+        tsserver = {},
+        gopls = {
+          settings = {
+            gopls = {
+              analyses = {
+                unusedparams = true,
+              },
+              staticcheck = true,
+              gofumpt = true,
+            },
+          },
+        },
+        -- phan = {},
 
         lua_ls = {
           -- cmd = {...},
@@ -607,10 +632,13 @@ require('lazy').setup {
     'stevearc/conform.nvim',
     opts = {
       notify_on_error = false,
-      format_on_save = {
-        timeout_ms = 500,
-        lsp_fallback = true,
-      },
+      format_on_save = function(bufnr)
+        -- Disable with a global or buffer-local variable
+        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+          return
+        end
+        return { timeout_ms = 500, lsp_fallback = true }
+      end,
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
@@ -781,7 +809,7 @@ require('lazy').setup {
 
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup {
-        ensure_installed = { 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc' },
+        ensure_installed = { 'bash', 'c', 'go', 'html', 'javascript', 'lua', 'markdown', 'php', 'terraform', 'vim', 'vimdoc' },
         -- Autoinstall languages that are not installed
         auto_install = true,
         highlight = { enable = true },
@@ -819,3 +847,52 @@ require('lazy').setup {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+vim.filetype.add {
+  extension = {
+    templ = 'templ',
+  },
+}
+
+-- Toggle Auto formatting
+vim.api.nvim_create_user_command('FormatDisable', function(args)
+  if args.bang then
+    -- FormatDisable! will disable formatting just for this buffer
+    vim.b.disable_autoformat = true
+  else
+    vim.g.disable_autoformat = true
+  end
+end, {
+  desc = 'Disable autoformat-on-save',
+  bang = true,
+})
+vim.api.nvim_create_user_command('FormatEnable', function()
+  vim.b.disable_autoformat = false
+  vim.g.disable_autoformat = false
+end, {
+  desc = 'Re-enable autoformat-on-save',
+})
+
+-- Automatically organize imports and format Go code on save
+vim.api.nvim_create_autocmd('BufWritePre', {
+  pattern = '*.go',
+  callback = function()
+    local params = vim.lsp.util.make_range_params()
+    params.context = { only = { 'source.organizeImports' } }
+    -- buf_request_sync defaults to a 1000ms timeout. Depending on your
+    -- machine and codebase, you may want longer. Add an additional
+    -- argument after params if you find that you have to write the file
+    -- twice for changes to be saved.
+    -- E.g., vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
+    local result = vim.lsp.buf_request_sync(0, 'textDocument/codeAction', params)
+    for cid, res in pairs(result or {}) do
+      for _, r in pairs(res.result or {}) do
+        if r.edit then
+          local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or 'utf-16'
+          vim.lsp.util.apply_workspace_edit(r.edit, enc)
+        end
+      end
+    end
+    vim.lsp.buf.format { async = false }
+  end,
+})
