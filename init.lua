@@ -81,20 +81,9 @@ If you experience any errors while trying to install kickstart, run `:checkhealt
 I hope you enjoy your Neovim journey,
 - TJ
 
+
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
-
--- Set how many spaces a tab counts for
--- See `:help 'tabstop'`
-vim.opt.tabstop = 2
-
--- Set the number of spaces inserted for each indentation
--- See `:help 'shiftwidth'`
-vim.opt.shiftwidth = 2
-
--- Use spaces instead of tabs
--- See `:help 'expandtab'`
--- vim.opt.expandtab = true
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
@@ -109,6 +98,18 @@ vim.g.have_nerd_font = true
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
+
+-- Set how many spaces a tab counts for
+-- See `:help 'tabstop'`
+vim.opt.tabstop = 2
+
+-- Set the number of spaces inserted for each indentation
+-- See `:help 'shiftwidth'`
+vim.opt.shiftwidth = 2
+
+-- Use spaces instead of tabs
+-- See `:help 'expandtab'`
+-- vim.opt.expandtab = true
 
 -- Make line numbers default
 vim.opt.number = true
@@ -254,7 +255,7 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  -- 'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -681,9 +682,6 @@ require('lazy').setup({
           end,
         },
       }
-
-      -- Enable the `typescript-tools` plugin for TypeScript and JavaScript
-      -- require('typescript-tools').setup {}
     end,
   },
 
@@ -701,6 +699,7 @@ require('lazy').setup({
       },
     },
     opts = {
+      notify = true,
       notify_on_error = false,
       format_on_save = function(bufnr)
         -- Disable "format_on_save lsp_fallback" for languages that don't
@@ -721,6 +720,7 @@ require('lazy').setup({
         -- is found.
         javascript = { { 'prettierd', 'prettier' } },
         typescript = { { 'prettierd', 'prettier' } },
+        css = { 'stylelint' },
       },
     },
   },
