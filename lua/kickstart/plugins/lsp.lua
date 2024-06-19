@@ -1,4 +1,6 @@
-return { -- LSP Configuration & Plugins
+return {
+  {
+    -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
@@ -157,21 +159,31 @@ return { -- LSP Configuration & Plugins
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        pyright = {},
-        pylsp = {
-            on_attach = on_attach,
-            capabilities = capabilities,
-            settings = {
-                pylsp = {
-                    plugins = {
-                        pycodestyle = {
-                            ignore = {},
-                            maxLineLength = 120,
-                        },
-                    },
-                },
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                autoSearchPaths = true,
+                diagnosticMode = 'workspace',
+                useLibraryCodeForTypes = true,
+                autoImportCompletions = true,
+              },
             },
+          },
+          disableLanguageServices = false,
         },
+        -- pylsp = {
+        --     settings = {
+        --         pylsp = {
+        --             plugins = {
+        --                 pycodestyle = {
+        --                     ignore = {},
+        --                     maxLineLength = 120,
+        --                 },
+        --             },
+        --         }
+        --     }
+        -- },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -212,7 +224,18 @@ return { -- LSP Configuration & Plugins
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
       })
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      --   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      -- INFO: Using my own utils function instead of mason-lspconfig as it checks if the stuff is already installed
+      -- outside of mason. This is useful for NixOS setup where mason version just doesn't work sometimes due to libc issues.
+      require('utils.mason').install {
+        -- "python-lsp-server",
+        'pyright',
+        'bash-language-server',
+        -- "rnix-lsp",
+        'lua-language-server',
+        -- "docker-compose-language-service",
+        -- "nil",
+      }
 
       require('mason-lspconfig').setup {
         handlers = {
@@ -227,4 +250,24 @@ return { -- LSP Configuration & Plugins
         },
       }
     end,
+  },
+  -- Show LSP explorer of functions and classes etc.
+  {
+    'hedyhli/outline.nvim',
+    lazy = true,
+    cmd = { 'Outline', 'OutlineOpen' },
+    keys = { -- Example mapping to toggle outline
+      { '<leader>o', '<cmd>Outline<CR>', desc = 'Toggle outline' },
+    },
+    opts = {},
+  },
+
+  -- Shows where you are in the file LSP wise (which class/function etc)
+  {
+    'ray-x/lsp_signature.nvim',
+    event = 'VeryLazy',
+    config = function(_, opts)
+      require('lsp_signature').setup(opts)
+    end,
+  },
 }
