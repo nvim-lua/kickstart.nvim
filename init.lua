@@ -190,6 +190,22 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- Define a function to easily set keymaps with description
+local function set_keymap(mode, lhs, rhs, desc)
+  vim.api.nvim_set_keymap(mode, lhs, rhs, { noremap = true, silent = true, desc = desc })
+end
+
+-- Typescript commands
+set_keymap('n', '<leader>cti', ':TSToolsOrganizeImports<CR>', 'Organize [I]mports')
+set_keymap('n', '<leader>cts', ':TSToolsSortImports<CR>', '[S]ort Imports')
+set_keymap('n', '<leader>ctu', ':TSToolsRemoveUnusedImports<CR>', 'Remove [U]nused Imports')
+set_keymap('n', '<leader>ctx', ':TSToolsRemoveUnused<CR>', 'Remove Unused Statements ([X])')
+set_keymap('n', '<leader>cta', ':TSToolsAddMissingImports<CR>', '[A]dd Missing Imports')
+set_keymap('n', '<leader>ctf', ':TSToolsFixAll<CR>', '[F]ix All Errors')
+set_keymap('n', '<leader>ctg', ':TSToolsGoToSourceDefinition<CR>', '[G]o to Source Definition')
+set_keymap('n', '<leader>ctr', ':TSToolsRenameFile<CR>', '[R]ename File')
+set_keymap('n', '<leader>ctR', ':TSToolsFileReferences<CR>', 'File [[R]]eferences')
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -277,10 +293,11 @@ require('lazy').setup({
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
-      require('which-key').setup()
+      local wk = require 'which-key'
+      wk.setup()
 
       -- Document existing key chains
-      require('which-key').register {
+      wk.register {
         ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
         ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
         ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
@@ -290,9 +307,26 @@ require('lazy').setup({
         ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
       }
       -- visual mode
-      require('which-key').register({
+      wk.register({
         ['<leader>h'] = { 'Git [H]unk' },
       }, { mode = 'v' })
+
+      wk.register({
+        c = {
+          t = {
+            name = '[T]ypescript',
+            i = 'Organize [I]mports',
+            s = '[S]ort Imports',
+            u = 'Remove [U]nused Imports',
+            x = 'Remove Unused Statements ([X])',
+            a = '[A]dd Missing Imports',
+            f = '[F]ix All Errors',
+            g = '[G]o to Source Definition',
+            r = '[R]ename File',
+            R = 'File [[R]]eferences',
+          },
+        },
+      }, { prefix = '<leader>' })
     end,
   },
 
@@ -423,6 +457,12 @@ require('lazy').setup({
       -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
       -- used for completion, annotations and signatures of Neovim apis
       { 'folke/neodev.nvim', opts = {} },
+
+      {
+        'pmizio/typescript-tools.nvim',
+        dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
+        opts = {},
+      },
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -607,7 +647,6 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
-        'tsserver',
         'lua_ls',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -620,10 +659,19 @@ require('lazy').setup({
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for tsserver)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+            if server_name == 'tsserver' then
+              return
+            end
             require('lspconfig')[server_name].setup(server)
+          end,
+          ['typescript-tools'] = function()
+            require('typescript-tools').setup {}
           end,
         },
       }
+
+      -- Enable the `typescript-tools` plugin for TypeScript and JavaScript
+      -- require('typescript-tools').setup {}
     end,
   },
 
@@ -775,6 +823,7 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+          { name = 'nvim_lsp_signature_help' },
         },
       }
     end,
