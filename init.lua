@@ -84,6 +84,18 @@ I hope you enjoy your Neovim journey,
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
 
+-- Set how many spaces a tab counts for
+-- See `:help 'tabstop'`
+vim.opt.tabstop = 2
+
+-- Set the number of spaces inserted for each indentation
+-- See `:help 'shiftwidth'`
+vim.opt.shiftwidth = 2
+
+-- Use spaces instead of tabs
+-- See `:help 'expandtab'`
+-- vim.opt.expandtab = true
+
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)

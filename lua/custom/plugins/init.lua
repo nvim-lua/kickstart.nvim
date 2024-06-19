@@ -10,4 +10,15 @@ return {
       vim.cmd 'Copilot setup'
     end,
   },
+  {
+    'sbdchd/neoformat',
+    cmd = 'Neoformat',
+    config = function()
+      vim.g.neoformat_enabled_javascript = { 'prettier' }
+      vim.g.neoformat_enabled_python = { 'black' }
+      vim.g.neoformat_enabled_typescript = { 'prettier' }
+      vim.g.neoformat_enabled_yaml = { 'prettier' }
+      vim.g.neoformat_run_on_save = 1
+    end,
+  },
 }
