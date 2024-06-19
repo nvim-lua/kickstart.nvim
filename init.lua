@@ -109,7 +109,7 @@ vim.opt.shiftwidth = 2
 
 -- Use spaces instead of tabs
 -- See `:help 'expandtab'`
--- vim.opt.expandtab = true
+vim.opt.expandtab = true
 
 -- Make line numbers default
 vim.opt.number = true
