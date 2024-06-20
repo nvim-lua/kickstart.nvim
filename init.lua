@@ -239,6 +239,8 @@ require('lazy').setup({
   'tpope/vim-fugitive', -- Support for :Git command
   'tpope/vim-surround', -- Support for :Git command
 
+  'normen/vim-pio', -- Support for PlatformIO (embedded development)
+
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
