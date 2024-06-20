@@ -573,7 +573,6 @@ require('lazy').setup({
         typescript = { { "prettierd", "prettier" } },
         javascriptreact = { { "prettierd", "prettier" } },
         typescriptreact = { { "prettierd", "prettier" } },
-        rust = { { "rustfmt" }},
         css = { { "prettierd", "prettier" } },
         html = { { "prettierd", "prettier" } },
         json = { { "prettierd", "prettier" } },
