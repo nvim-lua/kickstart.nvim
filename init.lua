@@ -237,7 +237,8 @@ require('lazy').setup({
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   'tpope/vim-rails', -- Rails integration
   'tpope/vim-fugitive', -- Support for :Git command
-  'tpope/vim-surround', -- Support for :Git command
+  'tpope/vim-surround', -- Replace string delimiters
+  'tpope/vim-dispatch', -- Support for :Make command
 
   'normen/vim-pio', -- Support for PlatformIO (embedded development)
 
