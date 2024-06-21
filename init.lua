@@ -695,6 +695,7 @@ require('lazy').setup({
         go = { 'gofmt', 'goimports', 'golines' },
         terraform = { 'terraform_fmt' },
         json = { 'jsonnetfmt', 'jq' },
+        rust = { 'rustfmt' },
         -- yaml = { 'yq' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
@@ -902,6 +903,7 @@ require('lazy').setup({
         'dockerfile',
         'gitignore',
         'json',
+        'rust',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
