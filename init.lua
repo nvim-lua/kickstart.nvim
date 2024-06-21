@@ -271,7 +271,17 @@ require('lazy').setup({
       },
     },
   },
-
+  {
+    'crnvl96/lazydocker.nvim',
+    event = 'VeryLazy',
+    opts = {}, -- automatically calls `require("lazydocker").setup()`
+    dependencies = {
+      'MunifTanjim/nui.nvim',
+    },
+    keys = {
+      { '<leader>ld', '<cmd>LazyDocker<cr>', desc = 'Open lazy docker' },
+    },
+  },
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
   --    require('gitsigns').setup({ ... })
@@ -1188,6 +1198,7 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   require 'kickstart.plugins.lazygit',
+  require 'kickstart.plugins.dadbod',
   require 'kickstart.plugins.debug',
   require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
