@@ -17,6 +17,9 @@ return {
       { 'folke/neodev.nvim', opts = {} },
     },
     config = function()
+      -- some default parameters
+      vim.lsp.inlay_hint.enable(true, nil)
+
       -- Brief aside: **What is LSP?**
       --
       -- LSP is an initialism you've probably heard, but might not understand what it is.
@@ -49,11 +52,6 @@ return {
       local on_attach = function(_, buffr)
         local kset = function(key, func, buffer, desc)
           vim.keymap.set('n', key, func, { buffer = buffer, desc = 'LSP: ' .. desc })
-        end
-
-        print('Called on attach', _)
-        for k, v in pairs(_) do
-          print(k, v)
         end
 
         -- Jump to the definition of the word under your cursor.
@@ -151,6 +149,8 @@ return {
           --  For example, in C this would take you to the header.
           map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
+          print('LSP attach event for ', event.data, event.data.client_id)
+
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
@@ -211,18 +211,28 @@ return {
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        pyright = {
+        -- pyright = {
+        --   settings = {
+        --     python = {
+        --       analysis = {
+        --         autoSearchPaths = true,
+        --         diagnosticMode = 'workspace',
+        --         useLibraryCodeForTypes = true,
+        --         autoImportCompletions = true,
+        --       },
+        --     },
+        --   },
+        --   disableLanguageServices = false,
+        -- },
+        basedpyright = {
           settings = {
-            python = {
+            basedpyright = {
               analysis = {
                 autoSearchPaths = true,
-                diagnosticMode = 'workspace',
-                useLibraryCodeForTypes = true,
-                autoImportCompletions = true,
+                typeCheckingMode = 'standard',
               },
             },
           },
-          disableLanguageServices = false,
         },
         -- pylsp = {
         --     settings = {
@@ -282,6 +292,7 @@ return {
       require('utils.mason').install {
         -- "python-lsp-server",
         'pyright',
+        'basedpyright',
         'bash-language-server',
         -- "rnix-lsp",
         'lua-language-server',
@@ -292,7 +303,6 @@ return {
       local lsp = require 'lspconfig'
 
       for server, config in pairs(servers) do
-        print(server)
         config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, config.capabilities or {})
         config.on_attach = on_attach
         lsp[server].setup(config)
