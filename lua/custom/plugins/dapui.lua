@@ -1,4 +1,4 @@
-return {
+return {} or {
   'rcarriga/nvim-dap-ui',
   dependencies = {
     'mfussenegger/nvim-dap',
