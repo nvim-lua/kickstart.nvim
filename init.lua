@@ -609,6 +609,12 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      local on_attach_ruff = function(client, bufnr)
+        if client.name == 'ruff' then
+          -- Disable hover in favor of Pyright
+          client.server_capabilities.hoverProvider = false
+        end
+      end
       local servers = {
         -- clangd = {},
         -- gopls = {},
@@ -623,6 +629,7 @@ require('lazy').setup({
         -- tsserver = {},
         --
 
+        -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
@@ -637,6 +644,7 @@ require('lazy').setup({
             },
           },
         },
+
         rust_analyzer = {
           checkOnSave = {
             allFeatures = true,
@@ -651,11 +659,28 @@ require('lazy').setup({
           },
         },
 
-        ruff_lsp = {
-          init_options = {
-            settings = {
-              -- Any extra CLI arguments for `ruff` go here.
-              args = {},
+        -- https://github.com/astral-sh/ruff/blob/main/crates/ruff_server/docs/setup/NEOVIM.md
+        ruff = {
+          -- Disable hover in favor of Pyright
+          on_attach = on_attach_ruff,
+          -- cmd_env = { RUFF_TRACE = 'messages' },
+        },
+        -- https://microsoft.github.io/pyright/#/settings
+        pyright = {
+          settings = {
+            pyright = {
+              -- Using Ruff's import organizer
+              disableOrganizeImports = true,
+            },
+            python = {
+              analysis = {
+                -- Ignore all files for analysis to exclusively use Ruff for linting
+                -- ignore = { '*' },
+                autoSearchPaths = true,
+                diagnosticMode = 'openFilesOnly',
+                useLibraryCodeForTypes = true,
+                -- typeCheckingMode = 'strict',
+              },
             },
           },
         },
@@ -676,7 +701,8 @@ require('lazy').setup({
         html = {},
         jsonls = {},
         tailwindcss = {},
-        tsserver = {},
+        -- npm install -g @biomejs/biome
+        biome = {},
         ltex = {
           ltex = {
             additionalRules = {
@@ -774,12 +800,12 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
+          {
+            'rafamadriz/friendly-snippets',
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load()
+            end,
+          },
         },
       },
       'saadparwaiz1/cmp_luasnip',
@@ -802,7 +828,7 @@ require('lazy').setup({
             luasnip.lsp_expand(args.body)
           end,
         },
-        completion = { completeopt = 'menu,menuone,noinsert' },
+        completion = { completeopt = 'menu,menuone,noinsert,noselect' },
 
         -- For an understanding of why these mappings were
         -- chosen, you will need to read `:help ins-completion`
