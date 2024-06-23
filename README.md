@@ -227,3 +227,58 @@ sudo pacman -S --noconfirm --needed gcc make git ripgrep fd unzip neovim
 ```
 </details>
 
+
+```
+lua/custom/plugins/markdown.lua
+return {
+    {
+        "iamcco/markdown-preview.nvim",
+        ft = "markdown",
+        build = ":call mkdp#util#install()",
+    },
+}
+
+
+lua/custom/plugins/others.lua
+return {
+  -- {
+    -- "kevinhwang91/nvim-bqf",
+    -- lazy = false,
+  -- },
+  {
+    "tpope/vim-unimpaired",
+  },
+}
+
+lua/custom/plugins/rust.lua
+return {
+{
+	"rust-lang/rust.vim",
+		ft = "rust",
+		init = function()
+			vim.g.rustfmt_autosave = 1
+		end,
+	},
+	--{
+	--	"simrat39/rust-tools.nvim",
+	--	ft = "rust",
+	--	dependencies = "neovim/nvim-lspconfig",
+	--	opts = function()
+	--		return require "custom.configs.rust-tools"
+	--	end,
+	--	config = function(_, opts)
+	--		require("rust-tools").setup(opts)
+	--	end,
+	--},
+	{
+		"saecki/crates.nvim",
+		ft = { "rust", "toml" },
+		dependencies = { 'nvim-lua/plenary.nvim' },
+		config = function(_, opts)
+			local crates = require "crates"
+			crates.setup(opts)
+			crates.show()
+		end,
+	},
+}
+```

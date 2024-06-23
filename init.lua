@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -119,11 +119,11 @@ vim.opt.clipboard = 'unnamedplus'
 vim.opt.breakindent = true
 
 -- Save undo history
-vim.opt.undofile = true
+-- vim.opt.undofile = true
 
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
+-- vim.opt.ignorecase = true
+-- vim.opt.smartcase = true
 
 -- Keep signcolumn on by default
 vim.opt.signcolumn = 'yes'
@@ -154,6 +154,45 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- Cutom configs
+
+vim.opt.colorcolumn = '100'
+
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+
+vim.opt.smartindent = true
+
+vim.opt.wrap = false
+
+-- https://youtu.be/w7i4amO_zaE?t=1408
+vim.opt.swapfile = false
+vim.opt.backup = false
+vim.opt.undodir = os.getenv 'HOME' .. '/.vim/undodir'
+vim.opt.undofile = true
+
+-- vim.opt.hlsearch = false
+-- vim.opt.incsearch = true
+
+vim.opt.scrolloff = 4
+vim.opt.ignorecase = false
+vim.opt.smartcase = false
+
+-- vim.opt.colorcolumn = "100"
+
+-- autocmd BufReadPost *.py :SymbolsOutline
+-- vim.api.nvim_command('autocmd BufReadPost *.py :SymbolsOutline')
+
+vim.g.undotree_WindowLayout = 3
+vim.g.undotree_ShortIndicators = 1
+
+-- spell
+-- vim.opt.spelllang = 'en_us'
+-- vim.opt.spell = true
+-- vim.opt.spellsuggest='best,9'
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -180,6 +219,12 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
 -- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 -- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+
+-- Disable arrow keys
+vim.keymap.set({ 'n', 'i', 'v' }, '<Up>', '<Nop>', { silent = true })
+vim.keymap.set({ 'n', 'i', 'v' }, '<Down>', '<Nop>', { silent = true })
+vim.keymap.set({ 'n', 'i', 'v' }, '<Left>', '<Nop>', { silent = true })
+vim.keymap.set({ 'n', 'i', 'v' }, '<Right>', '<Nop>', { silent = true })
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -592,6 +637,53 @@ require('lazy').setup({
             },
           },
         },
+        rust_analyzer = {
+          checkOnSave = {
+            allFeatures = true,
+            overrideCommand = {
+              'cargo',
+              'clippy',
+              '--workspace',
+              '--message-format=json',
+              '--all-targets',
+              '--all-features',
+            },
+          },
+        },
+
+        ruff_lsp = {
+          init_options = {
+            settings = {
+              -- Any extra CLI arguments for `ruff` go here.
+              args = {},
+            },
+          },
+        },
+
+        -- pylsp = {
+        --   pylsp = {
+        --     plugins = {
+        --       pycodestyle = {
+        --         ignore = { 'W391' },
+        --         maxLineLength = 100,
+        --       },
+        --     },
+        --   },
+        -- },
+
+        bashls = {},
+        cssls = {},
+        html = {},
+        jsonls = {},
+        tailwindcss = {},
+        tsserver = {},
+        ltex = {
+          ltex = {
+            additionalRules = {
+              languageModel = '~/ngrams/',
+            },
+          },
+        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -835,7 +927,31 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+      ensure_installed = {
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'vim',
+        'vimdoc',
+        'python',
+        'rust',
+        'tsx',
+        'typescript',
+        'javascript',
+        'css',
+        'json',
+        'comment',
+        'gitignore',
+        'kdl',
+        'regex',
+        'sql',
+        'toml',
+        'yaml',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -885,7 +1001,7 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
