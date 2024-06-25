@@ -5,8 +5,12 @@ return {
       'nvim-lua/plenary.nvim', -- required
       {
         'sindrets/diffview.nvim', -- optional - Diff integration
-        dependencies = {
-          'nvim-web-devicons',
+        -- dependencies = {
+        -- brew install font-hack-nerd-font
+        -- 'nvim-web-devicons',
+        -- },
+        config = {
+          use_icons = false,
         },
       },
 
