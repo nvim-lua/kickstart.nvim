@@ -131,8 +131,8 @@ examples of adding popularly requested plugins.
     same functionality is available here:
     * [kickstart-modular.nvim](https://github.com/dam9000/kickstart-modular.nvim)
   * Discussions on this topic can be found here:
-    * [Restructure the configuration](https://github.com/nvim-lua/kickstart.nvim/issues/218)
-    * [Reorganize init.lua into a multi-file setup](https://github.com/nvim-lua/kickstart.nvim/pull/473)
+    * [Restructure the configuration](https://github.com/TheSoeren/kickstart.nvim/issues/218)
+    * [Reorganize init.lua into a multi-file setup](https://github.com/TheSoeren/kickstart.nvim/pull/473)
 
 ### Install Recipes
 

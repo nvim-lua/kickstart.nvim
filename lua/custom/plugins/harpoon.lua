@@ -33,6 +33,7 @@ return {
     vim.keymap.set('n', '<leader>a', function()
       harpoon:list():add()
     end)
+
     vim.keymap.set('n', '<C-h>', function()
       harpoon:list():select(1)
     end)
@@ -46,12 +47,17 @@ return {
       harpoon:list():select(4)
     end)
 
-    -- Toggle previous & next buffers stored within Harpoon list
-    vim.keymap.set('n', '<C-S-H>', function()
-      harpoon:list():prev()
+    vim.keymap.set('n', '<leader><C-h>', function()
+      harpoon:list():replace_at(1)
     end)
-    vim.keymap.set('n', '<C-S-L>', function()
-      harpoon:list():next()
+    vim.keymap.set('n', '<leader><C-j>', function()
+      harpoon:list():replace_at(2)
+    end)
+    vim.keymap.set('n', '<leader><C-k>', function()
+      harpoon:list():replace_at(3)
+    end)
+    vim.keymap.set('n', '<leader><C-l>', function()
+      harpoon:list():replace_at(4)
     end)
   end,
 }
