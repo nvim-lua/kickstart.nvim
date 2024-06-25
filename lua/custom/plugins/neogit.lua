@@ -7,16 +7,16 @@ return {
         'sindrets/diffview.nvim', -- optional - Diff integration
         -- dependencies = {
         -- brew install font-hack-nerd-font
-        -- 'nvim-web-devicons',
+        -- 'nvim-tree/nvim-web-devicons',
         -- },
         config = {
           use_icons = false,
         },
       },
-
       'nvim-telescope/telescope.nvim', -- optional
     },
     config = true,
+    vim.keymap.set({ 'n', 'i', 'v' }, '<leader>n', '<cmd>Neogit kind=replace<CR>', {}),
   },
 
   --{
