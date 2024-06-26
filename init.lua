@@ -669,6 +669,37 @@ require('lazy').setup({
       }
     end,
   },
+
+  -- Prime's Harpoon2
+  {
+    'ThePrimeagen/harpoon',
+    branch = 'harpoon2',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+    lazy = false,
+    config = function()
+      require('harpoon'):setup({})
+    end,
+    keys = {
+      {
+        '<leader>a',
+        function()
+          require('harpoon'):list():add()
+        end,
+        mode = 'n',
+        desc = '[A]dd to Harpoon',
+      },
+      {
+        '<C-e>',
+        function()
+          local files = require('harpoon'):list() or {}
+          require('harpoon').ui:toggle_quick_menu(files)
+        end,
+        desc = 'Toggle Harpoon [E]xplorer',
+      },
+    },
+  },
   -- neoconf.nvim
   {
     'folke/neoconf.nvim',
@@ -730,7 +761,7 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        -- pyt,on = { "isort", "black" },
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
