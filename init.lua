@@ -341,6 +341,31 @@ require('lazy').setup({
   -- after the plugin has been loaded:
   --  config = function() ... end
 
+  {
+    'akinsho/toggleterm.nvim',
+    version = '*',
+    opts = {
+      size = 20,
+      open_mapping = [[<S-t>]],
+      shade_terminals = true,
+      auto_scroll = true,
+      shade_filetypes = {},
+      persist_mode = true,
+      direction = 'float',
+      shell = vim.o.shell,
+      float_opts = {
+        border = 'curved',
+        winblend = 3,
+        title_pos = 'left',
+      },
+      winbar = {
+        enabled = false,
+        name_formatter = function(term)
+          return term.name .. '@' .. term.dir .. '/'
+        end,
+      },
+    },
+  },
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
