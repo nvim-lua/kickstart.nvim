@@ -346,7 +346,7 @@ require('lazy').setup({
     version = '*',
     opts = {
       size = 20,
-      open_mapping = [[<S-t>]],
+      open_mapping = [[<C-\>]],
       shade_terminals = true,
       auto_scroll = true,
       shade_filetypes = {},
