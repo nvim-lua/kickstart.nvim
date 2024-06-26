@@ -191,7 +191,7 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
-vim.keymap.set('i', '{', '{}<Esc>ha', { desc = 'Matching { }' })
+vim.keymap.set('i', '{', '{<Enter>}<Esc><S-o>', { desc = 'Matching { }' })
 vim.keymap.set('i', '[', '[]<Esc>ha', { desc = 'Matching [ ]' })
 vim.keymap.set('i', "'", "''<Esc>ha", { desc = 'Matching quotes' })
 vim.keymap.set('i', '"', '""<Esc>ha', { desc = 'Matching "' })
@@ -556,6 +556,7 @@ require('lazy').setup({
           --
           -- In this case, we create a function that lets us more easily define mappings specific
           -- for LSP related items. It sets the mode, buffer and description for us each time.
+          vim.keymap.set('i', ';', ';<Esc>o', { desc = 'New line for a colon' })
           local map = function(keys, func, desc)
             vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
@@ -662,6 +663,7 @@ require('lazy').setup({
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
+        markdown_oxide = {},
         rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -828,7 +830,7 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<Space>'] = cmp.mapping.confirm { select = true },
+          ['<Enter>'] = cmp.mapping.confirm { select = true },
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
