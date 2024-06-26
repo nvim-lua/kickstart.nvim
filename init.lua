@@ -191,6 +191,14 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+vim.keymap.set('i', '{', '{}<Esc>ha', { desc = 'Matching { }' })
+vim.keymap.set('i', '[', '[]<Esc>ha', { desc = 'Matching [ ]' })
+vim.keymap.set('i', "'", "''<Esc>ha", { desc = 'Matching quotes' })
+vim.keymap.set('i', '"', '""<Esc>ha', { desc = 'Matching "' })
+vim.keymap.set('i', '(', '()<Esc>ha', { desc = 'Matching (' })
+vim.keymap.set('i', '±', '~', { desc = 'Complement in ipad.' })
+vim.keymap.set('i', '§', '``<Esc>ha', { desc = 'Complement in backtick in ipad.' })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -725,8 +733,8 @@ require('lazy').setup({
           ['<C-n>'] = cmp.mapping.select_next_item(),
           ['<C-p>'] = cmp.mapping.select_prev_item(),
 
-          ['<Tab>'] = cmp.mapping.select_next_item(),
-          ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+          --['<Tab>'] = cmp.mapping.select_next_item(),
+          --['<S-Tab>'] = cmp.mapping.select_prev_item(),
 
           -- Scroll the documentation window [b]ack / [f]orward
           ['<C-b>'] = cmp.mapping.scroll_docs(-4),
@@ -735,7 +743,7 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<space>'] = cmp.mapping.confirm { select = true },
+          ['<Space>'] = cmp.mapping.confirm { select = true },
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
