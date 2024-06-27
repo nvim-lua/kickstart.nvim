@@ -195,7 +195,6 @@ vim.keymap.set('i', '{', '{<Enter>}<Esc><S-o>', { desc = 'Matching { }' })
 vim.keymap.set('i', '[', '[]<Esc>ha', { desc = 'Matching [ ]' })
 vim.keymap.set('i', "'", "''<Esc>ha", { desc = 'Matching quotes' })
 vim.keymap.set('i', '"', '""<Esc>ha', { desc = 'Matching "' })
-vim.keymap.set('i', '(', '()<Esc>ha', { desc = 'Matching (' })
 vim.keymap.set('i', '±', '~', { desc = 'Complement in ipad.' })
 vim.keymap.set('i', '§', '``<Esc>ha', { desc = 'Complement in backtick in ipad.' })
 
@@ -557,6 +556,7 @@ require('lazy').setup({
           -- In this case, we create a function that lets us more easily define mappings specific
           -- for LSP related items. It sets the mode, buffer and description for us each time.
           vim.keymap.set('i', ';', ';<Esc>o', { desc = 'New line for a colon' })
+          vim.keymap.set('i', '(', '() {<Enter>}<Esc>kf(a', { desc = 'Matching (' })
           local map = function(keys, func, desc)
             vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
