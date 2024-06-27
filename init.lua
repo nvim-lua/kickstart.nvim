@@ -675,8 +675,9 @@ vim.keymap.set("i", "lk", "<esc>")
 
 -- MY SETTINGS -- 
 
--- line numbers
 vim.wo.number = true
 vim.wo.relativenumber = true
 
 vim.opt.scrolloff = 10
+
+vim.opt.colorcolumn = "79" 
