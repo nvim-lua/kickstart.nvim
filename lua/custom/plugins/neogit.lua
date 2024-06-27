@@ -16,7 +16,7 @@ return {
       'nvim-telescope/telescope.nvim', -- optional
     },
     config = true,
-    vim.keymap.set({ 'n', 'i', 'v' }, '<leader>n', '<cmd>Neogit kind=replace<CR>', {}),
+    vim.keymap.set({ 'n' }, '<leader>n', '<cmd>Neogit kind=replace<CR>', {}),
   },
 
   --{

@@ -236,8 +236,8 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Buffer switch
-vim.keymap.set({ 'n', 'i', 'v' }, ']b', '<cmd>bnext<CR>', { silent = true })
-vim.keymap.set({ 'n', 'i', 'v' }, '[b', '<cmd>bprev<CR>', { silent = true })
+vim.keymap.set({ 'n' }, ']b', '<cmd>bnext<CR>', { silent = true })
+vim.keymap.set({ 'n' }, '[b', '<cmd>bprev<CR>', { silent = true })
 -- vim.keymap.set({ 'n', 'i', 'v' }, '<C-h>', '<cmd>bnext<CR>', { silent = true })
 -- vim.keymap.set({ 'n', 'i', 'v' }, '<C-l>', '<cmd>bprev<CR>', { silent = true })
 
