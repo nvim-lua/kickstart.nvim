@@ -211,19 +211,19 @@ return {
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {
-        --   settings = {
-        --     python = {
-        --       analysis = {
-        --         autoSearchPaths = true,
-        --         diagnosticMode = 'workspace',
-        --         useLibraryCodeForTypes = true,
-        --         autoImportCompletions = true,
-        --       },
-        --     },
-        --   },
-        --   disableLanguageServices = false,
-        -- },
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                autoSearchPaths = true,
+                diagnosticMode = 'workspace',
+                useLibraryCodeForTypes = true,
+                autoImportCompletions = true,
+              },
+            },
+          },
+          disableLanguageServices = false,
+        },
         basedpyright = {
           settings = {
             basedpyright = {
@@ -255,11 +255,15 @@ return {
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
         --
-
+        nixd = {},
+        bashls = {
+          alias = 'bash-language-server',
+        },
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
           -- capabilities = {},
+          alias = 'lua-language-server',
           settings = {
             Lua = {
               completion = {
@@ -289,16 +293,28 @@ return {
       --   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
       -- INFO: Using my own utils function instead of mason-lspconfig as it checks if the stuff is already installed
       -- outside of mason. This is useful for NixOS setup where mason version just doesn't work sometimes due to libc issues.
-      require('utils.mason').install {
-        -- "python-lsp-server",
-        'pyright',
-        'basedpyright',
-        'bash-language-server',
-        -- "rnix-lsp",
-        'lua-language-server',
-        -- "docker-compose-language-service",
-        -- "nil",
-      }
+      local installed = {}
+      local i = 0
+      for server, config in pairs(servers) do
+        if config.alias then
+          installed[i] = config.alias
+        else
+          installed[i] = server
+        end
+        i = i + 1
+      end
+      table.insert(installed, 'stylua')
+      require('utils.mason').install(installed)
+      -- require('utils.mason').install {
+      --   -- "python-lsp-server",
+      --   'pyright',
+      --   'basedpyright',
+      --   'bash-language-server',
+      --   -- "rnix-lsp",
+      --   'lua-language-server',
+      --   -- "docker-compose-language-service",
+      --   -- "nil",
+      -- }
 
       local lsp = require 'lspconfig'
 
