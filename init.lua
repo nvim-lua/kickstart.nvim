@@ -126,6 +126,23 @@ vim.opt.clipboard = 'unnamedplus'
 -- Enable break indent
 vim.opt.breakindent = true
 
+-- Save all buffer
+vim.keymap.set('n', '<leader>wa', ':wall<CR>', { noremap = true, desc = '[W]rite [A]ll' })
+vim.keymap.set('n', '<leader>wf', ':w<CR>', { noremap = true, desc = '[W]rite [F]ile' })
+
+-- Create command do save with qw
+vim.api.nvim_command 'cmap qw wq'
+vim.api.nvim_command 'cmap WQ wq'
+vim.api.nvim_command 'cmap QW wq'
+
+-- Navigate buffers
+vim.keymap.set('n', '<S-h>', ':bp<CR>', { noremap = true, desc = '[G]oto [P]previous Buffer' })
+vim.keymap.set('n', '<S-l>', ':bn<CR>', { noremap = true, desc = '[G]oto [N]ext Buffer' })
+
+vim.keymap.set('n', '[c', function()
+  require('treesitter-context').go_to_context(vim.v.count1)
+end, { silent = true })
+
 -- Save undo history
 vim.opt.undofile = true
 
@@ -138,6 +155,9 @@ vim.opt.signcolumn = 'yes'
 
 -- Decrease update time
 vim.opt.updatetime = 250
+
+-- Decrease mapped sequence wait time
+-- Displays which-key popup sooner
 vim.opt.timeoutlen = 300
 
 -- Configure how new splits should be opened
@@ -230,6 +250,9 @@ vim.opt.rtp:prepend(lazypath)
 --
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
+  -- python import
+  { 'stevanmilic/nvim-lspimport' },
+
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
@@ -347,7 +370,13 @@ require('lazy').setup({
         ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
         ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
         ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+        ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
+        ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
       }
+      -- visual mode
+      require('which-key').register({
+        ['<leader>h'] = { 'Git [H]unk' },
+      }, { mode = 'v' })
     end,
   },
 
@@ -451,7 +480,6 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
->>>>>>> 66e2a5a425a4f3b2e4f9456d82b29718c24a8993
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -851,6 +879,10 @@ cmp.setup {
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', opts = {} },
+
+      -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
+      -- used for completion, annotations and signatures of Neovim apis
+      { 'folke/neodev.nvim', opts = {} },
     },
     config = function()
       -- Brief Aside: **What is LSP?**
@@ -885,9 +917,8 @@ cmp.setup {
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
-          -- NOTE: Remember that lua is a real programming language, and as such it is possible
-          -- to define small helper and utility functions so you don't have to repeat yourself
-          -- many times.
+          -- NOTE: Remember that Lua is a real programming language, and as such it is possible
+          -- to define small helper and utility functions so you don't have to repeat yourself.
           --
           -- In this case, we create a function that lets us more easily define mappings specific
           -- for LSP related items. It sets the mode, buffer and description for us each time.
@@ -916,8 +947,8 @@ cmp.setup {
           --  Symbols are things like variables, functions, types, etc.
           map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
 
-          -- Fuzzy find all the symbols in your current workspace
-          --  Similar to document symbols, except searches over your whole project.
+          -- Fuzzy find all the symbols in your current workspace.
+          --  Similar to document symbols, except searches over your entire project.
           map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
           -- Rename the variable under your cursor
@@ -936,6 +967,19 @@ cmp.setup {
           --  For example, in C this would take you to the header
           map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
+          -- Signature hel
+          --  For example, in C this would take you to the header.
+          map('<C-k>', vim.lsp.buf.signature_help, '[G]oto [S]signature [H]elp')
+
+          -- workspace add folder
+          map('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]add folder')
+
+          -- workspace remove folder
+          map('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove folder')
+
+          -- workspace list folder
+          map('<leader>wl', vim.lsp.buf.list_workspace_folders, '[W]orkspace [L]ist folder')
+
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
@@ -943,15 +987,36 @@ cmp.setup {
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.server_capabilities.documentHighlightProvider then
+            local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
+              group = highlight_augroup,
               callback = vim.lsp.buf.document_highlight,
             })
 
             vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
               buffer = event.buf,
+              group = highlight_augroup,
               callback = vim.lsp.buf.clear_references,
             })
+
+            vim.api.nvim_create_autocmd('LspDetach', {
+              group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
+              callback = function(event2)
+                vim.lsp.buf.clear_references()
+                vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+              end,
+            })
+          end
+
+          -- The following autocommand is used to enable inlay hints in your
+          -- code, if the language server you are using supports them
+          --
+          -- This may be unwanted, since they displace some of your code
+          if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
+            map('<leader>th', function()
+              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+            end, '[T]oggle Inlay [H]ints')
           end
         end,
       })
@@ -975,15 +1040,16 @@ cmp.setup {
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
-        -- rust_analyzer = {},
+        pyright = {},
+        ruff = {},
+        rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        -- tsserver = {},
+        tsserver = {},
         --
 
         lua_ls = {
@@ -1026,7 +1092,49 @@ cmp.setup {
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
+        'azure-pipelines-language-server',
+        'autoflake',
+        'autopep8',
+        'awk-language-server',
+        'azure-pipelines-language-server',
+        'bash-debug-adapter',
+        'bash-language-server',
+        'bicep-lsp',
+        'black',
+        'codelldb',
+        'codespell',
+        'debugpy',
+        'dockerfile-language-server',
+        'helm-ls',
+        'html-lsp',
+        'jq',
+        'json-lsp',
+        'jsonlint',
+        'jsonnet-language-server',
+        'lua-language-server',
+        'markdownlint',
+        'mypy',
+        'powershell-editor-services',
+        'prettier',
+        'pyright',
+        'ruff-lsp', -- linter for python (includes flake8, pep8, etc.)
+        'debugpy', -- debugger
+        'black', -- formatter
+        'isort', -- organize imports
+        'taplo', -- LSP for toml (for pyproject.toml files)
+        'ruff',
+        'rust-analyzer',
+        'shellcheck',
         'stylua', -- Used to format lua code
+        'terraform-ls',
+        'tflint',
+        'tree-sitter-cli',
+        'trivy',
+        'yaml-language-server',
+        'yamlfix',
+        'yamlfmt',
+        'yamllint',
+        'yq',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -1047,20 +1155,46 @@ cmp.setup {
 
   { -- Autoformat
     'stevearc/conform.nvim',
+    lazy = false,
+    keys = {
+      {
+        '<leader>f',
+        function()
+          require('conform').format { async = true, lsp_fallback = true }
+        end,
+        mode = '',
+        desc = '[F]ormat buffer',
+      },
+    },
     opts = {
       notify_on_error = false,
-      format_on_save = {
-        timeout_ms = 500,
-        lsp_fallback = true,
-      },
+      format_on_save = function(bufnr)
+        -- Disable "format_on_save lsp_fallback" for languages that don't
+        -- have a well standardized coding style. You can add additional
+        -- languages here or re-enable it for the disabled ones.
+        local disable_filetypes = { c = true, cpp = true }
+        return {
+          timeout_ms = 500,
+          lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
+        }
+      end,
       formatters_by_ft = {
+        go = { 'goimports', 'gofmt' },
+        javascript = { { 'prettierd', 'prettier' } },
+        json = { 'jsonlint' },
         lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
-        -- You can use a sub-list to tell conform to run *until* a formatter
-        -- is found.
-        -- javascript = { { "prettierd", "prettier" } },
+        markdown = { 'inject' },
+        python = function(bufnr)
+          if require('conform').get_formatter_info('ruff_format', bufnr).available then
+            return { 'ruff_format' }
+          else
+            return { 'isort', 'black' }
+          end
+        end,
+        yaml = { 'yamllint' },
+        -- Use the "_" filetype to run formatters on filetypes that don't
+        -- have other formatters configured.
+        ['_'] = { 'trim_whitespace' },
       },
     },
   },
@@ -1081,6 +1215,17 @@ cmp.setup {
           end
           return 'make install_jsregexp'
         end)(),
+        dependencies = {
+          'friendly-snippets', --contains a variety of premade snippets.
+          --    See the README about individual language/framework/plugin snippets:
+          --    https://github.com/rafamadriz/friendly-snippets
+          {
+            'rafamadriz/friendly-snippets',
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load()
+            end,
+          },
+        },
       },
       'saadparwaiz1/cmp_luasnip',
 
@@ -1088,6 +1233,8 @@ cmp.setup {
       --  nvim-cmp does not ship with all sources by default. They are split
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-cmdline',
       'hrsh7th/cmp-path',
 
       -- If you want to add a bunch of pre-configured snippets,
@@ -1120,10 +1267,20 @@ cmp.setup {
           -- Select the [p]revious item
           ['<C-p>'] = cmp.mapping.select_prev_item(),
 
+          -- Scroll the documentation window [b]ack / [f]orward
+          ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+          ['<C-f>'] = cmp.mapping.scroll_docs(4),
+
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
           ['<C-y>'] = cmp.mapping.confirm { select = true },
+
+          -- If you prefer more traditional completion keymaps,
+          -- you can uncomment the following lines
+          --['<CR>'] = cmp.mapping.confirm { select = true },
+          --['<Tab>'] = cmp.mapping.select_next_item(),
+          --['<S-Tab>'] = cmp.mapping.select_prev_item(),
 
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
@@ -1148,14 +1305,70 @@ cmp.setup {
               luasnip.jump(-1)
             end
           end, { 'i', 's' }),
+
+          -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
+          --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
         },
         sources = {
           { name = 'nvim_lsp' },
+          { name = 'bufer' },
           { name = 'luasnip' },
           { name = 'path' },
         },
       }
     end,
+  },
+
+  -----------------------------------------------------------------------------
+  -- PYTHON REPL
+  -- A basic REPL that opens up as a horizontal split
+  -- - use `<leader>i` to toggle the REPL
+  -- - use `<leader>I` to restart the REPL
+  -- - `+` serves as the "send to REPL" operator. That means we can use `++`
+  -- to send the current line to the REPL, and `+j` to send the current and the
+  -- following line to the REPL, like we would do with other vim operators.
+  {
+    'Vigemus/iron.nvim',
+    keys = {
+      { '<leader>i', vim.cmd.IronRepl, desc = '󱠤 Toggle REPL' },
+      { '<leader>I', vim.cmd.IronRestart, desc = '󱠤 Restart REPL' },
+
+      -- these keymaps need no right-hand-side, since that is defined by the
+      -- plugin config further below
+      { '+', mode = { 'n', 'x' }, desc = '󱠤 Send-to-REPL Operator' },
+      { '++', desc = '󱠤 Send Line to REPL' },
+    },
+
+    -- since irons's setup call is `require("iron.core").setup`, instead of
+    -- `require("iron").setup` like other plugins would do, we need to tell
+    -- lazy.nvim which module to via the `main` key
+    main = 'iron.core',
+    opts = {
+      keymaps = {
+        send_line = '++',
+        visual_send = '+',
+        send_motion = '+',
+      },
+      config = {
+        -- this defined how the repl is opened. Here we set the REPL window
+        -- to open in a horizontal split to a bottom, with a height of 10
+        -- cells.
+        repl_open_cmd = 'horizontal bot 10 split',
+
+        -- since the python repl does not play well with indents, it's
+        -- preferable to use `ipython` or `bypython` here.
+        -- (see: https://github.com/Vigemus/iron.nvim/issues/348)
+        repl_definition = {
+          python = {
+            command = function()
+              local ipythonAvailable = vim.fn.executable 'ipython' == 1
+              local binary = ipythonAvailable and 'ipython' or 'python3'
+              return { binary }
+            end,
+          },
+        },
+      },
+    },
   },
 
   { -- You can easily change to a different colorscheme.
@@ -1164,9 +1377,8 @@ cmp.setup {
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
     'folke/tokyonight.nvim',
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
-    config = function()
+    priority = 1000, -- Make sure to load this before all the other start plugins.
+    init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
@@ -1221,9 +1433,51 @@ cmp.setup {
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    config = function()
+    opts = {
+      ensure_installed = {
+        'awk',
+        'bash',
+        'bicep',
+        'c',
+        'comment',
+        'css',
+        'dockerfile',
+        'go',
+        'hcl',
+        'html',
+        'javascript',
+        'jq',
+        'json',
+        'jsonnet',
+        'lua',
+        'markdown',
+        'markdown_inline',
+        'python',
+        'query',
+        'rust',
+        'terraform',
+        'tsx',
+        'typescript',
+        'vim',
+        'vimdoc',
+        'yaml',
+      },
+      -- Autoinstall languages that are not installed
+      auto_install = true,
+      highlight = {
+        enable = true,
+        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
+        --  If you are experiencing weird indenting issues, add the language to
+        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
+        additional_vim_regex_highlighting = { 'ruby' },
+      },
+      indent = { enable = true, disable = { 'ruby' } },
+    },
+    config = function(_, opts)
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
 
+      -- Prefer git instead of curl in order to improve connectivity in some environments
+      require('nvim-treesitter.install').prefer_git = true
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup {
         ensure_installed = { 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc' },
@@ -1251,8 +1505,12 @@ cmp.setup {
   --  Here are some example plugins that I've included in the kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -1262,8 +1520,8 @@ cmp.setup {
   -- { import = 'custom.plugins' },
 }, {
   ui = {
-    -- If you have a Nerd Font, set icons to an empty table which will use the
-    -- default lazy.nvim defined Nerd Font icons otherwise define a unicode icons table
+    -- If you are using a Nerd Font: set icons to an empty table which will use the
+    -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
     icons = vim.g.have_nerd_font and {} or {
       cmd = '⌘',
       config = '🛠',
@@ -1281,6 +1539,58 @@ cmp.setup {
     },
   },
 })
+
+-- Create group to assign commands
+-- "clear = true" must be set to prevent loading an
+-- auto-command repeatedly every time a file is resourced
+local autocmd_group = vim.api.nvim_create_augroup('Custom auto-commands', { clear = true })
+
+-- vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
+--   pattern = { '*.yaml', '*.yml' },
+--   desc = 'Auto-format YAML files after saving',
+--   callback = function()
+--     local fileName = vim.api.nvim_buf_get_name(0)
+--     vim.cmd(':!yamlfmt ' .. fileName)
+--   end,
+--   group = autocmd_group,
+-- })
+
+-- BASIC PYTHON-RELATED OPTIONS
+
+-- The filetype-autocmd runs a function when opening a file with the filetype
+-- "python". This method allows you to make filetype-specific configurations. In
+-- there, you have to use `opt_local` instead of `opt` to limit the changes to
+-- just that buffer. (As an alternative to using an autocmd, you can also put those
+-- configurations into a file `/after/ftplugin/{filetype}.lua` in your
+-- nvim-directory.)
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'python', -- filetype for which to run the autocmd
+  callback = function()
+    -- use pep8 standards
+    vim.opt_local.expandtab = true
+    vim.opt_local.shiftwidth = 4
+    vim.opt_local.tabstop = 4
+    vim.opt_local.softtabstop = 4
+
+    -- folds based on indentation https://neovim.io/doc/user/fold.html#fold-indent
+    -- if you are a heavy user of folds, consider using `nvim-ufo`
+    -- vim.opt_local.foldmethod = 'indent'
+
+    -- automatically capitalize boolean values. Useful if you come from a
+    -- different language, and lowercase them out of habit.
+    vim.cmd.inoreabbrev '<buffer> true True'
+    vim.cmd.inoreabbrev '<buffer> false False'
+
+    -- in the same way, we can fix habits regarding comments or None
+    vim.cmd.inoreabbrev '<buffer> -- #'
+    vim.cmd.inoreabbrev '<buffer> null None'
+    vim.cmd.inoreabbrev '<buffer> none None'
+    vim.cmd.inoreabbrev '<buffer> nil None'
+  end,
+})
+
+-- lspimport keymap
+vim.keymap.set('n', '<leader>a', require('lspimport').import, { noremap = true, desc = '[L]sp [I]mport' })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
