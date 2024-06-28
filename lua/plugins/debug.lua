@@ -25,7 +25,6 @@ return {
     require('lspconfig').omnisharp.setup {}
     require('dap.ext.vscode').load_launchjs(nil, {})
     local dap, dapui = require 'dap', require 'dapui'
-    local ph_status, dotnet_ph = pcall(require, 'utilities.path_finder')
     dap.adapters.coreclr = {
       type = 'executable',
       command = 'netcoredbg',
@@ -62,21 +61,25 @@ return {
     vim.fn.sign_define('DapBreakpoint', { text = '🔴', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
 
     vim.keymap.set('n', '<Leader>db', dap.toggle_breakpoint, { desc = '[d]ebug toggle [b]reakpoint' })
+
+    --    vim.keymap.set('n', '<Leader>dB', dap.set_breakpoint(vim.fn.input 'Breakpoint condition: '), { desc = '[d]ebug conditional [B]reakpoint' })
     vim.keymap.set('n', '<Leader>dc', dap.continue, { desc = '[d]ebug [c]continue' })
     vim.keymap.set('n', '<Leader>dC', dap.close, { desc = '[d]ebug [C]lose' })
     vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug Continue' })
 
     vim.keymap.set('n', '<F8>', dap.step_over, { desc = 'Step Over' })
-    vim.keymap.set('n', '<F9>', dap.step_out, { desc = 'Step Out' })
-    vim.keymap.set('n', '<F10>', dap.step_into, { desc = 'Step Into' })
+    vim.keymap.set('n', '<F9>', dap.step_into, { desc = 'Step Into' })
+    vim.keymap.set('n', '<F10>', dap.step_out, { desc = 'Step Out' })
     vim.keymap.set('n', '<F12>', dap.terminate, { desc = 'Terminate' })
     vim.keymap.set('n', '<Leader>dx', dap.terminate, { desc = 'Terminate' })
     vim.keymap.set('n', '<Leader>do', dap.step_over, { desc = 'Step over' })
     vim.keymap.set('n', '<Leader>dr', dap.restart, { desc = 'Restart' })
+
+    vim.keymap.set('n', '<Leader>dl', dap.run_last, { desc = '[d]ebug run [l]ast' })
     vim.api.nvim_set_keymap('n', '<leader>dR', ":lua require('dapui').open({reset = true})<CR>", { noremap = true })
     vim.api.nvim_set_keymap('n', '<leader>ht', ":lua require('harpoon.ui').toggle_quick_menu()<CR>", { noremap = true })
     vim.keymap.set('n', '<Leader>?', function()
-      require('dapui').eval(nil, { enter = true })
+      dapui.eval(nil, { enter = true })
     end, { desc = 'Restart' })
   end,
 }
