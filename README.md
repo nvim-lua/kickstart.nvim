@@ -1,7 +1,5 @@
 # kickstart.nvim
 
-## Installation
-
 ### Install Neovim
 
 Kickstart.nvim targets *only* the latest
@@ -32,7 +30,7 @@ git clone https://github.com/BearTaffy/kickstart.nvim.git "${XDG_CONFIG_HOME:-$H
 
 [The Only Video You Need to Get Started with Neovim](https://youtu.be/m8C0Cq9Uv9o)
 
-#### Linux Install
+#### Ubuntu Install
 ```
 sudo add-apt-repository ppa:neovim-ppa/unstable -y
 sudo apt update
