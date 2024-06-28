@@ -8,7 +8,7 @@ end, { desc = '[Y]ank file [N]ame' })
 vim.keymap.set('n', '<leader>yp', function()
   local filepath = vim.fn.expand '%:p'
   vim.fn.setreg('+', filepath)
-end, { desc = '[Y]ank file [P]ame' })
+end, { desc = '[Y]ank file [P]ath' })
 
 vim.keymap.set('n', '<leader>ys', function()
   local filepath = vim.fn.expand '%:p'
@@ -75,4 +75,4 @@ vim.keymap.set('n', '<leader>Q', '<cmd>qall<cr>', { desc = '[Q]uit all' })
 vim.keymap.set('v', '<S-Tab>', '<gv', { desc = 'Unindent line' })
 vim.keymap.set('v', '<Tab>', '>gv', { desc = 'Indent line' })
 
-vim.keymap.set('n', '<C-a>', 'ggVG%')
+vim.keymap.set('n', '<leader>A', 'ggVG%', { desc = 'Select [A]ll' })
