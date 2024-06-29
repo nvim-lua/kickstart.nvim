@@ -612,6 +612,10 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
         'emmet-language-server', --html,css, language server
+        'pyright',
+        'css-lsp',
+        'tsserver',
+        'markdownlint',
         'prettier', --html,css,javascript etc formatter
         'prettierd', --javascript formatter
       })
@@ -659,7 +663,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = { "isort", "black" },
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
@@ -673,7 +677,7 @@ require('lazy').setup({
         yaml = { 'prettier' },
         markdown = { 'prettier' },
         graphql = { 'prettier' },
-        javascript = { 'prettierd', 'prettier' },
+        javascript = { 'prettier', 'prettierd' },
         lua = {'stylua'},
       },
     },
@@ -1017,6 +1021,7 @@ require('lazy').setup({
     version = '^1.0.0', -- optional: only update when a new 1.x version is released
   },
     {'tpope/vim-fugitive'},
+   {'HiPhish/rainbow-delimiters.nvim'},
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
