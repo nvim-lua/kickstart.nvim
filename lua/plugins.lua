@@ -360,6 +360,38 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         tsserver = {},
+        stylelint_lsp = {
+          filetypes = { 'css', 'scss' },
+          root_dir = require('lspconfig').util.root_pattern('package.json', '.git'),
+          settings = {
+            stylelintplus = {
+              autoFixOnFormat = true,
+              autoFixOnSave = true,
+            },
+          },
+          on_attach = function(client)
+            client.server_capabilities.document_formatting = false
+          end,
+        },
+        eslint = {
+          bin = 'eslint', -- or `eslint_d`
+          code_actions = {
+            enable = true,
+            apply_on_save = {
+              enable = true,
+              types = { 'directive', 'problem', 'suggestion', 'layout' },
+            },
+            disable_rule_comment = {
+              enable = true,
+              location = 'separate_line', -- or `same_line`
+            },
+          },
+          diagnostics = {
+            enable = true,
+            report_unused_disable_directives = false,
+            run_on = 'type', -- or `save`
+          },
+        },
         csharp_ls = {},
         netcoredbg = {},
         clangd = {},
@@ -394,9 +426,12 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'eslint_d',
+        'stylelint',
         'clang-format',
         'lua_ls',
         'omnisharp',
+        'jdtls',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -442,6 +477,10 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        typescript = { 'prettier' },
+        javascript = { 'prettier' },
+        json = { 'prettier' },
+        html = { 'prettier' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --

@@ -44,6 +44,8 @@ return {
         'delve',
         'netcoredbg',
         'codelldb',
+        'java-debug-adapter',
+        'java-test',
       },
     }
 
