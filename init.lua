@@ -198,6 +198,10 @@ vim.keymap.set('i', "'", "''<Esc>ha", { desc = 'Matching quotes' })
 vim.keymap.set('i', '"', '""<Esc>ha', { desc = 'Matching "' })
 vim.keymap.set('i', '±', '~', { desc = 'Complement in ipad.' })
 vim.keymap.set('i', '§', '``<Esc>ha', { desc = 'Complement in backtick in ipad.' })
+vim.keymap.set('n', '±', '~', { desc = 'Complement in ipad.' })
+vim.keymap.set('n', '§', '``<Esc>ha', { desc = 'Complement in backtick in ipad.' })
+vim.keymap.set('v', '±', '~', { desc = 'Complement in ipad.' })
+vim.keymap.set('v', '§', '``<Esc>ha', { desc = 'Complement in backtick in ipad.' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -351,7 +355,7 @@ require('lazy').setup({
       auto_scroll = true,
       shade_filetypes = {},
       persist_mode = true,
-      direction = 'float',
+      direction = 'horizontal',
       shell = vim.o.shell,
       float_opts = {
         border = 'curved',
@@ -556,7 +560,6 @@ require('lazy').setup({
           --
           -- In this case, we create a function that lets us more easily define mappings specific
           -- for LSP related items. It sets the mode, buffer and description for us each time.
-          vim.keymap.set('i', ';', ';<Esc>o', { desc = 'New line for a colon' })
           local map = function(keys, func, desc)
             vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
