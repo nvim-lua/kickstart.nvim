@@ -17,8 +17,8 @@ return {
       notify_on_error = true,
       formatters_by_ft = {
         lua = { 'stylua' },
-        javascript = { 'prettier' },
-        typescript = { 'prettier' },
+        javascript = { 'biome' },
+        typescript = { 'biome' },
       },
       format_on_save = function(bufnr)
         local disable_filetypes = {

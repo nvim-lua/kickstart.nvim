@@ -91,6 +91,14 @@ vim.opt.timeoutlen = 300
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
+-- Setup folding
+vim.o.foldcolumn = '0'
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
+vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
+vim.o.foldcolumn = '1'
+
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
@@ -115,10 +123,7 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Add padding to Neovide only
 if vim.g.neovide then
-  vim.g.neovide_padding_top = 4
-  vim.g.neovide_padding_bottom = 6
-  vim.g.neovide_padding_right = 12
-  vim.g.neovide_padding_left = 12
+  -- print
 end
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
@@ -196,6 +201,7 @@ local opts = {
 
 require 'commands'
 require 'fancyutil'
+require 'config.keybinds'
 require('lazy').setup('plugins', opts)
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

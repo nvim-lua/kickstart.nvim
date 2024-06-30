@@ -52,7 +52,7 @@ return {
         notification = '%T',
         notification_history = '%FT%T',
       },
-      timeout = 5000,
+      timeout = 2500,
       top_down = true,
       max_height = function()
         return math.floor(vim.o.lines * 0.75)

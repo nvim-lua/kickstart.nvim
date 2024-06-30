@@ -1,1 +1,0 @@
-function FancyWrapper(ptr: NativePointer);

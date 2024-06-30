@@ -95,6 +95,11 @@ return {
           { name = 'nvim_lua' },
         }, {
           { name = 'buffer' },
+          { name = 'hrsh7th/nvim-cmp' },
+          { name = 'hrsh7th/cmp-buffer' },
+          { name = 'hrsh7th/cmp-path' },
+          { name = 'hrsh7th/cmp-nvim-lsp' },
+          { name = 'hrsh7th/cmp-nvim-lua' },
         }),
       }
     end,

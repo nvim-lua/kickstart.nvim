@@ -19,12 +19,8 @@ return {
         signs = true,
         underline = true,
         virtual_text = false,
+        severity_sort = true,
       }
-
-      vim.fn.sign_define('DiagnosticSignError', { text = '', texthl = 'DiagnosticSignError' })
-      vim.fn.sign_define('DiagnosticSignWarn', { text = '', texthl = 'DiagnosticSignWarn' })
-      vim.fn.sign_define('DiagnosticSignInfo', { text = '', texthl = 'DiagnosticSignInfo' })
-      vim.fn.sign_define('DiagnosticSignHint', { text = '', texthl = 'DiagnosticSignHint' })
 
       --    function will be executed to configure the current buffer
       vim.api.nvim_create_autocmd('LspAttach', {
@@ -57,16 +53,24 @@ return {
 
       local lazyPlugins = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
       local servers = {
-        biome = {},
+        biome = {
+          settings = {
+            biome = {
+              single_file_support = true,
+            },
+          },
+        },
         tsserver = {},
         lua_ls = {
           settings = {
             Lua = {
               runtime = {
                 version = 'LuaJIT',
+                pathStrict = true,
+                path = { '?.lua', '?/init.lua' },
               },
               workspace = {
-                checkthirdparty = { lazyPlugins },
+                checkThirdParty = false,
                 library = vim.tbl_extend('force', vim.api.nvim_get_runtime_file('', true), { vim.env.VIMRUNTIME }),
               },
               completion = {

@@ -1,4 +1,4 @@
-lcal map = vim.keymap.set
+local map = vim.keymap.set
 
 -- The good 'ol keybinds
 map('n', '<C-a>', 'ggVG', { noremap = true, silent = true })
