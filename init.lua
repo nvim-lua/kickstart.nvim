@@ -302,13 +302,11 @@ require('lazy').setup({
         ['<leader>R'] = { name = '[R]efactor', _ = 'which_key_ignore' },
         ['<leader>u'] = { name = 'Tro[U]ble', _ = 'which_key_ignore' },
         ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-        ['<leader>H'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
         ['<leader>h'] = { name = 'Copilot C[H]at', _ = 'which_key_ignore' },
         --['<leader>e'] = { name = '[E]xplore files', _ = 'which_key_ignore' },
       }
       -- visual mode
       require('which-key').register({
-        ['<leader>h'] = { 'Git [H]unk' },
         ['<leader>R'] = { name = '[R]efactor', _ = 'which_key_ignore' },
         ['<leader>h'] = { name = 'Copilot C[H]at', _ = 'which_key_ignore' },
       }, { mode = 'v' })
@@ -547,6 +545,7 @@ require('lazy').setup({
   require 'custom.plugins.refactoring',
   require 'custom.plugins.trouble',
   require 'custom.plugins.persistence',
+  require 'custom.plugins.lazygit',
   -- require 'custom.plugins.dial',
   -- require 'custom.plugins.mason',
   --
