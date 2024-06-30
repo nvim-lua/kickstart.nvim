@@ -114,6 +114,11 @@ vim.opt.scrolloff = 999
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
+--  open tmux-sessionizer
+vim.keymap.set('n', '<C-g>', '<cmd>!tmux neww tmux-sessionizer<CR>', { desc = 'Open Tmux Sessionizer' })
+--  open tmux-cht.sh cheatsheet
+vim.keymap.set('n', '<leader>ts', '<cmd>!tmux neww cht.sh<CR>', { desc = 'Open chea[T][S]heet' })
+
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')

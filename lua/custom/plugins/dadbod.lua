@@ -1,8 +1,9 @@
 return {
   'kristijanhusak/vim-dadbod-ui',
+  event = 'VeryLazy',
   dependencies = {
-    { 'tpope/vim-dadbod', lazy = true },
-    { 'kristijanhusak/vim-dadbod-completion' },
+    { 'tpope/vim-dadbod', event = 'VeryLazy' },
+    { 'kristijanhusak/vim-dadbod-completion', event = 'InsertEnter' },
   },
   config = function()
     vim.g.db_ui_use_nerd_fonts = 1
