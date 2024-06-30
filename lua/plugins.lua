@@ -432,6 +432,7 @@ require('lazy').setup({
         'lua_ls',
         'omnisharp',
         'jdtls',
+        'prettier',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
