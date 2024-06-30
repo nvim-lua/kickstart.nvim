@@ -547,7 +547,6 @@ require('lazy').setup({
   require 'custom.plugins.persistence',
   require 'custom.plugins.lazygit',
   -- require 'custom.plugins.dial',
-  -- require 'custom.plugins.mason',
   --
   -- ad hoc lsp line
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
