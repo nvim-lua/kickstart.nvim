@@ -32,6 +32,7 @@ return {
       cpp = { 'clang-format' },
       yaml = { 'yamlfmt' },
       html = { 'djlint' },
+      htmldjango = { 'djlint' },
       css = { { 'prettierd', 'prettier' } },
       json = { 'deno_fmt' },
       -- Conform can also run multiple formatters sequentially

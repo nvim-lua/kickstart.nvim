@@ -7,8 +7,8 @@ return {
       local lint = require 'lint'
       lint.linters_by_ft = {
         python = { 'ruff' },
-        -- cpp = { 'cppcheck' },
-        -- c = { 'cppcheck' },
+        cpp = { 'cppcheck' },
+        c = { 'cppcheck' },
         javascript = { 'eslint' },
         css = { 'stylelint' },
         html = { 'djlint' },
