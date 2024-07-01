@@ -1,3 +1,4 @@
+-- vim: tabstop=4 shiftwidth=4 noexpandtab
 -- You can add your own plugins here or in other files in this directory!
 --  I promise not to create any merge conflicts in this directory :)
 --
@@ -12,6 +13,12 @@ return {
     'tpope/vim-fugitive',
     lazy = false,
   },
+  {
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    lazy = false,
+    config = function()
+      vim.cmd.colorscheme 'catppuccin-mocha'
+    end,
+  },
 }
-
--- vim: tabstop=4 shiftwidth=4 noexpandtab
