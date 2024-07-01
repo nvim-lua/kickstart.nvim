@@ -93,13 +93,13 @@ local opts = { noremap = true, silent = false }
 -- Normal-mode commands
 keymap.set('n', '<S-A-k>', ':MoveLine(-1)<CR>', opts)
 keymap.set('n', '<S-A-j>', ':MoveLine(1)<CR>', opts)
-keymap.set('n', '<A-h>', ':MoveHChar(-1)<CR>', opts)
-keymap.set('n', '<A-l>', ':MoveHChar(1)<CR>', opts)
+-- keymap.set('n', '<A-h>', ':MoveHChar(-1)<CR>', opts)
+-- keymap.set('n', '<A-l>', ':MoveHChar(1)<CR>', opts)
 -- Visual-mode commands
 keymap.set('v', '<S-A-j>', ':MoveBlock(1)<CR>', opts)
 keymap.set('v', '<S-A-k>', ':MoveBlock(-1)<CR>', opts)
-keymap.set('v', '<A-h>', ':MoveHBlock(-1)<CR>', opts)
-keymap.set('v', '<A-l>', ':MoveHBlock(1)<CR>', opts)
+-- keymap.set('v', '<A-h>', ':MoveHBlock(-1)<CR>', opts)
+-- keymap.set('v', '<A-l>', ':MoveHBlock(1)<CR>', opts)
 
 -- Harpoon
 keymap.set("n", "<leader>a", function() require("harpoon.mark").add_file() end, opts)
