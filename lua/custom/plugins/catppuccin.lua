@@ -18,12 +18,12 @@ return {
       percentage = 0.15,
     },
     -- transparent_background = true,
-    --[[ color_overrides = {
+    color_overrides = {
       mocha = {
         base = '#000000',
         mantle = '#000000',
         crust = '#000000',
       },
-    }, ]]
+    },
   },
 }
