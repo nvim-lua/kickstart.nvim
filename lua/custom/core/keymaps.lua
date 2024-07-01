@@ -112,5 +112,5 @@ keymap.set("n", "<leader>3", function() require("harpoon.ui").nav_file(3) end, o
 keymap.set("n", "<leader>4", function() require("harpoon.ui").nav_file(4) end, opts)
 
 -- undotree
-keymap.set("n", "<leader><F5>", ":UndotreeToggle<CR>")
+keymap.set("n", "<leader>u", ":UndotreeToggle<CR>")
 
