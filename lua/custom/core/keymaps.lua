@@ -42,6 +42,8 @@ keymap.set('n', 'dd', '"_dd') -- duplicate line not passing deleted line to regi
 keymap.set('n', '<C-a>', 'ggVG') -- select-all 
 keymap.set('n', 'J', '5j')
 keymap.set('n', 'K', '5k')
+keymap.set('v', 'J', '5j')
+keymap.set('v', 'K', '5k')
 
 keymap.set('n', '<leader>rr', ':e!<CR>') -- revert file
 keymap.set('n', '<leader>w', ':w<CR>') -- saves file
@@ -66,7 +68,7 @@ keymap.set('n', '<C-F2>', ':BookmarkToggle<CR>')
 keymap.set("n", "<leader>sm", ":MaximizerToggle<CR>") -- toggle split window maximization
 
 -- nvim-tree
-keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>") -- toggle file explorer
+-- keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>") -- toggle file explorer // todo
 
 -- telescope
 keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>") -- find files within current working directory, respects .gitignore
@@ -108,4 +110,7 @@ keymap.set("n", "<leader>1", function() require("harpoon.ui").nav_file(1) end, o
 keymap.set("n", "<leader>2", function() require("harpoon.ui").nav_file(2) end, opts)
 keymap.set("n", "<leader>3", function() require("harpoon.ui").nav_file(3) end, opts)
 keymap.set("n", "<leader>4", function() require("harpoon.ui").nav_file(4) end, opts)
+
+-- undotree
+keymap.set("n", "<leader><F5>", ":UndotreeToggle<CR>")
 

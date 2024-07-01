@@ -24,5 +24,7 @@ return {
   'tpope/vim-unimpaired', -- vim-unimpared
   -- 'nvim-telescope/telescope-media-files.nvim', -- doesnt work for windows
   'nvim-telescope/telescope-file-browser.nvim',
+  'RRethy/vim-illuminate',
+  'mbbill/undotree',
 }
 
