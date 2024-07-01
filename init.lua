@@ -546,6 +546,7 @@ require('lazy').setup({
   require 'custom.plugins.trouble',
   require 'custom.plugins.persistence',
   require 'custom.plugins.lazygit',
+  require 'custom.plugins.colorizer',
   -- require 'custom.plugins.dial',
   --
   -- ad hoc lsp line
