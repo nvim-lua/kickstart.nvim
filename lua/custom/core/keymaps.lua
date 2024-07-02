@@ -114,3 +114,7 @@ keymap.set("n", "<leader>4", function() require("harpoon.ui").nav_file(4) end, o
 -- undotree
 keymap.set("n", "<leader>u", ":UndotreeToggle<CR>")
 
+keymap.set("n",    "<Tab>",         ">>",  opts)
+keymap.set("n",    "<S-Tab>",       "<<",  opts)
+keymap.set("v",    "<Tab>",         ">gv", opts)
+keymap.set("v",    "<S-Tab>",       "<gv", opts)

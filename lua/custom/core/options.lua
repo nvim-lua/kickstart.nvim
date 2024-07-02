@@ -20,6 +20,5 @@ opt.tabstop = 2
 opt.termguicolors = true
 opt.wrap = false
 opt.timeoutlen = 222
+opt.conceallevel = 1
 
--- Set shellcmdflag
-opt.shellcmdflag = "-c"

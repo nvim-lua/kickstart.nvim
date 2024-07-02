@@ -6,8 +6,8 @@ return {
     require('typescript-tools').setup {
       settings = {
         tsserver_plugins = {
-          -- '@styled/typescript-styled-plugin',
-          'typescript-styled-plugin',
+          '@styled/typescript-styled-plugin',
+            -- 'typescript-styled-plugin',
         },
       },
     }

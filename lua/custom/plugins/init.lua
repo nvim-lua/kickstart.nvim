@@ -26,5 +26,6 @@ return {
   'nvim-telescope/telescope-file-browser.nvim',
   'RRethy/vim-illuminate',
   'mbbill/undotree',
+  -- 'styled-components/vim-styled-components'
 }
 
