@@ -1,17 +1,3 @@
----@diagnostic disable: undefined-global
----@diagnostic disable-next-line: undefined-global
----@diagnostic disable: undefined-global
----@diagnostic disable-next-line: undefined-global
----@diagnostic disable: undefined-global
----@diagnostic disable-next-line: undefined-global
----@diagnostic disable: undefined-global
----@diagnostic disable-next-line: undefined-global
----@diagnostic disable: undefined-global
----@diagnostic disable-next-line: undefined-global
----@diagnostic disable: undefined-global
----@diagnostic disable-next-line: undefined-global
----@diagnostic disable: undefined-global
----@diagnostic disable-next-line: undefined-global
 --[[
 
 =====================================================================
