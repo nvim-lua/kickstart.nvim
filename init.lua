@@ -423,6 +423,8 @@ require('lazy').setup({
       -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
       -- used for completion, annotations and signatures of Neovim apis
       -- { 'folke/neodev.nvim', opts = {} },
+      -- NEODEV IS NOW EOL
+      { "folke/neodev.nvim", enabled = false }, -- disable neodev as it is EOL
       {
         "folke/lazydev.nvim",
         ft = "lua", -- only load on lua files
@@ -445,7 +447,6 @@ require('lazy').setup({
           })
         end,
       },
-      { "folke/neodev.nvim", enabled = false },
     },
     config = function()
       -- Brief aside: **What is LSP?**
