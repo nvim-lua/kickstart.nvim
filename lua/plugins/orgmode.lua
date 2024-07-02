@@ -8,8 +8,16 @@ return {
       org_agenda_files = '~/orgfiles/**/*',
       org_default_notes_file = '~/orgfiles/refile.org',
       org_capture_templates = {
+        x = {
+          description = 'Journal Personal',
+          datetree = {
+            tree_type = 'day',
+          },
+          template = '\n**** %?\nEntered on %U\n',
+          target = '~/OrgMode-Personal/002-Areas/journal.org',
+        },
         j = {
-          description = 'Journal',
+          description = 'Journal Inmar',
           datetree = {
             tree_type = 'day',
           },

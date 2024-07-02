@@ -278,3 +278,6 @@ vim.cmd 'set shiftwidth=2'
 -- Oil plugin
 require('oil').setup()
 vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
+
+-- Neogit plugin
+vim.keymap.set('n', '<Leader>gg', ':Neogit<CR>', { desc = 'Neogit open' })
