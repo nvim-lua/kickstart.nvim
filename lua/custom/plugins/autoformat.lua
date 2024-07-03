@@ -27,13 +27,13 @@ return {
     formatters_by_ft = {
       lua = { 'stylua' },
       python = { 'autopep8' },
-      javascript = { { 'prettierd', 'prettier' } },
+      javascript = { 'prettier' },
       c = { 'clang-format' },
       cpp = { 'clang-format' },
       yaml = { 'yamlfmt' },
       html = { 'djlint' },
       htmldjango = { 'djlint' },
-      css = { { 'prettierd', 'prettier' } },
+      css = { 'prettier' },
       json = { 'deno_fmt' },
       -- Conform can also run multiple formatters sequentially
       -- python = { "isort", "black" },
@@ -41,6 +41,13 @@ return {
       -- You can use a sub-list to tell conform to run *until* a formatter
       -- is found.
       -- javascript = { { "prettierd", "prettier" } },
+    },
+    formatters = {
+      djlint = {
+        args = function()
+          return { '-', '--reformat', '--profile', 'django', '--indent', 4 }
+        end,
+      },
     },
   },
 }
