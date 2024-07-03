@@ -45,7 +45,7 @@ return {
     formatters = {
       djlint = {
         args = function()
-          return { '-', '--reformat', '--profile', 'django', '--indent', 4 }
+          return { '-', '--reformat', '--profile', 'django', '--indent', 2 }
         end,
       },
     },
