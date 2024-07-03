@@ -542,7 +542,7 @@ require('lazy').setup({
           -- This may be unwanted, since they displace some of your code
           if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
             map('<leader>th', function()
-              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled)
             end, '[T]oggle Inlay [H]ints')
           end
         end,
@@ -577,12 +577,13 @@ require('lazy').setup({
         -- But for many setups, the LSP (`tsserver`) will work just fine
         tsserver = {},
         angularls = {
-          config = {
-            cwd = function()
-              return require('lspconfig.util').root_pattern('angular.json', 'project.json')
-            end,
-            require_cwd = true,
-          },
+          cwd = require('lspconfig.util').root_pattern('angular.json', 'project.json'),
+          require_cwd = true,
+          on_new_config = function(new_config, new_root_dir)
+            new_config.root_dir = new_root_dir
+          end,
+          filetypes = { 'typescript', 'html' },
+          root_dir = require('lspconfig.util').root_pattern('angular.json', 'project.json'),
         },
         -- css_variables = {},
         cssls = {},
