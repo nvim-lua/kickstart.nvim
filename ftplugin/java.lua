@@ -36,6 +36,7 @@ local config = {
 
   settings = {
     java = {
+      home = 'c:/Program Files/Java/jdk-17',
       signatureHelp = { enabled = true },
       extendedClientCapabilities = extendedClientCapabilities,
       maven = {
