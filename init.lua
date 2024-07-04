@@ -251,10 +251,24 @@ require('lazy').setup({
   {
     'seblj/roslyn.nvim',
     opts = {},
-    capabilities = nil,
-    exe = 'Microsoft.CodeAnalysis.LanguageServer.dll',
+    config = {
+      capabilities = nil,
+    },
+    exe = vim.fs.joinpath(vim.fn.stdpath 'data' --[[@as string]], 'roslyn', 'Microsoft.CodeAnalysis.LanguageServer.dll'),
+    -- NOTE: Set `filewatching` to false if you experience performance problems.
+    -- Defaults to true, since turning it off is a hack.
+    -- If you notice that the server is _super_ slow, it is probably because of file watching
+    -- I noticed that neovim became super unresponsive on some large codebases, and that was because
+    -- it schedules the file watching on the event loop.
+    -- This issue went away by disabling that capability. However, roslyn will fallback to its own
+    -- file watching, which can make the server super slow to initialize.
+    -- Setting this option to false will indicate to the server that neovim will do the file watching.
+    -- However, in `hacks.lua` I will also just don't start off any watchers, which seems to make the server
+    -- a lot faster to initialize.
+    -- filewatching = true,
+    filewatching = false,
+    commit = 'c4d36a00852be07ef34768cf9da6cac94b13aeff',
   },
-
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
 
