@@ -619,7 +619,6 @@ require('lazy').setup({
         'jdtls',
         'yaml-language-server',
         'lua-language-server',
-        'csharp-language-server',
         'rust-analyzer',
         'marksman',
       })
