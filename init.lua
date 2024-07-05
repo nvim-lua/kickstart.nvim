@@ -621,6 +621,9 @@ require('lazy').setup({
         'lua-language-server',
         'rust-analyzer',
         'marksman',
+        'xmlformatter',
+        'lemminx',
+        'google-java-format',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
