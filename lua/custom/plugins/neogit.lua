@@ -9,7 +9,7 @@ return {
         -- brew install font-hack-nerd-font
         -- 'nvim-tree/nvim-web-devicons',
         -- },
-        config = {
+        opts = {
           use_icons = false,
         },
       },
