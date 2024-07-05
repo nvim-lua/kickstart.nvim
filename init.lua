@@ -733,6 +733,8 @@ require('lazy').setup({
         -- js -> LSP: tsserver, Formatter & linter: biome
         -- npm install -g @biomejs/biome
         biome = {},
+        -- npm install -g typescript typescript-language-server
+        tsserver = {},
         ltex = {
           ltex = {
             additionalRules = {
