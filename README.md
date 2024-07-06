@@ -21,12 +21,10 @@ If you are experiencing issues, please make sure you have the latest versions.
 
 ### Install External Dependencies
 
-> **NOTE**
-> [Backup](#FAQ) your previous configuration (if any exists)
-
 External Requirements:
 - Basic utils: `git`, `make`, `unzip`, C Compiler (`gcc`)
 - [ripgrep](https://github.com/BurntSushi/ripgrep#installation)
+- Clipboard tool (xclip/xsel/win32yank or other depending on platform)
 - A [Nerd Font](https://www.nerdfonts.com/): optional, provides various icons
   - if you have it set `vim.g.have_nerd_font` in `init.lua` to true
 - Language Setup:
@@ -38,6 +36,11 @@ External Requirements:
 > See [Install Recipes](#Install-Recipes) for additional Windows and Linux specific notes
 > and quick install snippets
 
+### Install Kickstart
+
+> **NOTE**
+> [Backup](#FAQ) your previous configuration (if any exists)
+
 Neovim's configurations are located under the following paths, depending on your OS:
 
 | OS | PATH |
@@ -46,18 +49,20 @@ Neovim's configurations are located under the following paths, depending on your
 | Windows (cmd)| `%userprofile%\AppData\Local\nvim\` |
 | Windows (powershell)| `$env:USERPROFILE\AppData\Local\nvim\` |
 
-### Install Kickstart
-
 #### Recommended Step
 
-[Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repo so that you have your own copy that you can modify, then install by cloning the fork to your machine using one of the commands below, depending on your OS.
+[Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repo
+so that you have your own copy that you can modify, then install by cloning the
+fork to your machine using one of the commands below, depending on your OS.
 
 > **NOTE**
-> Your fork's url will be something like this: `https://github.com/<your_github_username>/kickstart.nvim.git`
+> Your fork's url will be something like this:
+> `https://github.com/<your_github_username>/kickstart.nvim.git`
 
 #### Clone kickstart.nvim
 > **NOTE**
-> If following the recommended step above (i.e., forking the repo), replace `nvim-lua` with `<your_github_username>` in the commands below
+> If following the recommended step above (i.e., forking the repo), replace
+> `nvim-lua` with `<your_github_username>` in the commands below
 
 <details><summary> Linux and Mac </summary>
 
@@ -92,69 +97,12 @@ nvim
 ```
 
 That's it! Lazy will install all the plugins you have. Use `:Lazy` to view
-current plugin status.
+current plugin status. Hit `q` to close the window.
 
 Read through the `init.lua` file in your configuration folder for more
-information about extending and exploring Neovim.
+information about extending and exploring Neovim. That also includes
+examples of adding popularly requested plugins.
 
-
-#### Examples of adding popularly requested plugins
-
-NOTE: You'll need to uncomment the line in the init.lua that turns on loading custom plugins.
-
-<details>
-  <summary>Adding autopairs</summary>
-
-This will automatically install [windwp/nvim-autopairs](https://github.com/windwp/nvim-autopairs) and enable it on startup. For more information, see documentation for [lazy.nvim](https://github.com/folke/lazy.nvim).
-
-In the file: `lua/custom/plugins/autopairs.lua`, add:
-
-```lua
--- File: lua/custom/plugins/autopairs.lua
-
-return {
-  "windwp/nvim-autopairs",
-  -- Optional dependency
-  dependencies = { 'hrsh7th/nvim-cmp' },
-  config = function()
-    require("nvim-autopairs").setup {}
-    -- If you want to automatically add `(` after selecting a function or method
-    local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-    local cmp = require('cmp')
-    cmp.event:on(
-      'confirm_done',
-      cmp_autopairs.on_confirm_done()
-    )
-  end,
-}
-```
-
-</details>
-<details>
-  <summary>Adding a file tree plugin</summary>
-
-This will install the tree plugin and add the command `:Neotree` for you. For more information, see the documentation at [neo-tree.nvim](https://github.com/nvim-neo-tree/neo-tree.nvim).
-
-In the file: `lua/custom/plugins/filetree.lua`, add:
-
-```lua
--- File: lua/custom/plugins/filetree.lua
-
-return {
-  "nvim-neo-tree/neo-tree.nvim",
-  version = "*",
-  dependencies = {
-    "nvim-lua/plenary.nvim",
-    "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-    "MunifTanjim/nui.nvim",
-  },
-  config = function ()
-    require('neo-tree').setup {}
-  end,
-}
-```
-
-</details>
 
 ### Getting Started
 
@@ -164,13 +112,19 @@ return {
 
 * What should I do if I already have a pre-existing neovim configuration?
   * You should back it up and then delete all associated files.
-  * This includes your existing init.lua and the neovim files in `~/.local` which can be deleted with `rm -rf ~/.local/share/nvim/`
+  * This includes your existing init.lua and the neovim files in `~/.local`
+    which can be deleted with `rm -rf ~/.local/share/nvim/`
 * Can I keep my existing configuration in parallel to kickstart?
-  * Yes! You can use [NVIM_APPNAME](https://neovim.io/doc/user/starting.html#%24NVIM_APPNAME)`=nvim-NAME` to maintain multiple configurations. For example, you can install the kickstart configuration in `~/.config/nvim-kickstart` and create an alias:
+  * Yes! You can use [NVIM_APPNAME](https://neovim.io/doc/user/starting.html#%24NVIM_APPNAME)`=nvim-NAME`
+    to maintain multiple configurations. For example, you can install the kickstart
+    configuration in `~/.config/nvim-kickstart` and create an alias:
     ```
     alias nvim-kickstart='NVIM_APPNAME="nvim-kickstart" nvim'
     ```
-    When you run Neovim using `nvim-kickstart` alias it will use the alternative config directory and the matching local directory `~/.local/share/nvim-kickstart`. You can apply this approach to any Neovim distribution that you would like to try out.
+    When you run Neovim using `nvim-kickstart` alias it will use the alternative
+    config directory and the matching local directory
+    `~/.local/share/nvim-kickstart`. You can apply this approach to any Neovim
+    distribution that you would like to try out.
 * What if I want to "uninstall" this configuration:
   * See [lazy.nvim uninstall](https://github.com/folke/lazy.nvim#-uninstalling) information
 * Why is the kickstart `init.lua` a single file? Wouldn't it make sense to split it into multiple files?
@@ -229,7 +183,7 @@ wsl --install
 wsl
 sudo add-apt-repository ppa:neovim-ppa/unstable -y
 sudo apt update
-sudo apt install make gcc ripgrep unzip neovim
+sudo apt install make gcc ripgrep unzip git xclip neovim
 ```
 </details>
 
@@ -239,23 +193,37 @@ sudo apt install make gcc ripgrep unzip neovim
 ```
 sudo add-apt-repository ppa:neovim-ppa/unstable -y
 sudo apt update
-sudo apt install make gcc ripgrep unzip neovim
+sudo apt install make gcc ripgrep unzip git xclip neovim
 ```
 </details>
 <details><summary>Debian Install Steps</summary>
 
 ```
 sudo apt update
-sudo apt install make gcc ripgrep unzip git
-echo "deb https://deb.debian.org/debian unstable main" | sudo tee -a /etc/apt/sources.list
-sudo apt update
-sudo apt install -t unstable neovim
+sudo apt install make gcc ripgrep unzip git xclip curl
+
+# Now we install nvim
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
+sudo rm -rf /opt/nvim-linux64
+sudo mkdir -p /opt/nvim-linux64
+sudo chmod a+rX /opt/nvim-linux64
+sudo tar -C /opt -xzf nvim-linux64.tar.gz
+
+# make it available in /usr/local/bin, distro installs to /usr/bin
+sudo ln -sf /opt/nvim-linux64/bin/nvim /usr/local/bin/
 ```
 </details>
 <details><summary>Fedora Install Steps</summary>
 
 ```
-sudo dnf install -y gcc make git ripgrep fd-find neovim
+sudo dnf install -y gcc make git ripgrep fd-find unzip neovim
+```
+</details>
+
+<details><summary>Arch Install Steps</summary>
+
+```
+sudo pacman -S --noconfirm --needed gcc make git ripgrep fd unzip neovim
 ```
 </details>
 
