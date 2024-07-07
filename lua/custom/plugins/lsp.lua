@@ -215,6 +215,7 @@ return { -- LSP Configuration & Plugins
       'typescript-language-server',
       'deno',
       'stylelint',
+      'yamlfmt',
     })
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
