@@ -1,4 +1,12 @@
---[[
+--{{
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" }
+}
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" }
+}[[
 --
 -- This file is not required for your own configuration,
 -- but helps people determine if their system is setup correctly.
