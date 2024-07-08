@@ -151,6 +151,8 @@ vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
 vim.opt.cursorline = true
+-- Conceal level(obsidian)
+vim.opt.conceallevel = 1
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
@@ -1145,6 +1147,7 @@ require('lazy').setup({
 				'typescript',
 				'python',
 				'markdown',
+				'markdown_inline',
 				'vim',
 				'vimdoc',
 			},
@@ -1229,7 +1232,13 @@ require('lazy').setup({
 				--path = '~/Documents/Notes',
 				--},
 			},
-
+			-- Optional, completion of wiki links, local markdown links, and tags using nvim-cmp.
+			completion = {
+				-- Set to false to disable completion.
+				nvim_cmp = true,
+				-- Trigger completion at 2 chars.
+				min_chars = 2,
+			},
 			-- see below for full list of options 👇
 		},
 	},
