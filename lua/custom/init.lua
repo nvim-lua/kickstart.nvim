@@ -1,6 +1,11 @@
 vim.opt.relativenumber = true
 
 vim.keymap.set('n', '<leader>n', ':Neotree<CR>', { noremap = true, silent = true, desc = 'Open [N]eotree Explorer' })
+vim.keymap.set('n', '::', ':Telescope commands<CR>', { noremap = true })
+vim.keymap.set('n', 'L', '$', { noremap = true })
+vim.keymap.set('n', 'H', '^', { noremap = true })
+vim.keymap.set('n', '<C-u>', '<C-u>zz', { noremap = true })
+vim.keymap.set('n', '<C-d>', '<C-d>zz', { noremap = true })
 
 vim.keymap.set('n', '<C-s>', function()
   vim.lsp.buf.format()
