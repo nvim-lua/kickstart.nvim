@@ -304,6 +304,7 @@ require('lazy').setup({
         ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
         ['<leader>h'] = { name = 'Copilot C[H]at', _ = 'which_key_ignore' },
         ['<leader>Q'] = { name = '[Q] Load Last', _ = 'which_key_ignore' },
+        ['<leader>e'] = { name = '[E]xplorer', _ = 'which_key_ignore' },
       }
       -- visual mode
       require('which-key').register({
