@@ -196,6 +196,11 @@ vim.keymap.set('n', '<leader>wc', '<C-w>c', { desc = '[C]lose window' })
 vim.keymap.set('n', '<leader>w+', '<C-w>+', { desc = 'Increase size' })
 vim.keymap.set('n', '<leader>w-', '<C-w>-', { desc = 'Decrease size' })
 
+vim.keymap.set('n', '<c-k>', ':wincmd k<CR>')
+vim.keymap.set('n', '<c-j>', ':wincmd j<CR>')
+vim.keymap.set('n', '<c-h>', ':wincmd h<CR>')
+vim.keymap.set('n', '<c-l>', ':wincmd l<CR>')
+
 -- vim.keymap.set('n', '<leader>wh', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 -- vim.keymap.set('n', '<leader>wl', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 -- vim.keymap.set('n', '<leader>wj', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
@@ -281,3 +286,6 @@ vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
 
 -- Neogit plugin
 vim.keymap.set('n', '<Leader>gg', ':Neogit<CR>', { desc = 'Neogit open' })
+
+-- set conceal level bc obsidian plugin requires this:
+vim.opt.conceallevel = 1
