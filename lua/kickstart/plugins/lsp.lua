@@ -238,7 +238,7 @@ return {
         --             plugins = {
         --                 pycodestyle = {
         --                     ignore = {},
-        --                     maxLineLength = 120,
+        --                    maxLineLength = 120,
         --                 },
         --             },
         --         }
@@ -246,6 +246,10 @@ return {
         -- },
         rust_analyzer = {
           alias = 'rust-analyzer',
+        },
+
+        markdown_oxide = {
+          alias = 'markdown-oxide',
         },
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
