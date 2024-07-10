@@ -195,11 +195,17 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Custom key mapping to open netrw
-vim.api.nvim_set_keymap('n', '<leader>e', ':Explore<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<leader>e', ':Explore<CR>', { noremap = true, silent = true })
+-- Keybinding to toggle nvim-tree
+vim.api.nvim_set_keymap('n', '<leader>e', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
 
 -- Enable netrw settings
 vim.g.netrw_banner = 0
 vim.g.netrw_liststyle = 3
+
+-- Disable netrw plugins
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -239,6 +245,26 @@ require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   'github/copilot.vim', -- GitHub Copilot integration
+  -- vim-tree
+  {
+    'kyazdani42/nvim-tree.lua',
+    config = function()
+      require('nvim-tree').setup {
+        sort = {
+          sorter = 'case_sensitive',
+        },
+        view = {
+          width = 30,
+        },
+        renderer = {
+          group_empty = true,
+        },
+        filters = {
+          dotfiles = true,
+        },
+      }
+    end,
+  }, -- File explorer
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
