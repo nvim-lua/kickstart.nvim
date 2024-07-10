@@ -325,6 +325,14 @@ require('lazy').setup({
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
     config = function()
+
+
+      require('telescope').setup {
+        defaults = {
+          layout_strategy = 'flex',
+        }
+      }
+
       -- Telescope is a fuzzy finder that comes with a lot of different things that
       -- it can fuzzy find! It's more than just a "file finder", it can search
       -- many different aspects of Neovim, your workspace, LSP, and more!
@@ -346,76 +354,6 @@ require('lazy').setup({
 
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
-      require('telescope').setup {
-        -- You can put your default mappings / updates / etc. in here
-        --  All the info you're looking for is in `:help telescope.setup()`
-        --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
-        -- set all pickers to dropdown
-        pickers = {
-          find_files = {
-            theme = 'dropdown',
-          },
-          live_grep = {
-            theme = 'dropdown',
-          },
-          grep_string = {
-            theme = 'dropdown',
-          },
-          file_browser = {
-            theme = 'dropdown',
-          },
-          old_files = {
-            theme = 'dropdown',
-          },
-          help_tags = {
-            theme = 'dropdown',
-          },
-          keymaps = {
-            theme = 'dropdown',
-          },
-          builtin = {
-            theme = 'dropdown',
-          },
-          lsp_references = {
-            theme = 'dropdown',
-          },
-          lsp_definitions = {
-            theme = 'dropdown',
-          },
-          lsp_implementations = {
-            theme = 'dropdown',
-          },
-          lsp_code_actions = {
-            theme = 'dropdown',
-          },
-          lsp_document_diagnostics = {
-            theme = 'dropdown',
-          },
-          lsp_workspace_diagnostics = {
-            theme = 'dropdown',
-          },
-          lsp_document_symbols = {
-            theme = 'dropdown',
-          },
-          lsp_workspace_symbols = {
-            theme = 'dropdown',
-          },
-          lsp_dynamic_workspace_symbols = {
-            theme = 'dropdown',
-          },
-        },
-        extensions = {
-          ['ui-select'] = {
-            require('telescope.themes').get_dropdown(),
-          },
-        },
-      }
-
       -- Enable Telescope extensions if they are installed
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
@@ -436,10 +374,6 @@ require('lazy').setup({
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-        builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-          winblend = 10,
-          previewer = false,
-        })
       end, { desc = '[/] Fuzzily search in current buffer' })
 
       -- It's also possible to pass additional configuration options.
