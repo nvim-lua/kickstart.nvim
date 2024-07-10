@@ -253,7 +253,9 @@ return {
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
         --
-        nixd = {},
+        ['nil_ls'] = {
+          alias = 'nil',
+        },
         bashls = {
           alias = 'bash-language-server',
         },
