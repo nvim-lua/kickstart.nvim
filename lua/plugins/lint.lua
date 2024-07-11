@@ -3,8 +3,8 @@ return {
     'mfussenegger/nvim-lint',
     init = function()
       require('lint').linters_by_ft = {
-        javascript = { 'eslint_d' },
-        typescript = { 'eslint_d' },
+        javascript = { 'biomejs' },
+        typescript = { 'biomejs' },
         json = { 'jsonlint' },
         lua = { 'luacheck' },
         go = { 'revive' },
@@ -15,7 +15,7 @@ return {
       vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
         group = lint_augroup,
         callback = function()
-          require('lint').try_lint 'codespell'
+          -- require('lint').try_lint 'typos'
           require('lint').try_lint()
         end,
       })

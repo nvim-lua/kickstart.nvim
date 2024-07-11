@@ -25,12 +25,12 @@ map('n', '<C-Up>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Double Q to close current window
 --map('n', 'qq', '<CMD>q<CR>', { silent = true, desc = 'CLose window' })
--- vim.api.nvim_create_autocmd('FileType', {
---  pattern = 'TelescopePrompt',
---  callback = function(params)
---    vim.keymap.set('', 'qq', '<Esc>', { noremap = true, buffer = params.buf })
---   end,
--- })
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'TelescopePrompt',
+  callback = function(params)
+    vim.keymap.set('', 'qq', '<Esc>', { noremap = true, buffer = params.buf })
+  end,
+})
 
 -- Keep cursor centered when PgUp & PgDown
 map('n', '<PgDown>', '<C-d><C-d>', { desc = 'Page down' })
@@ -72,7 +72,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
     local function map(mode, l, r, opts)
       opts = opts or {}
-      opts.buffer = bufnr
+      opts.buffer = event.bufnr
       vim.keymap.set(mode, l, r, opts)
     end
 

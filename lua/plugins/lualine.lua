@@ -87,6 +87,7 @@ return {
                 lsp_client_name = colors.purple,
                 use = true,
               },
+              spinner = { '⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏' },
               timer = {
                 progress_enddelay = 1500,
                 spinner = 1500,
