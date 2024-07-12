@@ -279,6 +279,7 @@ require('lazy').setup({
 
   require 'kickstart.plugins.lsp',
 
+  require 'kickstart.plugins.autopairs',
   { -- Autoformat
     'stevearc/conform.nvim',
     lazy = false,
