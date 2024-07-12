@@ -8,6 +8,11 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
+-- Resize splits with arrow keys
+vim.keymap.set('n', '<M-j>', ':resize +2<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<M-k>', ':resize -2<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<M-l>', ':vertical resize -2<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<M-h>', ':vertical resize +2<CR>', { noremap = true, silent = true })
 
 -- Stop yanking on paste
 vim.keymap.set('x', 'p', 'P')
