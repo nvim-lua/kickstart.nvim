@@ -239,7 +239,9 @@ require('lazy').setup({
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
-  --
+  -- dependency for lots of plugins
+  'nvim-tree/nvim-web-devicons',
+  -- default kickstart plugins
   require 'kickstart.plugins.gitsigns',
   require 'kickstart.plugins.which_key',
   require 'kickstart.plugins.telescope',
@@ -247,6 +249,10 @@ require('lazy').setup({
   require 'kickstart.plugins.conform',
   require 'kickstart.plugins.cmp',
   require 'kickstart.plugins.kanagawa',
+  -- ollama integration
+  require 'custom.plugins.ollama',
+  -- oil, a file explorer
+  require 'custom.plugins.oil',
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
@@ -352,5 +358,6 @@ vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
 vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
 
 vim.keymap.set('n', '<leader>dt', ':DocsViewToggle<enter>', { desc = 'Toggle Documentation' })
+vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
