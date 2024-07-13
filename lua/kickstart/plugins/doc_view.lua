@@ -6,4 +6,12 @@ return {
     position = 'right',
     width = 60,
   },
+  keys = {
+    {
+      '<leader>dt',
+      ':DocsViewToggle<enter>',
+      desc = 'Toggle Documentation',
+      mode = { 'n' },
+    },
+  },
 }
