@@ -239,8 +239,6 @@ require('lazy').setup({
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
-  -- dependency for lots of plugins
-  'nvim-tree/nvim-web-devicons',
   -- default kickstart plugins
   require 'kickstart.plugins.gitsigns',
   require 'kickstart.plugins.which_key',
@@ -309,7 +307,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
-  require 'kickstart.plugins.neo-tree',
+  -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
   -- add the documentation viewer
   require 'kickstart.plugins.doc_view',
