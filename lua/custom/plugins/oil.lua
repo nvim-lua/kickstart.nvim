@@ -24,8 +24,16 @@ return {
     ['g.'] = 'actions.toggle_hidden',
     ['g\\'] = 'actions.toggle_trash',
   },
+  keys = {
+    {
+      '-',
+      '<CMD>Oil<CR>',
+      desc = 'Open parent directory',
+      mode = { 'n' }
+    }
+  },
   use_default_keymaps = false,
   -- Optional dependencies
-  dependencies = { 'echasnovski/mini.icons' },
-  -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
+  -- dependencies = { 'echasnovski/mini.icons' },
+  dependencies = { 'nvim-tree/nvim-web-devicons' }, -- use if prefer nvim-web-devicons
 }
