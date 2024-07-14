@@ -252,7 +252,9 @@ require('lazy').setup({
   -- oil, a file explorer
   require 'custom.plugins.oil',
   -- lazy git, for git stuff
-  require 'lua.custom.plugins.lazygit',
+  require 'custom.plugins.lazygit',
+  --database tool
+  require 'custom.plugins.dadbod',
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
