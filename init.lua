@@ -888,7 +888,20 @@ require('lazy').setup({
 })
 
 require('conform').formatters.golines = {
-  prepend_args = { '--max-len=128' },
+  prepend_args = { '--max-len=128 --no-reformat-tags' },
 }
+
+require('lspconfig').pylsp.setup {
+  settings = {
+    pylsp = {
+      plugins = {
+        pycodestyle = {
+          maxLineLength = 100,
+        },
+      },
+    },
+  },
+}
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
