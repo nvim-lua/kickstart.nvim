@@ -581,6 +581,7 @@ require('lazy').setup({
         html = {},
         cssls = {},
         clangd = {},
+        emmet_ls = {},
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
