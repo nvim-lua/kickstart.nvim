@@ -7,6 +7,7 @@ return {
       'sindrets/diffview.nvim',
       'nvim-telescope/telescope.nvim',
     },
+    lazy = true,
     keys = {
       { '<leader>ng', ':Neogit cwd=%:p:h<CR>', desc = 'Open neogit repository for current buffer' },
     },
