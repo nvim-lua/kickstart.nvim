@@ -280,7 +280,19 @@ require('lazy').setup({
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
-      require('which-key').setup()
+      require('which-key').setup {
+        plugins = {
+          marks = true,
+          registers = true,
+
+          presets = {
+            operators = true,
+            motions = true,
+            windows = true,
+            nav = true,
+          },
+        },
+      }
 
       local wk = require 'which-key'
       wk.add {
