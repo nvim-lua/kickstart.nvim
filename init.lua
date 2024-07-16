@@ -668,6 +668,7 @@ require('lazy').setup({
           },
         },
 
+        -- python -> LSP: basedpyright, Formatter & linter
         -- https://github.com/astral-sh/ruff/blob/main/crates/ruff_server/docs/setup/NEOVIM.md
         ruff = {
           -- Disable hover in favor of Pyright
@@ -729,8 +730,11 @@ require('lazy').setup({
         html = {},
         jsonls = {},
         tailwindcss = {},
+        -- js -> LSP: tsserver, Formatter & linter: biome
         -- npm install -g @biomejs/biome
         biome = {},
+        -- npm install -g typescript typescript-language-server
+        tsserver = {},
         ltex = {
           ltex = {
             additionalRules = {
