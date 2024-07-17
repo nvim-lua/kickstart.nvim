@@ -35,3 +35,34 @@ vim.api.nvim_create_autocmd('FileType', {
     end
   end,
 })
+
+vim.api.nvim_create_autocmd('User', {
+  pattern = 'LazyDone',
+  callback = function()
+    local registry = require 'mason-registry'
+    registry.refresh(function()
+      local installed_packages = registry.get_installed_packages()
+      for i = 1, #installed_packages do
+        local pkg = installed_packages[i]
+        pkg:check_new_version(function(success, result)
+          if not success then
+            if result ~= 'Package is not outdated.' then
+              vim.notify('Failed to fetch pkg' .. pkg.spec.name .. ':' .. result)
+            end
+            goto continue
+          end
+          local install_handler = pkg:install { version = result.latest_version }
+          while install_handler:is_active() do
+          end
+          if install_handler:is_terminated() then
+            vim.notify('Failed to install pkg' .. pkg.spec.name)
+          end
+          if install_handler:isClosed() then
+            vim.notify('Successfully updated pkg' .. pkg.spec.name)
+          end
+          ::continue::
+        end)
+      end
+    end)
+  end,
+})

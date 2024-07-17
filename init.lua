@@ -683,6 +683,7 @@ require('lazy').setup {
         },
       }
     end,
+    checker = { enabled = true },
   },
 
   { -- Autoformat
