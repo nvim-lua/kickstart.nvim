@@ -290,27 +290,25 @@ require('lazy').setup({
       require('which-key').setup()
 
       -- Document existing key chains
-      require('which-key').register {
-        ['<leader>x'] = { name = '[X] Close buffer', _ = 'which_key_ignore' },
-        ['<leader>o'] = { name = 'Harp[O]on', _ = 'which_key_ignore' },
-        ['<leader>t'] = { name = '[T]oggleTerminal', _ = 'which_key_ignore' },
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>C'] = { name = '[C]term', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>f'] = { name = '[F]ind', _ = 'which_key_ignore' },
-        ['<leader>R'] = { name = '[R]efactor', _ = 'which_key_ignore' },
-        ['<leader>u'] = { name = 'Tro[U]ble', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-        ['<leader>h'] = { name = 'Copilot C[H]at', _ = 'which_key_ignore' },
-        ['<leader>Q'] = { name = '[Q] Load Last', _ = 'which_key_ignore' },
-        ['<leader>e'] = { name = '[E]xplorer', _ = 'which_key_ignore' },
+      require('which-key').add {
+        { '<leader>x', group = '[X] Close buffer' },
+        { '<leader>o', group = 'Harp[O]on' },
+        { '<leader>t', group = '[T]oggleTerminal' },
+        { '<leader>c', group = '[C]ode' },
+        { '<leader>C', group = '[C]term' },
+        { '<leader>d', group = '[D]ocument' },
+        { '<leader>r', group = '[R]ename' },
+        { '<leader>f', group = '[F]ind' },
+        { '<leader>u', group = 'Tro[U]ble' },
+        { '<leader>w', group = '[W]orkspace' },
+        { '<leader>Q', group = '[Q] Load Last' },
+        { '<leader>e', group = '[E]xplorer' },
+        {
+          mode = { 'v', 'n' },
+          { '<leader>R', group = '[R]efactor' },
+          { '<leader>h', group = 'Copilot C[H]at' },
+        },
       }
-      -- visual mode
-      require('which-key').register({
-        ['<leader>R'] = { name = '[R]efactor', _ = 'which_key_ignore' },
-        ['<leader>h'] = { name = 'Copilot C[H]at', _ = 'which_key_ignore' },
-      }, { mode = 'v' })
     end,
   },
 
