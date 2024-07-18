@@ -302,6 +302,8 @@ require('lazy').setup({
         { '<leader>d_', hidden = true },
         { '<leader>h', group = 'Git [H]unk' },
         { '<leader>h_', hidden = true },
+        { '<leader>n', group = '[N]eogit' },
+        { '<leader>n_', hidden = false },
         { '<leader>r', group = '[R]ename' },
         { '<leader>r_', hidden = true },
         { '<leader>s', group = '[S]earch' },
@@ -310,6 +312,8 @@ require('lazy').setup({
         { '<leader>t_', hidden = true },
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>w_', hidden = true },
+        { '<leader>x', group = 'Trouble' },
+        { '<leader>_x', hidden = true },
         { '<leader>h', desc = 'Git [H]unk', mode = 'v' },
       }
     end,
