@@ -249,6 +249,8 @@ require('lazy').setup({
   --
   --  This is equivalent to:
   --    require('Comment').setup({})
+  
+    'BlackLight/nvim-http',
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
@@ -407,7 +409,11 @@ require('lazy').setup({
         --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
         --   },
         -- },
-        -- pickers = {}
+        pickers = {
+          find_files = {
+            hidden = true
+          }
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -1206,6 +1212,8 @@ require('lazy').setup({
   --
   require 'kickstart.plugins.lazygit',
   require 'kickstart.plugins.dadbod',
+  require 'kickstart.plugins.notify',
+  require 'kickstart.plugins.laravel',
   require 'kickstart.plugins.debug',
   require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
