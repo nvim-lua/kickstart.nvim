@@ -638,6 +638,23 @@ require('lazy').setup({
             },
           },
         },
+        pyright = {
+          settings = {
+            pyright = {
+              disableLanguageServices = false,
+              disableOrganizeImports = false,
+            },
+            python = {
+              analysis = {
+                autoImportCompletions = true,
+                autoSearchPaths = true,
+                diagnosticMode = 'workspace', -- openFilesOnly, workspace
+                typeCheckingMode = 'basic', -- off, basic, strict
+                useLibraryCodeForTypes = true,
+              },
+            },
+          },
+        },
       }
 
       -- Ensure the servers and tools above are installed
