@@ -11,5 +11,6 @@ return {
         script = true,
         replace_keycodes = false,
       })
+      vim.g.copilot_proxy_strict_ssl = false
     end,
   }
