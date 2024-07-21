@@ -282,7 +282,7 @@ require('lazy').setup({
   --  config = function() -- This is the function that runs, AFTER loading
   --    require('which-key').setup()
 
-      -- Document existing key chains
+  -- Document existing key chains
   --    require('which-key').add {
   --      { '<leader>c', group = '[C]ode' },
   --      { '<leader>d', group = '[D]ocument' },
@@ -353,10 +353,10 @@ require('lazy').setup({
         --  All the info you're looking for is in `:help telescope.setup()`
         --
         defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-					history = false,  
+          --   mappings = {
+          --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+          --   },
+          history = false,
         },
         -- pickers = {}
         extensions = {
@@ -412,30 +412,30 @@ require('lazy').setup({
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
-			{
-				"williamboman/mason.nvim",
-				opts = {
-					log_level = vim.log.levels.OFF,
-					pip = {
-						install_args = { "--no-cache-dir" },
-					},
-				},
-			}, -- NOTE: Must be loaded before dependants
+      {
+        'williamboman/mason.nvim',
+        opts = {
+          log_level = vim.log.levels.OFF,
+          pip = {
+            install_args = { '--no-cache-dir' },
+          },
+        },
+      }, -- NOTE: Must be loaded before dependants
 
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-			{
-				"j-hui/fidget.nvim",
-				opts = {
-					logger = {
-						level = vim.log.levels.OFF,
-						path = "/dev/null",
-					},
-				},
-			},
+      {
+        'j-hui/fidget.nvim',
+        opts = {
+          logger = {
+            level = vim.log.levels.OFF,
+            path = '/dev/null',
+          },
+        },
+      },
 
       -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
       -- used for completion, annotations and signatures of Neovim apis
@@ -471,7 +471,7 @@ require('lazy').setup({
       --    That is to say, every time a new file is opened that is associated with
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
       --    function will be executed to configure the current buffer
-			vim.lsp.set_log_level("off")
+      vim.lsp.set_log_level 'off'
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
@@ -700,12 +700,12 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-           {
-             'rafamadriz/friendly-snippets',
-             config = function()
-               require('luasnip.loaders.from_vscode').lazy_load()
-             end,
-           },
+          {
+            'rafamadriz/friendly-snippets',
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load()
+            end,
+          },
         },
       },
       'saadparwaiz1/cmp_luasnip',
@@ -882,29 +882,29 @@ require('lazy').setup({
     end,
   },
 
-	{
-		"akinsho/toggleterm.nvim",
-		config = function()
-			require("toggleterm").setup({
-				size = 20,
-				open_mapping = [[<c-\>]],
-				direction = "float",
-				float_opts = {
-					border = "curved",
-				},
-			})
+  {
+    'akinsho/toggleterm.nvim',
+    config = function()
+      require('toggleterm').setup {
+        size = 20,
+        open_mapping = [[<c-\>]],
+        direction = 'float',
+        float_opts = {
+          border = 'curved',
+        },
+      }
 
-			function _G.set_terminal_keymaps()
-				local opts = { buffer = 0 }
-				vim.keymap.set("t", "jk", [[<C-\><C-n>]], opts)
-			end
+      function _G.set_terminal_keymaps()
+        local opts = { buffer = 0 }
+        vim.keymap.set('t', 'jk', [[<C-\><C-n>]], opts)
+      end
 
-			-- if you only want these mappings for toggle term use term://*toggleterm#* instead
-			vim.cmd("autocmd! TermOpen term://* lua set_terminal_keymaps()")
-		end,
-		keys = [[<c-\>]],
-		cmd = "ToggleTerm",
-	},
+      -- if you only want these mappings for toggle term use term://*toggleterm#* instead
+      vim.cmd 'autocmd! TermOpen term://* lua set_terminal_keymaps()'
+    end,
+    keys = [[<c-\>]],
+    cmd = 'ToggleTerm',
+  },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
@@ -916,10 +916,10 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-   require 'kickstart.plugins.indent_line',
-   require 'kickstart.plugins.lint',
-   require 'kickstart.plugins.autopairs',
-   require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -929,11 +929,11 @@ require('lazy').setup({
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   -- { import = 'custom.plugins' },
 }, {
-	performance = {
-		cache = {
-			enabled = false,
-		},
-	},
+  performance = {
+    cache = {
+      enabled = false,
+    },
+  },
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
