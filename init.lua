@@ -882,6 +882,30 @@ require('lazy').setup({
     end,
   },
 
+	{
+		"akinsho/toggleterm.nvim",
+		config = function()
+			require("toggleterm").setup({
+				size = 20,
+				open_mapping = [[<c-\>]],
+				direction = "float",
+				float_opts = {
+					border = "curved",
+				},
+			})
+
+			function _G.set_terminal_keymaps()
+				local opts = { buffer = 0 }
+				vim.keymap.set("t", "jk", [[<C-\><C-n>]], opts)
+			end
+
+			-- if you only want these mappings for toggle term use term://*toggleterm#* instead
+			vim.cmd("autocmd! TermOpen term://* lua set_terminal_keymaps()")
+		end,
+		keys = [[<c-\>]],
+		cmd = "ToggleTerm",
+	},
+
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
@@ -892,10 +916,10 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+   require 'kickstart.plugins.indent_line',
+   require 'kickstart.plugins.lint',
+   require 'kickstart.plugins.autopairs',
+   require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -905,6 +929,11 @@ require('lazy').setup({
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   -- { import = 'custom.plugins' },
 }, {
+	performance = {
+		cache = {
+			enabled = false,
+		},
+	},
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
