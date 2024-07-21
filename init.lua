@@ -352,11 +352,12 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
+        defaults = {
         --   mappings = {
         --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
         --   },
-        -- },
+					history = false,  
+        },
         -- pickers = {}
         extensions = {
           ['ui-select'] = {
@@ -411,13 +412,30 @@ require('lazy').setup({
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
-      { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
+			{
+				"williamboman/mason.nvim",
+				opts = {
+					log_level = vim.log.levels.OFF,
+					pip = {
+						install_args = { "--no-cache-dir" },
+					},
+				},
+			}, -- NOTE: Must be loaded before dependants
+
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+			{
+				"j-hui/fidget.nvim",
+				opts = {
+					logger = {
+						level = vim.log.levels.OFF,
+						path = "/dev/null",
+					},
+				},
+			},
 
       -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
       -- used for completion, annotations and signatures of Neovim apis
@@ -453,6 +471,7 @@ require('lazy').setup({
       --    That is to say, every time a new file is opened that is associated with
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
       --    function will be executed to configure the current buffer
+			vim.lsp.set_log_level("off")
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
