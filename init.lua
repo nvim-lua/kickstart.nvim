@@ -424,6 +424,9 @@ require('lazy').setup({
         },
       },
       { 'Bilal2453/luvit-meta', lazy = true },
+
+      -- Allows extra capabilities provided by nvim-cmp
+      'hrsh7th/cmp-nvim-lsp',
     },
     config = function()
       -- Brief aside: **What is LSP?**
