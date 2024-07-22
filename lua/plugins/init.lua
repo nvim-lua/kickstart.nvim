@@ -665,10 +665,9 @@ require('lazy').setup({
   require 'plugins.kickstart.neo-tree',
   require 'plugins.kickstart.gitsigns', -- adds gitsigns recommend keymaps
 
-  -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
-  --    This is the easiest way to modularize your config.
-  --
+  -- require topper3418 plugins
   require 'plugins.topper3418.oil',
+  require 'plugins.topper3418.lazygit',
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
