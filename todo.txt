@@ -1,0 +1,5 @@
+[ ] refactor the plugins to be in separate files
+[ ] take notes of all the most important features that I want to make sure don't break
+[ ] implement testing procedure to make sure none of these features are broken for each change
+[ ] work my way back up to a working IDE
+[ ] deprecate all old files, lines and directories
