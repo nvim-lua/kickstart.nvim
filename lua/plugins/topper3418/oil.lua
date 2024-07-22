@@ -1,5 +1,6 @@
 return {
   'stevearc/oil.nvim',
+  default_file_explorer = true,
   opts = {
     columns = {
       'icon',
@@ -29,8 +30,8 @@ return {
       '-',
       '<CMD>Oil<CR>',
       desc = 'Open parent directory',
-      mode = { 'n' }
-    }
+      mode = { 'n' },
+    },
   },
   use_default_keymaps = false,
   -- Optional dependencies
