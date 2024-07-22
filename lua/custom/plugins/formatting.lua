@@ -1,25 +1,41 @@
 return {
-  "stevearc/conform.nvim",
-  event = { "BufReadPre", "BufNewFile" },
-  config = function()
-    local conform = require("conform")
+  'stevearc/conform.nvim',
+  dependencies = {
+    'nvim-lua/plenary.nvim',
+    'WhoIsSethDaniel/mason-tool-installer.nvim',
+  },
+  event = { 'BufReadPre', 'BufNewFile' },
+  opts = function()
+    local formatters_by_ft = {
+      lua = { 'stylua' },
+      python = function(bufnr)
+        if require('conform').get_formatter_info('ruff_format', bufnr).available then
+          return { 'isort', 'ruff_format', 'ruff_fix' }
+        else
+          return { 'isort', 'black' }
+        end
+      end,
+      go = { 'gofumpt', 'goimports' },
+    }
 
-    conform.setup({
-      formatters_by_ft = {
-        python = { "isort", "black" },
-      },
+    require('conform').setup({
+      formatters_by_ft = formatters_by_ft,
       format_on_save = {
         lsp_fallback = true,
-        async = false,
         timeout_ms = 500,
       },
     })
-    vim.keymap.set({ "n", "v" }, "<leader>mp", function()
-      conform.format({
-        lsp_fallback = true,
-        async = false,
-        timeout_ms = 500,
-      })
-    end, { desc = "Format file or range (in visual mode)" })
+
+    require('mason-tool-installer').setup({
+      ensure_installed = {
+        'stylua',
+        'ruff',
+        'isort',
+        'black',
+        'gofumpt',
+        'goimports',
+      },
+    })
   end,
 }
+

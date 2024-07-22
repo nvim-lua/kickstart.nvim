@@ -3,23 +3,22 @@ return {
   'nvim-treesitter/nvim-treesitter',
   dependencies = {
     'nvim-treesitter/nvim-treesitter-textobjects',
+    'https://github.com/apple/pkl-neovim.git',
     'windwp/nvim-ts-autotag',
   },
   build = ':TSUpdate',
-  -- setup autotag with default options
-  opts = {
-    enable = true,
-  },
   config = function()
-    -- See `:help nvim-treesitter`
-    require('nvim-treesitter.configs').setup {
-      -- Add languages to be installed here that you want installed for treesitter
-      ensure_installed = { 'c', 'cpp', 'lua', 'python', 'go', 'vimdoc', 'vim' },
-
-      -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-      auto_install = false,
-
-      highlight = { enable = true },
+    -- Lazy loading of treesitter
+    local ts = require('nvim-treesitter.configs')
+    ts.setup({
+      ensure_installed = {
+        'c', 'cpp', 'lua', 'python', 'go', 'rust', 'vimdoc', 'vim'
+      },
+      ignore_install = { '' },
+      highlight = {
+        enable = true,
+        additional_vim_regex_highlighting = { 'markdown' },
+      },
       indent = { enable = true },
       incremental_selection = {
         enable = true,
@@ -33,9 +32,8 @@ return {
       textobjects = {
         select = {
           enable = true,
-          lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+          lookahead = true,
           keymaps = {
-            -- You can use the capture groups defined in textobjects.scm
             ['aa'] = '@parameter.outer',
             ['ia'] = '@parameter.inner',
             ['af'] = '@function.outer',
@@ -46,7 +44,7 @@ return {
         },
         move = {
           enable = true,
-          set_jumps = true, -- whether to set jumps in the jumplist
+          set_jumps = true,
           goto_next_start = {
             [']m'] = '@function.outer',
             [']]'] = '@class.outer',
@@ -74,6 +72,17 @@ return {
           },
         },
       },
-    }
-  end
+    })
+
+    -- Autotag setup
+    require('nvim-ts-autotag').setup({
+      enable = true,
+    })
+  end,
+  opts = {
+    autotag = {
+      enable = true,
+    },
+  },
 }
+

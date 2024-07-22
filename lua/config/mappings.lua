@@ -1,107 +1,122 @@
--- [[ Basic Keymaps ]]
+local utils = require('config.utils')
 
+-- Basic Keymaps
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
-vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, { desc = "[P]roject [V]iew" })
+-- vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, { desc = "[P]roject [V]iew" })
+vim.keymap.set('n', '<C-c>', '<ESC><ESC>', { silent = true })
 
 -- Remap for dealing with word wrap
-vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", {
-  expr = true, silent = true
-})
-vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", {
-  -- Unmap the 'gp' key for previous word
-  expr = true,
-  silent = true
-})
+vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Move lines
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", { silent = true })
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { silent = true })
+vim.keymap.set('n', '>', '>gv', { silent = true })
+vim.keymap.set('n', '<', '<gv', { silent = true })
 
-vim.keymap.set('n', 'J', "mzj`z")
-vim.keymap.set('n', '<C-d>', "<C-d>zz", { desc = "Half Page Jumping Up" })
-vim.keymap.set('n', '<C-u>', "<C-u>zz", { desc = "Half Page Jumping Down" })
-
--- Keep search line in the middle
+-- Miscellaneous Navigation Keymaps
+vim.keymap.set('n', 'J', 'mzj`z')
+vim.keymap.set('n', '<c-d>', '<C-d>zz', { desc = 'Half Page Jumping Up' })
+vim.keymap.set('n', '<c-u>', '<C-u>zz', { desc = 'Half Page Jumping Down' })
 vim.keymap.set('n', 'n', 'nzzzv', { silent = true })
 vim.keymap.set('n', 'N', 'Nzzzv', { silent = true })
--- Unmap the 'p' key for previous word
 vim.api.nvim_set_keymap('n', 'gp', '<Nop>', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-k>', '<cmd>cnext<CR>zz')
+vim.keymap.set('n', '<C-j>', '<cmd>cprev<CR>zz')
+vim.keymap.set('n', '<leader>k', '<cmd>lnext<CR>zz', { desc = 'Quick Fix Nav Up' })
+vim.keymap.set('n', '<leader>j', '<cmd>lprev<CR>zz', { desc = 'Quick Fix Nav Down' })
 
--- Quick fix navigation
-vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
-vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
-vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz", { desc = "Quick Fix Nav Up" })
-vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz", { desc = "Quick Fix Nav Down" })
+-- Buffer Navigation Keymaps
+vim.keymap.set('n', '<leader>bn', '<cmd>bnext<CR>zz', { desc = 'Quick Nav Buf Next' })
+vim.keymap.set('n', '<leader>bp', '<cmd>bprev<CR>zz', { desc = 'Quick Nav Buf Prev' })
+vim.keymap.set('n', '<leader>bd', '<cmd>bdelete<CR>', { desc = 'Quick Nav Buf Delete' })
+vim.keymap.set('n', '<leader>bs', '<cmd>split<CR>', { desc = 'Openn Buf Horizontal Split' })
+vim.keymap.set('n', '<leader>bv', '<cmd>vsp<CR>', { desc = 'Open Buf Vertical Split' })
+vim.keymap.set('n', '<leader>bt', '<cmd>terminal<CR>')
 
--- Copy from plus register
-vim.keymap.set({ 'n', 'v' }, '<leader>y', "\"+y", { desc = "Copy to + register" })
-vim.keymap.set('n', '<leader>Y', "\"+Y")
+-- Editing Keymaps
+vim.keymap.set('x', '<leader>p', [["_dP"]], { desc = 'Paste without register' })
+vim.keymap.set({ 'n', 'v' }, '<leader>d', [["_d"]], { desc = 'Delete without register' })
+vim.keymap.set({ 'n', 'v' }, '<leader>y', '"+y', { desc = 'Copy to + register' })
+vim.keymap.set('n', '<leader>Y', '"+Y')
+-- replace current word in current scope
+vim.keymap.set(
+  'n',
+  '<leader>r',
+  ':%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>',
+  { desc = '[R]eplace Current Word in Current Scope' }
+)
+-- replace current word in file scope
+vim.keymap.set(
+  'n',
+  '<leader>R',
+  ':%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>',
+  { desc = '[R]eplace Current Word in File Scope' }
+)
 
--- Replace current word
-vim.keymap.set("n", "<leader>r", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
-  { desc = "[R]eplace Current Word" })
-vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { desc = "Set Current File to Executable", silent = true })
+-- Open vertical split pane
 
--- [ telescope keymaps]
+-- File Management Keymaps
+vim.keymap.set('n', '<C-f>', '<cmd>silent !tmux neww $HOME/.local/bin/tmux_sessionizer<CR>', { desc = 'Open Session' })
+vim.keymap.set('n', '<leader>x', '<cmd>!chmod +x %<CR>', { desc = 'Set Current File to Executable', silent = true })
+
+-- Telescope Keymaps
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader>/', function()
-  -- You can pass additional configuration to telescope to change theme, layout, etc.
-  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-    winblend = 10,
-    previewer = false,
-  })
-  -- require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes'))
+  require('telescope.builtin').current_buffer_fuzzy_find(
+    require('telescope.themes').get_dropdown({ winblend = 10, previewer = false })
+  )
 end, { desc = '[/] Fuzzily search in current buffer' })
-
 vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
+vim.keymap.set('n', '<leader>gb', require('telescope.builtin').git_branches, { desc = 'Search [G]it [B]ranches' })
+vim.keymap.set('n', '<leader>gc', require('telescope.builtin').git_commits, { desc = 'Search [G]it [C]ommits' })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sp', function()
-  require('telescope.builtin').grep_string({ search = vim.fn.input("Grep Search > ") })
-end, { desc = '[S]search [P]roject' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
-vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]resume' })
 
--- [ tree-sitter keymaps ]
+vim.keymap.set({ 'n', 'v' }, '<leader>sh', function()
+  local query = utils.get_search_query()
+  require('telescope.builtin').help_tags({ search = query, initial_mode = 'insert', default_text = query })
+end, { desc = '[S]earch [H]elp' })
+vim.keymap.set({ 'n', 'v' }, '<leader>sw', function()
+  local query = utils.get_search_query()
+  require('telescope.builtin').grep_string({ search = query, initial_mode = 'insert', default_text = query })
+end, { desc = '[S]earch current [W]ord' })
+vim.keymap.set('n', '<leader>sp', function()
+  require('telescope.builtin').grep_string({ search = vim.fn.input('Grep Search > ') })
+end, { desc = '[S]search [P]roject' })
+vim.keymap.set('n', '<leader>sG', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
+vim.keymap.set('n', '<leader>sg', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
+vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
+vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
+
+-- Tree-sitter Keymaps
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
+-- vim.keymap.set('n', '<leader>vd', function()
+--   vim.diagnostic.setloclist()
+--   vim.cmd('lopen')
+-- end, { desc = 'Open the diagnostics location list' })
 
--- Open the diagnostics location list
-vim.keymap.set('n', '<leader>q', function()
-  vim.diagnostic.setloclist()
-  vim.cmd('lopen')
-end, {
-  noremap = true,
-  silent = true,
-  expr = false,
-  desc = 'Open the diagnostics location list'
-})
+-- Refactoring Keymaps
+-- vim.keymap.set({ "x" }, "<leader>re", [[<Esc><Cmd>lua require('refactoring').refactor('Extract Function')<CR>]],
+--   { noremap = true, silent = true, expr = false, desc = "Extract Function" })
+-- vim.keymap.set({ "x" }, "<leader>rf", [[<Esc><Cmd>lua require('refactoring').refactor('Extract Function To File')<CR>]],
+--   { noremap = true, silent = true, expr = false, desc = "Extract Function To File" })
+-- vim.keymap.set({ "x" }, "<leader>rv", [[<Esc><Cmd>lua require('refactoring').refactor('Extract Variable')<CR>]],
+--   { noremap = true, silent = true, expr = false, desc = "Extract Variable" })
+-- vim.keymap.set({ "n" }, "<leader>rI", [[<Cmd>lua require('refactoring').refactor('Inline Variable')<CR>]],
+--   { noremap = true, silent = true, expr = false, desc = "Inline Variable" })
+-- vim.keymap.set({ "n", "x" }, "<leader>ri", [[<Esc><Cmd>lua require('refactoring').refactor('Inline Variable')<CR>]],
+--   { noremap = true, silent = true, expr = false, desc = "Inline Variable" })
+--
+-- vim.keymap.set({ "n" }, "<leader>rb", [[<Esc><Cmd>lua require('refactoring').refactor('Extract Block')<CR>]],
+--   { noremap = true, silent = true, expr = false, desc = "Extract Block" })
+-- vim.keymap.set({ "n" }, "<leader>rbf", [[<Esc><Cmd>lua require('refactoring').refactor('Extract Block To File')<CR>]],
+--   { noremap = true, silent = true, expr = false, desc = "Extract Block To File" })
 
--- Close the diagnostics location list
-vim.keymap.set('n', '<leader>qq', function()
-  vim.cmd('lclose')
-end, {
-  noremap = true,
-  silent = true,
-  expr = false,
-  desc = 'Close the diagnostics location list'
-})
-
--- [[ Highlight on yank ]]
--- See `:help vim.highlight.on_yank()`
-local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
-vim.api.nvim_create_autocmd('TextYankPost', {
-  callback = function()
-    vim.highlight.on_yank()
-  end,
-  group = highlight_group,
-  pattern = '*',
-})

@@ -3,10 +3,19 @@ local g = vim.g
 
 local opts = {
   -- Change cursor in insert mode
-  guicursor = "",
+  guicursor = '',
+
+  -- set terminal tab title
+  title = true,
+  titlelen = 0,
+  -- titlestring = 'nvim %t (%-15.25F)%a%r%m',
+  titlestring = 'nvim %t (%-15.25f)%a%r%m',
 
   -- Make line numbers default
   relativenumber = true,
+
+  --Enable noshowmode
+  showmode = false,
 
   -- Enable break indent
   breakindent = true,
@@ -16,7 +25,6 @@ local opts = {
   softtabstop = 4,
   shiftwidth = 4,
   expandtab = true,
-  smartindent = true,
 
   -- Disable line wrap
   wrap = false,
@@ -24,7 +32,7 @@ local opts = {
   -- Save undo history
   swapfile = false,
   backup = false,
-  undodir = vim.fn.stdpath("data") .. "/site/undodir",
+  undodir = vim.fn.stdpath('data') .. '/site/undodir',
   undofile = true,
 
   -- Searching Configuration
@@ -45,7 +53,6 @@ local opts = {
   -- NOTE: You should make sure your terminal supports this
   termguicolors = true,
   scrolloff = 10,
-  colorcolumn = "80",
   pyxversion = 3,
 }
 
@@ -64,31 +71,31 @@ end
 
 -- Disable built-in plugins
 local disabled_built_ins = {
-  "2html_plugin",
-  "getscript",
-  "getscriptPlugin",
-  "gzip",
-  "logipat",
-  "matchit",
+  '2html_plugin',
+  'getscript',
+  'getscriptPlugin',
+  'gzip',
+  'logipat',
+  'matchit',
   -- "netrw",
-  "netrwFileHandlers",
-  "loaded_remote_plugins",
-  "loaded_tutor_mode_plugin",
+  'netrwFileHandlers',
+  'loaded_remote_plugins',
+  'loaded_tutor_mode_plugin',
   -- "netrwPlugin",
   -- "netrwSettings",
-  "rrhelper",
-  "spellfile_plugin",
-  "tar",
-  "tarPlugin",
-  "vimball",
-  "vimballPlugin",
-  "zip",
-  "zipPlugin",
-  "matchparen",
+  'rrhelper',
+  'spellfile_plugin',
+  'tar',
+  'tarPlugin',
+  'vimball',
+  'vimballPlugin',
+  'zip',
+  'zipPlugin',
+  'matchparen',
 }
 
 for _, plugin in pairs(disabled_built_ins) do
-  g["loaded_" .. plugin] = 1
+  g['loaded_' .. plugin] = 1
 end
 
 -- Improve Neovim startup
@@ -107,13 +114,14 @@ for k, v in pairs(global_let_opts) do
   g[k] = v
 end
 
-opt.formatoptions = "l"
+opt.formatoptions = 'l'
 opt.formatoptions = opt.formatoptions
-    - "a" -- Auto formatting is BAD.
-    - "t" -- Don't auto format my code. I got linters for that.
-    + "c" -- In general, I like it when comments respect textwidth
-    - "o" -- O and o, don't continue comments
-    + "r" -- But do continue when pressing enter.
-    + "n" -- Indent past the formatlistpat, not underneath it.
-    + "j" -- Auto-remove comments if possible.
-    - "2" -- I'm not in gradeschool anymore
+    - 'a' -- Auto formatting is BAD.
+    - 't' -- Don't auto format my code. I got linters for that.
+    + 'c' -- In general, I like it when comments respect textwidth
+    - 'o' -- O and o, don't continue comments
+    + 'r' -- But do continue when pressing enter.
+    + 'n' -- Indent past the formatlistpat, not underneath it.
+    + 'j' -- Auto-remove comments if possible.
+    - '2' -- I'm not in gradeschool anymore
+

@@ -1,5 +1,4 @@
 return {
-  -- LSP Configuration & Plugin
   'neovim/nvim-lspconfig',
   dependencies = {
     -- Automatically install LSPs to stdpath for neovim
@@ -8,88 +7,68 @@ return {
     'WhoIsSethDaniel/mason-tool-installer.nvim',
 
     -- Useful status updates for LSP
-    -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
     {
       'j-hui/fidget.nvim',
       tag = 'legacy',
-      opts = {}
+      opts = {},
     },
 
     -- Additional lua configuration, makes nvim stuff amazing!
     'folke/neodev.nvim',
   },
   config = function()
-    --  This function gets run when an LSP connects to a particular buffer.
-    local on_attach = function(_, bufnr)
-      -- NOTE: Remember that lua is a real programming language, and as such it is possible
-      -- to define small helper and utility functions so you don't have to repeat yourself
-      -- many times.
-      --
-      -- In this case, we create a function that lets us more easily define mappings specific
-      -- for LSP related items. It sets the mode, buffer and description for us each time.
+    local on_attach = function(client, bufnr)
       local nmap = function(keys, func, desc)
         if desc then
           desc = 'LSP: ' .. desc
         end
-
         vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
       end
 
+      -- Key mappings for LSP features
       nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
       nmap('<leader>ca', function()
-        vim.lsp.buf.code_action(require('telescope.themes').get_dropdown {
+        vim.lsp.buf.code_action(require('telescope.themes').get_dropdown({
           winblend = 10,
           previewer = false,
-        })
+        }))
       end, '[C]ode [A]ction')
 
-      nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+      nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
       nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
       nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-      nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
+      nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
       nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
       nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
-      -- See `:help K` for why this keymap
       nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
       nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
-      -- Lesser used LSP functionality
       nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+      nmap('gv', ':vsplit<CR>:lua vim.lsp.buf.declaration()<CR>', '[G]oto [V]irtual Text')
       nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
       nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
       nmap('<leader>wl', function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
       end, '[W]orkspace [L]ist Folders')
-
-      -- Create a command `:Format` local to the LSP buffer
-      -- vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-      --   vim.lsp.buf.format()
-      -- end, { desc = 'Format current buffer with LSP and lint' })
-
-      -- Enable auto-formatting on save
-      vim.api.nvim_command([[
-        augroup AutoFormatOnSave
-          autocmd!
-          autocmd BufWritePre * :Format
-        augroup END
-      ]])
     end
 
-    -- Setup neovim lua configuration
-    require('neodev').setup()
+    local capabilities = vim.lsp.protocol.make_client_capabilities()
+    if pcall(require, 'cmp_nvim_lsp') then
+      capabilities = require('cmp_nvim_lsp').default_capabilities()
+    end
 
-    -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
-    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+    require('neodev').setup({
+      library = {
+        plugins = { 'nvim-dap-ui' },
+        types = true,
+      },
+    })
 
-    -- Servers configuration
     local servers = {
       clangd = {},
       gopls = {
         settings = {
-          plugins = {
-            revive = {},
-          },
           gopls = {
             completeUnimported = true,
             usePlaceholders = true,
@@ -99,89 +78,143 @@ return {
           },
         },
       },
-      pylsp = {
+      htmx = {
+        filetypes = { 'html' },
+      },
+      ruff_lsp = {
+        filetypes = { 'python' },
+      },
+      pyright = {
+        filetypes = { 'python' },
         settings = {
-          pylsp = {
-            plugins = {
-              black = {
-                blackArgs = {
-                  "--line-length", "79",
-                  "--exclude", "venv",
-                  "--exclude", "env",
-                  "--exclude", ".git",
-                  "--exclude", ".hg",
-                },
-                lineLength = 79,
-              },
-              flake8 = {},
-              isort = {
-                profile = "black",
-              },
-              mypy = {
-                args = {},
-                command = "mypy",
-                diagnostics = true,
-                enabled = true,
-              },
-              pycodestyle = {
-                ignore = { "W391" },
-                maxLineLength = 79,
-              },
-            },
-            python = {
-              analysis = {
-                autoSearchPaths = true,
-                diagnosticMode = "openFilesOnly",
-                typeCheckingMode = "strict",
-                useLibraryCodeForTypes = true,
-              },
-              pythonPath = "/usr/local/bin/python3",
+          python = {
+            analysis = {
+              autoSearchPaths = false,
+              diagnosticMode = 'workspace',
+              useLibraryCodeForTypes = true,
+              typeCheckingMode = 'off',
             },
           },
         },
       },
-      -- rust_analyzer = {},
-      -- tsserver = {},
-      -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+      rust_analyzer = {
+        cmd = { 'rustup', 'run', 'stable', 'rust-analyzer' },
+      },
       lua_ls = {
-        Lua = {
-          workspace = { checkThirdParty = false },
-          telemetry = { enable = false },
+        filetypes = { 'lua' },
+        settings = {
+          Lua = {
+            runtime = {
+              version = 'LuaJIT',
+              path = vim.split(package.path, ';'),
+            },
+            diagnostics = {
+              globals = { 'vim' },
+            },
+            workspace = {
+              library = vim.api.nvim_get_runtime_file('', true),
+              checkThirdParty = false,
+            },
+            telemetry = {
+              enable = false,
+            },
+          },
         },
+      },
+      ocamllsp = {
+        manual_install = true,
+        filetypes = { 'ocaml', 'ocaml.interface', 'ocaml.cram', 'ocaml.menhir' },
+        settings = {
+          codelens = { enabled = true },
+          inlayHints = { enable = true },
+        },
+      },
+      yamlls = {
+        filetypes = { 'yaml' },
+        settings = {
+          yaml = {
+            schemas = {
+              ['https://json.schemasstore.org/github-workflow.json'] = '/.github/workflows/*.{yml,yaml}',
+            },
+          },
+        },
+      },
+      taplo = {
+        filetypes = { 'toml' },
+      },
+      dockerls = {
+        filetypes = { 'Dockerfile' },
       },
     }
 
-    -- Setup Mason configuration
-    local mason = require('mason')
-    mason.setup {
+    local ensure_installed = vim.tbl_filter(function(key)
+      local t = servers[key]
+      if type(t) == 'table' then
+        return not t.manual_install
+      else
+        return t
+      end
+    end, vim.tbl_keys(servers))
+
+    require('mason').setup({
       ui = {
         icons = {
-          package_installed = "✓",
-          package_pending = "➜",
-          package_uninstalled = "✗",
+          package_installed = '✓',
+          package_pending = '➜',
+          package_uninstalled = '✗',
         },
       },
-    }
+    })
 
-    -- Ensure the servers above are installed
     local mason_lspconfig = require('mason-lspconfig')
-    mason_lspconfig.setup {
-      ensure_installed = vim.tbl_keys(servers),
-    }
+    mason_lspconfig.setup({
+      ensure_installed = ensure_installed,
+    })
 
-    -- Add Mason handlers
-    mason_lspconfig.setup_handlers {
-      function(server_name)
-        require('lspconfig')[server_name].setup {
+    for name, config in pairs(servers) do
+      if config then
+        require('lspconfig')[name].setup({
           capabilities = capabilities,
           on_attach = on_attach,
-          settings = servers[server_name],
-          filetypes = (servers[server_name] or {}).filetypes,
-        }
+          settings = config.settings,
+          filetypes = config.filetypes,
+          cmd = config.cmd,
+        })
       end
-    }
+    end
 
-    -- Load nvim-cmp after Mason to allow Mason to configure it first
     require('cmp')
-  end
+
+    local sign = function(opts)
+      vim.fn.sign_define(opts.name, {
+        texthl = opts.name,
+        text = opts.text,
+        numhl = '',
+      })
+    end
+
+    vim.diagnostic.config({
+      underline = true,
+      severity_sort = true,
+      signs = true,
+      update_in_insert = false,
+      virtual_text = {
+        spacing = 2,
+      },
+      float = {
+        source = 'if_many',
+        border = 'rounded',
+      },
+    })
+
+    sign({ name = 'DiagnosticSignError', text = '✘' })
+    sign({ name = 'DiagnosticSignWarn', text = '▲' })
+    sign({ name = 'DiagnosticSignHint', text = '⚑' })
+    sign({ name = 'DiagnosticSignInfo', text = '»' })
+
+    vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
+    vim.lsp.handlers['textDocument/signatureHelp'] =
+      vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' })
+  end,
 }
+

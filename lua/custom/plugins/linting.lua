@@ -1,38 +1,36 @@
 return {
-  "mfussenegger/nvim-lint",
+  'mfussenegger/nvim-lint',
+  dependencies = { 'WhoIsSethDaniel/mason-tool-installer.nvim' },
   event = {
-    "BufReadPre",
-    "BufNewFile",
+    'BufReadPre',
+    'BufNewFile',
   },
   config = function()
-    local lint = require("lint")
-
-    lint.linters_by_ft = {
-      python = { "flake8", "mypy" },
-      yaml = { "yamllint" },
-      json = { "jsonlint" }
+    require('lint').linters_by_ft = {
+      python = { 'ruff' },
+      go = { 'golangcilint' },
+      yaml = { 'yamllint' },
     }
 
-    local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
+    local lint_augroup = vim.api.nvim_create_augroup('lint', { clear = true })
 
-    vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+    vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
       group = lint_augroup,
       callback = function()
-        lint.try_lint()
+        require('lint').try_lint()
       end,
     })
 
-    local mason_tool_installer = require("mason-tool-installer")
+    vim.keymap.set('n', '<leader>l', function()
+      require('lint').try_lint()
+    end, { desc = 'Lint the current buffer' })
 
-    mason_tool_installer.setup({
+    require('mason-tool-installer').setup({
       ensure_installed = {
-        "prettier",
-        "stylua",
-        "isort",
-        "black",
-        "flake8",
-        "mypy",
-        "revive",
+        'ruff',
+        -- 'mypy',
+        'golangci-lint',
+        'yamllint',
       },
     })
   end,

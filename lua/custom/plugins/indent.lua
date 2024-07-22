@@ -3,12 +3,14 @@ return {
   'lukas-reineke/indent-blankline.nvim',
   -- Enable `lukas-reineke/indent-blankline.nvim`
   -- See `:help indent_blankline.txt`
-  main = "ibl",
+  main = 'ibl',
   opts = {
     indent = {
       --[[ highlight = highlight ]]
-      char = "┆",
-      smart_indent_cap = true,
+      char = '┆',
+      -- char = ' ',
+      -- char = "│",
+      -- smart_indent_cap = true,
     },
     whitespace = {
       --[[ highlight = highlight, ]]
@@ -17,3 +19,4 @@ return {
     scope = { enabled = true },
   },
 }
+

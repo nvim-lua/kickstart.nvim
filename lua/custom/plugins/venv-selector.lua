@@ -1,45 +1,40 @@
 return {
-	"linux-cultist/venv-selector.nvim",
-	dependencies = { "neovim/nvim-lspconfig", "nvim-telescope/telescope.nvim" },
-	event = "VeryLazy", -- Optional: needed only if you want to type `:VenvSelect` without a keymapping
-	keys = {
-		{
-			"<leader>vs", "<cmd>:VenvSelect<cr>",
-			-- Key mapping for directly retrieving from cache. You may set an autocmd if you prefer the hands-free approach.
-			"<leader>vc", "<cmd>:VenvSelectCached<cr>"
-		}
-	},
-	config = function()
-		-- Function to find the nearest venv path in parent directories.
-		local function find_nearest_venv(starting_path)
-			local current_path = starting_path
-			while current_path do
-				local venv_path = current_path .. '/venv/bin/python'
-				if vim.fn.filereadable(venv_path) == 1 then
-					return venv_path
-				end
-				local parent_path = vim.fn.fnamemodify(current_path, ':h')
-				if parent_path == current_path then
-					break
-				end
-				current_path = parent_path
-			end
-			return nil
-		end
+  {
+    'linux-cultist/venv-selector.nvim',
+    dependencies = {
+      'neovim/nvim-lspconfig',
+      { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
+    },
+    ft = 'python', -- Load only for Python files
+    branch = 'regexp', -- This is the regexp branch, use this for the new version
+    opts = {
+      settings = {
+        options = {
+          -- If you put the callback here as a global option, its used for all searches (including the default ones by the plugin)
+          on_telescope_result_callback = function(filename)
+            return filename:gsub('/bin/python', '')
+          end,
+        },
+        debug = true,
 
-		-- Get the path of the current file.
-		local current_file = vim.fn.expand('%:p')
-
-		-- Get the venv path for the current project directory.
-		local venv_path = find_nearest_venv(current_file)
-
-		if venv_path then
-			-- Activate the venv and use its Python interpreter.
-			vim.g.venv_selector_auto_activate = 1
-			vim.g.python3_host_prog = venv_path
-		else
-			-- Fallback to a system-wide Python interpreter.
-			vim.g.python3_host_prog = '/usr/bin/python3'
-		end
-	end
+        search = {
+          my_venvs = {
+            command = 'fd -H -I python$ ~/Documents/Projects/',
+            on_telescope_result_callback = function(filename)
+              return filename:gsub('/bin/python', '')
+            end,
+          },
+          my_conda_envs = {
+            command = 'fd -t l python$ /usr/local/Caskroom/miniforge/base/envs/',
+            on_telescope_result_callback = function(filename)
+              return filename:gsub('/bin/python', '')
+            end,
+          },
+        },
+      },
+    },
+    keys = {
+      { ',v', '<cmd>VenvSelect<cr>' },
+    },
+  },
 }
