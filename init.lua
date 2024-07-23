@@ -953,7 +953,7 @@ require('supermaven-nvim').setup {
   },
   ignore_filetypes = { cpp = true },
   color = {
-    suggestion_color = '#ffffff',
+    --        suggestion_color = '#ffffff',
     cterm = 244,
   },
 }
