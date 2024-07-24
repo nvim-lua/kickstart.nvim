@@ -368,7 +368,7 @@ return {
     vim.keymap.set(
       'n',
       '<leader>ok',
-      ":!mv '%:p' /Users/marctalcott/Library/Mobile\\ Documents/iCloud~md~obsidian/Documents/MarcsDailyNotes/zettelkasten<cr>:bd<cr>"
+      ":!mv '%:p' /Users/marctalcott/Library/Mobile\\ Documents/iCloud~md~obsidian/Documents/MarcsDailyNotes/zettelkasten/<cr>:bd<cr>"
     )
     -- delete file in current buffer
     vim.keymap.set('n', '<leader>odd', ":!rm '%:p'<cr>:bd<cr>")

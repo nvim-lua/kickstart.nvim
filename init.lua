@@ -191,10 +191,11 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
-vim.keymap.set('n', '<leader>ww', '<C-w>w', { desc = 'Switch [W]indow' })
-vim.keymap.set('n', '<leader>wc', '<C-w>c', { desc = '[C]lose window' })
-vim.keymap.set('n', '<leader>w+', '<C-w>+', { desc = 'Increase size' })
-vim.keymap.set('n', '<leader>w-', '<C-w>-', { desc = 'Decrease size' })
+vim.keymap.set('n', '<leader>w', '<C-w>', { desc = 'Windows' })
+-- vim.keymap.set('n', '<leader>ww', '<C-w>w', { desc = 'Switch [W]indow' })
+-- vim.keymap.set('n', '<leader>wc', '<C-w>c', { desc = '[C]lose window' })
+-- vim.keymap.set('n', '<leader>w+', '<C-w>+', { desc = 'Increase size' })
+-- vim.keymap.set('n', '<leader>w-', '<C-w>-', { desc = 'Decrease size' })
 
 vim.keymap.set('n', '<c-k>', ':wincmd k<CR>')
 vim.keymap.set('n', '<c-j>', ':wincmd j<CR>')
