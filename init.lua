@@ -156,6 +156,13 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- Neovide configuration
+if vim.g.neovide then
+  vim.o.guifont = 'RobotoMono Nerd Font Mono:h10' -- text below applies for VimScript
+  vim.g.neovide_cursor_antialiasing = true
+  vim.g.neovide_cursor_vfx_mode = 'railgun'
+end
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
