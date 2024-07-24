@@ -1,0 +1,2 @@
+-- theme
+return { 'franbach/miramare' }
