@@ -24,4 +24,14 @@ require('which-key').register({
   f = { lint_and_format, 'Lint and format current buffer' }
 }, { prefix = '<leader>c' })
 
+require('which-key').add({
+  {
+    "<leader>sF",
+    function ()
+      require("telescope").extensions.live_grep_args.live_grep_args()
+    end,
+    desc = "Telescope live_grep_args"
+  },
+})
+
 return {}
