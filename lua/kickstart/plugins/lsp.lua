@@ -238,7 +238,7 @@ return {
         --             plugins = {
         --                 pycodestyle = {
         --                     ignore = {},
-        --                    maxLineLength = 120,
+        --                     maxLineLength = 120,
         --                 },
         --             },
         --         }
@@ -259,6 +259,7 @@ return {
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
         --
+        nixd = {},
         ['nil_ls'] = {
           alias = 'nil',
         },
