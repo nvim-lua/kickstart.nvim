@@ -238,13 +238,19 @@ return {
         --             plugins = {
         --                 pycodestyle = {
         --                     ignore = {},
-        --                     maxLineLength = 120,
+        --                    maxLineLength = 120,
         --                 },
         --             },
         --         }
         --     }
         -- },
-        -- rust_analyzer = {},
+        rust_analyzer = {
+          alias = 'rust-analyzer',
+        },
+
+        markdown_oxide = {
+          alias = 'markdown-oxide',
+        },
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -253,7 +259,9 @@ return {
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
         --
-        nixd = {},
+        ['nil_ls'] = {
+          alias = 'nil',
+        },
         bashls = {
           alias = 'bash-language-server',
         },
