@@ -264,7 +264,6 @@ require('lazy').setup({
 
   { 'numToStr/Comment.nvim', opts = {} },
 
-
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
   --    require('gitsigns').setup({ ... })
@@ -305,17 +304,17 @@ require('lazy').setup({
       require('which-key').setup()
 
       -- Document existing key chains
-require('which-key').add {
-    { '<leader>q', '<cmd>confirm q<cr>', desc = 'Quit', mode = 'n' },
-    { '<leader>w', '<cmd>w!<cr>', desc = 'Write', mode = 'n' },
-    { '<leader>c', group = '[C]ode' },
-    { '<leader>d', group = '[D]ocument' },
-    { '<leader>r', group = '[R]ename' },
-    { '<leader>s', group = '[S]earch' },
-    { '<leader>i', group = '[I]nformation' },
-    { '<leader>t', group = '[T]oggle' },
-    { '<leader>h', group = 'Git [H]unk' },
-    { '<leader>tt', '<cmd>set relativenumber!<CR>', desc = 'Toggle Relative Number', mode = 'n' },
+      require('which-key').add {
+        { '<leader>q', '<cmd>confirm q<cr>', desc = 'Quit', mode = 'n' },
+        { '<leader>w', '<cmd>w!<cr>', desc = 'Write', mode = 'n' },
+        { '<leader>c', group = '[C]ode' },
+        { '<leader>d', group = '[D]ocument' },
+        { '<leader>r', group = '[R]ename' },
+        { '<leader>s', group = '[S]earch' },
+        { '<leader>i', group = '[I]nformation' },
+        { '<leader>t', group = '[T]oggle' },
+        { '<leader>h', group = 'Git [H]unk' },
+        { '<leader>tt', '<cmd>set relativenumber!<CR>', desc = 'Toggle Relative Number', mode = 'n' },
       }
     end,
   },
@@ -738,16 +737,16 @@ require('which-key').add {
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        javascript = { { 'prettierd', 'prettier' } },
-        typescript = { { 'prettierd', 'prettier' } },
-        javascriptreact = { { 'prettierd', 'prettier' } },
-        typescriptreact = { { 'prettierd', 'prettier' } },
-        css = { { 'prettierd', 'prettier' } },
-        scc = { { 'prettierd', 'prettier' } },
-        html = { { 'prettierd', 'prettier' } },
-        python = { { 'ruff_format' } },
-        c = { { 'clang_format' } },
-        cpp = { { 'clang_format' } },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescript = { 'prettierd', 'prettier', stop_after_first = true },
+        javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        css = { 'prettierd', 'prettier', stop_after_first = true },
+        scc = { 'prettierd', 'prettier', stop_after_first = true },
+        html = { 'prettierd', 'prettier', stop_after_first = true },
+        python = { 'ruff_format' },
+        c = { 'clang_format' },
+        cpp = { 'clang_format' },
       },
     },
   },
