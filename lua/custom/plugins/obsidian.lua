@@ -1,7 +1,7 @@
 return {
   'epwalsh/obsidian.nvim',
   version = '*', -- recommended, use latest release instead of latest commit
-  lazy = true,
+  lazy = false,
   ft = 'markdown',
   -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
   -- event = {
@@ -53,21 +53,24 @@ return {
       },
     },
 
-    new_notes_location = '/',
+    notes_subdir = 'Inbox',
+    new_notes_location = 'notes_subdir',
 
     preffered_link_style = 'wiki',
+    note_id_func = function(title)
+      return title
+    end,
 
-    picker = {
-      -- Set your preferred picker. Can be one of 'telescope.nvim', 'fzf-lua', or 'mini.pick'.
-      name = 'telescope.nvim',
-      -- Optional, configure key mappings for the picker. These are the defaults.
-      -- Not all pickers support all mappings.
-      mappings = {
-        -- Create a new note from your query.
-        new = '<C-x>',
-        -- Insert a link to the selected note.
-        insert_link = '<C-l>',
-      },
+    templates = {
+      folder = 'Templates',
+      date_format = '%Y-%m-%d-%a',
+      time_format = '%H:%M',
+    },
+
+    daily_notes = {
+      folder = 'Daily Notes',
+      date_format = '%Y-%m-%d',
+      default_tags = { 'dailynote' },
     },
 
     ui = {
