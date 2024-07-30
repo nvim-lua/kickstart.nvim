@@ -163,6 +163,7 @@ require('lazy').setup({
         csharp_ls = {},
         netcoredbg = {},
         clangd = {},
+        marksman = {},
         --
 
         lua_ls = {
@@ -270,7 +271,7 @@ require('lazy').setup({
         json = { 'prettier' },
         scss = { 'prettier' },
         html = { 'prettier' },
-
+        markdown = { 'prettier' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
