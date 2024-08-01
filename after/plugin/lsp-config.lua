@@ -4,11 +4,29 @@ local lsp = require 'lsp-zero'
 lsp.preset 'recommended'
 
 lsp.ensure_installed {
-  'gopls',
-  'pyright',
-  'tsserver',
   'rust_analyzer',
+  -- Python
+  -- 'mypy',
+  -- 'black',
+  -- 'isort',
+  'ruff_lsp',
+  'pyright',
+  -- Java Stuffs
+  'jdtls',
+  -- 'google-java-format',
+  -- Golang
+  -- 'gofumpt',
+  -- 'goimports-reviser',
+  -- 'golines',
+  'gopls',
   'templ',
+  'htmx',
+  -- Typescript
+  -- 'prettier',
+  -- 'prettierd',
+  'tsserver',
+  -- Others
+  'tailwindcss',
 }
 
 -- Fix Undefined global 'vim'
