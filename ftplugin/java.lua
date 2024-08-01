@@ -75,7 +75,7 @@ local config = {
         runtimes = {
           {
             name = 'JavaSE-11',
-            path = '/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home',
+            path = java_11_home_dir,
           },
           {
             name = 'JavaSE-17',
@@ -110,6 +110,7 @@ local config = {
       importOrder = {
         'java',
         'javax',
+        'jarkata',
         'com',
         'org',
       },
