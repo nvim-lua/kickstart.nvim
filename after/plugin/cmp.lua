@@ -45,8 +45,16 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
     { name = 'path' },
+    { name = 'buffer' },
     {
       { name = 'buffer' },
     },
   },
 }
+
+cmp.setup.filetype({ 'sql', 'mysql' }, {
+  sources = {
+    { name = 'vim-dadbod-completion' },
+    { name = 'buffer' },
+  },
+})
