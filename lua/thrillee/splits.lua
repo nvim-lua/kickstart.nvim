@@ -11,7 +11,7 @@ vim.keymap.set('n', '--', '<cmd>split<cr>', { desc = 'Horinzontal Split' })
 -- vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Navigate right' })
 
 vim.keymap.set('n', '<leader>sh', '<C-w>h', { desc = 'Navigate to the left' })
-vim.keymap.set('n', '<leader>sw', '<C-w>', { desc = 'Navigate below' })
+vim.keymap.set('n', '<leader>sj', '<C-w>', { desc = 'Navigate below' })
 vim.keymap.set('n', '<leader>sk', '<C-w>k', { desc = 'Navigate up' })
 vim.keymap.set('n', '<leader>sl', '<C-w>l', { desc = 'Navigate right' })
 
