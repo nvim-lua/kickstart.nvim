@@ -241,9 +241,9 @@ require('lazy').setup({
   --  This is equivalent to:
   --    require('Comment').setup({})
   {
-    'rose-pine/neovim',
-
-    name = 'rose-pine',
+    -- 'catppuccin/neovim',
+    --
+    -- name = 'rose-pine',
 
     -- require('rose-pine').setup {
     --   variant = 'main',
@@ -820,7 +820,7 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'EdenEast/nightfox.nvim',
+    -- 'EdenEast/nightfox.nvim',
     -- init = function()
     --   vim.cmd 'colorscheme carbonfox'
     -- end,
