@@ -14,6 +14,15 @@ return {
     { '\\', ':Neotree reveal right<CR>', { desc = 'NeoTree reveal' } },
   },
   opts = {
+    event_handlers = {
+      {
+        event = 'file_opened',
+        handler = function(file_path)
+          --auto close
+          require('neo-tree').close_all()
+        end,
+      },
+    },
     filesystem = {
       window = {
         mappings = {
