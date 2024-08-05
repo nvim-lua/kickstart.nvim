@@ -51,8 +51,10 @@ lint.linters_by_ft = {
 
 local conform = require 'conform'
 conform.formatters_by_ft = {
-  javascript = { 'prettierd ' },
-  typescript = { 'prettierd ' },
+  javascript = { 'prettierd', 'prettier' },
+  javascriptreact = { 'prettierd', 'prettier' },
+  typescript = { 'prettierd', 'prettier' },
+  typescriptreact = { 'prettierd', 'prettier' },
   ruby = { 'rubocop' },
   markdown = { 'markdownlint' },
   eruby = { 'erb_lint' },
