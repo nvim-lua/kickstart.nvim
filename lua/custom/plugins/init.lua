@@ -46,6 +46,7 @@ lint.linters_by_ft = {
   ruby = { 'ruby' },
   dockerfile = { 'hadolint' },
   typescript = { 'eslint_d' },
+  eruby = { 'erblint' },
 }
 
 local conform = require 'conform'
@@ -54,6 +55,7 @@ conform.formatters_by_ft = {
   typescript = { 'prettierd ' },
   ruby = { 'rubocop' },
   markdown = { 'markdownlint' },
+  eruby = { 'erb_lint' },
 }
 conform.format_on_save = function(bufnr)
   -- Disable "format_on_save lsp_fallback" for languages that don't
