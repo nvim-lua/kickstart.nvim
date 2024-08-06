@@ -911,6 +911,6 @@ require('lazy').setup({
   },
 })
 
-vim.cmd.colorscheme 'github_light'
+vim.cmd.colorscheme 'catppuccin-latte'
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
