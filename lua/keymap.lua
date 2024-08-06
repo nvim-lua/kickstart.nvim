@@ -1,5 +1,3 @@
-
-
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- TIP: Disable arrow keys in normal mode
@@ -17,5 +15,4 @@ vim.keymap.set('n', '<C-[>', '<cmd>move -2<CR>')
 vim.keymap.set('i', 'jk', '<Esc>')
 vim.keymap.set('n', 'fp', '<cmd>lua MiniFiles.open()<CR>')
 vim.keymap.set('n', 'TT', '<cmd>ToggleTerm<CR>')
-
-
+vim.keymap.set('n', '<F5>', '<cmd> w <CR><cmd>!python3 %<CR>')
