@@ -96,14 +96,6 @@ return {
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
-    -- Install golang specific config
-    require('dap-go').setup {
-      delve = {
-        -- On Windows delve must be run attached or it crashes.
-        -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
-        detached = vim.fn.has 'win32' == 0,
-      },
-    }
     -- cpp
     dap.adapters.cpp = {
       type = 'server',
@@ -165,65 +157,6 @@ return {
       },
     }
 
-    -- debug our applications running on the browser.
-    --note: chrome has to be started with a remote debugging port INFO : google-chrome-stable --remote-debugging-port=9222
-    -- dap.adapters.chrome = {
-    --   type = 'executable',
-    --   command = 'node',
-    --   args = { vim.fn.stdpath 'data' .. '/mason/packages/chrome-debug-adapter/out/src/chromeDebug.js' }, -- TODO adjust
-    -- }
-    --
-    -- dap.configurations.javascriptreact = { -- change this to javascript if needed
-    --   {
-    --     type = 'chrome',
-    --     request = 'attach',
-    --     program = '${file}',
-    --     cwd = vim.fn.getcwd(),
-    --     sourceMaps = true,
-    --     protocol = 'inspector',
-    --     port = 9230,
-    --     webRoot = '${workspaceFolder}',
-    --   },
-    -- }
-    --
-    -- dap.configurations.typescriptreact = { -- change to typescript if needed
-    --   {
-    --     type = 'chrome',
-    --     request = 'attach',
-    --     program = '${file}',
-    --     cwd = vim.fn.getcwd(),
-    --     sourceMaps = true,
-    --     protocol = 'inspector',
-    --     port = 9230,
-    --     webRoot = '${workspaceFolder}',
-    --   },
-    -- }
-    -- dap.configurations.javascriptreact = {
-    --   {
-    --     type = 'pwa-node',
-    --     request = 'launch',
-    --     name = 'Launch Next.js',
-    --     runtimeExecutable = 'pnpm',
-    --     runtimeArgs = { 'run', 'dev' },
-    --     cwd = vim.fn.getcwd(),
-    --     sourceMaps = true,
-    --     protocol = 'inspector',
-    --     -- console = 'integratedTerminal',
-    --     port = 9230,
-    --     -- skipFiles = { '<node_internals>/**', 'node_modules/**/*.js' },
-    --   },
-    --   {
-    --     type = 'pwa-node',
-    --     request = 'attach',
-    --     name = 'Attach to Next.js',
-    --     processId = require('dap.utils').pick_process,
-    --     cwd = vim.fn.getcwd(),
-    --     sourceMaps = true,
-    --     protocol = 'inspector',
-    --     -- console = 'integratedTerminal',
-    --     port = 9230,
-    --   },
-    -- }
     --
     -- dap.configurations.typescriptreact = dap.configurations.javascriptreact
     -- virtual text
