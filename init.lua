@@ -586,6 +586,16 @@ require('lazy').setup({
         cssls = {},
         clangd = {},
         emmet_ls = {},
+        eslint = {},
+        apex_ls = {
+          filetypes = {
+            'apex', -- treesitter uses apex instead of default apexcode filetype
+          },
+          settings = {
+            apex_enable_semantic_errors = false,
+            apex_enable_completion_statistics = false,
+          },
+        },
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
@@ -852,7 +862,23 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'css', 'javascript', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = {
+        'apex',
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'css',
+        'java',
+        'javascript',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
