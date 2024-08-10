@@ -67,7 +67,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -81,6 +81,9 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
       on_attach = function(bufnr)
+        vim.keymap.set('n', '<leader>cp', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[c]hange [p]review' })
+
+        -- don't override the built-in and fugitive keymaps
         local gs = package.loaded.gitsigns
 
         local function map(mode, l, r, opts)
@@ -97,6 +100,9 @@ require('lazy').setup({
           vim.schedule(function()
             gs.next_hunk()
           end)
+        vim.keymap.set({ 'n', 'v' }, ']c', function()
+          if vim.wo.diff then return ']c' end
+          vim.schedule(function() gs.next_hunk() end)
           return '<Ignore>'
         end, { expr = true, desc = 'Jump to next hunk' })
 
@@ -107,6 +113,10 @@ require('lazy').setup({
           vim.schedule(function()
             gs.prev_hunk()
           end)
+        end, { expr = true, buffer = bufnr, desc = "Jump to next hunk" })
+        vim.keymap.set({ 'n', 'v' }, '[c', function()
+          if vim.wo.diff then return '[c' end
+          vim.schedule(function() gs.prev_hunk() end)
           return '<Ignore>'
         end, { expr = true, desc = 'Jump to previous hunk' })
 
@@ -139,6 +149,7 @@ require('lazy').setup({
 
         -- Text object
         map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', { desc = 'select git hunk' })
+        end, { expr = true, buffer = bufnr, desc = "Jump to previous hunk" })
       end,
     },
   },
@@ -152,7 +163,20 @@ require('lazy').setup({
       vim.cmd('colorscheme github_dark_dimmed')
     end,
   },
+  {
+    'nyoom-engineering/oxocarbon.nvim',
+    priority = 1000,
+    config = function()
+      --[[
+      vim.opt.background = "dark" -- set this to dark or light
+      vim.cmd.colorscheme "oxocarbon"
 
+      -- transparent
+      vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+      vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+      --]]
+    end,
+  },
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
@@ -166,16 +190,42 @@ require('lazy').setup({
       },
     },
   },
-
   {
-    -- Add indentation guides even on blank lines
+    'projekt0n/github-nvim-theme',
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
+    config = function()
+      require('github-theme').setup({
+        -- ...
+      })
+
+      vim.cmd('colorscheme github_dark_dimmed')
+    end,
+  },
+
+  -- Add indentation guides even on blank lines
+  --[[ V2
+  {
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help ibl`
     main = 'ibl',
     opts = {},
   },
+  --]]
+  -- V3
 
+  --[[
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    opts = {
+      indent = {
+        char = "┊"
+      },
+    }
+  },
+  --]]
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
 
@@ -199,6 +249,14 @@ require('lazy').setup({
       },
     },
   },
+
+  --[[
+  -- Github copilot with down sindrome, but free
+  {
+    'Exafunction/codeium.vim',
+    event = 'BufEnter'
+  },
+  --]]
 
   {
     -- Highlight, edit, and navigate code
@@ -244,6 +302,7 @@ vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
+vim.wo.relativenumber = true
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -265,6 +324,7 @@ vim.o.smartcase = true
 
 -- Keep signcolumn on by default
 vim.wo.signcolumn = 'yes'
+vim.o.colorcolumn = '80'
 
 -- Decrease update time
 vim.o.updatetime = 250
@@ -447,6 +507,11 @@ vim.defer_fn(function()
   }
 end, 0)
 
+-- Toggle diagnostics
+require('toggle_lsp_diagnostics').init()
+vim.keymap.set('n', '<leader>dt', ':ToggleDiag<cr>', { desc = '[d]iagnostics [T]oggle' });
+
+--vim.keymap.set('n', '<leader>td', require('toggle_lsp_diagnostics'))
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
@@ -464,15 +529,15 @@ local on_attach = function(_, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
-  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+  -- nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
   nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-  nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
-  nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-  nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+  -- nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
+  -- nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
+  -- nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
@@ -480,11 +545,13 @@ local on_attach = function(_, bufnr)
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+  --[[
   nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
   nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
   nmap('<leader>wl', function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, '[W]orkspace [L]ist Folders')
+  --]]
 
   -- Create a command `:Format` local to the LSP buffer
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
@@ -528,8 +595,6 @@ local servers = {
     Lua = {
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
-      -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-      -- diagnostics = { disable = { 'missing-fields' } },
     },
   },
   tsserver = {},
