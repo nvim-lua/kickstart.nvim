@@ -11,7 +11,7 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '\\', ':Neotree reveal<CR>', { desc = 'NeoTree reveal' } },
+    { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal' },
   },
   -- sourced from here https://github.com/LazyVim/LazyVim/blob/4d706f1bdc687f1d4d4cd962ec166c65c453633e/lua/lazyvim/plugins/editor.lua#L46-L64
   -- init = function()
