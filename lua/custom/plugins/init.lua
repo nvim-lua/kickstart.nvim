@@ -127,22 +127,23 @@ return {
       harpoon:setup()
 
       vim.keymap.set('n', '<leader>a', function()
-        harpoon:list():append()
+        harpoon:list():add()
       end)
+
       vim.keymap.set('n', '<C-e>', function()
         harpoon.ui:toggle_quick_menu(harpoon:list())
       end)
 
-      vim.keymap.set('n', '<C-h>', function()
+      vim.keymap.set('n', '<C-1>', function()
         harpoon:list():select(1)
       end)
-      vim.keymap.set('n', '<C-j>', function()
+      vim.keymap.set('n', '<C-2>', function()
         harpoon:list():select(2)
       end)
-      vim.keymap.set('n', '<C-k>', function()
+      vim.keymap.set('n', '<C-3>', function()
         harpoon:list():select(3)
       end)
-      vim.keymap.set('n', '<C-l>', function()
+      vim.keymap.set('n', '<C-4>', function()
         harpoon:list():select(4)
       end)
 
@@ -153,6 +154,28 @@ return {
       vim.keymap.set('n', '<C-S-N>', function()
         harpoon:list():next()
       end)
+      local conf = require('telescope.config').values
+      local function toggle_telescope(harpoon_files)
+        local file_paths = {}
+        for _, item in ipairs(harpoon_files.items) do
+          table.insert(file_paths, item.value)
+        end
+
+        require('telescope.pickers')
+          .new({}, {
+            prompt_title = 'Harpoon',
+            finder = require('telescope.finders').new_table {
+              results = file_paths,
+            },
+            previewer = conf.file_previewer {},
+            sorter = conf.generic_sorter {},
+          })
+          :find()
+      end
+
+      vim.keymap.set('n', '<leader>se', function()
+        toggle_telescope(harpoon:list())
+      end, { desc = 'Open harpoon window' })
     end,
   },
   {
@@ -162,7 +185,8 @@ return {
     event = 'VimEnter',
     config = function()
       require('catppuccin').setup {
-        transparent_background = false,
+        transparent_background = true,
+        term_colors = true,
       }
     end,
   },
@@ -191,77 +215,74 @@ return {
       vim.fn['mkdp#util#install']()
     end,
   },
-  -- {
-  --   'nvim-neotest/neotest',
-  --   dependencies = {
-  --     'nvim-neotest/nvim-nio',
-  --     'nvim-lua/plenary.nvim',
-  --     'nvim-neotest/neotest-go',
-  --     'nvim-neotest/neotest-jest',
-  --     'marilari88/neotest-vitest',
-  --     'olimorris/neotest-rspec',
-  --     'antoinemadec/FixCursorHold.nvim',
-  --     'nvim-treesitter/nvim-treesitter',
-  --   },
-  --   config = function()
-  --     local neotest_ns = vim.api.nvim_create_namespace 'neotest'
-  --     vim.diagnostic.config({
-  --       virtual_text = {
-  --         format = function(diagnostic)
-  --           local message = diagnostic.message:gsub('\n', ' '):gsub('\t', ' '):gsub('%s+', ' '):gsub('^%s+', '')
-  --           return message
-  --         end,
-  --       },
-  --     }, neotest_ns)
-  --     require('neotest').setup {
-  --       adapters = {
-  --         require 'neotest-vitest' {
-  --           filter_dir = function(name, rel_path, root)
-  --             return name ~= 'node_modules'
-  --           end,
-  --         },
-  --         require 'neotest-jest' {
-  --           jestCommand = 'npm test --',
-  --           jestConfigFile = 'custom.jest.config.ts',
-  --           env = { CI = true },
-  --           cwd = function(path)
-  --             return vim.fn.getcwd()
-  --           end,
-  --         },
-  --         require 'neotest-go' {
-  --           recursive_run = true,
-  --           experimental = {
-  --             test_table = true,
-  --           },
-  --           args = { '-v', '-count=1' },
-  --         },
-  --         require 'neotest-rspec' {
-  --           rspec_cmd = function()
-  --             return vim.tbl_flatten {
-  --               'bundle',
-  --               'exec',
-  --               'rspec',
-  --             }
-  --           end,
-  --         },
-  --       },
-  --     }
-  --
-  --     vim.keymap.set('n', '<leader>fnn', function()
-  --       require('neotest').run.run()
-  --     end, { desc = 'Test Nearest' })
-  --     vim.keymap.set('n', '<leader>fnf', function()
-  --       require('neotest').run.run(vim.fn.expand '%')
-  --     end, { desc = 'Test File' })
-  --     vim.keymap.set('n', '<leader>fns', function()
-  --       require('neotest').run.run(vim.fn.getcwd())
-  --     end, { desc = 'Test Suite' })
-  --     vim.keymap.set('n', '<leader>fnp', function()
-  --       require('neotest').output_panel.toggle()
-  --       require('neotest').summary.toggle()
-  --     end, { desc = 'Toggle Neotest Panel' })
-  --   end,
-  -- },
+  {
+    'nvim-neotest/neotest',
+    dependencies = {
+      'nvim-neotest/nvim-nio',
+      'nvim-lua/plenary.nvim',
+      'nvim-neotest/neotest-go',
+      'nvim-neotest/neotest-jest',
+      'marilari88/neotest-vitest',
+      'olimorris/neotest-rspec',
+      'antoinemadec/FixCursorHold.nvim',
+      'nvim-treesitter/nvim-treesitter',
+    },
+    config = function()
+      local neotest_ns = vim.api.nvim_create_namespace 'neotest'
+      vim.diagnostic.config({
+        virtual_text = {
+          format = function(diagnostic)
+            local message = diagnostic.message:gsub('\n', ' '):gsub('\t', ' '):gsub('%s+', ' '):gsub('^%s+', '')
+            return message
+          end,
+        },
+      }, neotest_ns)
+      require('neotest').setup {
+        adapters = {
+          require 'neotest-vitest' {
+            filter_dir = function(name, rel_path, root)
+              return name ~= 'node_modules'
+            end,
+          },
+          require 'neotest-jest' {
+            jestCommand = 'npm test --',
+            jestConfigFile = 'custom.jest.config.ts',
+            env = { CI = true },
+            cwd = function(path)
+              return vim.fn.getcwd()
+            end,
+          },
+          require 'neotest-go' {
+            recursive_run = true,
+            experimental = {
+              test_table = true,
+            },
+            args = { '-v', '-count=1' },
+          },
+          require 'neotest-rspec' {
+            rspec_cmd = function()
+              return vim.tbl_flatten {
+                'bundle',
+                'exec',
+                'rspec',
+              }
+            end,
+          },
+        },
+      }
+
+      vim.keymap.set('n', '<M-t>n', function()
+        require('neotest').run.run()
+      end, { desc = 'Test Nearest' })
+      vim.keymap.set('n', '<M-t>f', function()
+        require('neotest').run.run(vim.fn.expand '%')
+      end, { desc = 'Test File' })
+      vim.keymap.set('n', '<M-t>p', function()
+        require('neotest').output_panel.toggle()
+        require('neotest').summary.toggle()
+      end, { desc = 'Toggle Neotest Panel' })
+    end,
+  },
   {
     'vim-test/vim-test',
     config = function()
@@ -313,7 +334,7 @@ return {
           hide_during_completion = false,
           debounce = 75,
           keymap = {
-            accept = '<M-;>',
+            accept = '<M-y>',
             accept_word = false,
             accept_line = false,
             next = '<M-]>',
@@ -610,6 +631,27 @@ return {
         end,
       },
     },
+  },
+  {
+    'scottmckendry/cyberdream.nvim',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require('cyberdream').setup {
+        transparent = true,
+        -- Options will go here
+      }
+    end,
+  },
+  {
+    'xiyaowong/nvim-transparent',
+    lazy = false,
+    priority = 1000,
+  },
+  {
+    'pappasam/papercolor-theme-slim',
+    lazy = false,
+    priority = 1000,
   },
   {
     'sainnhe/everforest',
