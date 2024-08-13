@@ -8,10 +8,11 @@ return {
     'nvim-lua/plenary.nvim',
     'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
     'MunifTanjim/nui.nvim',
+    '3rd/image.nvim', -- Optional image support in preview window
   },
   cmd = 'Neotree',
   keys = {
-    { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal' },
+    { '\\', ':Neotree position=float<CR>', desc = 'NeoTree reveal' },
   },
   opts = {
     filesystem = {
