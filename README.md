@@ -1,21 +1,73 @@
-# Mike's NVIM from kickstart.nvim
+# kickstart.nvim
 
-Requirements:
-* Make sure to review the readmes of the plugins if you are experiencing errors. In particular:
-  * [ripgrep](https://github.com/BurntSushi/ripgrep#installation) is required for multiple [telescope](https://github.com/nvim-telescope/telescope.nvim#suggested-dependencies) pickers.
+## Introduction
+
+A starting point for Neovim that is:
+
+* Small
+* Single-file
+* Completely Documented
+
+**NOT** a Neovim distribution, but instead a starting point for your configuration.
+
+## Installation
+
+### Install Neovim
+
+Kickstart.nvim targets *only* the latest
+['stable'](https://github.com/neovim/neovim/releases/tag/stable) and latest
+['nightly'](https://github.com/neovim/neovim/releases/tag/nightly) of Neovim.
+If you are experiencing issues, please make sure you have the latest versions.
+
+### Install External Dependencies
+
+External Requirements:
+- Basic utils: `git`, `make`, `unzip`, C Compiler (`gcc`)
+- [ripgrep](https://github.com/BurntSushi/ripgrep#installation)
+- Clipboard tool (xclip/xsel/win32yank or other depending on platform)
+- A [Nerd Font](https://www.nerdfonts.com/): optional, provides various icons
+  - if you have it set `vim.g.have_nerd_font` in `init.lua` to true
+- Language Setup:
+  - If want to write Typescript, you need `npm`
+  - If want to write Golang, you will need `go`
+  - etc.
+
+> **NOTE**
+> See [Install Recipes](#Install-Recipes) for additional Windows and Linux specific notes
+> and quick install snippets
+
+### Install Kickstart
+
+> **NOTE**
+> [Backup](#FAQ) your previous configuration (if any exists)
 
 Neovim's configurations are located under the following paths, depending on your OS:
 
 | OS | PATH |
 | :- | :--- |
-| Linux | `$XDG_CONFIG_HOME/nvim`, `~/.config/nvim` |
-| MacOS | `$XDG_CONFIG_HOME/nvim`, `~/.config/nvim` |
-| Windows (cmd)| `%userprofile%\AppData\Local\nvim\` |
-| Windows (powershell)| `$env:USERPROFILE\AppData\Local\nvim\` |
+| Linux, MacOS | `$XDG_CONFIG_HOME/nvim`, `~/.config/nvim` |
+| Windows (cmd)| `%localappdata%\nvim\` |
+| Windows (powershell)| `$env:LOCALAPPDATA\nvim\` |
 
-Clone kickstart.nvim:
+#### Recommended Step
+
+[Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repo
+so that you have your own copy that you can modify, then install by cloning the
+fork to your machine using one of the commands below, depending on your OS.
+
+> **NOTE**
+> Your fork's url will be something like this:
+> `https://github.com/<your_github_username>/kickstart.nvim.git`
+
+#### Clone kickstart.nvim
+> **NOTE**
+> If following the recommended step above (i.e., forking the repo), replace
+> `nvim-lua` with `<your_github_username>` in the commands below
+
+<details><summary> Linux and Mac </summary>
 
 ```sh
+
 # on Linux and Mac
 git clone git@github.com:mmroczka/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
 ```
@@ -28,47 +80,15 @@ Start Neovim
 nvim
 ```
 
-### Configuration And Extension
+That's it! Lazy will install all the plugins you have. Use `:Lazy` to view
+current plugin status. Hit `q` to close the window.
 
-* Inside of your copy, feel free to modify any file you like! It's your copy!
-* Feel free to change any of the default options in `init.lua` to better suit your needs.
-* For adding plugins, there are 3 primary options:
-  * Add new configuration in `lua/custom/plugins/*` files, which will be auto sourced using `lazy.nvim` (uncomment the line importing the `custom/plugins` directory in the `init.lua` file to enable this)
-  * Modify `init.lua` with additional plugins.
-  * Include the `lua/kickstart/plugins/*` files in your configuration.
-
-You can also merge updates/changes from the repo back into your fork, to keep up-to-date with any changes for the default configuration.
-
-#### Example: Adding an autopairs plugin
-
-In the file: `lua/custom/plugins/autopairs.lua`, add:
-
-```lua
--- File: lua/custom/plugins/autopairs.lua
-
-return {
-  "windwp/nvim-autopairs",
-  -- Optional dependency
-  dependencies = { 'hrsh7th/nvim-cmp' },
-  config = function()
-    require("nvim-autopairs").setup {}
-    -- If you want to automatically add `(` after selecting a function or method
-    local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-    local cmp = require('cmp')
-    cmp.event:on(
-      'confirm_done',
-      cmp_autopairs.on_confirm_done()
-    )
-  end,
-}
-```
+Read through the `init.lua` file in your configuration folder for more
+information about extending and exploring Neovim. That also includes
+examples of adding popularly requested plugins.
 
 
-This will automatically install [windwp/nvim-autopairs](https://github.com/windwp/nvim-autopairs) and enable it on startup. For more information, see documentation for [lazy.nvim](https://github.com/folke/lazy.nvim).
-
-#### Example: Adding a file tree plugin
-
-In the file: `lua/custom/plugins/filetree.lua`, add:
+### Getting Started
 
 ```lua
 -- Unless you are still migrating, remove the deprecated commands from v1.x
