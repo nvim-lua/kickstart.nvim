@@ -95,6 +95,9 @@ require('lazy').setup({
         'williamboman/mason.nvim',
         opts = {
           ensure_installed = {
+            "black",
+            "eslint-lsp",
+            "prettier",
             "typescript-language-server"
           }
         },
