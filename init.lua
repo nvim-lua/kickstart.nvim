@@ -844,7 +844,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'clojure', 'python' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -914,6 +914,11 @@ require('lazy').setup({
     },
   },
 })
+
+if vim.fn.has 'gui_running' then
+  -- vim.cmd("set guifont=JetBrainsMono\\ NFM:h10")
+  vim.opt.guifont = 'PragmataPro Mono:h16'
+end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
