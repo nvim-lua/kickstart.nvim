@@ -669,6 +669,7 @@ require('lazy').setup({
 
         -- python -> LSP: basedpyright, Formatter & linter
         -- https://github.com/astral-sh/ruff/blob/main/crates/ruff_server/docs/setup/NEOVIM.md
+        -- https://docs.astral.sh/ruff/editors/setup/#neovim
         ruff = {
           -- Disable hover in favor of Pyright
           on_attach = on_attach_ruff,

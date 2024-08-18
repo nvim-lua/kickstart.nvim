@@ -1,12 +1,12 @@
 return {
   {
     'windwp/nvim-ts-autotag',
-    -- ft = {
-    --   'html',
-    --   'javascript',
-    --   'typescript',
-    --   'svelte',
-    -- },
+    ft = {
+      'html',
+      'javascript',
+      'typescript',
+      'svelte',
+    },
     config = function()
       require('nvim-ts-autotag').setup {
         -- opts = {
