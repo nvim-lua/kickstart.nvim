@@ -18,6 +18,17 @@ vim.opt.spelllang = 'pt_br,en_us'
 
 vim.g.have_nerd_font = true
 
+vim.opt.swapfile = false
+vim.opt.termguicolors = true
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 2
+vim.opt.tabstop = 2
+vim.opt.cursorline = true
+vim.opt.numberwidth = 4
+vim.opt.ruler = true
+vim.opt.scrolloff = 8
+vim.opt.smartcase = true
+
 require('which-key').add {
   { '<leader>j', group = '[J]ump' },
   { '<leader>d', group = '[C-t]est' },
