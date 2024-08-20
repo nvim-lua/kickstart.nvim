@@ -16,6 +16,10 @@ return {
         end
       end,
       go = { 'gofumpt', 'goimports' },
+      yaml = { 'prettier' },       -- Added YAML formatter
+      bash = { 'shfmt' },          -- Added Bash formatter
+      rust = { 'rustfmt' },        -- Added Rust formatter
+      dockerfile = { 'hadolint' }, -- Added Dockerfile formatter
     }
 
     require('conform').setup({
@@ -28,12 +32,15 @@ return {
 
     require('mason-tool-installer').setup({
       ensure_installed = {
-        'stylua',
-        'ruff',
-        'isort',
-        'black',
-        'gofumpt',
-        'goimports',
+        'stylua',    -- Lua
+        'ruff',      -- Python
+        'isort',     -- Python
+        'black',     -- Python
+        'gofumpt',   -- Go
+        'goimports', -- Go
+        'prettier',  -- YAML, JSON, etc.
+        'shfmt',     -- Bash
+        'hadolint',  -- Dockerfile
       },
     })
   end,

@@ -13,6 +13,8 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
+vim.cmd('filetype plugin on')
+
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
@@ -23,4 +25,3 @@ require('config.mappings')
 require('config.utils')
 require('config.themes')
 
-vim.cmd('filetype plugin on')

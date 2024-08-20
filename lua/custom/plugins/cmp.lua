@@ -21,15 +21,19 @@ return {
     -- Set completion options
     vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
 
-    -- Lazy load snippets from friendly-snippets
-    require('luasnip.loaders.from_vscode').lazy_load()
-
     -- Import required modules
     local cmp = require('cmp')
     local luasnip = require('luasnip')
 
     -- Setup luasnip
-    luasnip.config.setup({})
+    luasnip.config.setup({
+      history = true,
+      updateevents = 'TextChanged,TextChangedI',
+    })
+
+    -- Lazy load snippets from friendly-snippets and custom snippets
+    require('luasnip.loaders.from_vscode').lazy_load()
+    require('luasnip.loaders.from_vscode').load(vim.fn.stdpath('config') .. '/snippets')
 
     -- Setup nvim-cmp
     cmp.setup({
@@ -88,12 +92,6 @@ return {
         end, { 'i', 's' }),
         ['<C-e>'] = cmp.mapping.abort(),
       }),
-    })
-
-    -- Additional luasnip configuration
-    luasnip.config.set_config({
-      history = true,
-      updateevents = 'TextChanged,TextChangedI',
     })
 
     -- Setup for SQL filetype with vim-dadbod-completion

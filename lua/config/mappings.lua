@@ -37,6 +37,10 @@ vim.keymap.set('n', '<leader>bs', '<cmd>split<CR>', { desc = 'Openn Buf Horizont
 vim.keymap.set('n', '<leader>bv', '<cmd>vsp<CR>', { desc = 'Open Buf Vertical Split' })
 vim.keymap.set('n', '<leader>bt', '<cmd>terminal<CR>')
 
+-- -- open terminal for R and Python
+-- vim.keymap.set('n', '<leader>bR', '<cmd>terminal R<CR>', { desc = 'Open R Terminal' })
+-- vim.keymap.set('n', '<leader>bP', '<cmd>terminal python<CR>', { desc = 'Open Python Terminal' })
+
 -- Editing Keymaps
 vim.keymap.set('x', '<leader>p', [["_dP"]], { desc = 'Paste without register' })
 vim.keymap.set({ 'n', 'v' }, '<leader>d', [["_d"]], { desc = 'Delete without register' })
@@ -45,16 +49,16 @@ vim.keymap.set('n', '<leader>Y', '"+Y')
 -- replace current word in current scope
 vim.keymap.set(
   'n',
-  '<leader>r',
+  '<leader>rw',
   ':%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>',
-  { desc = '[R]eplace Current Word in Current Scope' }
+  { desc = '[R]eplace Current [W]ord in Current Scope' }
 )
 -- replace current word in file scope
 vim.keymap.set(
   'n',
-  '<leader>R',
+  '<leader>rW',
   ':%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>',
-  { desc = '[R]eplace Current Word in File Scope' }
+  { desc = '[R]eplace Current [W]ord in File Scope' }
 )
 
 -- Open vertical split pane
@@ -87,7 +91,7 @@ vim.keymap.set({ 'n', 'v' }, '<leader>sw', function()
 end, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sp', function()
   require('telescope.builtin').grep_string({ search = vim.fn.input('Grep Search > ') })
-end, { desc = '[S]search [P]roject' })
+end, { desc = '[S]earch [P]roject' })
 vim.keymap.set('n', '<leader>sG', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sg', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
@@ -97,13 +101,43 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
--- vim.keymap.set('n', '<leader>vd', function()
+-- vim.keymap.set('n', '<leader>ef', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
+-- vim.keymap.set('n', '<leader>ee', function()
 --   vim.diagnostic.setloclist()
 --   vim.cmd('lopen')
 -- end, { desc = 'Open the diagnostics location list' })
 
--- Refactoring Keymaps
+-- local runner = require("quarto.runner")
+-- vim.keymap.set('n', '<leader>qrc', runner.run_cell, { desc = '[R]un [C]ell', silent = true })
+-- vim.keymap.set('n', '<leader>qra', runner.run_above, { desc = '[R]un cell and [A]bove', silent = true })
+-- vim.keymap.set('n', "<leader>qrA", runner.run_all, { desc = "run all cells", silent = true })
+-- vim.keymap.set('n', "<leader>qrl", runner.run_line, { desc = "run line", silent = true })
+-- vim.keymap.set('v', '<leader>qr', runner.run_range, { desc = "run visual range", silent = true })
+-- vim.keymap.set('n', '<leader>qRA', function()
+--   runner.run_all(true)
+-- end, { desc = "run all cells of all languages", silent = true })
+
+-- Latex-specific Keymaps
+-- Keybinding to compile LaTeX to PDF using xelatex with latexmk and output to the "output" directory
+vim.keymap.set('n', '<leader>ll', ':!mkdir -p output && latexmk -pdf -xelatex -output-directory=output -synctex=1 %<CR>',
+  {
+    desc = 'Compile LaTeX to PDF using xelatex with SyncTeX in the output directory',
+    noremap = true,
+    silent = true
+  })
+
+
+-- Keybinding to view the compiled PDF in Zathura from the output directory
+vim.keymap.set('n', '<leader>lv', function()
+  local pdf_path = vim.fn.expand('%:p:h') .. '/output/' .. vim.fn.expand('%:t:r') .. '.pdf'
+  vim.cmd(':silent !nohup zathura ' .. pdf_path .. ' >/dev/null 2>&1 &')
+end, {
+  desc = 'View PDF in Zathura from the output directory',
+  noremap = true,
+  silent = true
+})
+
+-- -- Refactoring Keymaps
 -- vim.keymap.set({ "x" }, "<leader>re", [[<Esc><Cmd>lua require('refactoring').refactor('Extract Function')<CR>]],
 --   { noremap = true, silent = true, expr = false, desc = "Extract Function" })
 -- vim.keymap.set({ "x" }, "<leader>rf", [[<Esc><Cmd>lua require('refactoring').refactor('Extract Function To File')<CR>]],

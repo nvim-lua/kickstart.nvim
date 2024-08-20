@@ -4,7 +4,6 @@ return {
   dependencies = {
     'nvim-treesitter/nvim-treesitter-textobjects',
     'https://github.com/apple/pkl-neovim.git',
-    'windwp/nvim-ts-autotag',
   },
   build = ':TSUpdate',
   config = function()
@@ -12,7 +11,8 @@ return {
     local ts = require('nvim-treesitter.configs')
     ts.setup({
       ensure_installed = {
-        'c', 'cpp', 'lua', 'python', 'go', 'rust', 'vimdoc', 'vim'
+        'bash', 'c', 'cpp', 'lua', 'python', 'go', 'markdown', 'markdown_inline', 'r', 'rust', 'vimdoc', 'vim', 'yaml',
+        'query'
       },
       ignore_install = { '' },
       highlight = {
@@ -23,10 +23,10 @@ return {
       incremental_selection = {
         enable = true,
         keymaps = {
-          init_selection = '<c-space>',
-          node_incremental = '<c-space>',
-          scope_incremental = '<c-s>',
-          node_decremental = '<M-space>',
+          init_selection = 'gnn',
+          node_incremental = 'grn',
+          scope_incremental = 'grc',
+          node_decremental = 'grm',
         },
       },
       textobjects = {
@@ -73,16 +73,6 @@ return {
         },
       },
     })
-
-    -- Autotag setup
-    require('nvim-ts-autotag').setup({
-      enable = true,
-    })
   end,
-  opts = {
-    autotag = {
-      enable = true,
-    },
-  },
 }
 
