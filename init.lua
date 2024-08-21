@@ -35,10 +35,6 @@ end)
 -- Enable break indent
 vim.opt.breakindent = true
 
-vim.bo.shiftwidth = 4
-vim.bo.tabstop = 4
-vim.bo.expandtab = true
-
 -- Save undo history
 vim.opt.undofile = true
 
@@ -71,6 +67,8 @@ vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
 vim.opt.cursorline = true
+-- Set block cursor for insert mode
+vim.opt.guicursor = ''
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
@@ -136,23 +134,7 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  'numToStr/Comment.nvim',
 
-  -- NOTE: Plugins can also be added by using a table,
-  -- with the first argument being the link and the following
-  -- keys can be used to configure plugin behavior/loading/etc.
-  --
-  -- Use `opts = {}` to force a plugin to be loaded.
-  --
-  --  This is equivalent to:
-  --    require('Comment').setup({})
-
-  -- "gc" to comment visual regions/lines
-
-  -- Here is a more advanced example where we pass configuration
-  -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
-  --    require('gitsigns').setup({ ... })
-  --
   -- See `:help gitsigns` to understand what the configuration keys do
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -228,6 +210,7 @@ require('lazy').setup({
         end,
       },
       { 'nvim-telescope/telescope-ui-select.nvim' },
+      { 'nvim-telescope/telescope-file-browser.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
@@ -249,15 +232,23 @@ require('lazy').setup({
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
           },
+          file_browser = {
+            hijack_netrw = true,
+            path = '%:p:h',
+          },
         },
       }
 
       -- Enable Telescope extensions if they are installed
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
+      pcall(require('telescope').load_extension, 'file_browser')
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
+      local picker = require('telescope').extensions.file_browser
+
+      vim.keymap.set('n', '\\', picker.file_browser, { desc = 'Open File Browser' })
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
@@ -461,13 +452,12 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
 
-      local lspconfig = require 'lspconfig'
-
       local servers = {
         clangd = {},
         cmake = {},
         rust_analyzer = {},
         csharp_ls = {},
+        bashls = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
 
         lua_ls = {
@@ -500,6 +490,7 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua',
         'clang-format',
+        'markdownlint',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -771,9 +762,9 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  require 'plugins.neo-tree',
   require 'plugins.autopairs',
   require 'plugins.lint',
+  require 'plugins.indent_line',
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
