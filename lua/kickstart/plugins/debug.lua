@@ -1,4 +1,4 @@
--- debug.lua
+-- debug.la
 --
 -- Shows how to use the DAP plugin to debug your code.
 --
@@ -25,6 +25,9 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+
+    -- Debugpy for Python debugging
+    'mfussenegger/nvim-dap-python',
   },
   keys = function(_, keys)
     local dap = require 'dap'
@@ -51,6 +54,9 @@ return {
   config = function()
     local dap = require 'dap'
     local dapui = require 'dapui'
+    local path = require('mason-registry').get_package('debugpy'):get_install_path()
+
+    require('dap-python').setup(os.getenv 'PYENV_ROOT' .. '/versions/3.11.9/bin/python')
 
     require('mason-nvim-dap').setup {
       -- Makes a best effort to setup the various debuggers with
@@ -67,6 +73,7 @@ return {
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'debugpy',
         'python',
         'jq',
         'stylua',
