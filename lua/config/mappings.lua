@@ -117,27 +117,7 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnos
 --   runner.run_all(true)
 -- end, { desc = "run all cells of all languages", silent = true })
 
--- Latex-specific Keymaps
--- Keybinding to compile LaTeX to PDF using xelatex with latexmk and output to the "output" directory
-vim.keymap.set('n', '<leader>ll', ':!mkdir -p output && latexmk -pdf -xelatex -output-directory=output -synctex=1 %<CR>',
-  {
-    desc = 'Compile LaTeX to PDF using xelatex with SyncTeX in the output directory',
-    noremap = true,
-    silent = true
-  })
-
-
--- Keybinding to view the compiled PDF in Zathura from the output directory
-vim.keymap.set('n', '<leader>lv', function()
-  local pdf_path = vim.fn.expand('%:p:h') .. '/output/' .. vim.fn.expand('%:t:r') .. '.pdf'
-  vim.cmd(':silent !nohup zathura ' .. pdf_path .. ' >/dev/null 2>&1 &')
-end, {
-  desc = 'View PDF in Zathura from the output directory',
-  noremap = true,
-  silent = true
-})
-
--- -- Refactoring Keymaps
+-- Refactoring Keymaps
 -- vim.keymap.set({ "x" }, "<leader>re", [[<Esc><Cmd>lua require('refactoring').refactor('Extract Function')<CR>]],
 --   { noremap = true, silent = true, expr = false, desc = "Extract Function" })
 -- vim.keymap.set({ "x" }, "<leader>rf", [[<Esc><Cmd>lua require('refactoring').refactor('Extract Function To File')<CR>]],
