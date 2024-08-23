@@ -598,7 +598,26 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        pyright = {},
+        pyright = {
+          capabilities = {
+            textDocument = {
+              completion = {
+                completionItem = {
+                  -- You can set the snippet support to true or false if you want to enable snippets
+                  snippetSupport = true,
+                },
+              },
+            },
+          },
+          settings = {
+            python = {
+              analysis = {
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+              },
+            },
+          },
+        },
         rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
