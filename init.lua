@@ -628,6 +628,8 @@ require('lazy').setup({
         -- tsserver = {},
         --
 
+        ruff = {},
+
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
