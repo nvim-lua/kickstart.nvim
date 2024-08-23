@@ -12,6 +12,7 @@ return {
   },
   build = ':Copilot auth',
   config = function()
+    -- vim.keymap.set('n', '<leader>pp', ':set invpaste<CR>', { noremap = true, desc = 'Co[p]ilot [P]aste' })
     vim.keymap.set('i', '<C-J>', 'copilot#Accept("\\<CR>")', {
       expr = true,
       replace_keycodes = false,
