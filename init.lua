@@ -687,6 +687,7 @@ require('lazy').setup({
         'ruff',
         'shellcheck',
         'stylua',
+        'taplo',
         'tflint',
         'yaml-language-server',
         'yamlfix',
