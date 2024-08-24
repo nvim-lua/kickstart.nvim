@@ -174,7 +174,16 @@ return {
           -- code, if the language server you are using supports them
           --
           -- This may be unwanted, since they displace some of your code
-          if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
+          local function dump_table(tbl)
+            local result = ''
+            for k, v in pairs(tbl) do
+              result = result .. (k .. ': ' .. tostring(v)) .. ',\t'
+            end
+            return string.sub(result, 1, -2)
+          end
+
+          vim.lsp.inlay_hint.enable(true)
+          if client and client.server_capabilities.inlayHintProvider then
             map('<leader>th', function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
             end, '[T]oggle Inlay [H]ints')
@@ -226,7 +235,9 @@ return {
             basedpyright = {
               analysis = {
                 autoSearchPaths = true,
-                typeCheckingMode = 'standard',
+                typeCheckingMode = 'basic',
+                diagnosticMode = 'openFilesOnly',
+                useLibraryCodeForTypes = true,
               },
             },
           },
@@ -238,6 +249,15 @@ return {
                 unusedparams = true,
               },
               staticcheck = true,
+              hints = {
+                rangeVariableTypes = true,
+                parameterNames = true,
+                constantValues = true,
+                assignVariableTypes = true,
+                compositeLiteralFields = true,
+                compositeLiteralTypes = true,
+                functionTypeParameters = true,
+              },
               gofumpt = true,
             },
           },
