@@ -28,8 +28,8 @@ External Requirements:
 - A [Nerd Font](https://www.nerdfonts.com/): optional, provides various icons
   - if you have it set `vim.g.have_nerd_font` in `init.lua` to true
 - Language Setup:
-  - If want to write Typescript, you need `npm`
-  - If want to write Golang, you will need `go`
+  - If you want to write Typescript, you need `npm`
+  - If you want to write Golang, you will need `go`
   - etc.
 
 > **NOTE**
@@ -58,6 +58,10 @@ fork to your machine using one of the commands below, depending on your OS.
 > **NOTE**
 > Your fork's url will be something like this:
 > `https://github.com/<your_github_username>/kickstart.nvim.git`
+
+You likely want to remove `lazy-lock.json` from your fork's `.gitignore` file
+too - it's ignored in the kickstart repo to make maintenance easier, but it's
+[recommmended to track it in version control](https://lazy.folke.io/usage/lockfile).
 
 #### Clone kickstart.nvim
 > **NOTE**
