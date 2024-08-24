@@ -232,6 +232,7 @@ return {
             },
           },
         },
+        gopls = {},
         -- pylsp = {
         --     settings = {
         --         pylsp = {
