@@ -231,7 +231,17 @@ return {
             },
           },
         },
-        gopls = {},
+        gopls = {
+          settings = {
+            gopls = {
+              analyses = {
+                unusedparams = true,
+              },
+              staticcheck = true,
+              gofumpt = true,
+            },
+          },
+        },
         -- pylsp = {
         --     settings = {
         --         pylsp = {
