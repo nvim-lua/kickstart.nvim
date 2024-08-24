@@ -208,7 +208,6 @@ return {
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        -- gopls = {},
         pyright = {
           settings = {
             python = {
@@ -267,6 +266,12 @@ return {
         bashls = {
           alias = 'bash-language-server',
         },
+        dockerls = {
+          alias = 'docker-langserver',
+        },
+        docker_compose_language_service = {
+          alias = 'docker-compose-langserver',
+        },
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
@@ -312,7 +317,7 @@ return {
         i = i + 1
       end
       table.insert(installed, 'stylua')
-      require('utils.mason').install(installed)
+      require('utils.mason').install(installed, true)
       -- require('utils.mason').install {
       --   -- "python-lsp-server",
       --   'pyright',

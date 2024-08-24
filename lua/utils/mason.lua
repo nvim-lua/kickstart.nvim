@@ -7,11 +7,16 @@ local name_to_bin = {
   ['docker-compose-language-service'] = 'docker-compose-langserver',
 }
 
-M.install = function(ensure_installed)
+-- We guarantee 'ensure_installed' package is installed locally
+-- If enforce_local is false then we install it via mason-registry
+-- By default we install LSPs via mason
+M.install = function(ensure_installed, enforce_local)
   -- Allow for passing in a single string
   if type(ensure_installed) == 'string' then
     ensure_installed = { ensure_installed }
   end
+
+  enforce_local = enforce_local == nil and false or enforce_local
 
   -- Function to check if the executable exists in the PATH
   local function executable_exists(name)
@@ -24,7 +29,7 @@ M.install = function(ensure_installed)
   local registry = require 'mason-registry'
   registry.refresh(function()
     for _, pkg_name in ipairs(ensure_installed) do
-      if not executable_exists(pkg_name) then
+      if (not executable_exists(pkg_name)) and not enforce_local then
         local pkg = registry.get_package(pkg_name)
         if not pkg:is_installed() then
           pkg:install()
