@@ -87,8 +87,8 @@ P.S. You can delete this when you're done too. It's your config now! :)
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+vim.g.mapleader = '-'
+vim.g.maplocalleader = '-'
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = false
@@ -158,7 +158,10 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 
 -- [[ Basic Keymaps ]]
---  See `:help vim.keymap.set()`
+--  See `:help vim.keymap.set()
+--
+vim.keymap.set('n', '<leader>n', '<cmd>tabnew<space>')
+vim.keymap.set('n', '<C-l>', '<cmd>tabnext #<CR>')
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
@@ -605,11 +608,60 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      --
+      --
+      --      local on_attach = function(client, bufnr)
+      --        if client.name == 'ruff_lsp' then
+      --          -- Disable hover in favor of Pyright
+      --          client.server_capabilities.hoverProvider = false
+      --        end
+      --      end
+
       local servers = {
-        -- clangd = {},
+        --clangd = {},
         -- gopls = {},
-        -- pyright = {},
-        -- rust_analyzer = {},
+        --prettier = {},
+        biome = {
+          settings = {
+            --           enable = true,
+          },
+        },
+        pyright = {
+          settings = {
+            pyright = {
+              -- Using Ruff's import organizer
+              --             disableOrganizeImports = true,
+            },
+            python = {
+              analysis = {
+                -- Ignore all files for analysis to exclusively use Ruff for linting
+                ignore = { '*' },
+              },
+            },
+          },
+        },
+        ruff = {
+          --on_attach = on_attach,
+          trace = 'messages',
+          init_options = {
+            settings = {
+              fixAll = true,
+              logLevel = 'debug',
+              organizeImports = true,
+              showSyntaxErrors = true,
+              lint = {
+                select = { 'I' },
+                enable = true,
+              },
+              lineLength = 150,
+            },
+          },
+        },
+
+        dockerls = {},
+        terraformls = {},
+        bashls = {},
+
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -617,6 +669,7 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
+        --
         --
 
         lua_ls = {
