@@ -634,7 +634,48 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        -- gopls = {},
+        gopls = {
+          gofumpt = true,
+          codelenses = {
+            gc_details = true,
+            generate = true,
+            upgrade_dependency = true,
+            regenerate_cgo = true,
+            run_govulncheck = true,
+            test = true,
+            tidy = true,
+            tidy = true,
+            vendor = true,
+          },
+          hints = {
+            assignVariableTypes = true,
+            compositeLiteralFields = true,
+            compositeLiteralTypes = true,
+            constantValues = true,
+            functionTypeParameters = true,
+            parameterNames = true,
+            rangeVariableTypes = true,
+          },
+          analyses = {
+            fieldalignment = true,
+            nilness = true,
+            unusedparams = true,
+            unsedwrite = true,
+            useany = true,
+          },
+          usePlaceholders = true,
+          completeUnimported = true,
+          staticcheck = true,
+          directoryFilters = {
+            '-.git',
+            '-.vscode',
+            '-.idea',
+            '-.vscode-test',
+            '-node_modules',
+            '-vendor',
+          },
+          semanticTokens = true,
+        },
         pyright = {
           capabilities = {
             textDocument = {
@@ -704,13 +745,19 @@ require('lazy').setup({
         'bicep-lsp',
         'black',
         'debugpy',
+        'delve',
         'docker-compose-language-service',
         'dockerfile-language-server',
         'eslint-lsp',
         'flake8',
+        'gofumpt',
+        'goimports',
+        'gomodifytags',
+        'gopls',
         'hclfmt',
         'helm-ls',
         'html-lsp',
+        'impl',
         'isort',
         'jedi-language-server',
         'jq',
@@ -778,6 +825,7 @@ require('lazy').setup({
       formatters_by_ft = {
         bash = { 'shellcheck' },
         hcl = { 'fmt' },
+        go = { 'goimports', 'gofumpt' },
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
         python = { 'isort', 'black' },
@@ -977,6 +1025,10 @@ require('lazy').setup({
         'c',
         'diff',
         'dockerfile',
+        'go',
+        'gomod',
+        'gosum',
+        'gowork',
         'hcl',
         'helm',
         'html',
@@ -1054,6 +1106,10 @@ require('lazy').setup({
     },
   },
 })
+
+-- Better copy-paste between vim and system clipboard
+vim.api.nvim_set_keymap('v', '<C-c>', '"+y', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-v>', '"+p', { noremap = true, silent = true })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
