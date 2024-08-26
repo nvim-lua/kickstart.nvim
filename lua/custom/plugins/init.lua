@@ -42,22 +42,21 @@ return {
         ft = { 'markdown', 'Avante' },
       },
     },
-    config = function()
-      local provider = 'openai'
-
-      -- Configuration specific to Claude (replace with OpenAI if necessary)
-      local openai = {
+    config = {
+      provider = 'openai',
+      ---@type AvanteSupportedProvider
+      openai = {
         endpoint = 'https://api.openai.com/v1',
-        model = 'gpt-4o', -- Replace with the desired OpenAI model
+        model = 'gpt-4o-mini', -- Replace with the desired OpenAI model
+        timeout = 30000,
         temperature = 0.7,
         max_tokens = 4096,
-      }
-
-      -- Key mappings
-      local mappings = {
+      },
+      mappings = {
         ask = '<leader>aa',
         edit = '<leader>ae',
         refresh = '<leader>ar',
+        ---@class AvanteConflictMappings
         diff = {
           ours = 'co',
           theirs = 'ct',
@@ -78,43 +77,30 @@ return {
           debug = '<leader>ad',
           hint = '<leader>ah',
         },
-      }
-
-      -- UI and window settings
-      local windows = {
+      },
+      hints = { enabled = true },
+      windows = {
         wrap = true, -- similar to vim.o.wrap
         width = 30, -- default % based on available width
         sidebar_header = {
           align = 'center', -- left, center, right for title
           rounded = true,
         },
-      }
-
-      -- Highlights for diffs
-      local highlights = {
+      },
+      highlights = {
+        ---@type AvanteConflictHighlights
         diff = {
           current = 'DiffText',
           incoming = 'DiffAdd',
         },
-      }
-
-      -- Diff configuration
-      local diff = {
+      },
+      --- @class AvanteConflictUserConfig
+      diff = {
         debug = false,
         autojump = true,
+        ---@type string | fun(): any
         list_opener = 'copen',
-      }
-
-      -- Set up Avante.nvim with the OpenAI provider and custom configurations
-      require('avante').setup {
-        provider = provider,
-        openai = openai,
-        mappings = mappings,
-        hints = { enabled = true },
-        windows = windows,
-        highlights = highlights,
-        diff = diff,
-      }
-    end,
+      },
+    },
   },
 }
