@@ -18,7 +18,7 @@ return {
           { action = 'Telescope oldfiles', name = ' 📂  Recent Files', section = 'Files' },
           { action = 'Telescope live_grep', name = ' 🔎  Find Text', section = 'Search' },
           { action = 'Lazy update', name = ' 🔄  Update Plugins', section = 'Plugins' },
-          { action = 'qall', name = '   Quit', section = 'Exit' },
+          { action = 'qall', name = ' ↪️  Quit', section = 'Exit' },
         },
         footer = 'Neovim - The hyperextensible Vim-based text editor',
         content_hooks = {
