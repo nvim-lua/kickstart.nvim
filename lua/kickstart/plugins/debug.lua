@@ -23,6 +23,7 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+    'mfussenegger/nvim-dap-python',
   },
   keys = function(_, keys)
     local dap = require 'dap'
@@ -64,6 +65,7 @@ return {
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'python',
       },
     }
 
@@ -101,5 +103,9 @@ return {
         detached = vim.fn.has 'win32' == 0,
       },
     }
+
+    -- uses the debugypy installation by mason
+    local debugpyPythonPath = require('mason-registry').get_package('debugpy'):get_install_path() .. '/venv/bin/python3'
+    require('dap-python').setup(debugpyPythonPath, {}) ---@diagnostic disable-line: missing-fields
   end,
 }
