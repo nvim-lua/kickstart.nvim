@@ -2,9 +2,9 @@ local M = {}
 
 -- any cases where name of package is different from the binary name
 local name_to_bin = {
-  ['csharp-language-server'] = 'csharp-ls',
-  ['python-lsp-server'] = 'pylsp',
-  ['docker-compose-language-service'] = 'docker-compose-langserver',
+  -- ['csharp-language-server'] = 'csharp-ls',
+  -- ['python-lsp-server'] = 'pylsp',
+  -- ['docker-compose-language-service'] = 'docker-compose-langserver',
 }
 
 -- We guarantee 'ensure_installed' package is installed locally
