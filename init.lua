@@ -69,7 +69,7 @@ Kickstart Guide:
   I have left several `:help X` comments throughout the init.lua
     These are hints about where to find more information about the relevant settings,
     plugins or Neovim features used in Kickstart.
-
+	
    NOTE: Look for lines like this
 
     Throughout the file. These are for you, the reader, to help you understand what is happening.
@@ -92,10 +92,41 @@ I hope you enjoy your Neovim journey,
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
 
+-- Your existing Neovim configurations..
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.softtabstop = 4
+vim.opt.expandtab = true
+-- Function to toggle transparency
+function ToggleTransparency()
+  if vim.g.transparency_enabled then
+    vim.cmd 'hi Normal guibg=#000000 ctermbg=NONE' -- Replace with your preferred background color
+    vim.cmd 'hi NormalNC guibg=#000000 ctermbg=NONE' -- Replace with your preferred background color
+    vim.g.transparency_enabled = false
+  else
+    vim.cmd 'hi Normal guibg=NONE ctermbg=NONE'
+    vim.cmd 'hi NormalNC guibg=NONE ctermbg=NONE'
+    vim.g.transparency_enabled = true
+  end
+end
+
+-- Command to toggle transparency
+vim.cmd 'command! Transp lua ToggleTransparency()'
+vim.cmd [[
+  autocmd VimEnter * Neotree position=right
+]]
+
+-- vim.api.nvim_command [[
+--     augroup ChangeBackgroundColour
+--         autocmd colorscheme * :hi normal guibg=#000000
+--     augroup END
+-- ]]
+
+vim.o.termguicolors = true
+vim.cmd [[silent! colorscheme snow]]
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
-
 vim.o.autoread = true
 vim.api.nvim_create_autocmd('BufEnter', {
   group = vim.api.nvim_create_augroup('lazyvim_auto_reload', { clear = true }),
@@ -483,6 +514,7 @@ require('lazy').setup({
           vim.lsp.buf.format()
         end,
       })
+      vim.keymap.set('n', 'gl', '<cmd>lua vim.diagnostic.open_float()<CR>', { noremap = true })
       -- LSP is an initialism you've probably heard, but might not understand what it is.
       --
       -- LSP stands for Language Server Protocol. It's a protocol that helps editors
@@ -843,8 +875,9 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
-
+      -- vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'kanagawa'
+      -- vim.cmd.colorscheme 'tokyonight'
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
     end,
@@ -936,7 +969,7 @@ require('lazy').setup({
   require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`

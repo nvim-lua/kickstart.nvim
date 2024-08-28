@@ -1,3 +1,3 @@
 return {
-  'timmajani/tokyonightnoir-vim',
+  'owickstrom/vim-colors-paramount',
 }
