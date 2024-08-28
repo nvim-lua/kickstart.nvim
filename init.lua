@@ -842,9 +842,9 @@ require('lazy').setup({
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       vim.cmd.colorscheme 'tokyonight-night'
-      vim.g.tokyonight_colors = { border = 'orange' }
+      -- vim.g.tokyonight_colors = { border = 'orange' }
       -- vim.cmd.colorscheme 'default'
-      vim.api.nvim_set_hl(0, 'WinSeparator', { fg = vim.g.tokyonight_colors.border })
+      -- vim.api.nvim_set_hl(0, 'WinSeparator', { fg = vim.g.tokyonight_colors.border })
 
       -- You can configure highlights by doing something like:
       --vim.cmd.hi 'Comment gui=none'
@@ -964,5 +964,3 @@ require('lazy').setup({
 })
 
 vim.diagnostic.config { virtual_text = false }
-
--- The line beneath this is called `modeline`. See `:help modeline`
