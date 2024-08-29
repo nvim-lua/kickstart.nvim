@@ -206,119 +206,6 @@ return {
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
-      -- Enable the following language servers
-      --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
-      --
-      --  Add any additional override configuration in the following tables. Available keys are:
-      --  - cmd (table): Override the default command used to start the server
-      --  - filetypes (table): Override the default list of associated filetypes for the server
-      --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
-      --  - settings (table): Override the default settings passed when initializing the server.
-      --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
-      local servers = {
-        -- clangd = {},
-        pyright = {
-          settings = {
-            python = {
-              analysis = {
-                autoSearchPaths = true,
-                diagnosticMode = 'workspace',
-                useLibraryCodeForTypes = true,
-                autoImportCompletions = true,
-              },
-            },
-          },
-          disableLanguageServices = false,
-        },
-        basedpyright = {
-          settings = {
-            basedpyright = {
-              analysis = {
-                autoSearchPaths = true,
-                typeCheckingMode = 'basic',
-                diagnosticMode = 'openFilesOnly',
-                useLibraryCodeForTypes = true,
-              },
-            },
-          },
-        },
-        gopls = {
-          settings = {
-            gopls = {
-              analyses = {
-                unusedparams = true,
-              },
-              staticcheck = true,
-              hints = {
-                rangeVariableTypes = true,
-                parameterNames = true,
-                constantValues = true,
-                assignVariableTypes = true,
-                compositeLiteralFields = true,
-                compositeLiteralTypes = true,
-                functionTypeParameters = true,
-              },
-              gofumpt = true,
-            },
-          },
-        },
-        -- pylsp = {
-        --     settings = {
-        --         pylsp = {
-        --             plugins = {
-        --                 pycodestyle = {
-        --                     ignore = {},
-        --                     maxLineLength = 120,
-        --                 },
-        --             },
-        --         }
-        --     }
-        -- },
-        rust_analyzer = {
-          alias = 'rust-analyzer',
-        },
-
-        markdown_oxide = {
-          alias = 'markdown-oxide',
-        },
-        -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-        --
-        -- Some languages (like typescript) have entire language plugins that can be useful:
-        --    https://github.com/pmizio/typescript-tools.nvim
-        --
-        -- But for many setups, the LSP (`tsserver`) will work just fine
-        -- tsserver = {},
-        --
-        nixd = {},
-        ['nil_ls'] = {
-          alias = 'nil',
-        },
-        bashls = {
-          alias = 'bash-language-server',
-        },
-        dockerls = {
-          alias = 'docker-langserver',
-        },
-        docker_compose_language_service = {
-          alias = 'docker-compose-langserver',
-        },
-        lua_ls = {
-          -- cmd = {...},
-          -- filetypes = { ...},
-          -- capabilities = {},
-          alias = 'lua-language-server',
-          settings = {
-            Lua = {
-              completion = {
-                callSnippet = 'Replace',
-              },
-              -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-              -- diagnostics = { disable = { 'missing-fields' } },
-            },
-          },
-        },
-      }
-
       -- Ensure the servers and tools above are installed
       --  To check the current status of installed tools and/or manually install
       --  other tools, you can run
@@ -329,39 +216,24 @@ return {
 
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
-      local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
-      })
       --   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
       -- INFO: Using my own utils function instead of mason-lspconfig as it checks if the stuff is already installed
       -- outside of mason. This is useful for NixOS setup where mason version just doesn't work sometimes due to libc issues.
-      local installed = {}
-      local i = 0
-      for server, config in pairs(servers) do
-        if config.alias then
-          installed[i] = config.alias
-        else
-          installed[i] = server
+
+      -- We take the languages configured for a given profile
+      -- Given the profile we take the LSPs configured for the languages
+      -- Then we guarantee use or install the LSPs
+      local languages = require('utils.profile').Languages()
+      local languageServers = require 'utils.languages'
+      local tmpTable = {}
+      for _, lang in ipairs(languages) do
+        for lsp, config in pairs(languageServers[lang]) do
+          tmpTable[lsp] = config
         end
-        i = i + 1
       end
-      table.insert(installed, 'stylua')
-      require('utils.mason').install(installed, true)
-      -- require('utils.mason').install {
-      --   -- "python-lsp-server",
-      --   'pyright',
-      --   'basedpyright',
-      --   'bash-language-server',
-      --   -- "rnix-lsp",
-      --   'lua-language-server',
-      --   -- "docker-compose-language-service",
-      --   -- "nil",
-      -- }
-
+      require('utils.mason').install(tmpTable, true)
       local lsp = require 'lspconfig'
-
-      for server, config in pairs(servers) do
+      for server, config in pairs(tmpTable) do
         config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, config.capabilities or {})
         config.on_attach = on_attach
         lsp[server].setup(config)
