@@ -204,12 +204,28 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
--- vim.api.nvim_create_augroup('DockerFileTypeDetection', { clear = true })
-vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
-  pattern = { 'docker-compose.yaml', 'compose.yaml' },
-  command = 'set filetype=yaml.docker-compose',
-  -- group = 'DockerFileTypeDetection',
-})
+local function DockerFileTypeDetectionAutoCommand()
+  local names = { 'docker-compose', 'compose' }
+  local extensions = { '.yaml', '.yml' }
+  local tbl = {}
+  local i = 1
+
+  for _, name in pairs(names) do
+    for _, ext in pairs(extensions) do
+      tbl[i] = name .. ext
+      i = i + 1
+    end
+  end
+
+  -- vim.api.nvim_create_augroup('DockerFileTypeDetection', { clear = true })
+  vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+    pattern = tbl,
+    command = 'set filetype=yaml.docker-compose',
+    -- group = 'DockerFileTypeDetection',
+  })
+end
+
+DockerFileTypeDetectionAutoCommand()
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
