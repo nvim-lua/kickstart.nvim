@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -189,6 +189,11 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+vim.keymap.set('n', '<leader>pb', '<cmd>Ex<cr><Esc>', { desc = 'Netrw file browser' })
+vim.keymap.set({ 'i', 'x', 'n', 's' }, 'ljlj', '<Esc>', { desc = 'Exit to normal mode' })
+vim.api.nvim_set_keymap('n', '<leader>dd', '<cmd>lua vim.diagnostic.config({ virtual_text = false }) <CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>ed', '<cmd>lua vim.diagnostic.config({ virtual_text = true }) <CR>', { noremap = true, silent = true })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -607,7 +612,7 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -700,7 +705,12 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = { 'isort', 'black' },
+        css = { 'prettier' },
+        html = { 'prettier' },
+        markdown = { 'prettier' },
+        json = { 'prettier' },
+        yaml = { 'prettier' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
@@ -824,26 +834,63 @@ require('lazy').setup({
     end,
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
-    init = function()
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+  -- { -- You can easily change to a different colorscheme.
+  --   -- Change the name of the colorscheme plugin below, and then
+  --   -- change the command in the config to whatever the name of that colorscheme is.
+  --   --
+  --   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
+  --   'folke/tokyonight.nvim',
+  --   priority = 1000, -- Make sure to load this before all the other start plugins.
+  --   init = function()
+  --     -- Load the colorscheme here.
+  --     -- Like many other themes, this one has different styles, and you could load
+  --     -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+  --     vim.cmd.colorscheme 'tokyonight-night'
 
-      -- You can configure highlights by doing something like:
+  --     -- You can configure highlights by doing something like:
+  --     vim.cmd.hi 'Comment gui=none'
+  --   end,
+  -- },
+  {
+    'rose-pine/neovim',
+    name = 'rose-pine',
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
+    config = function()
+      -- Load the colorscheme here
+      vim.cmd.colorscheme 'rose-pine'
+
+      -- You can configure highlights by doing something like
       vim.cmd.hi 'Comment gui=none'
     end,
   },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+
+  {
+    'windwp/nvim-autopairs',
+    event = { 'InsertEnter' },
+    dependencies = {
+      'hrsh7th/nvim-cmp',
+    },
+    config = function()
+      local autopairs = require 'nvim-autopairs'
+
+      autopairs.setup {
+        check_ts = true,
+        ts_config = {
+          lua = { 'string' },
+          javascript = { 'template_string' },
+          java = false,
+        },
+      }
+
+      local cmp_autopairs = require 'nvim-autopairs.completion.cmp'
+      local cmp = require 'cmp'
+      cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
+    end,
+  },
 
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
@@ -882,6 +929,331 @@ require('lazy').setup({
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
+
+  {
+    'MeanderingProgrammer/markdown.nvim',
+    main = 'render-markdown',
+    opts = {},
+    name = 'render-markdown',
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
+    config = function()
+      require('render-markdown').setup {
+        -- Whether Markdown should be rendered by default or not
+        enabled = true,
+        -- Maximum file size (in MB) that this plugin will attempt to render
+        -- Any file larger than this will effectively be ignored
+        max_file_size = 1.5,
+        -- Capture groups that get pulled from markdown
+        markdown_query = [[
+        (atx_heading [
+            (atx_h1_marker)
+            (atx_h2_marker)
+            (atx_h3_marker)
+            (atx_h4_marker)
+            (atx_h5_marker)
+            (atx_h6_marker)
+        ] @heading)
+
+        (thematic_break) @dash
+
+        (fenced_code_block) @code
+
+        [
+            (list_marker_plus)
+            (list_marker_minus)
+            (list_marker_star)
+        ] @list_marker
+
+        (task_list_marker_unchecked) @checkbox_unchecked
+        (task_list_marker_checked) @checkbox_checked
+
+        (block_quote) @quote
+
+        (pipe_table) @table
+    ]],
+        -- Capture groups that get pulled from quote nodes
+        markdown_quote_query = [[
+        [
+            (block_quote_marker)
+            (block_continuation)
+        ] @quote_marker
+    ]],
+        -- Capture groups that get pulled from inline markdown
+        inline_query = [[
+        (code_span) @code
+
+        (shortcut_link) @callout
+
+        [(inline_link) (full_reference_link) (image)] @link
+    ]],
+        -- The level of logs to write to file: vim.fn.stdpath('state') .. '/render-markdown.log'
+        -- Only intended to be used for plugin development / debugging
+        log_level = 'error',
+        -- Filetypes this plugin will run on
+        file_types = { 'markdown' },
+        -- Vim modes that will show a rendered view of the markdown file
+        -- All other modes will be uneffected by this plugin
+        render_modes = { 'n', 'c' },
+        -- Set to avoid seeing warnings for conflicts in health check
+        acknowledge_conflicts = false,
+        anti_conceal = {
+          -- This enables hiding any added text on the line the cursor is on
+          -- This does have a performance penalty as we must listen to the 'CursorMoved' event
+          enabled = true,
+        },
+        latex = {
+          -- Whether LaTeX should be rendered, mainly used for health check
+          enabled = true,
+          -- Executable used to convert latex formula to rendered unicode
+          converter = 'latex2text',
+          -- Highlight for LaTeX blocks
+          highlight = 'RenderMarkdownMath',
+          -- Amount of empty lines above LaTeX blocks
+          top_pad = 0,
+          -- Amount of empty lines below LaTeX blocks
+          bottom_pad = 0,
+        },
+        heading = {
+          -- Turn on / off heading icon & background rendering
+          enabled = true,
+          -- Turn on / off any sign column related rendering
+          sign = true,
+          -- Determines how the icon fills the available space:
+          --  inline: underlying '#'s are concealed resulting in a left aligned icon
+          --  overlay: result is left padded with spaces to hide any additional '#'
+          position = 'overlay',
+          -- Replaces '#+' of 'atx_h._marker'
+          -- The number of '#' in the heading determines the 'level'
+          -- The 'level' is used to index into the array using a cycle
+          icons = { '󰲡 ', '󰲣 ', '󰲥 ', '󰲧 ', '󰲩 ', '󰲫 ' },
+          -- Added to the sign column if enabled
+          -- The 'level' is used to index into the array using a cycle
+          signs = { '󰫎 ' },
+          -- Width of the heading background:
+          --  block: width of the heading text
+          --  full: full width of the window
+          width = 'full',
+          -- The 'level' is used to index into the array using a clamp
+          -- Highlight for the heading icon and extends through the entire line
+          backgrounds = {
+            'RenderMarkdownH1Bg',
+            'RenderMarkdownH2Bg',
+            'RenderMarkdownH3Bg',
+            'RenderMarkdownH4Bg',
+            'RenderMarkdownH5Bg',
+            'RenderMarkdownH6Bg',
+          },
+          -- The 'level' is used to index into the array using a clamp
+          -- Highlight for the heading and sign icons
+          foregrounds = {
+            'RenderMarkdownH1',
+            'RenderMarkdownH2',
+            'RenderMarkdownH3',
+            'RenderMarkdownH4',
+            'RenderMarkdownH5',
+            'RenderMarkdownH6',
+          },
+        },
+        code = {
+          -- Turn on / off code block & inline code rendering
+          enabled = true,
+          -- Turn on / off any sign column related rendering
+          sign = true,
+          -- Determines how code blocks & inline code are rendered:
+          --  none: disables all rendering
+          --  normal: adds highlight group to code blocks & inline code, adds padding to code blocks
+          --  language: adds language icon to sign column if enabled and icon + name above code blocks
+          --  full: normal + language
+          style = 'full',
+          -- Amount of padding to add to the left of code blocks
+          left_pad = 0,
+          -- Amount of padding to add to the right of code blocks when width is 'block'
+          right_pad = 0,
+          -- Width of the code block background:
+          --  block: width of the code block
+          --  full: full width of the window
+          width = 'full',
+          -- Determins how the top / bottom of code block are rendered:
+          --  thick: use the same highlight as the code body
+          --  thin: when lines are empty overlay the above & below icons
+          border = 'thin',
+          -- Used above code blocks for thin border
+          above = '▄',
+          -- Used below code blocks for thin border
+          below = '▀',
+          -- Highlight for code blocks & inline code
+          highlight = 'RenderMarkdownCode',
+          highlight_inline = 'RenderMarkdownCodeInline',
+        },
+        dash = {
+          -- Turn on / off thematic break rendering
+          enabled = true,
+          -- Replaces '---'|'***'|'___'|'* * *' of 'thematic_break'
+          -- The icon gets repeated across the window's width
+          icon = '─',
+          -- Width of the generated line:
+          --  <integer>: a hard coded width value
+          --  full: full width of the window
+          width = 'full',
+          -- Highlight for the whole line generated from the icon
+          highlight = 'RenderMarkdownDash',
+        },
+        bullet = {
+          -- Turn on / off list bullet rendering
+          enabled = true,
+          -- Replaces '-'|'+'|'*' of 'list_item'
+          -- How deeply nested the list is determines the 'level'
+          -- The 'level' is used to index into the array using a cycle
+          -- If the item is a 'checkbox' a conceal is used to hide the bullet instead
+          icons = { '●', '○', '◆', '◇' },
+          -- Padding to add to the right of bullet point
+          right_pad = 0,
+          -- Highlight for the bullet icon
+          highlight = 'RenderMarkdownBullet',
+        },
+        -- Checkboxes are a special instance of a 'list_item' that start with a 'shortcut_link'
+        -- There are two special states for unchecked & checked defined in the markdown grammar
+        checkbox = {
+          -- Turn on / off checkbox state rendering
+          enabled = true,
+          unchecked = {
+            -- Replaces '[ ]' of 'task_list_marker_unchecked'
+            icon = '󰄱 ',
+            -- Highlight for the unchecked icon
+            highlight = 'RenderMarkdownUnchecked',
+          },
+          checked = {
+            -- Replaces '[x]' of 'task_list_marker_checked'
+            icon = '󰱒 ',
+            -- Highligh for the checked icon
+            highlight = 'RenderMarkdownChecked',
+          },
+          -- Define custom checkbox states, more involved as they are not part of the markdown grammar
+          -- As a result this requires neovim >= 0.10.0 since it relies on 'inline' extmarks
+          -- Can specify as many additional states as you like following the 'todo' pattern below
+          --   The key in this case 'todo' is for healthcheck and to allow users to change its values
+          --   'raw': Matched against the raw text of a 'shortcut_link'
+          --   'rendered': Replaces the 'raw' value when rendering
+          --   'highlight': Highlight for the 'rendered' icon
+          custom = {
+            todo = { raw = '[-]', rendered = '󰥔 ', highlight = 'RenderMarkdownTodo' },
+          },
+        },
+        quote = {
+          -- Turn on / off block quote & callout rendering
+          enabled = true,
+          -- Replaces '>' of 'block_quote'
+          icon = '▋',
+          -- Highlight for the quote icon
+          highlight = 'RenderMarkdownQuote',
+        },
+        pipe_table = {
+          -- Turn on / off pipe table rendering
+          enabled = true,
+          -- Determines how the table as a whole is rendered:
+          --  none: disables all rendering
+          --  normal: applies the 'cell' style rendering to each row of the table
+          --  full: normal + a top & bottom line that fill out the table when lengths match
+          style = 'full',
+          -- Determines how individual cells of a table are rendered:
+          --  overlay: writes completely over the table, removing conceal behavior and highlights
+          --  raw: replaces only the '|' characters in each row, leaving the cells unmodified
+          --  padded: raw + cells are padded with inline extmarks to make up for any concealed text
+          cell = 'padded',
+          -- Gets placed in delimiter row for each column, position is based on alignmnet
+          alignment_indicator = '━',
+          -- Characters used to replace table border
+          -- Correspond to top(3), delimiter(3), bottom(3), vertical, & horizontal
+          -- stylua: ignore
+          border = {
+            '┌', '┬', '┐',
+            '├', '┼', '┤',
+            '└', '┴', '┘',
+            '│', '─',
+          },
+          -- Highlight for table heading, delimiter, and the line above
+          head = 'RenderMarkdownTableHead',
+          -- Highlight for everything else, main table rows and the line below
+          row = 'RenderMarkdownTableRow',
+          -- Highlight for inline padding used to add back concealed space
+          filler = 'RenderMarkdownTableFill',
+        },
+        -- Callouts are a special instance of a 'block_quote' that start with a 'shortcut_link'
+        -- Can specify as many additional values as you like following the pattern from any below, such as 'note'
+        --   The key in this case 'note' is for healthcheck and to allow users to change its values
+        --   'raw': Matched against the raw text of a 'shortcut_link', case insensitive
+        --   'rendered': Replaces the 'raw' value when rendering
+        --   'highlight': Highlight for the 'rendered' text and quote markers
+        callout = {
+          note = { raw = '[!NOTE]', rendered = '󰋽 Note', highlight = 'RenderMarkdownInfo' },
+          tip = { raw = '[!TIP]', rendered = '󰌶 Tip', highlight = 'RenderMarkdownSuccess' },
+          important = { raw = '[!IMPORTANT]', rendered = '󰅾 Important', highlight = 'RenderMarkdownHint' },
+          warning = { raw = '[!WARNING]', rendered = '󰀪 Warning', highlight = 'RenderMarkdownWarn' },
+          caution = { raw = '[!CAUTION]', rendered = '󰳦 Caution', highlight = 'RenderMarkdownError' },
+          -- Obsidian: https://help.a.md/Editing+and+formatting/Callouts
+          abstract = { raw = '[!ABSTRACT]', rendered = '󰨸 Abstract', highlight = 'RenderMarkdownInfo' },
+          todo = { raw = '[!TODO]', rendered = '󰗡 Todo', highlight = 'RenderMarkdownInfo' },
+          success = { raw = '[!SUCCESS]', rendered = '󰄬 Success', highlight = 'RenderMarkdownSuccess' },
+          question = { raw = '[!QUESTION]', rendered = '󰘥 Question', highlight = 'RenderMarkdownWarn' },
+          failure = { raw = '[!FAILURE]', rendered = '󰅖 Failure', highlight = 'RenderMarkdownError' },
+          danger = { raw = '[!DANGER]', rendered = '󱐌 Danger', highlight = 'RenderMarkdownError' },
+          bug = { raw = '[!BUG]', rendered = '󰨰 Bug', highlight = 'RenderMarkdownError' },
+          example = { raw = '[!EXAMPLE]', rendered = '󰉹 Example', highlight = 'RenderMarkdownHint' },
+          quote = { raw = '[!QUOTE]', rendered = '󱆨 Quote', highlight = 'RenderMarkdownQuote' },
+        },
+        link = {
+          -- Turn on / off inline link icon rendering
+          enabled = true,
+          -- Inlined with 'image' elements
+          image = '󰥶 ',
+          -- Inlined with 'inline_link' elements
+          hyperlink = '󰌹 ',
+          -- Applies to the inlined icon
+          highlight = 'RenderMarkdownLink',
+        },
+        sign = {
+          -- Turn on / off sign rendering
+          enabled = true,
+          -- Applies to background of sign text
+          highlight = 'RenderMarkdownSign',
+        },
+        -- Window options to use that change between rendered and raw view
+        win_options = {
+          -- See :h 'conceallevel'
+          conceallevel = {
+            -- Used when not being rendered, get user setting
+            default = vim.api.nvim_get_option_value('conceallevel', {}),
+            -- Used when being rendered, concealed text is completely hidden
+            rendered = 3,
+          },
+          -- See :h 'concealcursor'
+          concealcursor = {
+            -- Used when not being rendered, get user setting
+            default = vim.api.nvim_get_option_value('concealcursor', {}),
+            -- Used when being rendered, disable concealing text in all modes
+            rendered = '',
+          },
+        },
+        -- More granular configuration mechanism, allows different aspects of buffers
+        -- to have their own behavior. Values default to the top level configuration
+        -- if no override is provided. Supports the following fields:
+        --   enabled, max_file_size, render_modes, anti_conceal, heading, code, dash, bullet,
+        --   checkbox, quote, pipe_table, callout, link, sign, win_options
+        overrides = {
+          -- Overrides for different buftypes, see :h 'buftype'
+          buftype = {
+            nofile = {
+              sign = { enabled = false },
+            },
+          },
+        },
+        -- Mapping from treesitter language to user defined handlers
+        -- See 'Custom Handlers' document for more info
+        custom_handlers = {},
+      }
+    end,
+  },
+
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
