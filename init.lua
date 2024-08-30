@@ -168,8 +168,6 @@ require('lazy').setup({
     'OXY2DEV/markview.nvim',
     lazy = false, -- Recommended
     -- ft = "markdown" -- If you decide to lazy-load anyway
-    hybrid_modes = { 'n' },
-
     dependencies = {
       -- You will not need this if you installed the
       -- parsers manually
@@ -177,6 +175,9 @@ require('lazy').setup({
       'nvim-treesitter/nvim-treesitter',
 
       'nvim-tree/nvim-web-devicons',
+    },
+    opts = {
+      hybrid_modes = { 'n' },
     },
   },
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
