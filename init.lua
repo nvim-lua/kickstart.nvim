@@ -155,6 +155,11 @@ vim.opt.inccommand = 'split'
 -- Show which line your cursor is on
 vim.opt.cursorline = true
 
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.softtabstop = 2
+vim.opt.expandtab = true
+
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
@@ -243,8 +248,20 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  'github/copilot.vim', -- GitHub Copilot integration
+  -- 'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  -- 'github/copilot.vim', -- GitHub Copilot integration
+
+  {
+    'christoomey/vim-tmux-navigator', -- Seamless navigation between tmux panes and vim splits
+    cmd = { 'TmuxNavigateLeft', 'TmuxNavigateDown', 'TmuxNavigateUp', 'TmuxNavigateRight', 'TmuxNavigatePrevious' },
+    keys = {
+      { '<C-h>', 'TmuxNavigateLeft', { mode = 'n', desc = 'Navigate left' } },
+      { '<C-j>', 'TmuxNavigateDown', { mode = 'n', desc = 'Navigate down' } },
+      { '<C-k>', 'TmuxNavigateUp', { mode = 'n', desc = 'Navigate up' } },
+      { '<C-l>', 'TmuxNavigateRight', { mode = 'n', desc = 'Navigate right' } },
+      { '<C-\\>', 'TmuxNavigatePrevious', { mode = 'n', desc = 'Navigate to previous' } },
+    },
+  },
 
   -- nvim-tree
   {
@@ -261,7 +278,7 @@ require('lazy').setup({
           group_empty = true,
         },
         filters = {
-          dotfiles = true,
+          dotfiles = false,
         },
       }
     end,
@@ -916,7 +933,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
