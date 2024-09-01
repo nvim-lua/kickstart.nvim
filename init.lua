@@ -633,6 +633,7 @@ require('lazy').setup({
             },
           },
         },
+        jsonlint = {},
         --
 
         lua_ls = {
