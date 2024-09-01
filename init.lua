@@ -76,6 +76,15 @@ vim.opt.scrolloff = 10
 -- Set ConcealLevel for obsidian.nvim to work
 vim.opt.conceallevel = 2
 
+-- Set TAB details -> to 2 spaces
+-- NOTE: differnt types of code have tab spacing set in
+--  the language syntax file. If it's standard I won't get up
+--  in arms about it...
+-- vim.opt.tabstop = 2
+-- vim.opt.shiftwidth = 2
+-- vim.opt.expandtab = true
+-- vim.bo.softtabstop = 2
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -424,6 +433,10 @@ require('lazy').setup({
         end,
       })
 
+      -- See full Code Diagnostic Text
+      --  Useful for if they float off screen
+      vim.keymap.set('n', '<leader>dd', '<cmd>lua vim.diagnostic.open_float() <CR>', { desc = 'Focuses Code Diagnostics' })
+
       -- LSP servers and clients are able to communicate to each other what features they support.
       --  By default, Neovim doesn't support everything that is in the LSP specification.
       --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
@@ -527,6 +540,7 @@ require('lazy').setup({
           lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
         }
       end,
+      stop_after_first = true,
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
@@ -534,7 +548,8 @@ require('lazy').setup({
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        -- javascript = { { "prettierd", "prettier" } },
+        javascript = { 'prettierd' },
+        typescript = { 'prettierd' },
       },
     },
   },
@@ -656,46 +671,46 @@ require('lazy').setup({
   },
 
   -- ADD COLORSCHEMES HERE (or at least around here)
-  {
-    'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
-    config = function()
-      require('tokyonight').setup()
-    end,
-    init = function()
-      vim.cmd.colorscheme 'tokyonight'
-
-      vim.cmd.hi 'Comment gui=none'
-    end,
-  },
   -- {
-  --   'catppuccin/nvim',
-  --   name = 'catppuccin',
-  --   priority = 1000,
+  --   'folke/tokyonight.nvim',
+  --   priority = 1000, -- Make sure to load this before all the other start plugins.
   --   config = function()
-  --     require('catppuccin').setup {
-  --       name = 'catppuccin-mocha',
-  --       priority = 1000,
-  --       flavour = 'mocha',
-  --       term_colors = true,
-  --       integrations = {
-  --         cmp = true,
-  --         gitsigns = true,
-  --         nvimtree = true,
-  --         treesitter = true,
-  --         -- notify = false,
-  --         mini = {
-  --           enabled = true,
-  --           indentscope_color = '',
-  --         },
-  --       },
-  --     }
+  --     require('tokyonight').setup()
   --   end,
   --   init = function()
-  --     vim.cmd.colorscheme 'catppuccin-mocha'
+  --     vim.cmd.colorscheme 'tokyonight'
+  --
   --     vim.cmd.hi 'Comment gui=none'
   --   end,
   -- },
+  {
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    priority = 1000,
+    config = function()
+      require('catppuccin').setup {
+        name = 'catppuccin-mocha',
+        priority = 1000,
+        flavour = 'mocha',
+        term_colors = true,
+        integrations = {
+          cmp = true,
+          gitsigns = true,
+          nvimtree = true,
+          treesitter = true,
+          -- notify = false,
+          mini = {
+            enabled = true,
+            indentscope_color = '',
+          },
+        },
+      }
+    end,
+    init = function()
+      vim.cmd.colorscheme 'catppuccin-mocha'
+      vim.cmd.hi 'Comment gui=none'
+    end,
+  },
   -- END COLORSCHEMES CONFIG
 
   -- Highlight todo, notes, etc in comments
@@ -823,7 +838,11 @@ require('lazy').setup({
   {
     'm4xshen/autoclose.nvim',
     config = function()
-      require('autoclose').setup {}
+      require('autoclose').setup {
+        keys = {
+          ["'"] = { escape = true, close = false, pair = "''", disabled_filetypes = {} },
+        },
+      }
     end,
   },
   -- PLUGIN: obsidian
@@ -855,8 +874,21 @@ require('lazy').setup({
       },
     },
   },
+  {
+    'rmagatti/auto-session',
+    lazy = false,
+    dependencies = {
+      'nvim-telescope/telescope.nvim', -- Only needed if you want to use session lens
+    },
 
-  -- ADD COLORSCHEMES here!
+    ---enables autocomplete for opts
+    ---@module "auto-session"
+    ---@type AutoSession.Config
+    opts = {
+      suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
+      -- log_level = 'debug',
+    },
+  },
 
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
