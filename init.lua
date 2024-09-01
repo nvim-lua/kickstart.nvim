@@ -73,6 +73,9 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- Set ConcealLevel for obsidian.nvim to work
+vim.opt.conceallevel = 2
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -324,28 +327,6 @@ require('lazy').setup({
       { 'Bilal2453/luvit-meta', lazy = true },
     },
     config = function()
-      -- Brief aside: **What is LSP?**
-      --
-      -- LSP is an initialism you've probably heard, but might not understand what it is.
-      --
-      -- LSP stands for Language Server Protocol. It's a protocol that helps editors
-      -- and language tooling communicate in a standardized fashion.
-      --
-      -- In general, you have a "server" which is some tool built to understand a particular
-      -- language (such as `gopls`, `lua_ls`, `rust_analyzer`, etc.). These Language Servers
-      -- (sometimes called LSP servers, but that's kind of like ATM Machine) are standalone
-      -- processes that communicate with some "client" - in this case, Neovim!
-      --
-      -- LSP provides Neovim with features like:
-      --  - Go to definition
-      --  - Find references
-      --  - Autocompletion
-      --  - Symbol Search
-      --  - and more!
-      --
-      -- Thus, Language Servers are external tools that must be installed separately from
-      -- Neovim. This is where `mason` and related plugins come into play.
-      --
       -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
       -- and elegantly composed help section, `:help lsp-vs-treesitter`
 
@@ -625,13 +606,13 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
+          -- ['<C-y>'] = cmp.mapping.confirm { select = true },
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
-          --['<CR>'] = cmp.mapping.confirm { select = true },
-          --['<Tab>'] = cmp.mapping.select_next_item(),
-          --['<S-Tab>'] = cmp.mapping.select_prev_item(),
+          ['<CR>'] = cmp.mapping.confirm { select = true },
+          ['<Tab>'] = cmp.mapping.select_next_item(),
+          ['<S-Tab>'] = cmp.mapping.select_prev_item(),
 
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
@@ -675,45 +656,46 @@ require('lazy').setup({
   },
 
   -- ADD COLORSCHEMES HERE (or at least around here)
-  -- {
-  --   -- Change the name of the colorscheme plugin below, and then
-  --   -- change the command in the config to whatever the name of that colorscheme is.
-  --   --
-  --   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-  --   'folke/tokyonight.nvim',
-  --   priority = 1000, -- Make sure to load this before all the other start plugins.
-  --   init = function()
-  --     vim.cmd.colorscheme 'catppuccin'
-  --
-  --     vim.cmd.hi 'Comment gui=none'
-  --   end,
-  -- },
   {
-    'catppuccin/nvim',
-    name = 'catppuccin',
-    priority = 1000,
+    'folke/tokyonight.nvim',
+    priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
-      require('catppuccin').setup {
-        -- name = 'catppuccin',
-        -- priority = 1000,
-        integrations = {
-          cmp = true,
-          -- gitsigns = true,
-          nvimtree = true,
-          treesitter = true,
-          -- notify = false,
-          mini = {
-            enabled = true,
-            indentscope_color = '',
-          },
-        },
-      }
+      require('tokyonight').setup()
     end,
     init = function()
-      vim.cmd.colorscheme 'catppuccin-frappe'
+      vim.cmd.colorscheme 'tokyonight'
+
       vim.cmd.hi 'Comment gui=none'
     end,
   },
+  -- {
+  --   'catppuccin/nvim',
+  --   name = 'catppuccin',
+  --   priority = 1000,
+  --   config = function()
+  --     require('catppuccin').setup {
+  --       name = 'catppuccin-mocha',
+  --       priority = 1000,
+  --       flavour = 'mocha',
+  --       term_colors = true,
+  --       integrations = {
+  --         cmp = true,
+  --         gitsigns = true,
+  --         nvimtree = true,
+  --         treesitter = true,
+  --         -- notify = false,
+  --         mini = {
+  --           enabled = true,
+  --           indentscope_color = '',
+  --         },
+  --       },
+  --     }
+  --   end,
+  --   init = function()
+  --     vim.cmd.colorscheme 'catppuccin-mocha'
+  --     vim.cmd.hi 'Comment gui=none'
+  --   end,
+  -- },
   -- END COLORSCHEMES CONFIG
 
   -- Highlight todo, notes, etc in comments
@@ -844,6 +826,36 @@ require('lazy').setup({
       require('autoclose').setup {}
     end,
   },
+  -- PLUGIN: obsidian
+  {
+    'epwalsh/obsidian.nvim',
+    version = '*',
+    lazy = true,
+    ft = 'markdown',
+    -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
+    -- event = {
+    --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
+    --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/*.md"
+    --   -- refer to `:h file-pattern` for more examples
+    --   "BufReadPre path/to/my-vault/*.md",
+    --   "BufNewFile path/to/my-vault/*.md",
+    -- },
+    dependencies = {
+      -- Required.
+      'nvim-lua/plenary.nvim',
+
+      -- see below for full list of optional dependencies 👇
+    },
+    opts = {
+      workspaces = {
+        {
+          name = 'personal',
+          path = '~/Documents/alecaerdron',
+        },
+      },
+    },
+  },
+
   -- ADD COLORSCHEMES here!
 
   --  Here are some example plugins that I've included in the Kickstart repository.
@@ -860,7 +872,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
+  --    For additional information, see `:help lazy.nvim-jkjlazy.nvim-structuring-your-plugins`
   -- { import = 'custom.plugins' },
 }, {
   ui = {
