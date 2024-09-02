@@ -923,6 +923,18 @@ require('lazy').setup({
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
+      --  Animation:
+      -- require('mini.animate').setup()
+
+      -- Trailing spaces:
+      vim.api.nvim_create_autocmd('Filetype', {
+        -- Disable it for the dashboard
+        pattern = 'dashboard',
+        callback = function(args)
+          vim.b[args.buf].minitrailspace_disable = true
+        end,
+      })
+      require('mini.trailspace').setup()
     end,
   },
   { -- Highlight, edit, and navigate code
