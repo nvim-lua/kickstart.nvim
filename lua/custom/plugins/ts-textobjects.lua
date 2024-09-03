@@ -89,10 +89,10 @@ return {
           -- Use if you want more granular movements
           -- Make it even more gradual by adding multiple queries and regex.
           goto_next = {
-            [']c'] = { query = '@conditional.outer', desc = 'Next [C]onditional' },
+            [']d'] = { query = '@conditional.outer', desc = 'Next [D]ecision (Conditional)' },
           },
           goto_previous = {
-            ['[c'] = { query = '@conditional.outer', desc = 'Previous [C]onditional]' },
+            ['[d'] = { query = '@conditional.outer', desc = 'Previous [D]ecision (Conditional)' },
           },
         },
       },
