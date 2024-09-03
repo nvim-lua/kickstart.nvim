@@ -835,6 +835,20 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+
+      require('tokyonight').setup {
+        -- use the night style
+        style = 'night',
+        -- disable italic for functions
+        styles = {
+          functions = {},
+        },
+        -- Change the "hint" color to the "orange" color, and make the "error" color bright red
+        on_colors = function(colors)
+          colors.bg = '#011423'
+        end,
+      }
+
       vim.cmd.colorscheme 'tokyonight-night'
 
       -- You can configure highlights by doing something like:
