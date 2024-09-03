@@ -908,6 +908,12 @@ require('lazy').setup({
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
 
+  { -- Review undo history with a tree view
+    'mbbill/undotree',
+    event = 'VeryLazy', -- Set the loading event to 'VeryLazy'
+    vim.keymap.set('n', '<leader>vu', ':UndotreeToggle<CR>', { desc = 'Toggle Undotree' }),
+  },
+
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
