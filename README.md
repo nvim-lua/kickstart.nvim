@@ -1,4 +1,5 @@
-# kickstart.nvim
+# asmodeus.nvim
+> Iḿ too lazy to rewrite the whole README right now :(
 
 ## Introduction
 
