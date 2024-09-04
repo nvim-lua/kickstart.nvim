@@ -776,6 +776,9 @@ require('lazy').setup({
         biome = {},
         -- npm install -g typescript typescript-language-server
         tsserver = {},
+        harper_ls = {
+          -- userDictPath = '~/dict.txt',
+        },
         ltex = {
           ltex = {
             additionalRules = {
@@ -784,7 +787,6 @@ require('lazy').setup({
           },
         },
       }
-
       -- Ensure the servers and tools above are installed
       --  To check the current status of installed tools and/or manually install
       --  other tools, you can run
@@ -1039,7 +1041,33 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'python', 'rust', 'tsx', 'typescript', 'javascript', 'css', 'json', 'comment', 'gitignore', 'kdl', 'regex', 'sql', 'toml', 'yaml'},
+      ensure_installed = {
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc',
+        'python',
+        'rust',
+        'tsx',
+        'typescript',
+        'javascript',
+        'css',
+        'json',
+        'comment',
+        'gitignore',
+        'kdl',
+        'regex',
+        'sql',
+        'toml',
+        'yaml',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
