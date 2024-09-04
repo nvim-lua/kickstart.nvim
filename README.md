@@ -1,5 +1,5 @@
 # asmodeus.nvim
-> Iḿ too lazy to rewrite the whole README right now :(
+> I'm too lazy to rewrite the whole README right now :(
 
 ## Introduction
 
