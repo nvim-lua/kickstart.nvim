@@ -20,7 +20,7 @@ return {
     workspaces = {
       {
         name = 'Artemis',
-        path = '~/Documents/Obsidian/Artemis/',
+        path = '/mnt/c/Users/jkosk/OneDrive/Documents/Artemis/',
       },
     },
 
