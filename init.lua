@@ -910,8 +910,9 @@ require('lazy').setup({
 
   { -- Review undo history with a tree view
     'mbbill/undotree',
-    event = 'VeryLazy', -- Set the loading event to 'VeryLazy'
-    vim.keymap.set('n', '<leader>vu', ':UndotreeToggle<CR>', { desc = 'Toggle Undotree' }),
+    keys = {
+      {'<leader>vu', ':UndotreeToggle<CR>', desc = 'Toggle Undotree' }
+    }
   },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
