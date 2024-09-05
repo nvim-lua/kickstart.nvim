@@ -20,7 +20,6 @@ return {
     vim.keymap.set('n', '<Tab>', '<Cmd>BufferNext<CR>', { noremap = true, silent = true, desc = 'Move to next buffer' })
     vim.keymap.set('n', '<S-Tab>', '<Cmd>BufferPrevious<CR>', { noremap = true, silent = true, desc = 'Move to previous buffer' })
 
-    vim.keymap.set('n', '<leader>bc', '<Cmd>BufferClose<CR>', { noremap = true, silent = true, desc = 'Close current buffer' })
     vim.keymap.set('n', '<leader>q', '<Cmd>BufferClose<CR>', { noremap = true, silent = true, desc = 'Close current buffer' })
   end,
 }
