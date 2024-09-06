@@ -1,4 +1,6 @@
 return {
   'dstein64/nvim-scrollview',
-  opts = {},
+  opts = {
+    signs_on_startup = { 'diagnostics', 'search', 'cursor' },
+  },
 }
