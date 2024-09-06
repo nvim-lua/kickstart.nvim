@@ -637,7 +637,7 @@ require('lazy').setup({
           },
         },
         jsonlint = {},
-        --
+        markdownlint = {},
 
         lua_ls = {
           -- cmd = {...},
