@@ -338,14 +338,6 @@ require('lazy').setup({
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
     },
-      require('which-key').add {
-        { '<leader>c', group = '[C]ode' },
-        { '<leader>d', group = '[D]ocument]' },
-        { '<leader>r', group = '[R]ename' },
-        { '<leader>s', group = '[S]earch' },
-        { '<leader>w', group = '[W]orkspace' },
-      }
-    end,
   },
 
   -- NOTE: Plugins can specify dependencies.
@@ -480,9 +472,9 @@ require('lazy').setup({
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
-    opts = {
-      inlay_hints = { enabled = true },
-    },
+    -- opts = {
+    --   inlay_hints = { enabled = true },
+    -- },
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
@@ -711,8 +703,6 @@ require('lazy').setup({
             },
           },
         },
-        --
-
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
@@ -723,13 +713,12 @@ require('lazy').setup({
                 callSnippet = 'Replace',
               },
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-              diagnostics = { -- disable = { 'missing-fields' } },
+              diagnostics = { disable = { 'missing-fields' } },
                 globals = { 'vim' },
               },
               hint = { enable = true },
             },
           },
-        },
         ols = {},
       }
 
@@ -762,7 +751,6 @@ require('lazy').setup({
         },
       }
     end,
-    checker = { enabled = true },
   },
 
   { -- Autoformat
@@ -1026,11 +1014,11 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
