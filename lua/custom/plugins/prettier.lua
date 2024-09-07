@@ -1,0 +1,3 @@
+return {
+  'prettier/vim-prettier'
+}
