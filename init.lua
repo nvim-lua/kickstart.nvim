@@ -714,11 +714,11 @@ require('lazy').setup({
               },
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               diagnostics = { disable = { 'missing-fields' } },
-                globals = { 'vim' },
-              },
-              hint = { enable = true },
+              globals = { 'vim' },
             },
+            hint = { enable = true },
           },
+        },
         ols = {},
       }
 
@@ -741,6 +741,10 @@ require('lazy').setup({
       require('mason-lspconfig').setup {
         handlers = {
           function(server_name)
+            -- temporary solution based on https://github.com/neovim/nvim-lspconfig/pull/3232#issuecomment-2331025714 until things work correctly
+            if server_name == 'tsserver' then
+              server_name = 'ts_ls'
+            end
             local server = servers[server_name] or {}
             -- This handles overriding only values explicitly passed
             -- by the server configuration above. Useful when disabling
@@ -822,10 +826,10 @@ require('lazy').setup({
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
           {
-             'rafamadriz/friendly-snippets',
-             config = function()
-               require('luasnip.loaders.from_vscode').lazy_load()
-             end,
+            'rafamadriz/friendly-snippets',
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load()
+            end,
           },
         },
       },
