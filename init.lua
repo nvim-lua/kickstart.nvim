@@ -147,6 +147,20 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   {
+    'krivahtoo/silicon.nvim',
+    build = 'install.sh | silicon',
+    init = function()
+      os.execute 'silicon --build-cache'
+    end,
+    config = function()
+      local silicon = require 'silicon'
+      silicon.setup {
+        font = 'FiraCode Nerd Font Mono',
+        theme = 'Catppuccin-Macchiato',
+      }
+    end,
+  },
+  {
     'folke/trouble.nvim',
     opts = {},
     cmd = 'Trouble',
