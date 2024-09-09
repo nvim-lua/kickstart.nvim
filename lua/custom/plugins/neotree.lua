@@ -27,6 +27,19 @@ return {
         end,
       },
     },
+    keys = {
+      {
+        '<leader>o',
+        function()
+          if vim.bo.filetype == 'neo-tree' then
+            vim.cmd.wincmd 'p'
+          else
+            vim.cmd.Neotree 'focus'
+          end
+        end,
+        desc = 'Toggle Explorer Focus',
+      },
+    },
     config = function()
       -- If you want icons for diagnostic errors, you'll need to define them somewhere:
       vim.fn.sign_define('DiagnosticSignError', { text = ' ', texthl = 'DiagnosticSignError' })
@@ -318,9 +331,9 @@ return {
         },
       }
 
-      vim.cmd [[nnoremap \ :Neotree reveal<cr>]]
+      -- vim.cmd [[nnoremap \ :Neotree reveal<cr>]]
       vim.keymap.set('n', '<leader>e', ':Neotree toggle position=right<CR>', { noremap = true, silent = true }) -- focus file explorer
-      vim.keymap.set('n', '<leader>ngs', ':Neotree float git_status<CR>', { noremap = true, silent = true }) -- open git status window
+      vim.keymap.set('n', '<leader>gt', ':Neotree float git_status<CR>', { noremap = true, silent = true }) -- open git status window
     end,
   },
 }
