@@ -230,14 +230,14 @@ require('lazy').setup({
     'sindrets/diffview.nvim',
   },
 
-  { 
+  {
     "folke/flash.nvim",
     event = "VeryLazy",
     -- @type Flash.Config
     opts = {},
     -- stylua: ignore
     keys = {
-      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+      { "f", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
       { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
       { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
       { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
@@ -348,11 +348,11 @@ require('lazy').setup({
         --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
         --   },
         -- },
-        defaults = {
-            layout_config = {
-                preview_width = 0.7,
-            },
-        },
+        --defaults = {
+        --    layout_config = {
+        --        preview_width = 0.7,
+        --    },
+        --},
         pickers = {
             find_files = {
                 find_command = { "rg", "--files", "-g", "!**/**Linux_x86_64/**", "-g", "!compile_commands.json"},
@@ -593,7 +593,7 @@ require('lazy').setup({
               --  return vim.fn.getcwd()
               --end
           root_dir = function(fname)
-              return require('lspconfig/util').root_pattern( unpack({'compile_commands.json', 'tree.make'}))(fname)
+              return require('lspconfig/util').root_pattern( unpack({'compile_commands.json'}))(fname)
           end
         },
         -- gopls = {},
@@ -927,13 +927,17 @@ require('lazy').setup({
       },
     },
   },
+  --{
+  --   "m4xshen/hardtime.nvim",
+  --   dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
+  --   opts = {
+  --     max_count = 10,
+  --     restriction_mode = "hint",
+  --   }
+  --},
   {
-     "m4xshen/hardtime.nvim",
-     dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
-     opts = {
-       max_count = 10,
-       restriction_mode = "hint",
-     }
+    'ckipp01/nvim-jenkinsfile-linter', 
+    requires = { "nvim-lua/plenary.nvim" }
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
