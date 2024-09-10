@@ -14,8 +14,7 @@ vim.keymap.set('n', ';', ':', { desc = 'Replace : by ;' })
 
 vim.keymap.set('n', 'Q', ':noh<CR>')
 
-vim.keymap.set('n', '<leader>ww', ':w<CR>', { desc = 'Save file' })
-vim.keymap.set('n', '<leader>wq', ':wq<CR>', { desc = 'Save and quit file' })
+vim.keymap.set('n', '<leader>w', ':w<CR>', { desc = 'Save file' })
 
 -- insert mode
 vim.keymap.set('i', '<C-h>', '<left>')
