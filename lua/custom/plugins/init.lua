@@ -2,4 +2,12 @@
 --  I promise not to create any merge conflicts in this directory :)
 --
 -- See the kickstart.nvim README for more information
-return {}
+return {
+  {
+    'brenoprata10/nvim-highlight-colors',
+
+    config = function()
+      require('nvim-highlight-colors').setup {}
+    end,
+  },
+}
