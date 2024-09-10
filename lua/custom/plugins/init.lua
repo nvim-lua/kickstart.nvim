@@ -2,4 +2,20 @@
 --  I promise not to create any merge conflicts in this directory :)
 --
 -- See the kickstart.nvim README for more information
-return {}
+return {
+	-- Doesn't work on windows sometimes so it's commented out
+	-- {
+	--   'krivahtoo/silicon.nvim',
+	--   build = 'install.sh | silicon',
+	--   init = function()
+	--     os.execute 'silicon --build-cache'
+	--   end,
+	--   config = function()
+	--     local silicon = require 'silicon'
+	--     silicon.setup {
+	--       font = 'FiraCode Nerd Font Mono',
+	--       theme = 'Catppuccin-Macchiato',
+	--     }
+	--   end,
+	-- },
+}
