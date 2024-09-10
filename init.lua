@@ -93,6 +93,9 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = true
 
+-- disable some key in sql extensions
+vim.g.ftplugin_sql_omni_key = '<C-j>'
+
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
@@ -141,6 +144,7 @@ vim.opt.splitbelow = false
 --  and `:help 'listchars'`
 vim.opt.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.keymap.set('n', '<leader><Tab><Tab>', ':set invlist<CR>', { desc = 'Toggle list chars' })
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
@@ -156,6 +160,8 @@ vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.smarttab = true
 vim.opt.expandtab = true
+
+vim.opt.foldenable = false
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -367,6 +373,7 @@ require('lazy').setup({
       -- Enable telescope extensions, if they are installed
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
+      pcall(require('telescope').load_extension, 'rest')
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
@@ -523,6 +530,8 @@ require('lazy').setup({
         end,
       })
 
+      vim.lsp.set_log_level 'off'
+
       -- LSP servers and clients are able to communicate to each other what features they support.
       --  By default, Neovim doesn't support everything that is in the LSP Specification.
       --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
@@ -541,7 +550,18 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         clangd = {},
-        gopls = {},
+        gopls = {
+          settings = {
+            gopls = {
+              buildFlags = { '-tags=wireinject' },
+              standaloneTags = {
+                'ignore',
+                'wireinject',
+                '!wireinject',
+              },
+            },
+          },
+        },
         rust_analyzer = {},
         tsserver = {},
 
@@ -620,8 +640,10 @@ require('lazy').setup({
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
         java = { 'google-java-format' },
-        javascript = { 'prettier' },
-        typescript = { 'prettier' },
+        javascript = { 'eslint_d', 'prettier' },
+        javascriptreact = { 'eslint_d', 'prettier' },
+        typescript = { 'eslint_d', 'prettier' },
+        typescriptreact = { 'eslint_d', 'prettier' },
         go = { 'gofmt', 'goimports', 'golines', 'gofumpt' },
       },
     },
@@ -722,6 +744,13 @@ require('lazy').setup({
           { name = 'path' },
         },
       }
+
+      cmp.setup.filetype({ 'sql', 'sqlite', 'mysql' }, {
+        sources = {
+          { name = 'vim-dadbod-completion' },
+          { name = 'buffer' },
+        },
+      })
     end,
   },
 
@@ -730,15 +759,23 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
-    'catppuccin/nvim',
-    name = 'catppuccin',
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
+    --   'catppuccin/nvim',
+    --   name = 'catppuccin',
+    --   lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    --   priority = 1000, -- make sure to load this before all the other start plugins
+    --   config = function()
+    --     -- Load the colorscheme here
+    --     vim.cmd.colorscheme 'catppuccin-mocha'
+    --     -- You can configure highlights by doing something like
+    --     vim.cmd.hi 'Comment gui=none'
+    --   end,
+    -- },
+    --
+    -- {
+    'ellisonleao/gruvbox.nvim',
+    priority = 1000,
     config = function()
-      -- Load the colorscheme here
-      vim.cmd.colorscheme 'catppuccin-mocha'
-      -- You can configure highlights by doing something like
-      vim.cmd.hi 'Comment gui=none'
+      vim.cmd.colorscheme 'gruvbox'
     end,
   },
 
@@ -842,26 +879,8 @@ require('lazy').setup({
   },
 
   { 'lewis6991/gitsigns.nvim' },
-  {
-    'nvim-tree/nvim-tree.lua',
-    config = function()
-      vim.g.loaded_netrw = 1
-      vim.g.loaded_netrwPlugin = 1
-
-      require('nvim-tree').setup {
-        view = {
-          adaptive_size = true,
-        },
-        filters = {
-          dotfiles = true,
-        },
-      }
-
-      vim.keymap.set('n', '<C-n>', ':NvimTreeFindFileToggle<CR>')
-    end,
-  },
   { 'simrat39/symbols-outline.nvim' },
-  { 'github/copilot.vim' },
+  -- { 'github/copilot.vim' },
   {
     'alexghergh/nvim-tmux-navigation',
     config = function()
@@ -879,7 +898,79 @@ require('lazy').setup({
     end,
   },
   { 'mfussenegger/nvim-jdtls' },
+  {
+    'nvim-neo-tree/neo-tree.nvim',
+    version = '*',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
+      'MunifTanjim/nui.nvim',
+    },
+    config = function()
+      require('neo-tree').setup {}
 
+      vim.keymap.set('n', '<C-n>', ':Neotree toggle<CR>')
+    end,
+  },
+  {
+    'junegunn/goyo.vim',
+    config = function()
+      vim.g.goyo_width = 120
+
+      vim.keymap.set('n', '<leader>z', ':Goyo<CR>')
+    end,
+  },
+  { 'tpope/vim-dadbod' },
+  { 'kristijanhusak/vim-dadbod-completion' },
+  { 'kristijanhusak/vim-dadbod-ui' },
+  {
+    'stevearc/oil.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require('oil').setup {
+        columns = { 'icon' },
+        keymaps = {
+          ['<C-h>'] = false,
+          ['<M-h>'] = 'actions.select_split',
+          view_options = {
+            show_hidden = true,
+          },
+        },
+      }
+      vim.keymap.set('n', '-', ':Oil<CR>', { desc = 'Open parent directory' })
+      vim.keymap.set('n', '<leader>-', require('oil').toggle_float)
+    end,
+  },
+  { 'tpope/vim-dotenv' },
+  {
+    'vhyrro/luarocks.nvim',
+    priority = 1000,
+    config = true,
+    opts = {
+      rocks = { 'lua-curl', 'nvim-nio', 'mimetypes', 'xml2lua' },
+    },
+  },
+  {
+    'rest-nvim/rest.nvim',
+    ft = 'http',
+    dependencies = { 'luarocks.nvim' },
+    config = function()
+      require('rest-nvim').setup {
+        env_file = '.env',
+        env_pattern = '\\.env$',
+        env_edit_command = 'tabedit',
+        keybinds = {
+          {
+            '<leader>rr',
+            '<cmd>Rest run<cr>',
+            'Run request under cursor',
+          },
+        },
+      }
+
+      vim.keymap.set('n', '<leader>se', require('telescope').extensions.rest.select_env, { desc = '[S]elect [E]nvironment file' })
+    end,
+  },
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- put them in the right spots if you want.

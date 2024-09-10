@@ -68,5 +68,68 @@
       "</execution>"
     ],
     "description": "Maven POM Plugin Execution"
+  },
+  "Google Format Plugin": {
+    "prefix": "mvnfmt", 
+    "body": [
+      "<plugin>",
+      "  <groupId>com.coveo</groupId>",
+      "  <artifactId>fmt-maven-plugin</artifactId>",
+      "  <version>${fmt-maven-plugin.version}</version>",
+      "  <executions>",
+      "    <execution>",
+      "      <id>google-java-format</id>",
+      "      <goals>",
+      "        <goal>check</goal>",
+      "        <!-- <goal>format</goal> -->",
+      "      </goals>",
+      "    </execution>",
+      "  </executions>",
+      "</plugin>"
+    ],
+    "description": "Google Format Plugin"
+  },
+  "Shade Plugin": {
+    "prefix": "mvnshade",
+    "body": [
+      "<plugin>",
+      "  <groupId>org.apache.maven.plugins</groupId>",
+      "  <artifactId>maven-shade-plugin</artifactId>",
+      "  <version>${maven-shade-plugin.version}</version>",
+      "  <configuration>",
+      "    <createDependencyReducedPom>true</createDependencyReducedPom>",
+      "    <filters>",
+      "      <filter>",
+      "        <artifact>*:*</artifact>",
+      "        <excludes>",
+      "          <exclude>META-INF/*.SF</exclude>",
+      "          <exclude>META-INF/*.DSA</exclude>",
+      "          <exclude>META-INF/*.RSA</exclude>",
+      "        </excludes>",
+      "      </filter>",
+      "    </filters>",
+      "  </configuration>",
+      "  <executions>",
+      "    <execution>",
+      "      <id>shade</id>",
+      "      <phase>package</phase>",
+      "      <goals>",
+      "        <goal>shade</goal>",
+      "      </goals>",
+      "      <configuration>",
+      "        <transformers>",
+      "          <transformer",
+      "                  implementation=\"org.apache.maven.plugins.shade.resource.ServicesResourceTransformer\"/>",
+      "          <transformer",
+      "                  implementation=\"org.apache.maven.plugins.shade.resource.ManifestResourceTransformer\">",
+      "            <mainClass>${mainClass}</mainClass>",
+      "          </transformer>",
+      "        </transformers>",
+      "      </configuration>",
+      "    </execution>",
+      "  </executions>",
+      "</plugin>"
+    ],
+    "description": "Maven Shade Plugin"
   }
 }
