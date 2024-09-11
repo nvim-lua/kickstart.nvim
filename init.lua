@@ -584,6 +584,7 @@ require('lazy').setup({
           cmd = {'/home/utils/llvm-17.0.6/bin/clangd',
           "--background-index",
           "--clang-tidy",
+          "--header-insertion=iwyu",
           "--j=2"},
           filetypes = {"cpp"},
           single_file_support = true,
@@ -720,12 +721,14 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
+          {
+            'rafamadriz/friendly-snippets',
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load({ include={"cpp", "python", "lua"} })
+              local snip_loader = require('luasnip.loaders.from_vscode')
+              snip_loader.lazy_load({ paths = vim.fn.stdpath("config").."/snippets/" })
+            end,
+          },
         },
         opts = {},
       },

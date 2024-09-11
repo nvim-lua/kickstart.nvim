@@ -1,0 +1,11 @@
+{
+    "iterator": {
+        "prefix": "iterator",
+        "body": [
+            "class Iterator {",
+            "}",
+            ""
+        ],
+        "description": "iterator class"
+    }
+}
