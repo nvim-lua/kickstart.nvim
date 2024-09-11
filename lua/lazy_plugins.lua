@@ -18,6 +18,7 @@ require('lazy').setup({
   require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.harpoon',
   require 'kickstart.plugins.todo_comments',
+  require 'kickstart.plugins.comments',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- require 'kickstart.plugins.debug',
