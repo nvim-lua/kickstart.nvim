@@ -82,6 +82,10 @@ return {
     opts = { signs = false },
   },
 
+  -- F# syntax/lsp
+  --
+  "ionide/Ionide-vim",
+
   -- [ GRAVEYARD ]
   -- Plugins I don't use anymore
   --------------------------------------------------

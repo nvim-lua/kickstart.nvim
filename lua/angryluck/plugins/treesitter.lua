@@ -16,11 +16,11 @@ return {
       "bash",
       "c",
       "haskell",
-      "lua",
+      -- "lua",
       "vim",
       "vimdoc",
       -- "org",
-      "norg",
+      -- "norg",
       "markdown",
     },
     ignore_install = { "latex" },
@@ -108,7 +108,8 @@ return {
     },
     refactor = {
       highlight_definitions = {
-        enable = true,
+        -- enable = true,
+        enable = false,
         -- Set to false if you have an `updatetime` of ~100.
         clear_on_cursor_move = true,
       },

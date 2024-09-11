@@ -135,19 +135,20 @@ return { -- LSP Configuration & Plugins
           },
         },
       },
-      ltex = {
-        filetypes = { "tex" },
-        settings = {
-          dictionary = {
-            ["en-US"] = { "homotopy" },
-          },
-        },
-      },
+      -- ltex = {
+      --   filetypes = { "tex" },
+      --   settings = {
+      --     dictionary = {
+      --       ["en-US"] = { "homotopy" },
+      --     },
+      --   },
+      -- },
       hls = {
         filetypes = { "haskell", "lhaskell", "cabal" },
         haskell = {
           cabalFormattingProvider = "cabalfmt",
           formattingProvider = "fourmolu",
+          -- formattingProvider = "ormolu",
         },
         single_file_suppport = true,
       },

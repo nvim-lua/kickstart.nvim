@@ -15,9 +15,12 @@ return { -- Autoformat
     formatters_by_ft = {
       lua = { "stylua" },
       haskell = { "fourmolu" },
+      -- haskell = { "ormolu" },
       json = { "jq" },
+      c = { "clang-format" },
       -- Conform can also run multiple formatters sequentially
       -- python = { "isort", "black" },
+      python = { "autopep8", "black" },
       --
       -- You can use a sub-list to tell conform to run *until* a formatter is found.
       -- javascript = { { "prettierd", "prettier" } },
