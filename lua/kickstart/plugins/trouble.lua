@@ -39,7 +39,7 @@ return {
   -- end,
   keys = {
     {
-      '<leader>fd',
+      '<leader>tt',
       '<cmd>Trouble diagnostics toggle filter.buf=0<CR>',
       desc = 'Diagnostics (Trouble)',
     },
