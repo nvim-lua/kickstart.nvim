@@ -135,11 +135,11 @@ return {
             required_width = 122, -- min width of window required to show this column
           },
           last_modified = {
-            enabled = true,
+            enabled = false,
             required_width = 88, -- min width of window required to show this column
           },
           created = {
-            enabled = true,
+            enabled = false,
             required_width = 110, -- min width of window required to show this column
           },
           symlink_target = {
@@ -215,7 +215,7 @@ return {
         filesystem = {
           filtered_items = {
             visible = false, -- when true, they will just be displayed differently than normal items
-            hide_dotfiles = true,
+            hide_dotfiles = false,
             hide_gitignored = true,
             hide_hidden = true, -- only works on Windows for hidden files/directories
             hide_by_name = {

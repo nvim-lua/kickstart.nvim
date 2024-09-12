@@ -217,7 +217,13 @@ vim.keymap.set('n', 'N', 'Nzzzv', opts)
 vim.keymap.set('n', '<leader>v', '<C-w>v', opts) -- split window vertically
 vim.keymap.set('n', '<leader>h', '<C-w>s', opts) -- split window horizontally
 vim.keymap.set('n', '<leader>se', '<C-w>=', opts) -- make split windows equal width & height
-vim.keymap.set('n', '<leader>xs', ':close<CR>', opts) -- close current split window
+-- vim.keymap.set('n', '<leader>xs', ':close<CR>', opts) -- close current split windowleader>xs
+
+-- Resize splits
+vim.keymap.set('n', '<leader>+', '<C-w>+', { noremap = true, silent = true }) -- increase height
+vim.keymap.set('n', '<leader>-', '<C-w>-', { noremap = true, silent = true }) -- decrease height
+vim.keymap.set('n', '<leader>>', '<C-w>>', { noremap = true, silent = true }) -- increase width
+vim.keymap.set('n', '<leader><', '<C-w><', { noremap = true, silent = true }) -- decrease width
 
 -- Navigate between splits
 vim.keymap.set('n', '<C-k>', ':wincmd k<CR>', opts)
