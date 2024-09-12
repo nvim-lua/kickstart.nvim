@@ -165,6 +165,13 @@ vim.opt.scrolloff = 10
 -- vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('n', '<leader>l', ':set hlsearch!<CR>', { noremap = true, silent = true, desc = 'Toggle highlight search' })
 
+-- Map Ctrl-s to save the file in normal and insert mode
+vim.keymap.set('n', '<C-s>', ':w<CR>', { noremap = true, silent = true })
+vim.keymap.set('i', '<C-s>', '<Esc>:w<CR>', { noremap = true, silent = true })
+
+-- Map Ctrl-c to yank (copy) the selected text in visual mode
+vim.api.nvim_set_keymap('v', '<C-c>', '"+y', { noremap = true, silent = true })
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
@@ -830,13 +837,15 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
+    -- 'folke/tokyonight.nvim',
+    'morhetz/gruvbox',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.g.gruvbox_contrast_dark = 'medium'
+      vim.cmd.colorscheme 'gruvbox'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
