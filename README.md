@@ -1,5 +1,11 @@
 # kickstart.nvim
 
+## TL;DR
+```
+# Linux MacOS
+git clone git@github.com:lala74/kickstart.nvim.git --branch dla "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+```
+
 ## Introduction
 
 A starting point for Neovim that is:
