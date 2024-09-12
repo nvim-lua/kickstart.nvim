@@ -4,3 +4,4 @@ vim.opt.smarttab = true -- Enable smarttab
 vim.opt.expandtab = true -- Convert tabs to spaces
 vim.opt.smartindent = true -- Enable smart indentation
 vim.opt.autoindent = true -- Enable auto indentation
+vim.opt.relativenumber = true
