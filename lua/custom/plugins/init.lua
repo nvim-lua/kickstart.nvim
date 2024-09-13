@@ -2,10 +2,19 @@
 --  I promise not to create any merge conflicts in this directory :)
 --
 -- See the kickstart.nvim README for more information
-return {
-  {
-    'mtdl9/vim-log-highlighting',
+
+local function create_plugin(plugin_name)
+  return {
+    plugin_name,
     opts = {},
     config = function() end,
-  },
+  }
+end
+
+return {
+  create_plugin 'ojroques/vim-oscyank',
+  create_plugin 'thaerkh/vim-workspace',
+  create_plugin 'fatih/vim-go',
+  create_plugin 'preservim/nerdcommenter',
+  create_plugin 'mtdl9/vim-log-highlighting',
 }

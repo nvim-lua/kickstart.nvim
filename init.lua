@@ -92,9 +92,10 @@ vim.g.maplocalleader = ' '
 
 require 'custom.options'
 require 'custom.keymaps'
+require 'custom.settings'
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -381,15 +382,19 @@ require('lazy').setup({
 
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
+      local actions = require 'telescope.actions'
       require('telescope').setup {
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
+        defaults = {
+          wrap_results = true,
+          i = {
+            --['<C-k>'] = actions.move_selection_previous,
+            --['<C-j>'] = actions.move_selection_next,
+            --['<c-enter>'] = 'to_fuzzy_refine',
+          },
+        },
         -- pickers = {}
         extensions = {
           ['ui-select'] = {
@@ -609,7 +614,7 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         clangd = {},
-        gopls = {},
+        --gopls = {},
         pyright = {},
         rust_analyzer = {},
         bashls = {},
