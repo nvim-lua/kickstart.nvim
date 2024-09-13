@@ -46,7 +46,7 @@ return {
         --        
         section_separators = { left = '', right = '' },
         component_separators = { left = '', right = '' },
-        disabled_filetypes = { 'neo-tree' },
+        disabled_filetypes = { 'neo-tree', 'nvim-tree' },
         always_divide_middle = true,
       },
       sections = {
@@ -66,7 +66,7 @@ return {
         lualine_z = {},
       },
       tabline = {},
-      extensions = { 'lazy', 'toggleterm', 'mason', 'neo-tree', 'trouble' },
+      extensions = { 'lazy', 'toggleterm', 'mason', 'trouble' },
     }
   end,
 }

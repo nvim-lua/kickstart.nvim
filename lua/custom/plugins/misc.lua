@@ -135,4 +135,5 @@ return {
     end,
     config = true,
   },
+  { 'github/copilot.vim' },
 }

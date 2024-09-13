@@ -219,17 +219,18 @@ return {
             hide_gitignored = true,
             hide_hidden = true, -- only works on Windows for hidden files/directories
             hide_by_name = {
-              --"node_modules"
+              'node_modules',
             },
             hide_by_pattern = { -- uses glob style patterns
               --"*.meta",
               --"*/src/*/tsconfig.json",
             },
             always_show = { -- remains visible even if other settings would normally hide it
-              --".gitignored",
+              '.gitignored',
+              '.env', -- Add this line to always show .env files
             },
             always_show_by_pattern = { -- uses glob style patterns
-              --".env*",
+              '.env*',
             },
             never_show = { -- remains hidden even if visible is toggled to true, this overrides always_show
               --".DS_Store",
