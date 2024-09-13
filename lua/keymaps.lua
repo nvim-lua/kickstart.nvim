@@ -22,6 +22,8 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Moves focus to lower window
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Moves focus to left window' })
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Moves focus to right window' })
 
+vim.keymap.set('n', '<leader>V', ':vert terminal<CR>', { desc = 'open terminal in vertical split' })
+
 -- insert mode
 vim.keymap.set('i', '<C-h>', '<left>')
 vim.keymap.set('i', '<C-j>', '<down>')
