@@ -17,6 +17,11 @@ vim.keymap.set('n', 'Q', ':noh<CR>')
 vim.keymap.set('n', '<leader>w', ':w<CR>', { desc = 'Save file' })
 vim.keymap.set('n', '<leader>q', ':q<CR>', { desc = 'Quit' })
 
+vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Moves focus to upper window' })
+vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Moves focus to lower window' })
+vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Moves focus to left window' })
+vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Moves focus to right window' })
+
 -- insert mode
 vim.keymap.set('i', '<C-h>', '<left>')
 vim.keymap.set('i', '<C-j>', '<down>')

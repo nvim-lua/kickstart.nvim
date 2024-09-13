@@ -15,7 +15,7 @@ return {
     map('n', '<leader>a', function()
       harpoon:list():add()
     end)
-    map('n', '<C-h>', function()
+    map('n', '<C-a>', function()
       harpoon.ui:toggle_quick_menu(harpoon:list())
     end)
 
