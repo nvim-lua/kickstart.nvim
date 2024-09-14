@@ -599,7 +599,7 @@ require('lazy').setup({
 
           -- Open Code diagnostic in float window. your cursor needs to be on top of an error
           -- Alternatively a hotkey were added in nvim 0.10 <C-W>d to do this functionaly by default
-          map('<leader>cd', vim.diagnostic.open_float, '[C]ode [D]iagnostic')
+          -- map('<leader>cd', vim.diagnostic.open_float, '[C]ode [D]iagnostic')
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
