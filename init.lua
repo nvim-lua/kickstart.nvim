@@ -775,7 +775,7 @@ require('lazy').setup({
         -- npm install -g @biomejs/biome
         biome = {},
         -- npm install -g typescript typescript-language-server
-        tsserver = {},
+        ts_ls = {},
         harper_ls = {
           -- userDictPath = '~/dict.txt',
         },
