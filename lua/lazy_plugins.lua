@@ -20,6 +20,7 @@ require('lazy').setup({
   require 'kickstart.plugins.todo_comments',
   require 'kickstart.plugins.comments',
   require 'kickstart.plugins.trouble',
+  require 'kickstart.plugins.neomutt',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- require 'kickstart.plugins.debug',
