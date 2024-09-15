@@ -50,7 +50,7 @@ return {
       --  All the info you're looking for is in `:help telescope.setup()`
       --
       defaults = {
-        file_ignore_patterns = { '%.o' },
+        file_ignore_patterns = { '%.o', '%.git', '%vgcore' },
       },
       pickers = {
         find_files = {
