@@ -185,6 +185,7 @@ return {
     sign({ name = 'DiagnosticSignHint', text = '⚑' })
     sign({ name = 'DiagnosticSignInfo', text = '»' })
 
+
     -- Neodev setup for improved Lua development
     require('fidget').setup({})
     require('neodev').setup({
