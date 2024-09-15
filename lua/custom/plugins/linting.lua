@@ -12,9 +12,10 @@ return {
       go = { 'golangcilint' },
       yaml = { 'yamllint' },
       bash = { 'shellcheck' },
-      lua = { 'luacheck' },        -- Added Lua linter
-      rust = { 'clippy' },         -- Use `clippy` for Rust linting
+      lua = { 'luacheck' }, -- Added Lua linter
+      rust = { 'clippy' }, -- Use `clippy` for Rust linting
       dockerfile = { 'hadolint' }, -- Added Dockerfile linter
+      -- rust = { 'clippy' }, -- Use `clippy` for Rust linting
     }
 
     -- Autocommand group for triggering linting
@@ -36,15 +37,15 @@ return {
     -- Mason tool installer setup
     require('mason-tool-installer').setup({
       ensure_installed = {
-        'ruff',          -- Python
+        -- 'clippy', -- Rust
+        'ruff', -- Python
         -- 'mypy',       -- Uncomment if needed for additional Python linting
         'golangci-lint', -- Go
-        'yamllint',      -- YAML
-        'shellcheck',    -- Bash
-        'luacheck',      -- Lua
-        'hadolint',      -- Dockerfile
+        'yamllint', -- YAML
+        'shellcheck', -- Bash
+        'luacheck', -- Lua
+        'hadolint', -- Dockerfile
       },
     })
   end,
 }
-

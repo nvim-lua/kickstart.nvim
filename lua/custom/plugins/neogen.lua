@@ -5,8 +5,20 @@ return {
     'L3MON4D3/LuaSnip',
   },
   keys = {
-    { '<leader>nf', function() require('neogen').generate({ type = 'func' }) end, desc = 'Generate function doc' },
-    { '<leader>nt', function() require('neogen').generate({ type = 'type' }) end, desc = 'Generate type doc' },
+    {
+      '<leader>nf',
+      function()
+        require('neogen').generate({ type = 'func' })
+      end,
+      desc = 'Generate function doc',
+    },
+    {
+      '<leader>nt',
+      function()
+        require('neogen').generate({ type = 'type' })
+      end,
+      desc = 'Generate type doc',
+    },
   },
   config = function()
     require('neogen').setup({
@@ -16,4 +28,3 @@ return {
   -- Uncomment next line if you want to follow only stable versions
   -- version = "*"
 }
-

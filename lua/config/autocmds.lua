@@ -1,10 +1,10 @@
 -- Auto-format on save
-vim.cmd [[
+vim.cmd([[
   augroup FormatOnSave
     autocmd!
     autocmd BufWritePre * lua vim.lsp.buf.format({ async = false })
   augroup END
-]]
+]])
 
 -- Augroup for Highlight on yank
 vim.cmd([[
@@ -63,30 +63,3 @@ vim.cmd([[
   autocmd TermOpen * normal! G
   autocmd TermOpen * tnoremap <Esc> <C-\><C-n>
 ]])
-
--- Open PDF in the background when a .tex file is opened
-vim.api.nvim_create_autocmd("BufEnter", {
-  pattern = "*.tex",
-  callback = function()
-    -- Construct an absolute path to the PDF file
-    local pdf_path = vim.fn.expand('%:p:h') .. "/output/" .. vim.fn.expand('%:t:r') .. '.pdf'
-    if vim.fn.filereadable(pdf_path) == 1 then
-      -- Start Zathura asynchronously in the background with an absolute path
-      vim.fn.jobstart({ 'nohup', 'zathura', pdf_path, '>/dev/null', '2>&1', '&' }, { detach = true })
-    else
-      print("PDF file not found: " .. pdf_path)
-    end
-  end,
-})
-
--- Close Zathura gracefully when leaving Neovim
-vim.api.nvim_create_autocmd("VimLeavePre", {
-  callback = function()
-    -- Attempt to terminate Zathura gracefully with a grace period
-    vim.fn.system({ 'pkill', '-TERM', '-f', 'zathura' })
-    vim.defer_fn(function()
-      vim.fn.system({ 'pkill', '-KILL', '-f', 'zathura' })
-    end, 2000) -- Wait for 2 seconds before force killing if necessary
-  end,
-})
-

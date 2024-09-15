@@ -6,6 +6,7 @@ local utils = require('config.utils')
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, { desc = "[P]roject [V]iew" })
 vim.keymap.set('n', '<C-c>', '<ESC><ESC>', { silent = true })
+vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>', { silent = true })
 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -21,8 +22,8 @@ vim.keymap.set('n', '<', '<gv', { silent = true })
 vim.keymap.set('n', 'J', 'mzj`z')
 vim.keymap.set('n', '<c-d>', '<C-d>zz', { desc = 'Half Page Jumping Up' })
 vim.keymap.set('n', '<c-u>', '<C-u>zz', { desc = 'Half Page Jumping Down' })
-vim.keymap.set('n', 'n', 'nzzzv', { silent = true })
-vim.keymap.set('n', 'N', 'Nzzzv', { silent = true })
+vim.keymap.set('n', 'n', 'nzzzv', { noremap = true, silent = true })
+vim.keymap.set('n', 'N', 'Nzzzv', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'gp', '<Nop>', { noremap = true, silent = true })
 vim.keymap.set('n', '<C-k>', '<cmd>cnext<CR>zz')
 vim.keymap.set('n', '<C-j>', '<cmd>cprev<CR>zz')
@@ -133,4 +134,3 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnos
 --   { noremap = true, silent = true, expr = false, desc = "Extract Block" })
 -- vim.keymap.set({ "n" }, "<leader>rbf", [[<Esc><Cmd>lua require('refactoring').refactor('Extract Block To File')<CR>]],
 --   { noremap = true, silent = true, expr = false, desc = "Extract Block To File" })
-

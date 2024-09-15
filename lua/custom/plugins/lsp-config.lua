@@ -10,6 +10,7 @@ return {
       'j-hui/fidget.nvim',
       tag = 'legacy',
       opts = {},
+      event = 'LspAttach', -- Lazy load on LSP attachment
     },
 
     -- Additional Lua configuration
@@ -54,7 +55,9 @@ return {
           },
         },
       },
-      rust_analyzer = { cmd = { 'rustup', 'run', 'stable', 'rust-analyzer' } },
+      rust_analyzer = {
+        cmd = { 'rustup', 'run', 'stable', 'rust-analyzer' },
+      },
       texlab = {
         flags = {
           debounce_text_changes = 150,
@@ -62,13 +65,13 @@ return {
         settings = {
           texlab = {
             build = {
-              executable = "latexmk",
-              args = { "-pdf", "-xelatex", "-output-directory=output", "-interaction=nonstopmode", "-synctex=1", "%f" },
+              executable = 'latexmk',
+              args = { '-pdf', '-xelatex', '-output-directory=output', '-interaction=nonstopmode', '-synctex=1', '%f' },
               onSave = true,
             },
             forwardSearch = {
-              executable = "zathura",
-              args = { "--synctex-forward", "%l:1:%f", "%p" },
+              executable = 'zathura',
+              args = { '--synctex-forward', '%l:1:%f', '%p' },
             },
           },
         },
@@ -86,6 +89,13 @@ return {
             telemetry = { enable = false },
           },
         },
+      },
+      marksman = {
+        filetypes = { 'markdown' },
+        root_dir = function(fname)
+          return require('lspconfig.util').root_pattern('.marksman.toml', '.git')(fname) or vim.loop.cwd()
+        end,
+        settings = {},
       },
       yamlls = {
         filetypes = { 'yaml' },
@@ -156,11 +166,12 @@ return {
         spacing = 2,
       },
       float = {
-        Source = 'if_many',
+        source = 'if_many',
         border = 'rounded',
       },
     })
 
+    -- Define diagnostic signs
     local sign = function(opts)
       vim.fn.sign_define(opts.name, {
         texthl = opts.name,
@@ -174,10 +185,8 @@ return {
     sign({ name = 'DiagnosticSignHint', text = '⚑' })
     sign({ name = 'DiagnosticSignInfo', text = '»' })
 
-    -- Fidget configuration (LSP progress)
-    require('fidget').setup({})
-
     -- Neodev setup for improved Lua development
+    require('fidget').setup({})
     require('neodev').setup({
       library = {
         plugins = { 'nvim-dap-ui' },
@@ -186,4 +195,3 @@ return {
     })
   end,
 }
-

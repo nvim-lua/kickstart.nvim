@@ -14,7 +14,8 @@ return {
       -- on_attach function executed when the plugin is attached to a buffer
       on_attach = function(bufnr)
         vim.keymap.set('n', '<leader>hp', require('gitsigns').preview_hunk, {
-          buffer = bufnr, desc = 'Preview git hunk'
+          buffer = bufnr,
+          desc = 'Preview git hunk',
         })
 
         -- Don't override built-in and fugitive keymaps
@@ -42,4 +43,3 @@ return {
     },
   },
 }
-
