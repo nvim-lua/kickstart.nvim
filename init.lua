@@ -607,10 +607,9 @@ require('lazy').setup({
       local servers = {
         clangd = {},
         pyright = {},
-        htmx = {},
         bashls = {},
         jsonls = {},
-        tsserver = {},
+        ts_ls = {},
         eslint = {},
         rust_analyzer = {},
         cssls = {},
@@ -783,7 +782,7 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<CR>'] = cmp.mapping.confirm { select = false },
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
