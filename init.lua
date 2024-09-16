@@ -159,12 +159,18 @@ vim.opt.scrolloff = 10
 
 -- term gui colors for nvim.notify
 vim.opt.termguicolors = true
+vim.opt.conceallevel = 2
+vim.g.codeium_open_chat_in_buffer = 1
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
 -- For conciseness
 local opts = { noremap = true, silent = true }
+
+-- local codeium = require('custom.plugins.codeium')
+--
+-- vim.api.nvim_set_keymap('n', '<leader>c', ':lua codeium.chat_buffer()<CR>', { noremap = true, silent = true })
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
@@ -204,6 +210,7 @@ vim.keymap.set('n', '<leader>q', '<cmd>q!<CR>', { desc = 'Close file' })
 
 -- Keep last yanked when pasting
 vim.keymap.set('v', 'p', '"_dP', opts)
+vim.keymap.set('n', '<leader>A', 'ggVG', opts)
 
 -- Vertical scroll and center
 vim.keymap.set('n', '<C-d>', '<C-d>zz', opts)
@@ -241,6 +248,21 @@ vim.keymap.set('n', '<leader>tp', ':tabp<CR>', opts) --  go to previous tab
 vim.keymap.set('v', '<', '<gv', opts)
 vim.keymap.set('v', '>', '>gv', opts)
 
+-- Obsidian
+vim.keymap.set('n', '<leader>Oc', "<cmd>lua require('obsidian').util.toggle_checkbox()<CR>", { desc = 'Obsidian Check Checkbox' })
+vim.keymap.set('n', '<leader>Ot', '<cmd>ObsidianTemplate<CR>', { desc = 'Insert Obsidian Template' })
+vim.keymap.set('n', '<leader>Po', '<cmd>ObsidianOpen<CR>', { desc = 'Open in Obsidian App' })
+vim.keymap.set('n', '<leader>Ob', '<cmd>ObsidianBacklinks<CR>', { desc = 'Show ObsidianBacklinks' })
+vim.keymap.set('n', '<leader>Ol', '<cmd>ObsidianLinks<CR>', { desc = 'Show ObsidianLinks' })
+vim.keymap.set('n', '<leader>On', '<cmd>ObsidianNew<CR>', { desc = 'Create New Note' })
+vim.keymap.set('n', '<leader>Os', '<cmd>ObsidianSearch<CR>', { desc = 'Search Obsidian' })
+vim.keymap.set('n', '<leader>Oq', '<cmd>ObsidianQuickSwitch<CR>', { desc = 'Quick Switch' })
+
+-- Copilot
+-- vim.keymap.set('i', '<C-CR>', function()
+--   require('copilot.panel').accept()
+-- end, { desc = 'Accept Copilot suggestion' })
+vim.keymap.set('n', '<leader>cc', '<cmd>call codeium#Chat()<CR>', { desc = 'Codeium Chat' })
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -365,13 +387,15 @@ require('lazy').setup({
 
       -- Document existing key chains
       spec = {
-        { '<leader>c', group = '[C]opilot', mode = { 'n', 'x' } },
+        { '<leader>c', group = '[C]hatGPT', mode = { 'n', 'x' } },
         { '<leader>d', group = '[D]ocument' },
         { '<leader>r', group = '[R]ename' },
         { '<leader>f', group = '[F]ind' },
         -- { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
+        { '<leader>O', group = '[O]bsidian' },
         { '<leader>gh', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>g', group = '[G]it', mode = { 'n', 'v' } },
       },
     },
   },
@@ -439,9 +463,47 @@ require('lazy').setup({
         --   },
         -- },
         -- pickers = {}
+        defaults = {
+          layout_strategy = 'vertical',
+          layout_config = {
+            preview_height = 0.7,
+            vertical = {
+              width = '95%',
+              height = '95%',
+            },
+          },
+        },
         pickers = {
+          current_buffer_fuzzy_find = {
+            -- Override the layout strategy and config for current_buffer_fuzzy_find
+            layout_strategy = 'horizontal', -- or any other strategy you prefer
+            layout_config = {
+              preview_width = 0.5, -- example config, adjust as needed
+            },
+          },
+          old_files = {
+            layout_strategy = 'vertical',
+            layout_config = {
+              preview_height = 0.7,
+              vertical = {
+                size = {
+                  width = '95%',
+                  height = '95%',
+                },
+              },
+            },
+          },
           find_files = {
-            themes = 'dropdown',
+            layout_strategy = 'vertical',
+            layout_config = {
+              preview_height = 0.7,
+              vertical = {
+                size = {
+                  width = '95%',
+                  height = '95%',
+                },
+              },
+            },
             file_ignore_patterns = { 'node_modules', '.git', '.venv' },
             hidden = true,
           },
@@ -457,18 +519,7 @@ require('lazy').setup({
             require('telescope.themes').get_dropdown(),
           },
         },
-        defaults = {
-          layout_strategy = 'vertical',
-          layout_config = {
-            preview_height = 0.7,
-            vertical = {
-              size = {
-                width = '95%',
-                height = '95%',
-              },
-            },
-          },
-        },
+        defaults = {},
       }
 
       -- Enable Telescope extensions if they are installed
@@ -486,7 +537,10 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = '[F]ind [D]iagnostics' })
       vim.keymap.set('n', '<leader>f<CR>', builtin.resume, { desc = '[F]ind [R]esume' })
       vim.keymap.set('n', '<leader>fo', builtin.oldfiles, { desc = '[F]ind Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>fF', function()
+        require('telescope.builtin').find_files { hidden = true, no_ignore = true }
+      end, { desc = '[F]ind in all files' })
+      -- vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>f/', function()
@@ -787,6 +841,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        go = { 'gofmt' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
