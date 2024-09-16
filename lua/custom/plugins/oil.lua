@@ -5,7 +5,7 @@ return {
     config = function()
       require("oil").setup {
         columns = { "icon" },
-        default_file_explorer = true,
+        default_file_explorer = false,
         delete_to_trash = true,
         skip_confirm_for_simple_edits = true,
         keymaps = {
