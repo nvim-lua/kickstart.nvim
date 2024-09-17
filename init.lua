@@ -1,8 +1,6 @@
 -- Ethan Shoham neovim config
 -- 17/09/24
 
-
-
 -- Set <space> as the leader key
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -10,7 +8,7 @@ vim.g.maplocalleader = ' '
 -- Install Nerd Fonts
 -- Cousine Nerd Font: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/Cousine.zip
 -- Symbols Nerd Font: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/NerdFontsSymbolsOnly.zip
--- 
+--
 -- On Windows Terminal go to:
 -- Settings -> Default -> Appearance -> Font Face to Cousine Nerd Font
 --
@@ -37,7 +35,7 @@ vim.opt.showmode = false
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 vim.schedule(function()
-	vim.opt.clipboard = 'unnamedplus'
+  vim.opt.clipboard = 'unnamedplus'
 end)
 
 -- Enable break indent (wrapped lines will start on the same indent as the start of the original line)
@@ -108,7 +106,6 @@ vim.keymap.set('v', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 vim.keymap.set('v', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 vim.keymap.set('v', '<backspace>', '<cmd>echo "Use h to move!!"<CR>')
 
-
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
 --
@@ -145,7 +142,7 @@ end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
 -- [[ Configure and install plugins ]]
--- 
+--
 --
 --  To check the current status of your plugins, run
 --    :Lazy
@@ -156,7 +153,7 @@ vim.opt.rtp:prepend(lazypath)
 --    :Lazy update
 --
 -- NOTE: Here is where you install your plugins.
-require('lazy').setup({
+require('lazy').setup {
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
@@ -187,14 +184,14 @@ require('lazy').setup({
 
   -- Install color schema catppuccin
   {
-	  'catppuccin/nvim',
-	  name = 'catppuccin',
-	  priority = 1000 
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    priority = 1000,
   },
 
   {
     'rose-pine/neovim',
-    name = 'rose-pine'
+    name = 'rose-pine',
   },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
@@ -211,28 +208,32 @@ require('lazy').setup({
   -- Then, because we use the `config` key, the configuration only runs
   -- after the plugin has been loaded:
   --  config = function() ... end
-  
+
   {
     'ThePrimeagen/harpoon',
     config = function()
-      local mark = require('harpoon.mark')
-      local ui = require('harpoon.ui')
+      local mark = require 'harpoon.mark'
+      local ui = require 'harpoon.ui'
 
       -- Keybindings
       vim.keymap.set('n', '<leader>a', mark.add_file, { desc = 'Harpoon: Add file' })
       vim.keymap.set('n', '<C-e>', ui.toggle_quick_menu, { desc = 'Harpoon: Toggle menu' })
 
       -- Navigate to Harpoon marks
-      vim.keymap.set('n', '<A-1>', function() ui.nav_file(1) end, { desc = 'Harpoon: Go to file 1' })
-      vim.keymap.set('n', '<A-2>', function() ui.nav_file(2) end, { desc = 'Harpoon: Go to file 2' })
-      vim.keymap.set('n', '<A-3>', function() ui.nav_file(3) end, { desc = 'Harpoon: Go to file 3' })
-      vim.keymap.set('n', '<A-4>', function() ui.nav_file(4) end, { desc = 'Harpoon: Go to file 4' })
-
-
-    end
-
+      vim.keymap.set('n', '<A-1>', function()
+        ui.nav_file(1)
+      end, { desc = 'Harpoon: Go to file 1' })
+      vim.keymap.set('n', '<A-2>', function()
+        ui.nav_file(2)
+      end, { desc = 'Harpoon: Go to file 2' })
+      vim.keymap.set('n', '<A-3>', function()
+        ui.nav_file(3)
+      end, { desc = 'Harpoon: Go to file 3' })
+      vim.keymap.set('n', '<A-4>', function()
+        ui.nav_file(4)
+      end, { desc = 'Harpoon: Go to file 4' })
+    end,
   },
-
 
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
@@ -365,8 +366,9 @@ require('lazy').setup({
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', opts = {} },
-    
+
       -- Allows extra capabilities provided by nvim-cmp
+      'hrsh7th/nvim-cmp',
       'hrsh7th/cmp-nvim-lsp',
     },
     config = function()
@@ -567,41 +569,49 @@ require('lazy').setup({
     end,
   },
 
-
-
-
-})
+  { -- Autoformat
+    'stevearc/conform.nvim',
+    event = { 'BufWritePre' },
+    cmd = { 'ConformInfo' },
+    keys = {
+      {
+        '<leader>f',
+        function()
+          require('conform').format { async = true, lsp_format = 'fallback' }
+        end,
+        mode = '',
+        desc = '[F]ormat buffer',
+      },
+    },
+    opts = {
+      notify_on_error = false,
+      format_on_save = function(bufnr)
+        -- Disable "format_on_save lsp_fallback" for languages that don't
+        -- have a well standardized coding style. You can add additional
+        -- languages here or re-enable it for the disabled ones.
+        local disable_filetypes = { c = true, cpp = true }
+        local lsp_format_opt
+        if disable_filetypes[vim.bo[bufnr].filetype] then
+          lsp_format_opt = 'never'
+        else
+          lsp_format_opt = 'fallback'
+        end
+        return {
+          timeout_ms = 500,
+          lsp_format = lsp_format_opt,
+        }
+      end,
+      formatters_by_ft = {
+        lua = { 'stylua' },
+        -- Conform can also run multiple formatters sequentially
+        -- python = { "isort", "black" },
+        --
+        -- You can use 'stop_after_first' to run the first available formatter from the list
+        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+      },
+    },
+  },
+}
 
 -- Set colorscheme to catppuccin-macchinato
-vim.cmd.colorscheme('catppuccin-macchiato')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+vim.cmd.colorscheme 'catppuccin-macchiato'
