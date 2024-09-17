@@ -212,29 +212,22 @@ require('lazy').setup {
   {
     'ThePrimeagen/harpoon',
     config = function()
-      local mark = require 'harpoon.mark'
-      local ui = require 'harpoon.ui'
+      
+      local mark = require('harpoon.mark')
+      local ui = require('harpoon.ui')
+        
 
       -- Keybindings
       vim.keymap.set('n', '<leader>a', mark.add_file, { desc = 'Harpoon: Add file' })
       vim.keymap.set('n', '<C-e>', ui.toggle_quick_menu, { desc = 'Harpoon: Toggle menu' })
 
       -- Navigate to Harpoon marks
-      vim.keymap.set('n', '<A-1>', function()
-        ui.nav_file(1)
-      end, { desc = 'Harpoon: Go to file 1' })
-      vim.keymap.set('n', '<A-2>', function()
-        ui.nav_file(2)
-      end, { desc = 'Harpoon: Go to file 2' })
-      vim.keymap.set('n', '<A-3>', function()
-        ui.nav_file(3)
-      end, { desc = 'Harpoon: Go to file 3' })
-      vim.keymap.set('n', '<A-4>', function()
-        ui.nav_file(4)
-      end, { desc = 'Harpoon: Go to file 4' })
-    end,
+      vim.keymap.set('n', '<A-1>', function() ui.nav_file(1) end, { desc = 'Harpoon: Go to file 1' })
+      vim.keymap.set('n', '<A-2>', function() ui.nav_file(2) end, { desc = 'Harpoon: Go to file 2' })
+      vim.keymap.set('n', '<A-3>', function() ui.nav_file(3) end, { desc = 'Harpoon: Go to file 3' })
+      vim.keymap.set('n', '<A-4>', function() ui.nav_file(4) end, { desc = 'Harpoon: Go to file 4' })
+    end
   },
-
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
@@ -409,8 +402,9 @@ require('lazy').setup {
           --
           -- In this case, we create a function that lets us more easily define mappings specific
           -- for LSP related items. It sets the mode, buffer and description for us each time.
-          local map = function(keys, func, desc)
-            vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+          local map = function(keys, func, desc, mode)
+            mode = mode or 'n'
+            vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
 
           -- Jump to the definition of the word under your cursor.
@@ -444,7 +438,7 @@ require('lazy').setup {
 
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
-          map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+          map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
@@ -518,8 +512,8 @@ require('lazy').setup {
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
         --
-        -- But for many setups, the LSP (`tsserver`) will work just fine
-        -- tsserver = {},
+        -- But for many setups, the LSP (`ts_ls`) will work just fine
+        -- ts_ls = {},
         --
 
         lua_ls = {
@@ -560,7 +554,7 @@ require('lazy').setup {
             local server = servers[server_name] or {}
             -- This handles overriding only values explicitly passed
             -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for tsserver)
+            -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
@@ -568,7 +562,6 @@ require('lazy').setup {
       }
     end,
   },
-
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
@@ -611,7 +604,7 @@ require('lazy').setup {
       },
     },
   },
-}
+})
 
 -- Set colorscheme to catppuccin-macchinato
 vim.cmd.colorscheme 'catppuccin-macchiato'
