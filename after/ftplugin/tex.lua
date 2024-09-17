@@ -1,7 +1,9 @@
-vim.opt.breakindentopt = "shift:2"
-vim.opt.shiftwidth = 4
+-- vim.opt.breakindentopt = "shift:2"
+-- Replacement for this: vim.opt.showbreak = "↪ "
+vim.opt.shiftwidth = 2
+vim.opt.softtabstop = 2
+vim.opt.tabstop = 2
 vim.opt.textwidth = 0
-
 
 vim.cmd([[
 function! MyFormatExpr(start, end)

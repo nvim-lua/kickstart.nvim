@@ -33,7 +33,7 @@ vim.opt.signcolumn = "yes"
 
 vim.opt.updatetime = 250
 -- For which-key
-vim.opt.timeoutlen = 300
+vim.opt.timeoutlen = 500
 
 vim.opt.list = true
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
