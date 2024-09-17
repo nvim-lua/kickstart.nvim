@@ -125,7 +125,25 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        tsserver = {},
+        ts_ls = {
+          init_options = {
+            plugins = {
+              {
+                name = '@vue/typescript-plugin',
+                location = '/Users/fabianimhof/.nvm/versions/node/v16.20.2/lib/@vue/typescript-plugin',
+                languages = { 'javascript', 'typescript', 'vue' },
+              },
+            },
+          },
+          filetypes = {
+            'typescript',
+            'typescriptreact',
+            'javascript',
+            'javascriptreact',
+            'typescript.tsx',
+            'vue',
+          },
+        },
         angularls = {},
         stylelint_lsp = {
           filetypes = { 'css', 'scss' },
@@ -166,6 +184,8 @@ require('lazy').setup({
             fallbackFlags = { '--std=c++20' },
           },
         },
+        clangd = {},
+        marksman = {},
         --
 
         lua_ls = {
@@ -274,7 +294,7 @@ require('lazy').setup({
         json = { 'prettier' },
         scss = { 'prettier' },
         html = { 'prettier' },
-
+        markdown = { 'prettier' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
