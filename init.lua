@@ -621,7 +621,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {
+        ts_ls = {
           -- https://github.com/neovim/nvim-lspconfig/issues/2688#issuecomment-1601582648
           init_options = {
             preferences = {
