@@ -24,9 +24,6 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 
--- Open file tree
-vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
-
 -- Keep cursor in place when appending next line
 vim.keymap.set('n', 'J', 'mzJ`z')
 

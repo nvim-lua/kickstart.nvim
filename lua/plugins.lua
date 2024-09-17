@@ -15,7 +15,6 @@ require('lazy').setup({
       { 'j-hui/fidget.nvim', opts = {} }, -- Useful status updates for LSP.
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-      'nvim-java/nvim-java',
 
       -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
       -- used for completion, annotations and signatures of Neovim apis
@@ -162,7 +161,11 @@ require('lazy').setup({
         },
         csharp_ls = {},
         netcoredbg = {},
-        clangd = {},
+        clangd = {
+          init_options = {
+            fallbackFlags = { '--std=c++20' },
+          },
+        },
         --
 
         lua_ls = {
@@ -237,6 +240,7 @@ require('lazy').setup({
       }
     end,
   },
+  'nvim-java/nvim-java',
 
   { -- Autoformat
     'stevearc/conform.nvim',
@@ -477,7 +481,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   { import = 'custom.plugins' },

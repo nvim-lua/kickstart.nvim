@@ -3,7 +3,7 @@
 
 return {
   'nvim-neo-tree/neo-tree.nvim',
-  version = '*',
+  version = 'v3.x',
   dependencies = {
     'nvim-lua/plenary.nvim',
     'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
@@ -11,15 +11,17 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '\\', ':Neotree reveal<CR>', { desc = 'NeoTree reveal' } },
+    { '<leader>pv', ':Neotree reveal=true position=float<CR>', { desc = 'NeoTree reveal' } },
   },
   opts = {
-    filesystem = {
-      window = {
-        mappings = {
-          ['\\'] = 'close_window',
-        },
+    window = {
+      mappings = {
+        ['<c-c>'] = 'close_window',
       },
+    },
+    source_selector = {
+      winbar = true,
+      statusline = false,
     },
   },
 }
