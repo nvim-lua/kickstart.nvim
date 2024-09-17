@@ -90,13 +90,44 @@ P.S. You can delete this when you're done too. It's your config now! :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- Add the clipboard configuration for win32yank
+if vim.fn.has 'win32' == 1 or vim.fn.has 'win64' == 1 then
+  vim.g.clipboard = {
+    name = 'win32yank-wsl',
+    copy = {
+      ['+'] = 'win32yank.exe -i --crlf',
+      ['*'] = 'win32yank.exe -i --crlf',
+    },
+    paste = {
+      ['+'] = 'win32yank.exe -o --lf',
+      ['*'] = 'win32yank.exe -o --lf',
+    },
+    cache_enabled = 0,
+  }
+end
+
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
+
+-- Create the spell directory if it doesn't exist
+local spell_dir = vim.fn.stdpath 'config' .. '/spell'
+if vim.fn.isdirectory(spell_dir) == 0 then
+  vim.fn.mkdir(spell_dir, 'p')
+end
+
+-- Set the spellfile option
+vim.opt.spellfile = spell_dir .. '/en.utf-8.add'
+
+-- Ensure the spellfile exists
+local spellfile_path = spell_dir .. '/en.utf-8.add'
+if vim.fn.filereadable(spellfile_path) == 0 then
+  vim.fn.writefile({}, spellfile_path)
+end
 
 -- Make line numbers default
 vim.opt.number = true
@@ -160,6 +191,11 @@ vim.opt.scrolloff = 10
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
+-- Key mapping to toggle DAP UI
+vim.keymap.set('n', '<Leader>dui', function()
+  require('dapui').toggle()
+end)
+
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
@@ -176,10 +212,10 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -189,6 +225,24 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+-- [[ Custom Keymaps ]]
+
+-- Keymap to close the current buffer but keep split windows open
+vim.keymap.set('n', '<leader>bD', ':bp | bd #<CR>', { noremap = true, silent = true, desc = "Close buffer but keep split" })
+
+
+-- Vim Rest Console
+vim.keymap.set('n', '<leader>r', ':Vrc<CR>', { noremap = true, silent = true })
+
+-- Navigate to the next buffer
+vim.keymap.set('n', '<leader>bn', ':bnext<CR>', { desc = 'Next buffer' })
+
+-- Navigate to the previous buffer
+vim.keymap.set('n', '<leader>bp', ':bprevious<CR>', { desc = 'Previous buffer' })
+
+-- Close the current buffer
+vim.keymap.set('n', '<leader>bd', ':bd<CR>', { desc = 'Close buffer' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -207,7 +261,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
-if not vim.uv.fs_stat(lazypath) then
+if not vim.loop.fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
   local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
   if vim.v.shell_error ~= 0 then
@@ -228,6 +282,12 @@ vim.opt.rtp:prepend(lazypath)
 --
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
+
+  --spec = {
+  --{ 'LazyVim/LazyVim', import = 'lazyvim.plugins' },
+  --{ import = 'custom.plugins' },
+  --},
+
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
@@ -254,6 +314,57 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
     },
+  },
+  {
+    'windwp/nvim-ts-autotag',
+  },
+  {
+    'vhyrro/luarocks.nvim',
+    opts = {
+      luarocks_build_args = {
+        '--with-lua-include=/usr/include',
+      },
+    },
+  },
+  { import = 'custom.plugins.noice' },
+  { import = 'custom.plugins.notify' },
+  {
+    'nvimdev/dashboard-nvim',
+    event = 'VimEnter',
+    config = function()
+      require('dashboard').setup {
+        theme = 'doom',
+        config = {
+          header = {},
+          center = {
+            {
+              desc = ' Files',
+              group = 'Label',
+              action = 'Telescope find_files',
+              key = 'f',
+            },
+            { desc = '󰊳 Update', group = '@property', action = 'Lazy update', key = 'u' },
+            {
+              desc = '\u{1F5CA} Notes',
+              group = 'DiagnosticHint',
+              action = 'Neorg index',
+              key = 'n',
+            },
+            {
+              desc = 'Projects',
+              group = 'work',
+              action = 'e ~/Projects',
+              key = 'p',
+            },
+          },
+          footer = {},
+          week_header = {
+            enable = true,
+          },
+        },
+      }
+    end,
+    dependencies = { { 'nvim-tree/nvim-web-devicons' } },
   },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
@@ -340,7 +451,6 @@ require('lazy').setup({
       -- This opens a window that shows you all of the keymaps for the current
       -- Telescope picker. This is really useful to discover what Telescope can
       -- do as well as how to actually do it!
-
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
       require('telescope').setup {
@@ -399,6 +509,11 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
+
+      -- Shortcut for searching Obsidian files
+      vim.keymap.set('n', '<leader>so', function()
+        builtin.find_files { cwd = '~/Obsidian/vaults/' }
+      end, { desc = '[S]earch [O]bsidian files' })
     end,
   },
 
@@ -840,35 +955,104 @@ require('lazy').setup({
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
-  { -- Highlight, edit, and navigate code
-    'nvim-treesitter/nvim-treesitter',
-    build = ':TSUpdate',
-    opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
-      -- Autoinstall languages that are not installed
-      auto_install = true,
-      highlight = {
-        enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
-      },
-      indent = { enable = true, disable = { 'ruby' } },
-    },
-    config = function(_, opts)
-      -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-
-      ---@diagnostic disable-next-line: missing-fields
-      require('nvim-treesitter.configs').setup(opts)
-
-      -- There are additional nvim-treesitter modules that you can use to interact
-      -- with nvim-treesitter. You should go explore a few and see what interests you:
-      --
-      --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-      --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-      --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+  {
+    'olrtg/nvim-emmet',
+    config = function()
+      vim.keymap.set({ 'n', 'v' }, '<leader>xe', require('nvim-emmet').wrap_with_abbreviation)
     end,
+  },
+  {
+    'nvim-treesitter/nvim-treesitter',
+    version = false, -- last release is way too old and doesn't work on Windows
+    build = ':TSUpdate',
+    event = { 'BufRead', 'BufNewFile' },
+    lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
+    init = function(plugin)
+      -- PERF: add nvim-treesitter queries to the rtp and its custom query predicates early
+      -- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which
+      -- no longer triggers the **nvim-treesitter** module to be loaded in time.
+      -- Luckily, the only things that those plugins need are the custom queries, which we make available
+      -- during startup.
+      require('lazy.core.loader').add_to_rtp(plugin)
+      require 'nvim-treesitter.query_predicates'
+    end,
+    cmd = { 'TSUpdateSync', 'TSUpdate', 'TSInstall' },
+    keys = {
+      { '<c-space>', desc = 'Increment Selection' },
+      { '<bs>', desc = 'Decrement Selection', mode = 'x' },
+    },
+    opts_extend = { 'ensure_installed' },
+    ---@type TSConfig
+    ---@diagnostic disable-next-line: missing-fields
+    opts = {
+      highlight = { enable = true },
+      indent = { enable = true },
+      ensure_installed = {
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'javascript',
+        'jsdoc',
+        'json',
+        'jsonc',
+        'lua',
+        'luadoc',
+        'luap',
+        'markdown',
+        'markdown_inline',
+        'printf',
+        'python',
+        'query',
+        'regex',
+        'toml',
+        'tsx',
+        'typescript',
+        'vim',
+        'vimdoc',
+        'xml',
+        'yaml',
+      },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = '<C-space>',
+          node_incremental = '<C-space>',
+          scope_incremental = false,
+          node_decremental = '<bs>',
+        },
+      },
+      textobjects = {
+        move = {
+          enable = true,
+          goto_next_start = { [']f'] = '@function.outer', [']c'] = '@class.outer', [']a'] = '@parameter.inner' },
+          goto_next_end = { [']F'] = '@function.outer', [']C'] = '@class.outer', [']A'] = '@parameter.inner' },
+          goto_previous_start = { ['[f'] = '@function.outer', ['[c'] = '@class.outer', ['[a'] = '@parameter.inner' },
+          goto_previous_end = { ['[F'] = '@function.outer', ['[C'] = '@class.outer', ['[A'] = '@parameter.inner' },
+        },
+      },
+    },
+    ---@param opts TSConfig
+    config = function(_, opts)
+      -- Ensure the list is deduplicated manually
+      if type(opts.ensure_installed) == 'table' then
+        local seen = {}
+        local deduped = {}
+        for _, item in ipairs(opts.ensure_installed) do
+          if not seen[item] then
+            table.insert(deduped, item)
+            seen[item] = true
+          end
+        end
+        opts.ensure_installed = deduped
+      end
+      require('nvim-treesitter.configs').setup(opts)
+    end,
+  },
+  {
+    'windwp/nvim-ts-autotag',
+    after = 'nvim-treesitter',
+    opts = {},
   },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
@@ -880,19 +1064,57 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.debug',
+  --require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
+
+  -- Custom Plugins
+
+  -- Transparent Background
+  require 'custom.plugins.transparent',
+
+  -- Neorg
+  require 'custom.plugins.neorg',
+
+  -- Cattpuccin Theme
+  require 'custom.plugins.cattpuccin',
+
+  -- Obsidian
+  require 'custom.plugins.obsidian',
+
+  -- Lua Line
+  require 'custom.plugins.lualine',
+
+  -- Git Fugitive
+  require 'custom.plugins.git-fugitive',
+
+  -- Lazy Git
+  require 'custom.plugins.lazy-git',
+
+  -- Dad Bod
+  require 'custom.plugins.dadbod',
+
+  -- Dad Bod UI
+  require 'custom.plugins.dadbod-ui',
+
+  -- Dad Bod Completion
+  require 'custom.plugins.dad-bod-completion',
+
+  -- Dap Debugg
+  require 'custom.plugins.dap',
+
+  -- Completion
+  require 'custom.plugins.completion',
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
