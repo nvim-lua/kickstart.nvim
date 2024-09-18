@@ -11,7 +11,7 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '<leader>pv', ':Neotree reveal=true position=float<CR>', { desc = 'NeoTree reveal' } },
+    { '<leader>pv', ':Neotree reveal=true position=float<CR>', desc = 'NeoTree reveal' },
   },
   opts = {
     window = {
