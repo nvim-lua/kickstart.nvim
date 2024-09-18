@@ -19,10 +19,12 @@ return {
             return { 'isort', 'black' }
           end
         end,
-        javascript = { { 'prettierd', 'prettier' } },
-        javascriptreact = { { 'prettierd', 'prettier' } },
+        -- Replace nested brackets with separate formatters and `stop_after_first`
+        javascript = { 'prettierd', 'prettier' },
+        javascriptreact = { 'prettierd', 'prettier' },
         ['*'] = { 'trim_whitespace' },
       },
+      --     stop_after_first = true,
     },
   },
 }
