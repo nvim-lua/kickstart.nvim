@@ -3,3 +3,4 @@ return {
   dependencies = {},
   config = function() end,
 }
+-- :FloatermNew to open a window
