@@ -5,8 +5,10 @@ return {
   config = function()
     -- Setup orgmode
     require('orgmode').setup {
-      org_agenda_files = '~/orgfiles/**/*',
-      org_default_notes_file = '~/orgfiles/refile.org',
+      org_agenda_files = {
+        '~/Library/Mobile Documents/iCloud~md~obsidian/Documents/MarcsDailyNotes/**/*',
+      },
+      org_default_notes_file = '~/Library/Mobile Documents/iCloud~md~obsidian/Documents/MarcsDailyNotes/inbox/refile.org',
       org_capture_templates = {
         x = {
           description = 'Journal Personal',
@@ -50,12 +52,12 @@ return {
           target = '~/OrgMode-Inmar/OrgRoamRoot/002-Areas/OneOnOne/billy1on1.org',
         },
         t = {
-          description = 'Taylor 1:1',
+          description = 'Todo',
           datetree = {
             tree_type = 'day',
           },
-          template = '**** %?\nEntered on %U\n',
-          target = '~/OrgMode-Inmar/OrgRoamRoot/002-Areas/OneOnOne/taylor1on1.org',
+          template = '**** - [ ] TODO %?\n  Entered on: %U\n',
+          target = '~/Library/Mobile Documents/iCloud~md~obsidian/Documents/MarcsDailyNotes/tasks/tasks.org',
         },
         a = {
           description = 'Asha 1:1',
