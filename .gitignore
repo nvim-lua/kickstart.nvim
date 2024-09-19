@@ -1,3 +1,53 @@
+# Project gitignore
+.luarc.json
+after
+coc-settings.json
+colors
+docs
+ftplugin
+ginit.vim
+lua/user
+neoconf.json
+plugin
+queries
+spell
+
+# Global gitignore
+# ----------------
+
+# Mac OS X
+.AppleDouble
+.DS_Store
+.LSOverride
+._*
+
+# Windoze
+$RECYCLE.BIN/
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# (Neo)Vim
+*~
+.netrwhist
+Session.vim
+Sessionx.vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+[._]*.un~
+tags
+
+# VS Code
+.history
+.vscode
+
+# JetBrains
+.idea
+
 tags
 test.sh
 .luarc.json
