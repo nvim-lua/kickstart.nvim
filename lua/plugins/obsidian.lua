@@ -351,12 +351,12 @@ return {
     vim.keymap.set(
       'n',
       '<leader>os',
-      ':Telescope find_files search_dirs={"/Users/marctalcott/Library/Mobile\\ Documents/iCloud~md~obsidian/Documents/MarcsDailyNotes/notes"}<cr>'
+      ':Telescope find_files search_dirs={"/Users/marctalcott/Library/Mobile\\ Documents/iCloud~md~obsidian/Documents/MarcsDailyNotes"}<cr>'
     )
     vim.keymap.set(
       'n',
       '<leader>oz',
-      ':Telescope live_grep search_dirs={"/Users/marctalcott/Library/Mobile\\ Documents/iCloud~md~obsidian/Documents/MarcsDailyNotes/notes"}<cr>'
+      ':Telescope live_grep search_dirs={"/Users/marctalcott/Library/Mobile\\ Documents/iCloud~md~obsidian/Documents/MarcsDailyNotes"}<cr>'
     )
     --
     -- search for files in notes (ignore zettelkasten)
