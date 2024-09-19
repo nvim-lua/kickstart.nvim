@@ -160,7 +160,6 @@ require('lazy').setup({
             'vue',
           },
         },
-        angularls = {},
         stylelint_lsp = {
           filetypes = { 'css', 'scss' },
           root_dir = require('lspconfig').util.root_pattern('package.json', '.git'),
@@ -200,7 +199,6 @@ require('lazy').setup({
             fallbackFlags = { '--std=c++20' },
           },
         },
-        marksman = {},
         --
 
         lua_ls = {
@@ -316,7 +314,6 @@ require('lazy').setup({
         json = { 'prettier' },
         scss = { 'prettier' },
         html = { 'prettier' },
-        markdown = { 'prettier' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -437,6 +434,7 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+          { name = 'vimtex' },
         },
       }
     end,
@@ -501,6 +499,7 @@ require('lazy').setup({
       auto_install = true,
       highlight = {
         enable = true,
+        disable = { 'latex' },
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
@@ -519,7 +518,7 @@ require('lazy').setup({
   require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 

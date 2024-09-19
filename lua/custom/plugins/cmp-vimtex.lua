@@ -1,0 +1,1 @@
+return { 'micangl/cmp-vimtex' }
