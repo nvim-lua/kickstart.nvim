@@ -167,6 +167,18 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagn
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
+-- Tabpage keymaps
+vim.keymap.set('n', '<leader>nt', '<cmd>tabnew<CR>', { desc = 'New Tab' })
+vim.keymap.set('n', '[t', '<cmd>+tabnext<CR>', { desc = 'Go to previous [T]ab' })
+vim.keymap.set('n', ']t', '<cmd>-tabnext<CR>', { desc = 'Go to next [T]ab' })
+
+vim.keymap.set('n', '<leader>bn', '<cmd>badd<CR>', { desc = 'New buffer' })
+vim.keymap.set('n', '<leader>bd', '<cmd>bdelete<CR>', { desc = 'Delete buffer' })
+vim.keymap.set('n', '<leader>bD', '<cmd>bdelete!<CR>', { desc = 'Force Delete buffer' })
+vim.keymap.set('n', '<leader>bP', '<cmd>%bdelete<CR>', { desc = 'Delete all buffers' })
+vim.keymap.set('n', '<leader>bw', '<cmd>w<CR>', { desc = 'Save current buffer' })
+vim.keymap.set('n', '<leader>bW', '<cmd>wa<CR>', { desc = 'Save all buffers' })
+
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -288,6 +300,8 @@ require('lazy').setup({
         ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
         ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
         ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
+        ['<leader>n'] = { name = 'Create [N]ew...', _ = 'which_key_ignore' },
+        ['<leader>b'] = { name = '[B]uffer', _ = 'which_key_ignore' },
       }
       -- visual mode
       require('which-key').register({
@@ -555,6 +569,8 @@ require('lazy').setup({
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
+      local util = require 'lspconfig.util'
+
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --
@@ -575,15 +591,21 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {},
+        tsserver = {
+          root_dir = util.root_pattern('package.json', 'tsconfig.json', 'jsconfig.json'),
+          on_attach = function(client, _)
+            client.server_capabilities.document_formatting = false
+            client.server_capabilities.document_range_formatting = false
+          end,
+        },
         angularls = {
-          cwd = require('lspconfig.util').root_pattern('angular.json', 'project.json'),
+          cwd = util.root_pattern('angular.json', 'project.json'),
           require_cwd = true,
           on_new_config = function(new_config, new_root_dir)
             new_config.root_dir = new_root_dir
           end,
           filetypes = { 'typescript', 'html' },
-          root_dir = require('lspconfig.util').root_pattern('angular.json', 'project.json'),
+          root_dir = util.root_pattern('angular.json', 'project.json'),
         },
         -- css_variables = {},
         cssls = {},
@@ -591,7 +613,7 @@ require('lazy').setup({
         -- htmx = {},
         tailwindcss = {},
         eslint = {
-          cwd = require('lspconfig.util').root_pattern('package.json', '.eslintrc.json', '.eslintrc'),
+          cwd = util.root_pattern('package.json', '.eslintrc.json', '.eslintrc'),
           require_cwd = true,
         },
         --
