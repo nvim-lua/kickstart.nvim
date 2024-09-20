@@ -1,6 +1,6 @@
 return {
-  -- 'weygoldt/rose-pine-neovim',
-  'rose-pine/neovim',
+  'weygoldt/rose-pine-neovim',
+  -- 'rose-pine/neovim',
   name = 'rose-pine',
   priority = 100,
   config = function()
