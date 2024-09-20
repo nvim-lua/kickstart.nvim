@@ -152,12 +152,6 @@ return {
         flags = lsp_flags,
       }
 
-      lspconfig.tsserver.setup {
-        capabilities = capabilities,
-        flags = lsp_flags,
-        filetypes = { 'js', 'javascript', 'typescript', 'ojs' },
-      }
-
       local function get_quarto_resource_path()
         local function strsplit(s, delimiter)
           local result = {}
@@ -284,5 +278,5 @@ return {
         end,
       }
     end,
-  }
+  },
 }

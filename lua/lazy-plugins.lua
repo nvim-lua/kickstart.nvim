@@ -49,6 +49,9 @@ require('lazy').setup({
 
   require 'kickstart.plugins.copilot-chat',
 
+  require 'kickstart.plugins.octo',
+
+  require 'kickstart.plugins.web-dev-icons',
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
