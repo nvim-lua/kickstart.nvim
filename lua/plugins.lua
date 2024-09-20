@@ -235,14 +235,11 @@ require('lazy').setup({
         'clang-format',
         'lua_ls',
         'omnisharp',
-        'jdtls',
-        'prettier',
+        'prettierd',
       })
 
       -- Skip automatic setup for servers
-      local skip_setup = {
-        'jdtls',
-      }
+      local skip_setup = {}
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -260,20 +257,10 @@ require('lazy').setup({
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
-          jdtls = function()
-            require('java').setup {
-              -- Your custom jdtls settings goes here
-            }
-
-            require('lspconfig').jdtls.setup {
-              -- Your custom nvim-java configuration goes here
-            }
-          end,
         },
       }
     end,
   },
-  'nvim-java/nvim-java',
 
   { -- Autoformat
     'stevearc/conform.nvim',
@@ -309,11 +296,12 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
-        typescript = { 'prettier' },
-        javascript = { 'prettier' },
-        json = { 'prettier' },
-        scss = { 'prettier' },
-        html = { 'prettier' },
+        typescript = { 'prettierd' },
+        javascript = { 'prettierd' },
+        json = { 'prettierd' },
+        scss = { 'prettierd' },
+        html = { 'prettierd' },
+        markdown = { 'prettierd' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -494,7 +482,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'c' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
