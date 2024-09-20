@@ -1,0 +1,1 @@
+return { 'killitar/obscure.nvim' }

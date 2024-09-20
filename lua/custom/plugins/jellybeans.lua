@@ -1,6 +1,1 @@
-return {
-  {
-    'metalelf0/jellybeans-nvim',
-    dependencies = { 'rktjmp/lush.nvim' },
-  },
-}
+return { 'nanotech/jellybeans.vim' }
