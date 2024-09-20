@@ -261,6 +261,7 @@ require('lazy').setup({
       }
     end,
   },
+  'nvim-java/nvim-java', -- removing this disables :Mason for some reason...
 
   { -- Autoformat
     'stevearc/conform.nvim',
