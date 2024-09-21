@@ -52,11 +52,12 @@ local dash = {
           header = vim.split(logo, '\n'),
         -- stylua: ignore
         center = {
-          { action = "Telescope find_files",                                    desc = " Find File",       icon = " ", key = "f" },
+          { action = "Telescope find_files",                                     desc = " Find File",       icon = " ", key = "f" },
           { action = "ene | startinsert",                                        desc = " New File",        icon = " ", key = "n" },
           { action = "Telescope oldfiles",                                       desc = " Recent Files",    icon = " ", key = "r" },
           { action = "Telescope live_grep",                                      desc = " Find Text",       icon = " ", key = "g" },
           { action = "Lazy",                                                     desc = " Lazy",            icon = "󰒲 ", key = "l" },
+          { action = "Oil",                                                      desc = " Oil",             icon = "󰾅 ", key = "o" },
           { action = "qa",                                                       desc = " Quit",            icon = " ", key = "q" },
         },
           footer = function()
