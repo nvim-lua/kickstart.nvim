@@ -22,11 +22,19 @@ vim.keymap.set('n', '<C-->', ':DecreaseFont<CR>', { noremap = true, silent = tru
 vim.keymap.set('n', '<C-=>', ':IncreaseFont<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<C-+>', ':IncreaseFont<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<C-0>', ':ResetFontSize<CR>', { noremap = true, silent = true })
-
+vim.keymap.set('n', '<leader>bb', function()
+  local user_input = vim.fn.input 'Enter input: '
+  local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+  vim.cmd { cmd = 'b', args = { user_input } }
+end)
 vim.keymap.set('n', '<C-s>', '<cmd>w!<cr>', { desc = 'Force write' })
 vim.keymap.set('n', '<C-q>', '<cmd>qa!<cr>', { desc = 'Force quit' })
 vim.keymap.set('n', '|', '<cmd>vsplit<cr>', { desc = 'Vertical Split' })
 vim.keymap.set('n', '\\', '<cmd>split<cr>', { desc = 'Horizontal Split' })
+vim.keymap.set('n', '<leader>h', '<cmd>nohl<cr>', { desc = 'Horizontal Split' })
+vim.keymap.set('n', '<leader>h', '<cmd>nohl<cr>', { desc = 'Horizontal Split' })
+vim.keymap.set('n', '<leader>la', vim.lsp.buf.code_action, { desc = 'Code action' })
+
 vim.keymap.set('t', '<C-h>', '<cmd>wincmd h<cr>', { desc = 'Terminal left window navigation' })
 vim.keymap.set('t', '<C-j>', '<cmd>wincmd j<cr>', { desc = 'Terminal down window navigation' })
 vim.keymap.set('t', '<C-k>', '<cmd>wincmd k<cr>', { desc = 'Terminal up window navigation' })
