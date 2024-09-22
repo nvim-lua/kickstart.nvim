@@ -1,41 +1,5 @@
 --[[
 
-=====================================================================
-==================== READ THIS BEFORE CONTINUING ====================
-=====================================================================
-========                                    .-----.          ========
-========         .----------------------.   | === |          ========
-========         |.-""""""""""""""""""-.|   |-----|          ========
-========         ||                    ||   | === |          ========
-========         ||   KICKSTART.NVIM   ||   |-----|          ========
-========         ||                    ||   | === |          ========
-========         ||                    ||   |-----|          ========
-========         ||:Tutor              ||   |:::::|          ========
-========         |'-..................-'|   |____o|          ========
-========         `"")----------------(""`   ___________      ========
-========        /::::::::::|  |::::::::::\  \ no mouse \     ========
-========       /:::========|  |==hjkl==:::\  \ required \    ========
-========      '""""""""""""'  '""""""""""""'  '""""""""""'   ========
-========                                                     ========
-=====================================================================
-=====================================================================
-
-What is Kickstart?
-
-  Kickstart.nvim is *not* a distribution.
-
-  Kickstart.nvim is a starting point for your own configuration.
-    The goal is that you can read every line of code, top-to-bottom, understand
-    what your configuration is doing, and modify it to suit your needs.
-
-    Once you've done that, you can start exploring, configuring and tinkering to
-    make Neovim your own! That might mean leaving Kickstart just the way it is for a while
-    or immediately breaking it into modular pieces. It's up to you!
-
-    If you don't know anything about Lua, I recommend taking some time to read through
-    a guide. One possible example which will only take 10-15 minutes:
-      - https://learnxinyminutes.com/docs/lua/
-
     After understanding a bit more about Lua, you can use `:help lua-guide` as a
     reference for how Neovim integrates Lua.
     - :help lua-guide
@@ -50,8 +14,6 @@ Kickstart Guide:
       - :
       - Tutor
       - <enter key>
-
-    (If you already know the Neovim basics, you can skip this step.)
 
   Once you've completed that, you can continue working through **AND READING** the rest
   of the kickstart init.lua.
@@ -91,18 +53,27 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
--- [[ Setting options ]]
+--[[---------------------------------------------------------------------------------------------------]]
+--            __  __  _
+--   ___ ___ / /_/ /_(_)__  ___ ____
+--  (_-</ -_) __/ __/ / _ \/ _ `(_-<
+-- /___/\__/\__/\__/_/_//_/\_, /___/
+--                        /___/
+
+-- Vim options can be declared with:
+-- vim.opt.<OPTION>
+
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
--- Make line numbers default
+-- Show line numbers
 vim.opt.number = true
--- You can also add relative line numbers, to help with jumping.
---  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+
+-- Show relative line numbers
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -157,7 +128,13 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
--- [[ Basic Keymaps ]]
+--[[---------------------------------------------------------------------------------------------------]]
+--    __
+--   / /_____ __ ____ _  ___ ____  ___
+--  /  '_/ -_) // /  ' \/ _ `/ _ \(_-<
+-- /_/\_\\__/\_, /_/_/_/\_,_/ .__/___/
+--          /___/          /_/
+
 --  See `:help vim.keymap.set()`
 
 -- Clear highlights on search when pressing <Esc> in normal mode
@@ -170,16 +147,16 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
---
+
 -- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
--- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+-- Disable arrow keys in normal mode
+vim.keymap.set('n', '<left>', '<cmd>echo "Use h instead"<CR>')
+vim.keymap.set('n', '<right>', '<cmd>echo "Use l instead"<CR>')
+vim.keymap.set('n', '<up>', '<cmd>echo "Use k instead"<CR>')
+vim.keymap.set('n', '<down>', '<cmd>echo "Use j instead"<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -190,7 +167,16 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
--- [[ Basic Autocommands ]]
+-- Key mapping to delete the current line using the black hole register
+vim.keymap.set('n', '<C-x>', '"_dd:echo "Line deleted"<CR>', { noremap = true, silent = true })
+vim.keymap.set('i', '<C-x>', '<Esc>"_dd:echo "Line deleted"<CR>i', { noremap = true, silent = true })
+
+--[[---------------------------------------------------------------------------------------------------]]
+--             __                                         __
+--  ___ ___ __/ /____  _______  __ _  __ _  ___ ____  ___/ /__
+-- / _ `/ // / __/ _ \/ __/ _ \/  ' \/  ' \/ _ `/ _ \/ _  (_-<
+-- \_,_/\_,_/\__/\___/\__/\___/_/_/_/_/_/_/\_,_/_//_/\_,_/___/
+
 --  See `:help lua-guide-autocommands`
 
 -- Highlight when yanking (copying) text
@@ -204,7 +190,13 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
--- [[ Install `lazy.nvim` plugin manager ]]
+--[[---------------------------------------------------------------------------------------------------]]
+--    _          __       ____  __
+--   (_)__  ___ / /____ _/ / / / /__ ____ __ __
+--  / / _ \(_-</ __/ _ `/ / / / / _ `/_ // // /
+-- /_/_//_/___/\__/\_,_/_/_/ /_/\_,_//__/\_, /
+--                                      /___/
+
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -216,7 +208,17 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
--- [[ Configure and install plugins ]]
+--[[---------------------------------------------------------------------------------------------------]]
+--                 ____                     __  _          __       ____
+--  _______  ___  / _(_)__ _  ___ ____  ___/ / (_)__  ___ / /____ _/ / /
+-- / __/ _ \/ _ \/ _/ / _ `/ / _ `/ _ \/ _  / / / _ \(_-</ __/ _ `/ / /
+-- \__/\___/_//_/_//_/\_, /  \_,_/_//_/\_,_/ /_/_//_/___/\__/\_,_/_/_/
+--          __       /___/
+--    ___  / /_ _____ _(_)__  ___
+--   / _ \/ / // / _ `/ / _ \(_-<
+--  / .__/_/\_,_/\_, /_/_//_/___/
+-- /_/          /___/
+
 --
 --  To check the current status of your plugins, run
 --    :Lazy
