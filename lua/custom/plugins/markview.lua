@@ -1,3 +1,6 @@
+vim.keymap.set('n', '<leader>e', function()
+  vim.cmd.Markview 'toggleAll'
+end, { desc = 'Toggle Markview' })
 return {
   { -- Markview
     'OXY2DEV/markview.nvim',
