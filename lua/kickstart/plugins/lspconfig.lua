@@ -184,7 +184,7 @@ return {
         biome = {},
         ltex = {},
         marksman = {},
-        ts_ls = {},
+        tsserver = {},
         xmlformatter = {},
         yamlls = {},
 
