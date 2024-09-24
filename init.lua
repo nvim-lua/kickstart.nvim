@@ -676,6 +676,7 @@ require('lazy').setup({
           },
           semanticTokens = true,
         },
+        terraformls = {},
         pyright = {
           capabilities = {
             textDocument = {
@@ -772,6 +773,7 @@ require('lazy').setup({
         'shellcheck',
         'stylua',
         'taplo',
+        'terraform-ls',
         'tflint',
         'yaml-language-server',
         'yamlfix',
@@ -824,7 +826,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         bash = { 'shellcheck' },
-        hcl = { 'fmt' },
+        hcl = { 'hclfmt' },
         go = { 'goimports', 'gofumpt' },
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
