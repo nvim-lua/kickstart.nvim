@@ -1,5 +1,8 @@
 return { -- Useful plugin to show you pending keybinds.
   'folke/which-key.nvim',
+  dependencies = {
+    'nvim-tree/nvim-web-devicons',
+  },
   event = 'VimEnter', -- Sets the loading event to 'VimEnter'
   opt = {
     icons = {

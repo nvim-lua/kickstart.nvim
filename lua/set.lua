@@ -78,3 +78,8 @@ vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
+
+-- Spellchecker
+vim.opt.spelllang = 'en'
+vim.opt.spell = true
+vim.opt.spellfile = os.getenv 'HOME' .. '/.config/nvim/spell/en.utf-8.add'
