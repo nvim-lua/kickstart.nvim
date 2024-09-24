@@ -161,7 +161,9 @@ require('lazy').setup({
     'navarasu/onedark.nvim',
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'onedark'
+      require('onedark').setup({
+        transparent = true, -- Show/hide background
+      })
     end,
   },
 
@@ -535,6 +537,7 @@ local servers = {
   },
   clangd = {},
   gopls = {},
+  purescriptls = {},
 
   -- rust_analyzer = {},
   tsserver = {},
