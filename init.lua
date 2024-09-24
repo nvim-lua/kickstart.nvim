@@ -161,11 +161,11 @@ require('lazy').setup({
     'navarasu/onedark.nvim',
     priority = 1000,
     config = function()
-      require('onedark').setup({
-        style = 'darker',
-        transparent = true, -- Show/hide background
-      })
-      vim.cmd.colorscheme "onedark"
+      require('onedark').setup {
+        -- style = 'darker',
+        transparent = true,
+      }
+      -- require('onedark').load()
     end,
   },
 
