@@ -237,39 +237,56 @@ require('lazy').setup({
   --
   -- Use `opts = {}` to force a plugin to be loaded.
   --
+
   {
-    'nvim-tree/nvim-tree.lua',
-    version = '*',
-    lazy = false,
-    dependencies = {
-      'nvim-tree/nvim-web-devicons',
-      enabled = true,
+    'windwp/nvim-autopairs',
+    opts = {
+      fast_wrap = {},
+      disable_filetype = { 'TelescopePrompt', 'vim' },
     },
-    config = function()
-      require('nvim-tree').setup {}
-      local function my_on_attach(bufnr)
-        local api = require 'nvim-tree.api'
+    config = function(_, opts)
+      require('nvim-autopairs').setup(opts)
 
-        local function opts(desc)
-          return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-        end
+      -- Setup cmp for autopairs
+      local cmp_autopairs = require 'nvim-autopairs.completion.cmp'
+      local cmp = require 'cmp'
 
-        -- default mappings
-        api.config.mappings.default_on_attach(bufnr)
-
-        -- custom mappings
-        vim.keymap.set('n', '<C-t>', api.tree.change_root_to_parent, opts 'Up')
-        vim.keymap.set('n', '?', api.tree.toggle_help, opts 'Help')
-      end
-
-      -- pass to setup along with your other options
-      require('nvim-tree').setup {
-        ---
-        on_attach = my_on_attach,
-        ---
-      }
+      cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
     end,
   },
+
+  {
+    'nvim-tree/nvim-web-devicons',
+    opts = function()
+      dofile(vim.g.base46_cache .. 'devicons')
+    end,
+  },
+
+  {
+    'lukas-reineke/indent-blankline.nvim',
+    event = 'User FilePost',
+    opts = {
+      indent = { char = '│', highlight = 'IblChar' },
+      scope = { char = '│', highlight = 'IblScopeChar' },
+    },
+    config = function(_, opts)
+      dofile(vim.g.base46_cache .. 'blankline')
+
+      local hooks = require 'ibl.hooks'
+      hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
+      require('ibl').setup(opts)
+
+      dofile(vim.g.base46_cache .. 'blankline')
+    end,
+  },
+
+  -- File managing, picker etc
+  {
+    'nvim-tree/nvim-tree.lua',
+    cmd = { 'NvimTreeToggle', 'NvimTreeFocus' },
+    opts = function() end,
+  },
+
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
   --    require('gitsigns').setup({ ... })
