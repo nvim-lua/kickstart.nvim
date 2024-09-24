@@ -754,6 +754,7 @@ require('lazy').setup({
         'goimports',
         'gomodifytags',
         'gopls',
+        'hadolint',
         'hclfmt',
         'helm-ls',
         'html-lsp',
