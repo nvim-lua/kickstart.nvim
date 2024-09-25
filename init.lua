@@ -279,7 +279,7 @@ require('lazy').setup({
       },
     },
   },
-
+  { 'jvgrootveld/telescope-zoxide', opts = {} },
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
@@ -403,6 +403,7 @@ require('lazy').setup({
 
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
+      local z_utils = require 'telescope._extensions.zoxide.utils'
       require('telescope').setup {
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
@@ -422,11 +423,42 @@ require('lazy').setup({
             auto_quoting = true,
             theme = 'dropdown',
           },
+          ['zoxide'] = {
+            prompt_title = '[ Zoxide List ]',
+
+            -- Zoxide list command with score
+            list_command = 'zoxide query -ls',
+            mappings = {
+              default = {
+                action = function(selection)
+                  vim.cmd.cd(selection.path)
+                end,
+                after_action = function(selection)
+                  vim.notify('Directory changed to ' .. selection.path)
+                end,
+              },
+              ['<C-s>'] = { action = z_utils.create_basic_command 'split' },
+              ['<C-v>'] = { action = z_utils.create_basic_command 'vsplit' },
+              ['<C-e>'] = { action = z_utils.create_basic_command 'edit' },
+              ['<C-f>'] = {
+                keepinsert = true,
+                action = function(selection)
+                  builtin.find_files { cwd = selection.path }
+                end,
+              },
+              ['<C-t>'] = {
+                action = function(selection)
+                  vim.cmd.tcd(selection.path)
+                end,
+              },
+            },
+          },
         },
       }
 
       -- Enable Telescope extensions if they are installed
       pcall(require('telescope').load_extension, 'fzf')
+      pcall(require('telescope').load_extension, 'zoxide')
       pcall(require('telescope').load_extension, 'ui-select')
 
       -- See `:help telescope.builtin`
@@ -740,8 +772,8 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         cmake = { 'cmakelang' },
-        cpp = { 'clang_format' },
-        json = { 'clang_format' },
+        cpp = { 'clang-format' },
+        json = { 'clang-format' },
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
         python = { 'isort' },
@@ -879,7 +911,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'wildcharm'
+      vim.cmd.colorscheme 'retrobox'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
@@ -971,7 +1003,7 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
@@ -1042,3 +1074,4 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+require 'custom/keymap'
