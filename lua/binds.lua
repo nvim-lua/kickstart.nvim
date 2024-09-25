@@ -1,13 +1,13 @@
-
-
-return {
---    __
---   / /_____ __ ____ _  ___ ____  ___
---  /  '_/ -_) // /  ' \/ _ `/ _ \(_-<
--- /_/\_\\__/\_, /_/_/_/\_,_/ .__/___/
---          /___/          /_/
+--    __            __   _         __
+--   / /_____ __ __/ /  (_)__  ___/ /__
+--  /  '_/ -_) // / _ \/ / _ \/ _  (_-<
+-- /_/\_\\__/\_, /_.__/_/_//_/\_,_/___/
+--          /___/
 
 --  See `:help vim.keymap.set()`
+
+local global = vim.g
+local o = vim.opt
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
@@ -42,7 +42,3 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- Key mapping to delete the current line using the black hole register
 vim.keymap.set('n', '<C-x>', '"_dd:echo "Line deleted"<CR>', { noremap = true, silent = true })
 vim.keymap.set('i', '<C-x>', '<Esc>"_dd:echo "Line deleted"<CR>i', { noremap = true, silent = true })
-end
-
-}
-

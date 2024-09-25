@@ -1,13 +1,3 @@
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
-
-vim.g.have_nerd_font = true
-
---  To check the current status of your plugins, run
---    :Lazy
---  To update plugins you can run
---    :Lazy update
-
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -43,34 +33,3 @@ require("lazy").setup({
   -- automatically check for plugin updates
   checker = { enabled = true },
 })
-
-ui = {
-  -- If you are using a Nerd Font: set icons to an empty table which will use the
-  -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
-  icons = vim.g.have_nerd_font and {} or {
-  cmd = "⌘",
-  config = "🛠",
-  event = "📅",
-  ft = "📂",
-  init = "⚙",
-  keys = "🗝",
-  plugin = "🔌",
-  runtime = "💻",
-  require = "🌙",
-  source = "📄",
-  start = "🚀",
-  task = "📌",
-  lazy = "💤 ",
- },
-}
-
---                                 ____ __
---   ___ ___  __ _____________    / _(_) /__ ___
---  (_-</ _ \/ // / __/ __/ -_)  / _/ / / -_|_-<
--- /___/\___/\_,_/_/  \__/\__/  /_//_/_/\__/___/
-vim.loader.enable()
-
-require ("binds")
-require ("settings")
-require ("autocommands")
-
