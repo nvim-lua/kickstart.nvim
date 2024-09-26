@@ -455,12 +455,14 @@ require('lazy').setup({
   require 'kickstart.plugins.dap',
   require 'kickstart.plugins.debug',
   require 'kickstart.plugins.fzf-telescope',
-  require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lsp-config',
   require 'kickstart.plugins.mini',
   require 'kickstart.plugins.nvim-cmp',
   require 'kickstart.plugins.treesitter',
   require 'kickstart.plugins.vim-fugitive',
+  require 'kickstart.plugins.nvim-lint',
+  require 'kickstart.plugins.cord',
+  -- require 'kickstart.plugins.indent_line',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
