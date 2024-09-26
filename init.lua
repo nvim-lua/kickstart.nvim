@@ -240,6 +240,8 @@ vim.keymap.set({ 'n' }, ']b', '<cmd>bnext<CR>', { silent = true })
 vim.keymap.set({ 'n' }, '[b', '<cmd>bprev<CR>', { silent = true })
 -- vim.keymap.set({ 'n', 'i', 'v' }, '<C-h>', '<cmd>bnext<CR>', { silent = true })
 -- vim.keymap.set({ 'n', 'i', 'v' }, '<C-l>', '<cmd>bprev<CR>', { silent = true })
+-- Close all buffers and keep the open one only
+vim.keymap.set('n', '<leader>b', '<cmd>:%bd|e#|bd#<CR>', { desc = 'Close all buffers and keep the open one only' })
 
 -- Enable number in netrw
 vim.g.netrw_bufsettings = 'noma nomod nu rnu nobl nowrap ro'
@@ -932,11 +934,11 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
+          -- ['<C-y>'] = cmp.mapping.confirm { select = true },
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
-          -- ['<CR>'] = cmp.mapping.confirm { select = true },
+          ['<CR>'] = cmp.mapping.confirm { select = false },
           --['<Tab>'] = cmp.mapping.select_next_item(),
           --['<S-Tab>'] = cmp.mapping.select_prev_item(),
 
