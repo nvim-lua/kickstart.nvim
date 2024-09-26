@@ -828,6 +828,7 @@ require('lazy').setup({
           { name = 'path' },
           { name = 'gopls' },
           { name = 'rust_analyzer' },
+          { name = 'supermaven' },
         },
       }
     end,
