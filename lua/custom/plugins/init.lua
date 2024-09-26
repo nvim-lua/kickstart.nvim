@@ -95,8 +95,22 @@ return {
   },
 
   {
-    'ellisonleao/gruvbox.nvim',
+    'sainnhe/gruvbox-material',
+    lazy = false,
     priority = 1000,
-    config = true,
+    config = function()
+      vim.cmd.colorscheme 'gruvbox-material'
+    end,
+    enabled = false,
+  },
+
+  {
+    'sainnhe/sonokai',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.g.sonokai_style = 'shusia'
+      vim.cmd.colorscheme 'sonokai'
+    end,
   },
 }
