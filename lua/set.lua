@@ -81,5 +81,4 @@ vim.opt.scrolloff = 10
 
 -- Spellchecker
 vim.opt.spelllang = 'en'
-vim.opt.spell = true
 vim.opt.spellfile = os.getenv 'HOME' .. '/.config/nvim/spell/en.utf-8.add'
