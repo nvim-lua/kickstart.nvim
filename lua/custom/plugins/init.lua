@@ -173,15 +173,15 @@ return {
         end
 
         require('telescope.pickers')
-          .new({}, {
-            prompt_title = 'Harpoon',
-            finder = require('telescope.finders').new_table {
-              results = file_paths,
-            },
-            previewer = conf.file_previewer {},
-            sorter = conf.generic_sorter {},
-          })
-          :find()
+            .new({}, {
+              prompt_title = 'Harpoon',
+              finder = require('telescope.finders').new_table {
+                results = file_paths,
+              },
+              previewer = conf.file_previewer {},
+              sorter = conf.generic_sorter {},
+            })
+            :find()
       end
 
       vim.keymap.set('n', '<leader>se', function()
@@ -203,7 +203,7 @@ return {
   },
   {
     'projekt0n/github-nvim-theme',
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    lazy = false,    -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
       require('github-theme').setup {
@@ -307,10 +307,10 @@ return {
     end,
     keys = {
       { '<C-t>n', ':TestNearest<cr>', { desc = 'Test Nearest' } },
-      { '<C-t>f', ':TestFile<cr>', { desc = 'Test File' } },
-      { '<C-t>s', ':TestSuite<cr>', { desc = 'Test Suite' } },
-      { '<C-t>l', ':TestLast<cr>', { desc = 'Test Last' } },
-      { '<C-t>v', ':TestVisit<cr>', { desc = 'TestVist' } },
+      { '<C-t>f', ':TestFile<cr>',    { desc = 'Test File' } },
+      { '<C-t>s', ':TestSuite<cr>',   { desc = 'Test Suite' } },
+      { '<C-t>l', ':TestLast<cr>',    { desc = 'Test Last' } },
+      { '<C-t>v', ':TestVisit<cr>',   { desc = 'TestVist' } },
     },
   },
   { 'EdenEast/nightfox.nvim' },
@@ -582,8 +582,8 @@ return {
       -- Optional, configure additional syntax highlighting / extmarks.
       -- This requires you have `conceallevel` set to 1 or 2. See `:help conceallevel` for more details.
       ui = {
-        enable = false, -- set to false to disable all additional syntax features
-        update_debounce = 200, -- update delay after a text change (in milliseconds)
+        enable = false,         -- set to false to disable all additional syntax features
+        update_debounce = 200,  -- update delay after a text change (in milliseconds)
         max_file_length = 5000, -- disable UI features for files with more than this many lines
         -- Define how various check-boxes are displayed
         checkboxes = {
@@ -663,6 +663,38 @@ return {
     'pappasam/papercolor-theme-slim',
     lazy = false,
     priority = 1000,
+  },
+  {
+    'nomnivore/ollama.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+
+    -- All the user commands added by the plugin
+    cmd = { 'Ollama', 'OllamaModel', 'OllamaServe', 'OllamaServeStop' },
+
+    keys = {
+      -- Sample keybind for prompt menu. Note that the <c-u> is important for selections to work properly.
+      {
+        '<leader>oo',
+        ":<c-u>lua require('ollama').prompt()<cr>",
+        desc = 'ollama prompt',
+        mode = { 'n', 'v' },
+      },
+
+      -- Sample keybind for direct prompting. Note that the <c-u> is important for selections to work properly.
+      {
+        '<leader>oG',
+        ":<c-u>lua require('ollama').prompt('Generate_Code')<cr>",
+        desc = 'ollama Generate Code',
+        mode = { 'n', 'v' },
+      },
+    },
+
+    ---@type Ollama.Config
+    opts = {
+      model = "codellama"
+    },
   },
   {
     'sainnhe/everforest',
