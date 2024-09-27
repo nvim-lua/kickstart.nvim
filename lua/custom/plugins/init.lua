@@ -341,7 +341,7 @@ return {
       require('copilot').setup {
         suggestion = {
           enabled = true,
-          auto_trigger = true,
+          auto_trigger = false,
           hide_during_completion = false,
           debounce = 75,
           keymap = {
@@ -649,7 +649,7 @@ return {
     priority = 1000,
     config = function()
       require('cyberdream').setup {
-        transparent = true,
+        transparent = false,
         -- Options will go here
       }
     end,
