@@ -67,6 +67,22 @@ return {
       pcall(require('telescope').load_extension, 'ui-select')
 
       -- See `:help telescope.builtin`
+      --
+      local builtin = require 'telescope.builtin'
+
+      vim.keymap.set('n', '<leader>ch', function()
+        builtin.find_files {
+          hidden = true,
+        }
+      end, { desc = 'Find files inside hidden folders' })
+
+      vim.keymap.set('n', '<leader>en', function()
+        local cwd = vim.fn.input 'Enter dir: '
+        builtin.find_files {
+          cwd = cwd,
+          prompt_title = 'Project Files',
+        }
+      end, { desc = 'Prompt cwd' })
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
