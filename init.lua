@@ -149,11 +149,6 @@ require('lazy').setup({
   'ThePrimeagen/vim-be-good',
   'mbbill/undotree',
 
-  -- Database
-  -- 'tpope/vim-dadbod',
-  -- 'kristijanhusak/vim-dadbod-ui',
-  -- 'kristijanhusak/vim-dadbod-completion',
-
   {
     'microsoft/vscode-js-debug',
     opt = true,
@@ -380,6 +375,11 @@ require('lazy').setup({
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+
+  -- Database
+  -- 'tpope/vim-dadbod',
+  -- 'kristijanhusak/vim-dadbod-ui',
+  -- 'kristijanhusak/vim-dadbod-completion',
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
