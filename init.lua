@@ -237,8 +237,11 @@ require('lazy').setup({
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
     },
+    config = function() -- This is the function that runs, AFTER loading
+      require('which-key').setup()
+    end,
   },
-
+uu
   -- NOTE: Plugins can specify dependencies.
   --
   -- The dependencies are proper plugin specifications as well - anything
