@@ -241,7 +241,6 @@ require('lazy').setup({
       require('which-key').setup()
     end,
   },
-uu
   -- NOTE: Plugins can specify dependencies.
   --
   -- The dependencies are proper plugin specifications as well - anything
