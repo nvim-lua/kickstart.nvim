@@ -12,8 +12,10 @@ vim.g.loaded_netrwPlugin = 1
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
+
 -- Make line numbers default
--- vim.opt.number = true -- Make line number default
+-- see `help: number_relativenumber`
+vim.opt.number = true -- Make line number default
 vim.opt.relativenumber = true -- Make relative line number default
 
 -- Enable mouse mode, can be useful for resizing splits for example!
