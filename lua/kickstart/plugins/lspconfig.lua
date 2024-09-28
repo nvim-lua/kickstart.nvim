@@ -156,6 +156,11 @@ return {
         filetypes = { 'c', 'cpp' },
       },
 
+      html = {},
+
+      -- biome = {},
+      -- quick_lint_js = {},
+
       gopls = {
         settings = {
           gopls = {
@@ -180,7 +185,7 @@ return {
       --
       -- But for many setups, the LSP (`tsserver`) will work just fine
       -- tsserver = {},
-      --
+      -- ts_ls = {},
 
       lua_ls = {
         -- cmd = {...},
@@ -215,6 +220,11 @@ return {
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
     require('mason-lspconfig').setup {
+      function(server_name)
+        if server_name == 'tsserver' then
+          server_name = 'ts_ls'
+        end
+      end,
       handlers = {
         function(server_name)
           local server = servers[server_name] or {}
