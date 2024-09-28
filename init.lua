@@ -618,6 +618,7 @@ require('lazy').setup({
           'black',
           'isort',
         },
+        go = { 'gofmt' },
         stop_after_first = false,
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
@@ -806,6 +807,7 @@ require('lazy').setup({
     dependencies = { { 'echasnovski/mini.icons', opts = {} } },
     vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' }),
   },
+  { 'tpope/vim-fugitive' },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
