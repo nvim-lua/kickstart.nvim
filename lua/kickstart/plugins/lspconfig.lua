@@ -158,6 +158,8 @@ return {
 
       html = {},
 
+      ts_ls = {},
+
       -- biome = {},
       -- quick_lint_js = {},
 
