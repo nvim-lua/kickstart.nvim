@@ -255,9 +255,6 @@ require('lazy').setup({
       },
     },
   },
-  {
-    'mg979/vim-visual-multi',
-  },
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
@@ -438,69 +435,78 @@ require('lazy').setup({
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
+
   {
-    'theprimeagen/harpoon',
+    'ThePrimeagen/harpoon',
     branch = 'harpoon2',
-    dependencies = { 'nvim-lua/plenary.nvim' },
+    depenencies = { 'nvim-lua/plenary.nvim' },
+
     config = function()
-      require('harpoon'):setup()
+      local harpoon = require 'harpoon'
+
+      -- REQUIRED
+      harpoon:setup()
+      -- REQUIRED
+
+      vim.keymap.set('n', '<leader>A', function()
+        harpoon:list():add()
+      end, { desc = 'Add a file to harpoon' })
+      vim.keymap.set('n', '<leader>a', function()
+        harpoon.ui:toggle_quick_menu(harpoon:list())
+      end, { desc = 'Open harpoon nav' })
+
+      vim.keymap.set('n', '<leader>1', function()
+        harpoon:list():select(1)
+      end, { desc = 'Go to file 1' })
+      vim.keymap.set('n', '<leader>2', function()
+        harpoon:list():select(2)
+      end, { desc = 'Go to file 2' })
+      vim.keymap.set('n', '<leader>3', function()
+        harpoon:list():select(3)
+      end, { desc = 'Go to file 3' })
+      vim.keymap.set('n', '<leader>4', function()
+        harpoon:list():select(4)
+      end, { desc = 'Go to file 4' })
+      vim.keymap.set('n', '<leader>5', function()
+        harpoon:list():select(5)
+      end, { desc = 'Go to file 5' })
+
+      -- Toggle previous & next buffers stored within Harpoon list
+      vim.keymap.set('n', '<C-S-P>', function()
+        harpoon:list():prev()
+      end)
+      vim.keymap.set('n', '<C-S-N>', function()
+        harpoon:list():next()
+      end)
+
+      -- basic telescope configuration
+      local conf = require('telescope.config').values
+      local function toggle_telescope(harpoon_files)
+        local file_paths = {}
+        for _, item in ipairs(harpoon_files.items) do
+          table.insert(file_paths, item.value)
+        end
+
+        require('telescope.pickers')
+          .new({}, {
+            prompt_title = 'Harpoon',
+            finder = require('telescope.finders').new_table {
+              results = file_paths,
+            },
+            previewer = conf.file_previewer {},
+            sorter = conf.generic_sorter {},
+          })
+          :find()
+      end
+
+      vim.keymap.set('n', '<leader>z', function()
+        toggle_telescope(harpoon:list())
+      end, { desc = 'Open harpoon window in telescope' })
     end,
-    keys = {
-      {
-        '<leader>A',
-        function()
-          require('harpoon'):list():add()
-        end,
-        desc = 'harpoon file',
-      },
-      {
-        '<leader>a',
-        function()
-          local harpoon = require 'harpoon'
-          harpoon.ui:toggle_quick_menu(harpoon:list())
-        end,
-        desc = 'harpoon quick menu',
-      },
-      {
-        '<leader>1',
-        function()
-          require('harpoon'):list():select(1)
-        end,
-        desc = 'harpoon to file 1',
-      },
-      {
-        '<leader>2',
-        function()
-          require('harpoon'):list():select(2)
-        end,
-        desc = 'harpoon to file 2',
-      },
-      {
-        '<leader>3',
-        function()
-          require('harpoon'):list():select(3)
-        end,
-        desc = 'harpoon to file 3',
-      },
-      {
-        '<leader>4',
-        function()
-          require('harpoon'):list():select(4)
-        end,
-        desc = 'harpoon to file 4',
-      },
-      {
-        '<leader>5',
-        function()
-          require('harpoon'):list():select(5)
-        end,
-        desc = 'harpoon to file 5',
-      },
-    },
   },
   -- LSP Plugins
   {
-    -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
+    -- `lazyev` configures Lua LSP for your Neovim config, runtime and plugins
     -- used for completion, annotations and signatures of Neovim apis
     'folke/lazydev.nvim',
     ft = 'lua',
