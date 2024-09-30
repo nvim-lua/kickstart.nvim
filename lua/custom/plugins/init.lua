@@ -112,5 +112,155 @@ return {
       vim.g.sonokai_style = 'shusia'
       vim.cmd.colorscheme 'sonokai'
     end,
+    enabled = false,
+  },
+
+  {
+    'catppuccin/nvim',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require('catppuccin').setup {
+        integrations = {
+          cmp = true,
+          fidget = true,
+          gitsigns = true,
+          harpoon = true,
+          indent_blankline = {
+            enabled = false,
+            scope_color = 'sapphire',
+            colored_indent_levels = false,
+          },
+          mason = true,
+          native_lsp = { enabled = true },
+          noice = true,
+          notify = true,
+          symbols_outline = true,
+          telescope = true,
+          treesitter = true,
+          treesitter_context = true,
+        },
+      }
+
+      vim.cmd.colorscheme 'catppuccin-macchiato'
+
+      -- Hide all semantic highlights until upstream issues are resolved (https://github.com/catppuccin/nvim/issues/480)
+      for _, group in ipairs(vim.fn.getcompletion('@lsp', 'highlight')) do
+        vim.api.nvim_set_hl(0, group, {})
+      end
+    end,
+  },
+
+  {
+    'echasnovski/mini.cursorword',
+    version = false,
+    lazy = true,
+    event = 'CursorMoved',
+    config = function()
+      require('mini.cursorword').setup()
+    end,
+  },
+
+  {
+    'echasnovski/mini.indentscope',
+    version = false,
+    event = 'BufEnter',
+    opts = {
+      symbol = '│',
+      options = { try_as_border = true },
+      draw = {
+        animation = function()
+          return 0
+        end,
+      },
+    },
+    init = function()
+      local macchiato = require('catppuccin.palettes').get_palette 'macchiato'
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = {
+          'help',
+          'lazy',
+          'mason',
+          'notify',
+          'oil',
+          'Oil',
+        },
+        callback = function()
+          vim.b.miniindentscope_disable = true
+        end,
+      })
+
+      vim.api.nvim_set_hl(0, 'MiniIndentscopeSymbol', { fg = macchiato.mauve })
+    end,
+  },
+
+  {
+    'nvim-pack/nvim-spectre',
+    lazy = true,
+    cmd = { 'Spectre' },
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'catppuccin/nvim',
+    },
+    keys = {
+      {
+        '<leader>S',
+        function()
+          require('spectre').toggle()
+        end,
+        desc = 'Toggle Spectre',
+      },
+      {
+        '<leader>SW',
+        function()
+          require('spectre').open_visual { select_word = true }
+        end,
+        mode = 'n',
+        desc = 'Search current word',
+      },
+      {
+        '<leader>SW',
+        function()
+          require('spectre').open_visual()
+        end,
+        mode = 'v',
+        desc = 'Search current word',
+      },
+      {
+        '<leader>SP',
+        function()
+          require('spectre').open_file_search { select_word = true }
+        end,
+        desc = 'Search on current file',
+      },
+    },
+    config = function()
+      local theme = require('catppuccin.palettes').get_palette 'macchiato'
+      vim.api.nvim_set_hl(0, 'SpectreSearch', { bg = theme.red, fg = theme.base })
+      vim.api.nvim_set_hl(0, 'SpectreReplace', { bg = theme.green, fg = theme.base })
+      require('spectre').setup {
+        highlight = {
+          search = 'SpectreSearch',
+          replace = 'SpectreReplace',
+        },
+        mapping = {
+          ['send_to_qf'] = {
+            map = '<C-q>',
+            cmd = "<cmd>lua require('spectre.actions').send_to_qf()<CR>",
+            desc = 'send all items to quickfix',
+          },
+        },
+        replace_engine = {
+          sed = {
+            cmd = 'sed',
+            args = {
+              '-i',
+              '',
+              '-E',
+            },
+          },
+        },
+      }
+    end,
   },
 }
