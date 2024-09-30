@@ -909,6 +909,9 @@ require('lazy').setup({
 -- Used for wrapping during text formatting
 vim.o.textwidth = 120
 
+-- Don't automatically insert linebreaks
+vim.opt.formatoptions:remove { "t" }
+
 -- Set highlight on search
 vim.o.hlsearch = true
 
