@@ -1,0 +1,50 @@
+{
+  "Taking input in n size int array": {
+    "prefix": "inai",
+    "body": [
+      "int n;",
+      "    cin>>n;",
+      "    int a[n];",
+      "    for(int i=0;i<n;i++){",
+      "         cin>>a[i];",
+      "    }"
+    ],
+    "description": "Taking input in n size int array"
+  },
+  "Taking input in n size long long int array": {
+    "prefix": "inal",
+    "body": [
+      "long long int n;",
+      "    cin>>n;",
+      "    long long int a[n];",
+      "    for(long long int i=0;i<n;i++){",
+      "         cin>>a[i];",
+      "    }"
+    ],
+    "description": "Taking input in n size long long int array"
+  },
+  "Taking input in n size int vector": {
+    "prefix": "invi",
+    "body": [
+      "int n;",
+      "    cin>>n;",
+      "    vector<int> v(n)",
+      "    for(int i=0;i<n;i++){",
+      "         cin>>v[i];",
+      "    }"
+    ],
+    "description": "Taking input in n size int array"
+  },
+  "Taking input in n size long long int vector": {
+    "prefix": "invl",
+    "body": [
+      "long long int n;",
+      "    cin>>n;",
+      "    vector<long long int> v(n);",
+      "    for(long long int i=0;i<n;i++){",
+      "         cin>>v[i];",
+      "    }"
+    ],
+    "description": "Taking input in n size long long int vector"
+  }
+}

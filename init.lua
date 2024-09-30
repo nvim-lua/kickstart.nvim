@@ -98,6 +98,8 @@ vim.opt.foldlevel = 5
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 
+vim.opt.diffopt="internal,filler,closeoff,iwhite,linematch:60"
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -163,6 +165,22 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function() vim.hl.on_yank() end,
+})
+
+vim.api.nvim_create_autocmd('BufReadPost', {
+    pattern = { '*' },
+    desc = 'When editing a file, always jump to the last known cursor position',
+    callback = function()
+        local line = vim.fn.line '\'"'
+        if
+            line >= 1
+            and line <= vim.fn.line '$'
+            and vim.bo.filetype ~= 'commit'
+            and vim.fn.index({ 'xxd', 'gitrebase' }, vim.bo.filetype) == -1
+        then
+            vim.cmd 'normal! g`"'
+        end
+    end,
 })
 
 --vim.api.nvim_set_hl(0, '@lsp.type.comment.cpp', {})
@@ -584,8 +602,21 @@ require('lazy').setup({
           cmd = {'/home/utils/llvm-17.0.6/bin/clangd',
           "--background-index",
           "--clang-tidy",
-          "--header-insertion=iwyu",
+          "--header-insertion=never",
           "--j=2"},
+          init_options = {
+            clangdFileStatus = true,
+            inlayHints= {
+              enabled = true,
+              parameterNames = true,
+              autoDeducedTypes = true,  -- Enable auto type hints
+              typeHints = true,
+              typeNameLimit = 24,
+              lambdaReturnType = true,
+              blockEnd = true,
+              designators = true,
+            },
+          },
           filetypes = {"cpp"},
           single_file_support = true,
           capabilities = capabilities,
@@ -711,6 +742,7 @@ require('lazy').setup({
         'L3MON4D3/LuaSnip',
         version = '2.*',
         build = (function()
+          CC={"/home/utils/gcc-14.1.0/bin/gcc"}
           -- Build Step is needed for regex support in snippets.
           -- This step is not supported in many windows environments.
           -- Remove the below condition to re-enable on windows.
@@ -725,8 +757,7 @@ require('lazy').setup({
             'rafamadriz/friendly-snippets',
             config = function()
               require('luasnip.loaders.from_vscode').lazy_load({ include={"cpp", "python", "lua"} })
-              local snip_loader = require('luasnip.loaders.from_vscode')
-              snip_loader.lazy_load({ paths = vim.fn.stdpath("config").."/snippets/" })
+              require('luasnip.loaders.from_vscode').lazy_load({ paths = vim.fn.stdpath("config").."/snippets/" })
             end,
           },
         },
@@ -801,8 +832,8 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    --'folke/tokyonight.nvim',
-    'catppuccin/nvim',
+    'folke/tokyonight.nvim',
+    --'catppuccin/nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       ---@diagnostic disable-next-line: missing-fields
@@ -819,6 +850,7 @@ require('lazy').setup({
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
+      vim.api.nvim_set_hl(0, "LspInlayHint", {fg = "#9DA9A0", bg="#000000" })
     end,
   },
 
@@ -903,45 +935,6 @@ require('lazy').setup({
       })
     end,
   },
-  { 'ngemily/vim-vp4',
-      lazy = true,
-      event = "BufModifiedSet",
-      cmd = {"Vp4Diff", "Vp4Annotate"},
-  },
-  { 'AndrewRadev/linediff.vim',
-      lazy = true,
-      cmd = "Linediff",
-  },
-  { 'junegunn/vim-easy-align',
-      lazy = true,
-      cmd="EasyAlign"
-  },
-  {
-    'pteroctopus/faster.nvim',
-    opts = {
-      behaviors = {
-        bigfile = {
-          features_disabled = {
-            "illuminate", "matchparen", "lsp", "treesitter", "indent_blankline",
-            "vimopts", "syntax", "filetype", "linediff", "vim-vp4", "vim-easy-align", "telescope" 
-          },
-          filesize = 3,
-        }
-      },
-    },
-  },
-  --{
-  --   "m4xshen/hardtime.nvim",
-  --   dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
-  --   opts = {
-  --     max_count = 10,
-  --     restriction_mode = "hint",
-  --   }
-  --},
-  {
-    'ckipp01/nvim-jenkinsfile-linter', 
-    requires = { "nvim-lua/plenary.nvim" }
-  },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
@@ -963,12 +956,8 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
-  --
-  -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
-  -- Or use telescope!
-  -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
-  -- you can continue same window with `<space>sr` which resumes last telescope search
+  --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
+  { import = 'custom.plugins' },
 }, { ---@diagnostic disable-line: missing-fields
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the

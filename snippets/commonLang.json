@@ -1,0 +1,42 @@
+{
+  "For loop with n": {
+    "prefix": "forn",
+    "body": ["for(int i=0;i<n;i++)", "{", "${1:cursor}", "}"],
+    "description": "For loop with n"
+  },
+  "While loop with n": {
+    "prefix": "whilen",
+    "body": ["int i=0;", "    while()", "    {", "        i++;", "    }"],
+    "description": "While loop with n"
+  },
+  "Print element of array of n size": {
+    "prefix": "couta",
+    "body": [
+      "for(int i=0;i<n;i++)",
+      "    {",
+      "        cout<<a[i]<<\" \";",
+      "    }cout<<endl;"
+    ],
+    "description": "Print element of array of n size"
+  },
+  "Print element of vector": {
+    "prefix": "coutv",
+    "body": [
+      "for(int i=0;i<v.size();i++)",
+      "    {",
+      "        cout<<v[i]<<\" \";",
+      "    }cout<<endl;"
+    ],
+    "description": "Print element of vector"
+  },
+  "Print element of vector with auto": {
+    "prefix": "autov",
+    "body": [
+      "for(auto it:v)",
+      "    {",
+      "        cout<<it<<\" \";",
+      "    }cout<<endl;"
+    ],
+    "description": "Print element of vector with auto"
+  }
+}

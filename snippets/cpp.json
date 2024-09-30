@@ -1,11 +1,32 @@
 {
-    "iterator": {
-        "prefix": "iterator",
-        "body": [
-            "class Iterator {",
-            "}",
-            ""
-        ],
-        "description": "iterator class"
-    }
+  "iterator": {
+      "prefix": "iterator",
+      "body": [
+          "class Iterator {",
+          "}",
+          " "
+      ],
+      "description": "iterator class"
+  },
+  "cout using ostream_iterator": {
+      "prefix": "vector_cout",
+      "body": [
+          "std::ranges::copy(vec, std::ostream_iterator<int>(std::cout, \" \"));",
+          " "
+      ],
+      "description": "cout << vec"
+  },
+  "Greatest Common Divisor": {
+    "prefix": "gcd",
+    "body": [
+      "int gcd(int a, int b)",
+      "{",
+      "    if (b == 0)",
+      "        return a;",
+      "    return gcd(b, a % b);",
+      "     ",
+      "}"
+    ],
+    "description": "GCD using Euclidean Algorithm"
+  }
 }

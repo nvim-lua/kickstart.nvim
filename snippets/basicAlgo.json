@@ -1,0 +1,282 @@
+{
+  "Greatest Common Divisor": {
+    "prefix": "gcd",
+    "body": [
+      "int gcd(int a, int b)",
+      "{",
+      "    if (b == 0)",
+      "        return a;",
+      "    return gcd(b, a % b);",
+      "     ",
+      "}"
+    ],
+    "description": "GCD using Euclidean Algorithm"
+  },
+  "Maximum Function with long long int": {
+    "prefix": "maxll",
+    "body": [
+      "long long int max(long long int a, long long int b)",
+      "{",
+      "    if (a >= b)",
+      "    {",
+      "        return a;",
+      "    }",
+      "    else",
+      "    {",
+      "        return b;",
+      "    }",
+      "}"
+    ],
+    "description": "Maximum Function with long long int"
+  },
+  "Minimum Function with long long int": {
+    "prefix": "minll",
+    "body": [
+      "long long int min(long long int a, long long int b)",
+      "{",
+      "    if (a >= b)",
+      "    {",
+      "        return b;",
+      "    }",
+      "    else",
+      "    {",
+      "        return a;",
+      "    }",
+      "}"
+    ],
+    "description": "Minimum Function with long long int"
+  },
+  "Check number is power of two": {
+    "prefix": "isPowerOfTwo",
+    "body": [
+      "bool isPowerOfTwo(int n) {",
+      "  return n && (!(n & (n - 1)));",
+      "}"
+    ],
+    "description": "Check number is power of two"
+  },
+  "Check number is prime": {
+    "prefix": "isPrime",
+    "body": [
+      "bool isPrime(int n)",
+      "{",
+      "  for (int i = 2; i * i <= n; i++) {",
+      "    if (n % i == 0)return false;",
+      "  }",
+      "  return true;",
+      "}"
+    ],
+    "description": "Check number is prime"
+  },
+  "Return all prime factors": {
+    "prefix": "primeFactors",
+    "body": [
+      "vector<int> primeFactors(int n)",
+      "{",
+      "  vector<int> v;",
+      "  if (n % 2 == 0) {",
+      "    v.push_back(2);",
+      "    while (n % 2 == 0)n /= 2;",
+      "  }",
+      "  for (int i = 3; i * i <= n; i += 2) {",
+      "    if (n % i == 0) {",
+      "      v.push_back(i);",
+      "      while (n % i == 0)n /= i;",
+      "    }",
+      "  }",
+      "  if (n > 2)v.push_back(n);",
+      "  return v;",
+      "}"
+    ],
+    "description": "return all prime factors"
+  },
+  "Sum of all divisors": {
+    "prefix": "divisorFunction",
+    "body": [
+      "//return sum all divisors",
+      "int divisorFunction(int n)",
+      "{",
+      "  int ans = 1;",
+      "  int power = 0;",
+      "  while (n % 2 == 0)power++, n /= 2;",
+      "  //sum of GP",
+      "  ans *= (pow(2, power + 1) - 1);",
+      "  for (int i = 3; i * i <= n; i += 2) {",
+      "    power = 0;",
+      "    while (n % i == 0) {",
+      "      power++;",
+      "      n /= i;",
+      "    }",
+      "    ans *= (pow(i, power + 1) - 1) / (i - 1);",
+      "  }",
+      "  return ans;",
+      "}"
+    ],
+    "description": "sum of all divisors"
+  },
+  "Return n!": {
+    "prefix": "nFactorial",
+    "body": [
+      "//when n! <1e18 and you need raw",
+      "long long int nFactorial(int n)",
+      "{",
+      "  long long int ans = 1;",
+      "  for (int i = 2; i <= n; i++)ans *= i;",
+      "  return ans;",
+      "}"
+    ],
+    "description": "return n!"
+  },
+  "Return n!%mod": {
+    "prefix": "nFactorialMOD",
+    "body": [
+      "// n!%mod  ,for ex mod=1e9+7",
+      "int nFactorialMOD(int n, int mod)",
+      "{",
+      "  int ans = 1;",
+      "  for (int i = 2; i <= n; i++)(ans *= i) %= mod;",
+      "  return ans;",
+      "}"
+    ],
+    "description": "return n!%mod"
+  },
+  "Next power of two": {
+    "prefix": "nextPowerOfTwo",
+    "body": [
+      "int nextPowerOfTwo(int n)",
+      "{",
+      "  //if n is power of two",
+      "  if (n && (!n & (n - 1)))return n;",
+      "  return 1 << ((int)ceil(log2(n)));",
+      "}"
+    ],
+    "description": "next power of two"
+  },
+  "Prev power of two": {
+    "prefix": "prevPowerOfTwo",
+    "body": [
+      "int prevPowerOfTwo(int n)",
+      "{",
+      "  //if n is power of two",
+      "  if (n && (!n & (n - 1)))return n;",
+      "  return 1 << ((int)ceil(log2(n) - 1));",
+      "}"
+    ],
+    "description": "prev power of two"
+  },
+  "x^y": {
+    "prefix": "xpowery",
+    "body": [
+      "long long int xpowery(long long int x,long long int y) {",
+      "  long long int res = 1;",
+      "  /*",
+      "  it depends sometimes on questions too,",
+      "  whether pow(0,0) is 1 or 0",
+      "  So change accordingly",
+      "  */",
+      "  if (x == 0)return 0LL;",
+      "  while (y)",
+      "  {",
+      "    if (y & 1)res *= x;",
+      "    y >>= 1;",
+      "    x *= x;",
+      "  }",
+      "  return res;",
+      "}"
+    ],
+    "description": "x^y"
+  },
+  "(x^y)%mod": {
+    "prefix": "xpoweryMOD",
+    "body": [
+      "long long int xpoweryMOD(long long int x,long long int y, int mod)",
+      "{",
+      "  long long int res = 1;",
+      "  /*",
+      "  it depends sometimes on questions too,",
+      "  whether pow(0,0) is 1 or 0",
+      "  So change accordingly",
+      "  */",
+      "  if (x == 0)return 0;",
+      "  while (y)",
+      "  {",
+      "    if (y & 1)(res *= x) %= mod;",
+      "    y >>= 1;",
+      "    (x *= x) %= mod;",
+      "  }",
+      "  return res;",
+      "}"
+    ],
+    "description": "(x^y)%mod"
+  },
+  "Sieve of eratosthenes": {
+    "prefix": "sieve",
+    "body": [
+      "//return all primes b/w 1 to n",
+      "vector<int> sieve(int n)",
+      "{",
+      "   vector<bool> is(n + 1, true);",
+      "   vector<int> primes;",
+      "   for (int i = 2; i * i <= n; i++) {",
+      "      if (is[i]) {",
+      "         for (int p = i * i; p <= n; p += i)is[p] = false;",
+      "      }",
+      "   }",
+      "   for (int i = 2; i <= n; i++)",
+      "      if (is[i])primes.push_back(i);",
+      "   return primes;",
+      "}"
+    ],
+    "description": "sieve of eratosthenes"
+  },
+  "LCM between two number": {
+    "prefix": "lcm",
+    "body": [
+      "long long int gcd(long long int a, long long int b)",
+      "{",
+      "  if (b == 0)",
+      "    return a;",
+      "  return gcd(b, a % b);",
+      "}",
+      "long long int lcm(int a, int b)",
+      "{",
+      "    return (a / gcd(a, b)) * b;",
+      "}"
+    ],
+    "description": "Least Common Multiple"
+  },
+  "Combinatorics": {
+    "prefix": "combinatorics",
+    "body": [
+      "int SIZE = 2000005;",
+      "vector<int> fact(SIZE, 1);",
+      "vector<int> inv(SIZE, 1);",
+      "int inverse(int x, int y)",
+      "{",
+      "   int res = 1;",
+      "   while (y) {",
+      "      if (y & 1)res = (1LL * res * x) % MOD;",
+      "      y >>= 1;",
+      "      x = (1LL * x * x) % MOD;",
+      "   }",
+      "   return res;",
+      "}",
+      "void initCombinatorics()",
+      "{",
+      "   for (int i = 2; i < SIZE; i++) {",
+      "      fact[i] = (1LL * fact[i - 1] * i) % MOD;",
+      "      inv[i] = inverse(fact[i], MOD - 2);",
+      "   }",
+      "}",
+      "int nCr(int n, int r)",
+      "{",
+      "   int res = 1;",
+      "   if (r > n)return 0;",
+      "   res = (1LL * fact[n] * inv[r]) % MOD;",
+      "   res = (1LL * res * inv[n - r]) % MOD;",
+      "   return res;",
+      "}"
+    ],
+    "description": "Combinatorics"
+  }
+}

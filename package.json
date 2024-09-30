@@ -3,10 +3,52 @@
     "contributes": {
         "snippets": [
             {
-                "language": [
-                    "cpp"
-                ],
-                "path": "snippets/cpp.json"
+                "language": "cpp",
+                "path": "./snippets/cpp.json"
+            },
+            {
+                "language": "cpp",
+                "path": "./snippets/fmod.json"
+            },
+            {
+                "language": "cpp",
+                "path": "./snippets/starters.json"
+            },
+            {
+                "language": "cpp",
+                "path": "./snippets/basicAlgo.json"
+            },
+            {
+                "language": "cpp",
+                "path": "./snippets/sorting.json"
+            },
+            {
+                "language": "cpp",
+                "path": "./snippets/searching.json"
+            },
+            {
+                "language": "cpp",
+                "path": "./snippets/input.json"
+            },
+            {
+                "language": "cpp",
+                "path": "./snippets/commonLang.json"
+            },
+            {
+                "language": "cpp",
+                "path": "./snippets/tree.json"
+            },
+            {
+                "language": "cpp",
+                "path": "./snippets/bst.json"
+            },
+            {
+                "language": "cpp",
+                "path": "./snippets/graph.json"
+            },
+            {
+                "language": "cpp",
+                "path": "./snippets/strings.json"
             }
         ]
     }

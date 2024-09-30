@@ -1,0 +1,16 @@
+{
+  "cslDebugGroup": {
+      "prefix": "csld",
+      "body": [
+          "cslDebugGroup((\"MPC\", 50, \"MPC%d:%d: \\n\", GPCid, TPCid));"
+      ],
+      "description": "iterator class"
+  },
+  "cslAssertMsg": {
+      "prefix": "csla",
+      "body": [
+          "cslAssertMsg( (), (\"\\n\", sm_mask));"
+      ],
+      "description": "iterator class"
+  }
+}

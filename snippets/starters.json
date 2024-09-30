@@ -1,0 +1,84 @@
+{
+  "CP Starter Template": {
+    "prefix": "cpp",
+    "body": [
+      "#include <bits/stdc++.h>",
+      "using namespace std;",
+      "#define ll long long",
+      "#define endl '\\n'",
+      "#define tc     \\",
+      "    ll tc;     \\",
+      "    cin >> tc; \\",
+      "    while (tc--)",
+      "#define pb push_back",
+      "#define mp make_pair",
+      "const ll MOD = 1e9 + 7;",
+      "",
+      "void fastio()",
+      "{",
+      "    ios_base::sync_with_stdio(0);",
+      "    cin.tie(0);",
+      "    cout.tie(0);",
+      "}",
+      "",
+      "void solve()",
+      "{${1:cursor}",
+      "}",
+      "",
+      "int main()",
+      "{",
+      "    fastio();",
+      "    ll t;",
+      "    cin >> t;",
+      "    for (ll i = 1; i <= t; i++)",
+      "    {",
+      "        solve();",
+      "    }",
+      "",
+      "    return 0;",
+      "}"
+    ],
+    "description": "Creates Basic CPP Starter Template"
+  },
+  "C++ Starter Template": {
+    "prefix": "c++",
+    "body": [
+      "#include <bits/stdc++.h>",
+      "using namespace std;",
+      "",
+      "int main()",
+      "{   ",
+      "    return 0;",
+      "}"
+    ],
+    "description": "Creates Simple C++ Starter Template"
+  },
+  "DSA Specific Starter Template": {
+    "prefix": "dsa",
+    "body": [
+      "#include <bits/stdc++.h>",
+      "using namespace std;",
+      "class Solution",
+      "{",
+      "    public:",
+      "    void solve(){",
+      "    }",
+      "    ",
+      "};",
+      "int main()",
+      "{   ",
+      "    return 0;",
+      "}"
+    ],
+    "description": "Create Basic DSA Starter Template"
+  },
+  "Fast Input Output": {
+    "prefix": "fastio",
+    "body": [
+      "ios_base::sync_with_stdio(0);",
+      "    cin.tie(0);",
+      "    cout.tie(0);"
+    ],
+    "description": "Fast Input Output"
+  }
+}
