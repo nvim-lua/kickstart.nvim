@@ -522,8 +522,9 @@ require('lazy').setup({
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
         --
-        tsserver = {},
+        ts_ls = {},
         svelte = {},
+        ruby_lsp = {},
 
         lua_ls = {
           -- cmd = {...},
@@ -692,7 +693,6 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
-          { name = 'copilot', group_index = 2 },
         },
       }
     end,
@@ -788,20 +788,6 @@ require('lazy').setup({
     end,
   },
 
-  {
-    'zbirenbaum/copilot.lua',
-    cmd = 'Copilot',
-    event = 'InsertEnter',
-    config = function()
-      require('copilot').setup {}
-    end,
-  },
-  {
-    'zbirenbaum/copilot-cmp',
-    config = function()
-      require('copilot_cmp').setup()
-    end,
-  },
   {
     'elixir-tools/elixir-tools.nvim',
     version = '*',
