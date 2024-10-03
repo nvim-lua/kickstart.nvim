@@ -152,6 +152,9 @@ vim.opt.splitbelow = true
 vim.opt.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
+vim.opt.shell = 'zsh'
+vim.opt.shellcmdflag = '-ic'
+
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
 
@@ -282,6 +285,9 @@ require('lazy').setup({
         },
         filters = {
           dotfiles = false,
+        },
+        git = {
+          ignore = false,
         },
       }
     end,
@@ -439,11 +445,17 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
+        defaults = {
+          mappings = {
+            -- i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+            i = {
+              ['<C-d>'] = require('telescope.actions').delete_buffer, -- Set Ctrl + d to close buffer in insert mode
+            },
+            n = {
+              ['<C-d>'] = require('telescope.actions').delete_buffer, -- Set Ctrl + d to close buffer in normal mode
+            },
+          },
+        },
         -- pickers = {}
         extensions = {
           ['ui-select'] = {
