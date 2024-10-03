@@ -1204,7 +1204,7 @@ local servers = {
     },
   },
   pyright = {},
-  tsserver = {},
+  ts_ls = {},
   yamlls = {
     yaml = {
       schemas = {
