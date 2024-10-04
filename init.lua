@@ -734,6 +734,7 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+          { name = 'copilot', group_index = 2 },
         },
       }
     end,
@@ -796,6 +797,24 @@ require('lazy').setup({
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
+    end,
+  },
+  {
+    'zbirenbaum/copilot.lua',
+    dependencies = {
+      'zbirenbaum/copilot-cmp',
+      config = function()
+        require('copilot_cmp').setup()
+      end,
+    },
+    cmd = 'Copilot',
+    event = 'InsertEnter',
+    config = function()
+      vim.g.copilot_proxy = 'http://proxyldn.rivagecapital.com:8080'
+      require('copilot').setup {
+        suggestion = { enabled = false },
+        panel = { enabled = false },
+      }
     end,
   },
   { -- Highlight, edit, and navigate code
