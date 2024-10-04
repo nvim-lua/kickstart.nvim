@@ -834,6 +834,10 @@ require('lazy').setup({
     end,
   },
   {
+    'NoahTheDuke/vim-just',
+    ft = { 'just' },
+  },
+  {
     'kdheepak/lazygit.nvim',
     lazy = true,
     cmd = {
