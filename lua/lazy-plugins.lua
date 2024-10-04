@@ -49,6 +49,8 @@ require('lazy').setup({
 
   require 'custom/plugins/typescript-tools',
 
+  require 'custom/plugins/oil',
+
   -- require 'custom/plugins/markview',
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
