@@ -847,6 +847,13 @@ require('lazy').setup({
   --   end,
   -- },
 
+  {
+    'vim-airline/vim-airline',
+    init = function()
+      vim.g.airline_theme = 'everforest'
+    end,
+  },
+
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
