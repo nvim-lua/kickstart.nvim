@@ -827,25 +827,25 @@ require('lazy').setup({
   --   end,
   -- },
 
-  -- {
-  --   'sainnhe/everforest',
-  --   priority = 1000,
-  --   init = function()
-  --     vim.g.everforest_enable_italic = true
-  --     vim.g.everforest_background = 'hard'
-  --     vim.cmd.colorscheme 'everforest'
-  --   end,
-  -- },
-
   {
-    'sainnhe/gruvbox-material',
+    'sainnhe/everforest',
     priority = 1000,
     init = function()
-      vim.g.gruvbox_material_enable_italic = true
-      vim.g.gruvbox_material_background = 'hard'
-      vim.cmd.colorscheme 'gruvbox-material'
+      vim.g.everforest_enable_italic = true
+      vim.g.everforest_background = 'hard'
+      vim.cmd.colorscheme 'everforest'
     end,
   },
+
+  -- {
+  --   'sainnhe/gruvbox-material',
+  --   priority = 1000,
+  --   init = function()
+  --     vim.g.gruvbox_material_enable_italic = true
+  --     vim.g.gruvbox_material_background = 'hard'
+  --     vim.cmd.colorscheme 'gruvbox-material'
+  --   end,
+  -- },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
