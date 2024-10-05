@@ -158,6 +158,8 @@ vim.opt.cursorline = true
 -- vim.opt.scrolloff = 10
 vim.opt.scrolloff = 4
 
+vim.opt.colorcolumn = '80,120'
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -181,6 +183,22 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
 -- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 -- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+--
+--
+-- tab navigation from my old vimrc (thanks ChatGPT)
+vim.keymap.set('n', 'th', ':tabprev<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', 'tl', ':tabnext<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', 'tn', ':tabnew<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', 'tc', ':tabclose<CR>', { noremap = true, silent = true })
+
+-- Keymap to open terminal in the bottom third of the window without welcome message (thanks ChatGPT)
+--
+vim.keymap.set('n', '<C-\\>', function()
+  vim.cmd 'split | terminal'
+  vim.cmd 'startinsert' -- Automatically enter terminal mode
+  vim.cmd 'resize 10' -- Adjust the size of the terminal as needed
+  vim.cmd 'setlocal nonumber norelativenumber' -- Hide line numbers
+end, { desc = 'Open terminal in the bottom 1/3 and start in terminal mode' })
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -202,6 +220,22 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
     vim.highlight.on_yank()
+  end,
+})
+
+-- 10/4/2024: give python a 80 character hard wrap
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'python',
+  callback = function()
+    vim.opt_local.textwidth = 80
+  end,
+})
+
+-- 10/4/2024: give markdown a 120 character hard wrap
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'markdown',
+  callback = function()
+    vim.opt_local.textwidth = 120
   end,
 })
 
@@ -608,7 +642,8 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
+        phpactor = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -889,7 +924,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'python', 'php' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
