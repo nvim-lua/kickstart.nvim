@@ -99,7 +99,7 @@ vim.g.maplocalleader = ' '
 vim.opt.number = true
 -- You can also add relative line numbers, for help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -144,9 +144,25 @@ vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
 vim.opt.cursorline = true
+vim.opt.cursorcolumn = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
+
+-- [[ From nvchad ]]
+-- vim.opt.tabstop = 4
+-- vim.opt.shiftwidth = 4
+-- vim.opt.swapfile = false
+-- vim.opt.backup = false
+-- vim.opt.expandtab = false
+
+-- [[ Nvim-Tree ]]
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- optionally enable 24-bit colour
+vim.opt.termguicolors = true
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -184,6 +200,10 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- [[ My keymaps ]]
+vim.keymap.set('n', '<C-n>', '<cmd>:NvimTreeToggle<CR>', { desc = 'Toggle NvimTree' })
+vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = 'Toggle UndoTree' })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -197,6 +217,28 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
+
+local function open_nvim_tree(data)
+  -- buffer is a directory
+  local directory = vim.fn.isdirectory(data.file) == 1
+
+  -- buffer is a [No Name]
+  local no_name = data.file == '' and vim.bo[data.buf].buftype == ''
+
+  if not directory and not no_name then
+    return
+  end
+
+  if directory then
+    -- change to the directory
+    vim.cmd.cd(data.file)
+
+    -- open the tree
+    require('nvim-tree.api').tree.open()
+  end
+end
+
+vim.api.nvim_create_autocmd({ 'VimEnter' }, { callback = open_nvim_tree })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -219,8 +261,34 @@ vim.opt.rtp:prepend(lazypath)
 --
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup {
+  {
+    'nvim-tree/nvim-tree.lua',
+    version = '*',
+    lazy = false,
+    dependencies = {
+      'nvim-tree/nvim-web-devicons',
+    },
+    config = function()
+      require('nvim-tree').setup {
+        sort = {
+          sorter = 'case_sensitive',
+        },
+        view = {
+          width = 30,
+        },
+        renderer = {
+          group_empty = true,
+        },
+        filters = {
+          dotfiles = true,
+        },
+        update_focused_file = { enable = true },
+      }
+    end,
+  },
+
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  -- 'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -274,12 +342,17 @@ require('lazy').setup {
       require('which-key').setup()
 
       -- Document existing key chains
-      require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+      require('which-key').add {
+        { '<leader>c', group = '[C]ode' },
+        { '<leader>c_', hidden = true },
+        { '<leader>d', group = '[D]ocument' },
+        { '<leader>d_', hidden = true },
+        { '<leader>r', group = '[R]ename' },
+        { '<leader>r_', hidden = true },
+        { '<leader>s', group = '[S]earch' },
+        { '<leader>s_', hidden = true },
+        { '<leader>w', group = '[W]orkspace' },
+        { '<leader>w_', hidden = true },
       }
     end,
   },
@@ -315,7 +388,7 @@ require('lazy').setup {
       -- Useful for getting pretty icons, but requires special font.
       --  If you already have a Nerd Font, or terminal set up with fallback fonts
       --  you can enable this
-      -- { 'nvim-tree/nvim-web-devicons' }
+      { 'nvim-tree/nvim-web-devicons' },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -408,7 +481,17 @@ require('lazy').setup {
 
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      {
+        'j-hui/fidget.nvim',
+        opts = {
+          notification = {
+            window = {
+              winblend = 0,
+              -- border = 'rounded',
+            },
+          },
+        },
+      },
     },
     config = function()
       -- Brief Aside: **What is LSP?**
@@ -531,23 +614,61 @@ require('lazy').setup {
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
-        -- gopls = {},
+        clangd = {
+          config = function()
+            require('lspconfig').clangd.setup { init_options = { compilationDatabasePath = './build' } }
+          end,
+        },
+        -- gradle_ls = {},
+        -- kotlin_language_server = {},
         -- pyright = {},
-        -- rust_analyzer = {},
-        -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-        --
-        -- Some languages (like typescript) have entire language plugins that can be useful:
-        --    https://github.com/pmizio/typescript-tools.nvim
-        --
-        -- But for many setups, the LSP (`tsserver`) will work just fine
-        -- tsserver = {},
-        --
-
+        pylsp = {},
+        elmls = {},
+        htmx = {},
+        rubocop = {},
+        gopls = {
+          filetypes = { 'go', 'gomod', 'gowork', 'gohtml', 'gohtmltmpl' },
+          root_dir = require('lspconfig/util').root_pattern('go.work', 'go.mod', '.git'),
+          settings = {
+            gopls = {
+              hints = {
+                assignVariableTypes = true,
+                compositeLiteralFields = true,
+                compositeLiteralTypes = true,
+                constantValues = true,
+                functionTypeParameters = true,
+                parameterNames = true,
+                rangeVariableTypes = true,
+              },
+              gofumpt = true,
+              completeUnimported = true,
+              usePlaceholders = true,
+              templateExtensions = {
+                '.gohtml',
+                '.gohtmltmpl',
+              },
+              analyses = {
+                unusedparams = true,
+                unusedwrites = true,
+                unusedvariable = true,
+                useany = true,
+                fieldalignment = true,
+                nilness = true,
+                shadow = true,
+              },
+              -- Not supported by nvim (yet)
+              -- codelenses = {
+              --   generate = true,
+              --   gc_details = true,
+              -- },
+              staticcheck = true,
+            },
+          },
+          config = function()
+            vim.lsp.inlay_hint.enable(true)
+          end,
+        },
         lua_ls = {
-          -- cmd = {...},
-          -- filetypes { ...},
-          -- capabilities = {},
           settings = {
             Lua = {
               runtime = { version = 'LuaJIT' },
@@ -570,6 +691,55 @@ require('lazy').setup {
             },
           },
         },
+        jdtls = {},
+
+        -- gleam = {},
+        ocamllsp = {},
+        zls = {},
+
+        yamlls = {},
+        jsonls = {},
+
+        texlab = {
+          settings = {
+            texlab = {
+              auxDirectory = '.',
+              bibtexFormatter = 'texlab',
+              build = {
+                args = { '-pdf', '-interaction=nonstopmode', '-synctex=1', '%f', '-pvc' },
+                executable = 'latexmk',
+                forwardSearchAfter = false,
+                onSave = false,
+              },
+              chktex = {
+                onEdit = true,
+                onOpenAndSave = true,
+              },
+              diagnosticsDelay = 300,
+              formatterLineLength = 80,
+              forwardSearch = {
+                executable = 'zathura',
+                args = { '--synctex-forward', '%l:1:%f', '%p' },
+              },
+              latexFormatter = 'latexindent',
+              latexindent = {
+                modifyLineBreaks = false,
+              },
+            },
+          },
+        },
+
+        glsl_analyzer = {},
+        dockerls = {},
+        cmake = {},
+
+        typst_lsp = {},
+        marksman = {},
+        html = {},
+        -- sqls = {
+        --   cmd = { 'sqls', '-config', '.sqls.yml' },
+        --   root_dir = require('lspconfig/util').root_pattern '.sqls.yml',
+        -- },
       }
 
       -- Ensure the servers and tools above are installed
@@ -585,6 +755,19 @@ require('lazy').setup {
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format lua code
+        'prettier',
+        'golines',
+        'gofumpt',
+        -- 'gleam',
+        'clang-format',
+        'elm-format',
+        'ocamlformat',
+        'black',
+        'isort',
+        'mypy',
+        'hadolint',
+        'checkmake',
+        'sqlfluff',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -607,8 +790,7 @@ require('lazy').setup {
     'stevearc/conform.nvim',
     opts = {
       notify_on_error = false,
-      format_on_save = {
-        timeout_ms = 500,
+      format_after_save = {
         lsp_fallback = true,
       },
       formatters_by_ft = {
@@ -619,6 +801,18 @@ require('lazy').setup {
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
         -- javascript = { { "prettierd", "prettier" } },
+        javascript = { 'prettier' },
+        html = { 'prettier' },
+        python = { 'isort', 'black' },
+        -- go = { 'golines', 'goimports', 'gofumpt' },
+        -- go = { 'golines', 'gofumpt' },
+        latex = { 'latexindent' },
+        sh = { 'shfmt' },
+        zsh = { 'shfmt' },
+        ocaml = { 'ocamlformat' },
+        markdown = { 'prettier' },
+        yaml = { 'prettier' },
+        sql = { 'sqlfluff' },
       },
     },
   },
@@ -725,6 +919,14 @@ require('lazy').setup {
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
+      require('tokyonight').setup {
+        transparent = true,
+        styles = {
+          sidebars = 'transparent',
+          floats = 'transparent',
+        },
+        lualine_bold = true,
+      }
       -- Load the colorscheme here
       vim.cmd.colorscheme 'tokyonight-night'
 
@@ -815,7 +1017,154 @@ require('lazy').setup {
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   -- { import = 'custom.plugins' },
+  {
+    'andweeb/presence.nvim',
+    lazy = false,
+  },
+  {
+    'akinsho/bufferline.nvim',
+    version = '*',
+    dependencies = 'nvim-tree/nvim-web-devicons',
+    config = function()
+      local bl = require 'bufferline'
+      bl.setup()
+      vim.keymap.set('n', '<Tab>', '<cmd>:BufferLineCycleNext<CR>', { desc = 'Go to the next buffer' })
+      vim.keymap.set('n', '<S-Tab>', '<cmd>:BufferLineCyclePrev<CR>', { desc = 'Go to the previous buffer' })
+    end,
+  },
+  {
+    'nvim-lualine/lualine.nvim',
+    config = function()
+      require('lualine').setup {
+        options = {
+          -- ... your lualine config
+          theme = 'tokyonight',
+          -- ... your lualine config
+        },
+      }
+    end,
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+  },
+  {
+    'ray-x/go.nvim',
+    dependencies = { -- optional packages
+      'ray-x/guihua.lua',
+      'neovim/nvim-lspconfig',
+      'nvim-treesitter/nvim-treesitter',
+    },
+    config = function()
+      require('go').setup {
+        max_line_len = 80, -- max line length in golines format, Target maximum line length for golines
+        tag_transform = true, -- can be transform option("snakecase", "camelcase", etc) check gomodifytags for details and more options
+        lsp_cfg = false, -- true: use non-default gopls setup specified in go/lsp.lua
+        dap_debug_gui = {}, -- bool|table put your dap-ui setup here set to false to disable
+        verbose_tests = true, -- set to add verbose flag to tests deprecated, see '-v' option
+
+        floaterm = false,
+        luasnip = true, -- enable included luasnip snippets. you can also disable while add lua/snips folder to luasnip load
+      }
+    end,
+    event = { 'CmdlineEnter' },
+    ft = { 'go', 'gomod', 'gohtmltmpl', 'gotexttmpl' },
+    build = ':lua require("go.install").update_all_sync()', -- if you need to install/update all binaries
+  },
+  {
+    'mfussenegger/nvim-lint',
+    config = function()
+      require('lint').linters_by_ft = {
+        python = { 'mypy' },
+        docker = { 'hadolint' },
+        make = { 'checkmake' },
+        sql = { 'sqlfluff' },
+      }
+
+      vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
+        callback = function()
+          require('lint').try_lint()
+        end,
+      })
+    end,
+  },
+  {
+    'windwp/nvim-autopairs',
+    event = 'InsertEnter',
+    config = true,
+    -- use opts = {} for passing setup options
+    -- this is equalent to setup({}) function
+  },
+  {
+    'mbbill/undotree',
+    lazy = false,
+  },
+  {
+    'nvimdev/dashboard-nvim',
+    event = 'VimEnter',
+    config = function()
+      require('dashboard').setup {
+        config = {
+          week_header = {
+            enable = true,
+          },
+          header = {
+            'JHEl',
+          },
+        },
+      }
+    end,
+    dependencies = { { 'nvim-tree/nvim-web-devicons' } },
+  },
+  -- {
+  --   'iurimateus/luasnip-latex-snippets.nvim',
+  --   dependencies = { 'L3MON4D3/LuaSnip', 'lervag/vimtex' },
+  --   config = function()
+  --     require('luasnip-latex-snippets').setup()
+  --     -- or setup({ use_treesitter = true })
+  --   end,
+  --   ft = { 'tex', 'markdown' },
+  -- },
 }
+
+-- Autoformat
+local conform = require 'conform'
+conform.formatters.sqlfluff = {
+  inherit = false,
+  command = 'sqlfluff',
+  cwd = require('conform.util').root_file '.sqlfluff',
+  args = {
+    'fix',
+    '-',
+  },
+  require_cwd = true,
+}
+conform.formatters.shfmt = {
+  prepend_args = {
+    '-ci',
+  },
+}
+vim.cmd 'autocmd BufWritePre (InsertLeave?) <buffer> lua vim.lsp.buf.formatting_sync(nil,500)'
+local format_sync_grp = vim.api.nvim_create_augroup('GoFormat', {})
+vim.api.nvim_create_autocmd('BufWritePre', {
+  pattern = '*.go',
+  callback = function()
+    require('go.format').gofmt()
+    require('go.format').goimports()
+  end,
+  group = format_sync_grp,
+})
+
+require('lint').linters.sqlfluff.args = { 'lint', '--format=json' }
+
+vim.cmd 'autocmd FileType gleam lua require("lspconfig").gleam.setup({})'
+vim.cmd 'autocmd FileType gleam LspStart gleam'
+vim.cmd 'autocmd FileType markdown setlocal spell'
+vim.cmd 'autocmd FileType tex setlocal spell'
+vim.cmd 'autocmd BufEnter *.tex set concealcursor=c'
+vim.cmd 'set conceallevel=2'
+vim.cmd 'autocmd FileType tex set wrap'
+
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
