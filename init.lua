@@ -274,7 +274,8 @@ require('lazy').setup {
           sorter = 'case_sensitive',
         },
         view = {
-          width = 30,
+          width = 70,
+          side = 'right',
         },
         renderer = {
           group_empty = true,
@@ -425,6 +426,7 @@ require('lazy').setup {
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
+            require('telescope.themes').get_ivy(),
           },
         },
       }
@@ -626,6 +628,7 @@ require('lazy').setup {
         elmls = {},
         htmx = {},
         rubocop = {},
+        golangci_lint_ls = {},
         gopls = {
           filetypes = { 'go', 'gomod', 'gowork', 'gohtml', 'gohtmltmpl' },
           root_dir = require('lspconfig/util').root_pattern('go.work', 'go.mod', '.git'),
@@ -662,6 +665,7 @@ require('lazy').setup {
               --   gc_details = true,
               -- },
               staticcheck = true,
+              buildFlags = { '-tags=unit,functional' },
             },
           },
           config = function()
@@ -748,7 +752,9 @@ require('lazy').setup {
       --    :Mason
       --
       --  You can press `g?` for help in this menu
-      require('mason').setup()
+      require('mason').setup {
+        max_concurrent_installers = 16,
+      }
 
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
@@ -796,22 +802,20 @@ require('lazy').setup {
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        -- python = { 'isort', 'black' },
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        -- javascript = { { "prettierd", "prettier" } },
+        -- javascript = { { 'prettierd', 'prettier' } },
         javascript = { 'prettier' },
         html = { 'prettier' },
         python = { 'isort', 'black' },
-        -- go = { 'golines', 'goimports', 'gofumpt' },
-        -- go = { 'golines', 'gofumpt' },
         latex = { 'latexindent' },
         sh = { 'shfmt' },
         zsh = { 'shfmt' },
         ocaml = { 'ocamlformat' },
         markdown = { 'prettier' },
-        yaml = { 'prettier' },
+        -- yaml = { 'prettier' },
         sql = { 'sqlfluff' },
       },
     },
@@ -936,7 +940,12 @@ require('lazy').setup {
   },
 
   -- Highlight todo, notes, etc in comments
-  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+  {
+    'folke/todo-comments.nvim',
+    event = 'VimEnter',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    opts = { signs = false },
+  },
 
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
@@ -1022,6 +1031,21 @@ require('lazy').setup {
     lazy = false,
   },
   {
+    'andythigpen/nvim-coverage',
+    dependencies = 'nvim-lua/plenary.nvim',
+    config = function()
+      require('coverage').setup {
+        auto_reload = true,
+        lang = {
+          go = {
+            coverage_file = 'coverage.out',
+          },
+        },
+      }
+    end,
+    lazy = false,
+  },
+  {
     'akinsho/bufferline.nvim',
     version = '*',
     dependencies = 'nvim-tree/nvim-web-devicons',
@@ -1055,11 +1079,18 @@ require('lazy').setup {
     config = function()
       require('go').setup {
         max_line_len = 80, -- max line length in golines format, Target maximum line length for golines
-        tag_transform = true, -- can be transform option("snakecase", "camelcase", etc) check gomodifytags for details and more options
+        tag_transform = true, -- can be transform option('snakecase', 'camelcase', etc) check gomodifytags for details and more options
         lsp_cfg = false, -- true: use non-default gopls setup specified in go/lsp.lua
         dap_debug_gui = {}, -- bool|table put your dap-ui setup here set to false to disable
         verbose_tests = true, -- set to add verbose flag to tests deprecated, see '-v' option
 
+        lsp_inlay_hints = {
+
+          -- following are used for neovim < 0.10 which does not implement inlay hints
+          -- hint style, set to 'eol' for end-of-line hints, 'inlay' for inline hints
+          style = 'eol',
+          enable = true, -- this might be only field apply to neovim > 0.10
+        },
         floaterm = false,
         luasnip = true, -- enable included luasnip snippets. you can also disable while add lua/snips folder to luasnip load
       }
