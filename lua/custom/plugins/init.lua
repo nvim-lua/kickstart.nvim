@@ -47,7 +47,7 @@ return {
       ---@type AvanteSupportedProvider
       openai = {
         endpoint = 'https://api.openai.com/v1',
-        model = 'gpt-4o-mini', -- Replace with the desired OpenAI model
+        model = 'gpt-4o', -- Replace with the desired OpenAI model
         timeout = 30000,
         temperature = 0.7,
         max_tokens = 4096,
