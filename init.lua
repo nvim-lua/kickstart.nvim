@@ -283,6 +283,7 @@ require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   'tpope/vim-fugitive', -- git integration
+  'jpalardy/vim-slime', -- for piping code into external service like a REPL
   'mbbill/undotree', -- recommended undo history system
   {
     'nvim-tree/nvim-tree.lua',
