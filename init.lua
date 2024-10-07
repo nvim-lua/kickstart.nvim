@@ -245,6 +245,17 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+-- 10/7/2024: add a bash/zsh indent rules
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'sh', -- file type for shell scripts
+  callback = function()
+    vim.bo.expandtab = true -- Use spaces instead of tabs
+    vim.bo.shiftwidth = 4 -- Indent by 4 spaces
+    vim.bo.softtabstop = 4 -- Insert 4 spaces when pressing tab
+    vim.bo.tabstop = 4 -- Columns per tab character
+  end,
+})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
