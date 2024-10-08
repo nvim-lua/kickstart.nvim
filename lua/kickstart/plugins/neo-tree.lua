@@ -23,5 +23,10 @@ return {
       winbar = true,
       statusline = false,
     },
+    -- NOTE: activate this to collapse empty folders -> might cause performance drop
+    -- filesystem = {
+    --   group_empty_dirs = true,
+    --   scan_mode = 'deep',
+    -- },
   },
 }

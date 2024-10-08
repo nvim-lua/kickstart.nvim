@@ -35,6 +35,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
       --   },
       -- },
       -- pickers = {}
+      defaults = { path_display = { 'smart' } },
       extensions = {
         ['ui-select'] = {
           require('telescope.themes').get_dropdown(),
