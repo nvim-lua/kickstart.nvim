@@ -876,18 +876,55 @@ require('lazy').setup({
   --   end,
   -- },
   {
-    'scottmckendry/cyberdream.nvim',
+    'kdheepak/lazygit.nvim',
+    lazy = true,
+    cmd = {
+      'LazyGit',
+      'LazyGitConfig',
+      'LazyGitCurrentFile',
+      'LazyGitFilter',
+      'LazyGitFilterCurrentFile',
+    },
+    -- optional for floating window border decoration
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+    -- setting the keybinding for LazyGit with 'keys' is recommended in
+    -- order to load the plugin when the command is run for the first time
+    keys = {
+      { '<leader>lg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
+    },
+  },
+  {
+    'maxmx03/fluoromachine.nvim',
     lazy = false,
     priority = 1000,
-    init = function()
-      vim.cmd.colorscheme 'cyberdream'
-    end,
     config = function()
-      require('cyberdream').setup {
-        transparent = true,
+      local fm = require 'fluoromachine'
+
+      fm.setup {
+        glow = true,
+        theme = 'fluoromachine',
+        transparent = false,
+        brightness = 0.2,
       }
+
+      vim.cmd.colorscheme 'fluoromachine'
     end,
   },
+  -- {
+  --   'scottmckendry/cyberdream.nvim',
+  --   lazy = false,
+  --   priority = 1000,
+  --   init = function()
+  --     vim.cmd.colorscheme 'cyberdream'
+  --   end,
+  --   config = function()
+  --     require('cyberdream').setup {
+  --       transparent = true,
+  --     }
+  --   end,
+  -- },
   -- {
   --   'catppuccin/nvim',
   --   name = 'catppuccin',
