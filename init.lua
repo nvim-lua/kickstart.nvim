@@ -586,6 +586,7 @@ require('lazy').setup({
         cssls = {},
         clangd = {},
         emmet_ls = {},
+        pyright = {},
         eslint = {},
         apex_ls = {
           filetypes = {
