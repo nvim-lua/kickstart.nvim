@@ -286,6 +286,14 @@ require('lazy').setup({
   'jpalardy/vim-slime', -- for piping code into external service like a REPL
   'mbbill/undotree', -- recommended undo history system
   {
+    'jpalardy/vim-slime', -- for piping code into external service like a REPL
+    config = function()
+      vim.g.slime_target = 'tmux'
+      vim.g.slime_cell_delimiter = '# %%'
+      vim.g.slime_bracketed_paste = 1
+    end,
+  },
+  {
     'nvim-tree/nvim-tree.lua',
     requires = {
       'nvim-tree/nvim-web-devicons', -- optional, for file icons
