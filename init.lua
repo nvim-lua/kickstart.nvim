@@ -460,9 +460,9 @@ require('lazy').setup({
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'zoxide')
       pcall(require('telescope').load_extension, 'ui-select')
-
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
+      local extensions = require 'telescope._extensions'
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
@@ -772,8 +772,8 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         cmake = { 'cmakelang' },
-        cpp = { 'clang-format' },
-        json = { 'clang-format' },
+        cpp = { 'clang-format-15' },
+        json = { 'clang-format-15' },
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
         python = { 'isort' },
@@ -899,7 +899,6 @@ require('lazy').setup({
       }
     end,
   },
-
   { -- You can easily change to a different colorscheme.
     -- Change the name of the colorscheme plugin below, and then
     -- change the command in the config to whatever the name of that colorscheme is.
