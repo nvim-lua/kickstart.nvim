@@ -22,7 +22,7 @@
 
 What is Kickstart?
 
-  Kickstart.nvim is *not* a distribution.
+Kickstart.nvim is *not* a distribution.
 
   Kickstart.nvim is a starting point for your own configuration.
     The goal is that you can read every line of code, top-to-bottom, understand
@@ -100,6 +100,7 @@ vim.g.have_nerd_font = false
 
 -- Make line numbers default
 vim.opt.number = true
+vim.opt.relativenumber = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
 -- vim.opt.relativenumber = true
@@ -176,9 +177,9 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 -- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- Keybinds to make split navigation easier.
@@ -607,7 +608,7 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -615,7 +616,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+        ts_ls = {},
         --
 
         lua_ls = {
@@ -654,6 +655,55 @@ require('lazy').setup({
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
+            if server_name == 'jsonls' then
+              server.settings = {
+                json = {
+                  -- Schemas https://www.schemastore.org
+                  schemas = {
+                    {
+                      fileMatch = { 'package.json' },
+                      url = 'https://json.schemastore.org/package.json',
+                    },
+                    {
+                      fileMatch = { 'tsconfig*.json' },
+                      url = 'https://json.schemastore.org/tsconfig.json',
+                    },
+                    {
+                      fileMatch = {
+                        '.prettierrc',
+                        '.prettierrc.json',
+                        'prettier.config.json',
+                      },
+                      url = 'https://json.schemastore.org/prettierrc.json',
+                    },
+                    {
+                      fileMatch = { '.eslintrc', '.eslintrc.json' },
+                      url = 'https://json.schemastore.org/eslintrc.json',
+                    },
+                    {
+                      fileMatch = { '.babelrc', '.babelrc.json', 'babel.config.json' },
+                      url = 'https://json.schemastore.org/babelrc.json',
+                    },
+                    {
+                      fileMatch = { 'lerna.json' },
+                      url = 'https://json.schemastore.org/lerna.json',
+                    },
+                    {
+                      fileMatch = { 'now.json', 'vercel.json' },
+                      url = 'https://json.schemastore.org/now.json',
+                    },
+                    {
+                      fileMatch = {
+                        '.stylelintrc',
+                        '.stylelintrc.json',
+                        'stylelint.config.json',
+                      },
+                      url = 'http://json.schemastore.org/stylelintrc.json',
+                    },
+                  },
+                },
+              }
+            end
             -- This handles overriding only values explicitly passed
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
@@ -764,9 +814,9 @@ require('lazy').setup({
         -- No, but seriously. Please read `:help ins-completion`, it is really good!
         mapping = cmp.mapping.preset.insert {
           -- Select the [n]ext item
-          ['<C-n>'] = cmp.mapping.select_next_item(),
+          ['<tab>'] = cmp.mapping.select_next_item(),
           -- Select the [p]revious item
-          ['<C-p>'] = cmp.mapping.select_prev_item(),
+          ['<S-Tab>'] = cmp.mapping.select_prev_item(),
 
           -- Scroll the documentation window [b]ack / [f]orward
           ['<C-b>'] = cmp.mapping.scroll_docs(-4),
@@ -775,7 +825,7 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<CR>'] = cmp.mapping.confirm { select = true },
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
@@ -917,19 +967,19 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
