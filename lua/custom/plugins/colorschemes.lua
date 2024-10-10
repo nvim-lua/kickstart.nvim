@@ -54,7 +54,7 @@ return {
         vim.api.nvim_set_hl(0, group, {})
       end
     end,
-    enabled = false,
+    enabled = true,
   },
 
   {
@@ -81,6 +81,7 @@ return {
     config = function ()
       vim.opt.termguicolors = true
       vim.cmd.colorscheme 'melange'
-    end
-  }
+    end,
+    enabled = false,
+  },
 }
