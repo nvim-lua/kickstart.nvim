@@ -646,6 +646,7 @@ require('lazy').setup({
 
   { -- Autoformat
     'stevearc/conform.nvim',
+
     event = { 'BufWritePre' },
     cmd = { 'ConformInfo' },
     keys = {
@@ -658,11 +659,25 @@ require('lazy').setup({
         desc = '[F]ormat buffer',
       },
     },
+    -- This will provide type hinting with LuaLS
+    ---@module "conform"
+    ---@type conform.setupOpts
     opts = {
+      -- log_level = vim.log.levels.DEBUG,
       notify_on_error = false,
-      format_on_save = false,
+      format_on_save = nil,  -- Do NOT format when saving a buffer
+      formatters = {
+          isort = {
+            prepend_args = { "-l", "1000000", "--wl", "0", "--sl" }
+          },
+          black = {
+            prepend_args = { "-l", tostring(vim.o.textwidth) },
+          },
+      },
       formatters_by_ft = {
         lua = { 'stylua' },
+        java = { "google-java-format" },
+        python = { "black", "isort" },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
