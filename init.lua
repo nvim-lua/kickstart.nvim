@@ -831,16 +831,17 @@ require('lazy').setup({
         }
       end,
       formatters_by_ft = {
-        bash = { 'shellcheck' },
-        hcl = { 'hclfmt' },
-        go = { 'goimports', 'gofumpt' },
-        lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        python = { 'isort', 'black' },
-        markdown = { 'inject' },
         --
+        -- Conform can also run multiple formatters sequentially
         -- You can use 'stop_after_first' to run the first available formatter from the list
+        bash = { 'shellcheck' },
+        go = { 'goimports', 'gofumpt' },
+        hcl = { 'hclfmt' },
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        lua = { 'stylua' },
+        markdown = { 'inject' },
+        python = { 'isort', 'black' },
+        rust = { 'rustfmt', lsp_format = 'fallback' },
         terraform = { 'terraform_fmt' },
         yaml = { 'yamlfmt' },
       },
