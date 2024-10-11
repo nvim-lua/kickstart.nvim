@@ -670,14 +670,15 @@ require('lazy').setup({
           isort = {
             prepend_args = { "-l", "1000000", "--wl", "0", "--sl" }
           },
-          black = {
+          macchiato = {
+            command = "black-macchiato",
             prepend_args = { "-l", tostring(vim.o.textwidth) },
           },
       },
       formatters_by_ft = {
         lua = { 'stylua' },
         java = { "google-java-format" },
-        python = { "black", "isort" },
+        python = { "macchiato", "isort" },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
