@@ -193,6 +193,12 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- Centre screen when scrolling with Ctrl-d and Ctrl-u
 vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Scroll [D]own one half screen' })
 vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Scroll [U]p one half screen' })
+-- Paste without replacing the contents of the paste register
+vim.keymap.set({ 'n', 'x' }, '<leader>p', '"_dP', { desc = '[P]aste without replacing the paste register' })
+
+-- Remove s as a binding so I can see the tooltip
+vim.keymap.set('n', 's', '<nop>')
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
