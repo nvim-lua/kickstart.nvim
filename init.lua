@@ -282,6 +282,11 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  'tpope/vim-fugitive', -- git integration
+  'jpalardy/vim-slime', -- for piping code into external service like a REPL
+  'godlygeek/tabular',
+  -- for showing the `colorcolumn` 80 and 120 reference lines as thin lines:
+  'xiyaowong/virtcolumn.nvim',
   'mbbill/undotree', -- recommended undo history system
   {
     'jpalardy/vim-slime', -- for piping code into external service like a REPL
@@ -826,12 +831,12 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
+          {
+            'rafamadriz/friendly-snippets',
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load()
+            end,
+          },
         },
       },
       'saadparwaiz1/cmp_luasnip',
@@ -934,6 +939,12 @@ require('lazy').setup({
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       vim.cmd.colorscheme 'tokyonight-night'
+
+      vim.cmd [[
+        highlight Normal guibg=none ctermbg=none
+        highlight NonText guibg=none ctermbg=none
+        highlight NormalNC guibg=none ctermbg=none
+      ]]
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
