@@ -250,6 +250,9 @@ vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers['
 })
 vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help)
 
+-- hide diagnostic
+vim.diagnostic.config { virtual_text = false }
+
 -- Enable number in netrw
 vim.g.netrw_bufsettings = 'noma nomod nu rnu nobl nowrap ro'
 
