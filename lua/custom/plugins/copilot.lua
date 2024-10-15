@@ -1,23 +1,43 @@
 return {
+  -- {
+  --   'github/copilot.vim',
+  --   init = function()
+  --     -- vim.g.copilot_enabled = false
+  --     vim.keymap.set('i', '<M-;>', '<Plug>(copilot-accept-word)')
+  --     vim.keymap.set('i', '<M-/>', '<Plug>(copilot-dismiss)')
+  --   end,
+  --   --
+  -- },
   {
-    'github/copilot.vim',
-    init = function()
-      -- vim.g.copilot_enabled = false
-      vim.keymap.set('i', '<M-;>', '<Plug>(copilot-accept-word)')
-      vim.keymap.set('i', '<M-/>', '<Plug>(copilot-dismiss)')
+    'zbirenbaum/copilot.lua',
+    cmd = 'Copilot',
+    build = ':Copilot auth',
+    opts = {
+      suggestion = { enabled = false },
+      panel = { enabled = false },
+      --   filetypes = {
+      --     markdown = true,
+      --     help = true,
+      --   },
+    },
+  },
+  {
+    'zbirenbaum/copilot-cmp',
+    config = function()
+      require('copilot_cmp').setup()
     end,
-    --
   },
   {
     'CopilotC-Nvim/CopilotChat.nvim',
     branch = 'canary',
     dependencies = {
-      { 'github/copilot.vim' }, -- or github/copilot.vim
+      -- { 'github/copilot.vim' }, -- or github/copilot.vim
+      { 'zbirenbaum/copilot.lua' }, -- or github/copilot.vim
       { 'nvim-lua/plenary.nvim' }, -- for curl, log wrapper
     },
     build = 'make tiktoken', -- Only on MacOS or Linux
     opts = {
-      debug = true, -- Enable debugging
+      -- debug = true, -- Enable debugging
       -- See Configuration section for rest
       window = {
         layout = 'float',
