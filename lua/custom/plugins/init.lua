@@ -4,5 +4,7 @@
 -- See the kickstart.nvim README for more information
 return {
   -- Add trouble.nvim plugin
-  { 'folke/trouble.nvim', dependencies = { 'nvim-tree/nvim-web-devicons' }, opts = {} },
+  { 'folke/trouble.nvim', event = 'VimEnter', dependencies = { 'nvim-tree/nvim-web-devicons' }, config = function()
+    require('trouble').setup {}
+  end },
 }
