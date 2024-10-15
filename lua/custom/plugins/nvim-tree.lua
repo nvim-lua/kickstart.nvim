@@ -1,4 +1,4 @@
-vim.keymap.set('n', '<leader>o', vim.cmd.NvimTreeOpen, { desc = '[Open] file tree' })
+vim.keymap.set('n', '<leader>o', vim.cmd.NvimTreeOpen, { desc = '[O]pen file tree' })
 return {
   'nvim-tree/nvim-tree.lua',
   version = '*',
