@@ -243,6 +243,13 @@ vim.keymap.set({ 'n' }, '[b', '<cmd>bprev<CR>', { silent = true })
 -- Close all buffers and keep the open one only
 vim.keymap.set('n', '<leader>b', '<cmd>:%bd|e#|bd#<CR>', { desc = 'Close all buffers and keep the open one only' })
 
+-- signature help
+vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers['signature_help'], {
+  border = 'single',
+  close_events = { 'CursorMoved', 'BufHidden' },
+})
+vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help)
+
 -- Enable number in netrw
 vim.g.netrw_bufsettings = 'noma nomod nu rnu nobl nowrap ro'
 
@@ -902,7 +909,7 @@ require('lazy').setup({
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
-      'hrsh7th/cmp-nvim-lsp-signature-help',
+      -- 'hrsh7th/cmp-nvim-lsp-signature-help',
     },
     config = function()
       -- See `:help cmp`
@@ -911,6 +918,8 @@ require('lazy').setup({
       luasnip.config.setup {}
 
       cmp.setup {
+        -- https://github.com/hrsh7th/cmp-nvim-lsp-signature-help/issues/17
+        -- preselect = cmp.PreselectMode.None,
         snippet = {
           expand = function(args)
             luasnip.lsp_expand(args.body)
@@ -971,8 +980,7 @@ require('lazy').setup({
           --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
         },
         sources = {
-          { name = 'copilot', group_index = 2 },
-          -- { name = 'copilot' },
+          -- { name = 'copilot', group_index = 2 },
           {
             name = 'lazydev',
             -- set group index to 0 to skip loading LuaLS completions as lazydev recommends it
@@ -981,7 +989,7 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
-          { name = 'nvim_lsp_signature_help' },
+          -- { name = 'nvim_lsp_signature_help' },
         },
       }
     end,
