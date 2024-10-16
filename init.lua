@@ -102,7 +102,7 @@ vim.g.have_nerd_font = true
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -209,11 +209,14 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
--- Set keymap to toggle nvim-tree
+-- toggle nvim-tree
 vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<CR>', { desc = 'Toggle Nvim Tree' })
 
--- Set keymap to toggle undo-tree
+-- toggle undo-tree
 vim.keymap.set('n', '<leader>u', ':UndotreeToggle<CR>', { desc = 'Toggle UndoTree' })
+
+-- manually toggle which-key because it's not automatic for certain contexts like nvim-tree
+vim.keymap.set('n', '<leader>?', '<cmd>WhichKey<CR>', { desc = 'Manually trigger WhichKey' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
