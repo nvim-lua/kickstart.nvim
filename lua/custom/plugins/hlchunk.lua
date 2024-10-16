@@ -5,6 +5,8 @@ return {
     require('hlchunk').setup {
       chunk = {
         enable = true,
+        duration = 150,
+        delay = 1,
       },
     }
   end,
