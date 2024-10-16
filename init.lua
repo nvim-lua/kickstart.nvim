@@ -1186,9 +1186,9 @@ require('jupynium').setup {
 -- This is the default (when colour scheme is unknown)
 -- Try with CursorColumn, Pmenu, Folded etc.
 vim.cmd [[
-hi! link JupyniumCodeCellSeparator CursorLine
-hi! link JupyniumMarkdownCellSeparator CursorLine
-hi! link JupyniumMarkdownCellContent CursorLine
+hi! link JupyniumCodeCellSeparator NonText
+hi! link JupyniumMarkdownCellSeparator NonText
+hi! link JupyniumMarkdownCellContent Pmenu
 hi! link JupyniumMagicCommand Keyword
 ]]
 
