@@ -284,6 +284,12 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
+  {
+    'ErichDonGubler/lsp_lines.nvim',
+    config = function()
+      require('lsp_lines').setup()
+    end,
+  },
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   'tpope/vim-fugitive', -- git integration
   'jpalardy/vim-slime', -- for piping code into external service like a REPL
@@ -1181,6 +1187,13 @@ require('jupynium').setup {
     },
   },
 }
+
+-- Disable virtual_text since it's redundant due to lsp_lines.
+vim.diagnostic.config {
+  virtual_text = false,
+}
+
+vim.keymap.set('', '<Leader>l', require('lsp_lines').toggle, { desc = 'Toggle lsp_lines' })
 
 -- You can link highlighting groups.
 -- This is the default (when colour scheme is unknown)
