@@ -1217,6 +1217,11 @@ vim.diagnostic.config {
 
 vim.keymap.set('', '<Leader>l', require('lsp_lines').toggle, { desc = 'Toggle lsp_lines' })
 
+-- Redirect change operations to the blackhole to avoid spoiling 'y' register content
+-- https://www.reddit.com/r/neovim/comments/13p5mq7/comment/jl824ti
+vim.keymap.set('', 'c', '"_c')
+vim.keymap.set('', 'C', '"_C')
+
 -- You can link highlighting groups.
 -- This is the default (when colour scheme is unknown)
 -- Try with CursorColumn, Pmenu, Folded etc.
