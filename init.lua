@@ -808,6 +808,15 @@ require('lazy').setup({
     vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' }),
   },
   { 'tpope/vim-fugitive' },
+  {
+    'lervag/vimtex',
+    -- lazy = false,
+    init = function()
+      -- VimTeX configuration goes here, e.g.
+      vim.g.vimtex_view_general_viewer = 'okular'
+      vim.g.vimtex_compiler_method = 'latexmk'
+    end,
+  },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
@@ -817,6 +826,7 @@ require('lazy').setup({
       ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
+      ignore_install = { 'latex' },
       highlight = {
         enable = true,
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
