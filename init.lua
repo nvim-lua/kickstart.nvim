@@ -98,6 +98,9 @@ vim.g.have_nerd_font = true
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
+-- make line wrap disabled
+vim.opt.wrap = false
+
 -- Make line numbers default
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
@@ -655,19 +658,21 @@ require('lazy').setup({
       },
     },
     opts = {
+      autoformat = true,
       notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
-        return {
-          timeout_ms = 500,
-          lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
-        }
-      end,
+--      format_on_save = function(bufnr)
+--        -- Disable "format_on_save lsp_fallback" for languages that don't
+--        -- have a well standardized coding style. You can add additional
+--        -- languages here or re-enable it for the disabled ones.
+--        local disable_filetypes = { c = true, cpp = true, cxx = true }
+--        return {
+--          timeout_ms = 500,
+--          lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
+--        }
+--      end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        cpp = { 'clang-format' },
         -- Conform can also run multiple formatters sequentially
         python = { 'isort', 'black' },
         --
@@ -858,7 +863,23 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'python', 'cmake', 'bash', 'cpp', 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = {
+        'python',
+        'cmake',
+        'bash',
+        'cpp',
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
