@@ -696,6 +696,10 @@ require('lazy').setup({
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
             end, '[T]oggle Inlay [H]ints')
           end
+
+          -- Me adding key bindings to show hover info and signature help for any language that supports it
+          map('<leader>gg', vim.lsp.buf.hover, 'Show hover info')
+          map('<leader>gs', vim.lsp.buf.signature_help, 'Show signature help')
         end,
       })
 
@@ -718,7 +722,17 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        pyright = {},
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true, -- Ensure Pyright pulls type information from libraries
+              },
+            },
+          },
+        },
+
         phpactor = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -759,6 +773,14 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+
+        -- recommended for python by by https://www.youtube.com/watch?v=jWZ_JeLgDxU:
+        black = {},
+        debugpy = {},
+        flake8 = {},
+        isort = {},
+        mypy = {},
+        pylint = {},
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -812,7 +834,7 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = { 'isort', 'black' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
