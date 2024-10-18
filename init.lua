@@ -5,8 +5,9 @@ vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
 vim.opt.undodir = os.getenv 'HOME' .. '/.vim/undodir'
+vim.opt.encoding = 'utf-8'
 
-vim.opt.wrap = false
+vim.opt.wrap = true
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
@@ -30,6 +31,18 @@ vim.opt.showmode = false
 --  See `:help 'clipboard'`
 vim.schedule(function()
   vim.opt.clipboard = 'unnamedplus'
+  vim.g.clipboard = {
+    name = 'wl-clipboard',
+    copy = {
+      ['+'] = 'wl-copy',
+      ['*'] = 'wl-copy',
+    },
+    paste = {
+      ['+'] = 'wl-paste --no-newline',
+      ['*'] = 'wl-paste --no-newline',
+    },
+    cache_enabled = 0,
+  }
 end)
 
 -- Enable break indent
@@ -59,20 +72,20 @@ vim.opt.splitbelow = true
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
-vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+-- vim.opt.list = true
+-- vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
-vim.opt.cursorline = true
+vim.opt.cursorline = false
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 vim.opt.termguicolors = true
 
-vim.opt.tabstop = 4
+vim.opt.tabstop = 1
 
 --
 -- [[ Basic Keymaps ]]
@@ -82,8 +95,12 @@ vim.opt.tabstop = 4
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+-- Open Vertical Terminal in Neovim
+vim.keymap.set('n', '<leader>vt', '<cmd>vnew<CR><cmd>terminal<CR>a', { desc = 'Open neovim Terminal' })
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open diagnostic of current line' })
 
 -- Netrw keymaps
 
@@ -499,7 +516,8 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {},
+        tailwindcss = {},
+        ts_ls = {},
         cssls = {
           settings = {
             css = {
@@ -547,6 +565,7 @@ require('lazy').setup({
       require('mason-lspconfig').setup {
         handlers = {
           function(server_name)
+            server_name = server_name == 'tsserver' and 'ts_ls' or server_name
             local server = servers[server_name] or {}
             -- This handles overriding only values explicitly passed
             -- by the server configuration above. Useful when disabling
@@ -591,8 +610,10 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        javascript = { "prettierd", "prettier", stop_after_first = true },
-        cpp = { { 'clang-format' } },
+        typescript = { 'prettierd', 'prettier', stop_after_first = true },
+        json = { 'prettierd' },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        cpp = { 'clang-format' },
       },
     },
   },
@@ -721,6 +742,11 @@ require('lazy').setup({
     'catppuccin/nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     name = 'catppuccin',
+    config = function(self, opts)
+      require('catppuccin').setup {
+        transparent_background = true,
+      }
+    end,
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
@@ -776,7 +802,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'typescript', 'tsx', 'c', 'cpp', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -787,6 +813,10 @@ require('lazy').setup({
         additional_vim_regex_highlighting = { 'ruby', 'javascript', 'typescript' },
       },
       indent = { enable = true, disable = { 'ruby' } },
+    },
+    context_commentstring = {
+      enable = true,
+      enable_autocmd = false,
     },
     config = function(_, opts)
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
