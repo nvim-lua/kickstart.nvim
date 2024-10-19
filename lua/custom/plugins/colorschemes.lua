@@ -6,7 +6,7 @@ return {
     config = function()
       vim.cmd.colorscheme 'gruvbox-material'
     end,
-    enabled = false,
+    enabled = true,
   },
 
   {
@@ -54,7 +54,7 @@ return {
         vim.api.nvim_set_hl(0, group, {})
       end
     end,
-    enabled = true,
+    enabled = false,
   },
 
   {
