@@ -150,6 +150,30 @@ if not vim.uv.fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
+-- NOTE: rustaceanvim -> this config has been moved to it's lazyloading config function
+---@type rustaceanvim.Opts
+-- vim.g.rustaceanvim = {
+--   ---@type rustaceanvim.tools.Opts
+--   tools = {
+--     -- ...
+--   },
+--   ---@type rustaceanvim.lsp.ClientOpts
+--   server = {
+--     on_attach = function(client, bufnr)
+--       -- Set keybindings, etc. here.
+--     end,
+--     default_settings = {
+--       -- rust-analyzer language server configuration
+--       ['rust-analyzer'] = {},
+--     },
+--     -- ...
+--   },
+--   ---@type rustaceanvim.dap.Opts
+--   dap = {
+--     -- ...
+--   },
+-- }
+
 -- [[ Configure and install plugins ]]
 -- NOTE: Here is plugins are setup!
 require('lazy').setup({
@@ -316,7 +340,10 @@ require('lazy').setup({
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
-      { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
+      { -- NOTE: Must be loaded before dependants
+        'williamboman/mason.nvim',
+        config = true,
+      },
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
@@ -502,10 +529,21 @@ require('lazy').setup({
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
+      -- Prevent mason from starting rust_analyzer
+      require('mason-lspconfig').setup_handlers {
+        ['rust_analyzer'] = function() end,
+      }
+
       require('mason-lspconfig').setup {
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
+
+            -- Don't let mason configure the rust lsp -> this is done later in rustaceanvim
+            if server_name == 'rust_analyzer' then
+              return
+            end
+
             -- This handles overriding only values explicitly passed
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for tsserver)
@@ -668,6 +706,123 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+        },
+      }
+    end,
+  },
+  { --nvim-dap--
+    'mfussenegger/nvim-dap',
+    config = function()
+      -- local mason_registry = require 'mason-registry'
+      -- local codelldb = mason_registry.get_package 'codelldb'
+      -- local extension_path = codelldb:get_install_path() .. '/extensions/'
+      -- local codelldb_path = extension_path .. 'adapter/codelldb'
+      --
+      -- local dap = require 'dap'
+      -- dap.adapters.codelldb = {
+      --   type = 'server',
+      --   port = '${port}',
+      --   executable = {
+      --     command = codelldb_path,
+      --     args = { '--port', '${port}' },
+      --   },
+      -- }
+
+      -- dap.configurations.rust = {
+      --   {
+      --     name = 'Launch file',
+      --     type = 'codelldb',
+      --     request = 'launch',
+      --     program = function()
+      --       return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+      --     end,
+      --     cwd = '${workspaceFolder}',
+      --     stopOnEntry = false,
+      --   },
+      -- }
+    end,
+  },
+  { --nvim-dap-ui--
+    'rcarriga/nvim-dap-ui',
+    dependencies = {
+      'mfussenegger/nvim-dap',
+      'nvim-neotest/nvim-nio',
+    },
+    config = function()
+      local dapui = require 'dapui'
+      local dap = require 'dap'
+      dapui.setup()
+
+      -- handle closing/opening the UI when debugger stops/starts --
+      dap.listeners.after.event_initialized['dapui_config'] = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated['dapui_config'] = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited['dapui_config'] = function()
+        dapui.close()
+      end
+
+      -- setup some nice keybindings --
+      -- vim.keymap.set('n', '<Leader>dt', ':DapToggleBreakpoint<CR>', { desc = '[DEBUGGER] Toggle Breakpoint' })
+      -- vim.keymap.set('n', '<Leader>dx', ':DapTerminate<CR>', { desc = '[DEBUGGER] Terminate Debugger' })
+      -- vim.keymap.set('n', '<Leader>so', ':DapStepOver<CR>', { desc = '[DEBUGGER] Step Over' })
+
+      -- Nvim DAP Keybindings
+      local map = vim.keymap.set
+
+      map('n', '<Leader>dl', "<cmd>lua require'dap'.step_into()<CR>", { desc = '[DEBUGGER] Step Into' })
+      map('n', '<Leader>dj', "<cmd>lua require'dap'.step_over()<CR>", { desc = '[DEBUGGER] Step Over' })
+      map('n', '<Leader>dk', "<cmd>lua require'dap'.step_out()<CR>", { desc = '[DEBUGGER] Step Out' })
+      map('n', '<Leader>dc', "<cmd>lua require'dap'.continue()<CR>", { desc = '[DEBUGGER] Continue' })
+      map('n', '<Leader>db', "<cmd>lua require'dap'.toggle_breakpoint()<CR>", { desc = '[DEBUGGER] Toggle Breakpoint' })
+      -- map(
+      --   'n',
+      --   '<Leader>dd',
+      --   "<cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>",
+      --   { desc = 'Debugger set conditional breakpoint' }
+      -- )
+      map('n', '<Leader>de', "<cmd>lua require'dap'.terminate()<CR>", { desc = '[DEBUGGER] Reset' })
+      map('n', '<Leader>dr', "<cmd>lua require'dap'.run_last()<CR>", { desc = '[DEBUGGER] Run Last' })
+
+      -- rustaceanvim
+      map('n', '<Leader>dt', "<cmd>lua vim.cmd('RustLsp testables')<CR>", { desc = '[DEBUGGER] Testables' })
+    end,
+  },
+  {
+    'mrcjkb/rustaceanvim',
+    version = '^5',
+    lazy = false, -- This plugin is already lazy
+    config = function()
+      -- TODO: these paths are wrong for some fucking reason
+      -- local mason_registry = require 'mason-registry'
+      -- local codelldb = mason_registry.get_package 'codelldb'
+      -- local extension_path = codelldb:get_install_path() .. '/extensions/'
+      -- local codelldb_path = extension_path .. 'adapter/codelldb'
+      -- local liblldb_path = extension_path .. 'lldb/lib/liblldb.so'
+
+      local codelldb_path = '/home/slayterteal/.local/share/nvim/mason/packages/codelldb/extension/adapter/codelldb'
+      -- NOTE: the liblldb is different between linux/mac (liblldb.so/dylib)
+      local liblldb_path = '/home/slayterteal/.local/share/nvim/mason/packages/codelldb/extension/lldb/lib/liblldb.so'
+      local rustcfg = require 'rustaceanvim.config'
+
+      vim.g.rustaceanvim = {
+        -- Plugin configuration
+        tools = {},
+        -- LSP configuration
+        server = {
+          on_attach = function(client, bufnr)
+            -- you can also put keymaps in here
+          end,
+          default_settings = {
+            -- rust-analyzer language server configuration
+            ['rust-analyzer'] = {},
+          },
+        },
+        -- DAP configuration
+        dap = {
+          adapter = rustcfg.get_codelldb_adapter(codelldb_path, liblldb_path),
         },
       }
     end,
