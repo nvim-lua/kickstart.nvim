@@ -163,6 +163,8 @@ vim.opt.scrolloff = 10
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+vim.keymap.set('n', '<leader>w', '<cmd>:w<CR>', { desc = 'Save File' })
+vim.keymap.set('n', '<leader>pv', '<cmd>:Ex<CR>', { desc = 'Go back to Dir' })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
@@ -176,10 +178,10 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -317,7 +319,7 @@ require('lazy').setup({
         { '<leader>d', group = '[D]ocument' },
         { '<leader>r', group = '[R]ename' },
         { '<leader>s', group = '[S]earch' },
-        { '<leader>w', group = '[W]orkspace' },
+        { '<leader>W', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
@@ -505,15 +507,15 @@ require('lazy').setup({
     end,
   },
 
-  {
-    'okuuva/auto-save.nvim',
-    cmd = 'ASToggle', -- optional for lazy loading on command
-    event = { 'InsertLeave', 'TextChanged' }, -- optional for lazy loading on trigger events
-    opts = {
-      -- your config goes here
-      -- or just leave it empty :)
-    },
-  },
+  -- {
+  --   'okuuva/auto-save.nvim',
+  --   cmd = 'ASToggle', -- optional for lazy loading on command
+  --   event = { 'InsertLeave', 'TextChanged' }, -- optional for lazy loading on trigger events
+  --   opts = {
+  --     -- your config goes here
+  --     -- or just leave it empty :)
+  --   },
+  -- },
 
   -- LSP Plugins
   {
