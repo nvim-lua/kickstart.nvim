@@ -140,6 +140,8 @@ vim.opt.rtp:prepend(lazypath)
 --  To update plugins you can run
 --    :Lazy update
 --
+-- See HACK below...
+jdtls_already_ran = false
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
 
@@ -438,6 +440,7 @@ require('lazy').setup({
       { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
+      'nvim-java/nvim-java',
 
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -508,7 +511,7 @@ require('lazy').setup({
 
           -- Fuzzy find all the symbols in your current document.
           --  Symbols are things like variables, functions, types, etc.
-          map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
+          map('<leader>ds', require('telescope.builtin').treesitter, '[D]ocument [S]ymbols')
 
           -- Fuzzy find all the symbols in your current workspace.
           --  Similar to document symbols, except searches over your entire project.
@@ -638,6 +641,161 @@ require('lazy').setup({
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
+          end,
+          jdtls = function()
+            -- HACK: Don't know why this gets called more than once
+            if jdtls_already_ran then
+              return
+            end
+            jdtls_already_ran = true
+            require('java').setup {
+              -- Your custom jdtls settings goes here
+              -- Do not automatically install JDK 17
+              -- From: https://github.com/nvim-java/nvim-java/wiki/Q-&-A#no_entry-disable-openjdk-17-auto-installation
+              jdk = {
+                auto_install = false,
+              },
+              init_options = {
+                documentSymbol = {
+                  dynamicRegistration = false,
+                  hierarchicalDocumentSymbolSupport = true,
+                  labelSupport = true,
+                  symbolKind = {
+                    valueSet = {
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8,
+                      9,
+                      10,
+                      11,
+                      12,
+                      13,
+                      14,
+                      15,
+                      16,
+                      17,
+                      18,
+                      19,
+                      20,
+                      21,
+                      22,
+                      23,
+                      24,
+                      25,
+                      26,
+                      27,
+                      28,
+                      29,
+                      30,
+                      31,
+                    },
+                    tagSupport = {
+                      valueSet = {},
+                    },
+                  },
+                },
+              },
+
+              -- NOTE: custom java settings
+              -- https://github.com/ray-x/lsp_signature.nvim/issues/97
+              -- all options:
+              -- https://github.com/mfussenegger/nvim-jdtls
+              -- https://github.com/eclipse/eclipse.jdt.ls/wiki/Running-the-JAVA-LS-server-from-the-command-line#initialize-request
+              single_file_support = true,
+              settings = {
+                java = {
+                  autobuild = { enabled = false },
+                  server = { launchMode = 'Hybrid' },
+                  eclipse = {
+                    downloadSources = true,
+                  },
+                  maven = {
+                    downloadSources = true,
+                  },
+                  import = {
+                    gradle = {
+                      enabled = true,
+                    },
+                    maven = {
+                      enabled = true,
+                    },
+                    exclusions = {
+                      '**/node_modules/**',
+                      '**/.metadata/**',
+                      '**/archetype-resources/**',
+                      '**/META-INF/maven/**',
+                      '/**/test/**',
+                    },
+                  },
+                  -- configuration = {
+                  --     runtimes = {
+                  --         {
+                  --             name = 'JavaSE-1.8',
+                  --             path = '~/.sdkman/candidates/java/8.0.402-tem',
+                  --         },
+                  --         {
+                  --             name = 'JavaSE-11',
+                  --             path = '~/.sdkman/candidates/java/11.0.22-tem',
+                  --         },
+                  --         {
+                  --             name = 'JavaSE-17',
+                  --             path = '~/.sdkman/candidates/java/17.0.10-tem',
+                  --         },
+                  --         {
+                  --             name = 'JavaSE-21',
+                  --             path = '~/.sdkman/candidates/java/21.0.3-tem',
+                  --         },
+                  --     },
+                  -- },
+                  references = {
+                    includeDecompiledSources = true,
+                  },
+                  implementationsCodeLens = {
+                    enabled = false,
+                  },
+                  referenceCodeLens = {
+                    enabled = false,
+                  },
+                  -- https://github.com/eclipse-jdtls/eclipse.jdt.ls/issues/2948
+                  inlayHints = {
+                    parameterNames = {
+                      ---@type "none" | "literals" | "all"
+                      enabled = 'all',
+                    },
+                  },
+                  signatureHelp = {
+                    enabled = true,
+                    description = {
+                      enabled = true,
+                    },
+                  },
+                  symbols = {
+                    includeSourceMethodDeclarations = true,
+                  },
+                  -- https://stackoverflow.com/questions/74844019/neovim-setting-up-jdtls-with-lsp-zero-mason
+                  rename = { enabled = true },
+
+                  contentProvider = {
+                    preferred = 'fernflower',
+                  },
+                  sources = {
+                    organizeImports = {
+                      starThreshold = 9999,
+                      staticStarThreshold = 9999,
+                    },
+                  },
+                },
+                redhat = { telemetry = { enabled = false } },
+              },
+
+            }
+
+            require('lspconfig').jdtls.setup { }
           end,
         },
       }
@@ -905,6 +1063,7 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
@@ -1156,10 +1315,11 @@ local on_attach = function(_, bufnr)
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
   nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
   nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
-  -- Just show classes and functions
-  nmap('<leader>ds', function()
-    require('telescope.builtin').lsp_document_symbols { ignore_symbols = { 'variable', 'constant' } }
-  end, '[D]ocument [S]ymbols')
+
+  -- HACK: I can't get lsp_document_symbols to work for jdtls for some reason...
+  -- nmap('<leader>ds', function()
+  --   require('telescope.builtin').lsp_document_symbols { ignore_symbols = { 'variable', 'constant' } }
+  -- end, '[D]ocument [S]ymbols')
   nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
   -- See `:help K` for why this keymap
@@ -1212,7 +1372,6 @@ local servers = {
   bashls = {},
   groovyls = {},
   intelephense = {},
-  jdtls = {},
   jsonls = {},
   lua_ls = {
     Lua = {
