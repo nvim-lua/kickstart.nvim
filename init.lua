@@ -183,6 +183,11 @@ vim.keymap.set('n', '<leader>tb', ':Telescope buffers<CR>', { desc = 'Open Buffe
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
+vim.keymap.set('n', '<leader>cn', ':cnext<CR>', { desc = 'next in quickfix list' })
+vim.keymap.set('n', '<leader>cp', ':cprev<CR>', { desc = 'previous in quickfix list' })
+vim.keymap.set('n', '<leader>cdo', ':cdo ', { desc = 'do quick action to all' })
+vim.keymap.set('n', '<leader>gp', ':grep ', { desc = 'vim grep' })
+
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
 -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
@@ -972,8 +977,8 @@ require('lazy').setup({
     -- priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
       -- load the colorscheme here
-      -- vim.o.background = 'dark'
-      -- vim.cmd.colorscheme 'night-owl'
+      vim.o.background = 'dark'
+      vim.cmd.colorscheme 'night-owl'
     end,
   },
   {
@@ -1039,14 +1044,14 @@ require('lazy').setup({
     --   vim.cmd.colorscheme 'vscode'
     -- end,
   },
-  {
-    'Yazeed1s/minimal.nvim',
-    lazy = false,
-    priority = 1001,
-    init = function()
-      vim.cmd.colorscheme 'minimal'
-    end,
-  },
+  -- {
+  -- 'Yazeed1s/minimal.nvim',
+  -- lazy = false,
+  -- priority = 1001,
+  -- init = function()
+  --   vim.cmd.colorscheme 'minimal'
+  -- end,
+  -- },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
