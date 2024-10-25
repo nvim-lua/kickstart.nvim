@@ -14,7 +14,7 @@ end
 local jdtls_path = '/Users/oluwatobibello/.local/share/nvim/mason/packages/jdtls'
 local path_to_lsp_server = jdtls_path .. '/config_mac'
 local path_to_plugins = jdtls_path .. '/plugins/'
-local path_to_jar = path_to_plugins .. 'org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar'
+local path_to_jar = path_to_plugins .. 'org.eclipse.equinox.launcher_*.jar'
 local lombok_path = path_to_plugins .. 'lombok.jar'
 
 local root_markers = { '.git', 'mvnw', 'gradlew', 'pom.xml', 'build.gradle' }
@@ -27,6 +27,7 @@ local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
 local workspace_dir = vim.fn.stdpath 'data' .. '/site/java/workspace-root/' .. project_name
 os.execute('mkdir ' .. workspace_dir)
 
+local java_21_home_dir = '/Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home/bin/java'
 local java_17_home_dir = '/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home'
 local java_11_home_dir = '/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home'
 
@@ -35,12 +36,18 @@ local config = {
   -- The command that starts the language server
   -- See: https://github.com/eclipse/eclipse.jdt.ls#running-from-the-command-line
   cmd = {
-    java_17_home_dir .. '/bin/java',
+    java_21_home_dir .. '/bin/java',
     '-Declipse.application=org.eclipse.jdt.ls.core.id1',
     '-Dosgi.bundles.defaultStartLevel=4',
     '-Declipse.product=org.eclipse.jdt.ls.core.product',
     '-Dlog.protocol=true',
+    '-Xmx1g',
     '-Dlog.level=ALL',
+    '--add-modules=ALL-SYSTEM',
+    '--add-opens',
+    'java.base/java.util=ALL-UNNAMED',
+    '--add-opens',
+    'java.base/java.lang=ALL-UNNAMED',
     '-javaagent:' .. lombok_path,
     '-Xms1g',
     '--add-modules=ALL-SYSTEM',
@@ -66,13 +73,17 @@ local config = {
   -- for a list of options
   settings = {
     java = {
-      home = java_17_home_dir,
+      home = java_21_home_dir,
       eclipse = {
         downloadSources = true,
       },
       configuration = {
         updateBuildConfiguration = 'interactive',
         runtimes = {
+          {
+            name = 'JavaSE-21',
+            path = java_21_home_dir,
+          },
           {
             name = 'JavaSE-11',
             path = java_11_home_dir,
@@ -109,10 +120,10 @@ local config = {
       },
       importOrder = {
         'java',
-        'javax',
-        'jarkata',
         'com',
         'org',
+        'javax',
+        'jarkata',
       },
     },
     sources = {

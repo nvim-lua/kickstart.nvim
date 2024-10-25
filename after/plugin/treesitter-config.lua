@@ -32,6 +32,7 @@ require('nvim-treesitter.configs').setup {
     'vimdoc',
     'tsx',
     'html',
+    'java',
     'javascript',
     'typescript',
     'templ',

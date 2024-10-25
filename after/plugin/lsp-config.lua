@@ -24,7 +24,7 @@ lsp.ensure_installed {
   -- Typescript
   -- 'prettier',
   -- 'prettierd',
-  'tsserver',
+  -- 'tsserver',
   -- Others
   'tailwindcss',
 }
