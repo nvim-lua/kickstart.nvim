@@ -1,6 +1,13 @@
 {
   "extras": [
-
+    "lazyvim.plugins.extras.coding.luasnip",
+    "lazyvim.plugins.extras.coding.yanky",
+    "lazyvim.plugins.extras.editor.overseer",
+    "lazyvim.plugins.extras.lang.angular",
+    "lazyvim.plugins.extras.lang.json",
+    "lazyvim.plugins.extras.lang.markdown",
+    "lazyvim.plugins.extras.lang.typescript",
+    "lazyvim.plugins.extras.util.dot"
   ],
   "news": {
     "NEWS.md": "6520"
