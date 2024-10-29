@@ -130,6 +130,14 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
+-- adding the .slint filetype to the list of filetypes that neovim can recognize
+vim.cmd [[
+  augroup _slint
+  autocmd!
+  autocmd BufRead,BufEnter *.slint set filetype=slint
+  augroup end
+]]
+
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
@@ -524,14 +532,11 @@ require('lazy').setup({
         pyright = {},
         rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-        --
-        -- Some languages (like typescript) have entire language plugins that can be useful:
-        --    https://github.com/pmizio/typescript-tools.nvim
-        --
-        -- But for many setups, the LSP (`tsserver`) will work just fine
         ts_ls = {},
-        --
-
+        slint_lsp = {
+          -- command = 'slint-lsp',
+          -- filetypes = { 'slint' },
+        },
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
@@ -823,7 +828,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'slint' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       ignore_install = { 'latex' },
