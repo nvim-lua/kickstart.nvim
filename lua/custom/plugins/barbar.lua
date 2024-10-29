@@ -11,7 +11,6 @@ return {
     opts = {
       animation = true,
       insert_at_start = true,
-      icons = {},
     },
     version = '^1.0.0',
   },
