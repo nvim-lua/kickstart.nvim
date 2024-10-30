@@ -617,6 +617,7 @@ require('lazy').setup({
         },
         -- pyright {
         bashls = {},
+        groovyls = {},
         terraformls = {},
         yamlls = {
           settings = {
@@ -695,6 +696,7 @@ require('lazy').setup({
         'bash-language-server',
         'autopep8',
         'json-lsp',
+        'groovy-language-server',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -748,6 +750,7 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         python = { 'autopep8' },
+        sh = { 'shfmt' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
