@@ -48,7 +48,7 @@ return {
       --   height = 0.4,
       --   row = 1,
       -- },
-      model = 'gpt-4o', -- GPT model to use, 'gpt-3.5-turbo', 'gpt-4', or 'gpt-4o', 'o1-mini', 'o1-preview'
+      model = 'o1-preview', -- GPT model to use, 'gpt-3.5-turbo', 'gpt-4', or 'gpt-4o', 'o1-mini', 'o1-preview'
       -- clear_chat_on_new_prompt = true,
     },
     -- See Commands section for default commands if you want to lazy load on them
