@@ -168,7 +168,7 @@ vim.opt.expandtab = true
 
 vim.opt.smartindent = true
 
-vim.opt.wrap = false
+vim.opt.wrap = true
 
 -- https://youtu.be/w7i4amO_zaE?t=1408
 vim.opt.swapfile = false
