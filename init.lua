@@ -92,7 +92,7 @@ map('n', '<leader>bc', '<Cmd>BufferClose!<CR>', { desc = '[B]uffer [C]lose' })
 map('n', '<leader>br', '<Cmd>BufferRestore<CR>', { desc = '[B]uffer [R]estore' })
 map('n', '<leader>tc', 'gcc', { desc = '[T]oggle [C]omment', remap = true })
 map('v', '<leader>tc', 'gc', { desc = '[T]oggle [C]omment', remap = true })
-map('n', ';', ':', { desc = 'CMD enter command mode' })
+map('n', ';', '<Cmd>Telescope cmdline<CR>', { desc = 'Telescope Cmd History' })
 
 -- Floaterm keymaps
 map('n', '<leader>tt', '<Cmd>FloatermToggle<CR>', { desc = '[T]erminal [T]toggle' })
@@ -329,6 +329,7 @@ require('lazy').setup({
     branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
+      'jonarrien/telescope-cmdline.nvim',
       { -- If encountering errors, see telescope-fzf-native README for installation instructions
         'nvim-telescope/telescope-fzf-native.nvim',
 
@@ -390,6 +391,7 @@ require('lazy').setup({
       -- Enable Telescope extensions if they are installed
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
+      pcall(require('telescope').load_extension, 'cmdline')
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
