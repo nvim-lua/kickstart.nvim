@@ -11,6 +11,9 @@ return {
     opts = {
       animation = true,
       insert_at_start = true,
+      sidebar_filetypes = {
+        ['neo-tree'] = { event = 'BufWipeout' },
+      },
     },
     version = '^1.0.0',
   },
