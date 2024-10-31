@@ -1020,7 +1020,6 @@ require('lazy').setup({
   -- Or use telescope!
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
   -- you can continue same window with `<space>sr` which resumes last telescope search
->>>>>>> 2ba39c69736597b60f6033aa3f8526e7c28343d5
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
