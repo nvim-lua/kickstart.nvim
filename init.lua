@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -132,7 +132,7 @@ vim.opt.smartcase = true
 vim.opt.signcolumn = 'yes'
 
 -- Decrease update time
-vim.opt.updatetime = 250
+vim.opt.updatetime = 200
 
 -- Decrease mapped sequence wait time
 -- Displays which-key popup sooner
@@ -155,7 +155,7 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
+vim.opt.scrolloff = 20
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -189,6 +189,83 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+-- Setup the statusline
+-- Statusline configuration with rounded corners
+local function get_custom_statusline()
+  -- Helper function to create rounded separators
+  local function round_separator(color1, color2)
+    return '%#' .. color1 .. '#' .. '' .. '%#' .. color2 .. '#'
+  end
+
+  -- Define colors
+  vim.cmd [[
+    hi StatusLineAccent guibg=#1a1b26 guifg=#7aa2f7
+    hi StatusLineInsert guibg=#1a1b26 guifg=#9ece6a
+    hi StatusLineNormal guibg=#1a1b26 guifg=#7aa2f7
+    hi StatusLineVisual guibg=#1a1b26 guifg=#bb9af7
+    hi StatusLinePath guibg=#1a1b26 guifg=#737aa2
+    hi StatusLineModified guibg=#1a1b26 guifg=#e0af68
+  ]]
+
+  -- Get current mode
+  local mode_colors = {
+    n = 'StatusLineNormal',
+    i = 'StatusLineInsert',
+    v = 'StatusLineVisual',
+    V = 'StatusLineVisual',
+    [''] = 'StatusLineVisual',
+  }
+
+  local current_mode = vim.api.nvim_get_mode().mode
+  local mode_color = mode_colors[current_mode] or 'StatusLineNormal'
+
+  -- Build statusline components
+  local components = {
+    -- Left side
+    '%#'
+      .. mode_color
+      .. '#',
+    '  ',
+    vim.fn.mode(),
+    '  ',
+    round_separator(mode_color, 'StatusLinePath'),
+    ' %f', -- Filename
+    ' %m', -- Modified flag
+
+    -- Right side alignment
+    '%=',
+    '%#StatusLineAccent#',
+    ' %l:%c ', -- Line and column
+    round_separator('StatusLineAccent', 'StatusLineNormal'),
+    ' %p%% ', -- Percentage through file
+  }
+
+  return table.concat(components)
+end
+
+-- Set the statusline
+vim.opt.statusline = '%!v:lua.get_custom_statusline()'
+
+-- Make sure the statusline is always visible
+vim.opt.laststatus = 2
+
+-- Remove the mode display since it's in the statusline
+vim.opt.showmode = false
+
+-- Optional: customize colors based on your colorscheme
+-- Replace these colors with ones that match your theme
+vim.cmd [[
+  augroup CustomStatusline
+    autocmd!
+    autocmd ColorScheme * hi StatusLineAccent guibg=#1a1b26 guifg=#7aa2f7
+    autocmd ColorScheme * hi StatusLineInsert guibg=#1a1b26 guifg=#9ece6a
+    autocmd ColorScheme * hi StatusLineNormal guibg=#1a1b26 guifg=#7aa2f7
+    autocmd ColorScheme * hi StatusLineVisual guibg=#1a1b26 guifg=#bb9af7
+    autocmd ColorScheme * hi StatusLinePath guibg=#1a1b26 guifg=#737aa2
+    autocmd ColorScheme * hi StatusLineModified guibg=#1a1b26 guifg=#e0af68
+  augroup END
+]]
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -243,7 +320,7 @@ require('lazy').setup({
   --    require('gitsigns').setup({ ... })
   --
   -- See `:help gitsigns` to understand what the configuration keys do
-  { -- Adds git related signs to the gutter, as well as utilities for managing changes
+  {
     'lewis6991/gitsigns.nvim',
     opts = {
       signs = {
@@ -253,6 +330,15 @@ require('lazy').setup({
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
+      -- Add blame configuration
+      current_line_blame = true, -- Toggle current line blame
+      current_line_blame_opts = {
+        virt_text = true,
+        virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+        delay = 250, -- Delay in milliseconds before blame is shown
+        ignore_whitespace = false,
+      },
+      current_line_blame_formatter = ' | <author>, <author_time:%Y-%m-%d> - <summary>',
     },
   },
 
@@ -323,6 +409,50 @@ require('lazy').setup({
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
     },
+  },
+  -- Github Copilot --
+  {
+    'github/copilot.vim',
+    event = 'VimEnter',
+  },
+
+  -- Add this to your plugins table in the lazy.nvim setup:
+  {
+    'nvim-neo-tree/neo-tree.nvim',
+    branch = 'v3.x',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-tree/nvim-web-devicons', -- optional, for file icons
+      'MunifTanjim/nui.nvim',
+    },
+    config = function()
+      require('neo-tree').setup {
+        close_if_last_window = false,
+        enable_git_status = true,
+        enable_diagnostics = true,
+        filesystem = {
+          filtered_items = {
+            visible = false,
+            hide_dotfiles = false,
+            hide_gitignored = false,
+          },
+          follow_current_file = {
+            enabled = true, -- This will find and focus the file in the active buffer every time
+            leave_dirs_open = true, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
+          },
+        },
+        window = {
+          width = 30,
+          mappings = {
+            ['<space>'] = 'none',
+          },
+        },
+      }
+
+      -- Keymaps
+      vim.keymap.set('n', '<leader>e', ':Neotree toggle<CR>', { desc = 'Toggle [E]xplorer' })
+      vim.keymap.set('n', '<leader>o', ':Neotree focus<CR>', { desc = 'F[o]cus Explorer' })
+    end,
   },
 
   -- NOTE: Plugins can specify dependencies.
@@ -606,7 +736,21 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        -- gopls = {},
+        gopls = {
+          settings = {
+            gopls = {
+              analyses = {
+                unusedparams = true,
+                shadow = true,
+              },
+              staticcheck = true,
+              gofumpt = true,
+              usePlaceholders = true,
+              completeUnimported = true,
+              importShortcut = 'Both',
+            },
+          },
+        },
         -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -663,6 +807,39 @@ require('lazy').setup({
         },
       }
     end,
+  },
+
+  {
+    'ThePrimeagen/refactoring.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-treesitter/nvim-treesitter',
+    },
+    config = function()
+      require('refactoring').setup()
+    end,
+  },
+  {
+    'ray-x/go.nvim',
+    dependencies = {
+      'ray-x/guihua.lua',
+      'neovim/nvim-lspconfig',
+      'nvim-treesitter/nvim-treesitter',
+    },
+    config = function()
+      require('go').setup {
+        -- Add your go.nvim configuration here
+        lsp_gofumpt = true,
+        lsp_on_attach = true,
+        gopls_cmd = { 'gopls' },
+        fillstruct = 'gopls',
+        dap_debug = true,
+        dap_debug_gui = true,
+      }
+    end,
+    event = { 'CmdlineEnter' },
+    ft = { 'go', 'gomod' },
+    build = ':lua require("go.install").update_all_sync()',
   },
 
   { -- Autoformat
