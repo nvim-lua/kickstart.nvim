@@ -585,7 +585,9 @@ require('lazy').setup({
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
         --
-
+        zls = {
+          cmd = { 'zls' },
+        },
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
@@ -669,6 +671,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        zig = { 'zig fmt' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
