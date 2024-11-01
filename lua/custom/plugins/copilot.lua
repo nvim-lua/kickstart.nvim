@@ -77,7 +77,7 @@ return {
       --   auto_suggestions = true, -- Experimental stage
       -- },
       copilot = {
-        -- model = 'claude-3.5-sonnet',
+        model = 'claude-3.5-sonnet',
         -- model = 'o1-preview',
         -- model = 'o1-preview-2024-09-12',
         -- max_tokens = 4096,
