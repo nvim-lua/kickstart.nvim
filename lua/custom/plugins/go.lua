@@ -18,10 +18,6 @@ require('lspconfig').gopls.setup {
 
 return {
   {
-    'leoluz/nvim-dap-go',
-    opts = {},
-  },
-  {
     'fredrikaverpil/neotest-golang',
   },
   {
@@ -32,16 +28,6 @@ return {
       },
       filetype = {
         gotmpl = { glyph = '󰟓', hl = 'MiniIconsGrey' },
-      },
-    },
-  },
-  {
-    'mfussenegger/nvim-dap',
-    optional = true,
-    dependencies = {
-      {
-        'leoluz/nvim-dap-go',
-        opts = {},
       },
     },
   },
