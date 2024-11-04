@@ -84,6 +84,9 @@ return {
       },
       windows = {
         width = 44,
+        ask = {
+          start_insert = true,
+        },
       },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
