@@ -258,12 +258,12 @@ vim.opt.showmode = false
 vim.cmd [[
   augroup CustomStatusline
     autocmd!
-    autocmd ColorScheme * hi StatusLineAccent guibg=#1a1b26 guifg=#7aa2f7
-    autocmd ColorScheme * hi StatusLineInsert guibg=#1a1b26 guifg=#9ece6a
-    autocmd ColorScheme * hi StatusLineNormal guibg=#1a1b26 guifg=#7aa2f7
-    autocmd ColorScheme * hi StatusLineVisual guibg=#1a1b26 guifg=#bb9af7
-    autocmd ColorScheme * hi StatusLinePath guibg=#1a1b26 guifg=#737aa2
-    autocmd ColorScheme * hi StatusLineModified guibg=#1a1b26 guifg=#e0af68
+    autocmd ColorScheme * hi StatusLineAccent guibg=#1a1b26 guifg=#ff3333
+    autocmd ColorScheme * hi StatusLineInsert guibg=#1a1b26 guifg=#ff6666
+    autocmd ColorScheme * hi StatusLineNormal guibg=#1a1b26 guifg=#ff3333
+    autocmd ColorScheme * hi StatusLineVisual guibg=#1a1b26 guifg=#ff4d88
+    autocmd ColorScheme * hi StatusLinePath guibg=#1a1b26 guifg=#cc3333
+    autocmd ColorScheme * hi StatusLineModified guibg=#1a1b26 guifg=#ff6600
   augroup END
 ]]
 
