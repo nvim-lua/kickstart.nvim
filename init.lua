@@ -115,7 +115,9 @@ vim.opt.showmode = false
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.opt.clipboard = 'unnamedplus'
+vim.schedule(function()
+  vim.opt.clipboard = 'unnamedplus'
+end)
 
 -- Enable break indent
 vim.opt.breakindent = true
@@ -198,8 +200,8 @@ vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Center cursor after down half 
 vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Center cursor after down half up' })
 
 -- buffers
-vim.keymap.set("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
-vim.keymap.set("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
+vim.keymap.set('n', '<S-h>', '<cmd>bprevious<cr>', { desc = 'Prev Buffer' })
+vim.keymap.set('n', '<S-l>', '<cmd>bnext<cr>', { desc = 'Next Buffer' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -273,41 +275,40 @@ require('lazy').setup({
 
   {
     'tpope/vim-fugitive',
-    config = function() 
-        vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
+    config = function()
+      vim.keymap.set('n', '<leader>gs', vim.cmd.Git)
 
-        local Sefcik_Fugitive = vim.api.nvim_create_augroup("Sefcik_Fugitive", {})
+      local Sefcik_Fugitive = vim.api.nvim_create_augroup('Sefcik_Fugitive', {})
 
-        local autocmd = vim.api.nvim_create_autocmd
-        autocmd("BufWinEnter", {
-            group = Sefcik_Fugitive,
-            pattern = "*",
-            callback = function()
-                if vim.bo.ft ~= "fugitive" then
-                    return
-                end
+      local autocmd = vim.api.nvim_create_autocmd
+      autocmd('BufWinEnter', {
+        group = Sefcik_Fugitive,
+        pattern = '*',
+        callback = function()
+          if vim.bo.ft ~= 'fugitive' then
+            return
+          end
 
-                local bufnr = vim.api.nvim_get_current_buf()
-                local opts = {buffer = bufnr, remap = false}
-                vim.keymap.set("n", "<leader>P", function()
-                    vim.cmd.Git('push')
-                end, opts)
+          local bufnr = vim.api.nvim_get_current_buf()
+          local opts = { buffer = bufnr, remap = false }
+          vim.keymap.set('n', '<leader>P', function()
+            vim.cmd.Git 'push'
+          end, opts)
 
-                -- rebase always
-                vim.keymap.set("n", "<leader>p", function()
-                    vim.cmd.Git({'pull',  '--rebase'})
-                end, opts)
+          -- rebase always
+          vim.keymap.set('n', '<leader>p', function()
+            vim.cmd.Git { 'pull', '--rebase' }
+          end, opts)
 
-                -- NOTE: It allows me to easily set the branch i am pushing and any tracking
-                -- needed if i did not set the branch up correctly
-                vim.keymap.set("n", "<leader>t", ":Git push -u origin ", opts);
-            end,
-        })
+          -- NOTE: It allows me to easily set the branch i am pushing and any tracking
+          -- needed if i did not set the branch up correctly
+          vim.keymap.set('n', '<leader>t', ':Git push -u origin ', opts)
+        end,
+      })
 
-
-        vim.keymap.set("n", "gu", "<cmd>diffget //2<CR>")
-        vim.keymap.set("n", "gh", "<cmd>diffget //3<CR>")
-    end
+      vim.keymap.set('n', 'gu', '<cmd>diffget //2<CR>')
+      vim.keymap.set('n', 'gh', '<cmd>diffget //3<CR>')
+    end,
   },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
@@ -329,19 +330,76 @@ require('lazy').setup({
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
-      require('which-key').setup()
+      local wk = require 'which-key'
+
+      wk.setup()
 
       -- Document existing key chains
-      require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>h'] = { name = '[H]arpoon', _ = 'which_key_ignore' },
-        ['<leader>l'] = { name = '[L]azy Git', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+      wk.add {
+        { '<leader>c', desc = '[C]ode' },
+        { '<leader>d', desc = '[D]ocument' },
+        { '<leader>h', desc = '[H]arpoon' },
+        { '<leader>l', desc = '[L]azy Git' },
+        { '<leader>r', desc = '[R]ename' },
+        { '<leader>s', desc = '[S]earch' },
+        { '<leader>w', desc = '[W]orkspace' },
       }
     end,
+  },
+
+  { -- Useful plugin to show you pending keybinds.
+    'folke/which-key.nvim',
+    event = 'VimEnter', -- Sets the loading event to 'VimEnter'
+    opts = {
+      icons = {
+        -- set icon mappings to true if you have a Nerd Font
+        mappings = vim.g.have_nerd_font,
+        -- If you are using a Nerd Font: set icons.keys to an empty table which will use the
+        -- default whick-key.nvim defined Nerd Font icons, otherwise define a string table
+        keys = vim.g.have_nerd_font and {} or {
+          Up = '<Up> ',
+          Down = '<Down> ',
+          Left = '<Left> ',
+          Right = '<Right> ',
+          C = '<C-…> ',
+          M = '<M-…> ',
+          D = '<D-…> ',
+          S = '<S-…> ',
+          CR = '<CR> ',
+          Esc = '<Esc> ',
+          ScrollWheelDown = '<ScrollWheelDown> ',
+          ScrollWheelUp = '<ScrollWheelUp> ',
+          NL = '<NL> ',
+          BS = '<BS> ',
+          Space = '<Space> ',
+          Tab = '<Tab> ',
+          F1 = '<F1>',
+          F2 = '<F2>',
+          F3 = '<F3>',
+          F4 = '<F4>',
+          F5 = '<F5>',
+          F6 = '<F6>',
+          F7 = '<F7>',
+          F8 = '<F8>',
+          F9 = '<F9>',
+          F10 = '<F10>',
+          F11 = '<F11>',
+          F12 = '<F12>',
+        },
+      },
+
+      -- Document existing key chains
+      spec = {
+        { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
+        { '<leader>d', group = '[D]ocument' },
+        { '<leader>r', group = '[R]ename' },
+        { '<leader>s', group = '[S]earch' },
+        { '<leader>w', group = '[W]orkspace' },
+        { '<leader>t', group = '[T]oggle' },
+        { '<leader>h', group = '[H]arpoon' },
+        { '<leader>l', group = '[L]azy Git' },
+      },
+    },
   },
 
   -- NOTE: Plugins can specify dependencies.
@@ -522,7 +580,7 @@ require('lazy').setup({
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
-      'williamboman/mason.nvim',
+      { 'williamboman/mason.nvim', config = true },
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
@@ -889,9 +947,16 @@ require('lazy').setup({
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     'catppuccin/nvim',
-    name = 'catpuccin',
+    name = 'catppuccin',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
+      require('catppuccin').setup {
+        integrations = {
+          mini = {
+            enabled = true,
+          },
+        },
+      }
       -- require('rose-pine').setup {
       --   disable_background = true,
       --   styles = {
@@ -933,20 +998,45 @@ require('lazy').setup({
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
-      local statusline = require 'mini.statusline'
+      -- local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
+      -- statusline.setup { use_icons = vim.g.have_nerd_font }
 
       -- You can configure sections in the statusline by overriding their
       -- default behavior. For example, here we set the section for
       -- cursor location to LINE:COLUMN
       ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return '%2l/%L:%-2v'
-      end
+      -- statusline.section_location = function()
+      --   return '%2l/%L:%-2v'
+      -- end
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
+    end,
+  },
+
+  {
+    'nvim-lualine/lualine.nvim',
+    init = function()
+      require('lualine').setup {
+        options = {
+          icons_enabled = true,
+          component_separators = '|',
+          section_separators = '',
+        },
+        sections = {
+          lualine_c = {
+            {
+              'filename',
+              path = 1, -- 0: Just the filename
+              -- 1: Relative path
+              -- 2: Absolute path
+              -- 3: Absolute path, with tilde as the home directory
+              -- 4: Filename and parent dir, with tilde as the home directory
+            },
+          },
+        },
+      }
     end,
   },
 
@@ -983,12 +1073,41 @@ require('lazy').setup({
 
   {
     'max397574/better-escape.nvim',
-    opts = {
-      mapping = { 'jk', 'kj' },
-      timeout = vim.o.timeoutlen,
-      clear_empty_lines = false,
-      keys = '<Esc>',
-    },
+    config = function()
+      require('better_escape').setup {
+        timeout = vim.o.timeoutlen,
+        mappings = {
+          i = {
+            j = {
+              k = '<Esc>',
+              j = '<Esc>',
+            },
+          },
+          c = {
+            j = {
+              k = '<Esc>',
+              j = '<Esc>',
+            },
+          },
+          t = {
+            j = {
+              k = '<Esc>',
+              j = '<Esc>',
+            },
+          },
+          v = {
+            j = {
+              k = '<Esc>',
+            },
+          },
+          s = {
+            j = {
+              k = '<Esc>',
+            },
+          },
+        },
+      }
+    end,
   },
 
   {
@@ -1021,8 +1140,12 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
+  -- require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.bufferline'
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -1049,6 +1172,12 @@ require('lazy').setup({
       task = '📌',
       lazy = '💤 ',
     },
+  },
+  checker = {
+    -- automatically check for plugin updates
+    enabled = true,
+    notify = true, -- get a notification when new updates are found
+    frequency = 3600, -- check for updates every hour
   },
 })
 
