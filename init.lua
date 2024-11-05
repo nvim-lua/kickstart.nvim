@@ -90,6 +90,9 @@ P.S. You can delete this when you're done too. It's your config now! :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- Lets you type "EditConfig" to access here
+vim.api.nvim_create_user_command('EditConfig', 'edit $MYVIMRC', {})
+
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = false
 
@@ -102,7 +105,7 @@ vim.g.have_nerd_font = false
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -167,6 +170,8 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
+-- This is my shortcut to run python code with "<Leader> + t + p"
+vim.api.nvim_set_keymap('n', '<leader>tp', ':!python %<CR>', { noremap = true, silent = true })
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -176,10 +181,10 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -192,6 +197,26 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
+
+-- Command to compile the current Java file
+vim.api.nvim_create_user_command('JavaCompile', function()
+  local filename = vim.fn.expand '%:t'
+  vim.cmd('!javac ' .. filename)
+end, {})
+
+-- Command to run the compiled Java file in an interactive terminal
+vim.api.nvim_create_user_command('JavaRun', function()
+  local classname = vim.fn.expand '%:t:r'
+  vim.cmd('split | terminal java ' .. classname)
+end, {})
+
+-- Combined command to compile and run the Java file in an interactive terminal
+vim.api.nvim_create_user_command('JCR', function()
+  local filename = vim.fn.expand '%:t'
+  local classname = vim.fn.expand '%:t:r'
+  vim.cmd('!javac ' .. filename)
+  vim.cmd('split | terminal java ' .. classname)
+end, {})
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
@@ -254,6 +279,93 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
     },
+  },
+
+  {
+    'nvim-neotest/nvim-nio',
+  },
+  {
+    'rcarriga/nvim-dap-ui',
+    dependencies = 'mfussenegger/nvim-dap',
+    config = function()
+      local dap = require 'dap'
+      local dapui = require 'dapui'
+      dapui.setup()
+      dap.listeners.after.event_initialized['dapui_config'] = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated['dapui_config'] = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited['dapui_config'] = function()
+        dapui.close()
+      end
+    end,
+  },
+
+  {
+    'mfussenegger/nvim-dap',
+    config = function()
+      local dap = require 'dap'
+
+      dap.adapters.python = {
+        type = 'server',
+        host = '127.0.0.1',
+        port = 5678, -- the port that debugpy will use
+      }
+
+      dap.configurations.python = {
+        {
+          type = 'python', -- the type of the debugger
+          request = 'launch',
+          name = 'Launch File',
+          program = '${file}', -- This will run the current file
+          pythonPath = function()
+            return 'C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe' -- Adjust this path to your Python executable if needed
+          end,
+        },
+      }
+    end,
+  },
+  {
+    'mfussenegger/nvim-dap-python',
+    ft = 'python',
+    dependencies = {
+      'mfussenegger/nvim-dap',
+      'rcarriga/nvim-dap-ui',
+    },
+    config = function()
+      require('dap-python').setup 'C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\python.exe'
+    end,
+  },
+  {
+    'mfussenegger/nvim-jdtls',
+    ft = 'java',
+    config = function()
+      -- Configure nvim-jdtls when a Java file is opened
+      local jdtls = require 'jdtls'
+      local root_markers = { '.git', 'mvnw', 'gradlew', 'pom.xml' }
+
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'java',
+        callback = function()
+          local root_dir = require('jdtls.setup').find_root(root_markers)
+          local workspace_dir = vim.fn.stdpath 'data' .. '/java/workspace/' .. vim.fn.fnamemodify(root_dir, ':p:h:t')
+
+          jdtls.start_or_attach {
+            cmd = { 'jdtls', '-data', workspace_dir },
+            root_dir = root_dir,
+            settings = {
+              java = {
+                completion = {
+                  enabled = true,
+                },
+              },
+            },
+          }
+        end,
+      })
+    end,
   },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
@@ -616,7 +728,7 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -897,7 +1009,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'python' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -929,7 +1041,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
