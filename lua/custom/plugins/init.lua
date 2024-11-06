@@ -18,4 +18,5 @@ return {
     cmd = { 'LiveServerStart', 'LiveServerStop' },
     config = true,
   },
+  { 'nvim-java/nvim-java' },
 }
