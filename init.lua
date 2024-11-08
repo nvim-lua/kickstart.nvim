@@ -285,6 +285,14 @@ require('lazy').setup({
     'christoomey/vim-tmux-navigator',
     lazy = false,
   },
+  {
+    'chomosuke/typst-preview.nvim',
+    lazy = false,
+    version = '1.*',
+    build = function()
+      require('typst-preview').update()
+    end,
+  },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
