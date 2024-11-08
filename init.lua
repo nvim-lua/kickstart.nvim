@@ -265,6 +265,7 @@ require('lazy').setup({
       'MunifTanjim/nui.nvim',
       -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
     },
+    event = 'UIEnter',
     config = function()
       vim.keymap.set('n', '<leader>e', '<Cmd>Neotree toggle<CR>')
     end,
@@ -287,7 +288,7 @@ require('lazy').setup({
 
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
-    event = 'VimEnter', -- Sets the loading event to 'VimEnter'
+    event = 'UIEnter', -- Sets the loading event to 'VimEnter'
     opts = {
       icons = {
         -- set icon mappings to true if you have a Nerd Font
@@ -348,7 +349,7 @@ require('lazy').setup({
 
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
-    event = 'VimEnter',
+    event = 'UIEnter',
     branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
