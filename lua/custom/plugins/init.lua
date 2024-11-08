@@ -14,4 +14,8 @@ return {
   "cappyzawa/trim.nvim",
   opts = {}
 },
+{
+  "github/copilot.vim",
+  opts = {}
+},
 }
