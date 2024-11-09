@@ -91,7 +91,7 @@ return {
     opts = {
       restriction_mode = 'hint',
     },
-    enabled = true,
+    enabled = false,
   },
 
   {
@@ -132,7 +132,6 @@ return {
           vim.b.miniindentscope_disable = true
         end,
       })
-
       -- vim.api.nvim_set_hl(0, 'MiniIndentscopeSymbol', { fg = macchiato.mauve })
     end,
   },
