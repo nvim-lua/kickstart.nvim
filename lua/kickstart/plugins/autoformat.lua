@@ -5,9 +5,18 @@
 
 return {
   'neovim/nvim-lspconfig',
+  'jose-elias-alvarez/null-ls.nvim',
   config = function()
+    -- Force .html files to be recognized as htmldjango for Jinja compatibility
+    vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+      pattern = "*.html",
+      callback = function()
+        vim.bo.filetype = "htmldjango"
+      end,
+    })
+
     -- Switch for controlling whether you want autoformatting.
-    --  Use :KickstartFormatToggle to toggle autoformatting on or off
+    -- Use :KickstartFormatToggle to toggle autoformatting on or off
     local format_is_enabled = true
     vim.api.nvim_create_user_command('KickstartFormatToggle', function()
       format_is_enabled = not format_is_enabled
@@ -15,8 +24,8 @@ return {
     end, {})
 
     -- Create an augroup that is used for managing our formatting autocmds.
-    --      We need one augroup per client to make sure that multiple clients
-    --      can attach to the same buffer without interfering with each other.
+    -- We need one augroup per client to make sure that multiple clients
+    -- can attach to the same buffer without interfering with each other.
     local _augroups = {}
     local get_augroup = function(client)
       if not _augroups[client.id] then
@@ -51,7 +60,7 @@ return {
         end
 
         -- Create an autocmd that will run *before* we save the buffer.
-        --  Run the formatting command for the LSP that has just attached.
+        -- Run the formatting command for the LSP that has just attached.
         vim.api.nvim_create_autocmd('BufWritePre', {
           group = get_augroup(client),
           buffer = bufnr,
@@ -70,5 +79,15 @@ return {
         })
       end,
     })
+
+    -- Set up null-ls for additional formatting needs
+    null_ls.setup({
+      sources = {
+        null_ls.builtins.formatting.prettier.with({
+          filetypes = { "html", "jinja", "htmldjango" },
+        }),
+      },
+    })
   end,
 }
+

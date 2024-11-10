@@ -4,6 +4,13 @@
 -- See the kickstart.nvim README for more information
 
 return {
+  {
+    'neovim/nvim-lspconfig',
+    config = function()
+      require('custom.plugins.lspconfig') -- This simply loads the lspconfig.lua file
+    end,
+  },
+
   -- nvim-autopairs configuration
   {
     "windwp/nvim-autopairs",
@@ -51,5 +58,12 @@ return {
       })
     end
   },
-  { 'junegunn/gv.vim' }
+  { 'junegunn/gv.vim' },
+  {
+    'kyazdani42/nvim-web-devicons'
+  },
+  {
+    'echasnovski/mini.icons'
+  }
+
 }
