@@ -107,6 +107,17 @@ return {
       end,
     })
 
+    -- Configure Neovim tab settings for Go files [Go indendation]
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = 'go',
+      callback = function()
+        vim.bo.expandtab = true -- Use spaces instead of tabs
+        vim.bo.tabstop = 4 -- Display each tab as 4 spaces
+        vim.bo.shiftwidth = 4 -- Indentation size of 4 spaces
+        vim.bo.softtabstop = 4 -- <Tab> key inserts 4 spaces
+      end,
+    })
+
     local capabilities = cmp_nvim_lsp.default_capabilities()
     -- Change the Diagnostic symbols in the sign column (gutter)
     -- (not in youtube nvim video)

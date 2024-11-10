@@ -24,7 +24,7 @@ If you experience any errors while trying to install kickstart, run `:checkhealt
 --]]
 
 -- The file rakshit/core/options.lua will be storing all the options that we want to save n our file
-require 'rakshit.core'
+require('rakshit.core')
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
@@ -43,8 +43,18 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
-require('rakshit.lazy')
+-- Configure Neovim tab settings for Go files
+-- vim.api.nvim_create_autocmd('FileType', {
+--   pattern = 'go',
+--   callback = function()
+--     vim.bo.expandtab = true -- Use spaces instead of tabs
+--     vim.bo.tabstop = 4 -- Display each tab as 4 spaces
+--     vim.bo.shiftwidth = 4 -- Indentation size of 4 spaces
+--     vim.bo.softtabstop = 4 -- <Tab> key inserts 4 spaces
+--   end,
+-- })
 
+require('rakshit.lazy')
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
