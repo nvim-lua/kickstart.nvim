@@ -767,6 +767,7 @@ require('lazy').setup({
         'jq',
         'jq-lsp',
         'json-lsp',
+        'jsonlint',
         'markdownlint',
         'mypy',
         'powershell-editor-services',
