@@ -330,6 +330,7 @@ require('lazy').setup({
     dependencies = {
       'nvim-lua/plenary.nvim',
       'jonarrien/telescope-cmdline.nvim',
+      'jvgrootveld/telescope-zoxide',
       { -- If encountering errors, see telescope-fzf-native README for installation instructions
         'nvim-telescope/telescope-fzf-native.nvim',
 
@@ -385,6 +386,15 @@ require('lazy').setup({
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
           },
+          zoxide = {
+            mappings = {
+              default = {
+                after_action = function(selection)
+                  print('Update to (' .. selection.z_score .. ') ' .. selection.path)
+                end,
+              },
+            },
+          },
         },
       }
 
@@ -392,6 +402,7 @@ require('lazy').setup({
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
       pcall(require('telescope').load_extension, 'cmdline')
+      pcall(require('telescope').load_extension, 'zoxide')
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
@@ -408,6 +419,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>Z', require('telescope').extensions.zoxide.list, { desc = 'Open [Z]oxide' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
