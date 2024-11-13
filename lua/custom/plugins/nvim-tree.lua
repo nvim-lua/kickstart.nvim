@@ -1,6 +1,6 @@
 return {
-  "nvim-tree/nvim-tree.lua",
+  'nvim-tree/nvim-tree.lua',
   keys = {
-    {"n", "<leader>e", ":NvimTreeToggle<CR>", { silent = true }}
-  }
-},
+    { 'n', '<leader>e', ':NvimTreeToggle<CR>', { silent = true } },
+  },
+}
