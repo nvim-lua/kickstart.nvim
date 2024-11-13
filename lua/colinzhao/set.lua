@@ -1,5 +1,4 @@
 -- Set <space> as the leader key
--- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
@@ -34,15 +33,16 @@ if os.getenv 'SSH_CLIENT' then
     copy = {
       ['+'] = require('vim.ui.clipboard.osc52').copy '+',
       ['*'] = require('vim.ui.clipboard.osc52').copy '*',
+      ['unnamedplus'] = require('vim.ui.clipboard.osc52').copy 'unnamedplus',
     },
     paste = {
       ['+'] = require('vim.ui.clipboard.osc52').paste '+',
       ['*'] = require('vim.ui.clipboard.osc52').paste '*',
+      ['unnamedplus'] = require('vim.ui.clipboard.osc52').copy 'unnamedplus',
     },
   }
-else
-  vim.opt.clipboard = 'unnamedplus'
 end
+vim.opt.clipboard = 'unnamedplus'
 
 -- Enable break indent
 vim.opt.tabstop = 4
