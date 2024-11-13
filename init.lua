@@ -640,6 +640,7 @@ require('lazy').setup({
         },
         -- pyright {
         bashls = {},
+        helm_ls = {},
         groovyls = {},
         terraformls = {},
         yamlls = {
@@ -717,6 +718,7 @@ require('lazy').setup({
         'python-lsp-server',
         'terraform-ls',
         'bash-language-server',
+        'yaml-language-server',
         'autopep8',
         'json-lsp',
         'groovy-language-server',
