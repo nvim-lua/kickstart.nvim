@@ -78,6 +78,8 @@ vim.keymap.set('n', '<leader><leader>', '<cmd>Neotree toggle<CR>')
 vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = 'Toggle [U]ndoTree' })
 vim.keymap.set('n', '<leader>;', 'A;<esc>', { desc = 'Append [;] to line' })
 vim.keymap.set('n', '<leader>,', 'A,<esc>', { desc = 'Append [,] to line' })
+vim.keymap.set('n', '<leader><Tab>', ':bnext<CR>', { desc = "Next buffer"} )
+vim.keymap.set('n', '<leader><S-Tab>', ':bprev<CR>', { desc = "Previous buffer"} )
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
