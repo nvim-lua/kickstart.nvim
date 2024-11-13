@@ -212,7 +212,6 @@ require('lazy').setup({
         'optwin',
         'compiler',
         'bugreport',
-        'ftplugin',
       },
     },
   },
@@ -643,13 +642,13 @@ require('lazy').setup({
         helm_ls = {},
         groovyls = {},
         terraformls = {},
-        yamlls = {
-          settings = {
-            yaml = {
-              keyOrdering = false,
-            },
-          },
-        },
+        -- yamlls = {
+        --   settings = {
+        --     yaml = {
+        --       keyOrdering = false,
+        --     },
+        --   },
+        -- },
         pylsp = {
           settings = {
             pylsp = {
