@@ -66,27 +66,59 @@ return {
         'delve',
       },
     }
-
+    --GDB
+    dap.adapters.cppdbg = {
+      id = 'cppdbg',
+      type = 'executable',
+      command = 'C:/Users/18196/.vscode/extensions/ms-vscode.cpptools-1.23.1-win32-x64/debugAdapters/bin/OpenDebugAD7.exe',
+      options = {
+        detached = false,
+      },
+    }
+    dap.configurations.cpp = {
+      {
+        name = 'Launch file',
+        type = 'cppdbg',
+        request = 'launch',
+        program = function()
+          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+        end,
+        cwd = '${workspaceFolder}',
+        stopAtEntry = true,
+      },
+      {
+        name = 'Attach to gdbserver :1234',
+        type = 'cppdbg',
+        request = 'launch',
+        MIMode = 'gdb',
+        miDebuggerServerAddress = 'localhost:1234',
+        miDebuggerPath = '/usr/bin/gdb',
+        cwd = '${workspaceFolder}',
+        program = function()
+          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+        end,
+      },
+    }
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
     dapui.setup {
       -- Set icons to characters that are more likely to work in every terminal.
       --    Feel free to remove or use ones that you like more! :)
       --    Don't feel like these are good choices.
-      icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
-      controls = {
-        icons = {
-          pause = '⏸',
-          play = '▶',
-          step_into = '⏎',
-          step_over = '⏭',
-          step_out = '⏮',
-          step_back = 'b',
-          run_last = '▶▶',
-          terminate = '⏹',
-          disconnect = '⏏',
-        },
-      },
+      -- icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
+      -- controls = {
+      --   icons = {
+      --     pause = '⏸',
+      --     play = '▶',
+      --     step_into = '⏎',
+      --     step_over = '⏭',
+      --     step_out = '⏮',
+      --     step_back = 'b',
+      --     run_last = '▶▶',
+      --     terminate = '⏹',
+      --     disconnect = '⏏',
+      --   },
+      -- },
     }
 
     -- Change breakpoint icons
