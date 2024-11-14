@@ -149,6 +149,7 @@ return { -- LSP Configuration & Plugins
       -- But for many setups, the LSP (`tsserver`) will work just fine
       -- tsserver = {},
       eslint = {},
+      biome = {},
       tailwindcss = {},
       ['prisma-language-server'] = {},
       lua_ls = {
