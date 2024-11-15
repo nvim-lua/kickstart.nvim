@@ -144,8 +144,9 @@ vim.opt.splitbelow = true
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
-vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.list = false
+--vim.opt.listchars = { tab = '» ', trail = '·', eol = '$', nbsp = '␣' }
+vim.opt.listchars = { tab = '▸·', trail = '▸', eol = '$', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
@@ -201,10 +202,10 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Toggles
--- Line numbers
-vim.keymap.set('n', '<leader>n', '<Esc>:set number!<Enter>:set relativenumber!<Enter>')
--- Gitsigns
-vim.keymap.set('n', '<Leader>g', '<Esc>:Gitsigns toggle_signs<Enter>', { desc = 'Toggle Gitsigns' })
+vim.keymap.set('n', '<leader>n', ':set number!<Enter>:set relativenumber!<Enter>')
+vim.keymap.set('n', '<Leader>g', ':Gitsigns toggle_signs<Enter>', { desc = 'Toggle Gitsigns' })
+vim.keymap.set('n', '<Leader>l', ':set list!<Enter>', { desc = 'Toggle list mode' })
+vim.keymap.set('n', '<Leader>p', ':set paste!<Enter>', { desc = 'Toggle paste mode' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -417,6 +418,7 @@ require('lazy').setup({
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
+      vim.keymap.set('n', '<leader>sc', builtin.colorscheme, { desc = '[S]earch [C]colorscheme' })
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
@@ -863,7 +865,7 @@ require('lazy').setup({
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
       vim.cmd.hi 'Comment gui=none'
-      vim.cmd.colorscheme 'tokyonight'
+      vim.cmd.colorscheme 'tokyonight-moon'
     end,
   },
 
@@ -880,8 +882,9 @@ require('lazy').setup({
     end,
   },
 
+  { 'rebelot/kanagawa.nvim', priority = 1000 },
   {
-    'rebelot/kanagawa.nvim',
+    'EdenEast/nightfox.nvim',
     priority = 1000,
   },
 
