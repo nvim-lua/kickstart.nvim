@@ -1,0 +1,83 @@
+
+  s({ trig = '@G', condition = in_mathzone }, t '\\Gamma', snippetType="autosnippet"),
+
+  s({ trig = '@d', condition = in_mathzone }, t '\\delta', snippetType="autosnippet"),
+
+  s({ trig = '@D', condition = in_mathzone }, t '\\Delta', snippetType="autosnippet"),
+
+  s({ trig = '@e', condition = in_mathzone }, t '\\epsilon', snippetType="autosnippet"),
+
+  s({ trig = '@ve', condition = in_mathzone }, t '\\varepsilon'),
+
+  s({ trig = '@z', condition = in_mathzone }, t '\\zeta'),
+
+  s({ trig = '@h', condition = in_mathzone }, t '\\eta'),
+
+  s({ trig = '@th', condition = in_mathzone }, t '\\theta'),
+
+  s({ trig = '@Th', condition = in_mathzone }, t '\\Theta'),
+
+  s({ trig = '@vth', condition = in_mathzone }, t '\\vartheta'),
+
+  s({ trig = '@i', condition = in_mathzone }, t '\\iota'),
+
+  s({ trig = '@k', condition = in_mathzone }, t '\\kappa'),
+
+  s({ trig = '@l', condition = in_mathzone }, t '\\lambda'),
+
+  s({ trig = '@L', condition = in_mathzone }, t '\\Lambda'),
+
+  s({ trig = '@m', condition = in_mathzone }, t '\\mu'),
+
+  s({ trig = '@n', condition = in_mathzone }, t '\\nu'),
+
+  s({ trig = '@x', condition = in_mathzone }, t '\\xi'),
+
+  s({ trig = '@X', condition = in_mathzone }, t '\\Xi'),
+
+  s({ trig = '@p', condition = in_mathzone }, t '\\pi'),
+
+  s({ trig = '@P', condition = in_mathzone }, t '\\Pi'),
+
+  s({ trig = '@r', condition = in_mathzone }, t '\\rho'),
+
+  s({ trig = '@s', condition = in_mathzone }, t '\\sigma'),
+
+  s({ trig = '@S', condition = in_mathzone }, t '\\Sigma'),
+
+  s({ trig = '@t', condition = in_mathzone }, t '\\tau'),
+
+  s({ trig = '@ph', condition = in_mathzone }, t '\\phi'),
+
+  s({ trig = '@Ph', condition = in_mathzone }, t '\\Phi'),
+
+  s({ trig = '@vph', condition = in_mathzone }, t '\\varphi'),
+
+  s({ trig = '@ch', condition = in_mathzone }, t '\\chi'),
+
+  s({ trig = '@ps', condition = in_mathzone }, t '\\psi'),
+
+  s({ trig = '@Ps', condition = in_mathzone }, t '\\Psi'),
+
+  s({ trig = '@o', condition = in_mathzone }, t '\\omega'),
+
+  s({ trig = '@O', condition = in_mathzone }, t '\\Omega'),
+
+
+
+s({ trig = '@a', condition = in_mathzone , snippetType="autosnippet"},
+        t('\\alpha'),
+    ),
+    s({ trig = '@b', condition = in_mathzone , snippetType="autosnippet"},
+        t('\\beta'),
+    ),
+    s({ trig = '@g', condition = in_mathzone , snippetType="autosnippet"},
+        t('\\gamma'),
+    ),
+    s({ trig = '@G', condition = in_mathzone, snippetType="autosnippet"},
+        t('\\Gamma'),
+    ),
+
+local function in_mathzone()
+    return vim.fn['vimtex#syntax#in_mathzone']() == 1
+end

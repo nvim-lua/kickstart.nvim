@@ -1,0 +1,2064 @@
+local ls = require 'luasnip'
+local s = ls.snippet
+local sn = ls.snippet_node
+local t = ls.text_node
+local i = ls.insert_node
+local f = ls.function_node
+local d = ls.dynamic_node
+local c = ls.choice_node
+local fmt = require('luasnip.extras.fmt').fmt
+local fmta = require('luasnip.extras.fmt').fmta
+local rep = require('luasnip.extras').rep
+local line_begin = require('luasnip.extras.expand_conditions').line_begin
+local tex = require 'luasnip.extras.tex'
+
+-- Helper functions
+local function in_mathzone()
+  return vim.fn['vimtex#syntax#in_mathzone']() == 1
+end
+
+local function in_comment()
+  return vim.fn['vimtex#syntax#in_comment']() == 1
+end
+
+local function in_env(name)
+  local is_inside = vim.fn['vimtex#env#is_inside'](name)
+  return (is_inside[1] ~= '0' and is_inside[2] ~= '0')
+end
+
+-- Auto-expanding snippets when typing
+local function auto_snippets(context, snip)
+  if not context then
+    return false
+  end
+  local line_to_cursor = vim.api.nvim_get_current_line():sub(1, vim.api.nvim_win_get_cursor(0)[2])
+  return line_to_cursor:match(snip.trigger .. '$')
+end
+
+local snippets = {
+  -- Document Structure Snippets
+  s(
+    { trig = 'template', dscr = 'Basic template', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \documentclass[a4paper]{article}
+
+      \usepackage[utf8]{inputenc}
+      \usepackage[T1]{fontenc}
+      \usepackage{textcomp}
+      \usepackage[dutch]{babel}
+      \usepackage{amsmath, amssymb}
+
+      % figure support
+      \usepackage{import}
+      \usepackage{xifthen}
+      \pdfminorversion=7
+      \usepackage{pdfpages}
+      \usepackage{transparent}
+      \newcommand{\incfig}[1]{%
+        \def\svgwidth{\columnwidth}
+        \import{./figures/}{#1.pdf_tex}
+      }
+
+      \pdfsuppresswarningpagegroup=1
+
+      \begin{document}
+        <>
+      \end{document}
+      ]],
+      { i(0) }
+    )
+  ),
+
+  -- Environment snippets
+  s(
+    { trig = 'beg', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{<>}
+        <>
+      \end{<>}
+      ]],
+      {
+        i(1),
+        i(0),
+        rep(1),
+      }
+    )
+  ),
+
+  s({ trig = '...', snippetType = 'autosnippet' }, t '\\ldots'),
+
+  s(
+    { trig = 'table', dscr = 'Table environment' },
+    fmta(
+      [[
+      \begin{table}[<>]
+        \centering
+        \caption{<>}
+        \label{tab:<>}
+        \begin{tabular}{<>}
+          <>
+        \end{tabular}
+      \end{table}
+      ]],
+      {
+        i(1, 'htpb'),
+        i(2, 'caption'),
+        i(3, 'label'),
+        i(4, 'c'),
+        i(0),
+      }
+    )
+  ),
+
+  s(
+    { trig = 'fig', dscr = 'Figure environment' },
+    fmta(
+      [[
+      \begin{figure}[<>]
+        \centering
+        \includegraphics[width=0.8\textwidth]{<>}
+        \caption{<>}
+        \label{fig:<>}
+      \end{figure}
+      ]],
+      {
+        i(1, 'htpb'),
+        i(2),
+        i(3),
+        i(4),
+      }
+    )
+  ),
+
+  s(
+    { trig = 'enum', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{enumerate}
+        \item <>
+      \end{enumerate}
+      ]],
+      { i(0) }
+    )
+  ),
+
+  s(
+    { trig = 'item', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{itemize}
+        \item <>
+      \end{itemize}
+      ]],
+      { i(0) }
+    )
+  ),
+
+  s(
+    { trig = 'desc', dscr = 'Description environment' },
+    fmta(
+      [[
+      \begin{description}
+        \item[<>] <>
+      \end{description}
+      ]],
+      {
+        i(1),
+        i(0),
+      }
+    )
+  ),
+
+  s(
+    { trig = 'pac', dscr = 'Package inclusion' },
+    fmta('\\usepackage[<>]{<>}<>', {
+      i(1, 'options'),
+      i(2, 'package'),
+      i(0),
+    })
+  ),
+}
+
+-- Mathematical Snippets
+local math_snippets = {
+  -- Logic operators
+  s({ trig = '=>', snippetType = 'autosnippet' }, t '\\implies'),
+
+  s({ trig = '=<', snippetType = 'autosnippet' }, t '\\impliedby'),
+
+  s({ trig = 'iff', snippetType = 'autosnippet', condition = in_mathzone }, t '\\iff'),
+
+  -- Math mode snippets
+  s(
+    { trig = 'mk', snippetType = 'autosnippet' },
+    fmt('${}${}', {
+      i(1),
+      i(2),
+    })
+  ),
+
+  s(
+    { trig = 'dm', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \[
+        <>
+      .\] <>
+      ]],
+      {
+        i(1),
+        i(0),
+      }
+    )
+  ),
+
+  s(
+    { trig = 'ali', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{align*}
+        <>
+      .\end{align*}
+      ]],
+      { i(1) }
+    )
+  ),
+
+  -- Fractions
+  s(
+    { trig = '//', snippetType = 'autosnippet', condition = in_mathzone },
+    fmta('\\frac{<>}{<>}<>', {
+      i(1),
+      i(2),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = '/', snippetType = 'autosnippet' },
+    fmta('\\frac{<>}{<>}<>', {
+      f(function(_, snip)
+        return snip.env.TM_SELECTED_TEXT[1] or {}
+      end),
+      i(1),
+      i(0),
+    })
+  ),
+
+  -- Auto subscripts
+  s(
+    { trig = '([A-Za-z])(%d)', regTrig = true, snippetType = 'autosnippet', condition = in_mathzone },
+    f(function(_, snip)
+      return string.format('%s_%s', snip.captures[1], snip.captures[2])
+    end)
+  ),
+
+  s(
+    { trig = '([A-Za-z])_(%d%d)', regTrig = true, snippetType = 'autosnippet', condition = in_mathzone },
+    f(function(_, snip)
+      return string.format('%s_{%s}', snip.captures[1], snip.captures[2])
+    end)
+  ),
+
+  -- Common math functions
+  s(
+    { trig = 'sum', condition = in_mathzone },
+    fmta('\\sum_{<>}^{<>} <>', {
+      i(1, 'n=1'),
+      i(2, '\\infty'),
+      i(3),
+    })
+  ),
+
+  s(
+    { trig = 'taylor', condition = in_mathzone },
+    fmta('\\sum_{<>}^{<>} <> (x-a)^<>', {
+      i(1, 'k=0'),
+      i(2, '\\infty'),
+      i(3, 'c_k'),
+      rep(1),
+    })
+  ),
+
+  s(
+    { trig = 'lim', condition = in_mathzone },
+    fmta('\\lim_{<> \\to <>}', {
+      i(1, 'n'),
+      i(2, '\\infty'),
+    })
+  ),
+
+  s(
+    { trig = 'limsup', condition = in_mathzone },
+    fmta('\\limsup_{<> \\to <>}', {
+      i(1, 'n'),
+      i(2, '\\infty'),
+    })
+  ),
+
+  s(
+    { trig = 'prod', condition = in_mathzone },
+    fmta('\\prod_{<>}^{<>} <>', {
+      i(1, 'n=1'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'part', condition = in_mathzone },
+    fmta('\\frac{\\partial <>}{\\partial <>}', {
+      i(1, 'V'),
+      i(2, 'x'),
+    })
+  ),
+
+  -- Square root and powers
+  s({ trig = 'sq', condition = in_mathzone }, fmta('\\sqrt{<>}', { i(1) })),
+
+  s({ trig = 'sr', condition = in_mathzone }, t '^2'),
+
+  s({ trig = 'cb', condition = in_mathzone }, t '^3'),
+
+  s({ trig = 'td', condition = in_mathzone }, fmt('^{{}}', { i(1) })),
+
+  s({ trig = 'rd', condition = in_mathzone }, fmt('^{({})}', { i(1) })),
+
+  -- Subscripts and special notations
+  s({ trig = '__', condition = in_mathzone }, fmt('_{{}}', { i(1) })),
+
+  s({ trig = 'ooo', condition = in_mathzone }, t '\\infty'),
+
+  s(
+    { trig = 'rij', condition = in_mathzone },
+    fmta('(<>_{<>})_{<>\\in<>}', {
+      i(1, 'x'),
+      i(2, 'n'),
+      rep(2),
+      i(3, '\\N'),
+    })
+  ),
+
+  -- Comparison operators
+  s({ trig = '<=', snippetType = 'autosnippet' }, t '\\le '),
+
+  s({ trig = '>=', snippetType = 'autosnippet' }, t '\\ge '),
+
+  -- Quantifiers
+  s({ trig = 'EE', condition = in_mathzone }, t '\\exists '),
+
+  s({ trig = 'AA', condition = in_mathzone }, t '\\forall '),
+}
+
+-- Matrix and Vector Snippets
+
+-- Matrix and Vector Snippets
+local matrix_vector_snippets = {
+  -- Parenthesis Matrix
+  s(
+    { trig = 'pmat', condition = in_mathzone },
+    fmta(
+      [[
+      \begin{pmatrix} 
+        <> 
+      \end{pmatrix} <>
+      ]],
+      {
+        i(1),
+        i(0),
+      }
+    )
+  ),
+
+  -- Bracket Matrix
+  s(
+    { trig = 'bmat', condition = in_mathzone },
+    fmta(
+      [[
+      \begin{bmatrix} 
+        <> 
+      \end{bmatrix} <>
+      ]],
+      {
+        i(1),
+        i(0),
+      }
+    )
+  ),
+
+  -- Column Vector
+  s(
+    { trig = 'cvec', condition = in_mathzone },
+    fmta(
+      [[
+      \begin{pmatrix} 
+        <>_<>\\ 
+        \vdots\\ 
+        <>_<> 
+      \end{pmatrix}
+      ]],
+      {
+        i(1, 'x'),
+        i(2, '1'),
+        rep(1),
+        i(3, 'n'),
+      }
+    )
+  ),
+
+  -- Parentheses
+  s(
+    { trig = '()', condition = in_mathzone },
+    fmta('\\left( <> \\right) <>', {
+      i(1),
+      i(0),
+    })
+  ),
+
+  -- Left-Right Parentheses
+  s(
+    { trig = 'lr', condition = in_mathzone },
+    fmta('\\left( <> \\right) <>', {
+      i(1),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'lr(', condition = in_mathzone },
+    fmta('\\left( <> \\right) <>', {
+      i(1),
+      i(0),
+    })
+  ),
+
+  -- Left-Right Vertical Bars
+  s(
+    { trig = 'lr|', condition = in_mathzone },
+    fmta('\\left| <> \\right| <>', {
+      i(1),
+      i(0),
+    })
+  ),
+
+  -- Left-Right Curly Braces
+  s(
+    { trig = 'lr{', condition = in_mathzone },
+    fmta('\\left\\{ <> \\right\\} <>', {
+      i(1),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'lrb', condition = in_mathzone },
+    fmta('\\left\\{ <> \\right\\} <>', {
+      i(1),
+      i(0),
+    })
+  ),
+
+  -- Left-Right Square Brackets
+  s(
+    { trig = 'lr[', condition = in_mathzone },
+    fmta('\\left[ <> \\right] <>', {
+      i(1),
+      i(0),
+    })
+  ),
+
+  -- Left-Right Angle Brackets
+  s(
+    { trig = 'lra', condition = in_mathzone },
+    fmta('\\left\\langle <> \\right\\rangle <>', {
+      i(1),
+      i(0),
+    })
+  ),
+
+  -- Norm
+  s(
+    { trig = 'norm', condition = in_mathzone },
+    fmta('\\|<>\\|<>', {
+      i(1),
+      i(0),
+    })
+  ),
+
+  -- Cases Environment
+  s(
+    { trig = 'case', condition = in_mathzone },
+    fmta(
+      [[
+      \begin{cases}
+        <>
+      \end{cases}
+      ]],
+      { i(1) }
+    )
+  ),
+
+  -- Big Function Definition
+  s(
+    { trig = 'bigfun', condition = in_mathzone },
+    fmta(
+      [[
+      \begin{align*}
+        <>: <> &\longrightarrow <> \\
+        <> &\longmapsto <>(<>) = <>
+      .\end{align*}
+      ]],
+      {
+        i(1),
+        i(2),
+        i(3),
+        i(4),
+        rep(1),
+        rep(4),
+        i(0),
+      }
+    )
+  ),
+
+  -- Set Notation
+  s(
+    { trig = 'set', condition = in_mathzone },
+    fmta('\\{<>\\} <>', {
+      i(1),
+      i(0),
+    })
+  ),
+
+  -- Mid Vertical Bar
+  s({ trig = '||', snippetType = 'autosnippet' }, t ' \\mid '),
+}
+
+--
+-- Special Mathematical Symbols and Operators
+local math_symbols_snippets = {
+  -- Basic Operators
+  s({ trig = '!=', snippetType = 'autosnippet' }, t '\\neq '),
+
+  s({ trig = '==', condition = in_mathzone }, t '&= \\\\'),
+
+  s({ trig = '~=', snippetType = 'autosnippet' }, t '\\approx '),
+
+  s({ trig = '~~', snippetType = 'autosnippet' }, t '\\sim '),
+
+  s({ trig = '->', condition = in_mathzone }, t '\\to '),
+
+  s({ trig = '<->', condition = in_mathzone }, t '\\leftrightarrow'),
+
+  s({ trig = '!>', condition = in_mathzone }, t '\\mapsto '),
+
+  s({ trig = '>>', snippetType = 'autosnippet' }, t '\\gg'),
+
+  s({ trig = '<<', snippetType = 'autosnippet' }, t '\\ll'),
+
+  -- Set Theory Operators
+  s({ trig = 'cc', condition = in_mathzone }, t '\\subset '),
+
+  s({ trig = 'notin', snippetType = 'autosnippet' }, t '\\not\\in '),
+
+  s({ trig = 'inn', condition = in_mathzone }, t '\\in '),
+
+  s({ trig = 'Nn', snippetType = 'autosnippet' }, t '\\cap '),
+
+  s({ trig = 'UU', snippetType = 'autosnippet' }, t '\\cup '),
+
+  s(
+    { trig = 'uuu', snippetType = 'autosnippet' },
+    fmta('\\bigcup_{<> \\in <>} <>', {
+      i(1, 'i'),
+      i(2, 'I'),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'nnn', snippetType = 'autosnippet' },
+    fmta('\\bigcap_{<> \\in <>} <>', {
+      i(1, 'i'),
+      i(2, 'I'),
+      i(0),
+    })
+  ),
+
+  s({ trig = 'OO', snippetType = 'autosnippet' }, t '\\O'),
+
+  -- Number Sets
+  s({ trig = 'RR', snippetType = 'autosnippet' }, t '\\R'),
+
+  s({ trig = 'QQ', snippetType = 'autosnippet' }, t '\\Q'),
+
+  s({ trig = 'ZZ', snippetType = 'autosnippet' }, t '\\Z'),
+
+  s({ trig = 'NN', snippetType = 'autosnippet' }, t '\\N'),
+
+  s({ trig = 'HH', snippetType = 'autosnippet' }, t '\\mathbb{H}'),
+
+  s({ trig = 'DD', snippetType = 'autosnippet' }, t '\\mathbb{D}'),
+
+  -- Special Operators
+  s({ trig = '**', snippetType = 'autosnippet' }, t '\\cdot '),
+
+  s({ trig = 'xx', condition = in_mathzone }, t '\\times '),
+
+  s({ trig = '<!', snippetType = 'autosnippet' }, t '\\triangleleft '),
+
+  s({ trig = '<>', snippetType = 'autosnippet' }, t '\\diamond '),
+
+  -- Calculus and Analysis
+  s({ trig = 'nabl', condition = in_mathzone }, t '\\nabla '),
+
+  -- Function Modifiers
+  s(
+    { trig = 'bar', condition = in_mathzone },
+    fmta('\\overline{<>}<>', {
+      i(1),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = '([a-zA-Z])bar', regTrig = true, condition = in_mathzone },
+    f(function(_, snip)
+      return string.format('\\overline{%s}', snip.captures[1])
+    end)
+  ),
+
+  s(
+    { trig = 'hat', condition = in_mathzone },
+    fmta('\\hat{<>}<>', {
+      i(1),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = '([a-zA-Z])hat', regTrig = true, condition = in_mathzone },
+    f(function(_, snip)
+      return string.format('\\hat{%s}', snip.captures[1])
+    end)
+  ),
+
+  -- Common Mathematical Functions
+  s(
+    { trig = 'conj', condition = in_mathzone },
+    fmta('\\overline{<>}<>', {
+      i(1),
+      i(0),
+    })
+  ),
+
+  -- Inverse and Complement
+  s({ trig = 'invs', condition = in_mathzone }, t '^{-1}'),
+
+  s({ trig = 'compl', condition = in_mathzone }, t '^{c}'),
+
+  -- Set Operations
+  s({ trig = '\\\\', condition = in_mathzone }, t '\\setminus'),
+
+  -- Text in Math Mode
+  s(
+    { trig = 'tt', condition = in_mathzone },
+    fmta('\\text{<>}<>', {
+      i(1),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'sts', condition = in_mathzone },
+    fmta('_\\text{<>} <>', {
+      i(1),
+      i(0),
+    })
+  ),
+
+  -- Calligraphic Letters
+  s(
+    { trig = 'mcal', condition = in_mathzone },
+    fmta('\\mathcal{<>}<>', {
+      i(1),
+      i(0),
+    })
+  ),
+
+  -- Special Letters
+  s({ trig = 'lll', snippetType = 'autosnippet' }, t '\\ell'),
+}
+
+--
+--
+-- Greek Letters and Other Mathematical Notation
+local greek_math_notation = {
+  -- Common Greek Letters (auto-expanding in math mode)
+  s({ trig = '@a', condition = in_mathzone }, t '\\alpha'),
+
+  s({ trig = '@b', condition = in_mathzone }, t '\\beta'),
+
+  s({ trig = '@g', condition = in_mathzone }, t '\\gamma'),
+
+  s({ trig = '@G', condition = in_mathzone }, t '\\Gamma'),
+
+  s({ trig = '@d', condition = in_mathzone }, t '\\delta'),
+
+  s({ trig = '@D', condition = in_mathzone }, t '\\Delta'),
+
+  s({ trig = '@e', condition = in_mathzone }, t '\\epsilon'),
+
+  s({ trig = '@ve', condition = in_mathzone }, t '\\varepsilon'),
+
+  s({ trig = '@z', condition = in_mathzone }, t '\\zeta'),
+
+  s({ trig = '@h', condition = in_mathzone }, t '\\eta'),
+
+  s({ trig = '@th', condition = in_mathzone }, t '\\theta'),
+
+  s({ trig = '@Th', condition = in_mathzone }, t '\\Theta'),
+
+  s({ trig = '@vth', condition = in_mathzone }, t '\\vartheta'),
+
+  s({ trig = '@i', condition = in_mathzone }, t '\\iota'),
+
+  s({ trig = '@k', condition = in_mathzone }, t '\\kappa'),
+
+  s({ trig = '@l', condition = in_mathzone }, t '\\lambda'),
+
+  s({ trig = '@L', condition = in_mathzone }, t '\\Lambda'),
+
+  s({ trig = '@m', condition = in_mathzone }, t '\\mu'),
+
+  s({ trig = '@n', condition = in_mathzone }, t '\\nu'),
+
+  s({ trig = '@x', condition = in_mathzone }, t '\\xi'),
+
+  s({ trig = '@X', condition = in_mathzone }, t '\\Xi'),
+
+  s({ trig = '@p', condition = in_mathzone }, t '\\pi'),
+
+  s({ trig = '@P', condition = in_mathzone }, t '\\Pi'),
+
+  s({ trig = '@r', condition = in_mathzone }, t '\\rho'),
+
+  s({ trig = '@s', condition = in_mathzone }, t '\\sigma'),
+
+  s({ trig = '@S', condition = in_mathzone }, t '\\Sigma'),
+
+  s({ trig = '@t', condition = in_mathzone }, t '\\tau'),
+
+  s({ trig = '@ph', condition = in_mathzone }, t '\\phi'),
+
+  s({ trig = '@Ph', condition = in_mathzone }, t '\\Phi'),
+
+  s({ trig = '@vph', condition = in_mathzone }, t '\\varphi'),
+
+  s({ trig = '@ch', condition = in_mathzone }, t '\\chi'),
+
+  s({ trig = '@ps', condition = in_mathzone }, t '\\psi'),
+
+  s({ trig = '@Ps', condition = in_mathzone }, t '\\Psi'),
+
+  s({ trig = '@o', condition = in_mathzone }, t '\\omega'),
+
+  s({ trig = '@O', condition = in_mathzone }, t '\\Omega'),
+
+  -- Common Variable Notations
+  s({ trig = 'xnn', condition = in_mathzone }, t 'x_{n}'),
+
+  s({ trig = 'ynn', condition = in_mathzone }, t 'y_{n}'),
+
+  s({ trig = 'xii', condition = in_mathzone }, t 'x_{i}'),
+
+  s({ trig = 'yii', condition = in_mathzone }, t 'y_{i}'),
+
+  s({ trig = 'xjj', condition = in_mathzone }, t 'x_{j}'),
+
+  s({ trig = 'yjj', condition = in_mathzone }, t 'y_{j}'),
+
+  s({ trig = 'xp1', condition = in_mathzone }, t 'x_{n+1}'),
+
+  s({ trig = 'xmm', condition = in_mathzone }, t 'x_{m}'),
+
+  -- Special Sets and Notations
+  s({ trig = 'R0+', snippetType = 'autosnippet' }, t '\\R_0^+'),
+
+  -- Common Mathematical Decorations
+  s({ trig = 'bar', condition = in_mathzone }, fmta('\\overline{<>}', { i(1) })),
+
+  s({ trig = 'hat', condition = in_mathzone }, fmta('\\hat{<>}', { i(1) })),
+
+  s({ trig = 'vec', condition = in_mathzone }, fmta('\\vec{<>}', { i(1) })),
+
+  s({ trig = 'tilde', condition = in_mathzone }, fmta('\\tilde{<>}', { i(1) })),
+
+  -- Dots
+  s({ trig = '...', snippetType = 'autosnippet' }, t '\\dots'),
+
+  s({ trig = 'cd', snippetType = 'autosnippet' }, t '\\cdots'),
+
+  s({ trig = 'vd', snippetType = 'autosnippet' }, t '\\vdots'),
+
+  s({ trig = 'dd', snippetType = 'autosnippet' }, t '\\ddots'),
+
+  -- Special Functions
+  s({ trig = 'letw', snippetType = 'autosnippet' }, t 'Let $\\Omega \\subset \\C$ be open.'),
+
+  -- Common Mathematical Accents
+  s({ trig = 'dot', condition = in_mathzone }, fmta('\\dot{<>}', { i(1) })),
+
+  s({ trig = 'ddot', condition = in_mathzone }, fmta('\\ddot{<>}', { i(1) })),
+
+  -- Special Delimiters
+  s({ trig = 'ceil', condition = in_mathzone }, fmta('\\left\\lceil <> \\right\\rceil', { i(1) })),
+
+  s({ trig = 'floor', condition = in_mathzone }, fmta('\\left\\lfloor <> \\right\\rfloor', { i(1) })),
+
+  -- Mathematical Spaces
+  s({ trig = 'qq', snippetType = 'autosnippet' }, t '\\quad '),
+
+  s({ trig = 'qw', snippetType = 'autosnippet' }, t '\\qquad '),
+
+  -- Special Constants
+  s({ trig = 'pi', condition = in_mathzone }, t '\\pi'),
+
+  s({ trig = 'ee', condition = in_mathzone }, t '\\mathrm{e}'),
+
+  s({ trig = 'ii', condition = in_mathzone }, t '\\mathrm{i}'),
+}
+
+---- Environment-specific Snippets
+local environment_snippets = {
+  -- Align Environment
+  s(
+    { trig = 'ali', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{align*}
+        <>
+      \end{align*}
+      ]],
+      { i(1) }
+    )
+  ),
+
+  -- Equation Environment
+  s(
+    { trig = 'eq', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{equation*}
+        <>
+      \end{equation*}
+      ]],
+      { i(1) }
+    )
+  ),
+
+  -- Cases Environment
+  s(
+    { trig = 'case', condition = in_mathzone },
+    fmta(
+      [[
+      \begin{cases}
+        <>
+      \end{cases}
+      ]],
+      { i(1) }
+    )
+  ),
+
+  -- Matrix Environments
+  s(
+    { trig = 'mat', condition = in_mathzone },
+    c(1, {
+      sn(nil, {
+        t '\\begin{matrix} ',
+        i(1),
+        t ' \\end{matrix}',
+      }),
+      sn(nil, {
+        t '\\begin{pmatrix} ',
+        i(1),
+        t ' \\end{pmatrix}',
+      }),
+      sn(nil, {
+        t '\\begin{bmatrix} ',
+        i(1),
+        t ' \\end{bmatrix}',
+      }),
+      sn(nil, {
+        t '\\begin{vmatrix} ',
+        i(1),
+        t ' \\end{vmatrix}',
+      }),
+      sn(nil, {
+        t '\\begin{Vmatrix} ',
+        i(1),
+        t ' \\end{Vmatrix}',
+      }),
+    })
+  ),
+
+  -- Theorem Environments
+  s(
+    { trig = 'thm', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{theorem}[<>]
+        <>
+      \end{theorem}
+      ]],
+      {
+        i(1),
+        i(0),
+      }
+    )
+  ),
+
+  s(
+    { trig = 'lem', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{lemma}[<>]
+        <>
+      \end{lemma}
+      ]],
+      {
+        i(1),
+        i(0),
+      }
+    )
+  ),
+
+  s(
+    { trig = 'prop', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{proposition}[<>]
+        <>
+      \end{proposition}
+      ]],
+      {
+        i(1),
+        i(0),
+      }
+    )
+  ),
+
+  s(
+    { trig = 'cor', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{corollary}[<>]
+        <>
+      \end{corollary}
+      ]],
+      {
+        i(1),
+        i(0),
+      }
+    )
+  ),
+
+  s(
+    { trig = 'def', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{definition}[<>]
+        <>
+      \end{definition}
+      ]],
+      {
+        i(1),
+        i(0),
+      }
+    )
+  ),
+
+  -- Proof Environment
+  s(
+    { trig = 'prf', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{proof}
+        <>
+      \end{proof}
+      ]],
+      { i(0) }
+    )
+  ),
+
+  -- Example Environment
+  s(
+    { trig = 'exe', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{example}[<>]
+        <>
+      \end{example}
+      ]],
+      {
+        i(1),
+        i(0),
+      }
+    )
+  ),
+
+  -- Remark Environment
+  s(
+    { trig = 'rem', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{remark}
+        <>
+      \end{remark}
+      ]],
+      { i(0) }
+    )
+  ),
+
+  -- List Environments
+  s(
+    { trig = 'enum', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{enumerate}
+        \item <>
+      \end{enumerate}
+      ]],
+      { i(0) }
+    )
+  ),
+
+  s(
+    { trig = 'item', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{itemize}
+        \item <>
+      \end{itemize}
+      ]],
+      { i(0) }
+    )
+  ),
+
+  s(
+    { trig = 'desc', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{description}
+        \item[<>] <>
+      \end{description}
+      ]],
+      {
+        i(1),
+        i(0),
+      }
+    )
+  ),
+
+  -- Figure Environment
+  s(
+    { trig = 'fig', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{figure}[<>]
+        \centering
+        \includegraphics[width=<>\textwidth]{<>}
+        \caption{<>}
+        \label{fig:<>}
+      \end{figure}
+      ]],
+      {
+        i(1, 'htbp'),
+        i(2, '0.8'),
+        i(3, 'filename'),
+        i(4, 'caption'),
+        i(5, 'label'),
+      }
+    )
+  ),
+
+  -- Table Environment
+  s(
+    { trig = 'tab', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{table}[<>]
+        \centering
+        \caption{<>}
+        \label{tab:<>}
+        \begin{tabular}{<>}
+          \toprule
+          <>
+          \midrule
+          <>
+          \bottomrule
+        \end{tabular}
+      \end{table}
+      ]],
+      {
+        i(1, 'htbp'),
+        i(2, 'caption'),
+        i(3, 'label'),
+        i(4, 'cc'),
+        i(5, 'Header 1 & Header 2 \\\\'),
+        i(0, 'Content'),
+      }
+    )
+  ),
+
+  -- TikZ Environment
+  s(
+    { trig = 'tikz', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{tikzpicture}[<>]
+        <>
+      \end{tikzpicture}
+      ]],
+      {
+        i(1),
+        i(0),
+      }
+    )
+  ),
+
+  -- Plot Environment
+  s(
+    { trig = 'plot', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      \begin{figure}[<>]
+        \centering
+        \begin{tikzpicture}
+          \begin{axis}[
+            xmin= <>, xmax= <>,
+            ymin= <>, ymax = <>,
+            axis lines = middle,
+          ]
+            \addplot[domain=<>:<>, samples=<>]{<>};
+          \end{axis}
+        \end{tikzpicture}
+        \caption{<>}
+        \label{<>}
+      \end{figure}
+      ]],
+      {
+        i(1, 'htbp'),
+        i(2, '-10'),
+        i(3, '10'),
+        i(4, '-10'),
+        i(5, '10'),
+        rep(2),
+        rep(3),
+        i(6, '100'),
+        i(7, 'x^2'),
+        i(8, 'caption'),
+        i(9, 'label'),
+      }
+    )
+  ),
+}
+
+-- Common Mathematical Functions
+local math_functions_snippets = {
+  -- Trigonometric Functions
+  s({ trig = 'sin', condition = in_mathzone }, t '\\sin'),
+
+  s({ trig = 'cos', condition = in_mathzone }, t '\\cos'),
+
+  s({ trig = 'tan', condition = in_mathzone }, t '\\tan'),
+
+  s({ trig = 'csc', condition = in_mathzone }, t '\\csc'),
+
+  s({ trig = 'sec', condition = in_mathzone }, t '\\sec'),
+
+  s({ trig = 'cot', condition = in_mathzone }, t '\\cot'),
+
+  -- Inverse Trigonometric Functions
+  s({ trig = 'asin', condition = in_mathzone }, t '\\arcsin'),
+
+  s({ trig = 'acos', condition = in_mathzone }, t '\\arccos'),
+
+  s({ trig = 'atan', condition = in_mathzone }, t '\\arctan'),
+
+  s({ trig = 'acsc', condition = in_mathzone }, t '\\arccsc'),
+
+  s({ trig = 'asec', condition = in_mathzone }, t '\\arcsec'),
+
+  s({ trig = 'acot', condition = in_mathzone }, t '\\arccot'),
+
+  -- Hyperbolic Functions
+  s({ trig = 'sinh', condition = in_mathzone }, t '\\sinh'),
+
+  s({ trig = 'cosh', condition = in_mathzone }, t '\\cosh'),
+
+  s({ trig = 'tanh', condition = in_mathzone }, t '\\tanh'),
+
+  s({ trig = 'csch', condition = in_mathzone }, t '\\csch'),
+
+  s({ trig = 'sech', condition = in_mathzone }, t '\\sech'),
+
+  s({ trig = 'coth', condition = in_mathzone }, t '\\coth'),
+
+  -- Logarithmic Functions
+  s({ trig = 'log', condition = in_mathzone }, t '\\log'),
+
+  s({ trig = 'ln', condition = in_mathzone }, t '\\ln'),
+
+  s({ trig = 'lg', condition = in_mathzone }, t '\\lg'),
+
+  -- Exponential Function
+  s({ trig = 'exp', condition = in_mathzone }, t '\\exp'),
+
+  -- Limit Operations
+  s(
+    { trig = 'lim', condition = in_mathzone },
+    fmta('\\lim_{<> \\to <>} <>', {
+      i(1, 'n'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'limsup', condition = in_mathzone },
+    fmta('\\limsup_{<> \\to <>} <>', {
+      i(1, 'n'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'liminf', condition = in_mathzone },
+    fmta('\\liminf_{<> \\to <>} <>', {
+      i(1, 'n'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  -- Summation and Product
+  s(
+    { trig = 'sum', condition = in_mathzone },
+    fmta('\\sum_{<>}^{<>} <>', {
+      i(1, 'n=1'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'prod', condition = in_mathzone },
+    fmta('\\prod_{<>}^{<>} <>', {
+      i(1, 'n=1'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  -- Integral Operations
+  s(
+    { trig = 'int', condition = in_mathzone },
+    fmta('\\int_{<>}^{<>} <> \\,d<>', {
+      i(1, 'a'),
+      i(2, 'b'),
+      i(3),
+      i(4, 'x'),
+    })
+  ),
+
+  s(
+    { trig = 'dint', condition = in_mathzone },
+    fmta('\\int\\int_{<>} <> \\,d<>\\,d<>', {
+      i(1, 'D'),
+      i(2),
+      i(3, 'x'),
+      i(4, 'y'),
+    })
+  ),
+
+  s(
+    { trig = 'tint', condition = in_mathzone },
+    fmta('\\iiint_{<>} <> \\,d<>\\,d<>\\,d<>', {
+      i(1, 'E'),
+      i(2),
+      i(3, 'x'),
+      i(4, 'y'),
+      i(5, 'z'),
+    })
+  ),
+
+  -- Differential Operators
+  s(
+    { trig = 'partial', condition = in_mathzone },
+    fmta('\\frac{\\partial <>}{\\partial <>}', {
+      i(1, 'f'),
+      i(2, 'x'),
+    })
+  ),
+
+  s(
+    { trig = 'dv', condition = in_mathzone },
+    fmta('\\frac{d <>}{d <>}', {
+      i(1, 'y'),
+      i(2, 'x'),
+    })
+  ),
+
+  -- Special Functions
+  s({ trig = 'sqrt', condition = in_mathzone }, fmta('\\sqrt{<>}', { i(1) })),
+
+  s({ trig = 'max', condition = in_mathzone }, fmta('\\max\\{<>\\}', { i(1) })),
+
+  s({ trig = 'min', condition = in_mathzone }, fmta('\\min\\{<>\\}', { i(1) })),
+
+  s(
+    { trig = 'sup', condition = in_mathzone },
+    fmta('\\sup_{<>} <>', {
+      i(1, 'n \\in \\N'),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'inf', condition = in_mathzone },
+    fmta('\\inf_{<>} <>', {
+      i(1, 'n \\in \\N'),
+      i(0),
+    })
+  ),
+
+  -- Floor and Ceiling Functions
+  s({ trig = 'floor', condition = in_mathzone }, fmta('\\left\\lfloor <> \\right\\rfloor', { i(1) })),
+
+  s({ trig = 'ceil', condition = in_mathzone }, fmta('\\left\\lceil <> \\right\\rceil', { i(1) })),
+}
+
+local math_functions_snippets = {
+  -- Trigonometric Functions
+  s({ trig = 'sin', condition = in_mathzone }, t '\\sin'),
+
+  s({ trig = 'cos', condition = in_mathzone }, t '\\cos'),
+
+  s({ trig = 'tan', condition = in_mathzone }, t '\\tan'),
+
+  s({ trig = 'csc', condition = in_mathzone }, t '\\csc'),
+
+  s({ trig = 'sec', condition = in_mathzone }, t '\\sec'),
+
+  s({ trig = 'cot', condition = in_mathzone }, t '\\cot'),
+
+  -- Inverse Trigonometric Functions
+  s({ trig = 'asin', condition = in_mathzone }, t '\\arcsin'),
+
+  s({ trig = 'acos', condition = in_mathzone }, t '\\arccos'),
+
+  s({ trig = 'atan', condition = in_mathzone }, t '\\arctan'),
+
+  s({ trig = 'acsc', condition = in_mathzone }, t '\\arccsc'),
+
+  s({ trig = 'asec', condition = in_mathzone }, t '\\arcsec'),
+
+  s({ trig = 'acot', condition = in_mathzone }, t '\\arccot'),
+
+  -- Hyperbolic Functions
+  s({ trig = 'sinh', condition = in_mathzone }, t '\\sinh'),
+
+  s({ trig = 'cosh', condition = in_mathzone }, t '\\cosh'),
+
+  s({ trig = 'tanh', condition = in_mathzone }, t '\\tanh'),
+
+  s({ trig = 'csch', condition = in_mathzone }, t '\\csch'),
+
+  s({ trig = 'sech', condition = in_mathzone }, t '\\sech'),
+
+  s({ trig = 'coth', condition = in_mathzone }, t '\\coth'),
+
+  -- Logarithmic Functions
+  s({ trig = 'log', condition = in_mathzone }, t '\\log'),
+
+  s({ trig = 'ln', condition = in_mathzone }, t '\\ln'),
+
+  s({ trig = 'lg', condition = in_mathzone }, t '\\lg'),
+
+  -- Exponential Function
+  s({ trig = 'exp', condition = in_mathzone }, t '\\exp'),
+
+  -- Limit Operations
+  s(
+    { trig = 'lim', condition = in_mathzone },
+    fmta('\\lim_{<> \\to <>} <>', {
+      i(1, 'n'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'limsup', condition = in_mathzone },
+    fmta('\\limsup_{<> \\to <>} <>', {
+      i(1, 'n'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'liminf', condition = in_mathzone },
+    fmta('\\liminf_{<> \\to <>} <>', {
+      i(1, 'n'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  -- Summation and Product
+  s(
+    { trig = 'sum', condition = in_mathzone },
+    fmta('\\sum_{<>}^{<>} <>', {
+      i(1, 'n=1'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'prod', condition = in_mathzone },
+    fmta('\\prod_{<>}^{<>} <>', {
+      i(1, 'n=1'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  -- Integral Operations
+  s(
+    { trig = 'int', condition = in_mathzone },
+    fmta('\\int_{<>}^{<>} <> \\,d<>', {
+      i(1, 'a'),
+      i(2, 'b'),
+      i(3),
+      i(4, 'x'),
+    })
+  ),
+
+  s(
+    { trig = 'dint', condition = in_mathzone },
+    fmta('\\int\\int_{<>} <> \\,d<>\\,d<>', {
+      i(1, 'D'),
+      i(2),
+      i(3, 'x'),
+      i(4, 'y'),
+    })
+  ),
+
+  s(
+    { trig = 'tint', condition = in_mathzone },
+    fmta('\\iiint_{<>} <> \\,d<>\\,d<>\\,d<>', {
+      i(1, 'E'),
+      i(2),
+      i(3, 'x'),
+      i(4, 'y'),
+      i(5, 'z'),
+    })
+  ),
+
+  -- Differential Operators
+  s(
+    { trig = 'partial', condition = in_mathzone },
+    fmta('\\frac{\\partial <>}{\\partial <>}', {
+      i(1, 'f'),
+      i(2, 'x'),
+    })
+  ),
+
+  s(
+    { trig = 'dv', condition = in_mathzone },
+    fmta('\\frac{d <>}{d <>}', {
+      i(1, 'y'),
+      i(2, 'x'),
+    })
+  ),
+
+  -- Special Functions
+  s({ trig = 'sqrt', condition = in_mathzone }, fmta('\\sqrt{<>}', { i(1) })),
+
+  s({ trig = 'max', condition = in_mathzone }, fmta('\\max\\{<>\\}', { i(1) })),
+
+  s({ trig = 'min', condition = in_mathzone }, fmta('\\min\\{<>\\}', { i(1) })),
+
+  s(
+    { trig = 'sup', condition = in_mathzone },
+    fmta('\\sup_{<>} <>', {
+      i(1, 'n \\in \\N'),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'inf', condition = in_mathzone },
+    fmta('\\inf_{<>} <>', {
+      i(1, 'n \\in \\N'),
+      i(0),
+    })
+  ),
+
+  -- Floor and Ceiling Functions
+  s({ trig = 'floor', condition = in_mathzone }, fmta('\\left\\lfloor <> \\right\\rfloor', { i(1) })),
+
+  s({ trig = 'ceil', condition = in_mathzone }, fmta('\\left\\lceil <> \\right\\rceil', { i(1) })),
+}
+
+-- Add these snippets to your main snippets table
+for k, v in pairs(math_functions_snippets) do
+  table.insert(snippets, v)
+end -- Common Mathematical Functions
+local math_functions_snippets = {
+  -- Trigonometric Functions
+  s({ trig = 'sin', condition = in_mathzone }, t '\\sin'),
+
+  s({ trig = 'cos', condition = in_mathzone }, t '\\cos'),
+
+  s({ trig = 'tan', condition = in_mathzone }, t '\\tan'),
+
+  s({ trig = 'csc', condition = in_mathzone }, t '\\csc'),
+
+  s({ trig = 'sec', condition = in_mathzone }, t '\\sec'),
+
+  s({ trig = 'cot', condition = in_mathzone }, t '\\cot'),
+
+  -- Inverse Trigonometric Functions
+  s({ trig = 'asin', condition = in_mathzone }, t '\\arcsin'),
+
+  s({ trig = 'acos', condition = in_mathzone }, t '\\arccos'),
+
+  s({ trig = 'atan', condition = in_mathzone }, t '\\arctan'),
+
+  s({ trig = 'acsc', condition = in_mathzone }, t '\\arccsc'),
+
+  s({ trig = 'asec', condition = in_mathzone }, t '\\arcsec'),
+
+  s({ trig = 'acot', condition = in_mathzone }, t '\\arccot'),
+
+  -- Hyperbolic Functions
+  s({ trig = 'sinh', condition = in_mathzone }, t '\\sinh'),
+
+  s({ trig = 'cosh', condition = in_mathzone }, t '\\cosh'),
+
+  s({ trig = 'tanh', condition = in_mathzone }, t '\\tanh'),
+
+  s({ trig = 'csch', condition = in_mathzone }, t '\\csch'),
+
+  s({ trig = 'sech', condition = in_mathzone }, t '\\sech'),
+
+  s({ trig = 'coth', condition = in_mathzone }, t '\\coth'),
+
+  -- Logarithmic Functions
+  s({ trig = 'log', condition = in_mathzone }, t '\\log'),
+
+  s({ trig = 'ln', condition = in_mathzone }, t '\\ln'),
+
+  s({ trig = 'lg', condition = in_mathzone }, t '\\lg'),
+
+  -- Exponential Function
+  s({ trig = 'exp', condition = in_mathzone }, t '\\exp'),
+
+  -- Limit Operations
+  s(
+    { trig = 'lim', condition = in_mathzone },
+    fmta('\\lim_{<> \\to <>} <>', {
+      i(1, 'n'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'limsup', condition = in_mathzone },
+    fmta('\\limsup_{<> \\to <>} <>', {
+      i(1, 'n'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'liminf', condition = in_mathzone },
+    fmta('\\liminf_{<> \\to <>} <>', {
+      i(1, 'n'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  -- Summation and Product
+  s(
+    { trig = 'sum', condition = in_mathzone },
+    fmta('\\sum_{<>}^{<>} <>', {
+      i(1, 'n=1'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'prod', condition = in_mathzone },
+    fmta('\\prod_{<>}^{<>} <>', {
+      i(1, 'n=1'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  -- Integral Operations
+  s(
+    { trig = 'int', condition = in_mathzone },
+    fmta('\\int_{<>}^{<>} <> \\,d<>', {
+      i(1, 'a'),
+      i(2, 'b'),
+      i(3),
+      i(4, 'x'),
+    })
+  ),
+
+  s(
+    { trig = 'dint', condition = in_mathzone },
+    fmta('\\int\\int_{<>} <> \\,d<>\\,d<>', {
+      i(1, 'D'),
+      i(2),
+      i(3, 'x'),
+      i(4, 'y'),
+    })
+  ),
+
+  s(
+    { trig = 'tint', condition = in_mathzone },
+    fmta('\\iiint_{<>} <> \\,d<>\\,d<>\\,d<>', {
+      i(1, 'E'),
+      i(2),
+      i(3, 'x'),
+      i(4, 'y'),
+      i(5, 'z'),
+    })
+  ),
+
+  -- Differential Operators
+  s(
+    { trig = 'partial', condition = in_mathzone },
+    fmta('\\frac{\\partial <>}{\\partial <>}', {
+      i(1, 'f'),
+      i(2, 'x'),
+    })
+  ),
+
+  s(
+    { trig = 'dv', condition = in_mathzone },
+    fmta('\\frac{d <>}{d <>}', {
+      i(1, 'y'),
+      i(2, 'x'),
+    })
+  ),
+
+  -- Special Functions
+  s({ trig = 'sqrt', condition = in_mathzone }, fmta('\\sqrt{<>}', { i(1) })),
+
+  s({ trig = 'max', condition = in_mathzone }, fmta('\\max\\{<>\\}', { i(1) })),
+
+  s({ trig = 'min', condition = in_mathzone }, fmta('\\min\\{<>\\}', { i(1) })),
+
+  s(
+    { trig = 'sup', condition = in_mathzone },
+    fmta('\\sup_{<>} <>', {
+      i(1, 'n \\in \\N'),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'inf', condition = in_mathzone },
+    fmta('\\inf_{<>} <>', {
+      i(1, 'n \\in \\N'),
+      i(0),
+    })
+  ),
+
+  -- Floor and Ceiling Functions
+  s({ trig = 'floor', condition = in_mathzone }, fmta('\\left\\lfloor <> \\right\\rfloor', { i(1) })),
+
+  s({ trig = 'ceil', condition = in_mathzone }, fmta('\\left\\lceil <> \\right\\rceil', { i(1) })),
+}
+
+-- Add these snippets to your main snippets table
+for k, v in pairs(math_functions_snippets) do
+  table.insert(snippets, v)
+end -- Common Mathematical Functions
+local math_functions_snippets = {
+  -- Trigonometric Functions
+  s({ trig = 'sin', condition = in_mathzone }, t '\\sin'),
+
+  s({ trig = 'cos', condition = in_mathzone }, t '\\cos'),
+
+  s({ trig = 'tan', condition = in_mathzone }, t '\\tan'),
+
+  s({ trig = 'csc', condition = in_mathzone }, t '\\csc'),
+
+  s({ trig = 'sec', condition = in_mathzone }, t '\\sec'),
+
+  s({ trig = 'cot', condition = in_mathzone }, t '\\cot'),
+
+  -- Inverse Trigonometric Functions
+  s({ trig = 'asin', condition = in_mathzone }, t '\\arcsin'),
+
+  s({ trig = 'acos', condition = in_mathzone }, t '\\arccos'),
+
+  s({ trig = 'atan', condition = in_mathzone }, t '\\arctan'),
+
+  s({ trig = 'acsc', condition = in_mathzone }, t '\\arccsc'),
+
+  s({ trig = 'asec', condition = in_mathzone }, t '\\arcsec'),
+
+  s({ trig = 'acot', condition = in_mathzone }, t '\\arccot'),
+
+  -- Hyperbolic Functions
+  s({ trig = 'sinh', condition = in_mathzone }, t '\\sinh'),
+
+  s({ trig = 'cosh', condition = in_mathzone }, t '\\cosh'),
+
+  s({ trig = 'tanh', condition = in_mathzone }, t '\\tanh'),
+
+  s({ trig = 'csch', condition = in_mathzone }, t '\\csch'),
+
+  s({ trig = 'sech', condition = in_mathzone }, t '\\sech'),
+
+  s({ trig = 'coth', condition = in_mathzone }, t '\\coth'),
+
+  -- Logarithmic Functions
+  s({ trig = 'log', condition = in_mathzone }, t '\\log'),
+
+  s({ trig = 'ln', condition = in_mathzone }, t '\\ln'),
+
+  s({ trig = 'lg', condition = in_mathzone }, t '\\lg'),
+
+  -- Exponential Function
+  s({ trig = 'exp', condition = in_mathzone }, t '\\exp'),
+
+  -- Limit Operations
+  s(
+    { trig = 'lim', condition = in_mathzone },
+    fmta('\\lim_{<> \\to <>} <>', {
+      i(1, 'n'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'limsup', condition = in_mathzone },
+    fmta('\\limsup_{<> \\to <>} <>', {
+      i(1, 'n'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'liminf', condition = in_mathzone },
+    fmta('\\liminf_{<> \\to <>} <>', {
+      i(1, 'n'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  -- Summation and Product
+  s(
+    { trig = 'sum', condition = in_mathzone },
+    fmta('\\sum_{<>}^{<>} <>', {
+      i(1, 'n=1'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'prod', condition = in_mathzone },
+    fmta('\\prod_{<>}^{<>} <>', {
+      i(1, 'n=1'),
+      i(2, '\\infty'),
+      i(0),
+    })
+  ),
+
+  -- Integral Operations
+  s(
+    { trig = 'int', condition = in_mathzone },
+    fmta('\\int_{<>}^{<>} <> \\,d<>', {
+      i(1, 'a'),
+      i(2, 'b'),
+      i(3),
+      i(4, 'x'),
+    })
+  ),
+
+  s(
+    { trig = 'dint', condition = in_mathzone },
+    fmta('\\int\\int_{<>} <> \\,d<>\\,d<>', {
+      i(1, 'D'),
+      i(2),
+      i(3, 'x'),
+      i(4, 'y'),
+    })
+  ),
+
+  s(
+    { trig = 'tint', condition = in_mathzone },
+    fmta('\\iiint_{<>} <> \\,d<>\\,d<>\\,d<>', {
+      i(1, 'E'),
+      i(2),
+      i(3, 'x'),
+      i(4, 'y'),
+      i(5, 'z'),
+    })
+  ),
+
+  -- Differential Operators
+  s(
+    { trig = 'partial', condition = in_mathzone },
+    fmta('\\frac{\\partial <>}{\\partial <>}', {
+      i(1, 'f'),
+      i(2, 'x'),
+    })
+  ),
+
+  s(
+    { trig = 'dv', condition = in_mathzone },
+    fmta('\\frac{d <>}{d <>}', {
+      i(1, 'y'),
+      i(2, 'x'),
+    })
+  ),
+
+  -- Special Functions
+  s({ trig = 'sqrt', condition = in_mathzone }, fmta('\\sqrt{<>}', { i(1) })),
+
+  s({ trig = 'max', condition = in_mathzone }, fmta('\\max\\{<>\\}', { i(1) })),
+
+  s({ trig = 'min', condition = in_mathzone }, fmta('\\min\\{<>\\}', { i(1) })),
+
+  s(
+    { trig = 'sup', condition = in_mathzone },
+    fmta('\\sup_{<>} <>', {
+      i(1, 'n \\in \\N'),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'inf', condition = in_mathzone },
+    fmta('\\inf_{<>} <>', {
+      i(1, 'n \\in \\N'),
+      i(0),
+    })
+  ),
+
+  -- Floor and Ceiling Functions
+  s({ trig = 'floor', condition = in_mathzone }, fmta('\\left\\lfloor <> \\right\\rfloor', { i(1) })),
+
+  s({ trig = 'ceil', condition = in_mathzone }, fmta('\\left\\lceil <> \\right\\rceil', { i(1) })),
+}
+
+-- Add these snippets to your main snippets table
+for k, v in pairs(math_functions_snippets) do
+  table.insert(snippets, v)
+end
+
+local additional_math_snippets = {
+  -- Additional Operators
+  s({ trig = 'oplus', condition = in_mathzone }, t '\\oplus '),
+
+  s({ trig = 'otimes', condition = in_mathzone }, t '\\otimes '),
+
+  s({ trig = 'odot', condition = in_mathzone }, t '\\odot '),
+
+  s(
+    { trig = 'bigoplus', condition = in_mathzone },
+    fmta('\\bigoplus_{<>}^{<>} <>', {
+      i(1, 'i=1'),
+      i(2, 'n'),
+      i(0),
+    })
+  ),
+
+  s(
+    { trig = 'bigotimes', condition = in_mathzone },
+    fmta('\\bigotimes_{<>}^{<>} <>', {
+      i(1, 'i=1'),
+      i(2, 'n'),
+      i(0),
+    })
+  ),
+
+  -- Additional Arrows
+  s({ trig = 'rar', condition = in_mathzone }, t '\\rightarrow '),
+
+  s({ trig = 'lar', condition = in_mathzone }, t '\\leftarrow '),
+
+  s({ trig = 'lrar', condition = in_mathzone }, t '\\leftrightarrow '),
+
+  s({ trig = 'Rar', condition = in_mathzone }, t '\\Rightarrow '),
+
+  s({ trig = 'Lar', condition = in_mathzone }, t '\\Leftarrow '),
+
+  s({ trig = 'Lrar', condition = in_mathzone }, t '\\Leftrightarrow '),
+
+  -- Additional Delimiters
+  s({ trig = 'langle', condition = in_mathzone }, fmta('\\langle <> \\rangle', { i(1) })),
+
+  s({ trig = 'lvert', condition = in_mathzone }, fmta('\\lvert <> \\rvert', { i(1) })),
+
+  s({ trig = 'lVert', condition = in_mathzone }, fmta('\\lVert <> \\rVert', { i(1) })),
+
+  -- Additional Mathematical Spaces
+  s({ trig = ',', condition = in_mathzone }, t ', '),
+
+  s({ trig = ':', condition = in_mathzone }, t ': '),
+
+  s({ trig = 'quad', condition = in_mathzone }, t '\\quad '),
+
+  s({ trig = 'qquad', condition = in_mathzone }, t '\\qquad '),
+
+  -- Additional Set Theory
+  s({ trig = 'empty', condition = in_mathzone }, t '\\emptyset'),
+
+  s({ trig = 'comp', condition = in_mathzone }, t '^{\\complement}'),
+
+  s({ trig = 'powerset', condition = in_mathzone }, t '\\mathcal{P}'),
+
+  -- Additional Accents
+  s({ trig = 'vec', condition = in_mathzone }, fmta('\\vec{<>}', { i(1) })),
+
+  s({ trig = 'overline', condition = in_mathzone }, fmta('\\overline{<>}', { i(1) })),
+
+  s({ trig = 'underline', condition = in_mathzone }, fmta('\\underline{<>}', { i(1) })),
+
+  s({ trig = 'widehat', condition = in_mathzone }, fmta('\\widehat{<>}', { i(1) })),
+
+  s({ trig = 'widetilde', condition = in_mathzone }, fmta('\\widetilde{<>}', { i(1) })),
+
+  -- Additional Font Styles
+  s({ trig = 'bb', condition = in_mathzone }, fmta('\\mathbb{<>}', { i(1) })),
+
+  s({ trig = 'bf', condition = in_mathzone }, fmta('\\mathbf{<>}', { i(1) })),
+
+  s({ trig = 'cal', condition = in_mathzone }, fmta('\\mathcal{<>}', { i(1) })),
+
+  s({ trig = 'scr', condition = in_mathzone }, fmta('\\mathscr{<>}', { i(1) })),
+
+  s({ trig = 'frak', condition = in_mathzone }, fmta('\\mathfrak{<>}', { i(1) })),
+
+  -- Additional Relations
+  s({ trig = 'prec', condition = in_mathzone }, t '\\prec '),
+
+  s({ trig = 'succ', condition = in_mathzone }, t '\\succ '),
+
+  s({ trig = 'preceq', condition = in_mathzone }, t '\\preceq '),
+
+  s({ trig = 'succeq', condition = in_mathzone }, t '\\succeq '),
+
+  -- Special Functions and Notation
+  s(
+    { trig = 'binom', condition = in_mathzone },
+    fmta('\\binom{<>}{<>}', {
+      i(1),
+      i(2),
+    })
+  ),
+
+  s({ trig = 'pmod', condition = in_mathzone }, fmta('\\pmod{<>}', { i(1) })),
+
+  s({ trig = 'equiv', condition = in_mathzone }, t '\\equiv '),
+
+  s({ trig = 'cong', condition = in_mathzone }, t '\\cong '),
+
+  -- Probability and Statistics
+  s({ trig = 'prob', condition = in_mathzone }, t '\\mathbb{P}'),
+
+  s({ trig = 'expect', condition = in_mathzone }, t '\\mathbb{E}'),
+
+  s({ trig = 'var', condition = in_mathzone }, t '\\text{Var}'),
+
+  s({ trig = 'cov', condition = in_mathzone }, t '\\text{Cov}'),
+
+  -- SI Units
+  s(
+    { trig = 'SI', snippetType = 'autosnippet' },
+    fmta('\\SI{<>}{<>}', {
+      i(1),
+      i(2),
+    })
+  ),
+
+  -- Sympy Integration
+  s(
+    { trig = 'sympy', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      sympy <> sympy
+      ]],
+      { i(1) }
+    )
+  ),
+
+  -- Mathematica Integration
+  s(
+    { trig = 'math', snippetType = 'autosnippet' },
+    fmta(
+      [[
+      math <> math
+      ]],
+      { i(1) }
+    )
+  ),
+
+  -- Additional Useful Shortcuts
+  s({ trig = 'deff', condition = in_mathzone }, t '\\triangleq '),
+
+  s({ trig = 'isom', condition = in_mathzone }, t '\\cong '),
+
+  s({ trig = 'surj', condition = in_mathzone }, t '\\twoheadrightarrow '),
+
+  s({ trig = 'inj', condition = in_mathzone }, t '\\hookrightarrow '),
+
+  -- Common Subscript Patterns
+  s(
+    { trig = "([%w%)%]%}])'", regTrig = true, condition = in_mathzone },
+    f(function(_, snip)
+      return snip.captures[1] .. '^\\prime'
+    end)
+  ),
+
+  s(
+    { trig = '([%w%)%]%}])_%(%d+%)', regTrig = true, condition = in_mathzone },
+    f(function(_, snip)
+      local base = snip.captures[1]
+      local subscript = snip.captures[2]:sub(3, -2) -- Remove _( and )
+      return string.format('%s_{%s}', base, subscript)
+    end)
+  ),
+}
+return {
+  ls.add_snippets('tex', snippets),
+  ls.add_snippets('tex', math_snippets),
+  ls.add_snippets('tex', environment_snippets),
+  ls.add_snippets('tex', math_functions_snippets),
+  ls.add_snippets('tex', additional_math_snippets),
+  ls.add_snippets('tex', math_symbols_snippets),
+  ls.add_snippets('tex', math_functions_snippets),
+}
