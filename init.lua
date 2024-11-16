@@ -200,6 +200,8 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set('n', '<Tab>', ':bn!<Enter>', { desc = 'Go to next buffer' })
+vim.keymap.set('n', '<S-Tab>', ':bp!<Enter>', { desc = 'Go to previous buffer' })
 
 -- Toggles
 vim.keymap.set('n', '<leader>n', ':set number!<Enter>:set relativenumber!<Enter>')
@@ -865,15 +867,19 @@ require('lazy').setup({
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
       vim.cmd.hi 'Comment gui=none'
-      vim.cmd.colorscheme 'tokyonight-moon'
     end,
   },
-
   { 'zenbones-theme/zenbones.nvim', dependencies = 'rktjmp/lush.nvim', lazy = false, priority = 1000 },
   { 'catppuccin/nvim', name = 'catppuccin', priority = 1000 },
-  { 'navarasu/onedark.nvim', name = 'onedark', priority = 1000 },
+  {
+    'navarasu/onedark.nvim',
+    name = 'onedark',
+    priority = 1000,
+    init = function()
+      vim.cmd.colorscheme 'onedark'
+    end,
+  },
   { 'scottmckendry/cyberdream.nvim', lazy = false, priority = 1000 },
-
   {
     'yorik1984/newpaper.nvim',
     priority = 1000,
@@ -881,12 +887,8 @@ require('lazy').setup({
       vim.g.newpaper_style = 'light'
     end,
   },
-
   { 'rebelot/kanagawa.nvim', priority = 1000 },
-  {
-    'EdenEast/nightfox.nvim',
-    priority = 1000,
-  },
+  { 'EdenEast/nightfox.nvim', priority = 1000 },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
