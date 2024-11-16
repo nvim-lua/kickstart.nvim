@@ -768,7 +768,7 @@ require('lazy').setup({
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
         -- python = { 'isort', 'black' },
-        --
+        json = {},
         -- You can use 'stop_after_first' to run the first available formatter from the list
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
       },
@@ -1001,7 +1001,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
@@ -1061,5 +1061,7 @@ require('lspconfig').pylsp.setup {
   },
 }
 
+vim.keymap.set('t', '<ESC>', '<C-\\><C-n>', {})
+vim.keymap.set('n', '<leader>xt', ':Telescope colorscheme<CR>', {})
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
