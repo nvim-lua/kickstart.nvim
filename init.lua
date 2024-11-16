@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -767,10 +767,10 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        -- python = { 'isort', 'black' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
@@ -1028,6 +1028,38 @@ require('lazy').setup({
     },
   },
 })
+
+-- My own additions
+-- Manually install python-lsp-black, python-lsp-isort and pylsp-mypy into the venv created by mason
+-- /.local/share/mason/packages/python-lsp-server/venv...
+require('lspconfig').pylsp.setup {
+  settings = {
+    pylsp = {
+      plugins = {
+        black = {
+          enabled = true,
+          --  line_length = 120,
+        },
+        autopep8 = {
+          enabled = false,
+        },
+        yapf = {
+          enabled = false,
+        },
+        pycodestyle = {
+          ignore = { 'W391' },
+          maxLineLength = 120,
+        },
+        isort = {
+          enabled = true,
+        },
+        pylint = {
+          enabled = true,
+        },
+      },
+    },
+  },
+}
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
