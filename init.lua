@@ -1131,6 +1131,95 @@ require('lazy').setup({
     event = 'InsertEnter',
     config = true,
   },
+  {
+    'lukas-reineke/indent-blankline.nvim',
+    main = 'ibl',
+    ---@module "ibl"
+    ---@type ibl.config
+    opts = {},
+    config = function()
+      local highlight = {
+        'RainbowRed',
+        'RainbowYellow',
+        'RainbowBlue',
+        'RainbowOrange',
+        'RainbowGreen',
+        'RainbowViolet',
+        'RainbowCyan',
+      }
+
+      local hooks = require 'ibl.hooks'
+      -- create the highlight groups in the highlight setup hook, so they are reset
+      -- every time the colorscheme changes
+      hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+        vim.api.nvim_set_hl(0, 'RainbowRed', { fg = '#E06C75' })
+        vim.api.nvim_set_hl(0, 'RainbowYellow', { fg = '#E5C07B' })
+        vim.api.nvim_set_hl(0, 'RainbowBlue', { fg = '#61AFEF' })
+        vim.api.nvim_set_hl(0, 'RainbowOrange', { fg = '#D19A66' })
+        vim.api.nvim_set_hl(0, 'RainbowGreen', { fg = '#98C379' })
+        vim.api.nvim_set_hl(0, 'RainbowViolet', { fg = '#C678DD' })
+        vim.api.nvim_set_hl(0, 'RainbowCyan', { fg = '#56B6C2' })
+      end)
+
+      require('ibl').setup { indent = { highlight = highlight } }
+    end,
+  },
+
+  {
+    'numToStr/Comment.nvim',
+    opts = {
+      -- add any options here
+    },
+  },
+  {
+    'RRethy/vim-illuminate',
+    event = 'VimEnter',
+  },
+  {
+    'vim-test/vim-test',
+    keys = {
+      {
+        '<leader>tf',
+        function()
+          vim.cmd 'TestFile'
+        end,
+        mode = 'n',
+        desc = '[T]oggle [F]ile',
+      },
+      {
+        '<leader>tn',
+        function()
+          vim.cmd 'TestNearest'
+        end,
+        mode = 'n',
+        desc = '[T]oggle [N]earest',
+      },
+      {
+        '<leader>ts',
+        function()
+          vim.cmd 'TestSuite'
+        end,
+        mode = 'n',
+        desc = '[T]oggle [S]uite',
+      },
+      {
+        '<leader>tl',
+        function()
+          vim.cmd 'TestLast'
+        end,
+        mode = 'n',
+        desc = '[T]oggle [L]ast',
+      },
+      {
+        '<leader>tv',
+        function()
+          vim.cmd 'TestVisit'
+        end,
+        mode = 'n',
+        desc = '[T]oggle [V]isit',
+      },
+    },
+  },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
