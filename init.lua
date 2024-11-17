@@ -3,6 +3,19 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
+local function nvim_ver(major, minor)
+  local version = vim.version()
+  return (version.major > major or version.minor >= minor)
+end
+
+-- fs_stat moves based on version :(
+local fs_stat = function()
+  if nvim_ver(0, 10) then
+    return vim.uv.fs_stat
+  end
+  return vim.loop.fs_stat
+end
+
 -- Margins
 vim.opt.title = false -- in status, not great with tmux
 vim.opt.number = true -- show line number
@@ -22,8 +35,11 @@ vim.opt.mouse = 'nvi'
 
 -- File related
 vim.opt.autochdir = false
+vim.opt.swapfile = false
+vim.opt.backup = false
 vim.opt.writebackup = false
 vim.opt.undofile = true
+vim.opt.undodir = os.getenv 'HOME' .. '/.vim/undodir'
 if vim.fn.has 'win32' == 1 or vim.fn.has 'win64' == 1 then
   vim.opt.fileformats = 'dos,unix,mac'
 elseif vim.fn.has 'mac' == 1 then
@@ -76,7 +92,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- Install Lazy from Github
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
-if not vim.uv.fs_stat(lazypath) then
+
+if not fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
   local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
   if vim.v.shell_error ~= 0 then
@@ -95,6 +112,11 @@ require('lazy').setup({
     'millerjason/neovimacs.nvim',
     opts = {},
   },
+  -- {
+  --  dir = '/Users/jason/github/neovimacs.nvim',
+  --  name = 'neovimacs.nvim',
+  --  opts = {},
+  -- },
 
   -- Add git changes to gutter
   {
@@ -111,7 +133,8 @@ require('lazy').setup({
   },
 
   -- Shows keybindings as you go
-  {
+  -- this technically requires >= 0.9.4
+  unpack(nvim_ver(0, 10) and {
     'folke/which-key.nvim',
     event = 'VimEnter',
     config = function()
@@ -127,7 +150,7 @@ require('lazy').setup({
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       }
     end,
-  },
+  } or {}),
 
   -- Fuzzy finder (file & lsp)
   -- :Telescope help_tags
@@ -643,16 +666,24 @@ local function safe_tabclose()
     vim.cmd 'tabclose'
   end
 end
+vim.keymap.set('t', '<F1>', vim.cmd.tabp, { noremap = true, silent = true })
+vim.keymap.set('t', '<F2>', vim.cmd.tabn, { noremap = true, silent = true })
+vim.keymap.set('t', '<F3>', '<C-\\><C-n>:tabnew<CR>', { noremap = true, silent = true })
+vim.keymap.set('t', '', '<C-\\><C-n>:tabnew<CR>', { noremap = true, silent = true })
+vim.keymap.set('t', '<F4>', safe_tabclose, { noremap = true, silent = true })
+vim.keymap.set('t', '<F5>', '<C-\\><C-n><Esc>:tab new<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<F1>', vim.cmd.tabp, { noremap = true, silent = true })
 vim.keymap.set('n', '<F2>', vim.cmd.tabn, { noremap = true, silent = true })
 vim.keymap.set('n', '<F3>', ':tabnew<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '', ':tabnew<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<F4>', safe_tabclose, { noremap = true, silent = true })
+vim.keymap.set('n', '<F5>', ':tab term<CR>', { noremap = true, silent = true })
 vim.keymap.set('i', '<F1>', vim.cmd.tabp, { noremap = true, silent = true })
 vim.keymap.set('i', '<F2>', vim.cmd.tabn, { noremap = true, silent = true })
 vim.keymap.set('i', '<F3>', '<Esc>:tabnew<CR>', { noremap = true, silent = true })
 vim.keymap.set('i', '', '<Esc>:tabnew<CR>', { noremap = true, silent = true })
 vim.keymap.set('i', '<F4>', safe_tabclose, { noremap = true, silent = true })
+vim.keymap.set('i', '<F5>', '<Esc>:tab term<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>tp', vim.cmd.tabn, { desc = 'Tab [p]revious' })
 vim.keymap.set('n', '<leader>tn', vim.cmd.tabp, { desc = 'Tab [n]ext' })
 vim.keymap.set('n', '<leader>to', vim.cmd.tabnew, { desc = 'Tab [o]pen' })
