@@ -155,7 +155,7 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 20
+vim.opt.scrolloff = 10
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -252,6 +252,9 @@ vim.opt.laststatus = 2
 
 -- Remove the mode display since it's in the statusline
 vim.opt.showmode = false
+
+-- Open the terminal with <leader> t
+-- vim.keymap.set('n', '<leader>[', '<cmd>terminal<CR>', { desc = 'Open [T]erminal' })
 
 -- Optional: customize colors based on your colorscheme
 -- Replace these colors with ones that match your theme
@@ -810,6 +813,25 @@ require('lazy').setup({
   },
 
   {
+    'rhysd/conflict-marker.vim',
+    event = 'VimEnter',
+  },
+
+  {
+    'wfxr/minimap.vim',
+    event = 'VimEnter',
+    config = function()
+      vim.g.minimap_auto_start = 1
+      vim.g.minimap_auto_start_win_enter = 1
+      vim.g.minimap_width = 10
+      vim.g.minimap_highlight_range = 1
+      vim.g.minimap_highlight_search = 1
+      vim.g.minimap_auto_start = 1
+      vim.g.minimap_auto_start_win_enter = 1
+    end,
+  },
+
+  {
     'ThePrimeagen/refactoring.nvim',
     dependencies = {
       'nvim-lua/plenary.nvim',
@@ -1083,6 +1105,31 @@ require('lazy').setup({
     --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+  },
+  {
+    'mrcjkb/rustaceanvim',
+    version = '^5', -- Recommended
+    lazy = false, -- This plugin is already lazy
+  },
+
+  {
+    'voldikss/vim-floaterm',
+    keys = {
+      {
+        '<leader>tt',
+        function()
+          vim.cmd 'FloatermToggle'
+        end,
+        mode = 'n',
+        desc = '[T]oggle [T]erminal',
+      },
+    },
+  },
+
+  {
+    'windwp/nvim-autopairs',
+    event = 'InsertEnter',
+    config = true,
   },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
