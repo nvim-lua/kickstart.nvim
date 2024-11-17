@@ -103,6 +103,6 @@ return {
     config = function()
       vim.cmd('colorscheme vscode')
     end,
-    enabled = true,
+    enabled = false,
   }
 }
