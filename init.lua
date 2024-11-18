@@ -427,7 +427,13 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       -- vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-      vim.keymap.set('n', '<leader>sg', "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>", { desc = 'Live Grep' })
+      vim.keymap.set('n', '<leader>sg', "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>", { desc = '[S]earch Live Grep' })
+      vim.keymap.set(
+        'n',
+        '<leader>swc',
+        "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args({ additional_args = function(opts) return { '--word-regexp', '--case-sensitive' } end })<CR>",
+        { desc = '[S]earch Live Grep (case-sensitive, whole word)' }
+      )
       vim.keymap.set('n', '<leader>sc', '<cmd>lua require("telescope.builtin").live_grep({ glob_pattern = "!{spec,test}"})<CR>', { desc = 'Live Grep Code' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
