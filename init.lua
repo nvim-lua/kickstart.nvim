@@ -103,7 +103,9 @@ vim.g.have_nerd_font = false
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
+--- MYEDIT
+vim.opt.signcolumn = 'number'
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -479,6 +481,7 @@ require('lazy').setup({
     },
   },
   { 'Bilal2453/luvit-meta', lazy = true },
+  { 'cespare/vim-toml' },
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
@@ -488,7 +491,6 @@ require('lazy').setup({
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       -- ADDED TO SUPPORT TOML
-      'cespare/vim-toml',
 
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -928,6 +930,9 @@ require('lazy').setup({
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
       ensure_installed = {
+        'regex',
+        'diff',
+        'yaml',
         'toml',
         'python',
         'sql',
