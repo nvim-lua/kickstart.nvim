@@ -203,6 +203,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
+vim.api.nvim_set_keymap('n', '<leader>e', ':lua MiniFiles.open()<CR>', { noremap = true, silent = true })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -237,6 +238,24 @@ require('lazy').setup({
   --
   -- Use `opts = {}` to force a plugin to be loaded.
   --
+  {
+    'echasnovski/mini.nvim',
+    version = false,
+    config = function()
+      require('mini.files').setup()
+    end,
+  },
+
+  {
+  'nvimdev/dashboard-nvim',
+  event = 'VimEnter',
+  config = function()
+    require('dashboard').setup {
+      -- config
+    }
+  end,
+  dependencies = { {'nvim-tree/nvim-web-devicons'}}
+},
 
   {
     'windwp/nvim-autopairs',
@@ -256,13 +275,6 @@ require('lazy').setup({
   },
 
   {
-    'nvim-tree/nvim-web-devicons',
-    opts = function()
-      dofile(vim.g.base46_cache .. 'devicons')
-    end,
-  },
-
-  {
     'lukas-reineke/indent-blankline.nvim',
     event = 'User FilePost',
     opts = {
@@ -278,13 +290,6 @@ require('lazy').setup({
 
       dofile(vim.g.base46_cache .. 'blankline')
     end,
-  },
-
-  -- File managing, picker etc
-  {
-    'nvim-tree/nvim-tree.lua',
-    cmd = { 'NvimTreeToggle', 'NvimTreeFocus' },
-    opts = function() end,
   },
 
   -- Here is a more advanced example where we pass configuration
@@ -643,8 +648,8 @@ require('lazy').setup({
         clangd = {},
         -- gopls = {},
         pyright = {},
-        html= {},
-        cssls= {},
+        html = {},
+        cssls = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -866,7 +871,7 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'rose-pine/neovim',
+    'https://github.com/rose-pine/neovim.git',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
       -- Load the colorscheme here.
