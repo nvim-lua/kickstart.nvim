@@ -59,6 +59,8 @@ vim.opt.timeoutlen = 300
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
+vim.g.expandtab = true
+
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
@@ -717,7 +719,6 @@ require('lazy').setup({
         'python-lsp-server',
         'terraform-ls',
         'bash-language-server',
-        'yaml-language-server',
         'autopep8',
         'json-lsp',
         'groovy-language-server',
