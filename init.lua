@@ -9,11 +9,11 @@ local function nvim_ver(major, minor)
 end
 
 -- fs_stat moves based on version :(
-local fs_stat = function()
+local fs_stat = function(path)
   if nvim_ver(0, 10) then
-    return vim.uv.fs_stat
+    return vim.uv.fs_stat(path)
   end
-  return vim.loop.fs_stat
+  return vim.loop.fs_stat(path)
 end
 
 -- Margins
