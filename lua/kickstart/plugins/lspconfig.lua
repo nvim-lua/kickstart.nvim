@@ -152,11 +152,12 @@ return {
 
       -- Change diagnostic symbols in the sign column (gutter)
       -- if vim.g.have_nerd_font then
-      --   local signs = { Error = '', Warn = '', Hint = '', Info = '' }
+      --   local signs = { ERROR = '', WARN = '', INFO = '', HINT = '' }
+      --   local diagnostic_signs = {}
       --   for type, icon in pairs(signs) do
-      --     local hl = 'DiagnosticSign' .. type
-      --     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+      --     diagnostic_signs[vim.diagnostic.severity[type]] = icon
       --   end
+      --   vim.diagnostic.config { signs = { text = diagnostic_signs } }
       -- end
 
       -- LSP servers and clients are able to communicate to each other what features they support.
