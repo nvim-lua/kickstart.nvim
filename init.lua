@@ -619,6 +619,7 @@ require('lazy').setup({
         'prettier',
         'svelte-language-server',
         'tailwindcss',
+        'zls',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
