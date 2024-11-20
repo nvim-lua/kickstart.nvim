@@ -1,0 +1,3 @@
+return {
+  'jalvesaq/nvim-r',
+}
