@@ -327,6 +327,20 @@ require('lazy').setup({
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
       require('telescope').setup {
+        defaults = {
+          layout_strategy = 'flex',
+          layout_config = {
+            flex = {
+              flip_columns = 120,
+            },
+            horizontal = {
+              width = 0.6,
+            },
+            vertical = {
+              height = 0.7,
+            },
+          },
+        },
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
