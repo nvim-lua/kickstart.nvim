@@ -612,7 +612,7 @@ require('lazy').setup({
         'black',
         -- 'debugypy',
         'r-languageserver',
-        'clangd',
+        -- 'clangd',
         'html-lsp',
         'css-lsp',
         'typescript-language-server',
@@ -889,6 +889,7 @@ require('lazy').setup({
         'javascript',
         'typescript',
         'svelte',
+        'zig',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
