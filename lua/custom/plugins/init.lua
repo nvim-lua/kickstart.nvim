@@ -10,8 +10,21 @@ return {{
     -- VimTeX configuration goes here, e.g.
     vim.g.vimtex_view_method = "zathura"
   end
-}, 
---[[ {
+},
+{"windwp/nvim-autopairs",
+    event = "InsertEnter",
+    config = true
+},
+{
+  "iamcco/markdown-preview.nvim",
+  cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+  build = "cd app && yarn install",
+  init = function()
+    vim.g.mkdp_filetypes = { "markdown" }
+  end,
+  ft = { "markdown" },
+}
+--[[ 
 "iurimateus/luasnip-latex-snippets.nvim",
   config = function()
     require'luasnip-latex-snippets'.setup({use_treesitter=false})

@@ -22,10 +22,12 @@ return {
         t("\\pm"),
       }
     ),
+  --[[
     s({trig="pm", snippetType="autosnippet"},
     {
       t("\\pm"),
     }),
+  ]]--
     s({trig="-+", snippetType="autosnippet"},
     {
       t("\\mp"),
@@ -82,6 +84,12 @@ return {
     {
       t("\\exists"),
     }),
+    s({trig="ortho", snippetType="autosnippet"},
+    {
+      t("\\perp"),
+    }),
+
+
 
     -- Set notation
 
@@ -129,13 +137,81 @@ return {
     {
       t("\\mathbb{C}"),
     }),
-    -- Delimiters
+
+
     s({trig="norm", snippetType="autosnippet"},
-    fmt("\\lvert {} \\rvert",{ i(1) })
-    ),
+    fmta("\\lvert <> \\rvert <>",{ i(1,"u"), i(0) })),
+
     s({trig="pentiere", snippetType="autosnippet"},
-    fmt("\\lfloor {} \\rfloor",{ i(1) })
-    ),
+    fmta("\\lfloor <> \\floor <>",{ i(1, "n"), i(0) })),
+
+    s({trig="mcal", snippetType="autosnippet"},
+    fmta("\\mathcal{<>} <>",{ i(1, "I"), i(0) })),
+
+    s({trig="mbb", snippetType="autosnippet"},
+    fmta("\\mathbb{<>} <>",{ i(1, "I"), i(0) })),
+
+
+
+    s({trig="norm", snippetType="autosnippet"},
+    {fmt("\\lvert {} \\rvert",{ i(1) })
+    }),
     
+    s({trig="pentiere", snippetType="autosnippet"},
+    fmt("\\lfloor {} \\rfloor",{ i(1) })),
+    
+  
+  
+    s({ trig = 'mcal', snippetType="autosnippet" },
+    {fmta('\\mathcal{<>}<>', {
+      i(1),
+      i(0),})
+    }),
+
+    s({ trig = 'mbb', snippetType="autosnippet" },
+    {fmta('\\mathbb{<>}<>', {
+      i(1),
+      i(0),})
+    }),
+
+
+
+    s({trig="etoile", snippetType="autosnippet"},
+      {
+        t("\\ast"),
+      }),
+
+
+    s({trig="xnn", snippetType="autosnippet"},
+      {
+        t("x_{n}"),
+      }),
+
+      -- Common Variable Notations
+
+    s({ trig = 'ynn', snippetType="autosnippet" }, {t('y_{n}')}),
+
+    s({ trig = 'xii', snippetType="autosnippet" }, {t('x_{i}')}),
+
+    s({ trig = 'yii', snippetType="autosnippet" }, {t('y_{i}')} ),
+
+    s({ trig = 'xjj', snippetType="autosnippet" }, {t('x_{j}')} ),
+
+    s({ trig = 'yjj', snippetType="autosnippet" }, {t('y_{j}')} ),
+
+    s({ trig = 'xp1', snippetType="autosnippet" }, {t('x_{n+1}')} ),
+
+    s({ trig = 'xmm', snippetType="autosnippet" }, {t('x_{m}')} ),
+  
+    s({ trig = ';adh', snippetType="autosnippet" },
+    fmta('\\overset{\\circ}{<>}<>', {
+      i(1),
+      i(0),})
+    ),
+    s({ trig = ';int', snippetType="autosnippet" },
+    fmta('\\overline{<>}<>', {
+      i(1),
+      i(0),})
+    ),
 
 }

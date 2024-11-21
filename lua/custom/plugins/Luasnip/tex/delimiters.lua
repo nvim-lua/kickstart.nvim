@@ -6,42 +6,31 @@ local f = ls.function_node
 local fmt = require("luasnip.extras.fmt").fmt
 
 -- Add LaTeX snippets
-ls.add_snippets("tex", {
-    -- LaTeX Template
-    s("latex-template", fmt([[
-        \documentclass[a4paper]{article}
-
-        \usepackage{amsmath}
-
-        \begin{document}
-        {}
-        \end{document}
-    ]], { i(0) })),
-
+return { -- [[
     -- Implies
-    s("=>", t("\\implies")),
-
-    -- Inline Math
-    s("mk", fmt("${}$", { i(1) })),
-
-    -- Fraction with auto-expansion for a/b pattern
-    s("////", fmt("\\frac{{{}}}{{{}}}", { i(1), i(2) })),
-    s({ trig = "(%w+)/(%w+)", regTrig = true, wordTrig = false }, {
-        f(function(_, snip) return "\\frac{" .. snip.captures[1] .. "}{" .. snip.captures[2] .. "}" end)
+    s({trig="=>", snippetType="autosnippet"},
+    {
+      t("\\implies")  
     }),
 
+    -- Inline Math
+    s({trig="mk", snippetType="autosnippet"}, fmt("${}$", { i(1) })),
+
+
     -- Not Equals
-    s("!=", t("\\neq")),
+    s({trig="!=",snippetType="autosnippet"}, t("\\neq")),
 
     -- Sum
-    s("sum", fmt("\\sum_{{n={}}}^{{{}}} {}", { i(1, "1"), i(2, "\\infty"), i(3, "a_n z^n") })),
+    s({trig="sum",snippetType="autosnippet"}, fmt("\\sum_{{n={}}}^{{{}}} {}", { i(1, "1"), i(2, "\\infty"), i(3, "a_n z^n") })),
 
     -- Taylor Series
-    s("taylor", fmt("\\sum_{{{}={}}}^{{{}}} {} (x-a)^{}", { i(1, "k"), i(2, "0"), i(3, "\\infty"), i(4, "c_"), i(1) })),
+    s({trig="taylor",snippetType="autosnippet"}, fmt("\\sum_{{{}={}}}^{{{}}} {} (x-a)^{}", { i(1, "k"), i(2, "0"), i(3, "\\infty"), i(4, "c_"), i(1) })),
 
     -- Limit
-    s("lim", fmt("\\lim_{{{} \\to {}}}", { i(1, "n"), i(2, "\\infty") })),
+    s({trig="lim",snippetType="autosnippet"}, fmt("\\lim_{{{} \\to {}}}", { i(1, "n"), i(2, "\\infty") })),
 
+    s({trig="xx",snippetType="autosnippet"}, t("\\times")),
+  --[[
     -- Greek Letters
     s("alpha", t("\\alpha")),
     s("beta", t("\\beta")),
@@ -133,10 +122,10 @@ ls.add_snippets("tex", {
 
     -- Miscellaneous Symbols
     s("del", t("\\nabla")),
-    s("xx", t("\\times")),
     s("avg", fmt("\\langle {} \\rangle", { i(1) })),
     s("norm", fmt("\\lvert {} \\rvert", { i(1) })),
     s("ceil", fmt("\\lceil {} \\rceil", { i(1) })),
     s("floor", fmt("\\lfloor {} \\rfloor", { i(1) }))
-})
+    ]]--
+}
 
