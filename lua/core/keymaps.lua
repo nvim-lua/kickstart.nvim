@@ -2,6 +2,17 @@ return {
   -- [[ Basic Keymaps ]]
   --  See `:help vim.keymap.set()`
 
+  -- function to assist with keymapping
+  --[[
+  function map(mode, lhs, rhs, opts)
+    local options = { noremap = true, silent = true }
+    if opts then
+        options = vim.tbl_extend("force", options, opts)
+    end
+    vim.keymap.set(mode, lhs, rhs, options)
+  end
+  --]]
+
   -- Clear highlights on search when pressing <Esc> in normal mode
   --  See `:help hlsearch`
   vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>'),
@@ -17,9 +28,8 @@ return {
   -- or just use <C-\><C-n> to exit terminal mode
   vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }),
 
-  -- Keybinds to make split navigation easier.
+  -- Window and buffer handling
   --  Use CTRL+<hjkl> to switch between windows
-  --
   --  See `:help wincmd` for a list of all window commands
   vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' }),
   vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' }),
@@ -27,12 +37,14 @@ return {
   vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' }),
   vim.keymap.set('n', '<Tab>', ':bn!<Enter>', { desc = 'Go to next buffer' }),
   vim.keymap.set('n', '<S-Tab>', ':bp!<Enter>', { desc = 'Go to previous buffer' }),
+  vim.keymap.set('n', '<leader>ws', ':split<Enter>', { desc = 'split window horizontally' }),
+  vim.keymap.set('n', '<leader>wv', ':vsplit<Enter>', { desc = 'split window vertically' }),
 
   -- terraform
-  vim.keymap.set('n', '<leader>ti', ':!terraform init<CR>', { desc = 'terraform init' }),
-  vim.keymap.set('n', '<leader>tv', ':!terraform validate<CR>', { desc = 'terraform validate' }),
-  vim.keymap.set('n', '<leader>tp', ':!terraform plan<CR>', { desc = 'terraform plan' }),
-  vim.keymap.set('n', '<leader>taa', ':!terraform apply -auto-approve<CR>', { desc = 'terraform apply' }),
+  vim.keymap.set('n', '<leader>ti', ':!terraform init -no-color<CR>', { desc = 'terraform init' }),
+  vim.keymap.set('n', '<leader>tv', ':!terraform validate -no-color<CR>', { desc = 'terraform validate' }),
+  vim.keymap.set('n', '<leader>tp', ':!terraform plan -no-color<CR>', { desc = 'terraform plan' }),
+  vim.keymap.set('n', '<leader>taa', ':!terraform apply -no-color -auto-approve<CR>', { desc = 'terraform apply' }),
 
   -- Toggles
   vim.keymap.set('n', '<leader>n', ':set number!<Enter>:set relativenumber!<Enter>'),
