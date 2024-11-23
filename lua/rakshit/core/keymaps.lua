@@ -54,3 +54,10 @@ vim.keymap.set('n', '<leader>tx', '<cmd>tabclose<CR>', { desc = 'Close current t
 vim.keymap.set('n', '<leader>tn', '<cmd>tabn<CR>', { desc = 'Go to next tab' }) --  go to next tab
 vim.keymap.set('n', '<leader>tp', '<cmd>tabp<CR>', { desc = 'Go to previous tab' }) --  go to previous tab
 vim.keymap.set('n', '<leader>tf', '<cmd>tabnew %<CR>', { desc = 'Open current buffer in new tab' }) --  move current buffer to new tab
+
+-- Gopher plugin keymaps
+vim.keymap.set('n', '<leader>if', '<cmd> GoIfErr <CR>', { desc = 'Add if err != nil snippet' })
+
+-- Borrowed from my VS Code settings for better Vim navigations
+vim.keymap.set('n', '<leader>l', '$', { desc = 'Move to end of the line with leader + l' })
+vim.keymap.set('n', '<leader>h', '_', { desc = 'Move to first character of the line with leader + h' })

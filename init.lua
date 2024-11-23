@@ -43,17 +43,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
--- Configure Neovim tab settings for Go files
--- vim.api.nvim_create_autocmd('FileType', {
---   pattern = 'go',
---   callback = function()
---     vim.bo.expandtab = true -- Use spaces instead of tabs
---     vim.bo.tabstop = 4 -- Display each tab as 4 spaces
---     vim.bo.shiftwidth = 4 -- Indentation size of 4 spaces
---     vim.bo.softtabstop = 4 -- <Tab> key inserts 4 spaces
---   end,
--- })
-
 require('rakshit.lazy')
 
 -- The line beneath this is called `modeline`. See `:help modeline`
