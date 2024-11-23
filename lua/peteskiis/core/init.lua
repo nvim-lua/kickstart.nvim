@@ -1,2 +1,2 @@
-require("josean.core.options")
-require("josean.core.keymaps")
+require 'peteskiis.core.options'
+require 'peteskiis.core.keymaps'
