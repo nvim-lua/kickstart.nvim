@@ -36,6 +36,7 @@ return {
   map('n', '<Tab>', ':bn!<Enter>', { desc = 'Go to next buffer' }),
   map('n', '<S-Tab>', ':bp!<Enter>', { desc = 'Go to previous buffer' }),
   map('n', '<leader>bd', ':bd<Enter>', { desc = 'close the current buffer' }),
+  map('n', '<leader>bl', ':FlyBuf<Enter>', { desc = 'open up a list of all buffers in a float' }),
 
   -- terraform
   map('n', '<leader>ti', ':!terraform init -no-color<CR>', { desc = 'terraform init' }),

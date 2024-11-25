@@ -779,13 +779,21 @@ require('lazy').setup({
       require('lualine').setup()
     end,
   },
-  -- Nvimtree (File Explorer)
-  {
+
+  { -- Nvimtree (File Explorer)
     'nvim-tree/nvim-tree.lua',
     lazy = true,
     dependencies = {
       'nvim-tree/nvim-web-devicons',
     },
+  },
+
+  { -- FlyBuf (Buffer list in a float)
+    'glepnir/flybuf.nvim',
+    cmd = 'FlyBuf',
+    config = function()
+      require('flybuf').setup {}
+    end,
   },
 
   { -- Highlight, edit, and navigate code
@@ -826,7 +834,6 @@ require('lazy').setup({
   require 'plugins.neo-tree',
   require 'plugins.gitsigns', -- adds gitsigns recommend keymaps
   require 'plugins.codeium',
-  require 'plugins.terraform',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
