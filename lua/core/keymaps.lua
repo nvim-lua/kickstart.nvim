@@ -40,6 +40,9 @@ return {
   vim.keymap.set('n', '<leader>ws', ':split<Enter>', { desc = 'split window horizontally' }),
   vim.keymap.set('n', '<leader>wv', ':vsplit<Enter>', { desc = 'split window vertically' }),
 
+  -- neo-tree
+  vim.keymap.set('n', '<leader>e', ':Neotree reveal<CR>', { desc = 'Open file browser' }),
+
   -- terraform
   vim.keymap.set('n', '<leader>ti', ':!terraform init -no-color<CR>', { desc = 'terraform init' }),
   vim.keymap.set('n', '<leader>tv', ':!terraform validate -no-color<CR>', { desc = 'terraform validate' }),
