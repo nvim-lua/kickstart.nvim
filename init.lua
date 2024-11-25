@@ -1,6 +1,4 @@
 --[[
-
-  - Lua
     - quick guide: https://learnxinyminutes.com/docs/lua/
     - :help lua-guide
     - (or HTML version): https://neovim.io/doc/user/lua-guide.html
@@ -42,6 +40,7 @@ vim.schedule(function()
 end)
 
 vim.opt.breakindent = true -- Enable break indent
+vim.opt.showbreak = '↳ '
 vim.opt.undofile = false -- Do not save undo history (no undo beyond last save)
 vim.opt.ignorecase = true -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 vim.opt.smartcase = true
@@ -57,7 +56,6 @@ vim.opt.splitbelow = true -- Configure how new splits should be opened
 vim.opt.list = false
 --vim.opt.listchars = { tab = '» ', trail = '·', eol = '$', nbsp = '␣' }
 vim.opt.listchars = { tab = '▸·', trail = '▸', eol = '$', nbsp = '␣' }
-
 vim.opt.inccommand = 'split' -- Preview substitutions live, as you type!
 vim.opt.cursorline = true -- Show which line your cursor is on
 vim.opt.scrolloff = 3 -- Minimal number of screen lines to keep above and below the cursor.
