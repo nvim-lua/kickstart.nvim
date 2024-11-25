@@ -38,6 +38,9 @@ return {
   map('n', '<leader>bd', ':bd<Enter>', { desc = 'close the current buffer' }),
   map('n', '<leader>bl', ':FlyBuf<Enter>', { desc = 'open up a list of all buffers in a float' }),
 
+  -- neo-tree
+  vim.keymap.set('n', '<leader>e', ':Neotree reveal<CR>', { desc = 'Open file browser' }),
+
   -- terraform
   map('n', '<leader>ti', ':!terraform init -no-color<CR>', { desc = 'terraform init' }),
   map('n', '<leader>tv', ':!terraform validate -no-color<CR>', { desc = 'terraform validate' }),
