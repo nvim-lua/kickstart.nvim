@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -175,11 +175,13 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
+vim.keymap.set('i', 'kj', '<Esc>', { noremap = true, silent = true })
+
 -- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -615,10 +617,70 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
-        -- gopls = {},
-        -- pyright = {},
-        -- rust_analyzer = {},
+        clangd = {},
+        gopls = {},
+        -- pyright = {}, -- too heavy and slow :<
+        rust_analyzer = {},
+
+        -- pylsp with ruff ext is real GOAT :>
+        pylsp = {
+          cmd = { 'pylsp', '-vvv', '--log-file', '/tmp/lsp.log' },
+          settings = {
+            pylsp = {
+              plugins = {
+                -- Quite useful
+                rope_autoimport = {
+                  enabled = true,
+                  completions = {
+                    enabled = false,
+                  },
+                  code_actions = {
+                    enabled = true,
+                  },
+                },
+
+                -- Plugin conflict resolving for pylsp_rope plugin
+                rope_rename = {
+                  enabled = false, -- using pylsp_rope's rename instead
+                },
+                jedi_rename = {
+                  enabled = false, -- using pylsp_rope's rename instead
+                },
+
+                -- Advanced impl of renaming using rope
+                pylsp_rope = {
+                  enabled = true,
+                  rename = true,
+                },
+                ruff = {
+                  enabled = true, -- Enable the plugin
+                  formatEnabled = true, -- Enable formatting using ruffs formatter
+                  -- executable = '~/.rye/tools/ruff/bin/ruff', -- Custom path to ruff
+                  -- config = '~/.rye/tools/ruff/bin/.pylsp_ruff_custom_global.toml', -- Custom config for ruff to use
+                  extendSelect = { 'I' }, -- Rules that are additionally used by ruff
+                  extendIgnore = { 'C90' }, -- Rules that are additionally ignored by ruff
+                  format = { 'I' }, -- Rules that are marked as fixable by ruff that should be fixed when running textDocument/formatting
+                  severities = { ['D212'] = 'I' }, -- Optional table of rules where a custom severity is desired
+                  unsafeFixes = false, -- Whether or not to offer unsafe fixes as code actions. Ignored with the "Fix All" action
+
+                  --  -- Rules that are ignored when a pyproject.toml or ruff.toml is present:
+                  --  lineLength = 88, -- Line length to pass to ruff checking and formatting
+                  --  exclude = { '__about__.py' }, -- Files to be excluded by ruff checking
+                  --  select = { 'F' }, -- Rules to be enabled by ruff
+                  --  ignore = { 'D210' }, -- Rules to be ignored by ruff
+                  perFileIgnores = { ['__init__.py'] = 'CPY001' }, -- Rules that should be ignored for specific files
+                  preview = true, -- Whether to enable the preview style linting and formatting.
+                  -- targetVersion = 'py310', -- The minimum python version to target (applies for both linting and formatting).
+                },
+
+                pylsp_mypy = {
+                  enabled = true,
+                  exclude = { 'tests/*', 'leetcode/*' },
+                },
+              },
+            },
+          },
+        },
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -657,6 +719,11 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'prettierd', -- formatter
+        'delve', -- Golang DAP debugger
+        'markdownlint-cli2',
+        'npm-groovy-lint',
+        'vale',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -890,6 +957,11 @@ require('lazy').setup({
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
+
+      -- Lyu: activate mini.animate
+      if not vim.g.neovide then
+        require('mini.animate').setup()
+      end
     end,
   },
   { -- Highlight, edit, and navigate code
@@ -927,18 +999,18 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
@@ -965,6 +1037,13 @@ require('lazy').setup({
     },
   },
 })
+
+-- ADDED Manually by Lyu
+---- python provider set to pyenv venv interpreter 20240927
+vim.g.python3_host_prog = '~/.rye/tools/pynvim/bin/python3'
+-- avante.nvim: views can only be fully collapsed with the global statusline
+vim.opt.laststatus = 3
+-- END ADDED Manually
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
