@@ -65,3 +65,31 @@ vim.keymap.set("n", "<leader>h", "_", { desc = "Move to first character of the l
 -- Gitsigns to toggle hunk preview and git line blame
 vim.keymap.set("n", "<leader>gp", ":Gitsigns preview_hunk<CR>", { desc = "Preview changes made on the current line" })
 vim.keymap.set("n", "<leader>gt", ":Gitsigns toggle_current_line_blame<CR>", { desc = "View current line blame" })
+
+-- Start resize mode
+vim.keymap.set(
+  "n",
+  "<leader>z",
+  ":lua EnterResizeMode()<CR>",
+  { desc = "Enter Resi[z]e Mode", noremap = true, silent = true }
+)
+
+-- Define the resize mode function
+function EnterResizeMode()
+  print("Resize mode: press 'h' or 'l' to resize, 'q' to quit")
+  vim.keymap.set("n", "h", ":vertical resize +5<CR>", { noremap = true, silent = true })
+  vim.keymap.set("n", "l", ":vertical resize -5<CR>", { noremap = true, silent = true })
+  vim.keymap.set("n", "j", ":horizontal resize +5<CR>", { noremap = true, silent = true })
+  vim.keymap.set("n", "k", ":horizontal resize -5<CR>", { noremap = true, silent = true })
+  vim.keymap.set("n", "q", ":lua ExitResizeMode()<CR>", { noremap = true, silent = true })
+end
+
+-- Define the exit resize mode function
+function ExitResizeMode()
+  vim.api.nvim_del_keymap("n", "h")
+  vim.api.nvim_del_keymap("n", "l")
+  vim.api.nvim_del_keymap("n", "j")
+  vim.api.nvim_del_keymap("n", "k")
+  vim.api.nvim_del_keymap("n", "q")
+  print("Exited Resize Mode")
+end
