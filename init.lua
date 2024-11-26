@@ -58,7 +58,7 @@ vim.opt.list = false
 vim.opt.listchars = { tab = '▸·', trail = '▸', eol = '$', nbsp = '␣' }
 vim.opt.inccommand = 'split' -- Preview substitutions live, as you type!
 vim.opt.cursorline = true -- Show which line your cursor is on
-vim.opt.scrolloff = 3 -- Minimal number of screen lines to keep above and below the cursor.
+vim.opt.scrolloff = 2 -- Minimal number of screen lines to keep above and below the cursor.
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
