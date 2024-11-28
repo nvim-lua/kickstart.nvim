@@ -93,3 +93,6 @@ function ExitResizeMode()
   vim.api.nvim_del_keymap("n", "q")
   print("Exited Resize Mode")
 end
+
+-- Noice
+vim.keymap.set("n", "<leader>nd", "<cmd>NoiceDismiss<CR>", { desc = "Dismiss Noice Message" })
