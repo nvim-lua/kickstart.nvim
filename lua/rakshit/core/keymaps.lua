@@ -71,12 +71,12 @@ vim.keymap.set(
   "n",
   "<leader>z",
   ":lua EnterResizeMode()<CR>",
-  { desc = "Enter Resi[z]e Mode", noremap = true, silent = true }
+  { desc = "Resi[z]e Mode", noremap = true, silent = true }
 )
 
 -- Define the resize mode function
 function EnterResizeMode()
-  print("Resize mode: press 'h' or 'l' to resize, 'q' to quit")
+  print("Resize mode: press 'h' or 'l' for vertical resize and 'j' or 'k' for horizontal resize, 'q' to quit")
   vim.keymap.set("n", "h", ":vertical resize +5<CR>", { noremap = true, silent = true })
   vim.keymap.set("n", "l", ":vertical resize -5<CR>", { noremap = true, silent = true })
   vim.keymap.set("n", "j", ":horizontal resize +5<CR>", { noremap = true, silent = true })
