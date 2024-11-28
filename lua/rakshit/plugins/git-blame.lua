@@ -15,5 +15,6 @@ return {
     virtual_text_column = 80, -- virtual text start column, check Start virtual text at column section for more options
     message_when_not_committed = "Not committed yet",
     display_virtual_text = 1,
+    highlight_group = "Question",
   },
 }
