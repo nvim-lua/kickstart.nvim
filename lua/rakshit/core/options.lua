@@ -69,3 +69,19 @@ vim.opt.backspace = "indent,eol,start"
 
 -- Enable break indent
 vim.opt.breakindent = true
+
+-- Function to rename the current tmux window based on the directory name
+local function rename_tmux_window()
+  if vim.env.TMUX then
+    local cwd = vim.loop.cwd() -- Get the current working directory
+    local dirname = vim.fn.fnamemodify(cwd, ":t") -- Extract the last part of the directory path
+    os.execute("tmux rename-window " .. dirname)
+  end
+end
+
+-- Automatically rename tmux window when starting Neovim
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    rename_tmux_window()
+  end,
+})
