@@ -142,25 +142,6 @@ require('lazy').setup({
         --  - settings (table): Override the default settings passed when initializing the server.
         --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
         local servers = {
-          ts_ls = {
-            init_options = {
-              plugins = {
-                {
-                  name = '@vue/typescript-plugin',
-                  location = '/Users/fabianimhof/.nvm/versions/node/v16.20.2/lib/@vue/typescript-plugin',
-                  languages = { 'javascript', 'typescript', 'vue' },
-                },
-              },
-            },
-            filetypes = {
-              'typescript',
-              'typescriptreact',
-              'javascript',
-              'javascriptreact',
-              'typescript.tsx',
-              'vue',
-            },
-          },
           stylelint_lsp = {
             filetypes = { 'css', 'scss' },
             root_dir = require('lspconfig').util.root_pattern('package.json', '.git'),
@@ -196,6 +177,7 @@ require('lazy').setup({
           csharp_ls = {},
           netcoredbg = {},
           clangd = {
+            cmd = { 'clangd', '--background-index', '--clang-tidy' },
             init_options = {
               fallbackFlags = { '--std=c++20' },
             },
@@ -286,6 +268,7 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         typescript = { 'prettierd' },
+        typescriptreact = { 'prettierd' },
         javascript = { 'prettierd' },
         json = { 'prettierd' },
         scss = { 'prettierd' },
@@ -497,7 +480,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   { import = 'custom.plugins' },
 }, {
