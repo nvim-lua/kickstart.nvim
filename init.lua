@@ -136,8 +136,6 @@ vim.keymap.set('n', '<leader>c', '<cmd>bd<cr>')
 vim.keymap.set('n', '<leader>h', '<cmd>bprev<cr>')
 vim.keymap.set('n', '<leader>l', '<cmd>bnext<cr>')
 vim.keymap.set('n', '<leader>sv', '<cmd>write<cr>', { desc = 'Sa[v]e File' })
--- delete all other buffers
-vim.keymap.set('n', '<leader>C', '<cmd>%bd|e#|bd#<cr>')
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
@@ -911,6 +909,22 @@ require('lazy').setup({
     end,
     dependencies = {
       'nvim-lua/plenary.nvim',
+    },
+  },
+
+  {
+    'folke/snacks.nvim',
+    priority = 1000,
+    lazy = false,
+    opts = {},
+    keys = {
+      {
+        '<leader>C',
+        function()
+          Snacks.bufdelete.other()
+        end,
+        desc = 'Close other buffers',
+      },
     },
   },
 
