@@ -176,6 +176,10 @@ vim.keymap.set('v', '>', '>gv')
 -- Explorer
 vim.keymap.set('n', '<leader>x', vim.cmd.Ex)
 
+-- Center page scroll
+vim.keymap.set('n', '<C-d>', '<C-d>zz')
+vim.keymap.set('n', '<C-u>', '<C-u>zz')
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
