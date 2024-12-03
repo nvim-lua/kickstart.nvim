@@ -136,7 +136,7 @@ vim.opt.updatetime = 125
 
 -- Decrease mapped sequence wait time
 -- Displays which-key popup sooner
-vim.opt.timeoutlen = 200
+vim.opt.timeoutlen = 500
 
 -- Configure how new splits should be opened
 vim.opt.splitright = true
@@ -1082,5 +1082,6 @@ require('lspconfig').pylsp.setup {
 -- }
 vim.keymap.set('t', '<ESC>', '<C-\\><C-n>', {})
 vim.keymap.set('n', '<leader>xt', ':Telescope colorscheme<CR>', {})
+vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
