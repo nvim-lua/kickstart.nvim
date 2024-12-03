@@ -161,6 +161,9 @@ vim.opt.scrolloff = 10
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+-- use <C-n> to open and close the file tree
+vim.keymap.set('n', '<C-n>', '<cmd>Ex<CR>')
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
@@ -548,6 +551,8 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      --
+      --
       local servers = {
         -- clangd = {},
         -- gopls = {},
@@ -560,7 +565,14 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
-        --
+      volar = {
+          filetypes = { 'typescript', 'javascript', 'typescriptreact', 'javascriptreact', 'vue' },
+          init_options = {
+            vue = {
+              hybridMode = false
+            }
+          }
+        },
 
         lua_ls = {
           -- cmd = {...},
@@ -586,6 +598,7 @@ require('lazy').setup({
         --     return require('lspconfig').util.root_pattern('*.sln', '*.csproj', '*.fsproj', '*.vbproj', '*.vcxproj')(fname) or vim.fn.getcwd()
         --   end,
         -- },
+        --
       }
 
       require("neodev").setup({})
@@ -620,6 +633,13 @@ require('lazy').setup({
         },
       }
     end,
+  },
+
+  -- Vim Razor
+  {
+    'jlcrochet/vim-razor',
+    lazy = false,
+    ft = 'cshtml'
   },
 
   -- Prime's Harpoon2
@@ -835,7 +855,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'tokyonight-moon'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
