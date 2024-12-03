@@ -578,6 +578,7 @@ require('lazy').setup({
         -- tsserver = {},
         --
         jdtls = { cmd = { 'jdtls' } },
+        omnisharp = {},
 
         lua_ls = {
           -- cmd = {...},
@@ -622,6 +623,32 @@ require('lazy').setup({
             require('lspconfig')[server_name].setup(server)
           end,
         },
+      }
+    end,
+  },
+
+  {
+    'Hoffs/omnisharp-extended-lsp.nvim',
+    ft = 'cs', -- Only load for C# files
+    config = function()
+      require('lspconfig').omnisharp.setup {
+        root_dir = require('lspconfig').util.root_pattern('*.csproj', '*.sln'),
+        settings = {
+          omnisharp = {
+            enableEditorConfigSupport = true, -- Enable support for editorconfig
+            enableMsBuildLoadProjectsOnDemand = true, -- Load projects on demand (avoids excessive loading)
+            enableRoslynAnalyzers = false, -- Enable Roslyn analyzers
+            scriptFileSupport = true, -- Enable CSX script support if not needed
+            loggingLevel = 'debug', -- Enable debugging logs for better diagnostics
+          },
+        },
+        on_attach = function(_, bufnr)
+          vim.keymap.set('n', 'gd', require('omnisharp_extended').lsp_definition, { buffer = bufnr, desc = 'LSP: ' .. '[G]oto [D]efinition' })
+          vim.keymap.set('n', 'gr', require('omnisharp_extended').lsp_references, { buffer = bufnr, desc = 'LSP: ' .. '[G]oto [R]eferences' })
+          vim.keymap.set('n', 'gI', require('omnisharp_extended').lsp_implementation, { buffer = bufnr, desc = 'LSP: ' .. '[G]oto [I]implementation' })
+          vim.keymap.set('n', '<leader>D', require('omnisharp_extended').lsp_type_definition, { buffer = bufnr, desc = 'LSP: ' .. 'Type [D]efinition' })
+          print 'OmniSharp is ready!'
+        end,
       }
     end,
   },
