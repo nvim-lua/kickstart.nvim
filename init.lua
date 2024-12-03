@@ -180,6 +180,17 @@ vim.keymap.set('n', '<leader>x', vim.cmd.Ex)
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
 
+-- Yank/Past
+-- p without overriding default register
+vim.keymap.set("x", "<leader>p", [["_dP]])
+-- yank to os clipboard
+vim.keymap.set({"n", "v"}, "<leader>y", [["+y]])
+-- yank line to os clipboard
+vim.keymap.set("n", "<leader>Y", [["+Y]])
+-- delete to void register
+vim.keymap.set({"n", "v"}, "<leader>d", "\"_d")
+
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
