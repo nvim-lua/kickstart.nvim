@@ -4,6 +4,10 @@ return {
   config = function()
     require('chatgpt').setup {
       -- this config assumes you have OPENAI_API_KEY environment variable set
+      popup_input = {
+        submit = '<C-s>',
+      },
+
       openai_params = {
         -- NOTE: model can be a function returning the model name
         -- this is useful if you want to change the model on the fly
