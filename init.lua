@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -897,7 +897,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'nu' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -908,6 +908,32 @@ require('lazy').setup({
         additional_vim_regex_highlighting = { 'ruby' },
       },
       indent = { enable = true, disable = { 'ruby' } },
+      -- OPTIONAL!! These enable ts-specific textobjects.
+      -- So you can hit `yaf` to copy the closest function,
+      -- `dif` to clear the contet of the closest function,
+      -- or whatever keys you map to what query.
+      textobjects = {
+        select = {
+          enable = true,
+          keymaps = {
+            -- You can use the capture groups defined in textobjects.scm
+            -- For example:
+            -- Nushell only
+            ['aP'] = '@pipeline.outer',
+            ['iP'] = '@pipeline.inner',
+
+            -- supported in other languages as well
+            ['af'] = '@function.outer',
+            ['if'] = '@function.inner',
+            ['al'] = '@loop.outer',
+            ['il'] = '@loop.inner',
+            ['aC'] = '@conditional.outer',
+            ['iC'] = '@conditional.inner',
+            ['iS'] = '@statement.inner',
+            ['aS'] = '@statement.outer',
+          }, -- keymaps
+        }, -- select
+      }, -- textobjects
     },
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
