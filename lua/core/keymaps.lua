@@ -37,6 +37,7 @@ return {
   map('n', '<S-Tab>', ':bp!<Enter>', { desc = 'Go to previous buffer' }),
   map('n', '<leader>bd', ':bd<Enter>', { desc = 'close the current buffer' }),
   map('n', '<leader>bl', ':FlyBuf<Enter>', { desc = 'open up a list of all buffers in a float' }),
+  map('n', '<C-w>d', ':bp<bar>sp<bar>bn<bar>bd<CR>', { desc = 'close the current buffer' }),
 
   -- neo-tree
   vim.keymap.set('n', '<leader>e', ':Neotree reveal<CR>', { desc = 'Open file browser' }),
