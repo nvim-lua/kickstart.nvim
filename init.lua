@@ -26,6 +26,7 @@ vim.g.have_nerd_font = true -- Set to true if you have a Nerd Font installed and
 -- :help vim.opt
 -- :help option-list
 
+vim.opt.guifont = 'Hack Nerd Font:h10'
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.mouse = 'n' -- Enable mouse mode, can be useful for resizing splits for example!
