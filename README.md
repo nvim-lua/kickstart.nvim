@@ -72,4 +72,4 @@ nvim commands to help you track down key bindings and resolve conflicts:
 
 Kickstart: [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim)
 Kickstart Video: [Get Started with Neovim](https://youtu.be/m8C0Cq9Uv9o)
-
+Docs: [https://neovim.io/doc/user/](Manual)
