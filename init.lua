@@ -3,19 +3,6 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
-local function nvim_ver(major, minor)
-  local version = vim.version()
-  return (version.major > major or version.minor >= minor)
-end
-
--- fs_stat moves based on version :(
-local fs_stat = function(path)
-  if nvim_ver(0, 10) then
-    return vim.uv.fs_stat(path)
-  end
-  return vim.loop.fs_stat(path)
-end
-
 -- Margins
 vim.opt.title = false -- in status, not great with tmux
 vim.opt.number = true -- show line number
@@ -92,8 +79,9 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- Install Lazy from Github
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
+local uv = vim.uv or vim.loop
 
-if not fs_stat(lazypath) then
+if not uv.fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
   local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
   if vim.v.shell_error ~= 0 then
@@ -106,6 +94,7 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
 
   require 'plugins.indentguess', -- Detects tabstop and shiftwidth to match orig
+  require 'plugins.indent_line', -- Mark indent with vertical ruler (default as toggle off)
   require 'plugins.neovimacs', -- Emacs-style keybindings while in insert mode
   require 'plugins.gitsigns', -- Add git changes to gutter
   require 'plugins.which-key', -- Show keybindings as you go
