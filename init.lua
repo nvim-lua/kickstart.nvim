@@ -219,6 +219,11 @@ require('lazy').setup({
         })
       end, { desc = '[/] Fuzzily search in current buffer' })
 
+      -- Prompting
+      vim.keymap.set('n', '<leader>fG', function()
+        builtin.grep_string { search = vim.fn.input 'grep> ' }
+      end)
+
       -- It's also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
       vim.keymap.set('n', '<leader>s/', function()
@@ -343,6 +348,9 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'ruff', -- lint and format for python
+        'debugpy', -- debugger
+        'taplo', -- LSP for toml files
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
