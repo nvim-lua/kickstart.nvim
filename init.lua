@@ -14,11 +14,15 @@ vim.opt.scrolloff = 10
 vim.opt.colorcolumn = '120'
 -- vim.opt.breakindent = true
 
--- Sync clipboard between OS and Neovim.
-vim.schedule(function()
-  vim.opt.clipboard = 'unnamedplus'
-end)
-vim.opt.mouse = 'nvi'
+-- TODO: replace with osc52 provider once iTerm2 supports it better
+if vim.env.DISPLAY then
+  if vim.fn.executable 'xclip' == 1 then
+    vim.schedule(function()
+      vim.opt.clipboard:append { 'unnamed', 'unnamedplus' }
+    end)
+  end
+  vim.opt.mouse = 'nvi'
+end
 
 -- File related
 vim.opt.autochdir = false
