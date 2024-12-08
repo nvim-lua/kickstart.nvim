@@ -43,8 +43,12 @@ require('lazy').setup({
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs to stdpath for neovim
-      'williamboman/mason.nvim',
-      'williamboman/mason-lspconfig.nvim',
+      { 'williamboman/mason.nvim', opts = { ensure_installed = { "clangd" } } },
+      {
+        'williamboman/mason-lspconfig.nvim',
+        config = function()
+        end,
+      },
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -119,8 +123,23 @@ require('lazy').setup({
       vim.g.aurora_italic = 1
       vim.g.aurora_transparent = 1
       vim.g.aurora_bold = 1
-      vim.cmd.colorscheme 'aurora'
     end
+  },
+  {
+    "eldritch-theme/eldritch.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {
+      transparent = true,
+      terminal_colors = true,
+      styles = {
+        sidebars = "transparent",
+        floats = "transparent",
+      },
+      lualine_bold = true,
+      on_colors = function(colors) end,
+      on_highlights = function(highlights, colors) end,
+    },
   },
   {
     -- Set lualine as statusline
@@ -129,7 +148,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'aurora',
+        theme = 'eldritch',
         component_separators = '|',
         section_separators = '',
       },
@@ -147,37 +166,6 @@ require('lazy').setup({
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
-
-  -- Fuzzy Finder (files, lsp, etc)
-  {
-    'nvim-telescope/telescope.nvim',
-    branch = '0.1.x',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      -- Fuzzy Finder Algorithm which requires local dependencies to be built.
-      -- Only load if `make` is available. Make sure you have the system
-      -- requirements installed.
-      {
-        'nvim-telescope/telescope-fzf-native.nvim',
-        -- NOTE: If you are having trouble with this installation,
-        --       refer to the README for telescope-fzf-native for more instructions.
-        build = 'make',
-        cond = function()
-          return vim.fn.executable 'make' == 1
-        end,
-      },
-    },
-  },
-
-  {
-    -- Highlight, edit, and navigate code
-    'nvim-treesitter/nvim-treesitter',
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
-    },
-    build = ':TSUpdate',
-  },
-
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -192,6 +180,8 @@ require('lazy').setup({
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   { import = 'custom.plugins' },
 }, {})
+
+vim.cmd[[colorscheme eldritch]]
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -228,8 +218,6 @@ vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
 
 vim.opt.updatetime = 2000
-
-vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = 'white' })
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -368,7 +356,7 @@ vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     modules = {},
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'bash', 'c', 'csv', 'diff', 'elvish', 'git_config', 'git_rebase', 'gitattributes', 'gitcommit', 'gitignore', 'jsonc', 'kconfig', 'lua', 'make', 'markdown', 'query', 'regex', 'toml', 'udev', 'vim', 'vimdoc', 'xml', 'yaml' },
+    ensure_installed = { 'bash', 'c', 'cpp', 'csv', 'diff', 'elvish', 'git_config', 'git_rebase', 'gitattributes', 'gitcommit', 'gitignore', 'jsonc', 'kconfig', 'lua', 'make', 'markdown', 'query', 'regex', 'toml', 'udev', 'vim', 'vimdoc', 'xml', 'yaml' },
 
     -- Download languages from ensure_installed synchronously
     sync_install = false,
@@ -508,7 +496,11 @@ require('mason-lspconfig').setup()
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
+  asm_lsp = {},
+  bashls = {},
   clangd = {},
+  clojure_lsp = {},
+  omnisharp = {},
   -- gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
