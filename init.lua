@@ -100,6 +100,7 @@ require('lazy').setup({
   require 'plugins.indentguess', -- Detects tabstop and shiftwidth to match orig
   require 'plugins.indent_line', -- Mark indent with vertical ruler (default as toggle off)
   require 'plugins.neovimacs', -- Emacs-style keybindings while in insert mode
+  require 'plugins.bufferline', -- Filename header tabs
   require 'plugins.gitsigns', -- Add git changes to gutter
   require 'plugins.which-key', -- Show keybindings as you go
   require 'plugins.telescope', -- Fuzzy finder (file & LSP search)

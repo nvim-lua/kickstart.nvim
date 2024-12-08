@@ -24,7 +24,12 @@ return {
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
-        python = { 'pyright', 'isort', 'black' },
+        python = {
+          'black',
+          'isort',
+          'ruff_format',
+          'pyright',
+        },
         md = { 'prettier' },
         nix = { 'nixfmt' },
         yaml = { 'yamlfmt' },

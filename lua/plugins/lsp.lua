@@ -1,5 +1,5 @@
 return {
-  {
+  { -- properly configures LuaLS
     'folke/lazydev.nvim',
     ft = 'lua',
     opts = {
