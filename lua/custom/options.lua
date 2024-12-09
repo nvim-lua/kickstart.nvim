@@ -69,4 +69,4 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 
 -- Spell Checking
-vim.opt.spell = true
+vim.opt.spell = false
