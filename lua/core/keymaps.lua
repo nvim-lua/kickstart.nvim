@@ -40,7 +40,7 @@ return {
   map('n', '<C-w>d', ':bp<bar>sp<bar>bn<bar>bd<CR>', { desc = 'close the current buffer' }),
 
   -- neo-tree
-  vim.keymap.set('n', '<leader>e', ':Neotree reveal<CR>', { desc = 'Open file browser' }),
+  map('n', '<leader>e', ':Neotree toggle<CR>', { desc = 'Open or close file browser' }),
 
   -- terraform
   map('n', '<leader>ti', ':!terraform init -no-color<CR>', { desc = 'terraform init' }),
