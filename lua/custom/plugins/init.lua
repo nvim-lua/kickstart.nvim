@@ -124,4 +124,20 @@ return {
   },
   { 'ofseed/copilot-status.nvim' },
   --{ 'AndreM222/copilot-lualine' },
+  { -- know what is possible at the command line
+    'gelguy/wilder.nvim',
+    config = function()
+      local wilder = require 'wilder'
+      wilder.setup { modes = { ':', '/', '?' } }
+    end,
+  },
+
+  { -- shows the colors in files e.g. #CCAA33
+    'norcalli/nvim-colorizer.lua',
+    config = function()
+      require('colorizer').setup()
+    end,
+  },
+
+  { 'sainnhe/gruvbox-material' },
 } -- end of return
