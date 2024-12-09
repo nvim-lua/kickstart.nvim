@@ -289,7 +289,7 @@ require('lazy').setup({
           --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
           --   },
           -- },
-          layout_strategy = 'vertical',
+          layout_strategy = 'horizontal',
           pickers = {
             current_buffer_fuzzy_find = {
               theme = 'ivy',
