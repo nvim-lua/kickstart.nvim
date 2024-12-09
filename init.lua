@@ -856,7 +856,7 @@ require('lazy').setup({
 
   -- NOTE: Next step on your Neovim journey: Add/Configure additional plugins for Kickstart
   --
-  require 'plugins.debug',
+  -- require 'plugins.debug',
   -- require 'plugins.indent_line',
   -- require 'plugins.lint',
   require 'plugins.autopairs',
@@ -864,6 +864,7 @@ require('lazy').setup({
   require 'plugins.gitsigns', -- adds gitsigns recommend keymaps
   require 'plugins.codeium',
   require 'plugins.chatgpt',
+  require 'plugins.auto_session',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
