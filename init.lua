@@ -284,23 +284,76 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
-        -- pickers = {}
-
-        --[[          layout_config = {
         defaults = {
+          --   mappings = {
+          --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+          --   },
+          -- },
           layout_strategy = 'vertical',
+          pickers = {
+            current_buffer_fuzzy_find = {
+              theme = 'ivy',
+              previewer = false,
+            },
+            buffers = {
+              sort_lastused = true,
+              -- theme = "dropdown",
+              theme = 'ivy',
+              layout_config = { height = 10 },
+              previewer = false,
+              mappings = {
+                i = { ['<c-d>'] = require('telescope.actions').delete_buffer },
+                n = { ['<c-d>'] = require('telescope.actions').delete_buffer },
+              },
+            },
+            find_files = {
+              theme = 'ivy',
+              layout_config = { height = 10 },
+              previewer = false,
+            },
+            oldfiles = {
+              sort_lastused = true,
+              theme = 'ivy',
+              layout_config = { height = 10 },
+              previewer = false,
+            },
+            command_history = {
+              sort_lastused = true,
+              theme = 'ivy',
+              layout_config = { height = 10 },
+              previewer = false,
+            },
+          },
+
+          --[[
+          layout_config = {
+
+            width = function(_, max_columns)
+              local percentage = 0.7
+              local max = 70
+              return math.min(math.floor(percentage * max_columns), max)
+            end,
+
+            height = function(_, _, max_lines)
+              local percentage = 0.7
+              local min = 70
+              return math.max(math.floor(percentage * max_lines), min)
+            end,
+
+            --            preview_cutoff = 120,
+          },
+          --]]
+          --[[
+          layout_config = {
+            -- defaults = {
+            layout_strategy = 'vertical',
             height = vim.o.lines, -- maximally available lines
             width = vim.o.columns, -- maximally available columns
             prompt_position = 'top',
             --            preview_height = 0.6, -- 60% of available lines
           },
+          --]]
         },
-        --]]
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -324,20 +377,27 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
       -- Slightly advanced example of overriding default behavior and theme
+      --      vim.keymap.set('n', '<leader>/', builtin.current_buffer_fuzzy_find, { desc = '[/] Fuzzily search in current buffer' })
+      vim.keymap.set('n', '<leader>/', function()
+        builtin.current_buffer_fuzzy_find {
+          previewer = false,
+        }
+      end, { desc = '[/] Fuzzily search in current buffer' })
+      --[[
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
         builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-          winblend = 10,
+          winblend = 20,
           previewer = false,
         })
       end, { desc = '[/] Fuzzily search in current buffer' })
+      --]]
 
       -- It's also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
-      vim.keymap.set('n', '<leader>s/', function()
+      vim.keymap.set('n', '<leader><leader>', function()
         builtin.live_grep {
           grep_open_files = true,
           prompt_title = 'Live Grep in Open Files',
