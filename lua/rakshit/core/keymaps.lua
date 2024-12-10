@@ -16,8 +16,6 @@ vim.keymap.set("i", "<A-BS>", "<C-W>")
 -- Diagnostic keymaps
 vim.keymap.set("n", "[d", vim.diagnostic.goto_next, { desc = "Go to next [D]iagnostic message" })
 vim.keymap.set("n", "]d", vim.diagnostic.goto_prev, { desc = "Go to previous [D]iagnostic message" })
-vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rror message" })
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -96,3 +94,35 @@ end
 
 -- Noice
 vim.keymap.set("n", "<leader>nd", "<cmd>NoiceDismiss<CR>", { desc = "Dismiss Noice Message" })
+vim.keymap.set("n", "<leader>ndb", "<cmd>NoiceDisable<CR>", { desc = "Dismiss Noice Message" })
+vim.keymap.set("n", "<leader>ne", "<cmd>NoiceEnable<CR>", { desc = "Dismiss Noice Message" })
+vim.keymap.set("n", "<leader>nl", "<cmd>NoiceLast<CR>", { desc = "Dismiss Noice Message" })
+vim.keymap.set("n", "<leader>nt", "<cmd>NoiceTelescope<CR>", { desc = "Dismiss Noice Message" })
+--[[
+--
+- `:Noice` or `:Noice history` shows the message history
+- `:Noice last` shows the last message in a popup
+- `:Noice dismiss` dismiss all visible messages
+- `:Noice errors` shows the error messages in a split. Last errors on top
+- `:Noice disable` disables **Noice**
+- `:Noice enable` enables **Noice**
+- `:Noice stats` shows debugging stats
+- `:Noice telescope` opens message history in Telescope
+
+Alternatively, all commands also exist as a full name like `:NoiceLast`,
+`:NoiceDisable`.
+
+You can also use `Lua` equivalents.
+
+>lua
+    vim.keymap.set("n", "<leader>nl", function()
+      require("noice").cmd("last")
+    end)
+    
+    vim.keymap.set("n", "<leader>nh", function()
+      require("noice").cmd("history")
+    end)
+--]]
+
+-- Execute highlighted lua commands
+vim.keymap.set("v", "<leader>ex", ":lua<CR>", { desc = "[EX]ecute highlighted lua code" })
