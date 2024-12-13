@@ -664,7 +664,7 @@ require('lazy').setup({
         filetype_overrides = {},
         -- filetypes_denylist: filetypes to not illuminate, this overrides filetypes_allowlist
         filetypes_denylist = {
-        'dirbuf',
+          'dirbuf',
           'dirvish',
           'fugitive',
         },
@@ -699,7 +699,9 @@ require('lazy').setup({
         -- should_enable: a callback that overrides all other settings to
         -- enable/disable illumination. This will be called a lot so don't do
         -- anything expensive in it.
-        should_enable = function(bufnr) return true end,
+        should_enable = function(bufnr)
+          return true
+        end,
         -- case_insensitive_regex: sets regex case sensitivity
         case_insensitive_regex = false,
       }
