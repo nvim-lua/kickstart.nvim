@@ -9,7 +9,7 @@
 -- which loads which-key before all the UI elements are loaded. Events can be
 -- normal autocommands events (`:help autocmd-events`).
 --
--- Then, because we use the `opt` key (recommended), the configuration runs
+-- Then, because we use the `opts` key (recommended), the configuration runs
 -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
 
 return {
