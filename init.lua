@@ -725,6 +725,23 @@ require('lazy').setup({
             },
           },
         },
+
+        azure_pipelines_ls = {
+          schemas = {
+            ['https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json'] = {
+              '/azure-pipeline*.y*l',
+              '/*.azure*',
+              'Azure-Pipelines/**/*.y*l',
+              'Pipelines/*.y*l',
+            },
+          },
+        },
+
+        yamlls = {
+          schemas = {
+            ['https://raw.githubusercontent.com/instrumenta/kubernetes-json-schema/master/v1.18.0-standalone-strict/all.json'] = '/*.k8s.yaml',
+          },
+        },
       }
 
       -- Ensure the servers and tools above are installed
