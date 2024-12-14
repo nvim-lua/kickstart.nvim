@@ -321,6 +321,7 @@ require('lazy').setup({
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>m', group = '[M]arks' },
       },
     },
   },
@@ -434,6 +435,9 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
+
+      -- Custom picker for Harpoon marks
+      vim.keymap.set('n', '<leader>sm', require('harpoon.ui').toggle_quick_menu, { desc = '[S]earch [M]arks' })
     end,
   },
 
@@ -1007,6 +1011,13 @@ require('lazy').setup({
     },
   },
 })
+
+-- Harpoon keybindings
+vim.keymap.set('n', '<leader>ma', require('harpoon.mark').add_file, { desc = '[M]ark [A]dd file' })
+vim.keymap.set('n', '<leader>mm', require('harpoon.ui').toggle_quick_menu, { desc = '[M]ark [M]enu' })
+vim.keymap.set('n', '<leader>mn', require('harpoon.ui').nav_next, { desc = '[M]ark [N]ext' })
+vim.keymap.set('n', '<leader>mp', require('harpoon.ui').nav_prev, { desc = '[M]ark [P]revious' })
+vim.keymap.set('n', '<leader>md', require('harpoon.mark').rm_file, { desc = '[M]ark [D]elete file' })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
