@@ -1013,11 +1013,64 @@ require('lazy').setup({
 })
 
 -- Harpoon keybindings
-vim.keymap.set('n', '<leader>ma', require('harpoon.mark').add_file, { desc = '[M]ark [A]dd file' })
-vim.keymap.set('n', '<leader>mm', require('harpoon.ui').toggle_quick_menu, { desc = '[M]ark [M]enu' })
-vim.keymap.set('n', '<leader>mn', require('harpoon.ui').nav_next, { desc = '[M]ark [N]ext' })
-vim.keymap.set('n', '<leader>mp', require('harpoon.ui').nav_prev, { desc = '[M]ark [P]revious' })
-vim.keymap.set('n', '<leader>md', require('harpoon.mark').rm_file, { desc = '[M]ark [D]elete file' })
+local harpoon = require 'harpoon'
+
+-- REQUIRED
+harpoon:setup()
+-- REQUIRED
+
+vim.keymap.set('n', '<leader>ma', function()
+  harpoon:list():add()
+end, { desc = '[M]ark [A]dd file' })
+
+vim.keymap.set('n', '<C-e>', function()
+  harpoon.ui:toggle_quick_menu(harpoon:list())
+end, { desc = '[M]ark [M]enu' })
+
+vim.keymap.set('n', '<leader>mn', function()
+  harpoon:list():next()
+end, { desc = '[M]ark [N]ext' })
+
+vim.keymap.set('n', '<leader>mp', function()
+  harpoon:list():prev()
+end, { desc = '[M]ark [P]revious' })
+
+vim.keymap.set('n', '<C-h>', function()
+  harpoon:list():select(1)
+end)
+vim.keymap.set('n', '<C-t>', function()
+  harpoon:list():select(2)
+end)
+vim.keymap.set('n', '<C-n>', function()
+  harpoon:list():select(3)
+end)
+vim.keymap.set('n', '<C-s>', function()
+  harpoon:list():select(4)
+end)
+
+-- basic telescope configuration
+local conf = require('telescope.config').values
+local function toggle_telescope(harpoon_files)
+  local file_paths = {}
+  for _, item in ipairs(harpoon_files.items) do
+    table.insert(file_paths, item.value)
+  end
+
+  require('telescope.pickers')
+    .new({}, {
+      prompt_title = 'Harpoon',
+      finder = require('telescope.finders').new_table {
+        results = file_paths,
+      },
+      previewer = conf.file_previewer {},
+      sorter = conf.generic_sorter {},
+    })
+    :find()
+end
+
+vim.keymap.set('n', '<leader>mt', function()
+  toggle_telescope(harpoon:list())
+end, { desc = 'Open harpoon window' })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
