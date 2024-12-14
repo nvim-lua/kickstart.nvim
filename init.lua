@@ -363,12 +363,21 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
-        -- pickers = {}
+        defaults = {
+          layout_config = {
+            vertical = { width = 0.8, height = 0.8 },
+            horizontal = { width = 0.8 },
+          },
+        },
+        pickers = {
+          diagnostics = {
+            theme = 'dropdown',
+            previewer = false,
+            layout_config = {
+              width = 0.9,
+            },
+          },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -388,10 +397,15 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+
+      vim.keymap.set('n', '<leader>sd', function()
+        builtin.diagnostics {
+          bufnr = 0,
+        }
+      end, { desc = '[S]earch [D]iagnostics' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -527,6 +541,29 @@ require('lazy').setup({
           --  For example, in C this would take you to the header.
           map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
+          vim.api.nvim_create_autocmd('BufWritePre', {
+            pattern = '*.go',
+            callback = function()
+              local params = vim.lsp.util.make_range_params()
+              params.context = { only = { 'source.organizeImports' } }
+              -- buf_request_sync defaults to a 1000ms timeout. Depending on your
+              -- machine and codebase, you may want longer. Add an additional
+              -- argument after params if you find that you have to write the file
+              -- twice for changes to be saved.
+              -- E.g., vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
+              local result = vim.lsp.buf_request_sync(0, 'textDocument/codeAction', params)
+              for cid, res in pairs(result or {}) do
+                for _, r in pairs(res.result or {}) do
+                  if r.edit then
+                    local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or 'utf-16'
+                    vim.lsp.util.apply_workspace_edit(r.edit, enc)
+                  end
+                end
+              end
+              vim.lsp.buf.format { async = false }
+            end,
+          })
+
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
@@ -587,7 +624,17 @@ require('lazy').setup({
       local servers = {
         ruby_lsp = {},
         -- clangd = {},
-        gopls = {},
+        gopls = {
+          settings = {
+            gopls = {
+              analyses = {
+                unusedparams = true,
+              },
+              staticcheck = true,
+              usePlaceholders = true,
+            },
+          },
+        },
         -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -646,6 +693,44 @@ require('lazy').setup({
     end,
   },
 
+  { 'nvim-neotest/nvim-nio' },
+
+  {
+    'nvim-neotest/neotest',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+      'nvim-neotest/neotest-go',
+    },
+    opts = {},
+    config = function()
+      local neotest = require 'neotest'
+
+      neotest.setup {
+        adapters = {
+          -- require 'neotest-rspec' {
+          --   rspec_cmd = function()
+          --     return vim.tbl_flatten {
+          --       'bundle',
+          --       'exec',
+          --       'rspec',
+          --     }
+          --   end,
+          -- },
+          require 'neotest-go',
+        },
+        output_panel = {
+          enabled = true,
+          open = 'botright split | resize 15',
+        },
+        quickfix = {
+          open = false,
+        },
+      }
+
+      vim.keymap.set('n', '<leader>rt', "<cmd>lua require('neotest').run.run()<CR>", { desc = 'Run Test' })
+    end,
+  },
+
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
@@ -674,6 +759,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        go = { 'gofmt' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
