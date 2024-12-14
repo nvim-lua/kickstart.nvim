@@ -22,4 +22,5 @@ return {
       require('harpoon').setup()
     end,
   },
+  'github/copilot.vim',
 }
