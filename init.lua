@@ -132,10 +132,11 @@ vim.opt.smartcase = true
 vim.opt.signcolumn = 'yes'
 
 -- Decrease update time
-vim.opt.updatetime = 250
+vim.opt.updatetime = 125
 
 -- Decrease mapped sequence wait time
-vim.opt.timeoutlen = 300
+-- Displays which-key popup sooner
+vim.opt.timeoutlen = 200
 
 -- Configure how new splits should be opened
 vim.opt.splitright = true
@@ -154,7 +155,7 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
+vim.opt.scrolloff = 0
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
@@ -767,7 +768,7 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { 'isort', 'black' },
+        python = { 'ruff_fix', 'ruff_format', 'ruff_organize_imports' },
         json = {},
         -- You can use 'stop_after_first' to run the first available formatter from the list
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
@@ -939,17 +940,17 @@ require('lazy').setup({
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
-      local statusline = require 'mini.statusline'
+      --local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
+      --statusline.setup { use_icons = vim.g.have_nerd_font }
 
       -- You can configure sections in the statusline by overriding their
       -- default behavior. For example, here we set the section for
       -- cursor location to LINE:COLUMN
       ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return '%2l:%-2v'
-      end
+      --statusline.section_location = function()
+      --  return '%2l:%-2v'
+      --end
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
@@ -1037,7 +1038,7 @@ require('lspconfig').pylsp.setup {
     pylsp = {
       plugins = {
         black = {
-          enabled = true,
+          enabled = false,
           --  line_length = 120,
         },
         autopep8 = {
@@ -1047,20 +1048,38 @@ require('lspconfig').pylsp.setup {
           enabled = false,
         },
         pycodestyle = {
+          enabled = false,
           ignore = { 'W391' },
           maxLineLength = 120,
         },
         isort = {
-          enabled = true,
+          enabled = false,
         },
         pylint = {
+          enabled = false,
+        },
+        pyflakes = {
+          enabled = false,
+        },
+        ruff = {
           enabled = true,
+          formatEnabled = true,
+          lineLength = 120,
+          targetVersion = 'py311',
         },
       },
     },
   },
 }
-
+-- require('lspconfig').ruff.setup {
+--   init_options = {
+--     settings = {
+--       -- Ruff language server settings go here
+--       lineLength = 120,
+--       showSyntaxErrors = true,
+--     },
+--   },
+-- }
 vim.keymap.set('t', '<ESC>', '<C-\\><C-n>', {})
 vim.keymap.set('n', '<leader>xt', ':Telescope colorscheme<CR>', {})
 -- The line beneath this is called `modeline`. See `:help modeline`
