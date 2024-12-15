@@ -897,13 +897,16 @@ require('lazy').setup({
       end
 
       -- Starter screen
-      -- require('mini.starter').setup()
+      require('mini.starter').setup()
 
       -- Jump to next/previous single character
       require('mini.jump').setup()
 
       -- Move any selection in any direction
       require('mini.move').setup()
+
+      -- Minimal autopairs
+      require('mini.pairs').setup()
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
@@ -947,7 +950,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.debug',
   require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  require 'kickstart.plugins.autopairs',
+  -- require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
