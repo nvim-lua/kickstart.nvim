@@ -635,6 +635,47 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
+        -- ansiblels
+        ansiblels = {
+          filetypes = { 'yaml', 'yaml.ansible' },
+          settings = {
+            ansible = {
+              ansibleLint = {
+                enabled = true,
+                path = 'ansible-lint',
+              },
+              ansible = {
+                path = 'ansible',
+              },
+              python = {
+                interpreterPath = 'python3',
+              },
+            },
+          },
+        },
+
+        -- azure_pipelines_ls
+        azure_pipelines_ls = {
+          filetypes = { 'yml', 'yaml.azure-pipelines' },
+          settings = {
+            azurePipelines = {
+              schema = {
+                url = 'https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json',
+              },
+            },
+          },
+        },
+
+        -- bashls
+        bashls = {
+          filetypes = { 'sh', 'zsh' },
+          settings = {
+            bash = {
+              filetypes = { 'sh', 'zsh' },
+            },
+          },
+        },
+
         -- clangd = {},
         gopls = {
           gofumpt = true,
@@ -645,7 +686,6 @@ require('lazy').setup({
             regenerate_cgo = true,
             run_govulncheck = true,
             test = true,
-            tidy = true,
             tidy = true,
             vendor = true,
           },
@@ -1138,8 +1178,9 @@ require('lazy').setup({
 })
 
 -- Better copy-paste between vim and system clipboard
-vim.api.nvim_set_keymap('v', '<C-c>', '"+y', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<C-v>', '"+p', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<C-c>', '"+y', { noremap = true, silent = true, desc = 'Copy to system clipboard' })
+vim.api.nvim_set_keymap('n', '<C-v>', '"+p', { noremap = true, silent = true, desc = 'Paste from system clipboard' })
+vim.api.nvim_set_keymap('i', '<C-v>', '<C-r>+', { noremap = true, silent = true, desc = 'Paste from system clipboard in insert mode' })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
