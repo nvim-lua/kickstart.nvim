@@ -328,6 +328,7 @@ require('lazy').setup({
       -- See `:help telescope` and `:help telescope.setup()`
       require('telescope').setup {
         defaults = {
+          file_ignore_patterns = { 'node_modules' },
           layout_strategy = 'flex',
           layout_config = {
             flex = {
@@ -349,7 +350,12 @@ require('lazy').setup({
         --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
         --   },
         -- },
-        -- pickers = {}
+        pickers = {
+          find_files = {
+            hidden = true,
+          },
+        },
+
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -904,6 +910,7 @@ require('lazy').setup({
         'typescript',
         'svelte',
         'zig',
+        'php',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
