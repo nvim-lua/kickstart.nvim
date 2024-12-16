@@ -12,6 +12,9 @@ vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagn
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 vim.keymap.set('n', '<leader>z', require('telescope').extensions.zoxide.list, { desc = '[Z]oxide to different dir' })
 vim.keymap.set('n', '<leader>jl', require('telescope.builtin').jumplist, { desc = '[J]ump [L]ist' })
+vim.keymap.set('n', '<leader>ft', function()
+  vim.g.disable_format = not vim.g.disable_autoformat
+end, { desc = 'Auto[F]ormat [T]oggle ' })
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.

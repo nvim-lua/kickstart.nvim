@@ -477,15 +477,6 @@ require('lazy').setup({
       local servers = {
         clangd = {},
         -- gopls = {},
-        ruff = {
-          trace = 'messages',
-          on_attach = on_attach,
-          init_options = {
-            settings = {
-              logLevel = 'info',
-            },
-          },
-        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -493,7 +484,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {
+        ts_ls = {
           init_options = {
             plugins = {
               {
@@ -511,8 +502,15 @@ require('lazy').setup({
             },
           },
         },
-        --
-        pylsp = {},
+        pylsp = {
+          plugins = {
+            ruff = {
+              enabled = true,
+              formatEnabled = true,
+            },
+            autopep8 = { enabled = false },
+          },
+        },
         cmake = {},
         lua_ls = {
           -- cmd = {...},
@@ -567,31 +565,29 @@ require('lazy').setup({
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<leader>f',
+        '<leader>ff',
         function()
           require('conform').format { async = true, lsp_format = 'fallback' }
         end,
         mode = '',
-        desc = '[F]ormat buffer',
+        desc = '[F]ormat [F]ile buffer',
       },
     },
     opts = {
-      notify_on_error = false,
+      notify_on_error = true,
       format_on_save = function(bufnr)
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
         local disable_filetypes = { c = true, cpp = true, py = true, ts = true, vue = true }
-        local lsp_format_opt
-        if disable_filetypes[vim.bo[bufnr].filetype] then
-          lsp_format_opt = 'never'
+        if disable_filetypes[vim.bo[bufnr].filetype] or vim.g.disable_autoformat then
+          return
         else
-          lsp_format_opt = 'fallback'
+          return {
+            timeout_ms = 500,
+            lsp_format = 'fallback',
+          }
         end
-        return {
-          timeout_ms = 500,
-          lsp_format = lsp_format_opt,
-        }
       end,
       formatters_by_ft = {
         cmake = { 'cmakelang' },
@@ -599,7 +595,8 @@ require('lazy').setup({
         json = { 'clang-format-15' },
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        python = { 'ruff_format', 'ruff_fix' },
+        python = { 'ruff_format', 'ruff_fix', 'ruff_organize_imports' },
+        ['*'] = { 'codespell' },
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
@@ -818,7 +815,7 @@ require('lazy').setup({
     end,
   },
 
-  -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
+  -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted thefals
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
 
