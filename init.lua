@@ -696,6 +696,7 @@ require('lazy').setup({
         json = { { 'prettier' } },
         javascript = { { 'prettier' } },
         typescript = { { 'prettier' } },
+        nix = { { 'nixfmt' } },
       },
     },
   },
