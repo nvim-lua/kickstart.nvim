@@ -1,0 +1,1 @@
+[{"url": "postgresql://postgres:mysecretpassword@localhost:5432/postgres", "name": "postgresLOCAL"}, {"url": "postgres://Jam:uTbgAJkiWNQoaQM6Avs3@database-1.cl0yc6giqcky.us-west-2.rds.amazonaws.com:5432/argodb", "name": "argodb"}]

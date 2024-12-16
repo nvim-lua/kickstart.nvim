@@ -1,5 +1,4 @@
 --[[
-
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
 =====================================================================
@@ -14,7 +13,7 @@
 ========         |'-..................-'|   |____o|          ========
 ========         `"")----------------(""`   ___________      ========
 ========        /::::::::::|  |::::::::::\  \ no mouse \     ========
-========       /:::========|  |==hjkl==:::\  \ required \    ========
+========       /:::========|  |==hjkl==:::\  \ reqired \    ========
 ========      '""""""""""""'  '""""""""""""'  '""""""""""'   ========
 ========                                                     ========
 =====================================================================
@@ -22,7 +21,7 @@
 
 What is Kickstart?
 
-  Kickstart.nvim is *not* a distribution.
+  Kickstart.nvim is *not* a distribtion.
 
   Kickstart.nvim is a starting point for your own configuration.
     The goal is that you can read every line of code, top-to-bottom, understand
@@ -47,7 +46,7 @@ Kickstart Guide:
 
     If you don't know what this means, type the following:
       - <escape key>
-      - :
+h   - :
       - Tutor
       - <enter key>
 
@@ -97,12 +96,12 @@ vim.g.have_nerd_font = false
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
-
+vim.opt.foldmethod = 'indent'
 -- Make line numbers default
-vim.opt.number = true
+--vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -128,12 +127,11 @@ vim.opt.undofile = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
--- Keep signcolumn on by default
+-- Keep signcolumn on by default.
 vim.opt.signcolumn = 'yes'
 
 -- Decrease update time
-vim.opt.updatetime = 250
-
+vim.opt.updatetime = 20
 -- Decrease mapped sequence wait time
 -- Displays which-key popup sooner
 vim.opt.timeoutlen = 300
@@ -189,6 +187,9 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+-- I removed this because I just use oiler now with "-"
+--vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -257,7 +258,6 @@ require('lazy').setup({
   },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
-  --
   -- This is often very useful to both group configuration, as well as handle
   -- lazy loading plugins that don't need to be loaded immediately at startup.
   --
@@ -358,7 +358,7 @@ require('lazy').setup({
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
-      -- it can fuzzy find! It's more than just a "file finder", it can search
+      --", it can search
       -- many different aspects of Neovim, your workspace, LSP, and more!
       --
       -- The easiest way to use Telescope, is to start by doing something like:
@@ -411,7 +411,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
-
+      vim.keymap.set('n', '<C-p>', ':Telescope find_files<CR>')
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
@@ -450,6 +450,7 @@ require('lazy').setup({
       },
     },
   },
+
   { 'Bilal2453/luvit-meta', lazy = true },
   {
     -- Main LSP Configuration
@@ -468,6 +469,13 @@ require('lazy').setup({
       'hrsh7th/cmp-nvim-lsp',
     },
     config = function()
+      -- Add the dadbod completion setup here
+      require('cmp').setup.filetype('sql', {
+        sources = {
+          { name = 'vim-dadbod-completion' },
+          { name = 'buffer' },
+        },
+      })
       -- Brief aside: **What is LSP?**
       --
       -- LSP is an initialism you've probably heard, but might not understand what it is.
@@ -475,7 +483,7 @@ require('lazy').setup({
       -- LSP stands for Language Server Protocol. It's a protocol that helps editors
       -- and language tooling communicate in a standardized fashion.
       --
-      -- In general, you have a "server" which is some tool built to understand a particular
+      -- In general, you have a "" which is some tool built to understand a particular
       -- language (such as `gopls`, `lua_ls`, `rust_analyzer`, etc.). These Language Servers
       -- (sometimes called LSP servers, but that's kind of like ATM Machine) are standalone
       -- processes that communicate with some "client" - in this case, Neovim!
@@ -617,7 +625,7 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -625,7 +633,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+        ts_ls = {},
         --
 
         lua_ls = {
@@ -674,7 +682,6 @@ require('lazy').setup({
       }
     end,
   },
-
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
@@ -703,14 +710,15 @@ require('lazy').setup({
           lsp_format_opt = 'fallback'
         end
         return {
-          timeout_ms = 500,
+          timeout_ms = 2000, -- this was 500
           lsp_format = lsp_format_opt,
+          async = false, -- added this line
         }
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = { 'isort', 'black' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
@@ -797,7 +805,6 @@ require('lazy').setup({
           --  Generally you don't need this, because nvim-cmp will display
           --  completions whenever it has completion options available.
           ['<C-Space>'] = cmp.mapping.complete {},
-
           -- Think of <c-l> as moving to the right of your snippet expansion.
           --  So if you have a snippet that's like:
           --  function $name($args)
@@ -833,24 +840,42 @@ require('lazy').setup({
       }
     end,
   },
-
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
-    init = function()
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
-
-      -- You can configure highlights by doing something like:
-      vim.cmd.hi 'Comment gui=none'
+  {
+    'sainnhe/gruvbox-material',
+    priority = 1000,
+    config = function()
+      vim.g.gruvbox_material_foreground = 'original'
+      vim.g.gruvbox_material_background = 'medium'
+      vim.g.gruvbox_material_enable_italic = 1
+      vim.g.gruvbox_material_better_performance = 1
+      vim.cmd [[colorscheme gruvbox-material]]
     end,
   },
+  -- {
+  --   'shaunsingh/nord.nvim', -- Use the Nord plugin
+  --   priority = 1000,
+  --   init = function()
+  --     vim.cmd.colorscheme 'nord' -- Change to 'nord'
+  --   end,
+  -- },
+  -- { -- You can easily change to a different colorscheme.
+  --
+  --   -- Change the name of the colorscheme plugin below, and then
+  --   -- change the command in the config to whatever the name of that colorscheme is.
+  --
+  -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
+  --   'folke/tokyonight.nvim',
+  --   priority = 1000, -- Make sure to load this before all the other start plugins.
+  --   init = function()
+  --     -- Load the colorscheme here.
+  --     -- Like many other themes, this one has different styles, and you could load
+  --     -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+  --     vim.cmd.colorscheme 'tokyonight-night'
+  --
+  --     -- You can configure highlights by doing something like:
+  --     vim.cmd.hi 'Comment gui=none'
+  --   end,
+  -- },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
@@ -872,9 +897,7 @@ require('lazy').setup({
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
-
-      -- Simple and easy statusline.
-      --  You could remove this setup call if you don't like it,
+      -- Simple and easy statusline. You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
       local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
@@ -898,7 +921,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'typescript', 'python', 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -933,17 +956,115 @@ require('lazy').setup({
   -- require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  --
+  {
+    'nvim-tree/nvim-web-devicons',
+    lazy = true,
+  },
+  {
+    'folke/zen-mode.nvim',
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+    },
+  },
+  {
+    'stevearc/oil.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      CustomOilBar = function()
+        local path = vim.fn.expand '%'
+        path = path:gsub('oil://', '')
+
+        return '  ' .. vim.fn.fnamemodify(path, ':.')
+      end
+
+      require('oil').setup {
+        columns = { 'icon' },
+        keymaps = {
+          ['<C-h>'] = false,
+          ['<C-l>'] = false,
+          ['<C-k>'] = false,
+          ['<C-j>'] = false,
+          ['<M-h>'] = 'actions.select_split',
+        },
+        win_options = {
+          winbar = '%{v:lua.CustomOilBar()}',
+        },
+        view_options = {
+          show_hidden = true,
+          is_always_hidden = function(name, _)
+            local folder_skip = { 'dev-tools.locks', 'dune.lock', '_build' }
+            return vim.tbl_contains(folder_skip, name)
+          end,
+        },
+      }
+
+      -- Open parent directory in current window
+      vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
+
+      -- Open parent directory in floating window
+      vim.keymap.set('n', '<space>-', require('oil').toggle_float)
+    end,
+  },
+  -- NOTE Custom plugins
+  {
+    'ThePrimeagen/harpoon',
+    branch = 'harpoon2',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local harpoon = require 'harpoon'
+      harpoon:setup()
+
+      vim.keymap.set('n', '<leader>a', function()
+        harpoon:list():add()
+      end)
+      vim.keymap.set('n', '<leader>h', function()
+        harpoon.ui:toggle_quick_menu(harpoon:list())
+      end)
+
+      vim.keymap.set('n', '<leader>1', function()
+        harpoon:list():select(1)
+      end)
+      vim.keymap.set('n', '<leader>2', function()
+        harpoon:list():select(2)
+      end)
+      vim.keymap.set('n', '<leader>3', function()
+        harpoon:list():select(3)
+      end)
+      vim.keymap.set('n', '<leader>4', function()
+        harpoon:list():select(4)
+      end)
+    end,
+  },
+  {
+    'mbbill/undotree',
+    keys = {
+      { '<leader>u', vim.cmd.UndotreeToggle, desc = 'Toggle undotree' },
+    },
+  },
+  {
+    'tpope/vim-dadbod',
+    dependencies = {
+      'kristijanhusak/vim-dadbod-ui',
+      'kristijanhusak/vim-dadbod-completion',
+    },
+    config = function()
+      vim.g.db_ui_save_location = vim.fn.stdpath 'config' .. '/db_ui'
+    end,
+  },
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   -- { import = 'custom.plugins' },
-  --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
   -- you can continue same window with `<space>sr` which resumes last telescope search
+  --NOTE custom plugins
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
@@ -965,6 +1086,5 @@ require('lazy').setup({
     },
   },
 })
-
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
