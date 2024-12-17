@@ -6,9 +6,6 @@ return {
     -- The following are optional:
     { 'MeanderingProgrammer/render-markdown.nvim', ft = { 'markdown', 'codecompanion' } },
   },
-  keys = {
-    { '<leader>cc', '<cmd>CodeCompanionChat<cr>', desc = 'Start chat' },
-  },
   config = function()
     require('codecompanion').setup {
       adapters = {
@@ -27,5 +24,8 @@ return {
         },
       },
     }
+
+    vim.keymap.set('n', '<leader>cc', '<cmd>CodeCompanionChat<cr>', { desc = '[CodeCompanion] Start chat' })
+    vim.keymap.set('v', '<leader>ca', '<cmd>CodeCompanion<cr>', { desc = '[CodeCompanion] Inline chat' })
   end,
 }
