@@ -1,6 +1,3 @@
-if true then
-  return {}
-end
 return {
   'epwalsh/obsidian.nvim',
   version = '*', -- recommended, use latest release instead of latest commit
@@ -23,15 +20,9 @@ return {
   opts = {
     workspaces = {
       {
-        name = 'daybook',
-        path = '~/workspace/obsidian/daybook',
-      },
-      {
         name = 'obsidian-vault',
-        path = '~/workspace/obsidian/obsidian-vault',
+        path = '~/workspace/github.com/0x4D5352/obsidian-vault',
       },
     },
-
-    -- see below for full list of options 👇
   },
 }

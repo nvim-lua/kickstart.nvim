@@ -10,7 +10,6 @@ return {}
 -- https://github.com/stevearc/oil.nvim
 -- https://github.com/debugloop/telescope-undo.nvim
 -- https://github.com/nvim-java/nvim-java
--- https://github.com/epwalsh/obsidian.nvim
 -- https://github.com/nvim-neotest/neotest
 -- https://github.com/rafcamlet/nvim-luapad
 -- https://github.com/ellisonleao/glow.nvim
