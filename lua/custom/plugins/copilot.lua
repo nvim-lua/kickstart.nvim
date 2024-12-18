@@ -31,37 +31,17 @@ return {
   --
   {
     'CopilotC-Nvim/CopilotChat.nvim',
-    branch = 'canary',
     dependencies = {
       { 'github/copilot.vim' }, -- or github/copilot.vim
       -- { 'zbirenbaum/copilot.lua' }, -- or github/copilot.vim
-      { 'nvim-lua/plenary.nvim' }, -- for curl, log wrapper
+      { 'nvim-lua/plenary.nvim', branch = 'master' }, -- for curl, log wrapper
     },
     build = 'make tiktoken', -- Only on MacOS or Linux
     opts = {
       -- debug = true, -- Enable debugging
       -- See Configuration section for rest
-      model = 'claude-3.5-sonnet', -- GPT model to use, 'gpt-3.5-turbo', 'gpt-4', or 'gpt-4o', 'o1-mini', 'o1-preview'
+      model = 'claude-3.5-sonnet', -- GPT model to use, 'gpt-3.5-turbo', 'gpt-4', or 'gpt-4o', 'o1-mini', 'o1-preview', 'claude-3.5-sonnet'
       -- clear_chat_on_new_prompt = true,
-    },
-    -- See Commands section for default commands if you want to lazy load on them
-    --
-    -- keys = {
-    --   {
-    --     '<leader>ccq',
-    --     function()
-    --       local input = vim.fn.input 'Quick Chat: '
-    --       if input ~= '' then
-    --         -- require('CopilotChat').ask(input, { selection = require('CopilotChat.select').buffer })
-    --         require('CopilotChat').ask(input)
-    --       end
-    --     end,
-    --     desc = 'CopilotChat - Quick chat',
-    --   },
-    -- },
-    keys = {
-      -- { '<leader>ccq', '<cmd>CopilotChatOpen<cr>', mode = 'x', desc = 'CopilotChat' },
-      { '<leader>ccq', ':CopilotChat ', mode = 'x', desc = 'CopilotChat' },
     },
   },
   -- {

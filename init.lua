@@ -805,13 +805,13 @@ require('lazy').setup({
         harper_ls = {
           -- userDictPath = '~/dict.txt',
         },
-        ltex = {
-          ltex = {
-            additionalRules = {
-              languageModel = '~/ngrams/',
-            },
-          },
-        },
+        -- ltex = {
+        --   ltex = {
+        --     additionalRules = {
+        --       languageModel = '~/ngrams/',
+        --     },
+        --   },
+        -- },
       }
       -- Ensure the servers and tools above are installed
       --  To check the current status of installed tools and/or manually install
