@@ -8,8 +8,8 @@ return {
   -- or lazy = false. One of both options will work.
   opts = function()
     local hl_cursor_line = vim.api.nvim_get_hl(0, { name = "CursorLine" })
-    local hl_comment = vim.api.nvim_get_hl(0, { name = "Comment" })
-    local hl_combined = vim.tbl_extend("force", hl_comment, { bg = hl_cursor_line.bg })
+    local hl_question = vim.api.nvim_get_hl(0, { name = "Question" })
+    local hl_combined = vim.tbl_extend("force", hl_question, { bg = hl_cursor_line.bg })
     vim.api.nvim_set_hl(0, "CursorLineBlame", hl_combined)
     return {
       enabled = true,
