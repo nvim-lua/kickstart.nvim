@@ -94,6 +94,40 @@ P.S. You can delete this when you're done too. It's your config now! :)
 
 -- vim.api.nvim_set_hl(0, 'ReturnKeyword', { fg = '#FF0000', bold = true })
 -- Your existing Neovim configurations..
+vim.opt.autoread = true
+vim.cmd 'autocmd VimResume * checktime'
+
+-- Triger `autoread` when files changes on disk
+-- https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
+-- https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
+vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold', 'CursorHoldI' }, {
+  pattern = '*',
+  command = "if mode() !~ '\v(c|r.?|!|t)' && getcmdwintype() == '' | checktime | endif",
+})
+
+-- Notification after file change
+-- https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
+vim.api.nvim_create_autocmd({ 'FileChangedShellPost' }, {
+  pattern = '*',
+  command = "echohl WarningMsg | echo 'File changed on disk. Buffer reloaded.' | echohl None",
+})
+-- Trigger 'autoread' when files change on disk
+-- -- Auto-read changed files when focus is gained or events occur
+-- vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold', 'CursorHoldI' }, {
+--   callback = function()
+--     if vim.fn.mode() ~= 'c' then
+--       vim.cmd 'checktime'
+--     end
+--   end,
+-- })
+--
+-- -- Notification after file change
+-- vim.api.nvim_create_autocmd('FileChangedShellPost', {
+--   callback = function()
+--     vim.api.nvim_echo({ { 'File changed on disk. Buffer reloaded.', 'WarningMsg' } }, true, {})
+--   end,
+-- })
+
 vim.lsp.inlay_hint.enable()
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
@@ -217,7 +251,8 @@ vim.opt.splitbelow = true
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+-- vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { tab = '│ ', trail = '·', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
@@ -476,10 +511,28 @@ require('lazy').setup({
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
+      'saghen/blink.cmp',
       -- Automatically install LSPs and related tools to stdpath for Neovim
       { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
-      { 'williamboman/mason-lspconfig.nvim' },
+      -- { 'williamboman/mason-lspconfig.nvim' },
+      {
+        'williamboman/mason-lspconfig.nvim',
+        dependencies = { 'williamboman/mason.nvim', 'neovim/nvim-lspconfig' },
+        config = function()
+          require('mason').setup()
+          require('mason-lspconfig').setup {
+            ensure_installed = { 'ts_ls', 'lua_ls', 'eslint' },
+            automatic_installation = true,
+          }
 
+          local lspconfig = require 'lspconfig'
+
+          -- Setup tsserver
+          lspconfig.ts_ls.setup {}
+
+          -- Setup other servers similarly
+        end,
+      },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
@@ -503,7 +556,8 @@ require('lazy').setup({
     config = function()
       local lspconfig = require 'lspconfig'
       local util = require 'lspconfig/util'
-
+      local capabilities = require('blink.cmp').get_lsp_capabilities()
+      require('lspconfig').lua_ls.setup { capabilities = capabilities }
       -- Mason setup to ensure terraform-ls is installed
       require('mason-lspconfig').setup {
         ensure_installed = { 'terraformls', 'tflint' },
@@ -662,7 +716,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {},
+        ts_ls = {},
         --
 
         lua_ls = {
@@ -878,8 +932,9 @@ require('lazy').setup({
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       -- vim.cmd.colorscheme 'kanagawa'
+      vim.cmd.colorscheme 'material-palenight'
       -- vim.cmd.colorscheme 'obscure'
-      vim.cmd.colorscheme 'rose-pine'
+      -- vim.cmd.colorscheme 'rose-pine'
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
     end,
@@ -945,6 +1000,7 @@ require('lazy').setup({
         'python',
         'typescript',
         'javascript',
+        'go',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
