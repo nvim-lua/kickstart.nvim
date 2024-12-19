@@ -29,9 +29,9 @@ return {
     config = function()
       require('modes').setup {
         colors = {
-          copy = '#f5c359',
-          delete = '#c75c6a',
-          insert = '#78ccc5',
+          copy = '#DC9A0C',
+          delete = '#C73000',
+          insert = '#006600',
           visual = '#9745be',
           default = '#FFFFFF',
           normal = 'white',
@@ -57,9 +57,9 @@ return {
     end,
     vim.opt.guicursor:append 'n-c:block-Cursor',
   },
-  {
-    'github/copilot.vim',
-  },
+  -- {
+  --   'github/copilot.vim',
+  -- },
   {
     'akinsho/bufferline.nvim',
     version = '*',
