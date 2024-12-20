@@ -94,7 +94,7 @@ vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = false
 
 -- Set language of Vim, only needed if you prefer english over the language of your operating system
-vim.cmd("language en_US")
+vim.cmd 'language en_US'
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
