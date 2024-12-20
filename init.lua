@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -146,7 +146,7 @@ vim.opt.splitbelow = true
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣', lead = '.' }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
@@ -189,14 +189,49 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+--
+-- Resize window using <ctrl><shift> arrow keys
+vim.keymap.set('n', '<C-S-Up>', '<cmd>resize +2<cr>', { desc = 'Increase Window Height' })
+vim.keymap.set('n', '<C-S-Down>', '<cmd>resize -2<cr>', { desc = 'Decrease Window Height' })
+vim.keymap.set('n', '<C-S-Left>', '<cmd>vertical resize -2<cr>', { desc = 'Decrease Window Width' })
+vim.keymap.set('n', '<C-S-Right>', '<cmd>vertical resize +2<cr>', { desc = 'Increase Window Width' })
 
--- [[ Basic Autocommands ]]
---  See `:help lua-guide-autocommands`
+-- Move Lines
+vim.keymap.set('n', '<A-j>', "<cmd>execute 'move .+' . v:count1<cr>==", { desc = 'Move Down' })
+vim.keymap.set('n', '<A-k>', "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = 'Move Up' })
+vim.keymap.set('i', '<A-j>', '<esc><cmd>m .+1<cr>==gi', { desc = 'Move Down' })
+vim.keymap.set('i', '<A-k>', '<esc><cmd>m .-2<cr>==gi', { desc = 'Move Up' })
+vim.keymap.set('v', '<A-j>', ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = 'Move Down' })
+vim.keymap.set('v', '<A-k>', ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = 'Move Up' })
+--
+-- buffers
+vim.keymap.set('n', '<S-h>', '<cmd>bprevious<cr>', { desc = 'Prev Buffer' })
+vim.keymap.set('n', '<S-l>', '<cmd>bnext<cr>', { desc = 'Next Buffer' })
+vim.keymap.set('n', '[b', '<cmd>bprevious<cr>', { desc = 'Prev Buffer' })
+vim.keymap.set('n', ']b', '<cmd>bnext<cr>', { desc = 'Next Buffer' })
+vim.keymap.set('n', '<leader>bb', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer' })
+--vim.keymap.set('n', '<leader>`', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer' })
+vim.keymap.set('n', '<leader>bd', '<cmd>bdelete<cr>', { desc = 'Delete Buffer' })
+--
+-- Add undo break-points
+vim.keymap.set('i', ',', ',<c-g>u')
+vim.keymap.set('i', '.', '.<c-g>u')
+vim.keymap.set('i', ';', ';<c-g>u')
 
--- Highlight when yanking (copying) text
---  Try it with `yap` in normal mode
---  See `:help vim.highlight.on_yank()`
-vim.api.nvim_create_autocmd('TextYankPost', {
+-- better indenting: stay in visual mode after indent
+vim.keymap.set('v', '<', '<gv')
+vim.keymap.set('v', '>', '>gv')
+
+-- save file
+vim.keymap.set({ 'i', 'x', 'n', 's' }, '<c-s>', '<cmd>w<cr><esc>', { desc = 'save file' })
+
+-- [[ basic autocommands ]]
+--  see `:help lua-guide-autocommands`
+
+-- highlight when yanking (copying) text
+--  try it with `yap` in normal mode
+--  see `:help vim.highlight.on_yank()`
+vim.api.nvim_create_autocmd('textyankpost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
@@ -332,6 +367,19 @@ require('lazy').setup({
   --
   -- Use the `dependencies` key to specify the dependencies of a particular plugin
 
+  {
+    'nvim-telescope/telescope-file-browser.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' },
+    -- keys = {
+    --   {
+    --     '<leader>e',
+    --     ':Telescope file_browser path=%:p:h select_buffer=true follow_symlinks=true no_ignore=true<CR>',
+    --     desc = 'Browse current file',
+    --   },
+    --   { '<leader>e', '<leader>e', desc = 'Browse Files', remap = true },
+    -- },
+  },
+
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
@@ -389,6 +437,20 @@ require('lazy').setup({
         -- },
         -- pickers = {}
         extensions = {
+          file_browser = {
+            -- theme = "ivy",
+            hijack_netrw = true,
+            -- mappings = {
+            --   ["i"] = {
+            --     -- your custom insert mode mappings
+            --   },
+            --   ["n"] = {
+            --     -- your custom normal mode mappings
+            --   },
+            -- },
+            display_stat = false,
+            -- display_stat = { date = false, size = true, mode = false },
+          },
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
           },
@@ -398,19 +460,29 @@ require('lazy').setup({
       -- Enable Telescope extensions if they are installed
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
+      pcall(require('telescope').load_extension, 'file_browser')
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      -- vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader><leader>', builtin.find_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      -- vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>b', builtin.buffers, { desc = '[B] Find existing [B]uffers' })
+
+      vim.keymap.set(
+        'n',
+        '<leader>e',
+        ':Telescope file_browser path=%:p:h select_buffer=true follow_symlinks=true no_ignore=true<CR>',
+        { desc = '[S]earch File [E]ditor' }
+      )
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -632,6 +704,14 @@ require('lazy').setup({
             },
           },
         },
+        erlangls = {
+          -- cmd = { '/Users/lasiva/bin/erlang_ls' },
+          root_dir = function(fname)
+            local root_pattern = require('lspconfig').util.root_pattern 'erlang_ls.config'(fname)
+            return root_pattern
+          end,
+        },
+        sqlls = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -640,7 +720,11 @@ require('lazy').setup({
       --    :Mason
       --
       --  You can press `g?` for help in this menu.
-      require('mason').setup()
+      require('mason').setup {
+        registries = {
+          'file:/Users/lasiva/Documents/priv/mason-registry',
+        },
+      }
 
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
@@ -929,7 +1013,7 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
