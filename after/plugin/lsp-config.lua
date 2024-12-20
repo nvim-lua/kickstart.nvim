@@ -9,7 +9,7 @@ lsp.ensure_installed {
   -- 'mypy',
   -- 'black',
   -- 'isort',
-  'ruff_lsp',
+  -- 'ruff_lsp',
   'pyright',
   -- Java Stuffs
   'jdtls',
