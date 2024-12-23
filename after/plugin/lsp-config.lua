@@ -12,7 +12,7 @@ lsp.ensure_installed {
   -- 'ruff_lsp',
   'pyright',
   -- Java Stuffs
-  'jdtls',
+  -- 'jdtls',
   -- 'google-java-format',
   -- Golang
   -- 'gofumpt',
