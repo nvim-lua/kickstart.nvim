@@ -3,19 +3,25 @@
 -- 'nvim/ftplugin/java.lua'.
 -- 'nvim/lang-servers/intellij-java-google-style.xml'
 
-local jdtls_ok, jdtls = pcall(require, 'jdtls')
-if not jdtls_ok then
-  vim.notify 'JDTLS not found, install with `:LspInstall jdtls`'
-  return
-end
+-- local jdtls_ok, jdtls = pcall(require, 'jdtls')
+-- if not jdtls_ok then
+--   vim.notify 'JDTLS not found, install with `:LspInstall jdtls`'
+--   return
+-- end
+
+local home = os.getenv 'HOME'
+local jdtls = require 'jdtls'
+-- vim.notify 'Home: ' .. home
 
 -- See `:help vim.lsp.start_client` for an overview of the supported `config` options.
 -- local jdtls_path = vim.fn.stdpath 'data' .. '/mason/packages/jdtls'
-local jdtls_path = '/Users/oluwatobibello/.local/share/nvim/mason/packages/jdtls'
+local jdtls_path = home .. '/.local/share/nvim/mason/packages/jdtls'
 local path_to_lsp_server = jdtls_path .. '/config_mac'
 local path_to_plugins = jdtls_path .. '/plugins/'
-local path_to_jar = path_to_plugins .. 'org.eclipse.equinox.launcher_*.jar'
-local lombok_path = path_to_plugins .. 'lombok.jar'
+local path_to_jar = path_to_plugins .. 'org.eclipse.equinox.launcher_1.6.900.v20240613-2009.jar'
+local lombok_path = jdtls_path .. '/lombok.jar'
+local styling = home .. '/.local/share/java/eclipse-java-google-style.xml'
+print(lombok_path)
 
 local root_markers = { '.git', 'mvnw', 'gradlew', 'pom.xml', 'build.gradle' }
 local root_dir = require('jdtls.setup').find_root(root_markers)
@@ -27,7 +33,7 @@ local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
 local workspace_dir = vim.fn.stdpath 'data' .. '/site/java/workspace-root/' .. project_name
 os.execute('mkdir ' .. workspace_dir)
 
-local java_21_home_dir = '/Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home/bin/java'
+local java_21_home_dir = '/Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home'
 local java_17_home_dir = '/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home'
 local java_11_home_dir = '/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home'
 
@@ -68,9 +74,6 @@ local config = {
   -- One dedicated LSP server & client will be started per unique root_dir
   root_dir = root_dir,
 
-  -- Here you can configure eclipse.jdt.ls specific settings
-  -- See https://github.com/eclipse/eclipse.jdt.ls/wiki/Running-the-JAVA-LS-server-from-the-command-line#initialize-request
-  -- for a list of options
   settings = {
     java = {
       home = java_21_home_dir,
@@ -105,6 +108,12 @@ local config = {
       },
       references = {
         includeDecompiledSources = true,
+      },
+      format = {
+        settings = {
+          url = styling,
+          profile = 'GoogleStyle',
+        },
       },
     },
     signatureHelp = { enabled = true },
@@ -144,21 +153,23 @@ local config = {
     allow_incremental_sync = true,
   },
   init_options = {
-    bundles = {},
+    bundles = {
+      vim.fn.glob(lombok_path, 1),
+    },
   },
 }
 
-config['on_attach'] = function(_, bufnr)
-  require('keymaps').map_java_keys(bufnr)
-  require('lsp_signature').on_attach({
-    bind = true, -- This is mandatory, otherwise border config won't get registered.
-    floating_window_above_cur_line = false,
-    padding = '',
-    handler_opts = {
-      border = 'rounded',
-    },
-  }, bufnr)
-end
+-- config['on_attach'] = function(_, bufnr)
+--   require('keymaps').map_java_keys(bufnr)
+--   require('lsp_signature').on_attach({
+--     bind = true, -- This is mandatory, otherwise border config won't get registered.
+--     floating_window_above_cur_line = false,
+--     padding = '',
+--     handler_opts = {
+--       border = 'rounded',
+--     },
+--   }, bufnr)
+-- end
 
 -- This starts a new client & server,
 -- or attaches to an existing client & server depending on the `root_dir`.

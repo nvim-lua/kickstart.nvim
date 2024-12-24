@@ -12,7 +12,7 @@ lsp.ensure_installed {
   -- 'ruff_lsp',
   'pyright',
   -- Java Stuffs
-  -- 'jdtls',
+  'jdtls',
   -- 'google-java-format',
   -- Golang
   -- 'gofumpt',
@@ -27,6 +27,12 @@ lsp.ensure_installed {
   -- 'tsserver',
   -- Others
   'tailwindcss',
+}
+
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.foldingRange = {
+  dynamicRegistration = false,
+  lineFoldingOnly = true,
 }
 
 -- Fix Undefined global 'vim'
@@ -58,67 +64,71 @@ lsp.set_preferences {
   },
 }
 
-lsp.on_attach(function(_, bufnr)
+local function on_attach(client, bufnr)
   local opts = { buffer = bufnr, remap = false }
 
-  vim.keymap.set('n', 'gD', function()
-    vim.lsp.buf.declaration()
-  end, opts)
-  vim.keymap.set('n', 'K', function()
-    vim.lsp.buf.hover()
-  end, opts)
-  vim.keymap.set('n', '<leader>vws', function()
-    vim.lsp.buf.workspace_symbol()
-  end, opts)
-  vim.keymap.set('n', '<leader>vd', function()
-    vim.diagnostic.open_float()
-  end, opts)
-
-  vim.keymap.set('n', '[d', function()
-    vim.diagnostic.goto_next()
-  end, opts)
-
-  vim.keymap.set('n', ']d', function()
-    vim.diagnostic.goto_prev()
-  end, opts)
-
-  vim.keymap.set('n', '<leader>dd', function()
-    vim.diagnostic.setloclist()
-  end, opts)
-
-  vim.keymap.set('n', '<leader>do', function()
-    vim.diagnostic.open_float()
-  end, opts)
-
-  vim.keymap.set('n', '<leader>ca', function()
-    vim.lsp.buf.code_action()
-  end, opts)
-
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+  vim.keymap.set('n', '<leader>vws', vim.lsp.buf.workspace_symbol, opts)
+  vim.keymap.set('n', '<leader>vd', vim.diagnostic.open_float, opts)
+  vim.keymap.set('n', '[d', vim.diagnostic.goto_next, opts)
+  vim.keymap.set('n', ']d', vim.diagnostic.goto_prev, opts)
+  vim.keymap.set('n', '<leader>dd', vim.diagnostic.setloclist, opts)
+  vim.keymap.set('n', '<leader>do', vim.diagnostic.open_float, opts)
+  vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
   vim.keymap.set('n', 'gd', require('telescope.builtin').lsp_definitions, opts)
   vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, opts)
-
-  vim.keymap.set('n', '<leader>rn', function()
-    vim.lsp.buf.rename()
-  end, opts)
-
+  vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
   vim.keymap.set('n', '<leader>lf', function()
     require('conform').format()
-  end, { desc = 'Format Buffer' })
-
-  -- Add WorkSpace
+  end, { buffer = bufnr, desc = 'Format Buffer' })
   vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
-
-  -- Remove WorkSpace
   vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
-
-  -- List WorkSpace
   vim.keymap.set('n', '<leader>wl', function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, opts)
-end)
+end
 
+lsp.on_attach(on_attach)
 lsp.setup()
 
 vim.diagnostic.config {
   virtual_text = true,
+}
+
+local function on_attach(client, bufnr)
+  local opts = { buffer = bufnr, remap = false }
+
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+  vim.keymap.set('n', '<leader>vws', vim.lsp.buf.workspace_symbol, opts)
+  vim.keymap.set('n', '<leader>vd', vim.diagnostic.open_float, opts)
+  vim.keymap.set('n', '[d', vim.diagnostic.goto_next, opts)
+  vim.keymap.set('n', ']d', vim.diagnostic.goto_prev, opts)
+  vim.keymap.set('n', '<leader>dd', vim.diagnostic.setloclist, opts)
+  vim.keymap.set('n', '<leader>do', vim.diagnostic.open_float, opts)
+  vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+  vim.keymap.set('n', 'gd', require('telescope.builtin').lsp_definitions, opts)
+  vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, opts)
+  vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+  vim.keymap.set('n', '<leader>lf', function()
+    require('conform').format()
+  end, { buffer = bufnr, desc = 'Format Buffer' })
+  vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
+  vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
+  vim.keymap.set('n', '<leader>wl', function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, opts)
+end
+
+lsp.on_attach(on_attach)
+lsp.setup()
+
+vim.diagnostic.config {
+  virtual_text = true,
+}
+
+return {
+  capabilities = capabilities,
+  on_attach = on_attach,
 }

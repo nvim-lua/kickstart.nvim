@@ -8,10 +8,8 @@ vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
 vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
 
 vim.keymap.set('n', 'zK', function()
-  local winid = require('ufo').peekFoldedLinesUnderCursor()
+  local winid = ufo.peekFoldedLinesUnderCursor()
   if not winid then
-    -- choose one of coc.nvim and nvim lsp
-    -- vim.fn.CocActionAsync 'definitionHover' -- coc.nvim
     vim.lsp.buf.hover()
   end
 end)
@@ -21,15 +19,6 @@ capabilities.textDocument.foldingRange = {
   dynamicRegistration = false,
   lineFoldingOnly = true,
 }
-
--- local language_servers = require('lspconfig').util.available_servers() -- or list servers manually like {'gopls', 'clangd'}
--- print(language_servers)
--- for _, ls in ipairs(language_servers) do
---   require('lspconfig')[ls].setup {
---     capabilities = capabilities,
---     -- you can add other fields for setting up lsp server in this table
---   }
--- end
 
 require('ufo').setup {
   provider_selector = function(bufnr, filetype, buftype)
