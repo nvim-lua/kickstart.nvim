@@ -119,11 +119,11 @@ local config = {
         'org.mockito.Mockito.*',
       },
       importOrder = {
-        'java',
         'com',
-        'org',
-        'javax',
+        'java',
         'jarkata',
+        'javax',
+        'org',
       },
     },
     sources = {
