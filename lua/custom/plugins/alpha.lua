@@ -2,7 +2,7 @@ return {
   {
     'goolord/alpha-nvim',
     event = 'VimEnter',
-    enabled = true,
+    enabled = false,
     init = false,
     dependencies = {
       'echasnovski/mini.icons',
@@ -16,9 +16,7 @@ return {
         dashboard.button('e', '  New file', '<cmd>ene <CR>'),
         dashboard.button('f', '󰈞  Find file', '<cmd>Telescope find_files<cr>'),
         dashboard.button('h', '󰊄  Recently opened files', '<cmd>Telescope oldfiles<cr>'),
-        -- dashboard.button('SPC f r', '  Frecency/MRU'),
         dashboard.button('g', '󰈬  Find word', '<cmd>Telescope live_grep<cr>'),
-        -- dashboard.button('<leader> fm', '  Jump to bookmarks'),
         dashboard.button('s', '  Open last session', '<cmd> lua require("persistence").load() <cr>'),
         dashboard.button('sl', '  Select Session', '<cmd> lua require("persistence").select() <cr>'),
         dashboard.button('u', '  Update plugins', '<cmd>Lazy sync<CR>'),
