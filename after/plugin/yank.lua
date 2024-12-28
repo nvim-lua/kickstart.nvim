@@ -1,3 +1,5 @@
+-- https://github.com/neovim/neovim/issues/21739#issuecomment-1399405391
+--
 local M = {}
 
 local augroup = vim.api.nvim_create_augroup("deferClip", {})
