@@ -54,7 +54,7 @@ return {
         vim.api.nvim_set_hl(0, group, {})
       end
     end,
-    enabled = false,
+    enabled = true,
   },
 
   {
@@ -69,7 +69,7 @@ return {
 
       vim.cmd.colorscheme 'rose-pine-moon'
     end,
-    enabled = true,
+    enabled = false,
   },
 
   {
