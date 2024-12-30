@@ -223,6 +223,13 @@ vim.api.nvim_command 'cmap QW wq'
 vim.keymap.set('n', '<S-h>', ':bp<CR>', { noremap = true, desc = '[G]oto [P]previous Buffer' })
 vim.keymap.set('n', '<S-l>', ':bn<CR>', { noremap = true, desc = '[G]oto [N]ext Buffer' })
 
+-- terraform configuration
+local opts = { noremap = true, silent = true }
+vim.keymap.set('n', '<leader>ti', ':!terraform init<CR>', opts)
+vim.keymap.set('n', '<leader>tv', ':!terraform validate<CR>', opts)
+vim.keymap.set('n', '<leader>tp', ':!terraform plan<CR>', opts)
+vim.keymap.set('n', '<leader>taa', ':!terraform apply -auto-approve<CR>', opts)
+
 -- [[ JMB End ]]
 
 -- [[ Install `lazy.nvim` plugin manager ]]
@@ -729,7 +736,21 @@ require('lazy').setup({
           },
           semanticTokens = true,
         },
-        terraformls = {},
+        terraformls = {
+          root_dir = require('lspconfig.util').root_pattern('.terraform', '.git'),
+          filetypes = {
+            'hcl',
+            'tf',
+            'tfvars',
+          },
+          settings = {
+            terraform = {
+              telemetry = {
+                enabled = false,
+              },
+            },
+          },
+        },
         pyright = {
           capabilities = {
             textDocument = {
