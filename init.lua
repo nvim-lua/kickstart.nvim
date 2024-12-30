@@ -225,10 +225,10 @@ vim.keymap.set('n', '<S-l>', ':bn<CR>', { noremap = true, desc = '[G]oto [N]ext 
 
 -- terraform configuration
 local opts = { noremap = true, silent = true }
-vim.keymap.set('n', '<leader>ti', ':!terraform init<CR>', opts)
-vim.keymap.set('n', '<leader>tv', ':!terraform validate<CR>', opts)
-vim.keymap.set('n', '<leader>tp', ':!terraform plan<CR>', opts)
-vim.keymap.set('n', '<leader>taa', ':!terraform apply -auto-approve<CR>', opts)
+vim.keymap.set('n', '<leader>ti', ':!make init<CR>', opts)
+vim.keymap.set('n', '<leader>tv', ':!make validate<CR>', opts)
+vim.keymap.set('n', '<leader>tp', ':!make plan<CR>', opts)
+vim.keymap.set('n', '<leader>taa', ':!make applyA<CR>', opts)
 
 -- [[ JMB End ]]
 
