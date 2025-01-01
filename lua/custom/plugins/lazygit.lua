@@ -1,20 +1,36 @@
 return {
-  'kdheepak/lazygit.nvim',
-  lazy = true,
-  cmd = {
-    'LazyGit',
-    'LazyGitConfig',
-    'LazyGitCurrentFile',
-    'LazyGitFilter',
-    'LazyGitFilterCurrentFile',
-  },
-  dependencies = {
-    'nvim-lua/plenary.nvim',
+  'folke/snacks.nvim',
+  ---@diagnostic disable-next-line: undefined-doc-name
+  ---@type snacks.Config
+  opts = {
+    lazygit = {
+      -- your lazygit configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+    },
   },
   keys = {
-    { '<leader>gg', '<cmd>LazyGit<cr>', desc = 'Lazygit (Root Dir)' },
-    { '<leader>gf', '<cmd>LazyGitFilterCurrentFile<cr>', desc = 'Lazygit Current File History' },
-    { '<leader>gl', '<cmd>LazyGitFilter<cr>', desc = 'Lazygit log' },
+    {
+      '<leader>gg',
+      function()
+        Snacks.lazygit { cwd = vim.fn.getcwd() }
+      end,
+      { desc = 'Lazygit (Root Dir)' },
+    },
+    {
+      '<leader>gf',
+      function()
+        Snacks.lazygit.log_file()
+      end,
+      { desc = 'Lazygit Current File History' },
+    },
+    {
+      '<leader>gl',
+      function()
+        Snacks.lazygit.log { cwd = vim.fn.getcwd() }
+      end,
+      { desc = 'Lazygit Log' },
+    },
     { '<leader>gb', '<cmd>Gitsigns blame<cr>', desc = 'Git blame' },
     { '<leader>gs', '<cmd>Telescope git_status<CR>', desc = 'Git Status' },
   },
