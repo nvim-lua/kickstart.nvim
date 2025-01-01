@@ -135,7 +135,6 @@ vim.opt.signcolumn = 'yes'
 vim.opt.updatetime = 250
 
 -- Decrease mapped sequence wait time
--- Displays which-key popup sooner
 vim.opt.timeoutlen = 300
 
 -- Configure how new splits should be opened
@@ -274,6 +273,9 @@ require('lazy').setup({
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
+      -- delay between pressing a key and opening which-key (milliseconds)
+      -- this setting is independent of vim.opt.timeoutlen
+      delay = 0,
       icons = {
         -- set icon mappings to true if you have a Nerd Font
         mappings = vim.g.have_nerd_font,
