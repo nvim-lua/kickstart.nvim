@@ -969,6 +969,13 @@ require('lazy').setup({
 require('lspconfig').pyright.setup {
   trace = 'verbose',
 }
+require('lspconfig').denols.setup {
+  trace = 'verbose',
+}
+
+vim.g.markdown_fenced_languages = {
+  'ts=typescript',
+}
 vim.opt.autochdir = true
 
 vim.api.nvim_create_autocmd('BufWritePost', {
