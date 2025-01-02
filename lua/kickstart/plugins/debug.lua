@@ -27,6 +27,7 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+    'suketa/nvim-dap-ruby',
   },
   keys = {
     -- Basic debugging keymaps, feel free to change to your liking!
@@ -148,5 +149,8 @@ return {
         detached = vim.fn.has 'win32' == 0,
       },
     }
+
+    -- Install ruby specific config
+    require('dap-ruby').setup()
   end,
 }

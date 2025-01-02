@@ -656,6 +656,8 @@ require('lazy').setup({
           directoryFilters = { '-.git', '-.vscode', '-.idea', '-.vscode-test', '-node_modules' },
           semanticTokens = true,
         },
+        ruby_lsp = {},
+
         -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -959,6 +961,7 @@ require('lazy').setup({
         'markdown',
         'markdown_inline',
         'query',
+        'ruby',
         'yaml',
         'vim',
         'vimdoc',
