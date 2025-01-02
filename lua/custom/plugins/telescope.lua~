@@ -65,7 +65,7 @@ return {
       end, { desc = '[S]earch [N]eovim files' })
 
       -- bring in multi-grep
-      require('custom.telescope.multigrep').setup()
+      require('config.telescope.multigrep').setup()
     end,
   },
 }
