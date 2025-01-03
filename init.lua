@@ -457,16 +457,9 @@ require('lazy').setup({
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
-      {
-        'williamboman/mason.nvim',
-        -- Mason must be loaded before its dependents so we'll define `opts`
-        -- here: this will make `lazy` automatically run
-        -- `require('mason').setup(opts)` when `nvim-lspconfig` loads.
-        opts = {
-          -- Add overrides for mason's default settings here if needed! e.g.:
-          -- log_level = vim.log.levels.DEBUG,
-        },
-      },
+      -- Mason must be loaded before its dependents so we need to set it up here.
+      -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
+      { 'williamboman/mason.nvim', opts = {} },
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
