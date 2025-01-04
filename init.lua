@@ -18,6 +18,9 @@ vim.opt.number = true
 --  Experiment for yourself to see if you like it!
 vim.opt.relativenumber = true
 
+-- Go to start of line for big motions - gg, G, ctrl+d/e , etc
+vim.opt.startofline = true
+
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
 
