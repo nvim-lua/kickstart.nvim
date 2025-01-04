@@ -924,7 +924,7 @@ require('lazy').setup({
   require 'plugins.gitsigns', -- adds gitsigns recommend keymaps
   require 'plugins.codeium',
   require 'plugins.chatgpt',
-  require 'plugins.auto_session',
+  require 'plugins.auto-session',
   require 'plugins.obsidian',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
