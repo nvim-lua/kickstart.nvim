@@ -832,6 +832,15 @@ require('lazy').setup({
       return keys
     end,
   },
+  {
+    'stevearc/oil.nvim',
+    ---@module 'oil'
+    ---@type oil.SetupOpts
+    opts = {},
+    -- Optional dependencies
+    dependencies = { { 'echasnovski/mini.icons', opts = {} } },
+    -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
+  },
   -- If you downloaded the kickstart repo, uncomment lines below to enable example plugins (restart nvim).
   require 'kickstart.plugins.debug',
   require 'kickstart.plugins.indent_line',
