@@ -116,29 +116,30 @@ require('lazy').setup({
     },
   },
 
-  -- {
-  --   -- Theme inspired by Atom
-  --   'navarasu/onedark.nvim',
-  --   priority = 1000,
-  --   config = function()
-  --     require('onedark').setup {
-  --       style = 'dark',
-  --       code_style = {
-  --         comments = 'none',
-  --       },
-  --     }
-  --     require('onedark').load()
-  --     vim.cmd.colorscheme 'onedark'
-  --   end,
-  -- },
   {
-    'morhetz/gruvbox',
+    -- Theme inspired by Atom
+    'navarasu/onedark.nvim',
+    priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'gruvbox'
-      vim.o.background = 'dark'
-      vim.o.termguicolors = true
-    end
+      require('onedark').setup {
+        style = 'warmer',
+        transparent = true,
+        -- code_style = {
+        --   comments = 'none',
+        -- },
+      }
+      require('onedark').load()
+      vim.cmd.colorscheme 'onedark'
+    end,
   },
+  -- {
+  --   'morhetz/gruvbox',
+  --   config = function()
+  --     vim.cmd.colorscheme 'gruvbox'
+  --     vim.o.background = 'dark'
+  --     vim.o.termguicolors = true
+  --   end
+  -- },
 
   {
     -- Set lualine as statusline
@@ -266,7 +267,7 @@ vim.o.number = true
 vim.o.scrolloff = 5
 vim.o.sidescrolloff = 10
 
--- Set tabs to 4 spaces
+-- Set tabs to 2 spaces
 vim.o.tabstop = 2
 vim.o.softtabstop = 2
 
@@ -473,7 +474,7 @@ local servers = {
   dockerls = {},
   -- gradle_ls = {},
   pyright = {},
-  tsserver = {},
+  ts_ls = {},
   html = {},
   jsonls = {},
   -- jdtls = {},

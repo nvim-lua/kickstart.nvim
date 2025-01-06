@@ -5,7 +5,12 @@
 
 return {
   'neovim/nvim-lspconfig',
+  dependencies = {
+    'ray-x/go.nvim',
+    'ray-x/guihua.lua',
+  },
   config = function()
+    require("go").setup()
     -- Switch for controlling whether you want autoformatting.
     --  Use :KickstartFormatToggle to toggle autoformatting on or off
     local format_is_enabled = true
@@ -60,12 +65,16 @@ return {
               return
             end
 
-            vim.lsp.buf.format {
-              async = false,
-              filter = function(c)
-                return c.id == client.id
-              end,
-            }
+            if vim.bo.filetype == 'go' then
+              require('go.format').goimport()
+            else
+              vim.lsp.buf.format {
+                async = false,
+                filter = function(c)
+                  return c.id == client.id
+                end,
+              }
+            end
           end,
         })
       end,

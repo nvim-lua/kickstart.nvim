@@ -24,22 +24,49 @@ return {
     'leoluz/nvim-dap-go',
     'microsoft/vscode-js-debug',
     'mxsdev/nvim-dap-vscode-js',
+    'julianolf/nvim-dap-lldb',
+    'vadimcn/codelldb',
   },
 
   config = function()
     local dap = require 'dap'
     local dapui = require 'dapui'
 
+    dap.adapters.lldb = {
+      type = 'server',
+      command = vim.fn.expand('$HOME/.local/share/nvim/mason/bin/codelldb'),
+      host = '127.0.0.1',
+      port = 13000,
+    }
+
+    dap.configurations.cpp = {
+      {
+        name = 'Launch Editor (Development)',
+        type = 'lldb',
+        request = 'launch',
+        program = '/home/wil/dev/ue5/Engine/Binaries/Linux/UnrealEditor',
+        preLaunchTask = 'Editor Linux Development Build',
+        args = {
+          '/home/wil/dev/sro/game/SRO.uproject',
+          '--port ${port}',
+        },
+        -- terminal = 'integrated',
+        cwd = '/home/wil/dev/ue5',
+        -- visualizerFile = '/home/wil/dev/ue5/Engine/Extras/VisualStudioDebugging/Unreal.natvis',
+        -- showDisplayString = 'true',
+      },
+    }
+
     require('mason-nvim-dap').setup {
       -- Makes a best effort to setup the various debuggers with
       -- reasonable debug configurations
-      automatic_setup = false,
+      automatic_installation = true,
 
       -- You'll need to check that you have the required things installed
       -- online, please don't ask me how to install them :)
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
-        'delve',
+        -- 'delve',
         'js',
         'node2',
         'cppdbg',
@@ -86,8 +113,8 @@ return {
     }
 
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
-    dap.listeners.before.event_terminated['dapui_config'] = dapui.close
-    dap.listeners.before.event_exited['dapui_config'] = dapui.close
+    -- dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+    -- dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
     dap.defaults.fallback.exception_breakpoints = { 'Notice', 'Warning', 'Error', 'Exception' }
 
@@ -100,6 +127,7 @@ return {
       debugger_cmd = { "js-debug-adapter" },
       adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" },
     }
+
 
     for _, jsLang in ipairs({ 'typescript', 'javascript' }) do
       require("dap").configurations[jsLang] = {

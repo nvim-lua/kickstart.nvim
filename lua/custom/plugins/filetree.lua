@@ -6,7 +6,7 @@ return {
     "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
     "MunifTanjim/nui.nvim",
   },
-  config = function ()
+  config = function()
     -- Unless you are still migrating, remove the deprecated commands from v1.x
     vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
 
@@ -14,7 +14,7 @@ return {
       close_if_last_window = true,
     }
 
-    vim.keymap.set('n', '<leader>nf', ':NeoTreeFloatToggle<CR>', { desc = '[N]eoTree [F]loat Toggle' })
-    vim.keymap.set('n', '<leader>nr', ':NeoTreeRevealToggle<CR>', { desc = '[N]eoTree [R]eveal Toggle' })
+    vim.keymap.set('n', '<leader>nf', ':Neotree show float toggle<CR>', { desc = '[N]eoTree [F]loat Toggle' })
+    vim.keymap.set('n', '<leader>nr', ':Neotree show toggle<CR>', { desc = '[N]eoTree [R]eveal Toggle' })
   end,
 }
