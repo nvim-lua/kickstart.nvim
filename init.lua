@@ -1033,6 +1033,7 @@ require('lazy').setup({
           'diff',
           'git_rebase',
           'html',
+          'java',
           'lua',
           'markdown',
           'vim',
