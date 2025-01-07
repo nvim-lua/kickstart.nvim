@@ -228,6 +228,22 @@ vim.opt.rtp:prepend(lazypath)
 --
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
+  -- For view of open buffers
+  {
+    'romgrk/barbar.nvim',
+    dependencies = {
+      'lewis6991/gitsigns.nvim',
+      'nvim-tree/nvim-web-devicons',
+    },
+    init = function()
+      vim.g.barbar_auto_setup = false
+    end,
+    opts = {
+      animation = false,
+    },
+    version = '^1.0.0',
+  },
+
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
@@ -320,22 +336,6 @@ require('lazy').setup({
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
-
-      -- For view of open buffers
-      {
-        'romgrk/barbar.nvim',
-        dependencies = {
-          'lewis6991/gitsigns.nvim',
-          'nvim-tree/nvim-web-devicons',
-        },
-        init = function()
-          vim.g.barbar_auto_setup = false
-        end,
-        opts = {
-          animation = false,
-        },
-        version = '^1.0.0',
-      },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
