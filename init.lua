@@ -365,11 +365,11 @@ require('lazy').setup({
         --
         defaults = {
           layout_config = {
-            vertical = { width = 0.8, height = 0.8 },
-            horizontal = { width = 0.8 },
+            vertical = { height = 0.9 },
           },
         },
         pickers = {
+          lsp_references = { theme = 'dropdown', layout_config = { width = 0.98, height = 0.4 }, previewer = true },
           diagnostics = {
             theme = 'dropdown',
             previewer = false,
@@ -631,7 +631,6 @@ require('lazy').setup({
                 unusedparams = true,
               },
               staticcheck = true,
-              usePlaceholders = true,
             },
           },
         },
@@ -727,7 +726,8 @@ require('lazy').setup({
         },
       }
 
-      vim.keymap.set('n', '<leader>rt', "<cmd>lua require('neotest').run.run()<CR>", { desc = 'Run Test' })
+      vim.keymap.set('n', '<leader>rt', '<cmd>lua require(\'neotest\').run.run(vim.fn.expand("%"))<CR>', { desc = 'Run Test' })
+      vim.keymap.set('n', '<leader>rot', '<cmd>lua require("neotest").output.open({ enter = true })<CR>', { desc = 'Open Test Output' })
     end,
   },
 
