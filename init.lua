@@ -625,6 +625,7 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
+        zls = {},
         gopls = {},
         -- pyright = {},
         rust_analyzer = {},
@@ -667,7 +668,6 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
         'goimports', -- Used to format Go code
-        'rustfmt', -- Used to format Rust code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -1039,6 +1039,7 @@ require('lazy').setup({
           { name = 'luasnip' },
           { name = 'path' },
           { name = 'gopls' },
+          { name = 'zls' },
           { name = 'rust_analyzer' },
           -- { name = 'supermaven' },
         },
