@@ -228,6 +228,9 @@ vim.opt.rtp:prepend(lazypath)
 --
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
+  -- For autosave functionality
+  'pocco81/auto-save.nvim',
+
   -- For view of open buffers
   {
     'romgrk/barbar.nvim',
