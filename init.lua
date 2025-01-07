@@ -231,6 +231,8 @@ require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
+  { 'norcalli/nvim-colorizer.lua' },
+
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -938,7 +940,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
@@ -966,11 +968,19 @@ require('lazy').setup({
   },
 })
 
-require('lspconfig').pyright.setup {
+require('colorizer').setup()
+
+local lspconfig = require 'lspconfig'
+
+lspconfig['pyright'].setup {
   trace = 'verbose',
 }
-require('lspconfig').denols.setup {
+
+lspconfig['denols'].setup {
   trace = 'verbose',
+  settings = {
+    lint = false,
+  },
 }
 
 vim.g.markdown_fenced_languages = {
@@ -984,5 +994,6 @@ vim.api.nvim_create_autocmd('BufWritePost', {
     vim.cmd '!kill -s USR1 -- $(pidof sxhkd)'
   end,
 })
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
