@@ -656,7 +656,10 @@ require('lazy').setup({
 
         -- azure_pipelines_ls
         azure_pipelines_ls = {
-          filetypes = { 'yml', 'yaml.azure-pipelines' },
+          filetypes = {
+            'yml',
+            'yaml.azure-pipelines',
+          },
           settings = {
             azurePipelines = {
               schema = {
@@ -676,6 +679,23 @@ require('lazy').setup({
           },
         },
 
+        -- dockerls
+        dockerls = {
+          filetypes = { 'Dockerfile', 'dockerfile' },
+          settings = {
+            docker = {
+              dockerfile = {
+                lint = {
+                  rules = {
+                    'DL3000',
+                    'DL3003',
+                    'DL4000',
+                  },
+                },
+              },
+            },
+          },
+        },
         -- clangd = {},
         gopls = {
           gofumpt = true,
@@ -762,17 +782,6 @@ require('lazy').setup({
               },
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               -- diagnostics = { disable = { 'missing-fields' } },
-            },
-          },
-        },
-
-        azure_pipelines_ls = {
-          schemas = {
-            ['https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json'] = {
-              '/azure-pipeline*.y*l',
-              '/*.azure*',
-              'Azure-Pipelines/**/*.y*l',
-              'Pipelines/*.y*l',
             },
           },
         },
@@ -1045,7 +1054,7 @@ require('lazy').setup({
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
-
+  { 'echasnovski/mini.surround', branch = 'stable', opts = { search_method = 'cover_or_next' } },
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
     config = function()
