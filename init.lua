@@ -949,7 +949,7 @@ require('lazy').setup({
         markdown = { 'inject' },
         python = { 'isort', 'black' },
         rust = { 'rustfmt', lsp_format = 'fallback' },
-        terraform = { 'terraform_fmt' },
+        terraform = { 'terraform_fmt', pattern = { '*.tf', '*.tfvars', '*.hcl' }, callback = 'vim.lsp.buf.format()' },
         yaml = { 'yamlfmt' },
       },
     },
