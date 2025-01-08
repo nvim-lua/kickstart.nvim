@@ -9,7 +9,9 @@
 			"extensions": [
 				"GitHub.copilot",
 				"GitHub.copilot-chat",
-				"github.vscode-github-actions"
+				"github.vscode-github-actions",
+				"elagil.pre-commit-helper",
+				"saoudrizwan.claude-dev"
 			]
 		}
 	}
