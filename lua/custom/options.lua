@@ -70,3 +70,5 @@ vim.opt.scrolloff = 10
 
 -- Spell Checking
 vim.opt.spell = false
+
+vim.opt.indentkeys:remove ':'
