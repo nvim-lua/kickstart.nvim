@@ -634,6 +634,7 @@ require('lazy').setup({
         'svelte-language-server',
         'tailwindcss',
         'zls',
+        'intelephense',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -904,6 +905,7 @@ require('lazy').setup({
         'typescript',
         'svelte',
         'zig',
+        'php',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
