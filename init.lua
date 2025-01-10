@@ -328,7 +328,7 @@ require('lazy').setup({
       -- See `:help telescope` and `:help telescope.setup()`
       require('telescope').setup {
         defaults = {
-          file_ignore_patterns = { 'node_modules' },
+          file_ignore_patterns = { '.git', 'node_modules', 'venv', '__pycache__' },
           layout_strategy = 'flex',
           layout_config = {
             flex = {
