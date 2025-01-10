@@ -57,8 +57,8 @@ vim.keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current bu
 vim.keymap.set("n", "<leader>if", "<cmd> GoIfErr <CR>", { desc = "Add if err != nil snippet" })
 
 -- Borrowed from my VS Code settings for better Vim navigations
-vim.keymap.set("n", "<leader>l", "$", { desc = "Move to end of the line with leader + l" })
-vim.keymap.set("n", "<leader>h", "_", { desc = "Move to first character of the line with leader + h" })
+vim.keymap.set({ "n", "v" }, "<leader>l", "$", { desc = "Move to end of the line with leader + l" })
+vim.keymap.set({ "n", "v" }, "<leader>h", "_", { desc = "Move to first character of the line with leader + h" })
 
 -- Gitsigns to toggle hunk preview and git line blame
 vim.keymap.set("n", "<leader>gp", ":Gitsigns preview_hunk<CR>", { desc = "Preview changes made on the current line" })
