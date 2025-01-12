@@ -254,7 +254,16 @@ require('lazy').setup({
       },
     },
   },
-
+  -- NOTE: Plugin for flutter development
+  {
+    'nvim-flutter/flutter-tools.nvim',
+    lazy = false,
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'stevearc/dressing.nvim', -- optional for vim.ui.select
+    },
+    config = true,
+  },
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
@@ -625,6 +634,7 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
+        dart = {}, --
         zls = {},
         gopls = {},
         -- pyright = {},
@@ -637,7 +647,6 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
-
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -918,6 +927,7 @@ require('lazy').setup({
         lua = { 'stylua' },
         go = { 'goimports', lsp_format = 'fallback' },
         rust = { 'rustfmt', lsp_format = 'fallback' },
+        dart = { 'dart format .', lsp_format = 'fallback' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
