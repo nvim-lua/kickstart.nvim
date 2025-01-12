@@ -230,6 +230,9 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  'tpope/vim-dadbod', -- Database integration
+  'kristijanhusak/vim-dadbod-ui',
+  'kristijanhusak/vim-dadbod-completion',
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -883,6 +886,7 @@ require('lazy').setup({
         'query',
         'vim',
         'vimdoc',
+        'sql',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
