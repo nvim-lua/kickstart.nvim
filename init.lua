@@ -928,6 +928,7 @@ require('lazy').setup({
         go = { 'goimports', lsp_format = 'fallback' },
         rust = { 'rustfmt', lsp_format = 'fallback' },
         dart = { 'dart format .', lsp_format = 'fallback' },
+        zig = { 'zig fmt', lsp_format = 'fallback' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
