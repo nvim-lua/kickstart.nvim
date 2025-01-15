@@ -44,6 +44,6 @@
 			}
 		}
 	},
-	"postCreateCommand": "sudo apt-get update && sudo apt-get install -y build-essential lua5.3 lua5.3-dev luarocks && sudo luarocks install luacheck",
+	"postCreateCommand": "sudo apt-get update && sudo apt-get install -y build-essential lua5.3 lua5.3-dev luarocks ripgrep fd-find curl && curl -L https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz | sudo tar xzf - -C /opt && sudo ln -s /opt/nvim-linux64/bin/nvim /usr/local/bin/nvim && sudo luarocks install luacheck",
 	"remoteUser": "vscode"
 }
