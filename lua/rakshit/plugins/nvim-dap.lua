@@ -76,6 +76,14 @@ return {
       end,
       desc = "Debug: See last session result.",
     },
+    -- Terminate the ongoing debug session with Space + q (leader + q)
+    {
+      "<leader>q",
+      function()
+        require("dap").terminate()
+      end,
+      desc = "Debug: Terminate ongoing debug session.",
+    },
   },
   config = function()
     local dap = require("dap")
