@@ -11,7 +11,7 @@ assignees: ''
 
 ## Before Reporting an Issue
 - I have read the kickstart.nvim README.md.
-- I have read the appropiate plugin's documentation.
+- I have read the appropriate plugin's documentation.
 - I have searched that this issue has not been reported before.
 
 - [ ] **By checking this, I confirm that the above steps are completed. I understand leaving this unchecked will result in this report being closed immediately.**
