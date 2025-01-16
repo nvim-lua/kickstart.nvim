@@ -134,6 +134,7 @@ return { -- LSP Configuration & Plugins
     --  - settings (table): Override the default settings passed when initializing the server.
     --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
     local servers = {
+      ocamllsp = {},
       clangd = {},
       bashls = {},
       gopls = {},
@@ -183,6 +184,7 @@ return { -- LSP Configuration & Plugins
       'stylua', -- Used to format Lua code
       'black', -- Used to format Python code
       'prettierd',
+      'ocamlformat',
     })
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
