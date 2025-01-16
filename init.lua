@@ -1100,22 +1100,31 @@ require('lazy').setup({
   --   end,
   -- },
   {
-    'maxmx03/fluoromachine.nvim',
+    'baliestri/aura-theme',
     lazy = false,
     priority = 1000,
-    config = function()
-      local fm = require 'fluoromachine'
-
-      fm.setup {
-        glow = true,
-        theme = 'fluoromachine',
-        transparent = false,
-        brightness = 0.2,
-      }
-
-      vim.cmd.colorscheme 'fluoromachine'
+    config = function(plugin)
+      vim.opt.rtp:append(plugin.dir .. '/packages/neovim')
+      vim.cmd [[colorscheme aura-dark]]
     end,
   },
+  -- {
+  --   'maxmx03/fluoromachine.nvim',
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     local fm = require 'fluoromachine'
+  --
+  --     fm.setup {
+  --       glow = true,
+  --       theme = 'fluoromachine',
+  --       transparent = false,
+  --       brightness = 0.2,
+  --     }
+  --
+  --     vim.cmd.colorscheme 'fluoromachine'
+  --   end,
+  -- },
   -- {
   --   'scottmckendry/cyberdream.nvim',
   --   lazy = false,
