@@ -29,3 +29,9 @@ vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { desc = 'Move highlighted down' })
 
 -- Map <leader>c to close and save the buffer
 vim.api.nvim_set_keymap('n', '<leader>c', [[:w | bd<CR>]], { noremap = true, silent = true })
+
+-- Map <leader>c quickfix list remaps
+vim.api.nvim_set_keymap('n', '<leader>cj', '<cmd>cnext<cr>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>ck', '<cmd>cprev<cr>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>cq', '<cmd>cclose<cr>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>co', '<cmd>copen<cr>', { noremap = true, silent = true })
