@@ -19,9 +19,11 @@ return {
     })
     vim.g.copilot_no_tab_map = true
     vim.g.copilot_filetypes = {
-      gitcommit = true,
-      markdown = true,
-      xml = false,
+      ['gitcommit'] = {
+        enable = true,
+        -- Disable using previous commit messages as suggestions
+        previous_commit_history = false
+      }
     }
   end,
 }

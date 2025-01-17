@@ -91,9 +91,11 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- set python 3.11.9 as default python
-vim.g.python2_host_prog = os.getenv 'PYENV_ROOT' .. '/versions/neovim2/bin/python'
-vim.g.python3_host_prog = os.getenv 'PYENV_ROOT' .. '/versions/neovim3/bin/python'
-vim.g.python_host_prog = os.getenv 'PYENV_ROOT' .. '/versions/neovim2/bin/python'
+-- vim.g.python2_host_prog = os.getenv 'PYENV_ROOT' .. '/versions/neovim2/bin/python'
+-- vim.g.python3_host_prog = os.getenv 'PYENV_ROOT' .. '/versions/neovim3/bin/python'
+-- vim.g.python_host_prog = os.getenv 'PYENV_ROOT' .. '/versions/neovim2/bin/python'
+-- Replace Python path configuration with:
+vim.g.python3_host_prog = vim.fn.exepath('python3')
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
