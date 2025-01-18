@@ -47,7 +47,7 @@ return {
         },
       }
 
-      vim.cmd.colorscheme 'catppuccin-macchiato'
+      vim.cmd.colorscheme 'catppuccin-mocha'
 
       -- Hide all semantic highlights until upstream issues are resolved (https://github.com/catppuccin/nvim/issues/480)
       for _, group in ipairs(vim.fn.getcompletion('@lsp', 'highlight')) do
@@ -102,5 +102,15 @@ return {
       vim.cmd('colorscheme vscode')
     end,
     enabled = false,
-  }
+  },
+
+  {
+    'calind/selenized.nvim',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.cmd.colorscheme 'selenized'
+    end,
+    enabled = false,
+  },
 }
