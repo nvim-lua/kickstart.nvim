@@ -126,3 +126,13 @@ You can also use `Lua` equivalents.
 
 -- Execute highlighted lua commands
 vim.keymap.set("v", "<leader>ex", ":lua<CR>", { desc = "[EX]ecute highlighted lua code" })
+
+-- Leetcode.nvim keymaps
+vim.keymap.set("n", "<leader>li", "<cmd>Leet list<CR>", { desc = "[Li]st Leetcode questions" })
+vim.keymap.set("n", "<leader>lr", "<cmd>Leet run<CR>", { desc = "[L]eetcode [R]un" })
+vim.keymap.set("n", "<leader>ls", "<cmd>Leet submit<CR>", { desc = "[L]eetcode [S]ubmit" })
+vim.keymap.set("n", "<leader>lo", "<cmd>Leet open<CR>", { desc = "[L]eetcode [O]pen" })
+vim.keymap.set("n", "<leader>lc", "<cmd>Leet console<CR>", { desc = "[L]eetcode [C]onsole" })
+vim.keymap.set("n", "<leader>ln", "<cmd>Leet info<CR>", { desc = "[L]eetcode I[n]fo" })
+vim.keymap.set("n", "<leader>lt", "<cmd>Leet tabs<CR>", { desc = "[L]eetcode [T]abs" })
+vim.keymap.set("n", "<leader>le", "<cmd>Leet reset<CR>", { desc = "[L]eetcode R[e]set code definition" })
