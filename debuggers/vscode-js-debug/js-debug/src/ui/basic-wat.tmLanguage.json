@@ -1,0 +1,93 @@
+{
+  "name": "WebAssembly Text Format",
+  "scopeName": "text.wat",
+  "patterns": [
+    { "include": "#block-comment" },
+    { "include": "#line-comment" },
+    { "include": "#expr" }
+  ],
+  "repository": {
+    "op": {
+      "match": "[a-zA-Z0-9!#$%&`*+\\-/:<=>?@\\\\^_|~\\.]+",
+      "name": "keyword"
+    },
+    "id": {
+      "match": "\\$[A-Za-z0-9!#$%&`*+\\-/:<=>?@\\\\^_|~\\.]+",
+      "name": "variable"
+    },
+    "decimal-number": {
+      "match": "\\b[+-]?[0-9_]+(.[0-9_]+)?([Ee][+-][0-9_]+)?\\b",
+      "name": "constant.numeric"
+    },
+    "hexadecimal-number": {
+      "match": "\\b[+-]?0x[0-9a-fA-F_]+(.[0-9a-fA-F_]+)?([pP][+-][0-9a-fA-F_]+)?\\b",
+      "name": "constant.numeric"
+    },
+    "number-special": {
+      "match": "\\b[+-]?(inf|nan(:0x[0-9]+)?)\\b",
+      "name": "constant.numeric"
+    },
+    "memarg": {
+      "match": "\\b(offset|align)(=)([0-9_]+)\\b",
+      "name": "keyword",
+      "captures": {
+        "1": { "name": "keyword" },
+        "2": { "name": "keyword.operator.arithmetic" },
+        "3": { "name": "constant.numeric" }
+      }
+    },
+    "any-number": {
+      "patterns": [
+        { "include": "#decimal-number" },
+        { "include": "#hexadecimal-number" },
+        { "include": "#number-special" }
+      ]
+    },
+    "types": {
+      "match": "\\b([if](32|64)|v128|funcref|externref|func|extern|func|param|result|mut)\\b",
+      "name": "keyword"
+    },
+    "string": {
+      "begin": "\"",
+      "end": "\"",
+      "name": "string.quoted",
+      "patterns": [
+        {
+          "name": "constant.character.escape",
+          "match": "\\\\[\"\\\\]"
+        }
+      ]
+    },
+    "line-comment": {
+      "match": ";;.*$",
+      "name": "comment.line.double-semicolon"
+    },
+    "block-comment": {
+      "begin": "\\(;",
+      "end": ";\\)",
+      "name": "comment.block"
+    },
+    "expr": {
+      "begin": "\\(",
+      "end": "\\)",
+      "beginCaptures": {
+        "0": { "name": "punctuation.paren.open" }
+      },
+      "endCaptures": {
+        "0": { "name": "punctuation.paren.close" }
+      },
+      "name": "expression.group",
+      "patterns": [
+        { "include": "#block-comment" },
+        { "include": "$self" },
+        { "include": "#types" },
+        { "include": "#line-comment" },
+        { "include": "#any-number" },
+        { "include": "#memarg" },
+        { "include": "#id" },
+        { "include": "#string" },
+        { "include": "#op" }
+      ]
+    }
+  }
+}

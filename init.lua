@@ -93,6 +93,8 @@ P.S. You can delete this when you're done too. It's your config now! :)
 --]]
 
 -- vim.api.nvim_set_hl(0, 'ReturnKeyword', { fg = '#FF0000', bold = true })
+-- vim.cmd [[syntax match ReturnKeyword /\<return\>/]]
+
 -- Your existing Neovim configurations..
 vim.opt.autoread = true
 vim.cmd 'autocmd VimResume * checktime'
@@ -129,9 +131,9 @@ vim.api.nvim_create_autocmd({ 'FileChangedShellPost' }, {
 -- })
 
 vim.lsp.inlay_hint.enable()
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.softtabstop = 4
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.softtabstop = 2
 vim.opt.expandtab = true
 -- Function to toggle transparency
 function ToggleTransparency()
@@ -199,7 +201,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -931,8 +933,9 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+      vim.cmd.colorscheme 'tokyonight-night'
       -- vim.cmd.colorscheme 'kanagawa'
-      vim.cmd.colorscheme 'material-palenight'
+      -- vim.cmd.colorscheme 'material-palenight'
       -- vim.cmd.colorscheme 'obscure'
       -- vim.cmd.colorscheme 'rose-pine'
       -- You can configure highlights by doing something like:
@@ -1075,5 +1078,6 @@ require('lazy').setup({
     },
   },
 })
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

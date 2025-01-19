@@ -23,6 +23,7 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+    'microsoft/vscode-js-debug',
   },
   keys = function(_, keys)
     local dap = require 'dap'
@@ -64,6 +65,7 @@ return {
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'js',
       },
     }
 
@@ -92,7 +94,28 @@ return {
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
+    -- Configure the adapter
+    dap.adapters['pwa-node'] = {
+      type = 'server',
+      host = 'localhost',
+      port = '${port}', -- nvim-dap will replace this with an open port number
+      executable = {
+        command = 'node',
+        -- Update the path below to point to your `dapDebugServer.js`
+        args = { '/home/tawfeeq/.config/nvim/.debuggers/vscode-js-debug/js-debug/src/dapDebugServer.js', '${port}' },
+      },
+    }
 
+    -- Configure a launch configuration for JavaScript
+    dap.configurations.javascript = {
+      {
+        type = 'pwa-node',
+        request = 'launch',
+        name = 'Launch file',
+        program = '${file}',
+        cwd = '${workspaceFolder}',
+      },
+    }
     -- Install golang specific config
     require('dap-go').setup {
       delve = {
