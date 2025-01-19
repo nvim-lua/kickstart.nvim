@@ -270,6 +270,7 @@ require('lazy').setup({
   -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
 
   { -- Useful plugin to show you pending keybinds.
+    enabled = false,
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
@@ -908,6 +909,9 @@ require('lazy').setup({
 
       -- Minimal autopairs
       require('mini.pairs').setup()
+
+      -- Which key
+      require('mini.clue').setup()
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
