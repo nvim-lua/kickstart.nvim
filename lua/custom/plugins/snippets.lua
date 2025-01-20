@@ -3,6 +3,7 @@ local s = ls.snippet
 local t = ls.text_node
 local i = ls.insert_node
 local rep = require('luasnip.extras').rep
+local fmt = require('luasnip.extras.fmt').fmt
 
 return {
   -- Snippet pour la déclaration de fonction Tcl
@@ -57,7 +58,7 @@ return {
   },
   -- Déclaration de snippet typst
   typst = {
-    s('images', {
+    s('image', {
       t { '#figure(caption: "' },
       i(1, 'caption'),
       t { '")[', '' },
@@ -65,6 +66,20 @@ return {
       i(2, 'path'),
       t { '")', '' },
       t { ']' },
+    }),
+    s('image_paysage', {
+      t { '#page(flipped:true)[', '  #figure(caption: "' },
+      i(1, ''),
+      t { '")[', '    #align(center + horizon)[#image("' },
+      i(2, ''),
+      t { '")]', '  ]', ']' },
+    }),
+    s('code_fig', {
+      t { '#figure(caption:"' },
+      i(1, 'Légende'),
+      t { '")[```', '' },
+      i(2, 'Contenu'),
+      t { '', '```]' },
     }),
   },
   c = {
@@ -117,6 +132,94 @@ return {
       t { '', '#define ' },
       rep(1),
       t { '', 'int foo(int x);  /* An example function declaration */', '', '#endif' },
+    }),
+  },
+  bib = {
+    s('online', {
+      t { '@online{' },
+      i(1, 'citekey'),
+      t { ',', '\tauthor = {' },
+      i(2, 'Author Name'),
+      t { '},' },
+      t { '', '\ttitle = {' },
+      i(3, 'Title of Webpage'),
+      t { '},' },
+      t { '', '\turl = {' },
+      i(4, 'https://example.com'),
+      t { '},' },
+      t { '', '\turldate = {' },
+      i(5, '2025-01-08'),
+      t { '}', '}' },
+    }),
+  },
+  js = {
+    s('func', {
+      t { 'function ' },
+      i(1, 'functionName'),
+      t '() {',
+      t { '', '  ' },
+      i(2, '// code'),
+      t { '', '}' },
+    }),
+
+    -- If statement snippet
+    s('if', {
+      t { 'if (' },
+      i(1, 'condition'),
+      t ') {',
+      t { '', '  ' },
+      i(2, '// code'),
+      t { '', '}' },
+    }),
+
+    -- For loop snippet
+    s('for', {
+      t { 'for (let ' },
+      i(1, 'i'),
+      t ' = ',
+      i(2, '0'),
+      t '; ',
+      i(3, 'i'),
+      t ' < ',
+      i(4, '10'),
+      t '; ',
+      i(5, 'i'),
+      t '++) {',
+      t { '', '  ' },
+      i(6, '// code'),
+      t { '', '}' },
+    }),
+
+    -- While loop snippet
+    s('while', {
+      t { 'while (' },
+      i(1, 'condition'),
+      t ') {',
+      t { '', '  ' },
+      i(2, '// code'),
+      t { '', '}' },
+    }),
+
+    -- Foreach snippet
+    s('foreach', {
+      i(1, 'array'),
+      t '.forEach(',
+      i(2, 'element'),
+      t ' => {',
+      t { '', '  ' },
+      i(3, '// code'),
+      t { '', '});' },
+    }),
+    s('javadoc', {
+      t { '/**', ' * ' },
+      i(1, 'Description...'),
+      t { '', ' * ', ' * @param ' },
+      i(2, 'paramName'),
+      t ' ',
+      i(3, 'description of parameter'),
+      t { '', ' * @return ' },
+      i(4, 'description of return value'),
+      t { '', ' */' },
     }),
   },
 }
