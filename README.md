@@ -1,16 +1,15 @@
-# kickstart.nvim
+# 0x4D5352/nvim
 
 ## Introduction
 
-A starting point for Neovim that is:
-
-* Small
-* Single-file
-* Completely Documented
-
-**NOT** a Neovim distribution, but instead a starting point for your configuration.
+Welcome to my personal neovim config. I started from the official [Kickstart](https://github.com/nvim-lua/kickstart.nvim) repo,
+and pivoted once I felt like I knew what I was using and what I even wanted from the config.
 
 ## Installation
+
+> **TODO**
+> Rewrite the following sections.
+
 
 ### Install Neovim
 
