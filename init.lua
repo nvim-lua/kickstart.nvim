@@ -158,6 +158,8 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 vim.opt.smarttab = true
 vim.opt.shiftwidth = 4
+vim.opt.wildmenu = true
+vim.opt.hidden = true
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -244,6 +246,21 @@ require('lazy').setup({
     },
   },
   {
+    'akinsho/toggleterm.nvim',
+    version = '*',
+    opts = {--[[ things you want to change go here]]
+    },
+    config = function()
+      require('toggleterm').setup {
+        direction = 'float',
+        open_mapping = [[<c-\>]],
+        insert_mappings = true,
+        terminal_mappings = true,
+      }
+    end,
+  },
+  { 'akinsho/bufferline.nvim', version = '*', dependencies = 'nvim-tree/nvim-web-devicons' },
+  {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     config = function()
@@ -257,7 +274,15 @@ require('lazy').setup({
       }
     end,
   },
-  { 'akinsho/bufferline.nvim', version = '*', dependencies = 'nvim-tree/nvim-web-devicons' },
+  {
+    'akinsho/bufferline.nvim',
+    version = '*',
+    dependencies = 'nvim-tree/nvim-web-devicons',
+    config = function()
+      vim.opt.termguicolors = true
+      require('bufferline').setup {}
+    end,
+  },
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -360,7 +385,6 @@ require('lazy').setup({
   -- you do for a plugin at the top level, you can do for a dependency.
   --
   -- Use the `dependencies` key to specify the dependencies of a particular plugin
-
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
