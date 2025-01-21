@@ -1081,7 +1081,25 @@ require('lazy').setup({
       { '<leader>lg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
     },
   },
-
+  {
+    'EdenEast/nightfox.nvim',
+    lazy = false,
+    priority = 1000,
+    init = function()
+      vim.cmd 'colorscheme duskfox'
+    end,
+    config = function()
+      require('nightfox').setup {
+        options = {
+          styles = {
+            comments = 'italic',
+            keywords = 'bold',
+            types = 'italic,bold',
+          },
+        },
+      }
+    end,
+  },
   -- { -- You can easily change to a different colorscheme.
   --   -- Change the name of the colorscheme plugin below, and then
   --   -- change the command in the config to whatever the name of that colorscheme is.
@@ -1099,15 +1117,15 @@ require('lazy').setup({
   --     vim.cmd.hi 'Comment gui=none'
   --   end,
   -- },
-  {
-    'baliestri/aura-theme',
-    lazy = false,
-    priority = 1000,
-    config = function(plugin)
-      vim.opt.rtp:append(plugin.dir .. '/packages/neovim')
-      vim.cmd [[colorscheme aura-dark]]
-    end,
-  },
+  -- {
+  --   'baliestri/aura-theme',
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function(plugin)
+  --     vim.opt.rtp:append(plugin.dir .. '/packages/neovim')
+  --     vim.cmd [[colorscheme aura-dark]]
+  --   end,
+  -- },
   -- {
   --   'maxmx03/fluoromachine.nvim',
   --   lazy = false,
