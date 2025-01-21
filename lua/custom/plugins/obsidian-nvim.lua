@@ -1,5 +1,5 @@
 if true then
-  return
+  return {}
 else
   return {
     'epwalsh/obsidian.nvim',

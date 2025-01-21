@@ -1,15 +1,16 @@
 if true then
   return {}
-end
-return {
-  'zbirenbaum/copilot-cmp',
-  config = function()
-    require('copilot_cmp').setup()
-  end,
-  opts = {
-    filetypes = {
-      ['.'] = false,
-      go = true,
+else
+  return {
+    'zbirenbaum/copilot-cmp',
+    config = function()
+      require('copilot_cmp').setup()
+    end,
+    opts = {
+      filetypes = {
+        ['.'] = false,
+        go = true,
+      },
     },
-  },
-}
+  }
+end

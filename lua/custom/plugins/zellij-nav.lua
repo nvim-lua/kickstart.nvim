@@ -1,5 +1,5 @@
 if true then
-  return
+  return {}
 else
   return {
     'https://git.sr.ht/~swaits/zellij-nav.nvim',
