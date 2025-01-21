@@ -1,3 +1,7 @@
-return {
-  'ThePrimeagen/vim-be-good',
-}
+if true then
+  return
+else
+  return {
+    'ThePrimeagen/vim-be-good',
+  }
+end
