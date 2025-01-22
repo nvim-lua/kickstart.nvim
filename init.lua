@@ -555,17 +555,6 @@ require('lazy').setup({
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
-
-          powershell_es = function()
-            local lspconfig = require 'lspconfig'
-            lspconfig.powershell_es.setup {
-              bundle_path = '~/Appdata/Local/nvim/powershell',
-              on_attach = function(client, bufnr)
-                vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-              end,
-              settings = { powershell = { codeFormatting = { Preset = 'OTBS' } } },
-            }
-          end,
         },
       }
       -- Godot's LSP - Requires Godot to be running
