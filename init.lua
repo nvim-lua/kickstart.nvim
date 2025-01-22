@@ -78,8 +78,8 @@ vim.keymap.set('n', '<leader><leader>', '<cmd>Neotree toggle<CR>')
 vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = 'Toggle [U]ndoTree' })
 vim.keymap.set('n', '<leader>;', 'A;<esc>', { desc = 'Append [;] to line' })
 vim.keymap.set('n', '<leader>,', 'A,<esc>', { desc = 'Append [,] to line' })
-vim.keymap.set('n', '<leader><Tab>', ':bnext<CR>', { desc = "Next buffer"} )
-vim.keymap.set('n', '<leader><S-Tab>', ':bprev<CR>', { desc = "Previous buffer"} )
+vim.keymap.set('n', '<leader><Tab>', ':bnext<CR>', { desc = 'Next buffer' })
+vim.keymap.set('n', '<leader><S-Tab>', ':bprev<CR>', { desc = 'Previous buffer' })
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -504,6 +504,7 @@ require('lazy').setup({
         -- gopls = {},
         -- pyright = {},
         rust_analyzer = {},
+        powershell_es = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -553,6 +554,17 @@ require('lazy').setup({
             -- certain features of an LSP (for example, turning off formatting for tsserver)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
+          end,
+
+          powershell_es = function()
+            local lspconfig = require 'lspconfig'
+            lspconfig.powershell_es.setup {
+              bundle_path = '~/Appdata/Local/nvim/powershell',
+              on_attach = function(client, bufnr)
+                vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+              end,
+              settings = { powershell = { codeFormatting = { Preset = 'OTBS' } } },
+            }
           end,
         },
       }
