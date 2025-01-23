@@ -467,6 +467,9 @@ require('lazy').setup({
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
           --
+          --                        on_attach = function(client, bufnr)
+          --                                                    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+          --                                                                            end,
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.server_capabilities.documentHighlightProvider then
@@ -501,7 +504,7 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         clangd = {},
-        gopls = {},
+        -- gopls = {},
         -- pyright = {},
         rust_analyzer = {},
         powershell_es = {},
@@ -554,6 +557,18 @@ require('lazy').setup({
             -- certain features of an LSP (for example, turning off formatting for tsserver)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
+          end,
+
+          powershell_es = function()
+            local lspconfig = require 'lspconfig'
+            lspconfig.powershell_es.setup {
+              init_options = { enableProfileLoading = false },
+              filetypes = { 'ps1' },
+              on_attach = function(client, bufnr)
+                vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+              end,
+              settings = { powershell = { codeFormatting = { Preset = 'OTBS' } } },
+            }
           end,
         },
       }
