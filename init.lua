@@ -104,6 +104,10 @@ vim.opt.number = true
 --  Experiment for yourself to see if you like it!
 vim.opt.relativenumber = true
 
+-- change the default tab space
+-- vim.o.schiftwidth = 4
+vim.o.tabstop = 4
+
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
 
@@ -662,6 +666,8 @@ require('lazy').setup({
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
+        ensure_installed = { 'ltex' },
+        automatic_installation = {},
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
@@ -670,6 +676,29 @@ require('lazy').setup({
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
+          end,
+          -- this is the "custom handler" for `ltex`
+          ltex = function()
+            require('lspconfig').ltex.setup {
+              -- settings = {
+              --   ltex = {
+              --     language = 'fr',
+              --   },
+              -- },
+              ---@param client vim.lsp.Client
+              on_attach = function(client)
+                -- define new function to change language
+                vim.api.nvim_create_user_command('Ltexlang', function(args)
+                  client.config.settings.ltex.language = args.fargs[1]
+                  client.notify(vim.lsp.protocol.Methods.workspace_didChangeConfiguration, client.config.settings)
+                end, {
+                  nargs = 1,
+                  complete = function()
+                    return { 'fr', 'en-US' }
+                  end,
+                })
+              end,
+            }
           end,
         },
       }
