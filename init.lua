@@ -166,6 +166,7 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- CUSTOM KEYMAPS MOVE TO SEPERATE FILE PLEASE!!!!!
 vim.keymap.set('i', 'kj', '<Esc>')
 vim.keymap.set('n', '-', '<Cmd>Oil<CR>', { desc = 'Open Parent Directory' })
+vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
@@ -857,7 +858,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'rose-pine'
+      vim.cmd.colorscheme 'rose-pine-moon'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
