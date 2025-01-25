@@ -1,5 +1,14 @@
 return {
   {
+    "ellisonleao/gruvbox.nvim", 
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.cmd.colorscheme 'gruvbox'
+    end
+  },
+
+  {
     'sainnhe/gruvbox-material',
     lazy = false,
     priority = 1000,
@@ -54,7 +63,7 @@ return {
         vim.api.nvim_set_hl(0, group, {})
       end
     end,
-    enabled = true,
+    enabled = false,
   },
 
   {
