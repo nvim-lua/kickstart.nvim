@@ -109,8 +109,8 @@ vim.api.nvim_create_autocmd('TermOpen', {
   desc = 'Custom terminal settings',
   group = vim.api.nvim_create_augroup('term-custom', { clear = true }),
   callback = function()
-    vim.opt.number = false
-    vim.opt.relativenumber = false
+    vim.opt_local.number = false
+    vim.opt_local.relativenumber = false
   end,
 })
 
@@ -550,6 +550,11 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
+        denols = {
+          root_dir = require('lspconfig').util.root_pattern { 'deno.json', 'deno.jsonc' },
+          single_file_support = false,
+          settings = {},
+        },
 
         lua_ls = {
           -- cmd = {...},
