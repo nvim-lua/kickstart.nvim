@@ -1,11 +1,21 @@
 return {
   {
-    "ellisonleao/gruvbox.nvim", 
+    "tjdevries/colorbuddy.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function ()
+      vim.cmd.colorscheme 'gruvbuddy'
+    end
+  },
+
+  {
+    "ellisonleao/gruvbox.nvim",
     lazy = false,
     priority = 1000,
     config = function()
       vim.cmd.colorscheme 'gruvbox'
-    end
+    end,
+    enabled = false,
   },
 
   {
