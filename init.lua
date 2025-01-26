@@ -165,7 +165,7 @@ require('lazy').setup({
         -- style = 'darker',
         transparent = true,
       }
-      -- require('onedark').load()
+      require('onedark').load()
     end,
   },
 
