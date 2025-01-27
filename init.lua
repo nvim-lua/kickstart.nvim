@@ -27,6 +27,17 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   {
+    'christoomey/vim-tmux-navigator',
+    cmd = {
+      'TmuxNavigateLeft',
+      'TmuxNavigateDown',
+      'TmuxNavigateUp',
+      'TmuxNavigateRight',
+      'TmuxNavigatePrevious',
+      'TmuxNavigatorProcessList',
+    },
+  },
+  {
     'pmizio/typescript-tools.nvim',
     dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
     opts = {},
@@ -502,14 +513,10 @@ require('lazy').setup({
             },
           },
         },
-        pylsp = {
-          plugins = {
-            ruff = {
-              enabled = true,
-              formatEnabled = true,
-            },
-            autopep8 = { enabled = false },
-          },
+        pyright = {},
+        ruff = {
+          enabled = true,
+          formatEnabled = true,
         },
         cmake = {},
         lua_ls = {
