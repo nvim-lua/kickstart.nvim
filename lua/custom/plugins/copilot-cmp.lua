@@ -14,3 +14,7 @@ else
     },
   }
 end
+
+return {
+  'https://github.com/mbbill/undotree',
+}

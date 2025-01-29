@@ -18,4 +18,5 @@ return {}
 -- https://github.com/vipul-sharma20/nvim-jira
 -- https://github.com/walterl/centerfold
 -- https://github.com/tricktux/pomodoro.vim/tree/master - but fork it into your own in lua
+-- https://github.com/mbbill/undotree
 --]]
