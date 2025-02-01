@@ -1099,7 +1099,7 @@ require('lazy').setup({
             keywords = 'bold',
             types = 'italic,bold',
           },
-          transparent = false,
+          transparent = true,
         },
       }
     end,
