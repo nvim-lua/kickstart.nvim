@@ -340,7 +340,7 @@ require('lazy').setup({
   --
   -- Use the `dependencies` key to specify the dependencies of a particular plugin
   {
-    'folke/snacks.nvim',
+    "folke/snacks.nvim",
     priority = 1000,
     lazy = false,
     ---@type snacks.Config
@@ -353,6 +353,7 @@ require('lazy').setup({
         enabled = true,
         timeout = 3000,
       },
+      picker = { enabled = true },
       quickfile = { enabled = true },
       scroll = { enabled = true },
       statuscolumn = { enabled = true },
@@ -360,154 +361,49 @@ require('lazy').setup({
       styles = {
         notification = {
           -- wo = { wrap = true } -- Wrap notifications
-        },
-      },
+        }
+      }
     },
     keys = {
+      { "<leader>z",  function() Snacks.zen() end, desc = "Toggle Zen Mode" },
+      { "<leader>Z",  function() Snacks.zen.zoom() end, desc = "Toggle Zoom" },
+      { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
+      { "<leader>S",  function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
+      { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
+      { "<leader>bd", function() Snacks.bufdelete() end, desc = "Delete Buffer" },
+      { "<leader>cR", function() Snacks.rename.rename_file() end, desc = "Rename File" },
+      { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
+      { "<leader>gb", function() Snacks.git.blame_line() end, desc = "Git Blame Line" },
+      { "<leader>gf", function() Snacks.lazygit.log_file() end, desc = "Lazygit Current File History" },
+      { "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
+      { "<leader>gl", function() Snacks.lazygit.log() end, desc = "Lazygit Log (cwd)" },
+      { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss All Notifications" },
+      { "<c-/>",      function() Snacks.terminal() end, desc = "Toggle Terminal" },
+      { "<c-_>",      function() Snacks.terminal() end, desc = "which_key_ignore" },
+      { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },
+      { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
       {
-        '<leader>z',
+        "<leader>N",
+        desc = "Neovim News",
         function()
-          Snacks.zen()
-        end,
-        desc = 'Toggle Zen Mode',
-      },
-      {
-        '<leader>Z',
-        function()
-          Snacks.zen.zoom()
-        end,
-        desc = 'Toggle Zoom',
-      },
-      {
-        '<leader>.',
-        function()
-          Snacks.scratch()
-        end,
-        desc = 'Toggle Scratch Buffer',
-      },
-      {
-        '<leader>S',
-        function()
-          Snacks.scratch.select()
-        end,
-        desc = 'Select Scratch Buffer',
-      },
-      {
-        '<leader>n',
-        function()
-          Snacks.notifier.show_history()
-        end,
-        desc = 'Notification History',
-      },
-      {
-        '<leader>bd',
-        function()
-          Snacks.bufdelete()
-        end,
-        desc = 'Delete Buffer',
-      },
-      {
-        '<leader>cR',
-        function()
-          Snacks.rename.rename_file()
-        end,
-        desc = 'Rename File',
-      },
-      {
-        '<leader>gB',
-        function()
-          Snacks.gitbrowse()
-        end,
-        desc = 'Git Browse',
-        mode = { 'n', 'v' },
-      },
-      {
-        '<leader>gb',
-        function()
-          Snacks.git.blame_line()
-        end,
-        desc = 'Git Blame Line',
-      },
-      {
-        '<leader>gf',
-        function()
-          Snacks.lazygit.log_file()
-        end,
-        desc = 'Lazygit Current File History',
-      },
-      {
-        '<leader>gg',
-        function()
-          Snacks.lazygit()
-        end,
-        desc = 'Lazygit',
-      },
-      {
-        '<leader>gl',
-        function()
-          Snacks.lazygit.log()
-        end,
-        desc = 'Lazygit Log (cwd)',
-      },
-      {
-        '<leader>un',
-        function()
-          Snacks.notifier.hide()
-        end,
-        desc = 'Dismiss All Notifications',
-      },
-      {
-        '<c-/>',
-        function()
-          Snacks.terminal()
-        end,
-        desc = 'Toggle Terminal',
-      },
-      {
-        '<c-_>',
-        function()
-          Snacks.terminal()
-        end,
-        desc = 'which_key_ignore',
-      },
-      {
-        ']]',
-        function()
-          Snacks.words.jump(vim.v.count1)
-        end,
-        desc = 'Next Reference',
-        mode = { 'n', 't' },
-      },
-      {
-        '[[',
-        function()
-          Snacks.words.jump(-vim.v.count1)
-        end,
-        desc = 'Prev Reference',
-        mode = { 'n', 't' },
-      },
-      {
-        '<leader>N',
-        desc = 'Neovim News',
-        function()
-          Snacks.win {
-            file = vim.api.nvim_get_runtime_file('doc/news.txt', false)[1],
+          Snacks.win({
+            file = vim.api.nvim_get_runtime_file("doc/news.txt", false)[1],
             width = 0.6,
             height = 0.6,
             wo = {
               spell = false,
               wrap = false,
-              signcolumn = 'yes',
-              statuscolumn = ' ',
+              signcolumn = "yes",
+              statuscolumn = " ",
               conceallevel = 3,
             },
-          }
+          })
         end,
-      },
+      }
     },
     init = function()
-      vim.api.nvim_create_autocmd('User', {
-        pattern = 'VeryLazy',
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "VeryLazy",
         callback = function()
           -- Setup some globals for debugging (lazy-loaded)
           _G.dd = function(...)
@@ -519,17 +415,17 @@ require('lazy').setup({
           vim.print = _G.dd -- Override print to use snacks for `:=` command
 
           -- Create some toggle mappings
-          Snacks.toggle.option('spell', { name = 'Spelling' }):map '<leader>us'
-          Snacks.toggle.option('wrap', { name = 'Wrap' }):map '<leader>uw'
-          Snacks.toggle.option('relativenumber', { name = 'Relative Number' }):map '<leader>uL'
-          Snacks.toggle.diagnostics():map '<leader>ud'
-          Snacks.toggle.line_number():map '<leader>ul'
-          Snacks.toggle.option('conceallevel', { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):map '<leader>uc'
-          Snacks.toggle.treesitter():map '<leader>uT'
-          Snacks.toggle.option('background', { off = 'light', on = 'dark', name = 'Dark Background' }):map '<leader>ub'
-          Snacks.toggle.inlay_hints():map '<leader>uh'
-          Snacks.toggle.indent():map '<leader>ug'
-          Snacks.toggle.dim():map '<leader>uD'
+          Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
+          Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
+          Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>uL")
+          Snacks.toggle.diagnostics():map("<leader>ud")
+          Snacks.toggle.line_number():map("<leader>ul")
+          Snacks.toggle.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):map("<leader>uc")
+          Snacks.toggle.treesitter():map("<leader>uT")
+          Snacks.toggle.option("background", { off = "light", on = "dark", name = "Dark Background" }):map("<leader>ub")
+          Snacks.toggle.inlay_hints():map("<leader>uh")
+          Snacks.toggle.indent():map("<leader>ug")
+          Snacks.toggle.dim():map("<leader>uD")
         end,
       })
     end,
@@ -933,7 +829,7 @@ require('lazy').setup({
     },
     opts = {
       autoformat = true,
-      notify_on_error = false,
+      notify_on_error = true,
       -- format_on_save = function(bufnr)
       --   -- Disable "format_on_save lsp_fallback" for languages that don't
       --   -- have a well standardized coding style. You can add additional
@@ -958,6 +854,11 @@ require('lazy').setup({
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
+      },
+      formatters = {
+        clang_format = {
+          prepend_args = { '--style=file', '--fallback-style=LLVM' },
+        },
       },
     },
   },
@@ -1179,7 +1080,17 @@ require('lazy').setup({
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
-
+  {
+    'mg979/vim-visual-multi',
+        -- See https://github.com/mg979/vim-visual-multi/issues/241
+        init = function()
+            vim.g.VM_default_mappings = 0
+            vim.g.VM_maps = {
+                ['Find Under'] = ''
+            }
+            vim.g.VM_add_cursor_at_pos_no_mappings = 1
+        end,
+  },
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
@@ -1202,7 +1113,8 @@ require('lazy').setup({
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   { import = 'custom.plugins' },
-}, {
+}, 
+{
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
