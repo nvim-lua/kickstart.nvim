@@ -1052,7 +1052,7 @@ require('lazy').setup({
           { name = 'gopls' },
           { name = 'zls' },
           { name = 'rust_analyzer' },
-          -- { name = 'supermaven' },
+          { name = 'dart' },
         },
       }
     end,
@@ -1096,6 +1096,7 @@ require('lazy').setup({
             keywords = 'bold',
             types = 'italic,bold',
           },
+          transparent = false,
         },
       }
     end,
