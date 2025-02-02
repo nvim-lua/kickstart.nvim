@@ -39,7 +39,6 @@ return {
 
       -- Keymaps
       vim.keymap.set('n', '<C-n>', ':Neotree toggle<CR>', { silent = true })
-      vim.keymap.set('n', '<leader>o', ':Neotree focus<CR>', { silent = true })
     end,
   },
 }
