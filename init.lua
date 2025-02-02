@@ -243,6 +243,8 @@ require('lazy').setup({
               default = {
                 action = function(selection)
                   vim.cmd.cd(selection.path)
+                  local split = z_utils.create_basic_command 'split'
+                  split(selection)
                 end,
                 after_action = function(selection)
                   vim.notify('Directory changed to ' .. selection.path)
