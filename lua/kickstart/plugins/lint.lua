@@ -6,7 +6,13 @@ return {
     config = function()
       local lint = require 'lint'
       lint.linters_by_ft = {
+        clojure = { nil },
+        inko = { nil },
+        janet = { nil },
         markdown = { 'markdownlint' },
+        terraform = { 'tflint'},
+        tofu = { 'tflint' },
+        text = { 'vale' },
       }
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,
