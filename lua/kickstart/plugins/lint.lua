@@ -1,18 +1,74 @@
 return {
-
   { -- Linting
     'mfussenegger/nvim-lint',
-    event = { 'BufReadPre', 'BufNewFile' },
+    dependencies = {
+      { 'williamboman/mason.nvim', config = true },
+     'rshkarin/mason-nvim-lint',
+    },
+    enabled = true,
+    event = { 'BufReadPre', 'BufNewFile', 'InsertLeave' },
     config = function()
       local lint = require 'lint'
+      local ensure_installed = {
+          'actionlint',
+          'ansible-lint',
+          'cmakelint',
+          'cpplint',
+          'eslint_d',
+          'golangci-lint',
+          'hadolint',
+          'jsonlint',
+          'ktlint',
+          'luacheck',
+          'markdownlint',
+          -- 'markdownlint-cli2',
+          -- 'npm-groovy-lint',
+          'pylint',
+          -- 'semgrep',
+          'shellcheck',
+          'shellharden',
+          'shfmt',
+          'tflint',
+          'trivy',
+          'typos',
+          'yamllint',
+      }
+      require('mason-nvim-lint').setup{
+        automatic_installation = true,
+        ensure_installed = ensure_installed,
+        -- ignore_install = {},
+      }
       lint.linters_by_ft = {
+        ansible = { 'ansible_lint' },
+        bash = { 'shellcheck', 'shellharden' },
         clojure = { nil },
+        dockerfile = { 'hadolint' },
+        -- helm = { 'helm_lint'}, -- helm_lint is currently available.
         inko = { nil },
         janet = { nil },
+        -- java = { 'semgrep' }, -- Need to find an alternative here.
+        javascript = { 'eslint_d' },
+        json = { 'jsonlint' },
+        kotlin = { 'ktlint' },
+        -- gitcommit = { 'gitlint', 'gitleaks' }, -- Handled better by `pre-commit`.
+        go = { 'golangcilint' },
+        -- graphql = { 'prettierd' },
+        -- groovy = { 'npm-groovy-lint' },
+        latex = { 'vale' },
+        lua = { 'luacheck' },
         markdown = { 'markdownlint' },
-        terraform = { 'tflint'},
+        postgres = { 'sqlfluff' },
+        python = { 'pylint', 'ruff' },
+        -- rust = { 'bacon' }, -- bacon is present in the registry, but does not function.
+        sh = { 'shellcheck', 'shellharden' },
+        sql = { 'sqlfluff' },
+        terraform = { 'tflint' },
         tofu = { 'tflint' },
+        -- toml = { '' },
         text = { 'vale' },
+        typescript = { 'eslint_d' },
+        yaml = { 'yamllint', 'actionlint' },
+        zsh = { 'shellcheck', 'shellharden' },
       }
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,
@@ -47,8 +103,6 @@ return {
       -- lint.linters_by_ft['terraform'] = nil
       -- lint.linters_by_ft['text'] = nil
 
-      -- Create autocommand which carries out the actual linting
-      -- on the specified events.
       local lint_augroup = vim.api.nvim_create_augroup('lint', { clear = true })
       vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
         group = lint_augroup,
@@ -57,10 +111,10 @@ return {
           -- avoid superfluous noise, notably within the handy LSP pop-ups that
           -- describe the hovered symbol using Markdown.
           if vim.opt_local.modifiable:get() then
-            lint.try_lint()
+              lint.try_lint()
           end
         end,
       })
     end,
-  },
+  }
 }
