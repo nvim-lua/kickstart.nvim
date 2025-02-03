@@ -17,9 +17,7 @@ vim.opt.mouse = 'a'
 vim.opt.showmode = true
 
 -- Supposedly reduces load time
-vim.schedule(function()
-  vim.opt.clipboard = 'unnamedplus'
-end)
+vim.opt.clipboard = 'unnamedplus'
 
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
