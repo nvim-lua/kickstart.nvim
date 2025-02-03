@@ -783,9 +783,9 @@ require('lazy').setup({
   },
 
   {
-    'shaunsingh/nord.nvim',
+    'rebelot/kanagawa.nvim',
     init = function()
-      vim.cmd.colorscheme 'nord'
+      vim.cmd.colorscheme 'kanagawa-dragon'
     end,
   },
 
