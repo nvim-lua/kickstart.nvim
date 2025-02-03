@@ -171,7 +171,12 @@ vim.opt.scrolloff = 10
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+-- Set up diagnostic keymaps only after VimEnter to ensure diagnostic module is loaded
+vim.api.nvim_create_autocmd('VimEnter', {
+  callback = function()
+    vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+  end,
+})
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -233,6 +238,15 @@ vim.keymap.set('n', '<leader>tp', ':!make plan<CR>', opts)
 vim.keymap.set('n', '<leader>taa', ':!make applyA<CR>', opts)
 
 -- [[ JMB End ]]
+
+-- Configure diagnostic display
+vim.diagnostic.config({
+  virtual_text = true,
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,
+})
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
