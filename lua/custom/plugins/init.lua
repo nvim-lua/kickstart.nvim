@@ -52,4 +52,15 @@ return {
       }
     end,
   },
+  {
+    'norcalli/nvim-colorizer.lua',
+    event = 'VimEnter',
+    opts = { '*' },
+  },
+  -- {
+  --   'kao.nvim',
+  --   dev = true,
+  --   dir = '~/.config/nvim/plugin/',
+  --   opts = { message = 'Hello' },
+  -- },
 }

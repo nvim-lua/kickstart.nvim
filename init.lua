@@ -84,6 +84,8 @@ I hope you enjoy your Neovim journey,
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
 
+-- vim.cmd [[colorscheme koa]]
+
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -169,6 +171,9 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>td', function()
+  vim.diagnostic.enable(not vim.diagnostic.is_enabled())
+end, { silent = true, noremap = true, desc = '[T]oggle [D]iagnostics' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -192,6 +197,9 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+-- My palette
+local palette = require 'custom.palette'
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -279,7 +287,7 @@ require('lazy').setup({
     opts = {
       -- delay between pressing a key and opening which-key (milliseconds)
       -- this setting is independent of vim.opt.timeoutlen
-      delay = 0,
+      delay = 200,
       icons = {
         -- set icon mappings to true if you have a Nerd Font
         mappings = vim.g.have_nerd_font,
@@ -594,14 +602,14 @@ require('lazy').setup({
       })
 
       -- Change diagnostic symbols in the sign column (gutter)
-      -- if vim.g.have_nerd_font then
-      --   local signs = { ERROR = '', WARN = '', INFO = '', HINT = '' }
-      --   local diagnostic_signs = {}
-      --   for type, icon in pairs(signs) do
-      --     diagnostic_signs[vim.diagnostic.severity[type]] = icon
-      --   end
-      --   vim.diagnostic.config { signs = { text = diagnostic_signs } }
-      -- end
+      if vim.g.have_nerd_font then
+        local signs = { ERROR = '', WARN = '', INFO = '', HINT = '' }
+        local diagnostic_signs = {}
+        for type, icon in pairs(signs) do
+          diagnostic_signs[vim.diagnostic.severity[type]] = icon
+        end
+        vim.diagnostic.config { signs = { text = diagnostic_signs } }
+      end
 
       -- LSP servers and clients are able to communicate to each other what features they support.
       --  By default, Neovim doesn't support everything that is in the LSP specification.
@@ -669,7 +677,8 @@ require('lazy').setup({
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
-        ensure_installed = { 'ltex' },
+        -- ensure_installed = { 'ltex' },
+        ensure_installed = {},
         automatic_installation = {},
         handlers = {
           function(server_name)
@@ -688,7 +697,7 @@ require('lazy').setup({
               --     language = 'fr',
               --   },
               -- },
-              ---@param client vim.lsp.Client
+              ---@param client vim.lsp.Client --type annotation of the lsp just
               on_attach = function(client)
                 -- define new function to change language
                 vim.api.nvim_create_user_command('Ltexlang', function(args)
@@ -822,9 +831,9 @@ require('lazy').setup({
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
-          --['<CR>'] = cmp.mapping.confirm { select = true },
-          --['<Tab>'] = cmp.mapping.select_next_item(),
-          --['<S-Tab>'] = cmp.mapping.select_prev_item(),
+          ['<CR>'] = cmp.mapping.confirm { select = true },
+          ['<Tab>'] = cmp.mapping.select_next_item(),
+          ['<S-Tab>'] = cmp.mapping.select_prev_item(),
 
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
@@ -878,11 +887,100 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'default'
-
-      -- You can configure highlights by doing something like:
-      vim.cmd.hi 'Comment gui=none'
+      vim.cmd.colorscheme 'tokyonight'
     end,
+    opts = { -- current line number
+      style = 'night',
+      -- TODO change color of control characters
+      -- of buffer window separators
+      -- change italic text from command
+      on_colors = function(colors)
+        colors.bg = palette.black
+        colors.bg_dark = palette.magenta
+        colors.bg_dark1 = palette.magenta
+        colors.bg_float = palette.trunk0 -- floating window (help etc.)
+        colors.bg_highlight = palette.brown2 -- color of onglet
+        colors.bg_popup = palette.brown
+        -- colors.bg_search = palette.yellow
+        colors.bg_sidebar = palette.trunk0
+        colors.bg_statusline = palette.trunk1
+        colors.bg_visual = palette.trunk7
+        colors.black = palette.magenta
+        colors.blue = palette.leaf1 -- color of background of Normal mode indicator
+        colors.blue0 = palette.magenta
+        colors.blue1 = palette.trunk8 -- color of types
+        colors.blue2 = palette.magenta
+        colors.blue5 = palette.trunk5 -- color of punctuation
+        colors.blue6 = palette.magenta
+        colors.blue7 = palette.magenta
+        colors.border = palette.magenta
+        colors.border_highlight = palette.trunk4
+        -- colors.comment = palette.trunk3
+        colors.cyan = palette.petal2 -- color of vim lines comment
+        colors.dark3 = palette.trunk6 -- color of number of results in search
+        colors.dark5 = palette.fur4 -- color of Snippet text in floating
+        -- colors.diff = {
+        --   add = "#283b4d",
+        --   change = "#1f2231",
+        --   delete = "#37222c",
+        --   text = "#394b70"
+        -- }
+        colors.errors = palette.magenta
+        colors.fg = palette.trunk5 -- color of normal text
+        colors.fg_dark = palette.fur2 -- color of text in status/command line
+        -- colors.fg_float = palette.fur1
+        colors.fg_gutter = palette.trunk7 -- color of line numbers
+        colors.fg_sidebar = palette.magenta
+        colors.git = {
+          add = palette.leaf4,
+          change = '#6183bb',
+          delete = '#914c54',
+          ignore = '#545c7e',
+        }
+        colors.green = palette.leaf4 -- strings
+        colors.green1 = palette.fur2 -- methods or attributes
+        colors.green2 = palette.magenta
+        colors.hint = palette.leaf4 -- "#1abc9c", -- NOTE comment
+        colors.info = palette.cyan --''#0db9d7' -- color of lua logo
+        colors.magenta = palette.petal2 -- "#bb9af7", -- color of functions and {}
+        colors.magenta2 = palette.magenta -- "#ff007c"
+        -- colors.none = "NONE"
+        colors.orange = palette.fur4 -- "#ff9e64" -- current line number
+        colors.purple = palette.wine -- "#9d7cd8", -- local, Return...
+        colors.rainbow = { '#7aa2f7', '#e0af68', '#9ece6a', '#1abc9c', '#bb9af7', '#9d7cd8', '#ff9e64', '#f7768e' }
+        colors.red = palette.magenta -- "#f7768e",
+        colors.red1 = palette.magenta -- "#db4b4b",
+        colors.teal = '#AEDBD9' -- "#1abc9c", -- color of file icon
+        -- terminal = {
+        --   black = "#15161e",
+        --   black_bright = "#414868",
+        --   blue = "#7aa2f7",
+        --   blue_bright = "#8db0ff",
+        --   cyan = "#7dcfff",
+        --   cyan_bright = "#a4daff",
+        --   green = "#9ece6a",
+        --   green_bright = "#9fe044",
+        --   magenta = "#bb9af7",
+        --   magenta_bright = "#c7a9ff",
+        --   red = "#f7768e",
+        --   red_bright = "#ff899d",
+        --   white = "#a9b1d6",
+        --   white_bright = "#c0caf5",
+        --   yellow = "#e0af68",
+        --   yellow_bright = "#faba4a"
+        -- },
+        -- terminal_black = "#414868",
+        -- todo = "#7aa2f7",
+        -- warning = "#e0af68",
+        colors.yellow = '#e0af68'
+        colors.black = palette.black
+      end,
+      on_highlights = function(highlights, colors)
+        -- highlights.comment = colors.teal
+        -- highlights['@comment'] = { fg = colors.red }
+        highlights['IblScope'] = { fg = colors.fg_dark, nocombine = true }
+      end,
+    },
   },
 
   -- Highlight todo, notes, etc in comments
@@ -943,6 +1041,15 @@ require('lazy').setup({
         additional_vim_regex_highlighting = { 'ruby' },
       },
       indent = { enable = true, disable = { 'ruby' } },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = 'gnn',
+          node_incremental = 'grn',
+          scope_incremental = 'grc',
+          node_decremental = 'grm',
+        },
+      },
     },
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
@@ -972,7 +1079,9 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  { import = 'custom.plugins' },
+  -- { import = 'custom.plugins' },
+  require 'custom.plugins.init',
+  -- require 'custom.plugins.koa',
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
