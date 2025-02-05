@@ -1094,6 +1094,8 @@ require('lazy').setup({
         'typescript',
         'javascript',
         -- 'ts_ls',
+        'nu',
+        -- 'nix',
         'css',
         'json',
         'comment',
@@ -1103,6 +1105,11 @@ require('lazy').setup({
         'sql',
         'toml',
         'yaml',
+      },
+      dependencies = {
+        -- Install official queries and filetype detection
+        -- alternatively, see section "Install official queries only"
+        { 'nushell/tree-sitter-nu' },
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
@@ -1122,13 +1129,6 @@ require('lazy').setup({
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
-  --   'nu',
-  -- },
-  -- dependencies = {
-  --   -- Install official queries and filetype detection
-  --   -- alternatively, see section "Install official queries only"
-  --   { 'nushell/tree-sitter-nu' },
-  -- },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
