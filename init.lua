@@ -898,9 +898,6 @@ require('lazy').setup({
         return '%2l:%-2v'
       end
 
-      -- Starter screen
-      require('mini.starter').setup()
-
       -- Jump to next/previous single character
       require('mini.jump').setup()
 
@@ -917,6 +914,7 @@ require('lazy').setup({
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
+
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
