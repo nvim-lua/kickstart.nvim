@@ -1,1 +1,0 @@
-return { 'adigitoleo/vim-mellow' }

@@ -1,1 +1,0 @@
-return { 'sixfourtwelve/bore.vim' }

@@ -102,7 +102,7 @@ return {
       executable = {
         command = 'node',
         -- Update the path below to point to your `dapDebugServer.js`
-        args = { '/home/tawfeeq/.config/nvim/.debuggers/vscode-js-debug/js-debug/src/dapDebugServer.js', '${port}' },
+        args = { '/home/tawfeeq/.config/nvim/debuggers/vscode-js-debug/js-debug/src/dapDebugServer.js', '${port}' },
       },
     }
 

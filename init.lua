@@ -25,7 +25,7 @@ What is Kickstart?
   Kickstart.nvim is *not* a distribution.
 
   Kickstart.nvim is a starting point for your own configuration.
-    The goal is that you can read every line of code, top-to-bottom, understand
+    /// goal is that you can read every line of code, top-to-bottom, understand
     what your configuration is doing, and modify it to suit your needs.
 
     Once you've done that, you can start exploring, configuring and tinkering to
@@ -94,7 +94,14 @@ P.S. You can delete this when you're done too. It's your config now! :)
 
 -- vim.api.nvim_set_hl(0, 'ReturnKeyword', { fg = '#FF0000', bold = true })
 -- vim.cmd [[syntax match ReturnKeyword /\<return\>/]]
-
+--
+--AUTO RELOAD ON SAVE
+vim.api.nvim_create_autocmd('BufWritePost', {
+  pattern = '*', -- For all files
+  callback = function()
+    vim.cmd [[silent edit]] -- Reload the buffer silently
+  end,
+})
 -- Your existing Neovim configurations..
 vim.opt.autoread = true
 vim.cmd 'autocmd VimResume * checktime'
@@ -123,6 +130,7 @@ vim.api.nvim_create_autocmd({ 'FileChangedShellPost' }, {
 --   end,
 -- })
 --
+--
 -- -- Notification after file change
 -- vim.api.nvim_create_autocmd('FileChangedShellPost', {
 --   callback = function()
@@ -131,14 +139,14 @@ vim.api.nvim_create_autocmd({ 'FileChangedShellPost' }, {
 -- })
 
 vim.lsp.inlay_hint.enable()
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.softtabstop = 2
+-- vim.opt.tabstop = 2
+-- vim.opt.shiftwidth = 2
+-- vim.opt.softtabstop = 2
 vim.opt.expandtab = true
 -- Function to toggle transparency
 function ToggleTransparency()
   if vim.g.transparency_enabled then
-    vim.cmd 'hi Normal guibg=#000000 ctermbg=NONE' -- Replace with your preferred background color
+    vim.cmd 'hi Normal guibg=NONE ctermbg=NONE' -- Replace with your preferred background color
     vim.cmd 'hi NormalNC guibg=#000000 ctermbg=NONE' -- Replace with your preferred background color
     vim.g.transparency_enabled = false
   else
@@ -188,9 +196,14 @@ vim.api.nvim_set_keymap('i', '<C-f>', '<ESC>^', { noremap = true })
 vim.api.nvim_set_keymap('i', '<C-M-p>', '<ESC>opi', { noremap = true })
 vim.api.nvim_set_keymap('i', '<C-M-P>', '<ESC>oPi', { noremap = true })
 -- Block cursor
-vim.opt.guicursor =
-  'n-v-c:block,i-ci-ve:block,r-cr:hor20,o:hor50,i-ci-ve:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175'
+-- vim.opt.guicursor = 'n-v-c:block,i:block-blinkwait700-blinkoff400-blinkon250,sm:block'
+-- vim.opt.guicursor = 'n-v-c:block,i:ver25-blinkon250-blinkoff400-blinkwait700,r:hor20,o:hor50,sm:block-blinkwait175-blinkoff150-blinkon175'
 
+vim.api.nvim_create_autocmd('VimEnter', {
+  callback = function()
+    vim.opt.guicursor = 'n-v-c:ver90,i:block-blinkwait400-blinkoff200-blinkon250,sm:block'
+  end,
+})
 --------------------------------------------------------------------
 
 if vim.fn.has 'termguicolors' == 1 then
@@ -718,7 +731,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        ts_ls = {},
+        -- ts_ls = {},
         --
 
         lua_ls = {
@@ -933,9 +946,9 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      -- vim.cmd.colorscheme 'tokyonight-night'
       -- vim.cmd.colorscheme 'kanagawa'
-      -- vim.cmd.colorscheme 'material-palenight'
+      vim.cmd.colorscheme 'material-palenight'
       -- vim.cmd.colorscheme 'obscure'
       -- vim.cmd.colorscheme 'rose-pine'
       -- You can configure highlights by doing something like:
