@@ -144,23 +144,28 @@ vim.lsp.inlay_hint.enable()
 -- vim.opt.softtabstop = 2
 vim.opt.expandtab = true
 -- Function to toggle transparency
+
+-- Initialize transparency state if not set
+if vim.g.transparency_enabled == nil then
+  vim.g.transparency_enabled = false
+end
+
 function ToggleTransparency()
   if vim.g.transparency_enabled then
-    vim.cmd 'hi Normal guibg=NONE ctermbg=NONE' -- Replace with your preferred background color
-    vim.cmd 'hi NormalNC guibg=#000000 ctermbg=NONE' -- Replace with your preferred background color
+    -- Disable transparency: set a non-transparent background color.
+    vim.cmd 'hi Normal guibg=#1e222a ctermbg=NONE'
+    vim.cmd 'hi NormalNC guibg=#1e222a ctermbg=NONE'
     vim.g.transparency_enabled = false
   else
+    -- Enable transparency: remove the background color.
     vim.cmd 'hi Normal guibg=NONE ctermbg=NONE'
     vim.cmd 'hi NormalNC guibg=NONE ctermbg=NONE'
     vim.g.transparency_enabled = true
   end
 end
 
--- Command to toggle transparency
+-- Create the command to toggle transparency
 vim.cmd 'command! Transp lua ToggleTransparency()'
-vim.cmd [[
-  autocmd VimEnter * Neotree position=right
-]]
 
 -- vim.api.nvim_command [[
 --     augroup ChangeBackgroundColour
