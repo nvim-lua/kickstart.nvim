@@ -1,0 +1,125 @@
+{
+    "Next.js Get initial props outside Component": {
+        "prefix": "gip",
+        "body": "${1:${TM_FILENAME_BASE}}.getInitialProps = ({ req }) => {\treturn $2}",
+        "description": "Next.js Get initial props outside Component"
+    },
+    "Next.js getInitialProps() inside Class Component": {
+        "prefix": "cgip",
+        "body": ["static async getInitialProps() {", "\treturn { $1 };", "}"],
+        "description": "Next.js static async getInitialProps() inside Class Component"
+    },
+    "Next.js getStaticProps() export": {
+        "prefix": "gsp",
+        "body": [
+            "export async function getStaticProps(context) {",
+            "\treturn {",
+            "\t\tprops: {$1}",
+            "\t};",
+            "}"
+        ],
+        "description": "Next.js getStaticProps() export"
+    },
+    "Next.js getStaticPaths() export": {
+        "prefix": "gspt",
+        "body": [
+            "export async function getStaticPaths() {",
+            "\treturn {",
+            "\t\tpaths: [",
+            "\t\t\t{ params: { $1 }}",
+            "\t\t],",
+            "\t\tfallback: $2",
+            "\t};",
+            "}"
+        ],
+        "description": "Next.js pre-renders all the static paths https://nextjs.org/docs/basic-features/data-fetching#getstaticpaths-static-generation"
+    },
+    "Next.js getServerSideProps() export": {
+        "prefix": "gssp",
+        "body": [
+            "export async function getServerSideProps(context) {",
+            "\treturn {",
+            "\t\tprops: {$1}",
+            "\t};",
+            "}"
+        ],
+        "description": "Next.js getServerSideProps() export https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering"
+    },
+    "import Next.js Head": {
+        "prefix": "imh",
+        "body": "import Head from 'next/head';",
+        "description": "Next.js Head import"
+    },
+    "import Next.js Link": {
+        "prefix": "iml",
+        "body": "import Link from 'next/link';",
+        "description": "Next.js Link import"
+    },
+    "Use Next.js Link": {
+        "prefix": "usl",
+        "body": ["<Link href=\"$1\">", "\t<a>", "\t\t$0", "\t</a>", "</Link>"],
+        "description": "Next.js Link Tag with <a>"
+    },
+    "Use Next.js Link With Pathname": {
+        "prefix": "uslp",
+        "body": [
+            "<Link href={{ pathname: \"$1\", query: { queryName: queryValue } }}>",
+            "\t<a>",
+            "\t\t$0",
+            "\t</a>",
+            "</Link>"
+        ],
+        "description": "Next.js Link with Pathname"
+    },
+    "Use Next.js LinkTagWithDynmicRoute": {
+        "prefix": "usld",
+        "body": [
+            "<Link href=\"/[$1]\" as={`/${2:SLUG_NAME}`}>",
+            "\t<a>",
+            "\t\t$0",
+            "\t</a>",
+            "</Link>"
+        ],
+        "description": "Next.js Link Tag with Dynamic Route"
+    },
+    "importNextRouter": {
+        "prefix": "imro",
+        "body": "import Router from 'next/router';",
+        "description": "Next.js Router import"
+    },
+    "Next.js Router from useRouter": {
+        "prefix": "usro",
+        "body": "const router = useRouter();",
+        "description": "Declare Next.js Router from useRouter"
+    },
+    "Next.js query param from useRouter": {
+        "prefix": "nroq",
+        "body": "const { $1 } = router.query;",
+        "description": "Destructure Next.js query param from Router from useRouter"
+    },
+    "importNextRouterWithRouter": {
+        "prefix": "imrow",
+        "body": "import Router, { withRouter } from 'next/router';",
+        "description": "Next.js Router and { withRouter } import"
+    },
+    "importNextUseRouter": {
+        "prefix": "imuro",
+        "body": "import { useRouter } from 'next/router';",
+        "description": "Next.js { useRouter } import"
+    },
+    "Import Next Image component": {
+        "prefix": "imni",
+        "body": "import Image from 'next/image';",
+        "description": "Next.js 10 Image component import"
+    },
+    "Use sized Next Image component": {
+        "prefix": "usim",
+        "body": "<Image alt=\"$1\" src=\"$1\" width=\"$1\" height=\"$1\" />",
+        "description": "Use sized Next Image component"
+    },
+    "Use unsized Next Image component": {
+        "prefix": "usimu",
+        "body": "<Image alt=\"$1\" src=\"$1\" unsized=\"$1\" />",
+        "description": "Use sized Next Image component"
+    }
+}

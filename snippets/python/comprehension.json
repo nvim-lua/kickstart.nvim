@@ -1,0 +1,47 @@
+{
+    "List comprehension": {
+        "prefix": "lc",
+        "body": "[${3:value} for ${2:value} in ${1:iterable}]$0",
+        "description": "List comprehension for creating a list based on existing lists."
+    },
+    "List comprehension if else": {
+        "prefix": "lcie",
+        "body": "[${3:value} if ${4:condition} else ${5:condition} for ${2:value} in ${1:iterable}]$0",
+        "description": "List comprehension for creating a list based on existing lists, with conditional if-else statement."
+    },
+    "List comprehension if filter": {
+        "prefix": "lci",
+        "body": "[${3:value} for ${2:value} in ${1:iterable} if ${4:condition}$0]",
+        "description": "List comprehension for creating a list based on existing lists, with conditional if statement."
+    },
+    "Dictionary comprehension": {
+        "prefix": "dc",
+        "body": "{${4:key}: ${5:value} for ${2:key}, ${3:value} in ${1:iterable}}$0",
+        "description": "Handy and faster way to create dictionaries based on existing dictionaries."
+    },
+    "Dictionary comprehension if filter": {
+        "prefix": "dci",
+        "body": "{${4:key}: ${5:value} for ${2:key}, ${3:value} in ${1:iterable} if ${6:condition}}$0",
+        "description": "Handy and faster way to create dictionaries based on existing dictionaries, with conditional if statement."
+    },
+    "Set comprehension": {
+        "prefix": "sc",
+        "body": "{${3:value} for ${2:value} in ${1:iterable}}$0",
+        "description": "Create a set based on existing iterables."
+    },
+    "Set Comprehension if filter": {
+        "prefix": "sci",
+        "body": "{${3:value} for ${2:value} in ${1:iterable} if ${4:condition}}$0",
+        "description": "Create a set based on existing iterables, with condition if statement."
+    },
+    "Generator comprehension": {
+        "prefix": "gc",
+        "body": "(${3:key} for ${2:value} in ${1:iterable})$0",
+        "description": "Create a generator based on existing iterables."
+    },
+    "Generator comprehension if filter": {
+        "prefix": "gci",
+        "body": "(${3:key} for ${2:value} in ${1:iterable} if ${4:condition})$0",
+        "description": "Create a generator based on existing iterables, with condition if statement."
+    }
+}

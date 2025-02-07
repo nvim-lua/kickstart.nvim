@@ -1,0 +1,213 @@
+{
+    "comment": {
+        "prefix": "/**",
+        "body": [
+            "/**",
+            " * ${1:What it does.}",
+            " *",
+            " * @param ${3:name} - ${4:Parameter description.}",
+            " * @returns ${2:Type and description of the returned object.}",
+            " *",
+            " * @example",
+            " * ```",
+            " * ${5:Write me later.}$0",
+            " * ```",
+            " */"
+        ],
+        "description": "A full TSDoc comment with description, parameters, return, and example."
+    },
+    "comment simple": {
+        "prefix": "/*",
+        "body": [
+            "/**", 
+            " * ${1:Comment.}$0", 
+            " */"
+        ],
+        "description": "A simple TSDoc comment."
+    },
+    "alpha": {
+        "prefix": "@alpha",
+        "body": ["@alpha$0"],
+        "description": "This tag can be used to indicate that the associated member is intended to eventually be used by third-party developers but is not yet stable enough to conform to semantic versioning requirements."
+    },
+    "beta": {
+        "prefix": "@beta",
+        "body": ["@beta$0"],
+        "description": "This tag can be used to indicate that the associated member is intended to eventually be used by third-party developers but is not yet stable enough to conform to semantic versioning requirements."
+    },
+    "category": {
+        "prefix": "@category",
+        "body": ["@category$0"],
+        "description": "The @category tag can be used to place several related API items under a common header when listed in a page's index. It may be specified multiple times to list a reflection under several headings."
+    },
+    "defaultValue": {
+        "prefix": "@defaultValue",
+        "body": ["@defaultValue$0"],
+        "description": "The @defaultValue tag can be used to document the default value for an accessor or property."
+    },
+    "deprecated": {
+        "prefix": "@deprecated",
+        "body": ["@deprecated$0"],
+        "description": "nThe @deprecated tag indicates that a declaration should not be used and may be removed in a future release."
+    },
+    "enum": {
+        "prefix": "@enum",
+        "body": ["@enum$0"],
+        "description": "If present on an object with string or number literal values, TypeDoc will convert the variable as an enumeration instead of a variable."
+    },
+    "event": {
+        "prefix": "@event",
+        "body": ["@event$0"],
+        "description": "The @event tag is used to mark a reflection as belonging in the \"Events\" group. It is equivalent to specifying @group Events in the comment."
+    },
+    "eventProperty": {
+        "prefix": "@eventProperty",
+        "body": ["@eventProperty$0"],
+        "description": "The @eventProperty tag is used to mark a reflection as belonging in the \"Events\" group. It is equivalent to specifying @group Events in the comment."
+    },
+    "example": {
+        "prefix": "@example",
+        "body": ["@example", "* ```", "* ${1:write me later.}$0", "* ```"],
+        "description": "The example tag indicates that the following text is an example of how to use the function."
+    },
+    "experimental": {
+        "prefix": "@experimental",
+        "body": ["@experimental$0"],
+        "description": "This tag can be used to indicate that the associated member is intended to eventually be used by third-party developers but is not yet stable enough to conform to semantic versioning requirements."
+    },
+    "group": {
+        "prefix": "@group",
+        "body": ["@group$0"],
+        "description": "The @group tag can be used to place several related API items under a common header when listed in a page's index. It may be specified multiple times to list a reflection under several headings."
+    },
+    "ignore": {
+        "prefix": "@ignore",
+        "body": ["@ignore$0"],
+        "description": "Reflections marked with the @hidden tag will be removed from the documentation. It is equivalent to the @ignore JSDoc tag."
+    },
+    "inheritDoc": {
+        "prefix": "@inheritDoc",
+        "body": ["@inheritDoc$0"],
+        "description": "The @inheritDoc tag is used to create a reflection's documentation by copying it from another reflection. The tag has the form {@inheritDoc ref} where ref is a declaration reference."
+    },
+    "interface": {
+        "prefix": "@interface",
+        "body": ["@interface$0"],
+        "description": "If present on a type alias, will cause it to be converted as an interface. This will result in all \"dynamic\" properties being expanded to real properties."
+    },
+    "internal": {
+        "prefix": "@internal",
+        "body": ["@internal$0"],
+        "description": "The @internal tag indicates that a reflection is not intended to be used by API consumers. API items annotated with @internal may be removed from the generated documentation by specifying the --excludeInternal option."
+    },
+    "label": {
+        "prefix": "@label",
+        "body": ["@label$0"],
+        "description": "The @label tag can be used to give an overloaded signature a name that it can be referenced with via a declaration reference."
+    },
+    "link": {
+        "prefix": "@link",
+        "body": ["@link$0"],
+        "description": "The @link tag is used to refer to another documented declaration. The tag has the form of {@link myDeclaration}."
+    },
+    "module": {
+        "prefix": "@module",
+        "body": ["@module$0"],
+        "description": "The @module tag is used to mark a comment as referring to a file rather than the declaration following it. It may optionally be used to rename a module whose name TypeDoc guesses incorrectly."
+    },
+    "overload": {
+        "prefix": "@overload",
+        "body": ["@overload$0"],
+        "description": "The @overload tag is recognized for use in JavaScript projects which can use it to declare overloads since TypeScript 5.0. It is automatically removed from the rendered documentation with the --excludeTags option."
+    },
+    "override": {
+        "prefix": "@override",
+        "body": ["@override$0"],
+        "description": "TypeDoc parses the @override tag for compatibility with TSDoc, but does not attach any meaning to it's use."
+    },
+    "packageDocumentation": {
+        "prefix": "@packageDocumentation",
+        "body": ["@packageDocumentation$0"],
+        "description": "The @packageDocumentation tag is used to mark a comment as referring to a file rather than the declaration following it. The TypeDoc specific @module tag can be used for the same purpose when semantically clearer."
+    },
+    "param": {
+        "prefix": "@param",
+        "body": ["@param$0"],
+        "description": "The @param tag is used to document a parameter of a function or method."
+    },
+    "private": {
+        "prefix": "@private",
+        "body": ["@private$0"],
+        "description": "This tag should generally not be used and may be removed in a future release. The @private tag overrides the visibility of a reflection to be private."
+    },
+    "privateRemarks": {
+        "prefix": "@privateRemarks",
+        "body": ["@privateRemarks$0"],
+        "description": "The @privateRemarks tag can be used to include documentation text that should not be included in the generated API reference."
+    },
+    "property": {
+        "prefix": "@property",
+        "body": ["@property$0"],
+        "description": "The @property (or @prop) tag can be used to add a comment to a child of the current reflection. It is intended for use with the @namespace and @interface tags which might not have convenient places to include comments for each member."
+    },
+    "protected": {
+        "prefix": "@protected",
+        "body": ["@protected$0"],
+        "description": "This tag should generally not be used and may be removed in a future release. The @protected tag overrides the visibility of a reflection to be protected."
+    },
+    "public": {
+        "prefix": "@public",
+        "body": ["@public$0"],
+        "description": "This tag should generally not be used. The @public tag overrides the visibility of a reflection to be public. This does not strictly conform to the TSDoc specification, which treats member visibility and release visibility separately."
+    },
+    "readonly": {
+        "prefix": "@readonly",
+        "body": ["@readonly$0"],
+        "description": "The @readonly tag indicates that a reflection should be documented as non-writable, even if writable according to TypeScript."
+    },
+    "remarks": {
+        "prefix": "@remarks",
+        "body": ["@remarks$0"],
+        "description": "The @remarks tag can be used to separate the summary section of a documentation content from additional detailed information. At most one @remarks block is permitted in a comment. Unlike most tags, the @remarks tag will be copied if {@inheritDoc} is used in a comment."
+    },
+    "returns": {
+        "prefix": "@returns",
+        "body": ["@returns$0"],
+        "description": "The @returns tag can be used to document the return value of a function. At most one @returns tag should be present in a comment."
+    },
+    "satisfies": {
+        "prefix": "@satisfies",
+        "body": ["@satisfies$0"],
+        "description": "This tag is recognized for parity with TypeScript 5.0's @satisfies Support in JSDoc."
+    },
+    "sealed": {
+        "prefix": "@sealed",
+        "body": ["@sealed$0"],
+        "description": "TypeDoc parses the @sealed tag for compatibility with TSDoc, but does not attach any meaning to it's use."
+    },
+    "see": {
+        "prefix": "@see",
+        "body": ["@see$0"],
+        "description": "The @see tag can be used to create a list of references for other resources related to this export."
+    },
+    "template": {
+        "prefix": "@template",
+        "body": ["@template$0"],
+        "description": "The @template tag is used to document a type parameter of a function, method, class, interface or type alias. It is used like \"@template {string} T - the identity type \""
+    },
+    "throws": {
+        "prefix": "@throws",
+        "body": ["@throws$0"],
+        "description": "The @throws tag can be used to document an exception that can be thrown by a function or method."
+    },
+    "typeParam": {
+        "prefix": "@typeParam",
+        "body": ["@typeParam$0"],
+        "description": "The @typeParam tag is used to document a type parameter of a function, method, class, interface or type alias. TypeDoc recognizes the @template tag as an alias of @typeParam."
+    },
+    "virtual": {
+        "prefix": "@virtual",
+        "body": ["@virtual$0"],
+        "description": "TypeDoc parses the @virtual tag for compatibility with TSDoc, but does not attach any meaning to it's use."
+    }
+}

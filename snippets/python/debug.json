@@ -1,0 +1,44 @@
+{
+    "PDB set trace": {
+        "prefix": "pdb",
+        "body": "__import__('pdb').set_trace()$0",
+        "description": "Code snippet for pdb debug"
+    },
+    "iPDB set trace": {
+        "prefix": "ipdb",
+        "body": "__import__('ipdb').set_trace()$0",
+        "description": "Code snippet for ipdb debug"
+    },
+    "rPDB set trace": {
+        "prefix": "rpdb",
+        "body": "import rpdb2; rpdb2.start_embedded_debugger('${1:debug_password}')$0"
+    },
+    "PuDB set trace": {
+        "prefix": "pudb",
+        "body": "import pudb; pudb.set_trace()$0",
+        "description": "Code snippet for pudb debug"
+    },
+    "IPython set trace": {
+        "prefix": "ipydb",
+        "body": "from IPython import embed; embed()$0"
+    },
+    "Celery set trace": {
+        "prefix": "rdb",
+        "body": "from celery.contrib import rdb; rdb.set_trace()$0",
+        "description": "Code snippet for celery remote debugger breakpoint"
+    },
+    "Pretty print": {
+        "prefix": "pprint",
+        "body": "__import__('pprint').pprint(${1:expression})$0"
+    },
+    "debugpy remote attach": {
+        "prefix": "debugpy",
+        "body": [
+            "import debugpy, platform",
+            "debugpy.listen((platform.node(), ${1:5678}))",
+            "print(f\"debugpy listening on {platform.node()}:$1\", flush=True)",
+            "debugpy.wait_for_client()$0"
+        ],
+        "description": "Code snippet for debugpy remote attach"
+    }
+}

@@ -1,0 +1,370 @@
+{
+    "destructuring of props": {
+        "prefix": "dp",
+        "body": ["const { ${1:name} } = this.props"]
+    },
+    "destructuring of state": {
+        "prefix": "ds",
+        "body": ["const { ${1:name} } = this.state"]
+    },
+    "if falsy return null": {
+        "prefix": "ifr",
+        "body": "if (!${1:condition}) {\n\treturn null\n}"
+    },
+    "reactClassCompoment": {
+        "prefix": "rcc",
+        "body": "import { Component } from 'react'\n\nclass ${TM_FILENAME_BASE} extends Component {\n\trender () {\n\t\treturn (\n\t\t\t<div>\n\t\t\t\t$0\n\t\t\t</div>\n\t\t)\n\t}\n}\n\nexport default ${1}",
+        "description": "Creates a React component class"
+    },
+    "reactJustClassCompoment": {
+        "prefix": "rcjc",
+        "body": "class ${TM_FILENAME_BASE} extends Component {\n\trender () {\n\t\treturn (\n\t\t\t<div>\n\t\t\t\t$0\n\t\t\t</div>\n\t\t)\n\t}\n}\n",
+        "description": "Creates a React component class"
+    },
+    "reactClassCompomentPropTypes": {
+        "prefix": "rccp",
+        "body": "import { Component, PropTypes } from 'react'\n\nclass ${TM_FILENAME_BASE} extends Component {\n\trender () {\n\t\treturn (\n\t\t\t<div>\n\t\t\t\t$0\n\t\t\t</div>\n\t\t)\n\t}\n}\n\n${1}.propTypes = {\n\n}\n\nexport default ${1}",
+        "description": "Creates a React component class with PropTypes"
+    },
+    "reactClassCompomentWithMethods": {
+        "prefix": "rcfc",
+        "body": "import { Component, PropTypes } from 'react'\n\nclass ${TM_FILENAME_BASE} extends Component {\n\tconstructor(props) {\n\t\tsuper(props)\n\n\t}\n\n\tcomponentWillMount () {\n\n\t}\n\n\tcomponentDidMount () {\n\n\t}\n\n\tcomponentWillReceiveProps (nextProps) {\n\n\t}\n\n\tshouldComponentUpdate (nextProps, nextState) {\n\n\t}\n\n\tcomponentWillUpdate (nextProps, nextState) {\n\n\t}\n\n\tcomponentDidUpdate (prevProps, prevState) {\n\n\t}\n\n\tcomponentWillUnmount () {\n\n\t}\n\n\trender () {\n\t\treturn (\n\t\t\t<div>\n\n\t\t\t</div>\n\t\t)\n\t}\n}\n\n${1}.propTypes = {\n\n}\n\nexport default ${1}",
+        "description": "Creates a React component class with PropTypes and all lifecycle methods"
+    },
+    "reactFunctionComponent": {
+        "prefix": "rfc",
+        "body": "\nconst ${TM_FILENAME_BASE} = () => {\n\treturn (\n\t\t<div>\n\t\t\t$0\n\t\t</div>\n\t)\n}\n\nexport default ${TM_FILENAME_BASE}",
+        "description": "Creates a React function component without PropTypes"
+    },
+    "reactFunctionComponentWithCustomName": {
+        "prefix": "rfcn",
+        "body": "\nconst ${1:functionname} = () => {\n\treturn (\n\t\t<div>\n\t\t\t$0\n\t\t</div>\n\t)\n}\n\nexport default ${1:functionname}",
+        "description": "Creates a React function component with custom name"
+    },
+    "reactFunctionComponentWithEmotion": {
+        "prefix": "rfce",
+        "body": "import { css } from '@emotion/core'\n\nexport const ${TM_FILENAME_BASE} = () => {\n\treturn (\n\t\t<div css={css``}>\n\t\t\t$0\n\t\t</div>\n\t)\n}",
+        "description": "Creates a React functional component with emotion"
+    },
+    "reactStatelessProps": {
+        "prefix": "rfcp",
+        "body": "import { PropTypes } from 'react'\n\nconst ${TM_FILENAME_BASE} = props => {\n\treturn (\n\t\t<div>\n\t\t\t\n\t\t</div>\n\t)\n}\n\n${1}.propTypes = {\n\t$0\n}\n\nexport default ${1}",
+        "description": "Creates a React function component with PropTypes"
+    },
+    "classConstructor": {
+        "prefix": "con",
+        "body": "constructor (props) {\n\tsuper(props)\n\t$0\n}\n",
+        "description": "Adds a default constructor for the class that contains props as arguments"
+    },
+    "classConstructorContext": {
+        "prefix": "conc",
+        "body": "constructor (props, context) {\n\tsuper(props, context)\n\t$0\n}\n",
+        "description": "Adds a default constructor for the class that contains props and context as arguments"
+    },
+    "componentWillMount": {
+        "prefix": "cwm",
+        "body": "\ncomponentWillMount () {\n\t$0\n}\n",
+        "description": "Invoked once, both on the client and server, immediately before the initial rendering occurs"
+    },
+    "componentDidMount": {
+        "prefix": "cdm",
+        "body": "componentDidMount () {\n\t$0\n}\n",
+        "description": "Invoked once, only on the client (not on the server), immediately after the initial rendering occurs."
+    },
+    "componentWillReceiveProps": {
+        "prefix": "cwr",
+        "body": "componentWillReceiveProps (nextProps) {\n\t$0\n}\n",
+        "description": "Invoked when a component is receiving new props. This method is not called for the initial render."
+    },
+    "componentGetDerivedStateFromProps": {
+        "prefix": "cgd",
+        "body": "\nstatic getDerivedStateFromProps(nextProps, prevState) {\n\t$0\n}\n",
+        "description": "Invoked after a component is instantiated as well as when it receives new props. It should return an object to update state, or null to indicate that the new props do not require any state updates."
+    },
+    "shouldComponentUpdate": {
+        "prefix": "scu",
+        "body": "shouldComponentUpdate (nextProps, nextState) {\n\t$0\n}\n",
+        "description": "Invoked before rendering when new props or state are being received. "
+    },
+    "componentWillUpdate": {
+        "prefix": "cwup",
+        "body": "componentWillUpdate (nextProps, nextState) {\n\t$0\n}\n",
+        "description": "Invoked immediately before rendering when new props or state are being received."
+    },
+    "componentDidUpdate": {
+        "prefix": "cdup",
+        "body": "componentDidUpdate (prevProps, prevState) {\n\t$0\n}\n",
+        "description": "Invoked immediately after the component's updates are flushed to the DOM."
+    },
+    "componentWillUnmount": {
+        "prefix": "cwun",
+        "body": "componentWillUnmount () {\n\t$0\n}\n",
+        "description": "Invoked immediately before a component is unmounted from the DOM."
+    },
+    "componentRender": {
+        "prefix": "ren",
+        "body": "render () {\n\treturn (\n\t\t<div>\n\t\t\t$0\n\t\t</div>\n\t)\n}",
+        "description": "When called, it should examine this.props and this.state and return a single child element."
+    },
+    "componentSetStateObject": {
+        "prefix": "sst",
+        "body": "this.setState($0)",
+        "description": "Performs a shallow merge of nextState into current state"
+    },
+    "componentSetStateFunc": {
+        "prefix": "ssf",
+        "body": "this.setState((state, props) => { return { $0 }})\n",
+        "description": "Performs a shallow merge of nextState into current state"
+    },
+    "componentProps": {
+        "prefix": "tp",
+        "body": "this.props.$0",
+        "description": "Access component's props"
+    },
+    "componentState": {
+        "prefix": "ts",
+        "body": "this.state.$0",
+        "description": "Access component's state"
+    },
+    "propTypes": {
+        "prefix": "rpt",
+        "body": "$1.propTypes = {\n\t$2\n}",
+        "description": "Creates empty propTypes declaration"
+    },
+    "propTypeArray": {
+        "prefix": "pta",
+        "body": "PropTypes.array,",
+        "description": "Array prop type"
+    },
+    "propTypeArrayRequired": {
+        "prefix": "ptar",
+        "body": "PropTypes.array.isRequired,",
+        "description": "Array prop type required"
+    },
+    "propTypeBool": {
+        "prefix": "ptb",
+        "body": "PropTypes.bool,",
+        "description": "Bool prop type"
+    },
+    "propTypeBoolRequired": {
+        "prefix": "ptbr",
+        "body": "PropTypes.bool.isRequired,",
+        "description": "Bool prop type required"
+    },
+    "propTypeFunc": {
+        "prefix": "ptf",
+        "body": "PropTypes.func,",
+        "description": "Func prop type"
+    },
+    "propTypeFuncRequired": {
+        "prefix": "ptfr",
+        "body": "PropTypes.func.isRequired,",
+        "description": "Func prop type required"
+    },
+    "propTypeNumber": {
+        "prefix": "ptn",
+        "body": "PropTypes.number,",
+        "description": "Number prop type"
+    },
+    "propTypeNumberRequired": {
+        "prefix": "ptnr",
+        "body": "PropTypes.number.isRequired,",
+        "description": "Number prop type required"
+    },
+    "propTypeObject": {
+        "prefix": "pto",
+        "body": "PropTypes.object,",
+        "description": "Object prop type"
+    },
+    "propTypeObjectRequired": {
+        "prefix": "ptor",
+        "body": "PropTypes.object.isRequired,",
+        "description": "Object prop type required"
+    },
+    "propTypeString": {
+        "prefix": "pts",
+        "body": "PropTypes.string,",
+        "description": "String prop type"
+    },
+    "propTypeStringRequired": {
+        "prefix": "ptsr",
+        "body": "PropTypes.string.isRequired,",
+        "description": "String prop type required"
+    },
+    "propTypeNode": {
+        "prefix": "ptnd",
+        "body": "PropTypes.node,",
+        "description": "Anything that can be rendered: numbers, strings, elements or an array"
+    },
+    "propTypeNodeRequired": {
+        "prefix": "ptndr",
+        "body": "PropTypes.node.isRequired,",
+        "description": "Anything that can be rendered: numbers, strings, elements or an array required"
+    },
+    "propTypeElement": {
+        "prefix": "ptel",
+        "body": "PropTypes.element,",
+        "description": "React element prop type"
+    },
+    "propTypeElementRequired": {
+        "prefix": "ptelr",
+        "body": "PropTypes.element.isRequired,",
+        "description": "React element prop type required"
+    },
+    "propTypeInstanceOf": {
+        "prefix": "pti",
+        "body": "PropTypes.instanceOf($0),",
+        "description": "Is an instance of a class prop type"
+    },
+    "propTypeInstanceOfRequired": {
+        "prefix": "ptir",
+        "body": "PropTypes.instanceOf($0).isRequired,",
+        "description": "Is an instance of a class prop type required"
+    },
+    "propTypeEnum": {
+        "prefix": "pte",
+        "body": "PropTypes.oneOf(['$0']),",
+        "description": "Prop type limited to specific values by treating it as an enum"
+    },
+    "propTypeEnumRequired": {
+        "prefix": "pter",
+        "body": "PropTypes.oneOf(['$0']).isRequired,",
+        "description": "Prop type limited to specific values by treating it as an enum required"
+    },
+    "propTypeOneOfType": {
+        "prefix": "ptet",
+        "body": "PropTypes.oneOfType([\n\t$0\n]),",
+        "description": "An object that could be one of many types"
+    },
+    "propTypeOneOfTypeRequired": {
+        "prefix": "ptetr",
+        "body": "PropTypes.oneOfType([\n\t$0\n]).isRequired,",
+        "description": "An object that could be one of many types required"
+    },
+    "propTypeArrayOf": {
+        "prefix": "ptao",
+        "body": "PropTypes.arrayOf($0),",
+        "description": "An array of a certain type"
+    },
+    "propTypeArrayOfRequired": {
+        "prefix": "ptaor",
+        "body": "PropTypes.arrayOf($0).isRequired,",
+        "description": "An array of a certain type required"
+    },
+    "propTypeObjectOf": {
+        "prefix": "ptoo",
+        "body": "PropTypes.objectOf($0),",
+        "description": "An object with property values of a certain type"
+    },
+    "propTypeObjectOfRequired": {
+        "prefix": "ptoor",
+        "body": "PropTypes.objectOf($0).isRequired,",
+        "description": "An object with property values of a certain type required"
+    },
+    "propTypeShape": {
+        "prefix": "ptsh",
+        "body": "PropTypes.shape({\n\t$0\n}),",
+        "description": "An object taking on a particular shape"
+    },
+    "propTypeShapeRequired": {
+        "prefix": "ptshr",
+        "body": "PropTypes.shape({\n\t$0\n}).isRequired,",
+        "description": "An object taking on a particular shape required"
+    },
+    "jsx element": {
+        "prefix": "j",
+        "body": "<${1:elementName}>\n\t$0\n</${1}>",
+        "description": "an element"
+    },
+    "jsx element self closed": {
+        "prefix": "jc",
+        "body": "<${1:elementName} />",
+        "description": "an element self closed"
+    },
+    "jsx elements map": {
+        "prefix": "jm",
+        "body": "{${1:array}.map((item) => <${2:elementName} key={item.id}>\n\t$0\n</${2}>)}",
+        "description": "an element self closed"
+    },
+    "jsx elements map with return": {
+        "prefix": "jmr",
+        "body": "{${1:array}.map((item) => {\n\treturn <${2:elementName} key={item.id}>\n\t$0\n</${2}>\n})}",
+        "description": "an element self closed"
+    },
+    "jsx element wrap selection": {
+        "prefix": "jsx wrap selection with element",
+        "body": "<${1:elementName}>\n\t{$TM_SELECTED_TEXT}\n</${1}>",
+        "description": "an element"
+    },
+    "useState": {
+        "prefix": "us",
+        "body": "const [${1:state}, set${1/(.*)/${1:/capitalize}/}] = useState(${2:initValue})$0",
+        "description": "React useState() hook"
+    },
+    "useEffect": {
+        "prefix": "ue",
+        "body": ["useEffect(() => {", "\t$1", "}, [${3:dependencies}])$0"],
+        "description": "React useEffect() hook"
+    },
+    "useEffect with return": {
+        "prefix": "uer",
+        "body": [
+            "useEffect(() => {",
+            "\t$1",
+            "\n\treturn () => {",
+            "\t\t$2",
+            "\t}",
+            "}, [${3:dependencies}])$0"
+        ],
+        "description": "React useEffect() hook with return statement"
+    },
+    "useContext": {
+        "prefix": "uc",
+        "body": ["const $1 = useContext($2)$0"],
+        "description": "React useContext() hook"
+    },
+    "useRef": {
+        "prefix": "ur",
+        "body": ["const ${1:elName}El = useRef(null)$0"],
+        "description": "React useContext() hook"
+    },
+    "useCallback": {
+        "prefix": "ucb",
+        "body": [
+            "const ${1:memoizedCallback} = useCallback(",
+            "\t() => {",
+            "\t\t${2:doSomething}(${3:a}, ${4:b})",
+            "\t},",
+            "\t[${5:a}, ${6:b}],",
+            ")$0"
+        ],
+        "description": "React useCallback() hook"
+    },
+    "useMemo": {
+        "prefix": "ume",
+        "body": [
+            "const ${1:memoizedValue} = useMemo(() => ${2:computeExpensiveValue}(${3:a}, ${4:b}), [${5:a}, ${6:b}])$0"
+        ],
+        "description": "React useMemo() hook"
+    },
+    "describeBlock": {
+        "prefix": "desc",
+        "body": ["describe('$1', () => {", "  $0", "})", ""],
+        "description": "Testing `describe` block"
+    },
+    "testBlock": {
+        "prefix": "test",
+        "body": ["test('should $1', () => {", "  $0", "})", ""],
+        "description": "Testing `test` block"
+    },
+    "itBlock": {
+        "prefix": "tit",
+        "body": ["it('should $1', () => {", "  $0", "})", ""],
+        "description": "Testing `it` block"
+    },
+    "itAsyncBlock": {
+        "prefix": "tita",
+        "body": ["it('should $1', async () => {", "  $0", "})", ""],
+        "description": "Testing async `it` block"
+    }
+}

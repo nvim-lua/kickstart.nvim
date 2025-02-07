@@ -1,0 +1,468 @@
+{
+    "statefulComponent": {
+        "prefix": "rnc",
+        "body": [
+            "import React, { Component } from 'react';",
+            "",
+            "import { View } from 'react-native';",
+            "",
+            "// import { Container } from './styles';",
+            "",
+            "export default class ${1:${TM_DIRECTORY/^.*(\\/|\\\\)([^(\\/|\\\\)]+)$/$2/}} extends Component {",
+            "  render() {",
+            "    return <View />;",
+            "  }",
+            "}",
+            ""
+        ],
+        "description": "Create React Native Stateful Component"
+    },
+    "statefulReduxComponent": {
+        "prefix": "rnrc",
+        "body": [
+            "import React, { Component } from 'react';",
+            "",
+            "import { View } from 'react-native';",
+            "",
+            "import { bindActionCreators } from 'redux';",
+            "import { connect } from 'react-redux';",
+            "",
+            "// import { Container } from './styles';",
+            "",
+            "class ${1:${TM_DIRECTORY/^.*(\\/|\\\\)([^(\\/|\\\\)]+)$/$2/}} extends Component {",
+            "  render() {",
+            "    return <View />;",
+            "  }",
+            "}",
+            "",
+            "const mapStateToProps = state => ({});",
+            "",
+            "// const mapDispatchToProps = dispatch =>",
+            "//   bindActionCreators(Actions, dispatch);",
+            "",
+            "export default connect(",
+            "  mapStateToProps,",
+            "  // mapDispatchToProps",
+            ")(${1:${TM_DIRECTORY/^.*(\\/|\\\\)([^(\\/|\\\\)]+)$/$2/}});",
+            ""
+        ],
+        "description": "Create React Native Stateful Redux Component"
+    },
+    "statelessComponent": {
+        "prefix": "rnsc",
+        "body": [
+            "import React from 'react';",
+            "",
+            "import { View } from 'react-native';",
+            "",
+            "// import { Container } from './styles';",
+            "",
+            "const ${1:${TM_DIRECTORY/^.*(\\/|\\\\)([^(\\/|\\\\)]+)$/$2/}} = () => <View />;",
+            "",
+            "export default ${1:${TM_DIRECTORY/^.*(\\/|\\\\)([^(\\/|\\\\)]+)$/$2/}};",
+            ""
+        ],
+        "description": "Create React Native Stateless Component"
+    },
+    "componentFunctional": {
+        "prefix": "rnfc",
+        "body": [
+            "import React from 'react';",
+            "import { View } from 'react-native';",
+            "",
+            "// import { Container } from './styles';",
+            "",
+            "export default function ${1:${TM_DIRECTORY/^.*(\\/|\\\\)([^(\\/|\\\\)]+)$/$2/}}() {",
+            "  return (",
+            "    <View />",
+            "  );",
+            "}",
+            ""
+        ],
+        "description": "Create React Native Functional Component"
+    },
+    "componentFunctionalTypescript": {
+        "prefix": "rnfcc",
+        "body": [
+            "import React from 'react';",
+            "import { View } from 'react-native';",
+            "",
+            "// import { Container } from './styles';",
+            "",
+            "const ${1:${TM_DIRECTORY/^.*(\\/|\\\\)([^(\\/|\\\\)]+)$/$2/}} = () => {",
+            "  return <View />;",
+            "}",
+            "",
+            "export default ${1:${TM_DIRECTORY/^.*(\\/|\\\\)([^(\\/|\\\\)]+)$/$2/}};"
+        ],
+        "description": "Create React Native Functional Component"
+    },
+    "styles": {
+        "prefix": "styled-rn",
+        "body": [
+            "import styled from 'styled-components/native';",
+            "",
+            "export const ${1:Container} = styled.${2:View}`",
+            "  ${3}",
+            "`;",
+            ""
+        ],
+        "description": "Create React Native Styled Components file"
+    },
+    "StyleSheet": {
+        "prefix": "rn-stylesheet",
+        "body": [
+            "const ${1:styles} = StyleSheet.create({",
+            "    ${2:container}: {",
+            "        ${3}",
+            "    },",
+            "});",
+            ""
+        ],
+        "description": "Create React Native Styled Components StyleSheet"
+    },
+    "justifyContent": {
+        "prefix": "just",
+        "body": "justifyContent: '${1:center}',",
+        "description": "justifyContent"
+    },
+    "alignItems": {
+        "prefix": "align",
+        "body": "alignItems: '${1:center}',",
+        "description": "alignItems"
+    },
+    "alignSelf": {
+        "prefix": "align",
+        "body": "alignSelf: '${1:center}',",
+        "description": "alignSelf"
+    },
+    "alignContent": {
+        "prefix": "align",
+        "body": "alignContent: '${1}',",
+        "description": "alignContent"
+    },
+    "aspectRatio": {
+        "prefix": "as",
+        "body": "aspectRatio: '${1}',",
+        "description": "aspectRatio"
+    },
+    "borderBottomWidth": {
+        "prefix": "bor",
+        "body": "borderBottomWidth: ${1},",
+        "description": "borderBottomWidth"
+    },
+    "borderLeftWidth": {
+        "prefix": "bor",
+        "body": "borderLeftWidth: ${1},",
+        "description": "borderLeftWidth"
+    },
+    "borderRightWidth": {
+        "prefix": "bor",
+        "body": "borderRightWidth: ${1},",
+        "description": "borderRightWidth"
+    },
+    "borderTopWidth": {
+        "prefix": "bor",
+        "body": "borderTopWidth: ${1},",
+        "description": "borderTopWidth"
+    },
+    "borderWidth": {
+        "prefix": "bor",
+        "body": "borderWidth: ${1},",
+        "description": "borderWidth"
+    },
+    "borderColor": {
+        "prefix": "bor",
+        "body": "borderColor: ${1},",
+        "description": "borderColor"
+    },
+    "borderRadius": {
+        "prefix": "bor",
+        "body": "borderRadius: ${1},",
+        "description": "borderRadius"
+    },
+    "borderLeftColor": {
+        "prefix": "bor",
+        "body": "borderLeftColor: ${1},",
+        "description": "borderLeftColor"
+    },
+    "borderRightColor": {
+        "prefix": "bor",
+        "body": "borderRightColor: ${1},",
+        "description": "borderRightColor"
+    },
+    "borderTopColor": {
+        "prefix": "bor",
+        "body": "borderTopColor: ${1},",
+        "description": "borderTopColor"
+    },
+    "borderBottomColor": {
+        "prefix": "bor",
+        "body": "borderBottomColor: ${1},",
+        "description": "borderBottomColor"
+    },
+    "borderBottomLeftRadius": {
+        "prefix": "bor",
+        "body": "borderBottomLeftRadius: ${1},",
+        "description": "borderBottomLeftRadius"
+    },
+    "borderBottomRightRadius": {
+        "prefix": "bor",
+        "body": "borderBottomRightRadius: ${1},",
+        "description": "borderBottomRightRadius"
+    },
+    "borderTopLeftRadius": {
+        "prefix": "bor",
+        "body": "borderTopLeftRadius: ${1},",
+        "description": "borderTopLeftRadius"
+    },
+    "borderTopRightRadius": {
+        "prefix": "bor",
+        "body": "borderTopRightRadius: ${1},",
+        "description": "borderTopRightRadius"
+    },
+    "backgroundColor": {
+        "prefix": "bac",
+        "body": "backgroundColor: ${1},",
+        "description": "backgroundColor"
+    },
+    "display": {
+        "prefix": "di",
+        "body": "display: '${1:none}',",
+        "description": "display"
+    },
+    "opacity": {
+        "prefix": "op",
+        "body": "opacity: ${1},",
+        "description": "opacity"
+    },
+    "shadowColor": {
+        "prefix": "sha",
+        "body": "shadowColor: '${1:none}',",
+        "description": "shadowColor"
+    },
+    "shadowOffset": {
+        "prefix": "sha",
+        "body": "shadowOffset: ${1},",
+        "description": "shadowOffset"
+    },
+    "shadowOpacity": {
+        "prefix": "sha",
+        "body": "shadowOpacity: ${1},",
+        "description": "shadowOpacity"
+    },
+    "shadowRadius": {
+        "prefix": "sha",
+        "body": "shadowRadius: ${1},",
+        "description": "shadowRadius"
+    },
+    "elevation": {
+        "prefix": "e",
+        "body": "elevation: ${1},",
+        "description": "elevation"
+    },
+    "flex": {
+        "prefix": "flex",
+        "body": "flex: ${1},",
+        "description": "flex"
+    },
+    "flexBasis": {
+        "prefix": "flex",
+        "body": "flexBasis: '${1}',",
+        "description": "flexBasis"
+    },
+    "flexDirection": {
+        "prefix": "flex",
+        "body": "flexDirection: '${1:column}',",
+        "description": "flexDirection"
+    },
+    "flexGrow": {
+        "prefix": "flex",
+        "body": "flexGrow: '${1}',",
+        "description": "flexGrow"
+    },
+    "flexShrink": {
+        "prefix": "flex",
+        "body": "flexShrink: '${1}',",
+        "description": "flexShrink"
+    },
+    "flexWrap": {
+        "prefix": "flex",
+        "body": "flexWrap: '${1}',",
+        "description": "flexWrap"
+    },
+    "fontSize": {
+        "prefix": "fo",
+        "body": "fontSize: ${1},",
+        "description": "fontSize"
+    },
+    "fontStyle": {
+        "prefix": "fo",
+        "body": "fontStyle: '${1:normal}',",
+        "description": "fontStyle"
+    },
+    "fontFamily": {
+        "prefix": "fo",
+        "body": "fontFamily: '${1}',",
+        "description": "fontFamily"
+    },
+    "fontWeight": {
+        "prefix": "fo",
+        "body": "fontWeight: '${1:normal}',",
+        "description": "fontWeight"
+    },
+    "height": {
+        "prefix": "h",
+        "body": "height: ${1},",
+        "description": "height"
+    },
+    "left": {
+        "prefix": "l",
+        "body": "left: ${1},",
+        "description": "left"
+    },
+    "margin": {
+        "prefix": "mar",
+        "body": "margin: '${1}',",
+        "description": "margin"
+    },
+    "marginBottom": {
+        "prefix": "mar",
+        "body": "marginBottom: ${1},",
+        "description": "marginBottom"
+    },
+    "marginHorizontal": {
+        "prefix": "mar",
+        "body": "marginHorizontal: '${1}',",
+        "description": "marginHorizontal"
+    },
+    "marginLeft": {
+        "prefix": "mar",
+        "body": "marginLeft: ${1},",
+        "description": "marginLeft"
+    },
+    "marginRight": {
+        "prefix": "mar",
+        "body": "marginRight: ${1},",
+        "description": "marginRight"
+    },
+    "marginTop": {
+        "prefix": "mar",
+        "body": "marginTop: ${1},",
+        "description": "marginTop"
+    },
+    "marginVertical": {
+        "prefix": "mar",
+        "body": "marginVertical: '${1}',",
+        "description": "marginVertical"
+    },
+    "maxHeight": {
+        "prefix": "max",
+        "body": "maxHeight: ${1},",
+        "description": "maxHeight"
+    },
+    "maxWidth": {
+        "prefix": "max",
+        "body": "maxWidth: ${1},",
+        "description": "maxWidth"
+    },
+    "minHeight": {
+        "prefix": "min",
+        "body": "minHeight: ${1},",
+        "description": "minHeight"
+    },
+    "minWidth": {
+        "prefix": "min",
+        "body": "minWidth: ${1},",
+        "description": "minWidth"
+    },
+    "overflow": {
+        "prefix": "over",
+        "body": "overflow: '${1}',",
+        "description": "overflow"
+    },
+    "padding": {
+        "prefix": "padding",
+        "body": "padding: ${1},",
+        "description": "padding"
+    },
+    "paddingBottom": {
+        "prefix": "padding",
+        "body": "paddingBottom: ${1},",
+        "description": "paddingBottom"
+    },
+    "paddingHorizontal": {
+        "prefix": "padding",
+        "body": "paddingHorizontal: ${1},",
+        "description": "paddingHorizontal"
+    },
+    "paddingLeft": {
+        "prefix": "padding",
+        "body": "paddingLeft: ${1},",
+        "description": "paddingLeft"
+    },
+    "paddingRight": {
+        "prefix": "padding",
+        "body": "paddingRight: ${1},",
+        "description": "paddingRight"
+    },
+    "paddingTop": {
+        "prefix": "padding",
+        "body": "paddingTop: ${1},",
+        "description": "paddingTop"
+    },
+    "paddingVertical": {
+        "prefix": "padding",
+        "body": "paddingVertical: ${1},",
+        "description": "paddingVertical"
+    },
+    "position": {
+        "prefix": "pos",
+        "body": "position: ${1},",
+        "description": "position"
+    },
+    "right": {
+        "prefix": "ri",
+        "body": "right: ${1},",
+        "description": "right"
+    },
+    "top": {
+        "prefix": "top",
+        "body": "top: ${1},",
+        "description": "top"
+    },
+    "width": {
+        "prefix": "w",
+        "body": "width: ${1},",
+        "description": "width"
+    },
+    "zIndex": {
+        "prefix": "z",
+        "body": "zIndex: ${1},",
+        "description": "zIndex"
+    },
+    "api": {
+        "prefix": "api",
+        "body": [
+            "import axios from 'axios';",
+            "",
+            "const api = axios.create({",
+            "  baseURL: ${1},",
+            "});",
+            "",
+            "export default api;",
+            ""
+        ],
+        "description": "Create Axios Configuration file"
+    },
+    "region": {
+        "prefix": "region",
+        "body": ["//#region ${1}", "${2}", "//#endregion"],
+        "description": "Create region"
+    },
+    "regionStartEnd": {
+        "prefix": "#regionStartEnd",
+        "body": ["//#region ${1}", "${2}", "//#endregion"],
+        "description": "Create region"
+    }
+}
