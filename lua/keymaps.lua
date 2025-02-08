@@ -21,3 +21,10 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
+
+-- Keybindings for folding
+vim.keymap.set('n', 'zc', 'zc', { desc = 'Close fold' }) -- Collapse current fold
+vim.keymap.set('n', 'zo', 'zo', { desc = 'Open fold' }) -- Open current fold
+vim.keymap.set('n', 'za', 'za', { desc = 'Toggle fold' }) -- Toggle fold open/close
+vim.keymap.set('n', 'zR', 'zR', { desc = 'Open all folds' }) -- Open all folds
+vim.keymap.set('n', 'zM', 'zM', { desc = 'Close all folds' }) -- Close all folds
