@@ -572,7 +572,15 @@ require('lazy').setup({
         --
         ts_ls = {},
         svelte = {},
-        ruby_lsp = {},
+        ruby_lsp = {
+          cmd_env = {
+            BUNDLE_GEMFILE = vim.fn.expand '~/.global-ruby/Gemfile',
+          },
+          cmd = {
+            -- vim.fn.expand '~/.local/bin/mise exec ruby@3.0 -- ruby-lsp',
+            vim.fn.expand '~/test/misw',
+          },
+        },
 
         lua_ls = {
           -- cmd = {...},
