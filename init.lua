@@ -996,7 +996,14 @@ vim.api.nvim_create_autocmd('BufWritePost', {
 })
 
 vim.api.nvim_create_autocmd('BufWritePost', {
-  pattern = 'config.jsonc',
+  pattern = '/home/momoyon/dotfiles/waybar/.config/waybar/style.css',
+  callback = function()
+    vim.cmd '!killall -SIGUSR2 waybar'
+  end,
+})
+
+vim.api.nvim_create_autocmd('BufWritePost', {
+  pattern = '/home/momoyon/dotfiles/waybar/.config/waybar/config.jsonc',
   callback = function()
     vim.cmd '!killall -SIGUSR2 waybar'
   end,
