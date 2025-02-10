@@ -91,10 +91,7 @@ I hope you enjoy your Neovim journey,
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
-
--- vim.api.nvim_set_hl(0, 'ReturnKeyword', { fg = '#FF0000', bold = true })
--- vim.cmd [[syntax match ReturnKeyword /\<return\>/]]
---
+vim.cmd [[ autocmd VimEnter * Neotree position=left ]]
 --AUTO RELOAD ON SAVE
 vim.api.nvim_create_autocmd('BufWritePost', {
   pattern = '*', -- For all files
@@ -120,23 +117,6 @@ vim.api.nvim_create_autocmd({ 'FileChangedShellPost' }, {
   pattern = '*',
   command = "echohl WarningMsg | echo 'File changed on disk. Buffer reloaded.' | echohl None",
 })
--- Trigger 'autoread' when files change on disk
--- -- Auto-read changed files when focus is gained or events occur
--- vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold', 'CursorHoldI' }, {
---   callback = function()
---     if vim.fn.mode() ~= 'c' then
---       vim.cmd 'checktime'
---     end
---   end,
--- })
---
---
--- -- Notification after file change
--- vim.api.nvim_create_autocmd('FileChangedShellPost', {
---   callback = function()
---     vim.api.nvim_echo({ { 'File changed on disk. Buffer reloaded.', 'WarningMsg' } }, true, {})
---   end,
--- })
 
 vim.lsp.inlay_hint.enable()
 -- vim.opt.tabstop = 2
@@ -209,6 +189,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
     vim.opt.guicursor = 'n-v-c:ver90,i:block-blinkwait400-blinkoff200-blinkon250,sm:block'
   end,
 })
+
 --------------------------------------------------------------------
 
 if vim.fn.has 'termguicolors' == 1 then
@@ -574,13 +555,12 @@ require('lazy').setup({
       { 'Bilal2453/luvit-meta', lazy = true },
     },
     config = function()
-      local lspconfig = require 'lspconfig'
-      local util = require 'lspconfig/util'
       local capabilities = require('blink.cmp').get_lsp_capabilities()
       require('lspconfig').lua_ls.setup { capabilities = capabilities }
       -- Mason setup to ensure terraform-ls is installed
       require('mason-lspconfig').setup {
         ensure_installed = { 'terraformls', 'tflint' },
+        automatic_installation = {},
       }
 
       require('lspconfig').terraformls.setup {}
@@ -727,7 +707,7 @@ require('lazy').setup({
       local servers = {
         -- terraformls = {},
         -- clangd = {},
-        gopls = {},
+        -- gopls = {},
         -- pyright = {},
         rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -1021,7 +1001,7 @@ require('lazy').setup({
         'python',
         'typescript',
         'javascript',
-        'go',
+        -- 'go',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,

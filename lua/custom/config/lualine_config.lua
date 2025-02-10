@@ -48,7 +48,12 @@ local config = {
   },
   sections = {
     -- these are to remove the defaults
-    lualine_a = {},
+    lualine_a = {
+      -- {
+      --   'buffers',
+      --   show_filename_only = false,
+      -- },
+    },
     lualine_b = {},
     lualine_y = {},
     lualine_z = {},
@@ -125,16 +130,15 @@ ins_left {
   cond = conditions.buffer_not_empty,
 }
 
-ins_left {
-  'filename',
-  cond = conditions.buffer_not_empty,
-  color = { fg = colors.magenta, gui = 'bold' },
-}
+-- ins_left {
+--   'filename',
+--   cond = conditions.buffer_not_empty,
+--   color = { fg = colors.magenta, gui = 'bold' },
+-- }
 
-ins_left { 'location' }
-
+ins_left { 'location', show_filename_only = false }
 ins_left { 'progress', color = { fg = colors.fg, gui = 'bold' } }
-
+ins_left { 'buffers', show_filename_only = false }
 ins_left {
   'diagnostics',
   sources = { 'nvim_diagnostic' },
