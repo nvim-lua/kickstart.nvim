@@ -164,7 +164,7 @@ vim.opt.scrolloff = 20
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('i', 'jj', '<Esc>')
 vim.keymap.set('v', '<Leader>cc', '"+y')
-vim.keymap.set('n', '<leader>ee', '<cmd>Ex<CR>')
+-- vim.keymap.set('n', '<leader>ee', '<cmd>Ex<CR>')
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
@@ -385,6 +385,7 @@ require('lazy').setup({
 
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
+      local actions = require 'telescope.actions'
       require('telescope').setup {
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
@@ -401,6 +402,12 @@ require('lazy').setup({
             '.angular',
             'cypress',
           },
+          -- mappings = {
+          --   i = {
+          --     -- Open file in a new tab on <CR> (Enter) key press
+          --     ['<CR>'] = actions.select_tab,
+          --   },
+          -- },
         },
         extensions = {
           ['ui-select'] = {
@@ -936,8 +943,52 @@ require('lazy').setup({
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
 
-  -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
-  -- init.lua. If you want these files, they are in the repository, so you can just download them and
+  {
+    'nvim-tree/nvim-tree.lua',
+    dependencies = { 'nvim-tree/nvim-web-devicons' }, -- Add the icon plugin as a dependency
+    config = function()
+      -- Disable netrw
+      vim.g.loaded_netrw = 1
+      vim.g.loaded_netrwPlugin = 1
+
+      -- Enable 24-bit color support
+      vim.opt.termguicolors = true
+
+      -- Setup nvim-tree with defaults
+      -- require('nvim-tree').setup()
+      require('nvim-web-devicons').setup()
+
+      require('nvim-tree').setup {
+        renderer = {
+          icons = {
+            glyphs = {
+              default = '', -- Icon for files
+              symlink = '', -- Symlink icon
+              folder = {
+                default = '', -- Closed folder icon
+                open = '', -- Open folder icon
+                empty = '', -- Empty folder
+                empty_open = '', -- Open empty folder
+                symlink = '', -- Symlink folder
+                symlink_open = '', -- Opened symlink folder
+              },
+              git = {
+                unstaged = '', -- Icon for unstaged changes
+                staged = 'S', -- Icon for staged changes
+                unmerged = '', -- Icon for unmerged changes
+                renamed = '➜', -- Icon for renamed files
+                untracked = 'U', -- Icon for untracked files
+                deleted = '', -- Icon for deleted files
+                ignored = '◌', -- Icon for ignored files
+              },
+            },
+          },
+        },
+      }
+    end,
+  },
+  -- the following comments only work if you have downloaded the kickstart repo, not just copy pasted the
+  -- init.lua. if you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
 
   -- NOTE: Next step on your Neovim journey: Add/Configure additional plugins for Kickstart
