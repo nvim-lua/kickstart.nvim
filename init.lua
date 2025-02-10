@@ -90,6 +90,7 @@ P.S. You can delete this when you're done too. It's your config now! :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- vim.g.codeium_disable_bindings = 1
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
@@ -451,6 +452,7 @@ require('lazy').setup({
             'node_modules',
             '.angular',
             'cypress',
+            'coverage',
           },
           -- mappings = {
           --   i = {
@@ -508,6 +510,25 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'Exafunction/codeium.vim',
+    event = 'BufEnter',
+    -- config = function()
+    --   -- Change '<C-g>' here to any keycode you like.
+    --   vim.keymap.set('i', '<C-CR>', function()
+    --     return vim.fn['codeium#Accept']()
+    --   end, { expr = true, silent = true })
+    --   vim.keymap.set('i', '<c-n>', function()
+    --     return vim.fn['codeium#CycleCompletions'](1)
+    --   end, { expr = true, silent = true })
+    --   vim.keymap.set('i', '<c-p>', function()
+    --     return vim.fn['codeium#CycleCompletions'](-1)
+    --   end, { expr = true, silent = true })
+    --   vim.keymap.set('i', '<c-x>', function()
+    --     return vim.fn['codeium#Clear']()
+    --   end, { expr = true, silent = true })
+    -- end,
+  },
   -- LSP Plugins
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
@@ -1004,11 +1025,15 @@ require('lazy').setup({
       -- Enable 24-bit color support
       vim.opt.termguicolors = true
 
+      vim.keymap.set('n', '<leader>tn', ':NvimTreeToggle<CR>', { desc = 'Toggles File Explorer' })
       -- Setup nvim-tree with defaults
       -- require('nvim-tree').setup()
       require('nvim-web-devicons').setup()
 
       require('nvim-tree').setup {
+        view = {
+          width = 50,
+        },
         renderer = {
           icons = {
             glyphs = {
