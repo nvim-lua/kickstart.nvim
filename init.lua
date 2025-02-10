@@ -89,7 +89,8 @@ P.S. You can delete this when you're done too. It's your config now! :)
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-
+-- vim.g.codeium_port = 0 -- Automatically assigns an available port
+-- vim.g.codeium_cmd = 'C:\\Users\\rohit.kamu\\AppData\\Local\\nvim-data\\codeium\\bin\\language_server_windows_x64.exe'
 -- vim.g.codeium_disable_bindings = 1
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
@@ -509,26 +510,92 @@ require('lazy').setup({
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
-
   {
-    'Exafunction/codeium.vim',
-    event = 'BufEnter',
-    -- config = function()
-    --   -- Change '<C-g>' here to any keycode you like.
-    --   vim.keymap.set('i', '<C-CR>', function()
-    --     return vim.fn['codeium#Accept']()
-    --   end, { expr = true, silent = true })
-    --   vim.keymap.set('i', '<c-n>', function()
-    --     return vim.fn['codeium#CycleCompletions'](1)
-    --   end, { expr = true, silent = true })
-    --   vim.keymap.set('i', '<c-p>', function()
-    --     return vim.fn['codeium#CycleCompletions'](-1)
-    --   end, { expr = true, silent = true })
-    --   vim.keymap.set('i', '<c-x>', function()
-    --     return vim.fn['codeium#Clear']()
-    --   end, { expr = true, silent = true })
-    -- end,
+    'Exafunction/codeium.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'hrsh7th/nvim-cmp',
+    },
+    config = function()
+      -- require('codeium').setup {}
+
+      -- Change '<C-g>' here to any keycode you like.
+      vim.keymap.set('i', '<C-CR>', function()
+        return vim.fn['codeium#Accept']()
+      end, { expr = true, silent = true })
+      vim.keymap.set('i', '<c-n>', function()
+        return vim.fn['codeium#CycleCompletions'](1)
+      end, { expr = true, silent = true })
+      vim.keymap.set('i', '<c-p>', function()
+        return vim.fn['codeium#CycleCompletions'](-1)
+      end, { expr = true, silent = true })
+      vim.keymap.set('i', '<c-x>', function()
+        return vim.fn['codeium#Clear']()
+      end, { expr = true, silent = true })
+
+      require('codeium').setup {
+        -- Optionally disable cmp source if using virtual text only
+        enable_cmp_source = false,
+        virtual_text = {
+          enabled = true,
+
+          -- These are the defaults
+
+          -- Set to true if you never want completions to be shown automatically.
+          manual = false,
+          -- A mapping of filetype to true or false, to enable virtual text.
+          filetypes = {},
+          -- Whether to enable virtual text of not for filetypes not specifically listed above.
+          default_filetype_enabled = true,
+          -- How long to wait (in ms) before requesting completions after typing stops.
+          idle_delay = 75,
+          -- Priority of the virtual text. This usually ensures that the completions appear on top of
+          -- other plugins that also add virtual text, such as LSP inlay hints, but can be modified if
+          -- desired.
+          virtual_text_priority = 65535,
+          -- Set to false to disable all key bindings for managing completions.
+          map_keys = true,
+          -- The key to press when hitting the accept keybinding but no completion is showing.
+          -- Defaults to \t normally or <c-n> when a popup is showing.
+          accept_fallback = nil,
+          -- Key bindings for managing completions in virtual text mode.
+          key_bindings = {
+            -- Accept the current completion.
+            accept = '<Tab>',
+            -- Accept the next word.
+            accept_word = false,
+            -- Accept the next line.
+            accept_line = false,
+            -- Clear the virtual text.
+            clear = false,
+            -- Cycle to the next completion.
+            next = '<M-]>',
+            -- Cycle to the previous completion.
+            prev = '<M-[>',
+          },
+        },
+      }
+    end,
   },
+  -- {
+  --   'Exafunction/codeium.vim',
+  --   event = 'BufEnter',
+  --   -- config = function()
+  --   --   -- Change '<C-g>' here to any keycode you like.
+  --   --   vim.keymap.set('i', '<C-CR>', function()
+  --   --     return vim.fn['codeium#Accept']()
+  --   --   end, { expr = true, silent = true })
+  --   --   vim.keymap.set('i', '<c-n>', function()
+  --   --     return vim.fn['codeium#CycleCompletions'](1)
+  --   --   end, { expr = true, silent = true })
+  --   --   vim.keymap.set('i', '<c-p>', function()
+  --   --     return vim.fn['codeium#CycleCompletions'](-1)
+  --   --   end, { expr = true, silent = true })
+  --   --   vim.keymap.set('i', '<c-x>', function()
+  --   --     return vim.fn['codeium#Clear']()
+  --   --   end, { expr = true, silent = true })
+  --   -- end,
+  -- },
   -- LSP Plugins
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
@@ -681,14 +748,14 @@ require('lazy').setup({
       })
 
       -- Change diagnostic symbols in the sign column (gutter)
-      -- if vim.g.have_nerd_font then
-      --   local signs = { ERROR = '', WARN = '', INFO = '', HINT = '' }
-      --   local diagnostic_signs = {}
-      --   for type, icon in pairs(signs) do
-      --     diagnostic_signs[vim.diagnostic.severity[type]] = icon
-      --   end
-      --   vim.diagnostic.config { signs = { text = diagnostic_signs } }
-      -- end
+      if vim.g.have_nerd_font then
+        local signs = { ERROR = '', WARN = '', INFO = '', HINT = '' }
+        local diagnostic_signs = {}
+        for type, icon in pairs(signs) do
+          diagnostic_signs[vim.diagnostic.severity[type]] = icon
+        end
+        vim.diagnostic.config { signs = { text = diagnostic_signs } }
+      end
 
       -- LSP servers and clients are able to communicate to each other what features they support.
       --  By default, Neovim doesn't support everything that is in the LSP specification.
