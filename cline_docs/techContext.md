@@ -1,65 +1,126 @@
-# Technical Context: Neovim Configuration
+# Technical Context
 
 ## Technologies Used
+1. Core Technologies
+   - Neovim (>= 0.9.0)
+   - Lua (>= 5.1)
+   - Tree-sitter
+   - Built-in LSP client
 
-### Core Environment
-- Neovim v0.11.0-dev-1731+gf8cbdbb4a8
-- LuaJIT 2.1.1736781742
-- Operating System: Linux 5.15
-- Shell: /bin/zsh
+2. Package Management
+   - lazy.nvim (Plugin manager)
+   - mason.nvim (LSP/DAP/Formatter manager)
+   - mason-lspconfig.nvim (LSP configuration)
 
-### Key Dependencies
-1. **Plugin Manager**
-   - lazy.nvim for plugin management
-   - Automatic plugin installation and loading
-
-2. **Language Support**
-   - nvim-lspconfig for LSP configuration
-   - Treesitter for syntax highlighting
-   - Mason for LSP server management
-
-3. **User Interface**
-   - Telescope for fuzzy finding
-   - Which-key for keymap discovery
-   - Tokyo Night color scheme
-   - Mini.nvim for various UI components
+3. Required External Tools
+   - Git (Version control)
+   - Ripgrep (Search)
+   - fd (File finding)
+   - Node.js (LSP servers)
 
 ## Development Setup
-1. **Required Components**
-   - Neovim 0.8+ (currently running 0.11.0-dev)
-   - Git for plugin management
-   - (Optional) Nerd Font for icons
-   - Proper runtime files installation
+1. Prerequisites Installation
+   ```bash
+   # Install Neovim
+   # Install Node.js and npm
+   # Install Python and pip
+   # Install Rust and Cargo
+   # Install Go
+   ```
 
-2. **Configuration Location**
-   - Main config: /home/barbosa/.config/nvim/init.lua
-   - Memory Bank: /home/barbosa/.config/nvim/cline_docs/
+2. Required Global Tools
+   ```bash
+   # LSP Servers
+   npm install -g pyright typescript-language-server bash-language-server
+   # Formatters
+   npm install -g prettier
+   cargo install stylua
+   ```
+
+3. Plugin Dependencies
+   - tree-sitter CLI
+   - language parsers
+   - compilation tools (make, gcc)
 
 ## Technical Constraints
-1. **Runtime Requirements**
-   - Proper VIMRUNTIME environment variable setting
-   - Access to runtime files (currently having issues)
-   - vim.diagnostic module accessibility
+1. Performance Requirements
+   - Startup time < 100ms
+   - Memory usage < 1GB
+   - Responsive editing experience
+   - Efficient file search
 
-2. **Plugin Dependencies**
-   - Some plugins require specific Neovim versions
-   - LSP servers need external installations
-   - Some features depend on Nerd Font availability
+2. System Requirements
+   - Modern terminal emulator
+   - True color support
+   - Unicode support
+   - Clipboard integration
+
+3. Plugin Limitations
+   - Compatibility requirements
+   - Load order dependencies
+   - Potential conflicts
+   - Resource usage
 
 ## Dependencies
-1. **Core Plugins**
-   - lazy.nvim (plugin manager)
-   - nvim-lspconfig (LSP support)
-   - nvim-treesitter (syntax)
-   - telescope.nvim (fuzzy finder)
-   - mason.nvim (LSP server manager)
+1. Core Plugins
+   - lazy.nvim (Plugin management)
+   - nvim-lspconfig (LSP configuration)
+   - nvim-cmp (Completion)
+   - telescope.nvim (Fuzzy finding)
+   - neo-tree.nvim (File explorer)
+   - which-key.nvim (Key binding help)
 
-2. **LSP Servers**
-   - Various language servers (go, python, lua, etc.)
-   - External formatters and linters
-   - Diagnostic tools
+2. Language Support
+   - LSP Servers
+   - Treesitter parsers
+   - Debug adapters
+   - Formatters/Linters
 
-3. **System Requirements**
-   - Git for plugin management
-   - Make for some plugin builds
-   - Proper runtime file installation
+3. UI Enhancements
+   - lualine.nvim (Status line)
+   - bufferline.nvim (Buffer line)
+   - nvim-notify (Notifications)
+   - nvim-web-devicons (Icons)
+
+## Build & Deployment
+1. Configuration Structure
+   ```
+   ~/.config/nvim/
+   ├── init.lua
+   ├── lua/
+   │   ├── core/
+   │   ├── plugins/
+   │   ├── lsp/
+   │   └── config/
+   ```
+
+2. Installation Process
+   - Configuration files setup
+   - Plugin installation
+   - LSP servers installation
+   - Parser installation
+
+3. Update Process
+   - Plugin updates
+   - LSP server updates
+   - Configuration updates
+   - Backup strategy
+
+## Testing Strategy
+1. Configuration Testing
+   - Startup validation
+   - Plugin compatibility
+   - Feature verification
+   - Performance monitoring
+
+2. Language Support Testing
+   - LSP functionality
+   - Completion accuracy
+   - Diagnostic reporting
+   - Format checking
+
+3. Integration Testing
+   - Plugin interactions
+   - Key binding conflicts
+   - Event handling
+   - Error recovery
