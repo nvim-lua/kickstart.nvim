@@ -1,0 +1,12 @@
+# Project Patterns and Intelligence
+
+1. Running Neovim v0.11.0-dev with potential runtime path issues
+2. Configuration based on Kickstart.nvim template
+3. Core issue: vim.diagnostic module and syntax.vim not found
+4. Using lazy.nvim for plugin management with lazy loading
+5. LSP setup depends on proper runtime file configuration
+6. Memory bank tracks project state in cline_docs/
+7. Configuration lives in ~/.config/nvim/init.lua
+8. Runtime files expected in standard system locations
+9. Regular :checkhealth checks recommended
+10. Critical to verify VIMRUNTIME environment variable

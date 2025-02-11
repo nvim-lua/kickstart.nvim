@@ -1,122 +1,58 @@
-# System Patterns
+# System Patterns: Neovim Configuration
 
 ## System Architecture
-1. Configuration Layer Design
-   - Core configuration (init.lua)
-   - Module-based organization
-   - Plugin management system
-   - User customization layer
+1. **Core Configuration Structure**
+   - init.lua as main configuration file
+   - Lazy plugin management system
+   - LSP integration through nvim-lspconfig
+   - Custom keymaps and settings
 
-2. Feature Organization
-   - LSP services management
-   - Completion engine integration
-   - File tree and navigation
-   - Buffer and window management
-
-3. Event System
-   - Autocommands framework
-   - Key mapping system
-   - Plugin hooks
-   - Custom events
+2. **Key Components**
+   - Plugin Management (lazy.nvim)
+   - LSP Configuration
+   - Treesitter Integration
+   - Diagnostic System
+   - Custom Keybindings
 
 ## Key Technical Decisions
-1. Plugin Management
-   - Use of lazy.nvim for plugin management
-   - Lazy-loading strategy for performance
-   - Conditional plugin loading
-   - Dependencies management
 
-2. LSP Implementation
-   - Native LSP client usage
-   - Mason.nvim for LSP server management
-   - Language-specific configurations
-   - Diagnostic system integration
+### Plugin Management
+- Using lazy.nvim for plugin management
+- Lazy loading enabled for better startup performance
+- Plugin-specific configurations contained within setup blocks
 
-3. Performance Optimization
-   - Modular loading system
-   - Cache implementation
-   - Startup optimization
-   - Memory management
+### LSP Implementation
+- Mason for LSP server management
+- nvim-lspconfig for LSP configuration
+- Custom LSP attach events and keymaps
+- Diagnostic configuration through vim.diagnostic
 
-## Architecture Patterns
-1. Module Pattern
-   ```lua
-   -- Module structure
-   local M = {}
-   -- Configuration
-   M.setup = function(opts)
-     -- Setup logic
-   end
-   -- Module functions
-   M.function_name = function()
-     -- Implementation
-   end
-   return M
-   ```
+### Editor Features
+- Treesitter for syntax highlighting
+- Telescope for fuzzy finding
+- Which-key for keymap discovery
+- Mini.nvim for various utilities
 
-2. Plugin Setup Pattern
-   ```lua
-   -- Plugin configuration pattern
-   {
-     "plugin/name",
-     event = "Event",
-     dependencies = {},
-     config = function()
-       require("plugin").setup({})
-     end
-   }
-   ```
+## Component Relationships
+1. **Plugin Dependencies**
+   - LSP plugins depend on nvim-lspconfig
+   - UI elements depend on having Nerd Font
+   - Telescope depends on plenary.nvim
 
-3. LSP Configuration Pattern
-   ```lua
-   -- LSP server setup pattern
-   lspconfig[server].setup({
-     capabilities = capabilities,
-     on_attach = on_attach,
-     settings = {}
-   })
-   ```
+2. **Configuration Flow**
+   - Leader key set before plugins
+   - Basic options configured early
+   - Plugins loaded through lazy.nvim
+   - LSP servers configured after plugins
+   - Keymaps set after all configurations
 
-## Implementation Guidelines
-1. Code Organization
-   - One feature per file
-   - Clear module interfaces
-   - Consistent naming conventions
-   - Documentation standards
+## Design Patterns
+1. **Modularity**
+   - Separate plugin configurations
+   - Isolated LSP server settings
+   - Independent keymap definitions
 
-2. Configuration Standards
-   - User-facing options
-   - Default values
-   - Type checking
-   - Validation
-
-3. Error Handling
-   - Graceful degradation
-   - User feedback
-   - Debug logging
-   - Recovery mechanisms
-
-## System Components
-1. Core Components
-   - Plugin manager
-   - LSP client
-   - Completion engine
-   - File explorer
-
-2. Language Support
-   - LSP servers
-   - Treesitter parsers
-   - Language tools
-   - Formatters
-
-3. UI Components
-   - Status line
-   - Buffer line
-   - Command line
-   - Notifications
-
-4. Integration Layer
-   - Git integration
-   - Terminal
-   - Debug adapter
-   - External tools
+2. **Event-Driven**
+   - LSP attach events
+   - Autocommands for specific behaviors
+   - Lazy loading based on events
