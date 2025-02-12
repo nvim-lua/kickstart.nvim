@@ -1009,5 +1009,12 @@ vim.api.nvim_create_autocmd('BufWritePost', {
   end,
 })
 
+vim.api.nvim_create_autocmd('BufWritePost', {
+  pattern = '/home/momoyon/dotfiles/mako/.config/mako/config',
+  callback = function()
+    vim.cmd '!makoctl reload'
+  end,
+})
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
