@@ -519,10 +519,15 @@ require('lazy').setup({
     config = function()
       -- require('codeium').setup {}
 
+      vim.g.codeium_disable_bindings = 1
+
       -- Change '<C-g>' here to any keycode you like.
       vim.keymap.set('i', '<C-CR>', function()
         return vim.fn['codeium#Accept']()
       end, { expr = true, silent = true })
+      -- vim.keymap.set('i', '<c-n>', function()
+      --   return vim.fn['codeium#CycleCompletions'](1)
+      -- end, { expr = true, silent = true })
       vim.keymap.set('i', '<c-n>', function()
         return vim.fn['codeium#CycleCompletions'](1)
       end, { expr = true, silent = true })
@@ -1081,54 +1086,54 @@ require('lazy').setup({
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
 
-  {
-    'nvim-tree/nvim-tree.lua',
-    dependencies = { 'nvim-tree/nvim-web-devicons' }, -- Add the icon plugin as a dependency
-    config = function()
-      -- Disable netrw
-      vim.g.loaded_netrw = 1
-      vim.g.loaded_netrwPlugin = 1
-
-      -- Enable 24-bit color support
-      vim.opt.termguicolors = true
-
-      vim.keymap.set('n', '<leader>tn', ':NvimTreeToggle<CR>', { desc = 'Toggles File Explorer' })
-      -- Setup nvim-tree with defaults
-      -- require('nvim-tree').setup()
-      require('nvim-web-devicons').setup()
-
-      require('nvim-tree').setup {
-        view = {
-          width = 50,
-        },
-        renderer = {
-          icons = {
-            glyphs = {
-              default = '', -- Icon for files
-              symlink = '', -- Symlink icon
-              folder = {
-                default = '', -- Closed folder icon
-                open = '', -- Open folder icon
-                empty = '', -- Empty folder
-                empty_open = '', -- Open empty folder
-                symlink = '', -- Symlink folder
-                symlink_open = '', -- Opened symlink folder
-              },
-              git = {
-                unstaged = '', -- Icon for unstaged changes
-                staged = 'S', -- Icon for staged changes
-                unmerged = '', -- Icon for unmerged changes
-                renamed = '➜', -- Icon for renamed files
-                untracked = 'U', -- Icon for untracked files
-                deleted = '', -- Icon for deleted files
-                ignored = '◌', -- Icon for ignored files
-              },
-            },
-          },
-        },
-      }
-    end,
-  },
+  -- {
+  --   'nvim-tree/nvim-tree.lua',
+  --   dependencies = { 'nvim-tree/nvim-web-devicons' }, -- Add the icon plugin as a dependency
+  --   config = function()
+  --     -- Disable netrw
+  --     vim.g.loaded_netrw = 1
+  --     vim.g.loaded_netrwPlugin = 1
+  --
+  --     -- Enable 24-bit color support
+  --     vim.opt.termguicolors = true
+  --
+  --     vim.keymap.set('n', '<leader>tn', ':NvimTreeToggle<CR>', { desc = 'Toggles File Explorer' })
+  --     -- Setup nvim-tree with defaults
+  --     -- require('nvim-tree').setup()
+  --     require('nvim-web-devicons').setup()
+  --
+  --     require('nvim-tree').setup {
+  --       view = {
+  --         width = 50,
+  --       },
+  --       renderer = {
+  --         icons = {
+  --           glyphs = {
+  --             default = '', -- Icon for files
+  --             symlink = '', -- Symlink icon
+  --             folder = {
+  --               default = '', -- Closed folder icon
+  --               open = '', -- Open folder icon
+  --               empty = '', -- Empty folder
+  --               empty_open = '', -- Open empty folder
+  --               symlink = '', -- Symlink folder
+  --               symlink_open = '', -- Opened symlink folder
+  --             },
+  --             git = {
+  --               unstaged = '', -- Icon for unstaged changes
+  --               staged = 'S', -- Icon for staged changes
+  --               unmerged = '', -- Icon for unmerged changes
+  --               renamed = '➜', -- Icon for renamed files
+  --               untracked = 'U', -- Icon for untracked files
+  --               deleted = '', -- Icon for deleted files
+  --               ignored = '◌', -- Icon for ignored files
+  --             },
+  --           },
+  --         },
+  --       },
+  --     }
+  --   end,
+  -- },
   -- the following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. if you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
