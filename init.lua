@@ -784,8 +784,8 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        ts_ls = {},
-        angularls = {},
+        ts_ls = { filetypes = { 'javascript', 'typescript', 'typescriptreact' } },
+        angularls = { filetypes = { 'typescript', 'typescriptreact', 'html' } },
         --
 
         lua_ls = {
