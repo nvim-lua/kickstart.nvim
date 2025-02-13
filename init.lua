@@ -166,6 +166,11 @@ vim.opt.scrolloff = 20
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('i', 'jj', '<Esc>')
 vim.keymap.set('v', '<Leader>cc', '"+y')
+-- Move in insert mode with Alt + hjkl
+vim.keymap.set('i', '<M-h>', '<Left>', { desc = 'Move left in insert mode' })
+vim.keymap.set('i', '<M-j>', '<Down>', { desc = 'Move down in insert mode' })
+vim.keymap.set('i', '<M-k>', '<Up>', { desc = 'Move up in insert mode' })
+vim.keymap.set('i', '<M-l>', '<Right>', { desc = 'Move right in insert mode' })
 -- vim.keymap.set('n', '<leader>ee', '<cmd>Ex<CR>')
 
 -- Diagnostic keymaps
@@ -517,27 +522,6 @@ require('lazy').setup({
       'hrsh7th/nvim-cmp',
     },
     config = function()
-      -- require('codeium').setup {}
-
-      vim.g.codeium_disable_bindings = 1
-
-      -- Change '<C-g>' here to any keycode you like.
-      vim.keymap.set('i', '<C-CR>', function()
-        return vim.fn['codeium#Accept']()
-      end, { expr = true, silent = true })
-      -- vim.keymap.set('i', '<c-n>', function()
-      --   return vim.fn['codeium#CycleCompletions'](1)
-      -- end, { expr = true, silent = true })
-      vim.keymap.set('i', '<c-n>', function()
-        return vim.fn['codeium#CycleCompletions'](1)
-      end, { expr = true, silent = true })
-      vim.keymap.set('i', '<c-p>', function()
-        return vim.fn['codeium#CycleCompletions'](-1)
-      end, { expr = true, silent = true })
-      vim.keymap.set('i', '<c-x>', function()
-        return vim.fn['codeium#Clear']()
-      end, { expr = true, silent = true })
-
       require('codeium').setup {
         -- Optionally disable cmp source if using virtual text only
         enable_cmp_source = false,
@@ -574,33 +558,14 @@ require('lazy').setup({
             -- Clear the virtual text.
             clear = false,
             -- Cycle to the next completion.
-            next = '<M-]>',
+            next = '<C-A-n>',
             -- Cycle to the previous completion.
-            prev = '<M-[>',
+            prev = '<C-A-p>',
           },
         },
       }
     end,
   },
-  -- {
-  --   'Exafunction/codeium.vim',
-  --   event = 'BufEnter',
-  --   -- config = function()
-  --   --   -- Change '<C-g>' here to any keycode you like.
-  --   --   vim.keymap.set('i', '<C-CR>', function()
-  --   --     return vim.fn['codeium#Accept']()
-  --   --   end, { expr = true, silent = true })
-  --   --   vim.keymap.set('i', '<c-n>', function()
-  --   --     return vim.fn['codeium#CycleCompletions'](1)
-  --   --   end, { expr = true, silent = true })
-  --   --   vim.keymap.set('i', '<c-p>', function()
-  --   --     return vim.fn['codeium#CycleCompletions'](-1)
-  --   --   end, { expr = true, silent = true })
-  --   --   vim.keymap.set('i', '<c-x>', function()
-  --   --     return vim.fn['codeium#Clear']()
-  --   --   end, { expr = true, silent = true })
-  --   -- end,
-  -- },
   -- LSP Plugins
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
