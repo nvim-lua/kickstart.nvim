@@ -1095,7 +1095,6 @@ require('lazy').setup({
         'javascript',
         -- 'ts_ls',
         'nu',
-        -- 'nix',
         'css',
         'json',
         'comment',
