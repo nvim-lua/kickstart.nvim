@@ -44,7 +44,7 @@ vim.opt.foldcolumn = '1'
 function _G.custom_foldtext()
   local line = vim.trim(vim.fn.getline(vim.v.foldstart))
   local fold_size = vim.v.foldend - vim.v.foldstart + 1
-  return string.format('⏷ %s ⏤ %d lines ⏵', line, fold_size)
+  return string.format('%s ⏤ %d lines', line, fold_size)
 end
 
 vim.opt.foldtext = 'v:lua.custom_foldtext()'

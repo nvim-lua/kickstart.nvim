@@ -28,3 +28,29 @@ vim.keymap.set('n', 'zo', 'zo', { desc = 'Open fold' }) -- Open current fold
 vim.keymap.set('n', 'za', 'za', { desc = 'Toggle fold' }) -- Toggle fold open/close
 vim.keymap.set('n', 'zR', 'zR', { desc = 'Open all folds' }) -- Open all folds
 vim.keymap.set('n', 'zM', 'zM', { desc = 'Close all folds' }) -- Close all folds
+
+-- Spectre: Search and replace in all files
+vim.keymap.set('n', '<leader>sr', function()
+  require('spectre').open()
+end, { desc = '[S]earch and [R]eplace in all files' })
+
+-- Lazygit: Open in a floating terminal
+vim.keymap.set('n', '<leader>gg', function()
+  local Terminal = require('toggleterm.terminal').Terminal
+  local lazygit = Terminal:new {
+    cmd = 'lazygit',
+    dir = 'git_dir', -- Open Lazygit in the current Git repository
+    hidden = true, -- Hide the terminal buffer
+    direction = 'float', -- Open in a floating window
+    float_opts = {
+      border = 'curved', -- Add a border to the floating window
+    },
+    on_open = function(term)
+      vim.cmd 'startinsert!' -- Enter insert mode when Lazygit opens
+    end,
+    on_close = function(term)
+      vim.cmd 'startinsert!' -- Exit insert mode when Lazygit closes
+    end,
+  }
+  lazygit:toggle() -- Toggle Lazygit
+end, { desc = '[G]it [G]UI (Lazygit)' })
