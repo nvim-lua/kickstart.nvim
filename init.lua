@@ -30,7 +30,19 @@ require('lazy').setup {
       }
     end,
   },
-
+  {
+    'akinsho/toggleterm.nvim',
+    version = '*',
+    config = function()
+      require('toggleterm').setup {
+        open_mapping = [[<c-\>]], -- Open/close terminal with Ctrl+\
+        direction = 'float', -- Open Lazygit in a floating window
+        float_opts = {
+          border = 'curved', -- Add a border to the floating window
+        },
+      }
+    end,
+  },
   { -- Which-key: Shows available keybindings
     'folke/which-key.nvim',
     event = 'VimEnter',
