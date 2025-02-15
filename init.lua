@@ -1016,5 +1016,9 @@ vim.api.nvim_create_autocmd('BufWritePost', {
   end,
 })
 
+vim.g.expandtab = true
+vim.g.tabstop = 4
+vim.g.shiftwidth = 4
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
