@@ -36,7 +36,7 @@ return {
     config = function()
       require('harpoon'):setup {
         settings = {
-          sync_on_ui_close = true,
+          -- sync_on_ui_close = true,
           save_on_toggle = true,
         },
       }
