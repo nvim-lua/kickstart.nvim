@@ -627,7 +627,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+        ts_ls = {},
         --
 
         lua_ls = {
@@ -664,6 +664,7 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
         'jdtls',
+        'prettier',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
       local cmp = require 'cmp'
@@ -673,9 +674,7 @@ require('lazy').setup({
           ['<C-j>'] = cmp.mapping.scroll_docs(4),
         },
       }
-      Global = {}
-      Global.lspCapabilities = vim.lsp.protocol.make_client_capabilities()
-      Global.lspCapabilities.textDocument.completion.completionItem.resolveSupport.properties = {
+      capabilities.textDocument.completion.completionItem.resolveSupport.properties = {
         'documentation',
         'detail',
         'additionalTextEdits',
@@ -716,7 +715,7 @@ require('lazy').setup({
                   },
                 },
               },
-              capabilities = Global.lspCapabilities,
+              capabilities = capabilities,
             }
           end,
         },
@@ -762,7 +761,7 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', 'prettierrc', stop_after_first = true },
       },
     },
   },
@@ -947,7 +946,24 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'java' },
+      ensure_installed = {
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc',
+        'java',
+        'javascript',
+        'typescript',
+        'yaml',
+        'css',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -980,7 +996,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -989,7 +1005,7 @@ require('lazy').setup({
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   { import = 'custom.plugins' },
 
-  vim.keymap.set('n', '|', ':Neotree reveal<CR>', { desc = 'Toggle Neotree window', silent = true }),
+  -- vim.keymap.set('n', '|', ':Neotree reveal<CR>', { desc = 'Toggle Neotree window', silent = true }),
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
