@@ -235,14 +235,17 @@ vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 -- vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Buffer switch
+-- https://github.com/tpope/vim-unimpaired
 vim.keymap.set({ 'n' }, ']b', '<cmd>bnext<CR>', { silent = true })
 vim.keymap.set({ 'n' }, '[b', '<cmd>bprev<CR>', { silent = true })
+vim.keymap.set({ 'n' }, ']q', '<cmd>cnext<CR>', { silent = true })
+vim.keymap.set({ 'n' }, '[q', '<cmd>cprevious<CR>', { silent = true })
 -- vim.keymap.set({ 'n', 'i', 'v' }, '<C-h>', '<cmd>bnext<CR>', { silent = true })
 -- vim.keymap.set({ 'n', 'i', 'v' }, '<C-l>', '<cmd>bprev<CR>', { silent = true })
 -- Close all buffers and keep the open one only
 vim.keymap.set('n', '<leader>b', '<cmd>:%bd|e#|bd#<CR>', { desc = 'Close all buffers and keep the open one only' })
 
--- signature help
+-- Signature help
 vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers['signature_help'], {
   border = 'single',
   close_events = { 'CursorMoved', 'BufHidden' },
