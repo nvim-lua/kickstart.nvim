@@ -653,7 +653,7 @@ require('lazy').setup({
       --    :Mason
       --
       -- You can press `g?` for help in this menu.
-      -- require('mason').setup()
+      require('mason').setup()
       --
       -- `mason` had to be setup earlier: to configure its options see the
       -- `dependencies` table for `nvim-lspconfig` above.
@@ -666,7 +666,26 @@ require('lazy').setup({
         'jdtls',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-
+      local cmp = require 'cmp'
+      cmp.setup {
+        mapping = {
+          ['<C-k>'] = cmp.mapping.scroll_docs(-4),
+          ['<C-j>'] = cmp.mapping.scroll_docs(4),
+        },
+      }
+      Global = {}
+      Global.lspCapabilities = vim.lsp.protocol.make_client_capabilities()
+      Global.lspCapabilities.textDocument.completion.completionItem.resolveSupport.properties = {
+        'documentation',
+        'detail',
+        'additionalTextEdits',
+        'sortText',
+        'filterText',
+        'insertText',
+        'textEdit',
+        'insertTextFormat',
+        'insertTextMode',
+      }
       require('mason-lspconfig').setup {
         handlers = {
           function(server_name)
@@ -684,12 +703,20 @@ require('lazy').setup({
                 java = {
                   configuration = {
                     runtimes = {
-                      { name = 'Java-21', path = '/home/lucas/.sdkman/candidates/java/21.0.2-open', default = true },
-                      { name = 'Java-11', path = '/home/lucas/.sdkman/candidates/java/11.0.22-ms', default = false },
+                      { name = 'JavaSE-21', path = '/home/lucas/.sdkman/candidates/java/21.0.2-open', default = true },
+                      { name = 'JavaSE-11', path = '/home/lucas/.sdkman/candidates/java/11.0.22-ms', default = false },
                     },
+                  },
+                  formatting = {
+                    settings = { url = '/home/lucas/Magna_Sistemas.xml' },
+                  },
+                  signatureHelp = {
+                    enabled = true,
+                    description = { enabled = true },
                   },
                 },
               },
+              capabilities = Global.lspCapabilities,
             }
           end,
         },
@@ -807,7 +834,7 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<CR>'] = cmp.mapping.confirm { select = true },
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
@@ -952,7 +979,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
@@ -960,7 +987,9 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
+
+  vim.keymap.set('n', '|', ':Neotree reveal<CR>', { desc = 'Toggle Neotree window', silent = true }),
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
