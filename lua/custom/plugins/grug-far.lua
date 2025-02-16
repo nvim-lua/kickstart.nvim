@@ -3,7 +3,7 @@ return {
     'MagicDuck/grug-far.nvim',
     init = function()
       -- vim.g.copilot_enabled = false
-      vim.keymap.set('n', '<leader>g', ':GrugFar<CR>')
+      vim.keymap.set('n', '<leader>rr', ':GrugFar<CR>')
     end,
     config = function()
       require('grug-far').setup {
