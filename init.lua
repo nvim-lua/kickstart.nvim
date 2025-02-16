@@ -721,19 +721,19 @@ require('lazy').setup({
           },
         },
 
-        rust_analyzer = {
-          checkOnSave = {
-            allFeatures = true,
-            overrideCommand = {
-              'cargo',
-              'clippy',
-              '--workspace',
-              '--message-format=json',
-              '--all-targets',
-              '--all-features',
-            },
-          },
-        },
+        -- rust_analyzer = {
+        --   checkOnSave = {
+        --     allFeatures = true,
+        --     overrideCommand = {
+        --       'cargo',
+        --       'clippy',
+        --       '--workspace',
+        --       '--message-format=json',
+        --       '--all-targets',
+        --       '--all-features',
+        --     },
+        --   },
+        -- },
 
         -- python -> LSP: basedpyright, Formatter & linter
         -- https://github.com/astral-sh/ruff/blob/main/crates/ruff_server/docs/setup/NEOVIM.md
