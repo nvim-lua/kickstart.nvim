@@ -34,12 +34,15 @@ return {
       end)
     end,
     config = function()
-      require('harpoon'):setup {
+      local harpoon = require 'harpoon'
+      -- local extensions = require 'harpoon.extensions'
+      harpoon:setup {
         settings = {
           -- sync_on_ui_close = true,
           save_on_toggle = true,
         },
       }
+      -- harpoon:extend(extensions.builtins.navigate_with_number())
     end,
   },
 }
