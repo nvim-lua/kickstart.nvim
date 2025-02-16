@@ -22,7 +22,7 @@ return {
       -- === Suggested Keymaps: ===
       local namu = require 'namu.namu_symbols'
       local colorscheme = require 'namu.colorscheme'
-      vim.keymap.set('n', '<leader>gs', ':Namu symbols<cr>', {
+      vim.keymap.set('n', '<leader>js', ':Namu symbols<cr>', {
         desc = 'Jump to LSP symbol',
         silent = true,
       })
