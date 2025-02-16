@@ -195,6 +195,8 @@ vim.g.undotree_ShortIndicators = 1
 -- vim.opt.spell = true
 -- vim.opt.spellsuggest='best,9'
 
+vim.opt.hidden = false
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
