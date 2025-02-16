@@ -27,4 +27,8 @@ return {
       crates.show()
     end,
   },
+  {
+    'cordx56/rustowl',
+    dependencies = { 'neovim/nvim-lspconfig' },
+  },
 }
