@@ -1020,5 +1020,10 @@ vim.g.expandtab = true
 vim.g.tabstop = 4
 vim.g.shiftwidth = 4
 
+vim.keymap.set('n', '<leader>bd', ':bd<CR>')
+vim.keymap.set('n', '<leader>bD', ':bd!<CR>')
+vim.keymap.set('n', '<leader>bc', ':close<CR>')
+vim.keymap.set('n', '<leader>bC', ':close!<CR>')
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
