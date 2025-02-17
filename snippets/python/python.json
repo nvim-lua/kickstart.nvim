@@ -1,0 +1,234 @@
+{
+    "#!/usr/bin/env pythonX": {
+        "prefix": "#env",
+        "body": "#!/usr/bin/env python$0",
+        "description": "Shebang line for the first python in PATH"
+    },
+    "pyright ignore line": {
+        "prefix": "#ignore",
+        "body": "# pyright: ignore[$0]",
+        "description": "Ignore specific line diagnostic in pyright (ignore all is unsafe)"
+    },
+    "Multiline string": {
+        "prefix": "#",
+        "body": ["\"\"\"$0", "\"\"\""],
+        "description": "Snippet to avoid autopair plugin annoyances when typing multiple \""
+    },
+    "One-line multiline string": {
+        "prefix": "##",
+        "body": "\"\"\"$0\"\"\"",
+        "description": "Snippet to avoid autopair plugin annoyances when typing multiple \""
+    },
+    "self": {
+        "prefix": "s",
+        "body": "self.$0",
+        "description": "Snippet to reference the self property in an object"
+    },
+    "__magic__": {
+        "prefix": "__",
+        "body": "__${1:init}__$0",
+        "description": "Create magic method"
+    },
+    "if __name__ == __main__": {
+        "prefix": "ifmain",
+        "body": ["if __name__ == \"__main__\":", "\t${1:main()}"],
+        "description": "Execute code if the file is executed directly"
+    },
+    "import": {
+        "prefix": "import",
+        "body": "import ${1:datetime}",
+        "description": "Import a package or module"
+    },
+    "from ... import ...": {
+        "prefix": "fromim",
+        "body": "from ${1:pathlib} import ${2:Path}",
+        "description": "Import individual objects directly into the caller’s symbol table"
+    },
+    "if": {
+        "prefix": "if",
+        "body": ["if ${1:condition}:", "\t${2:pass}"],
+        "description": "if statement"
+    },
+    "elif": {
+        "prefix": "elif",
+        "body": ["elif ${1:expression}:", "\t${2:pass}"],
+        "description": "elif statement"
+    },
+    "else": {
+        "prefix": "else",
+        "body": ["else:", "\t${1:pass}"],
+        "description": "else statement"
+    },
+    "if/else": {
+        "prefix": "ifelse",
+        "body": ["if ${1:condition}:", "\t${2:pass}", "else:", "\t${3:pass}"],
+        "description": "if statement with else"
+    },
+    "match/case": {
+        "prefix": "match",
+        "body": [
+            "match ${1:expression}:",
+            "\tcase ${2:pattern}:",
+            "\t\t${3:pass}"
+        ],
+        "description": "match/case statements"
+    },
+    "case": {
+        "prefix": "case",
+        "body": ["case ${2:pattern}:", "\t${3:pass}"],
+        "description": "case block"
+    },
+    "case wildcard": {
+        "prefix": "casew",
+        "body": ["case _:", "\t${1:pass}"],
+        "description": "case wildcard block if other cases fail"
+    },
+    "while": {
+        "prefix": "while",
+        "body": ["while ${1:condition}:", "\t${2:pass}"],
+        "description": "while loop"
+    },
+    "for": {
+        "prefix": "for",
+        "body": ["for ${1:value} in ${2:iterable}:", "\t${3:pass}"],
+        "description": "for loop"
+    },
+    "for w/ range": {
+        "prefix": "forr",
+        "body": ["for ${1:value} in range($2):", "\t${3:pass}"],
+        "description": "for loop that iterates over range of integers"
+    },
+    "with": {
+        "prefix": "with",
+        "body": ["with ${1:expression} as ${2:target}:", "\t${3:pass}"],
+        "description": "'with' statement"
+    },
+    "lambda": {
+        "prefix": "lambda",
+        "body": ["lambda ${1:parameter_list}: ${2:expression}"],
+        "description": "lambda statement"
+    },
+    "Function": {
+        "prefix": "def",
+        "body": ["def ${1:fname}($2):", "\t${3:pass}"],
+        "description": "Function definition"
+    },
+    "Function w/ return type": {
+        "prefix": "deft",
+        "body": ["def ${1:fname}($2) -> ${3:None}:", "\t${4:pass}"],
+        "description": "Function definition with return type"
+    },
+    "class": {
+        "prefix": "class",
+        "body": ["class ${1:classname}:", "\t${2:pass}"],
+        "description": "Class definition"
+    },
+    "Derived class": {
+        "prefix": "classd",
+        "body": ["class ${1:classname}($2):", "\t${3:pass}"],
+        "description": "Class definition with inheritance"
+    },
+    "class template": {
+        "prefix": "classi",
+        "body": [
+            "class ${1:ClassName}($2):",
+            "\t\"\"\"${3:docstring for $1.}\"\"\"",
+            "\tdef __init__(self, ${4:arg}):",
+            "\t\t${5:super($1, self).__init__()}",
+            "\t\tself.$4 = $4$0"
+        ],
+        "description": "Class definition template"
+    },
+    "Method": {
+        "prefix": "defs",
+        "body": ["def ${1:mname}(self$2):", "\t${3:pass}"],
+        "description": "Class method definition"
+    },
+    "Method w/ return type": {
+        "prefix": "defst",
+        "body": ["def ${1:mname}(self$2) -> ${3:None}:", "\t${4:pass}"],
+        "description": "Class method definition"
+    },
+    "property template": {
+        "prefix": "property",
+        "body": [
+            "@property",
+            "def ${1:pname}(self):",
+            "\t\"\"\"${2:The $1 property.}\"\"\"",
+            "\t${3:return self._$1}",
+            "",
+            "@${4:$1}.setter",
+            "def ${5:$1}(self, value):",
+            "\t${6:self._$1} = value"
+        ],
+        "description": "New property: get and set via decorator"
+    },
+    "except": {
+        "prefix": "except",
+        "body": ["except$1:", "\t${2:pass}"],
+        "description": "except statement"
+    },
+    "except as": {
+        "prefix": "exceptas",
+        "body": ["except ${1:Exception} as ${2:e}:", "\t${3:raise $2}"],
+        "description": "'except as' statement"
+    },
+    "try/except": {
+        "prefix": "try",
+        "body": [
+            "try:",
+            "\t${1:pass}",
+            "except ${2:Exception} as ${3:e}:",
+            "\t${4:raise $3}"
+        ],
+        "description": "try/except blocks"
+    },
+    "try/except/else": {
+        "prefix": "trya",
+        "body": [
+            "try:",
+            "\t${1:pass}",
+            "except ${2:Exception} as ${3:e}:",
+            "\t${4:raise $3}",
+            "else:",
+            "\t${5:pass}"
+        ],
+        "description": "try/except/else blocks"
+    },
+    "try/except/finally": {
+        "prefix": "tryf",
+        "body": [
+            "try:",
+            "\t${1:pass}",
+            "except ${2:Exception} as ${3:e}:",
+            "\t${4:raise $3}",
+            "finally:",
+            "\t${5:pass}"
+        ],
+        "description": "try/except/finally blocks"
+    },
+    "try/except/else/finally": {
+        "prefix": "tryef",
+        "body": [
+            "try:",
+            "\t${1:pass}",
+            "except${2: ${3:Exception} as ${4:e}}:",
+            "\t${5:raise}",
+            "else:",
+            "\t${6:pass}",
+            "finally:",
+            "\t${7:pass}"
+        ],
+        "description": "try/except/else/finally blocks"
+    },
+    "Jupyter cell": {
+        "prefix": "#cell",
+        "body": "# %%",
+        "description": "Add a new cell"
+    },
+    "Jupyter markdown cell": {
+        "prefix": "#mark",
+        "body": "# %% [markdown]",
+        "description": "Add a new markdown cell"
+    }
+}

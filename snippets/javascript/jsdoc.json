@@ -1,0 +1,630 @@
+{
+    "comment": {
+        "prefix": "/**",
+        "body": [
+            "/**",
+            " * ${1:What it does}.",
+            " *",
+            " * @param ${3:name} - ${4:Parameter description.}",
+            " * @returns ${2:Type and description of the returned object.}",
+            " *",
+            " * @example",
+            " * ```",
+            " * ${5:Write me later.}$0",
+            " * ```",
+            " */"
+        ],
+        "description": "A full JSDoc comment with description, parameters, return, and example."
+    },
+    "comment simple": {
+        "prefix": "/*",
+        "body": [
+            "/**",
+            " * ${1:Comment.}$0",
+            " */"
+        ],
+        "description": "A simpple JSDoc comment."
+    },
+    "abstract": {
+        "prefix": "@abstract",
+        "body": [
+            "@abstract$0"
+        ],
+        "description": "This member must be implemented (or overridden) by the inheritor. Synonysm of @virtual."
+    },
+    "virtual": {
+        "prefix": "@virtual",
+        "body": [
+            "@virlual$0"
+        ],
+        "description": "This member must be implemented (or overridden) by the inheritor. Synonysm of @abstract."
+    },
+    "access": {
+        "prefix": "@access",
+        "body": [
+            "@access ${1:private}$0"
+        ],
+        "description": "Specify the access level of this member (private, package-private, public, or protected)."
+    },
+    "alias": {
+        "prefix": "@alias",
+        "body": [
+            "@alias ${1:name}$0"
+        ],
+        "description": "Treat a member as if it had a different name."
+    },
+    "async": {
+        "prefix": "@async",
+        "body": [
+            "@async$0"
+        ],
+        "description": "Indicate that the function is asynchronous."
+    },
+    "augments": {
+        "prefix": "@augments",
+        "body": [
+            "@augments ${1:namepath}$0"
+        ],
+        "description": "The @augments or @extends tag indicates that a symbol inherits from, and potentially adds to, a parent symbol. You can use this tag to document both class-based and prototype-based inheritance. Synonysm of @extends."
+    },
+    "extends": {
+        "prefix": "@extends",
+        "body": [
+            "@extends ${1:namepath}$0"
+        ],
+        "description": "The @augments or @extends tag indicates that a symbol inherits from, and potentially adds to, a parent symbol. You can use this tag to document both class-based and prototype-based inheritance. Synonysm of @augments."
+    },
+    "author": {
+        "prefix": "@author",
+        "body": [
+            "@author ${1:author_name} <${2:author_email}$0>"
+        ],
+        "description": "Identify the author of an item."
+    },
+    "borrows": {
+        "prefix": "@borrows",
+        "body": [
+            "@borrows ${1:that namepath} as ${2:this namepath}$0"
+        ],
+        "description": "The @borrows tag allows you to add documentation for another symbol to your documentation. This tag would be useful if you had more than one way to reference a function, but you didn't want to duplicate the same documentation in two places."
+    },
+    "callback": {
+        "prefix": "@callback",
+        "body": [
+            "@callback ${1:namepath}$0"
+        ],
+        "description": "The @callback tag provides information about a callback function that can be passed to other functions, including the callback's parameters and return value. You can include any of the tags that you can provide for a @method."
+    },
+    "class": {
+        "prefix": "@class",
+        "body": [
+            "@class$0"
+        ],
+        "description": "This function is intended to be called with the \"new\" keyword. Synonysm of @constructor."
+    },
+    "constructor": {
+        "prefix": "@constructor",
+        "body": [
+            "@constructor$0"
+        ],
+        "description": "This function is intended to be called with the \"new\" keyword. Synonysm of @class."
+    },
+    "classdesc": {
+        "prefix": "@classdesc",
+        "body": [
+            "@classdesc ${1:some description}$0"
+        ],
+        "description": "Use the following text to describe the entire class."
+    },
+    "constant": {
+        "prefix": "@constant",
+        "body": [
+            "@constant$0"
+        ],
+        "description": "Document an object as a constant. Synonysm of @const."
+    },
+    "constructs": {
+        "prefix": "@constructs",
+        "body": [
+            "@constructs$0"
+        ],
+        "description": "This function member will be the constructor for the previous class."
+    },
+    "copyright": {
+        "prefix": "@copyright",
+        "body": [
+            "@copyright ${1:some copyright text}$0"
+        ],
+        "description": "Document some copyright information."
+    },
+    "default": {
+        "prefix": "@default",
+        "body": [
+            "@default$0"
+        ],
+        "description": "The @default tag allows you to document the assigned value of a symbol. You can supply this tag with a value yourself or you can allow JSDoc to automatically document the value from the source code -- only possible when the documented symbol is being assigned a single, simple value that is either: a string, a number, a boolean or null. Synonysm of @defaultvalue."
+    },
+    "defaultvalue": {
+        "prefix": "@defaultvalue",
+        "body": [
+            "@defaultvalue$0"
+        ],
+        "description": "The @default tag allows you to document the assigned value of a symbol. You can supply this tag with a value yourself or you can allow JSDoc to automatically document the value from the source code -- only possible when the documented symbol is being assigned a single, simple value that is either: a string, a number, a boolean or null. Synonysm of @default."
+    },
+    "deprecated": {
+        "prefix": "@deprecated",
+        "body": [
+            "@deprecated$0"
+        ],
+        "description": "Document that this is no longer the preferred way."
+    },
+    "description": {
+        "prefix": "@description",
+        "body": [
+            "@description ${1:some description}$0"
+        ],
+        "description": "The @description tag allows you to provide a general description of the symbol you are documenting. The description may include HTML markup. It may also include Markdown formatting if the Markdown plugin is enabled. Synonysm of @desc."
+    },
+    "desc": {
+        "prefix": "@desc",
+        "body": [
+            "@desc ${1:some description}$0"
+        ],
+        "description": "The @description tag allows you to provide a general description of the symbol you are documenting. The description may include HTML markup. It may also include Markdown formatting if the Markdown plugin is enabled. Synonysm of @description."
+    },
+    "enum": {
+        "prefix": "@enum",
+        "body": [
+            "@enum ${1:type}$0"
+        ],
+        "description": "The @enum tag documents a collection of static properties whose values are all of the same type."
+    },
+    "event": {
+        "prefix": "@event",
+        "body": [
+            "@event ${1:class name}#[event]:${2:eventName}$0"
+        ],
+        "description": "Provide an example of how to use a documented item. The text that follows this tag will be displayed as highlighted code."
+    },
+    "example": {
+        "prefix": "@example",
+        "body": [
+            "@example ${1:some example}$0"
+        ],
+        "description": "The @event tag allows you to document an event that can be fired. A typical event is represented by an object with a defined set of properties."
+    },
+    "exports": {
+        "prefix": "@exports",
+        "body": [
+            "@exports ${1:moduleName}$0"
+        ],
+        "description": "Use the @exports tag when documenting JavaScript modules that export anything other than the \"exports\" object or the \"module.exports\" property."
+    },
+    "external": {
+        "prefix": "@external",
+        "body": [
+            "@external ${1:nameOfExternal}$0"
+        ],
+        "description": "The @external tag identifies a class, namespace, or module that is defined outside of the current package. Synonysm of @host."
+    },
+    "host": {
+        "prefix": "@host",
+        "body": [
+            "@host ${1:nameOfExternal}$0"
+        ],
+        "description": "The @external tag identifies a class, namespace, or module that is defined outside of the current package. Synonysm of @external."
+    },
+    "file": {
+        "prefix": "@file",
+        "body": [
+            "@file ${1:some description}$0"
+        ],
+        "description": "The @file tag provides a description for a file. Use the tag in a JSDoc comment at the beginning of the file. Synonysm of @fileoverview and @overview."
+    },
+    "fileoverview": {
+        "prefix": "@fileoverview",
+        "body": [
+            "@fileoverview ${1:some description}$0"
+        ],
+        "description": "The @file tag provides a description for a file. Use the tag in a JSDoc comment at the beginning of the file. Synonysm of @file and @overview."
+    },
+    "overview": {
+        "prefix": "@overview",
+        "body": [
+            "@overview ${1:some description}$0"
+        ],
+        "description": "The @file tag provides a description for a file. Use the tag in a JSDoc comment at the beginning of the file. Synonysm of @file and @fileoverview"
+    },
+    "fires": {
+        "prefix": "@fires",
+        "body": [
+            "@fires ${1:className}#[event:]${2:eventName}$0"
+        ],
+        "description": "Describe the events this method may fire. Synonysm of @emits."
+    },
+    "emits": {
+        "prefix": "@emits",
+        "body": [
+            "@emits ${1:className}#[event:]${2:eventName}$0"
+        ],
+        "description": "Describe the events this method may fire. Synonysm of @fires."
+    },
+    "function": {
+        "prefix": "@function",
+        "body": [
+            "@function$0"
+        ],
+        "description": "This marks an object as being a function, even though it may not appear to be one to the parser. Synonysm of @func and @method."
+    },
+    "func": {
+        "prefix": "@func",
+        "body": [
+            "@func$0"
+        ],
+        "description": "This marks an object as being a function, even though it may not appear to be one to the parser. Synonysm of @function and @method."
+    },
+    "method": {
+        "prefix": "@method",
+        "body": [
+            "@method$0"
+        ],
+        "description": "This marks an object as being a function, even though it may not appear to be one to the parser. Synonysm of @function and @func."
+    },
+    "generator": {
+        "prefix": "@generator",
+        "body": [
+            "@generator$0"
+        ],
+        "description": "Indicate that a function is a generator function."
+    },
+    "global": {
+        "prefix": "@global",
+        "body": [
+            "@global$0"
+        ],
+        "description": "Document a global object."
+    },
+    "hideconstructor": {
+        "prefix": "@hideconstructor",
+        "body": [
+            "@hideconstructor$0"
+        ],
+        "description": "Indicate that the constructor should not be displayed."
+    },
+    "ignore": {
+        "prefix": "@ignore",
+        "body": [
+            "@ignore$0"
+        ],
+        "description": "Omit a symbol from the documentation."
+    },
+    "implements": {
+        "prefix": "@implements",
+        "body": [
+            "@implements$0"
+        ],
+        "description": "This symbol implements an interface."
+    },
+    "inheritdoc": {
+        "prefix": "@inheritdoc",
+        "body": [
+            "@inheritdoc$0"
+        ],
+        "description": "Indicate that a symbol should inherit its parent's documentation."
+    },
+    "inner": {
+        "prefix": "@inner",
+        "body": [
+            "@inner$0"
+        ],
+        "description": "Using the @inner tag will mark a symbol as an inner member of its parent symbol. This means it can be referred to by \"Parent~Child\"."
+    },
+    "instance": {
+        "prefix": "@instance",
+        "body": [
+            "@instance$0"
+        ],
+        "description": "Using the @instance tag will mark a symbol as an instance member of its parent symbol. This means it can be referred to by \"Parent#Child\"."
+    },
+    "interface": {
+        "prefix": "@interface",
+        "body": [
+            "@interface$0"
+        ],
+        "description": "This symbol is an interface that others can implement."
+    },
+    "kind": {
+        "prefix": "@kind",
+        "body": [
+            "@kind ${1:kindName}$0"
+        ],
+        "description": "What kind of symbol is this. Possible values are: class, constant, event, external, file, function, member, mixin, module, namespace, typedef."
+    },
+    "lends": {
+        "prefix": "@lends",
+        "body": [
+            "@lends ${1:namePath}$0"
+        ],
+        "description": "The @lends tag allows you to document all the members of an object literal as if they were members of a symbol with the given name. You might want to do this if you are passing an object literal into a function that creates a named class from its members."
+    },
+    "license": {
+        "prefix": "@license",
+        "body": [
+            "@license ${1:identifier}$0"
+        ],
+        "description": "Identify the license that applies to this code."
+    },
+    "listens": {
+        "prefix": "@listens",
+        "body": [
+            "@listens ${1:eventName}$0"
+        ],
+        "description": "List the events that a symbol listens for."
+    },
+    "member": {
+        "prefix": "@member",
+        "body": [
+            "@member {type}$0"
+        ],
+        "description": "Document a member. Synonysm or @var."
+    },
+    "var": {
+        "prefix": "@var",
+        "body": [
+            "@var {type}$0"
+        ],
+        "description": "Document a member. Synonysm or @member."
+    },
+    "memberof": {
+        "prefix": "@memberof",
+        "body": [
+            "@memberof ${1:parentNamePath}$0"
+        ],
+        "description": "This symbol belongs to a parent symbol."
+    },
+    "mixes": {
+        "prefix": "@mixes",
+        "body": [
+            "@mixes ${1:OtherObjectPath}$0"
+        ],
+        "description": "This object mixes in all the members from another object."
+    },
+    "mixin": {
+        "prefix": "@mixin",
+        "body": [
+            "@mixin ${1:MixinName}$0"
+        ],
+        "description": "Document a mixin object."
+    },
+    "module": {
+        "prefix": "@module",
+        "body": [
+            "@module ${1:myModule}$0"
+        ],
+        "description": "Document a JavaScript module."
+    },
+    "name": {
+        "prefix": "@name",
+        "body": [
+            "@name ${1:namePath}$0"
+        ],
+        "description": "The @name tag forces JSDoc to associate the remainder of the JSDoc comment with the given name, ignoring all surrounding code. This tag is best used in \"virtual comments\" for symbols that are not readily visible in the code, such as methods that are generated at runtime."
+    },
+    "namespace": {
+        "prefix": "@namespace",
+        "body": [
+            "@namespace ${1:someName}$0"
+        ],
+        "description": "The @namespace tag indicates that an object creates a namespace for its members. You can also write a virtual JSDoc comment that defines a namespace used by your code."
+    },
+    "override": {
+        "prefix": "@override",
+        "body": [
+            "@override$0"
+        ],
+        "description": "The @override tag indicates that a symbol overrides a symbol with the same name in a parent class."
+    },
+    "package": {
+        "prefix": "@package",
+        "body": [
+            "@package$0"
+        ],
+        "description": "The @package tag marks a symbol as package-private. Typically, this tag indicates that a symbol is available only to code in the same directory as the source file for this symbol."
+    },
+    "param": {
+        "prefix": "@param",
+        "body": [
+            "@param {${1:type}} ${2:paranName} - ${3:paramDescription}$0"
+        ],
+        "description": "Provides the name, type, and description of a function parameter. Synonysm of @arg and @argument."
+    },
+    "arg": {
+        "prefix": "@arg",
+        "body": [
+            "@arg {${1:type}} ${2:paranName} - ${3:paramDescription}$0"
+        ],
+        "description": "Provides the name, type, and description of a function parameter. Synonysm of @param and @argument."
+    },
+    "argument": {
+        "prefix": "@argument",
+        "body": [
+            "@argument {${1:type}} ${2:paranName} - ${3:paramDescription}$0"
+        ],
+        "description": "Provides the name, type, and description of a function parameter. Synonysm of @param and @arg."
+    },
+    "private": {
+        "prefix": "@private",
+        "body": [
+            "@private$0"
+        ],
+        "description": "Indicate this symbol is meant to be private."
+    },
+    "property": {
+        "prefix": "@property",
+        "body": [
+            "@property {${1:type}} ${2:propertyName.something} - ${3:propertyDescription}$0"
+        ],
+        "description": "The @property tag is a way to easily document a list of static properties of a class, namespace or other object."
+    },
+    "protected": {
+        "prefix": "@protected",
+        "body": [
+            "@protected$0"
+        ],
+        "description": "The @protected tag marks a symbol as protected. Typically, this tag indicates that a symbol is only available, or should only be used, within the current module."
+    },
+    "public": {
+        "prefix": "@publilc",
+        "body": [
+            "@public$0"
+        ],
+        "description": "Indicated this symbol is meant to be public."
+    },
+    "readonly": {
+        "prefix": "@readonly",
+        "body": [
+            "@readonly$0"
+        ],
+        "description": "Indicates this symbol is meant to be read-only."
+    },
+    "requires": {
+        "prefix": "@requires",
+        "body": [
+            "@requires ${1:moduleName}$0"
+        ],
+        "description": "Indicates a required module."
+    },
+    "returns": {
+        "prefix": "@returns",
+        "body": [
+            "@returns ${1:type} ${2:description}$0"
+        ],
+        "description": "Documents the value a function returns. Synonysm of @return."
+    },
+    "return": {
+        "prefix": "@return",
+        "body": [
+            "@return ${1:type} ${2:description}$0"
+        ],
+        "description": "Documents the value a function returns. Synonysm of @returns."
+    },
+    "see": {
+        "prefix": "@see",
+        "body": [
+            "@see ${1:text}$0"
+        ],
+        "description": "Refer to some other documentation for more information. It accepts text or {@link foobar}."
+    },
+    "since": {
+        "prefix": "@since",
+        "body": [
+            "@since ${1:version}$0"
+        ],
+        "description": "Version in which this symbol was added."
+    },
+    "static": {
+        "prefix": "@static",
+        "body": [
+            "@static$0"
+        ],
+        "description": "Indicates this is an static member."
+    },
+    "summary": {
+        "prefix": "@summary",
+        "body": [
+            "@summary ${1:summary goes here}$0"
+        ],
+        "description": "A shorter version of the full description."
+    },
+    "this": {
+        "prefix": "@this",
+        "body": [
+            "@this ${1:namePath}$0"
+        ],
+        "description": "The @this tag indicates what the this keyword refers to when used within another symbol."
+    },
+    "throws": {
+        "prefix": "@throws",
+        "body": [
+            "@throws ${1:errorName} ${2:description}$0"
+        ],
+        "description": "Describe what errors can be thrown. Synonysm of @exception."
+    },
+    "exception": {
+        "prefix": "@exception",
+        "body": [
+            "@exception ${1:errorName} ${2:description}$0"
+        ],
+        "description": "Describe what errors can be thrown. Synonysm of @throws."
+    },
+    "todo": {
+        "prefix": "@todo",
+        "body": [
+            "@todo ${1:text describing thing to do}$0"
+        ],
+        "description": "Documents a task to be completed."
+    },
+    "tutorial": {
+        "prefix": "@tutorial",
+        "body": [
+            "@tutorial$0"
+        ],
+        "description": "Link to a tutorial file."
+    },
+    "type": {
+        "prefix": "@type",
+        "body": [
+            "@type ${1:typeName}$0"
+        ],
+        "description": "Documents the type of the object."
+    },
+    "typedef": {
+        "prefix": "@typedef",
+        "body": [
+            "@typedef ${1:type} ${2:namePath}$0"
+        ],
+        "description": "Documents a custom type definition."
+    },
+    "variation": {
+        "prefix": "@variation",
+        "body": [
+            "@variation ${1:variationNumber}$0"
+        ],
+        "description": "Distinguish different objects with the same name."
+    },
+    "version": {
+        "prefix": "@version",
+        "body": [
+            "@version ${1:versionTag}$0"
+        ],
+        "description": "Documents the version number of an item."
+    },
+    "yields": {
+        "prefix": "@yields",
+        "body": [
+            "@yields {${1:type}} ${2:description}$0"
+        ],
+        "description": "Document the value yielded by a generator function."
+    },
+    "link": {
+        "prefix": "@link",
+        "body": [
+            "@link ${1:namePathOrUrl}$0"
+        ],
+        "description": "Link to another item in the documentation. Synonysm of @linkcode and @linkplain."
+    },
+    "linkcode": {
+        "prefix": "@linkcode",
+        "body": [
+            "@linkcode ${1:namePathOrUrl}$0"
+        ],
+        "description": "Link to another item in the documentation. Synonysm of @link and @linkplain."
+    },
+    "linkplain": {
+        "prefix": "@linkplain",
+        "body": [
+            "@linkplain ${1:namePathOrUrl}$0"
+        ],
+        "description": "Link to another item in the documentation. Synonysm of @link and @linkcode."
+    }
+}

@@ -1,0 +1,941 @@
+{
+    "setImmediate": {
+        "prefix": "sim",
+        "body": "setImmediate(() => {\n\t${0}\n})"
+    },
+    "await": {
+        "prefix": "a",
+        "body": "await ${0}"
+    },
+    "await Promise.all": {
+        "prefix": "apa",
+        "body": "await Promise.all(${1:value})"
+    },
+    "await Promise.all with destructuring": {
+        "prefix": "apad",
+        "body": "const [${0}] = await Promise.all(${1:value})"
+    },
+    "await Promise.all map": {
+        "prefix": "apm",
+        "body": "await Promise.all(${1:array}.map(async (${2:value}) => {\n\t${0}\n}))"
+    },
+    "await sleep": {
+        "prefix": "ast",
+        "body": "await new Promise((r) => setTimeout(r, ${0}))"
+    },
+    "Node callback": {
+        "prefix": "cb",
+        "body": "function (err, ${1:value}) {\n\tif (err) throw err\n\t${0}\n}"
+    },
+    "process.env": {
+        "prefix": "pe",
+        "body": "process.env"
+    },
+    "Promise.all": {
+        "prefix": "pa",
+        "body": "Promise.all(${1:value})"
+    },
+    "Promise.resolve": {
+        "prefix": "prs",
+        "body": "Promise.resolve(${1:value})"
+    },
+    "Promise.reject": {
+        "prefix": "prj",
+        "body": "Promise.reject(${1:value})"
+    },
+    "Promise": {
+        "prefix": "p",
+        "body": "Promise"
+    },
+    "new Promise": {
+        "prefix": "np",
+        "body": "new Promise((resolve, reject) => {\n\t${0}\n})"
+    },
+    "Promise.then": {
+        "prefix": "pt",
+        "body": "${1:promise}.then((${2:value}) => {\n\t${0}\n})"
+    },
+    "Promise.catch": {
+        "prefix": "pc",
+        "body": "${1:promise}.catch(error => {\n\t${0}\n})"
+    },
+    "describe": {
+        "prefix": "desc",
+        "body": "describe('${1:description}', () => {\n\t${0}\n})"
+    },
+    "describe top level": {
+        "prefix": "dt",
+        "body": "describe('${TM_FILENAME_BASE}', () => {\n\t${0}\n})"
+    },
+    "it asynchronous": {
+        "prefix": "it",
+        "body": "it('${1:description}', async () => {\n\t${0}\n})"
+    },
+    "it.todo": {
+        "prefix": "itt",
+        "body": "it.todo('${1:description}')"
+    },
+    "it with a callback": {
+        "prefix": "itd",
+        "body": "it('${1:description}', (done) => {\n\t${0}\n})"
+    },
+    "it synchronous": {
+        "prefix": "its",
+        "body": "it('${1:description}', () => {\n\t${0}\n})"
+    },
+    "before": {
+        "prefix": "bf",
+        "body": "before(async () => {\n\t${0}\n})"
+    },
+    "beforeAll": {
+        "prefix": "ba",
+        "body": "beforeAll(async () => {\n\t${0}\n})"
+    },
+    "beforeEach": {
+        "prefix": "bfe",
+        "body": "beforeEach(async () => {\n\t${0}\n})"
+    },
+    "after": {
+        "prefix": "aft",
+        "body": "after(() => {\n\t${0}\n})"
+    },
+    "afterEach": {
+        "prefix": "afe",
+        "body": "afterEach(() => {\n\t${0}\n})"
+    },
+    "require": {
+        "prefix": "rq",
+        "body": "require('${1:module}')"
+    },
+    "const module = require('module')": {
+        "prefix": "cr",
+        "body": "const ${1:module} = require('${1:module}')"
+    },
+    "exports.member": {
+        "prefix": "em",
+        "body": "exports.${1:member} = ${2:value}"
+    },
+    "module.exports": {
+        "prefix": "me",
+        "body": "module.exports = ${1:name}"
+    },
+    "module as class": {
+        "prefix": "mec",
+        "body": "class ${1:name} {\n\tconstructor (${2:arguments}) {\n\t\t${0}\n\t}\n}\n\nmodule.exports = ${1:name}\n"
+    },
+    "event handler": {
+        "prefix": "on",
+        "body": "${1:emitter}.on('${2:event}', (${3:arguments}) => {\n\t${0}\n})"
+    },
+    "dom event cancel default and propagation": {
+        "prefix": "evc",
+        "body": "ev.preventDefault()\nev.stopPropagation()\nreturn false"
+    },
+    "addEventListener": {
+        "prefix": "ae",
+        "body": "${1:document}.addEventListener('${2:event}', ${3:ev} => {\n\t${0}\n})"
+    },
+    "removeEventListener": {
+        "prefix": "rel",
+        "body": "${1:document}.removeEventListener('${2:event}', ${3:listener})"
+    },
+    "getElementById": {
+        "prefix": "gi",
+        "body": "${1:document}.getElementById('${2:id}')"
+    },
+    "getElementsByClassName": {
+        "prefix": "gc",
+        "body": "Array.from(${1:document}.getElementsByClassName('${2:class}'))"
+    },
+    "getElementsByTagName": {
+        "prefix": "gt",
+        "body": "Array.from(${1:document}.getElementsByTagName('${2:tag}'))"
+    },
+    "querySelector": {
+        "prefix": "qs",
+        "body": "${1:document}.querySelector('${2:selector}')"
+    },
+    "querySelectorAll": {
+        "prefix": "qsa",
+        "body": "Array.from(${1:document}.querySelectorAll('${2:selector}'))"
+    },
+    "createDocumentFragment": {
+        "prefix": "cdf",
+        "body": "${1:document}.createDocumentFragment(${2:elem})"
+    },
+    "createElement": {
+        "prefix": "cel",
+        "body": "${1:document}.createElement(${2:elem})"
+    },
+    "classList.add": {
+        "prefix": "hecla",
+        "body": "${1:el}.classList.add('${2:class}')"
+    },
+    "classList.remove": {
+        "prefix": "heclr",
+        "body": "${1:el}.classList.remove('${2:class}')"
+    },
+    "classList.toggle": {
+        "prefix": "hect",
+        "body": "${1:el}.classList.toggle('${2:class}')"
+    },
+    "getAttribute": {
+        "prefix": "hega",
+        "body": "${1:el}.getAttribute('${2:attr}')"
+    },
+    "removeAttribute": {
+        "prefix": "hera",
+        "body": "${1:el}.removeAttribute('${2:attr}')"
+    },
+    "setAttribute": {
+        "prefix": "hesa",
+        "body": "${1:el}.setAttribute('${2:attr}', ${3:value})"
+    },
+    "appendChild": {
+        "prefix": "heac",
+        "body": "${1:el}.appendChild(${2:elem})"
+    },
+    "removeChild": {
+        "prefix": "herc",
+        "body": "${1:el}.removeChild(${2:elem})"
+    },
+    "forEach loop": {
+        "prefix": "fe",
+        "body": "${1:iterable}.forEach((${2:item}) => {\n\t${0}\n})"
+    },
+    "map": {
+        "prefix": "map",
+        "body": "${1:iterable}.map((${2:item}) => {\n\t${0}\n})"
+    },
+    "reduce": {
+        "prefix": "reduce",
+        "body": "${1:iterable}.reduce((${2:previous}, ${3:current}) => {\n\t${0}\n}${4:, initial})"
+    },
+    "filter": {
+        "prefix": "filter",
+        "body": "${1:iterable}.filter((${2:item}) => {\n\t${0}\n})"
+    },
+    "find": {
+        "prefix": "find",
+        "body": "${1:iterable}.find((${2:item}) => {\n\t${0}\n})"
+    },
+    "every": {
+        "prefix": "every",
+        "body": "${1:iterable}.every((${2:item}) => {\n\t${0}\n})"
+    },
+    "some": {
+        "prefix": "some",
+        "body": "${1:iterable}.some((${2:item}) => {\n\t${0}\n})"
+    },
+    "var statement": {
+        "prefix": "v",
+        "body": "var ${1:name}"
+    },
+    "var assignment": {
+        "prefix": "va",
+        "body": "var ${1:name} = ${2:value}"
+    },
+    "let statement": {
+        "prefix": "l",
+        "body": "let ${1:name}"
+    },
+    "const statement": {
+        "prefix": "c",
+        "body": "const ${1:name}"
+    },
+    "const statement from destructuring": {
+        "prefix": "cd",
+        "body": "const { ${2:prop} } = ${1:value}"
+    },
+    "const statement from array destructuring": {
+        "prefix": "cad",
+        "body": "const [ ${2:prop} ] = ${1:value}"
+    },
+    "const assignment awaited": {
+        "prefix": "ca",
+        "body": "const ${1:name} = await ${2:value}"
+    },
+    "const destructuring assignment awaited": {
+        "prefix": "cda",
+        "body": "const { ${1:name} } = await ${2:value}"
+    },
+    "const arrow function assignment": {
+        "prefix": "cf",
+        "body": "const ${1:name} = (${2:arguments}) => {\n\treturn ${0}\n}"
+    },
+    "let assignment awaited": {
+        "prefix": "la",
+        "body": "let ${1:name} = await ${2:value}"
+    },
+    "const assignment yielded": {
+        "prefix": "cy",
+        "body": "const ${1:name} = yield ${2:value}"
+    },
+    "let assignment yielded": {
+        "prefix": "ly",
+        "body": "let ${1:name} = yield ${2:value}"
+    },
+    "const object": {
+        "prefix": "co",
+        "body": "const ${1:name} = {\n\t${0}\n}"
+    },
+    "const array": {
+        "prefix": "car",
+        "body": "const ${1:name} = [\n\t${0}\n]"
+    },
+    "generate array of integers starting with 1": {
+        "prefix": "gari",
+        "body": "Array.from({ length: ${1:length} }, (v, k) => k + 1)"
+    },
+    "generate array of integers starting with 0": {
+        "prefix": "gari0",
+        "body": "[...Array(${1:length}).keys()]"
+    },
+    "class": {
+        "prefix": "cs",
+        "body": "class ${1:name} {\n\tconstructor (${2:arguments}) {\n\t\t${0}\n\t}\n}"
+    },
+    "class extends": {
+        "prefix": "csx",
+        "body": "class ${1:name} extends ${2:base} {\n\tconstructor (${3:arguments}) {\n\t\tsuper(${3:arguments})\n\t\t${0}\n\t}\n}"
+    },
+    "module export": {
+        "prefix": "e",
+        "body": "export ${1:member}"
+    },
+    "module export const": {
+        "prefix": "ec",
+        "body": "export const ${1:member} = ${2:value}"
+    },
+    "export named function": {
+        "prefix": "ef",
+        "body": "export function ${1:member} (${2:arguments}) {\n\t${0}\n}"
+    },
+    "module default export": {
+        "prefix": "ed",
+        "body": "export default ${1:member}"
+    },
+    "module default export function": {
+        "prefix": "edf",
+        "body": "export default function ${1:name} (${2:arguments}) {\n\t${0}\n}"
+    },
+    "import module": {
+        "prefix": "im",
+        "body": "import ${2:*} from '${1:module}'"
+    },
+    "import module as": {
+        "prefix": "ia",
+        "body": "import ${2:*} as ${3:name} from '${1:module}'"
+    },
+    "import module destructured": {
+        "prefix": "id",
+        "body": "import {$2} from '${1:module}'"
+    },
+    "typeof": {
+        "prefix": "to",
+        "body": "typeof ${1:source} === '${2:undefined}'"
+    },
+    "this": {
+        "prefix": "t",
+        "body": "this."
+    },
+    "instanceof": {
+        "prefix": "iof",
+        "body": "${1:source} instanceof ${2:Object}"
+    },
+    "let and if statement": {
+        "prefix": "lif",
+        "body": "let ${0} \n if (${2:condition}) {\n\t${1}\n}"
+    },
+    "else statement": {
+        "prefix": "el",
+        "body": "else {\n\t${0}\n}"
+    },
+    "else if statement": {
+        "prefix": "ei",
+        "body": "else if (${1:condition}) {\n\t${0}\n}"
+    },
+    "while iteration decrementing": {
+        "prefix": "wid",
+        "body": "let ${1:array}Index = ${1:array}.length\nwhile (${1:array}Index--) {\n\t${0}\n}"
+    },
+    "throw new Error": {
+        "prefix": "tn",
+        "body": "throw new ${0:error}"
+    },
+    "try/catch": {
+        "prefix": "tc",
+        "body": "try {\n\t${0}\n} catch (${1:err}) {\n\t\n}"
+    },
+    "try/finally": {
+        "prefix": "tf",
+        "body": "try {\n\t${0}\n} finally {\n\t\n}"
+    },
+    "try/catch/finally": {
+        "prefix": "tcf",
+        "body": "try {\n\t${0}\n} catch (${1:err}) {\n\t\n} finally {\n\t\n}"
+    },
+    "anonymous function": {
+        "prefix": "fan",
+        "body": "function (${1:arguments}) {${0}}"
+    },
+    "named function": {
+        "prefix": "fn",
+        "body": "function ${1:name} (${2:arguments}) {\n\t${0}\n}"
+    },
+    "async function": {
+        "prefix": "asf",
+        "body": "async function (${1:arguments}) {\n\t${0}\n}"
+    },
+    "async arrow function": {
+        "prefix": "aa",
+        "body": "async (${1:arguments}) => {\n\t${0}\n}"
+    },
+    "immediately-invoked function expression": {
+        "prefix": "iife",
+        "body": ";(function (${1:arguments}) {\n\t${0}\n})(${2})"
+    },
+    "async immediately-invoked function expression": {
+        "prefix": "aiife",
+        "body": ";(async (${1:arguments}) => {\n\t${0}\n})(${2})"
+    },
+    "arrow function": {
+        "prefix": "af",
+        "body": "(${1:arguments}) => ${2:statement}"
+    },
+    "arrow function with destructuring": {
+        "prefix": "fd",
+        "body": "({${1:arguments}}) => ${2:statement}"
+    },
+    "arrow function with destructuring returning destructured": {
+        "prefix": "fdr",
+        "body": "({${1:arguments}}) => ${1:arguments}"
+    },
+    "arrow function with body": {
+        "prefix": "f",
+        "body": "(${1:arguments}) => {\n\t${0}\n}"
+    },
+    "arrow function with return": {
+        "prefix": "fr",
+        "body": "(${1:arguments}) => {\n\treturn ${0}\n}"
+    },
+    "generator function": {
+        "prefix": "gf",
+        "body": "function* (${1:arguments}) {\n\t${0}\n}"
+    },
+    "named generator": {
+        "prefix": "gfn",
+        "body": "function* ${1:name}(${2:arguments}) {\n\t${0}\n}"
+    },
+    "console.log": {
+        "prefix": "cl",
+        "body": "console.log(${0})"
+    },
+    "console.log with log": {
+        "prefix": "log",
+        "body": "console.log(${0})"
+    },
+    "console.log a variable": {
+        "prefix": "cv",
+        "body": "console.log('${1}:', ${1})"
+    },
+    "console.error": {
+        "prefix": "ce",
+        "body": "console.error(${0})"
+    },
+    "console.warn": {
+        "prefix": "cw",
+        "body": "console.warn(${0})"
+    },
+    "console.dir": {
+        "prefix": "cod",
+        "body": "console.dir('${1}:', ${1})"
+    },
+    "constructor": {
+        "prefix": "cn",
+        "body": "constructor () {\n\t${0}\n}"
+    },
+    "use strict": {
+        "prefix": "uss",
+        "body": "'use strict'"
+    },
+    "JSON.stringify()": {
+        "prefix": "js",
+        "body": "JSON.stringify($0)"
+    },
+    "JSON.parse()": {
+        "prefix": "jp",
+        "body": "JSON.parse($0)"
+    },
+    "method": {
+        "prefix": "m",
+        "body": "${1:method} (${2:arguments}) {\n\t${0}\n}"
+    },
+    "getter": {
+        "prefix": "get",
+        "body": "get ${1:property} () {\n\t${0}\n}"
+    },
+    "setter": {
+        "prefix": "set",
+        "body": "set ${1:property} (${2:value}) {\n\t${0}\n}"
+    },
+    "getter + setter": {
+        "prefix": "gs",
+        "body": "get ${1:property} () {\n\t${0}\n}\nset ${1:property} (${2:value}) {\n\t\n}"
+    },
+    "prototype method": {
+        "prefix": "proto",
+        "body": "${1:Class}.prototype.${2:method} = function (${3:arguments}) {\n\t${0}\n}"
+    },
+    "Object.assign": {
+        "prefix": "oa",
+        "body": "Object.assign(${1:dest}, ${2:source})"
+    },
+    "Object.create": {
+        "prefix": "oc",
+        "body": "Object.create(${1:obj})"
+    },
+    "Object.getOwnPropertyDescriptor": {
+        "prefix": "og",
+        "body": "Object.getOwnPropertyDescriptor(${1:obj}, '${2:prop}')"
+    },
+    "ternary": {
+        "prefix": "te",
+        "body": "${1:cond} ? ${2:true} : ${3:false}"
+    },
+    "ternary assignment": {
+        "prefix": "ta",
+        "body": "const ${0} = ${1:cond} ? ${2:true} : ${3:false}"
+    },
+    "Object.defineProperty": {
+        "prefix": "od",
+        "body": "Object.defineProperty(${1:dest}, '${2:prop}', {\n\t${0}\n})"
+    },
+    "Object.keys": {
+        "prefix": "ok",
+        "body": "Object.keys(${1:obj})"
+    },
+    "Object.values": {
+        "prefix": "ov",
+        "body": "Object.values(${1:obj})"
+    },
+    "Object.entries": {
+        "prefix": "oe",
+        "body": "Object.entries(${1:obj})"
+    },
+    "return": {
+        "prefix": "r",
+        "body": "return ${0}"
+    },
+    "return arrow function": {
+        "prefix": "rf",
+        "body": "return (${1:arguments}) => ${2:statement}"
+    },
+    "yield": {
+        "prefix": "y",
+        "body": "yield ${0}"
+    },
+    "return this": {
+        "prefix": "rt",
+        "body": "return ${0:this}"
+    },
+    "return null": {
+        "prefix": "rn",
+        "body": "return null"
+    },
+    "return new object": {
+        "prefix": "ro",
+        "body": "return {\n\t${0}\n}"
+    },
+    "return new array": {
+        "prefix": "ra",
+        "body": "return [\n\t${0}\n]"
+    },
+    "return promise": {
+        "prefix": "rp",
+        "body": "return new Promise((resolve, reject) => {\n\t${0}\n})"
+    },
+    "wrap selection in arrow function": {
+        "prefix": "wrap selection in arrow function",
+        "body": "() => {\n\t{$TM_SELECTED_TEXT}\n}",
+        "description": "wraps text in arrow function"
+    },
+    "wrap selection in async arrow function": {
+        "prefix": "wrap selection in async arrow function",
+        "body": "async () => {\n\t{$TM_SELECTED_TEXT}\n}",
+        "description": "wraps text in arrow function"
+    },
+    "define module": {
+        "prefix": "define",
+        "body": [
+            "define([",
+            "\t'require',",
+            "\t'${1:dependency}'",
+            "], function(require, ${2:factory}) {",
+            "\t'use strict';",
+            "\t$0",
+            "});"
+        ],
+        "description": "define module"
+    },
+    "For Loop": {
+        "prefix": "for",
+        "body": [
+            "for (let ${1:index} = 0; ${1:index} < ${2:array}.length; ${1:index}++) {",
+            "\tconst ${3:element} = ${2:array}[${1:index}];",
+            "\t$0",
+            "}"
+        ],
+        "description": "For Loop"
+    },
+    "For-Each Loop": {
+        "prefix": "foreach",
+        "body": ["${1:array}.forEach(${2:element} => {", "\t$0", "});"],
+        "description": "For-Each Loop"
+    },
+    "For-In Loop": {
+        "prefix": "forin",
+        "body": [
+            "for (const ${1:key} in ${2:object}) {",
+            "\tif (${2:object}.hasOwnProperty(${1:key})) {",
+            "\t\tconst ${3:element} = ${2:object}[${1:key}];",
+            "\t\t$0",
+            "\t}",
+            "}"
+        ],
+        "description": "For-In Loop"
+    },
+    "For-Of Loop": {
+        "prefix": "forof",
+        "body": ["for (const ${1:iterator} of ${2:object}) {", "\t$0", "}"],
+        "description": "For-Of Loop"
+    },
+    "For-Await-Of Loop": {
+        "prefix": "forawaitof",
+        "body": [
+            "for await (const ${1:iterator} of ${2:object}) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "For-Await-Of Loop"
+    },
+    "Function Statement": {
+        "prefix": "function",
+        "body": ["function ${1:name}(${2:params}) {", "\t$0", "}"],
+        "description": "Function Statement"
+    },
+    "If Statement": {
+        "prefix": "if",
+        "body": ["if (${1:condition}) {", "\t$0", "}"],
+        "description": "If Statement"
+    },
+    "If-Else Statement": {
+        "prefix": "ifelse",
+        "body": ["if (${1:condition}) {", "\t$2", "} else {", "\t$0", "}"],
+        "description": "If-Else Statement"
+    },
+    "New Statement": {
+        "prefix": "new",
+        "body": ["const ${1:name} = new ${2:type}(${3:arguments});$0"],
+        "description": "New Statement"
+    },
+    "Switch Statement": {
+        "prefix": "switch",
+        "body": [
+            "switch (${1:key}) {",
+            "\tcase ${2:value}:",
+            "\t\t$0",
+            "\t\tbreak;",
+            "",
+            "\tdefault:",
+            "\t\tbreak;",
+            "}"
+        ],
+        "description": "Switch Statement"
+    },
+    "While Statement": {
+        "prefix": "while",
+        "body": ["while (${1:condition}) {", "\t$0", "}"],
+        "description": "While Statement"
+    },
+    "Do-While Statement": {
+        "prefix": "dowhile",
+        "body": ["do {", "\t$0", "} while (${1:condition});"],
+        "description": "Do-While Statement"
+    },
+    "Try-Catch Statement": {
+        "prefix": "trycatch",
+        "body": ["try {", "\t$0", "} catch (${1:error}) {", "\t", "}"],
+        "description": "Try-Catch Statement"
+    },
+    "Set Timeout Function": {
+        "prefix": "settimeout",
+        "body": ["setTimeout(() => {", "\t$0", "}, ${1:timeout});"],
+        "description": "Set Timeout Function"
+    },
+    "Set Interval Function": {
+        "prefix": "setinterval",
+        "body": ["setInterval(() => {", "\t$0", "}, ${1:interval});"],
+        "description": "Set Interval Function"
+    },
+    "Import external module.": {
+        "prefix": "import statement",
+        "body": ["import { $0 } from \"${1:module}\";"],
+        "description": "Import external module."
+    },
+    "Region Start": {
+        "prefix": "#region",
+        "body": ["//#region $0"],
+        "description": "Folding Region Start"
+    },
+    "Region End": {
+        "prefix": "#endregion",
+        "body": ["//#endregion"],
+        "description": "Folding Region End"
+    },
+    "Log warning to console": {
+        "prefix": "warn",
+        "body": ["console.warn($1);", "$0"],
+        "description": "Log warning to the console"
+    },
+    "Log error to console": {
+        "prefix": "error",
+        "body": ["console.error($1);", "$0"],
+        "description": "Log error to the console"
+    },
+    "concat": {
+        "prefix": "concat",
+        "body": ["concat($1);", "$0"],
+        "description": "The concat() method concatenates the string arguments to the calling string and returns a new string."
+    },
+    "endsWith": {
+        "prefix": "endsWith",
+        "body": ["endsWith($1);", "$0"],
+        "description": "The endsWith() method determines whether a string ends with the characters of a specified string, returning true or false as appropriate.    "
+    },
+    "fromCharCode": {
+        "prefix": "fromCharCode",
+        "body": ["fromCharCode($1);", "$0"],
+        "description": "The static String.fromCharCode() method returns a string created from the specified sequence of UTF-16 code units."
+    },
+    "includes": {
+        "prefix": "includes",
+        "body": ["includes($1);", "$0"],
+        "description": "The includes() method performs a case-sensitive search to determine whether one string may be found within another string, returning true or false as appropriate."
+    },
+    "indexOf": {
+        "prefix": "indexOf",
+        "body": ["indexOf($1);", "$0"],
+        "description": "The indexOf() method, given one argument: a substring to search for, searches the entire calling string, and returns the index of the first occurrence of the specified substring. Given a second argument: a number, the method returns the first occurrence of the specified substring at an index greater than or equal to the specified number."
+    },
+    "lastIndexOf": {
+        "prefix": "lastIndexOf",
+        "body": ["lastIndexOf($1);", "$0"],
+        "description": "The lastIndexOf() method, given one argument: a substring to search for, searches the entire calling string, and returns the index of the last occurrence of the specified substring. Given a second argument: a number, the method returns the last occurrence of the specified substring at an index less than or equal to the specified number."
+    },
+    "localeCompare": {
+        "prefix": "localeCompare",
+        "body": ["localeCompare($1);", "$0"],
+        "description": "The localeCompare() method returns a number indicating whether a reference string comes before, or after, or is the same as the given string in sort order. In implementations with Intl.Collator API support, this method simply calls Intl.Collator."
+    },
+    "match": {
+        "prefix": "match",
+        "body": ["match($1);", "$0"],
+        "description": "The match() method retrieves the result of matching a string against a regular expression."
+    },
+    "matchAll": {
+        "prefix": "matchAll",
+        "body": ["matchAll($1);", "$0"],
+        "description": "The matchAll() method returns an iterator of all results matching a string against a regular expression, including capturing groups."
+    },
+    "normalize": {
+        "prefix": "normalize",
+        "body": ["normalize($1);", "$0"],
+        "description": "The normalize() method returns the Unicode Normalization Form of the string."
+    },
+    "repeat": {
+        "prefix": "repeat",
+        "body": ["repeat($1);", "$0"],
+        "description": "The repeat() method constructs and returns a new string which contains the specified number of copies of the string on which it was called, concatenated together."
+    },
+    "replace": {
+        "prefix": "replace",
+        "body": ["replace($1, $2);", "$0"],
+        "description": "The replace() method returns a new string with one, some, or all matches of a pattern replaced by a replacement. The pattern can be a string or a RegExp, and the replacement can be a string or a function called for each match. If pattern is a string, only the first occurrence will be replaced. The original string is left unchanged."
+    },
+    "replaceAll": {
+        "prefix": "replaceAll",
+        "body": ["replaceAll($1, $2);", "$0"],
+        "description": "The replaceAll() method returns a new string with all matches of a pattern replaced by a replacement. The pattern can be a string or a RegExp, and the replacement can be a string or a function to be called for each match. The original string is left unchanged."
+    },
+    "search": {
+        "prefix": "search",
+        "body": ["search($1);", "$0"],
+        "description": "The search() method executes a search for a match between a regular expression and this String object."
+    },
+    "slice": {
+        "prefix": "slice",
+        "body": ["slice($1);", "$0"],
+        "description": "The slice() method extracts a section of a string and returns it as a new string, without modifying the original string."
+    },
+    "split": {
+        "prefix": "split",
+        "body": ["split($1);", "$0"],
+        "description": "The split() method takes a pattern and divides a String into an ordered list of substrings by searching for the pattern, puts these substrings into an array, and returns the array."
+    },
+    "startsWith": {
+        "prefix": "startsWith",
+        "body": ["startsWith($1);", "$0"],
+        "description": "The startsWith() method determines whether a string begins with the characters of a specified string, returning true or false as appropriate."
+    },
+    "substring": {
+        "prefix": "substring",
+        "body": ["substring($1);", "$0"],
+        "description": "The substring() method returns the part of the string between the start and end indexes, or to the end of the string."
+    },
+    "toLocaleLowerCase": {
+        "prefix": "toLocaleLowerCase",
+        "body": ["toLocaleLowerCase($1);", "$0"],
+        "description": "The toLocaleLowerCase() method returns the calling string value converted to lower case, according to any locale-specific case mappings."
+    },
+    "toLocaleUpperCase": {
+        "prefix": "toLocaleUpperCase",
+        "body": ["toLocaleUpperCase($1);", "$0"],
+        "description": "The toLocaleUpperCase() method returns the calling string value converted to upper case, according to any locale-specific case mappings."
+    },
+    "toLowerCase": {
+        "prefix": "toLowerCase",
+        "body": ["toLowerCase()"],
+        "description": "The toLowerCase() method returns the calling string value converted to lower case."
+    },
+    "toString": {
+        "prefix": "toString",
+        "body": ["toString()"],
+        "description": "The toString() method returns a string representing the specified string value."
+    },
+    "toUpperCase": {
+        "prefix": "toUpperCase",
+        "body": ["toUpperCase()"],
+        "description": "The toUpperCase() method returns the calling string value converted to uppercase (the value will be converted to a string if it isn't one)."
+    },
+    "valueOf": {
+        "prefix": "valueOf",
+        "body": ["valueOf()"],
+        "description": "The valueOf() method returns the primitive value of a String object."
+    },
+    "isFinite": {
+        "prefix": "isFinite",
+        "body": ["isFinite($1);", "$0"],
+        "description": "The Number.isFinite() method determines whether the passed value is a finite number — that is, it checks that a given value is a number, and the number is neither positive Infinity, negative Infinity, nor NaN."
+    },
+    "parseFloat": {
+        "prefix": "parseFloat",
+        "body": ["parseFloat($1);", "$0"],
+        "description": "The Number.parseFloat() method parses an argument and returns a floating point number. If a number cannot be parsed from the argument, it returns NaN."
+    },
+    "isNaN": {
+        "prefix": "isNaN",
+        "body": ["isNaN($1);", "$0"],
+        "description": "The Number.isNaN() method determines whether the passed value is the number value NaN, and returns false if the input is not of the Number type. It is a more robust version of the original, global isNaN() function."
+    },
+    "parseInt": {
+        "prefix": "parseInt",
+        "body": ["parseInt($1);", "$0"],
+        "description": "The Number.parseInt() method parses a string argument and returns an integer of the specified radix or base."
+    },
+    "toFixed": {
+        "prefix": "toFixed",
+        "body": ["toFixed($1);", "$0"],
+        "description": "The toFixed() method formats a number using fixed-point notation."
+    },
+    "toLocaleString": {
+        "prefix": "toLocaleString",
+        "body": ["toLocaleString($1);", "$0"],
+        "description": "The toLocaleString() method returns a string with a language-sensitive representation of this number. In implementations with Intl.NumberFormat API support, this method simply calls Intl.NumberFormat."
+    },
+    "apply": {
+        "prefix": "apply",
+        "body": ["apply($1);", "$0"],
+        "description": "The apply() method calls the specified function with a given this value, and arguments provided as an array (or an array-like object)."
+    },
+    "bind": {
+        "prefix": "bind",
+        "body": ["bind($1);", "$0"],
+        "description": "The bind() method creates a new function that, when called, has its this keyword set to the provided value, with a given sequence of arguments preceding any provided when the new function is called."
+    },
+    "call": {
+        "prefix": "call",
+        "body": ["call($1);", "$0"],
+        "description": "The call() method calls the function with a given this value and arguments provided individually."
+    },
+    "defineProperties": {
+        "prefix": "defineProperties",
+        "body": ["defineProperties($1, $2);", "$0"],
+        "description": ""
+    },
+    "entries": {
+        "prefix": "entries",
+        "body": ["entries($1);", "$0"],
+        "description": "The Object.entries() method returns an array of a given object's own enumerable string-keyed property key-value pairs."
+    },
+    "values": {
+        "prefix": "values",
+        "body": ["values($1);", "$0"],
+        "description": "The Object.values() method returns an array of a given object's own enumerable string-keyed property values."
+    },
+    "focus": {
+        "prefix": "focus",
+        "body": ["focus()"],
+        "description": "The HTMLElement.focus() method sets focus on the specified element, if it can be focused. The focused element is the element that will receive keyboard and similar events by default."
+    },
+    "blur": {
+        "prefix": "blur",
+        "body": ["blur()"],
+        "description": ""
+    },
+    "innerText": {
+        "prefix": "innerText",
+        "body": ["innerText"],
+        "description": "The innerText property of the HTMLElement interface represents the rendered text content of a node and its descendants."
+    },
+    "push": {
+        "prefix": "push",
+        "body": ["push($1);", "$0"],
+        "description": "The push() method adds one or more elements to the end of an array and returns the new length of the array."
+    },
+    "reverse": {
+        "prefix": "reverse",
+        "body": ["reverse();", "$0"],
+        "description": "The reverse() method reverses an array in place and returns the reference to the same array, the first array element now becoming the last, and the last array element becoming the first. In other words, elements order in the array will be turned towards the direction opposite to that previously stated."
+    },
+    "sort": {
+        "prefix": "sort",
+        "body": ["sort($1);", "$0"],
+        "description": "The sort() method sorts the elements of an array in place and returns the reference to the same array, now sorted. The default sort order is ascending, built upon converting the elements into strings, then comparing their sequences of UTF-16 code units values."
+    },
+    "splice": {
+        "prefix": "splice",
+        "body": ["splice($1);", "$0"],
+        "description": "The splice() method changes the contents of an array by removing or replacing existing elements and/or adding new elements in place. To access part of an array without modifying it, see slice()."
+    },
+    "toJSON": {
+        "prefix": "toJSON",
+        "body": ["toJSON();", "$0"],
+        "description": "The toJSON() method returns a string representation of the Date object."
+    },
+    "toDateString": {
+        "prefix": "toDateString",
+        "body": ["toDateString();", "$0"],
+        "description": ""
+    },
+    "setTime": {
+        "prefix": "setTime",
+        "body": ["setTime($1);", "$0"],
+        "description": "The setTime() method sets the Date object to the time represented by a number of milliseconds since January 1, 1970, 00:00:00 UTC."
+    },
+    "setDate": {
+        "prefix": "setDate",
+        "body": ["setDate($1);", "$0"],
+        "description": "The setDate() method changes the day of the month of a given Date instance, based on local time."
+    }
+}

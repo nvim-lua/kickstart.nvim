@@ -1,0 +1,54 @@
+{
+    "Assert equal": {
+        "prefix": "ase",
+        "body": "self.assertEqual(${1:expected}, ${2:actual}${3:, '${4:message}'})$0"
+    },
+    "Assert not equal": {
+        "prefix": "asne",
+        "body": "self.assertNotEqual(${1:expected}, ${2:actual}${3:, '${4:message}'})$0"
+    },
+    "Assert raises": {
+        "prefix": "asr",
+        "body": "self.assertRaises(${1:exception}, ${2:callable}, ${3:args})$0"
+    },
+    "Assert True": {
+        "prefix": "ast",
+        "body": "self.assertTrue(${1:actual}${2:, '${3:message}'})$0"
+    },
+    "Assert False": {
+        "prefix": "asf",
+        "body": "self.assertFalse(${1:actual}${2:, '${3:message}'})$0"
+    },
+    "Assert is": {
+        "prefix": "asi",
+        "body": "self.assertIs(${1:expected}, ${2:actual}${3:, '${4:message}'})$0"
+    },
+    "Assert is not": {
+        "prefix": "asint",
+        "body": "self.assertIsNot(${1:expected}, ${2:actual}${3:, '${4:message}'})$0"
+    },
+    "Assert is None": {
+        "prefix": "asino",
+        "body": "self.assertIsNone(${1:actual}${2:, '${3:message}'})$0"
+    },
+    "Assert is not None": {
+        "prefix": "asinno",
+        "body": "self.assertIsNotNone(${1:actual}${2:, '${3:message}'})$0"
+    },
+    "Assert in": {
+        "prefix": "asin",
+        "body": "self.assertIn(${1:needle}, ${2:haystack}${3:, '${4:message}'})$0"
+    },
+    "Assert not in": {
+        "prefix": "asni",
+        "body": "self.assertNotIn(${1:needle}, ${2:haystack}${3:, '${4:message}'})$0"
+    },
+    "Assert": {
+        "prefix": "as",
+        "body": "self.assert_(${1:boolean expression}${2:, '${3:message}'})$0"
+    },
+    "Fail (a test)": {
+        "prefix": "fail",
+        "body": "self.fail('${1:message}')$0"
+    }
+}
