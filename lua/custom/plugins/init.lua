@@ -7,4 +7,14 @@ return {
   { 'folke/trouble.nvim', event = 'VimEnter', dependencies = { 'nvim-tree/nvim-web-devicons' }, config = function()
     require('trouble').setup {}
   end },
+
+  -- Mode Manager Plugin (local)
+  {
+    dir = vim.fn.stdpath('config') .. '/lua/custom/plugins/mode_manager',
+    name = 'mode_manager',
+    event = 'VimEnter',
+    config = function()
+      require('custom.plugins.mode_manager').setup()
+    end,
+  },
 }

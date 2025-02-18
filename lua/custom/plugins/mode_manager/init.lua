@@ -94,15 +94,12 @@ end
 local function restore_context(mode)
   local ctx = M.state.contexts[mode]
   if ctx then
-    -- Restore window view
     if ctx.window then
       vim.fn.winrestview(ctx.window)
     end
-    -- Restore cursor position
     if ctx.cursor then
       vim.api.nvim_win_set_cursor(0, ctx.cursor)
     end
-    -- Restore folding
     if ctx.folding then
       vim.wo.foldenable = true
       vim.wo.foldmethod = ctx.folding
@@ -207,7 +204,7 @@ function M.save_state()
       settings = M.state.settings,
       contexts = M.state.contexts,
       last_updated = os.time(),
-      version = '1.0' -- Added versioning
+      version = '1.0'
     }
     file:write(vim.fn.json_encode(persist_state))
     file:close()
@@ -224,13 +221,11 @@ function M.load_state()
     if content and content ~= '' then
       local decoded = vim.fn.json_decode(content)
       if decoded then
-        -- Restore state with validation
         if decoded.version == '1.0' then
           M.state.current_mode = decoded.current_mode
           M.state.settings = decoded.settings or {act = {}, plan = {}}
           M.state.contexts = decoded.contexts or {act = {}, plan = {}}
         else
-          -- Handle older versions or invalid state
           M.state.current_mode = decoded.current_mode or 'act'
           M.state.settings = {act = {}, plan = {}}
           M.state.contexts = {act = {}, plan = {}}
@@ -248,6 +243,16 @@ function M.load_state()
       end
     end
   end
+end
+
+-- Get mode history
+function M.get_history()
+  return M.state.history
+end
+
+-- Clear mode history
+function M.clear_history()
+  M.state.history = {}
 end
 
 -- Initialize the plugin
@@ -270,16 +275,6 @@ function M.setup()
       data = { old_mode = old_mode, new_mode = new_mode }
     })
   end)
-end
-
--- Get mode history
-function M.get_history()
-  return M.state.history
-end
-
--- Clear mode history
-function M.clear_history()
-  M.state.history = {}
 end
 
 return M
