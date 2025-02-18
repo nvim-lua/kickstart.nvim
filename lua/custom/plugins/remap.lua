@@ -34,3 +34,5 @@ vim.keymap.set('n', '<leader>o', '<C-w><C-k>', { desc = 'Move focus to the upper
 --split window maps
 vim.keymap.set('n', '<leader>xs', ':close', { desc = 'Close current window' })
 vim.keymap.set('n', '<leader>s', ':vsplit', { desc = 'Split window vertically' })
+
+return {}
