@@ -874,14 +874,25 @@ require('lazy').setup({
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     'loctvl842/monokai-pro.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
-    init = function()
+    config = function()
+      ---@diagnostic disable-next-line: missing-fields
+      require('tokyonight').setup {
+        styles = {
+          comments = { italic = false }, -- Disable italics in comments
+        },
+      }
+
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+<<<<<<< HEAD
       vim.cmd.colorscheme 'monokai-pro'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
+=======
+      vim.cmd.colorscheme 'tokyonight-night'
+>>>>>>> ebca680 (perf: load tokyonight.nvim in the intended way (#1360))
     end,
   },
 
