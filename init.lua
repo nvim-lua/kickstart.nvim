@@ -86,6 +86,29 @@ P.S. You can delete this when you're done too. It's your config now! :)
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
+
+-- Ensure proper runtime paths
+local rtp = vim.opt.runtimepath:get()
+local nvim_share_path = '/usr/share/nvim'
+if vim.fn.isdirectory(nvim_share_path) == 1 and not vim.tbl_contains(rtp, nvim_share_path) then
+  vim.opt.runtimepath:append(nvim_share_path)
+end
+
+-- Create syntax directory if it doesn't exist
+local syntax_dir = vim.fn.stdpath('config') .. '/syntax'
+if vim.fn.isdirectory(syntax_dir) == 0 then
+  vim.fn.mkdir(syntax_dir, 'p')
+
+  -- Create minimal syntax.vim if it doesn't exist
+  local syntax_file = syntax_dir .. '/syntax.vim'
+  if vim.fn.filereadable(syntax_file) == 0 then
+    local file = io.open(syntax_file, 'w')
+    file:write('\" Base syntax file\n')
+    file:close()
+  end
+end
+
+
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -172,11 +195,11 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
 -- Set up diagnostic keymaps only after VimEnter to ensure diagnostic module is loaded
-vim.api.nvim_create_autocmd('VimEnter', {
-  callback = function()
-    vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
-  end,
-})
+-- vim.api.nvim_create_autocmd('VimEnter', {
+--   callback = function()
+--     vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+--   end,
+-- })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -239,26 +262,51 @@ vim.keymap.set('n', '<leader>taa', ':!make applyA<CR>', opts)
 
 -- [[ JMB End ]]
 
+
+-- Add uri module compatibility layer for older Neovim versions
+if not vim.uri then
+  vim.uri = {
+    -- Basic uri encode/decode functions
+    encode = function(str)
+      return str and str:gsub("\n", "%%0A"):gsub("([^%w-_.~])", function(c)
+        return string.format("%%%02X", string.byte(c))
+      end)
+    end,
+    decode = function(str)
+      return str and str:gsub("%%(%x%x)", function(hex)
+        return string.char(tonumber(hex, 16))
+      end)
+    end
+  }
+end
+
 -- Configure diagnostic display
-vim.diagnostic.config({
-  virtual_text = true,
-  signs = true,
-  underline = true,
-  update_in_insert = false,
-  severity_sort = true,
-})
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
-local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
-  local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
-  if vim.v.shell_error ~= 0 then
-    error('Error cloning lazy.nvim:\n' .. out)
+local function bootstrap_lazy()
+  local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
+  if not (vim.uv or vim.loop).fs_stat(lazypath) then
+    vim.notify('Installing lazy.nvim...', vim.log.levels.INFO)
+    local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
+    local out = vim.fn.system { 
+      'git',
+      'clone',
+      '--filter=blob:none',
+      '--branch=stable',
+      lazyrepo,
+      lazypath
+    }
+    if vim.v.shell_error ~= 0 then
+      error('Error cloning lazy.nvim:\n' .. out)
+    end
+    vim.notify('lazy.nvim installed successfully!', vim.log.levels.INFO)
   end
-end ---@diagnostic disable-next-line: undefined-field
-vim.opt.rtp:prepend(lazypath)
+  vim.opt.rtp:prepend(lazypath)
+end
+
+-- Bootstrap lazy.nvim
+bootstrap_lazy()
 
 -- [[ Configure and install plugins ]]
 --
@@ -493,15 +541,11 @@ require('lazy').setup({
   -- LSP Plugins
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
-    -- used for completion, annotations and signatures of Neovim apis
+    -- used for completion, annotations and signatures of Neovim APIs
     'folke/lazydev.nvim',
-    ft = 'lua',
-    opts = {
-      library = {
-        -- Load luvit types when the `vim.uv` word is found
-        { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
-      },
-    },
+    priority = 1000,
+    -- Simple configuration as recommended by lazydev documentation
+    opts = {}
   },
   {
     -- Main LSP Configuration
@@ -606,6 +650,15 @@ require('lazy').setup({
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
+
+-- Ensure LSP features are available
+local has_lsp, _ = pcall(require, 'vim.lsp')
+if not has_lsp then
+  vim.notify('LSP support not available in this Neovim version', vim.log.levels.WARN)
+  return
+end
+
+
           if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
@@ -1245,6 +1298,20 @@ require('lazy').setup({
 vim.api.nvim_set_keymap('v', '<C-c>', '"+y', { noremap = true, silent = true, desc = 'Copy to system clipboard' })
 vim.api.nvim_set_keymap('n', '<C-v>', '"+p', { noremap = true, silent = true, desc = 'Paste from system clipboard' })
 vim.api.nvim_set_keymap('i', '<C-v>', '<C-r>+', { noremap = true, silent = true, desc = 'Paste from system clipboard in insert mode' })
+
+-- -- Configure diagnostic display after VimEnter to ensure the module is loaded
+-- vim.api.nvim_create_autocmd('VimEnter', {
+--   callback = function()
+--     vim.diagnostic.config({
+--       virtual_text = true,
+--       signs = true,
+--       underline = true,
+--       update_in_insert = false,
+--       severity_sort = true,
+--     })
+--   end,
+-- })
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
