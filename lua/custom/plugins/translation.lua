@@ -1,4 +1,5 @@
 -- 翻译
+-- 选中内容后，leader [T]ranslate
 -- NOTE: 弹出窗中 `g?` 查看操作帮助
 return {
   'potamides/pantran.nvim',
@@ -19,3 +20,4 @@ return {
     vim.keymap.set('x', '<leader>t', pantran.motion_translate, { noremap = true, silent = true, expr = true, desc = '[T]ranslate' })
   end,
 }
+

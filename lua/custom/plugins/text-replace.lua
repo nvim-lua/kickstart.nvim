@@ -1,4 +1,5 @@
 -- 文本替换
+-- :Spectre
 return {
   'nvim-pack/nvim-spectre',
   event = 'BufRead',

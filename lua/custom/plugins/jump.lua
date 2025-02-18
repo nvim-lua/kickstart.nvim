@@ -1,7 +1,8 @@
 -- 快速跳转
+-- 按下 `s` 然后输入需要跳转到的位置的单词
 return {
-  "folke/flash.nvim",
-  event = "VeryLazy",
+  'folke/flash.nvim',
+  event = 'VeryLazy',
   ---@type Flash.Config
   opts = {},
   -- stylua: ignore
@@ -13,3 +14,4 @@ return {
     { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
   },
 }
+

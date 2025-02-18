@@ -1,3 +1,4 @@
+-- 更好的消息提示，命令输入框
 -- 取代 messages, cmdline 和 popupmenu
 return {
   'folke/noice.nvim',
@@ -14,3 +15,4 @@ return {
     -- 'rcarriga/nvim-notify',
   },
 }
+

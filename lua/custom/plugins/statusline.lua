@@ -1,4 +1,4 @@
--- 状态栏
+-- 更好状态栏
 return {
   'nvim-lualine/lualine.nvim',
   dependencies = { 'nvim-tree/nvim-web-devicons' },
