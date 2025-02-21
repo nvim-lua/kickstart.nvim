@@ -135,7 +135,6 @@ vim.opt.signcolumn = 'yes'
 vim.opt.updatetime = 250
 
 -- Decrease mapped sequence wait time
--- Displays which-key popup sooner
 vim.opt.timeoutlen = 300
 
 -- Configure how new splits should be opened
@@ -190,6 +189,290 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+vim.api.nvim_set_keymap('c', '%%', "<C-R>=expand('%:h').'/'<CR>", { noremap = true, silent = true })
+
+-- Configuration file path
+local config_path = vim.fn.expand '~/.config/nvim/obsidian_vaults.json'
+
+-- Initialize vaults table
+local vaults = {}
+
+-- Pre-declare functions that are used before their definition
+local save_vault_configs
+
+-- Function to save vault configurations
+save_vault_configs = function()
+  local f = io.open(config_path, 'w')
+  if f then
+    f:write(vim.json.encode(vaults))
+    f:close()
+  end
+end
+
+-- Function to load vault configurations
+local function load_vault_configs()
+  -- Check if config file exists
+  local f = io.open(config_path, 'r')
+  if f then
+    local content = f:read '*all'
+    f:close()
+
+    -- Parse JSON content
+    local ok, parsed = pcall(vim.json.decode, content)
+    if ok then
+      vaults = parsed
+    end
+  end
+
+  -- Ensure at least one default vault exists
+  if #vaults == 0 then
+    vaults = {
+      {
+        name = 'cavelazquez8-wiki',
+        path = '/home/cavelazquez8/cavelazquez8-wiki/',
+      },
+    }
+    -- Save the default configuration
+    save_vault_configs()
+  end
+end
+
+-- Load existing configurations at startup
+load_vault_configs()
+
+-- Function to find which vault a file belongs to
+local function find_containing_vault(filepath)
+  for _, vault in ipairs(vaults) do
+    if filepath:find('^' .. vim.pesc(vault.path)) then
+      return vault, filepath:gsub('^' .. vim.pesc(vault.path), '')
+    end
+  end
+  return nil, nil
+end
+
+-- Function to URL-encode strings
+local function url_encode(str)
+  local handle = io.popen('python3 -c "import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1]))" ' .. "'" .. str .. "'")
+  local result = handle:read '*a'
+  handle:close()
+  return result:gsub('\n', '')
+end
+
+-- Function to close Obsidian
+local function close_obsidian()
+  os.execute 'pkill -9 -f obsidian'
+  print 'Closed Obsidian instance(s).'
+end
+
+-- Improved function to add a new vault configuration
+function AddObsidianVault(name, path)
+  -- Ensure path ends with a slash
+  if not path:match '/$' then
+    path = path .. '/'
+  end
+
+  -- Check if vault already exists
+  for _, vault in ipairs(vaults) do
+    if vault.name == name then
+      print("Vault with name '" .. name .. "' already exists!")
+      return
+    end
+    if vault.path == path then
+      print("Vault with path '" .. path .. "' already exists!")
+      return
+    end
+  end
+
+  -- Add to vaults table
+  table.insert(vaults, { name = name, path = path })
+
+  -- Create temp directory
+  local temp_dir = path .. '_temp_preview/'
+  os.execute("mkdir -p '" .. temp_dir .. "'")
+
+  -- Save updated configuration
+  save_vault_configs()
+
+  print('Added Obsidian vault: ' .. name .. ' at ' .. path)
+end
+
+-- Function to remove a vault configuration
+function RemoveObsidianVault(name)
+  for i, vault in ipairs(vaults) do
+    if vault.name == name then
+      table.remove(vaults, i)
+      save_vault_configs()
+      print('Removed Obsidian vault: ' .. name)
+      return
+    end
+  end
+  print("Vault '" .. name .. "' not found!")
+end
+
+-- Function to list all configured vaults
+function ListObsidianVaults()
+  print 'Configured Obsidian vaults:'
+  for _, vault in ipairs(vaults) do
+    print(string.format('- %s: %s', vault.name, vault.path))
+  end
+end
+
+-- Function to open any markdown file in Obsidian
+local function open_in_obsidian()
+  local filepath = vim.fn.expand '%:p'
+
+  if filepath == '' then
+    print 'No file to open!'
+    return
+  end
+
+  -- Check if file is markdown
+  if not filepath:match '%.md$' then
+    print 'Not a markdown file. Only markdown files can be opened in Obsidian.'
+    return
+  end
+
+  -- Find if file belongs to a known vault
+  local containing_vault, relative_path = find_containing_vault(filepath)
+
+  if containing_vault then
+    -- File is inside a known vault
+    local encoded_path = url_encode(relative_path)
+    local uri = 'obsidian://open?vault=' .. containing_vault.name .. '&file=' .. encoded_path
+
+    print("Opening in Obsidian vault '" .. containing_vault.name .. "': " .. relative_path)
+    vim.fn.jobstart({ 'xdg-open', uri }, { detach = true })
+  else
+    -- File is outside any known vault - create a symlink in the first vault
+    local default_vault = vaults[1]
+    local file_basename = vim.fn.fnamemodify(filepath, ':t')
+    local temp_link_name = '_temp_preview/' .. file_basename
+    local temp_link_path = default_vault.path .. temp_link_name
+
+    -- Remove any existing link
+    os.execute("rm -f '" .. temp_link_path .. "'")
+
+    -- Create the symlink
+    os.execute("ln -sf '" .. filepath .. "' '" .. temp_link_path .. "'")
+
+    -- Register autocmd to clean up the symlink when the buffer is closed
+    vim.api.nvim_create_autocmd({ 'BufDelete', 'BufWipeout' }, {
+      buffer = vim.api.nvim_get_current_buf(),
+      callback = function()
+        os.execute("rm -f '" .. temp_link_path .. "'")
+      end,
+    })
+
+    -- Open in default vault
+    local encoded_path = url_encode(temp_link_name)
+    local uri = 'obsidian://open?vault=' .. default_vault.name .. '&file=' .. encoded_path
+
+    print('Opening external file in default Obsidian vault: ' .. temp_link_name)
+    vim.fn.jobstart({ 'xdg-open', uri }, { detach = true })
+  end
+end
+
+-- Create the which-key keymap group
+local ok, wk = pcall(require, 'which-key')
+if ok then
+  wk.register {
+    ['<leader>o'] = {
+      name = 'Obsidian',
+      o = { open_in_obsidian, 'Open in Obsidian' },
+      c = { close_obsidian, 'Close Obsidian' },
+      l = { ListObsidianVaults, 'List Vaults' },
+      a = {
+        function()
+          vim.ui.input({ prompt = 'Vault name: ' }, function(name)
+            if name then
+              vim.ui.input({ prompt = 'Vault path: ' }, function(path)
+                if path then
+                  AddObsidianVault(name, path)
+                end
+              end)
+            end
+          end)
+        end,
+        'Add Vault',
+      },
+      r = {
+        function()
+          vim.ui.input({ prompt = 'Vault name to remove: ' }, function(name)
+            if name then
+              RemoveObsidianVault(name)
+            end
+          end)
+        end,
+        'Remove Vault',
+      },
+    },
+  }
+else
+  -- Fallback keymaps if which-key is not available
+  local opts = { noremap = true, silent = true }
+  vim.keymap.set('n', '<leader>oo', open_in_obsidian, opts)
+  vim.keymap.set('n', '<leader>oc', close_obsidian, opts)
+  vim.keymap.set('n', '<leader>ol', ListObsidianVaults, opts)
+  vim.keymap.set('n', '<leader>oa', function()
+    vim.ui.input({ prompt = 'Vault name: ' }, function(name)
+      if name then
+        vim.ui.input({ prompt = 'Vault path: ' }, function(path)
+          if path then
+            AddObsidianVault(name, path)
+          end
+        end)
+      end
+    end)
+  end, opts)
+  vim.keymap.set('n', '<leader>or', function()
+    vim.ui.input({ prompt = 'Vault name to remove: ' }, function(name)
+      if name then
+        RemoveObsidianVault(name)
+      end
+    end)
+  end, opts)
+end
+
+-- Create user commands
+vim.api.nvim_create_user_command('OpenInObsidian', open_in_obsidian, {})
+vim.api.nvim_create_user_command('CloseObsidian', close_obsidian, {})
+vim.api.nvim_create_user_command('AddObsidianVault', function(opts)
+  local args = opts.args
+  local parts = {}
+  for part in string.gmatch(args, '%S+') do
+    table.insert(parts, part)
+  end
+
+  if #parts ~= 2 then
+    print 'Usage: AddObsidianVault <vault_name> <vault_path>'
+    return
+  end
+
+  AddObsidianVault(parts[1], parts[2])
+end, { nargs = '+' })
+
+vim.api.nvim_create_user_command('RemoveObsidianVault', function(opts)
+  RemoveObsidianVault(opts.args)
+end, { nargs = 1 })
+
+vim.api.nvim_create_user_command('ListObsidianVaults', ListObsidianVaults, {})
+
+-- Enable autoread
+vim.o.autoread = true
+vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter' }, {
+  callback = function()
+    vim.cmd 'checktime'
+  end,
+})
+
+-- Cleanup temp directories on exit
+vim.api.nvim_create_autocmd('VimLeavePre', {
+  callback = function()
+    for _, vault in ipairs(vaults) do
+      os.execute("rm -rf '" .. vault.path .. "_temp_preview/'*")
+    end
+  end,
+})
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -204,6 +487,12 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+vim.api.nvim_exec(
+  [[
+        autocmd BufNewFile ~/cavelazquez8-wiki/diary/*.md :silent 0r !~/.vim/autoload/vimwiki/generate-vimwiki-diary-template '%'
+    ]],
+  false
+)
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -235,12 +524,22 @@ require('lazy').setup({
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
   --
-  -- Use `opts = {}` to force a plugin to be loaded.
+  -- Use `opts = {}` to automatically pass options to a plugin's `setup()` function, forcing the plugin to be loaded.
   --
 
+  -- Alternatively, use `config = function() ... end` for full control over the configuration.
+  -- If you prefer to call `setup` explicitly, use:
+  --    {
+  --        'lewis6991/gitsigns.nvim',
+  --        config = function()
+  --            require('gitsigns').setup({
+  --                -- Your gitsigns configuration here
+  --            })
+  --        end,
+  --    }
+  --
   -- Here is a more advanced example where we pass configuration
-  -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
-  --    require('gitsigns').setup({ ... })
+  -- options to `gitsigns.nvim`.
   --
   -- See `:help gitsigns` to understand what the configuration keys do
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
@@ -267,19 +566,21 @@ require('lazy').setup({
   -- which loads which-key before all the UI elements are loaded. Events can be
   -- normal autocommands events (`:help autocmd-events`).
   --
-  -- Then, because we use the `config` key, the configuration only runs
-  -- after the plugin has been loaded:
-  --  config = function() ... end
+  -- Then, because we use the `opts` key (recommended), the configuration runs
+  -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
 
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
+      -- delay between pressing a key and opening which-key (milliseconds)
+      -- this setting is independent of vim.opt.timeoutlen
+      delay = 0,
       icons = {
         -- set icon mappings to true if you have a Nerd Font
         mappings = vim.g.have_nerd_font,
         -- If you are using a Nerd Font: set icons.keys to an empty table which will use the
-        -- default whick-key.nvim defined Nerd Font icons, otherwise define a string table
+        -- default which-key.nvim defined Nerd Font icons, otherwise define a string table
         keys = vim.g.have_nerd_font and {} or {
           Up = '<Up> ',
           Down = '<Down> ',
@@ -446,22 +747,22 @@ require('lazy').setup({
     opts = {
       library = {
         -- Load luvit types when the `vim.uv` word is found
-        { path = 'luvit-meta/library', words = { 'vim%.uv' } },
+        { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
       },
     },
   },
-  { 'Bilal2453/luvit-meta', lazy = true },
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
-      { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
+      -- Mason must be loaded before its dependents so we need to set it up here.
+      -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
+      { 'williamboman/mason.nvim', opts = {} },
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', opts = {} },
 
       -- Allows extra capabilities provided by nvim-cmp
@@ -547,13 +848,26 @@ require('lazy').setup({
           --  For example, in C this would take you to the header.
           map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
+          -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
+          ---@param client vim.lsp.Client
+          ---@param method vim.lsp.protocol.Method
+          ---@param bufnr? integer some lsp support methods only in specific files
+          ---@return boolean
+          local function client_supports_method(client, method, bufnr)
+            if vim.fn.has 'nvim-0.11' == 1 then
+              return client:supports_method(method, bufnr)
+            else
+              return client.supports_method(method, { bufnr = bufnr })
+            end
+          end
+
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
-          if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+          if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
@@ -580,13 +894,42 @@ require('lazy').setup({
           -- code, if the language server you are using supports them
           --
           -- This may be unwanted, since they displace some of your code
-          if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+          if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
             map('<leader>th', function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
             end, '[T]oggle Inlay [H]ints')
           end
         end,
       })
+
+      -- Diagnostic Config
+      -- See :help vim.diagnostic.Opts
+      vim.diagnostic.config {
+        severity_sort = true,
+        float = { border = 'rounded', source = 'if_many' },
+        underline = { severity = vim.diagnostic.severity.ERROR },
+        signs = vim.g.have_nerd_font and {
+          text = {
+            [vim.diagnostic.severity.ERROR] = '󰅚 ',
+            [vim.diagnostic.severity.WARN] = '󰀪 ',
+            [vim.diagnostic.severity.INFO] = '󰋽 ',
+            [vim.diagnostic.severity.HINT] = '󰌶 ',
+          },
+        } or {},
+        virtual_text = {
+          source = 'if_many',
+          spacing = 2,
+          format = function(diagnostic)
+            local diagnostic_message = {
+              [vim.diagnostic.severity.ERROR] = diagnostic.message,
+              [vim.diagnostic.severity.WARN] = diagnostic.message,
+              [vim.diagnostic.severity.INFO] = diagnostic.message,
+              [vim.diagnostic.severity.HINT] = diagnostic.message,
+            }
+            return diagnostic_message[diagnostic.severity]
+          end,
+        },
+      }
 
       -- LSP servers and clients are able to communicate to each other what features they support.
       --  By default, Neovim doesn't support everything that is in the LSP specification.
@@ -619,8 +962,8 @@ require('lazy').setup({
         --
 
         lua_ls = {
-          -- cmd = {...},
-          -- filetypes = { ...},
+          -- cmd = { ... },
+          -- filetypes = { ... },
           -- capabilities = {},
           settings = {
             Lua = {
@@ -635,13 +978,16 @@ require('lazy').setup({
       }
 
       -- Ensure the servers and tools above are installed
-      --  To check the current status of installed tools and/or manually install
-      --  other tools, you can run
+      --
+      -- To check the current status of installed tools and/or manually install
+      -- other tools, you can run
       --    :Mason
       --
-      --  You can press `g?` for help in this menu.
-      require('mason').setup()
-
+      -- You can press `g?` for help in this menu.
+      --
+      -- `mason` had to be setup earlier: to configure its options see the
+      -- `dependencies` table for `nvim-lspconfig` above.
+      --
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
@@ -746,6 +1092,8 @@ require('lazy').setup({
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-path',
+      'hrsh7th/cmp-nvim-lsp-signature-help',
     },
     config = function()
       -- See `:help cmp`
@@ -822,6 +1170,7 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+          { name = 'nvim_lsp_signature_help' },
         },
       }
     end,
@@ -834,14 +1183,18 @@ require('lazy').setup({
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     'folke/tokyonight.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
-    init = function()
+    config = function()
+      ---@diagnostic disable-next-line: missing-fields
+      require('tokyonight').setup {
+        styles = {
+          comments = { italic = false }, -- Disable italics in comments
+        },
+      }
+
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       vim.cmd.colorscheme 'tokyonight-night'
-
-      -- You can configure highlights by doing something like:
-      vim.cmd.hi 'Comment gui=none'
     end,
   },
 
@@ -911,7 +1264,7 @@ require('lazy').setup({
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
 
-  -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
+  -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
 
@@ -931,8 +1284,11 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
+  -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
+  -- Or use telescope!
+  -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
+  -- you can continue same window with `<space>sr` which resumes last telescope search
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
