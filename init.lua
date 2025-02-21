@@ -190,6 +190,114 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 vim.api.nvim_set_keymap('c', '%%', "<C-R>=expand('%:h').'/'<CR>", { noremap = true, silent = true })
+-- Opening markdown file from neovim to Obsidian
+-- Default vault settings
+local default_vault_name = 'cavelazquez8-wiki'
+local default_vault_path = '/home/cavelazquez8/cavelazquez8-wiki/'
+
+-- Ensure the temp directory exists within your vault
+local temp_dir = default_vault_path .. '_temp_preview/'
+os.execute("mkdir -p '" .. temp_dir .. "'")
+
+-- Function to URL-encode strings
+local function url_encode(str)
+  local handle = io.popen('python3 -c "import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1]))" ' .. "'" .. str .. "'")
+  local result = handle:read '*a'
+  handle:close()
+  return result:gsub('\n', '')
+end
+
+-- Function to open any markdown file in Obsidian
+local function open_in_obsidian()
+  local filepath = vim.fn.expand '%:p'
+
+  if filepath == '' then
+    print 'No file to open!'
+    return
+  end
+
+  -- Check if file is markdown
+  if not filepath:match '%.md$' then
+    print 'Not a markdown file. Only markdown files can be opened in Obsidian.'
+    return
+  end
+
+  -- Determine if file is inside default vault or needs to be symlinked
+  local vault_name = default_vault_name
+  local relative_path
+
+  if filepath:find('^' .. vim.pesc(default_vault_path)) then
+    -- File is inside the vault
+    relative_path = filepath:gsub('^' .. vim.pesc(default_vault_path), '')
+  else
+    -- File is outside the vault - create a symlink
+    local file_basename = vim.fn.fnamemodify(filepath, ':t')
+    local temp_link_name = '_temp_preview/' .. file_basename
+    local temp_link_path = default_vault_path .. temp_link_name
+
+    -- Remove any existing link
+    os.execute("rm -f '" .. temp_link_path .. "'")
+
+    -- Create the symlink
+    os.execute("ln -sf '" .. filepath .. "' '" .. temp_link_path .. "'")
+
+    relative_path = temp_link_name
+
+    -- Register autocmd to clean up the symlink when the buffer is closed
+    vim.api.nvim_create_autocmd({ 'BufDelete', 'BufWipeout' }, {
+      buffer = vim.api.nvim_get_current_buf(),
+      callback = function()
+        os.execute("rm -f '" .. temp_link_path .. "'")
+      end,
+    })
+  end
+
+  -- Create and open the Obsidian URI
+  local encoded_path = url_encode(relative_path)
+  local uri = 'obsidian://open?vault=' .. vault_name .. '&file=' .. encoded_path
+
+  print('Opening in Obsidian: ' .. relative_path)
+  vim.fn.jobstart({ 'xdg-open', uri }, { detach = true })
+end
+
+-- Function to close Obsidian
+local function close_obsidian()
+  os.execute 'pkill -9 -f obsidian'
+  print 'Closed Obsidian instance(s).'
+end
+
+-- Create user commands and key mappings
+vim.api.nvim_create_user_command('OpenInObsidian', open_in_obsidian, {})
+vim.api.nvim_create_user_command('CloseObsidian', close_obsidian, {})
+vim.keymap.set('n', '<leader>o', open_in_obsidian, { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>co', close_obsidian, { noremap = true, silent = true })
+
+-- Enable autoread so that if the file changes externally (or via Obsidian) Neovim reloads it
+vim.o.autoread = true
+vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter' }, {
+  callback = function()
+    vim.cmd 'checktime'
+  end,
+})
+
+-- Use a trap-based approach for VimLeave to ensure it runs before Neovim fully exits
+vim.api.nvim_create_autocmd('UIEnter', {
+  once = true,
+  callback = function()
+    -- Get Neovim's PID
+    local nvim_pid = vim.fn.getpid()
+
+    -- Create a trap in the parent shell that will kill Obsidian when Neovim exits
+    os.execute(string.format("trap 'pkill -9 -f obsidian' EXIT && " .. 'while kill -0 %d 2>/dev/null; do sleep 0.01; done & disown', nvim_pid))
+  end,
+})
+
+-- Cleanup temp directory on exit
+vim.api.nvim_create_autocmd('VimLeavePre', {
+  callback = function()
+    os.execute("rm -rf '" .. temp_dir .. "'/*")
+  end,
+})
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -205,6 +313,12 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+vim.api.nvim_exec(
+  [[
+        autocmd BufNewFile ~/cavelazquez8-wiki/diary/*.md :silent 0r !~/.vim/autoload/vimwiki/generate-vimwiki-diary-template '%'
+    ]],
+  false
+)
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -993,7 +1107,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-   { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`

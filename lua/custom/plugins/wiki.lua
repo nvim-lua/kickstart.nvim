@@ -6,6 +6,7 @@ return {
     --    { "<leader>wz", "<cmd>Vimwiki2HTML<cr>", desc = "Vimwiki2HTML" },
     --   { "<leader>wx", "<cmd>VimwikiAll2HTML<cr>", desc = "VimwikiAll2HTML" },
   },
+  cmd = 'VimwikiIndex', -- Add this command to load Vimwiki
   init = function()
     vim.g.vimwiki_list = {
       {
@@ -16,9 +17,10 @@ return {
         --   custom_wiki2html = "~/.vim/autoload/vimwiki/convert.py",
         -- Auto update diary index
         auto_diary_index = 1,
+        links_space_char = '-', -- Replace spaces with hyphens in links
       },
     }
-    -- Treat markdown files as markdown files, not wiki files
+    -- Register markdown files
     -- vim.g.vimwiki_ext2syntax = {
     -- ['.md'] = 'markdown',
     --   ['.markdown'] = 'markdown',
