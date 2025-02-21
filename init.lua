@@ -461,7 +461,6 @@ require('lazy').setup({
       { 'williamboman/mason.nvim', opts = {} },
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-      'nvim-java/nvim-java',
 
       -- Useful status updates for LSP.
       { 'j-hui/fidget.nvim', opts = {} },
@@ -663,7 +662,6 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
-        'jdtls',
         'prettier',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -674,17 +672,7 @@ require('lazy').setup({
           ['<C-j>'] = cmp.mapping.scroll_docs(4),
         },
       }
-      capabilities.textDocument.completion.completionItem.resolveSupport.properties = {
-        'documentation',
-        'detail',
-        'additionalTextEdits',
-        'sortText',
-        'filterText',
-        'insertText',
-        'textEdit',
-        'insertTextFormat',
-        'insertTextMode',
-      }
+
       require('mason-lspconfig').setup {
         handlers = {
           function(server_name)
@@ -694,29 +682,6 @@ require('lazy').setup({
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
-          end,
-          jdtls = function()
-            require('java').setup {}
-            require('lspconfig').jdtls.setup {
-              settings = {
-                java = {
-                  configuration = {
-                    runtimes = {
-                      { name = 'JavaSE-21', path = '/home/lucas/.sdkman/candidates/java/21.0.2-open', default = true },
-                      { name = 'JavaSE-11', path = '/home/lucas/.sdkman/candidates/java/11.0.22-ms', default = false },
-                    },
-                  },
-                  formatting = {
-                    settings = { url = '/home/lucas/Magna_Sistemas.xml' },
-                  },
-                  signatureHelp = {
-                    enabled = true,
-                    description = { enabled = true },
-                  },
-                },
-              },
-              capabilities = capabilities,
-            }
           end,
         },
       }
