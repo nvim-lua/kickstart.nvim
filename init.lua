@@ -190,14 +190,65 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 vim.api.nvim_set_keymap('c', '%%', "<C-R>=expand('%:h').'/'<CR>", { noremap = true, silent = true })
--- Opening markdown file from neovim to Obsidian
--- Default vault settings
-local default_vault_name = 'cavelazquez8-wiki'
-local default_vault_path = '/home/cavelazquez8/cavelazquez8-wiki/'
 
--- Ensure the temp directory exists within your vault
-local temp_dir = default_vault_path .. '_temp_preview/'
-os.execute("mkdir -p '" .. temp_dir .. "'")
+-- Configuration file path
+local config_path = vim.fn.expand '~/.config/nvim/obsidian_vaults.json'
+
+-- Initialize vaults table
+local vaults = {}
+
+-- Pre-declare functions that are used before their definition
+local save_vault_configs
+
+-- Function to save vault configurations
+save_vault_configs = function()
+  local f = io.open(config_path, 'w')
+  if f then
+    f:write(vim.json.encode(vaults))
+    f:close()
+  end
+end
+
+-- Function to load vault configurations
+local function load_vault_configs()
+  -- Check if config file exists
+  local f = io.open(config_path, 'r')
+  if f then
+    local content = f:read '*all'
+    f:close()
+
+    -- Parse JSON content
+    local ok, parsed = pcall(vim.json.decode, content)
+    if ok then
+      vaults = parsed
+    end
+  end
+
+  -- Ensure at least one default vault exists
+  if #vaults == 0 then
+    vaults = {
+      {
+        name = 'cavelazquez8-wiki',
+        path = '/home/cavelazquez8/cavelazquez8-wiki/',
+      },
+    }
+    -- Save the default configuration
+    save_vault_configs()
+  end
+end
+
+-- Load existing configurations at startup
+load_vault_configs()
+
+-- Function to find which vault a file belongs to
+local function find_containing_vault(filepath)
+  for _, vault in ipairs(vaults) do
+    if filepath:find('^' .. vim.pesc(vault.path)) then
+      return vault, filepath:gsub('^' .. vim.pesc(vault.path), '')
+    end
+  end
+  return nil, nil
+end
 
 -- Function to URL-encode strings
 local function url_encode(str)
@@ -205,6 +256,65 @@ local function url_encode(str)
   local result = handle:read '*a'
   handle:close()
   return result:gsub('\n', '')
+end
+
+-- Function to close Obsidian
+local function close_obsidian()
+  os.execute 'pkill -9 -f obsidian'
+  print 'Closed Obsidian instance(s).'
+end
+
+-- Improved function to add a new vault configuration
+function AddObsidianVault(name, path)
+  -- Ensure path ends with a slash
+  if not path:match '/$' then
+    path = path .. '/'
+  end
+
+  -- Check if vault already exists
+  for _, vault in ipairs(vaults) do
+    if vault.name == name then
+      print("Vault with name '" .. name .. "' already exists!")
+      return
+    end
+    if vault.path == path then
+      print("Vault with path '" .. path .. "' already exists!")
+      return
+    end
+  end
+
+  -- Add to vaults table
+  table.insert(vaults, { name = name, path = path })
+
+  -- Create temp directory
+  local temp_dir = path .. '_temp_preview/'
+  os.execute("mkdir -p '" .. temp_dir .. "'")
+
+  -- Save updated configuration
+  save_vault_configs()
+
+  print('Added Obsidian vault: ' .. name .. ' at ' .. path)
+end
+
+-- Function to remove a vault configuration
+function RemoveObsidianVault(name)
+  for i, vault in ipairs(vaults) do
+    if vault.name == name then
+      table.remove(vaults, i)
+      save_vault_configs()
+      print('Removed Obsidian vault: ' .. name)
+      return
+    end
+  end
+  print("Vault '" .. name .. "' not found!")
+end
+
+-- Function to list all configured vaults
+function ListObsidianVaults()
+  print 'Configured Obsidian vaults:'
+  for _, vault in ipairs(vaults) do
+    print(string.format('- %s: %s', vault.name, vault.path))
+  end
 end
 
 -- Function to open any markdown file in Obsidian
@@ -222,26 +332,28 @@ local function open_in_obsidian()
     return
   end
 
-  -- Determine if file is inside default vault or needs to be symlinked
-  local vault_name = default_vault_name
-  local relative_path
+  -- Find if file belongs to a known vault
+  local containing_vault, relative_path = find_containing_vault(filepath)
 
-  if filepath:find('^' .. vim.pesc(default_vault_path)) then
-    -- File is inside the vault
-    relative_path = filepath:gsub('^' .. vim.pesc(default_vault_path), '')
+  if containing_vault then
+    -- File is inside a known vault
+    local encoded_path = url_encode(relative_path)
+    local uri = 'obsidian://open?vault=' .. containing_vault.name .. '&file=' .. encoded_path
+
+    print("Opening in Obsidian vault '" .. containing_vault.name .. "': " .. relative_path)
+    vim.fn.jobstart({ 'xdg-open', uri }, { detach = true })
   else
-    -- File is outside the vault - create a symlink
+    -- File is outside any known vault - create a symlink in the first vault
+    local default_vault = vaults[1]
     local file_basename = vim.fn.fnamemodify(filepath, ':t')
     local temp_link_name = '_temp_preview/' .. file_basename
-    local temp_link_path = default_vault_path .. temp_link_name
+    local temp_link_path = default_vault.path .. temp_link_name
 
     -- Remove any existing link
     os.execute("rm -f '" .. temp_link_path .. "'")
 
     -- Create the symlink
     os.execute("ln -sf '" .. filepath .. "' '" .. temp_link_path .. "'")
-
-    relative_path = temp_link_name
 
     -- Register autocmd to clean up the symlink when the buffer is closed
     vim.api.nvim_create_autocmd({ 'BufDelete', 'BufWipeout' }, {
@@ -250,29 +362,102 @@ local function open_in_obsidian()
         os.execute("rm -f '" .. temp_link_path .. "'")
       end,
     })
+
+    -- Open in default vault
+    local encoded_path = url_encode(temp_link_name)
+    local uri = 'obsidian://open?vault=' .. default_vault.name .. '&file=' .. encoded_path
+
+    print('Opening external file in default Obsidian vault: ' .. temp_link_name)
+    vim.fn.jobstart({ 'xdg-open', uri }, { detach = true })
   end
-
-  -- Create and open the Obsidian URI
-  local encoded_path = url_encode(relative_path)
-  local uri = 'obsidian://open?vault=' .. vault_name .. '&file=' .. encoded_path
-
-  print('Opening in Obsidian: ' .. relative_path)
-  vim.fn.jobstart({ 'xdg-open', uri }, { detach = true })
 end
 
--- Function to close Obsidian
-local function close_obsidian()
-  os.execute 'pkill -9 -f obsidian'
-  print 'Closed Obsidian instance(s).'
+-- Create the which-key keymap group
+local ok, wk = pcall(require, 'which-key')
+if ok then
+  wk.register {
+    ['<leader>o'] = {
+      name = 'Obsidian',
+      o = { open_in_obsidian, 'Open in Obsidian' },
+      c = { close_obsidian, 'Close Obsidian' },
+      l = { ListObsidianVaults, 'List Vaults' },
+      a = {
+        function()
+          vim.ui.input({ prompt = 'Vault name: ' }, function(name)
+            if name then
+              vim.ui.input({ prompt = 'Vault path: ' }, function(path)
+                if path then
+                  AddObsidianVault(name, path)
+                end
+              end)
+            end
+          end)
+        end,
+        'Add Vault',
+      },
+      r = {
+        function()
+          vim.ui.input({ prompt = 'Vault name to remove: ' }, function(name)
+            if name then
+              RemoveObsidianVault(name)
+            end
+          end)
+        end,
+        'Remove Vault',
+      },
+    },
+  }
+else
+  -- Fallback keymaps if which-key is not available
+  local opts = { noremap = true, silent = true }
+  vim.keymap.set('n', '<leader>oo', open_in_obsidian, opts)
+  vim.keymap.set('n', '<leader>oc', close_obsidian, opts)
+  vim.keymap.set('n', '<leader>ol', ListObsidianVaults, opts)
+  vim.keymap.set('n', '<leader>oa', function()
+    vim.ui.input({ prompt = 'Vault name: ' }, function(name)
+      if name then
+        vim.ui.input({ prompt = 'Vault path: ' }, function(path)
+          if path then
+            AddObsidianVault(name, path)
+          end
+        end)
+      end
+    end)
+  end, opts)
+  vim.keymap.set('n', '<leader>or', function()
+    vim.ui.input({ prompt = 'Vault name to remove: ' }, function(name)
+      if name then
+        RemoveObsidianVault(name)
+      end
+    end)
+  end, opts)
 end
 
--- Create user commands and key mappings
+-- Create user commands
 vim.api.nvim_create_user_command('OpenInObsidian', open_in_obsidian, {})
 vim.api.nvim_create_user_command('CloseObsidian', close_obsidian, {})
-vim.keymap.set('n', '<leader>o', open_in_obsidian, { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>co', close_obsidian, { noremap = true, silent = true })
+vim.api.nvim_create_user_command('AddObsidianVault', function(opts)
+  local args = opts.args
+  local parts = {}
+  for part in string.gmatch(args, '%S+') do
+    table.insert(parts, part)
+  end
 
--- Enable autoread so that if the file changes externally (or via Obsidian) Neovim reloads it
+  if #parts ~= 2 then
+    print 'Usage: AddObsidianVault <vault_name> <vault_path>'
+    return
+  end
+
+  AddObsidianVault(parts[1], parts[2])
+end, { nargs = '+' })
+
+vim.api.nvim_create_user_command('RemoveObsidianVault', function(opts)
+  RemoveObsidianVault(opts.args)
+end, { nargs = 1 })
+
+vim.api.nvim_create_user_command('ListObsidianVaults', ListObsidianVaults, {})
+
+-- Enable autoread
 vim.o.autoread = true
 vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter' }, {
   callback = function()
@@ -280,25 +465,14 @@ vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter' }, {
   end,
 })
 
--- Use a trap-based approach for VimLeave to ensure it runs before Neovim fully exits
-vim.api.nvim_create_autocmd('UIEnter', {
-  once = true,
-  callback = function()
-    -- Get Neovim's PID
-    local nvim_pid = vim.fn.getpid()
-
-    -- Create a trap in the parent shell that will kill Obsidian when Neovim exits
-    os.execute(string.format("trap 'pkill -9 -f obsidian' EXIT && " .. 'while kill -0 %d 2>/dev/null; do sleep 0.01; done & disown', nvim_pid))
-  end,
-})
-
--- Cleanup temp directory on exit
+-- Cleanup temp directories on exit
 vim.api.nvim_create_autocmd('VimLeavePre', {
   callback = function()
-    os.execute("rm -rf '" .. temp_dir .. "'/*")
+    for _, vault in ipairs(vaults) do
+      os.execute("rm -rf '" .. vault.path .. "_temp_preview/'*")
+    end
   end,
 })
-
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
