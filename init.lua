@@ -1022,6 +1022,9 @@ require('lazy').setup({
           end,
         },
       }
+      require('lspconfig').clangd.setup{
+      capabilities = capabilities,
+}
     end,
   },
 
