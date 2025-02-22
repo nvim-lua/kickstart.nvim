@@ -1,56 +1,49 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/python
 {
-	"name": "Lua Development",
-	"build": {
-		"dockerfile": "Dockerfile"
-	},
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"GitHub.copilot",
-				"GitHub.copilot-chat",
-				"github.vscode-github-actions",
-				"elagil.pre-commit-helper",
-				"saoudrizwan.claude-dev",
-				"sumneko.lua",
-				"actboy168.lua-debug",
-				"yinfei.luahelper",
-				"keyring.Lua",
-				"trixnz.vscode-lua",
-				"eamodio.gitlens",
-				"mhutchie.git-graph",
-				"donjayamanne.githistory",
-				"fabiospampinato.vscode-git-history",
-				"pprice.better-merge",
-				"ryu1kn.partial-diff",
-				"moshfeu.compare-folders",
-				"editorconfig.editorconfig",
-				"ms-vscode.vs-gitlense-compare",
-				"vsls-contrib.gitdoc",
-				"huizhou.githd"
-			],
-			"settings": {
-				"Lua.telemetry.enable": false,
-				"Lua.diagnostics.globals": ["vim"],
-				"Lua.workspace.library": [
-					"${3rd}/love2d/library"
-				],
-				"Lua.runtime.version": "LuaJIT",
-				"Lua.workspace.checkThirdParty": false
-			}
-		}
-	},
-	"runArgs": ["--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined"],
-	"postCreateCommand": {
-		"update": "sudo apt-get update",
-		"install-deps": "sudo apt-get install -y build-essential lua5.3 lua5.3-dev luarocks ripgrep fd-find curl git python3 python3-pip python3-venv",
-		"install-neovim": "curl -L https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz | sudo tar xzf - -C /opt",
-		"link-neovim": "sudo ln -s /opt/nvim-linux64/bin/nvim /usr/local/bin/nvim",
-		"install-luacheck": "sudo luarocks install luacheck",
-		"install-python-tools": "sudo pip3 install pynvim",
-		"configure-python": "sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1"
-	},
-	"remoteUser": "vscode"
+  "name": "My Dev Container",
+  "dockerFile": "Dockerfile",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "github.vscode-github-actions",
+        "elagil.pre-commit-helper",
+        "saoudrizwan.claude-dev",
+        "sumneko.lua",
+        "actboy168.lua-debug",
+        "yinfei.luahelper",
+        "keyring.Lua",
+        "trixnz.vscode-lua",
+        "eamodio.gitlens",
+        "mhutchie.git-graph",
+        "donjayamanne.githistory",
+        "fabiospampinato.vscode-git-history",
+        "pprice.better-merge",
+        "ryu1kn.partial-diff",
+        "moshfeu.compare-folders",
+        "editorconfig.editorconfig",
+        "ms-vscode.vs-gitlense-compare",
+        "vsls-contrib.gitdoc",
+        "huizhou.githd"
+      ],
+      "settings": {
+        "Lua.telemetry.enable": false,
+        "Lua.diagnostics.globals": ["vim"],
+        "Lua.workspace.library": ["${3rd}/love2d/library"],
+        "Lua.runtime.version": "LuaJIT",
+        "Lua.workspace.checkThirdParty": false
+      }
+    }
+  },
+  "runArgs": ["--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined"],
+  "postCreateCommand": {
+    "update": "sudo apt-get update",
+    "install-deps": "sudo apt-get install -y build-essential lua5.3 lua5.3-dev luarocks ripgrep fd-find curl git python3 python3-pip python3-venv",
+    "install-neovim": "curl -L https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz | sudo tar xzf - -C /opt",
+    "link-neovim": "sudo ln -s /opt/nvim-linux64/bin/nvim /usr/local/bin/nvim",
+    "install-luacheck": "sudo luarocks install luacheck",
+    "install-python-tools": "sudo pip3 install pynvim",
+    "configure-python": "sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1"
+  },
+  "remoteUser": "vscode"
 }

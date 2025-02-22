@@ -1,3 +1,27 @@
+# MIT License
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+if not vim then
+  return
+end
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -38,9 +62,9 @@ vim.keymap.set('n', '<leader>wa', ':wall<CR>', { noremap = true, desc = '[W]rite
 vim.keymap.set('n', '<leader>wf', ':w<CR>', { noremap = true, desc = '[W]rite [F]ile' })
 
 -- Create command do save with qw
-vim.api.nvim_command 'cmap qw wq'
-vim.api.nvim_command 'cmap WQ wq'
-vim.api.nvim_command 'cmap QW wq'
+vim.api.nvim_command('cmap qw wq')
+vim.api.nvim_command('cmap WQ wq')
+vim.api.nvim_command('cmap QW wq')
 
 -- Navigate buffers
 vim.keymap.set('n', '<S-h>', ':bp<CR>', { noremap = true, desc = '[G]oto [P]revious Buffer' })
@@ -58,4 +82,9 @@ vim.keymap.set('n', '<leader>taa', ':!make applyA<CR>', opts)
 -- Better copy-paste between vim and system clipboard
 vim.api.nvim_set_keymap('v', '<C-c>', '"+y', { noremap = true, silent = true, desc = 'Copy to system clipboard' })
 vim.api.nvim_set_keymap('n', '<C-v>', '"+p', { noremap = true, silent = true, desc = 'Paste from system clipboard' })
-vim.api.nvim_set_keymap('i', '<C-v>', '<C-r>+', { noremap = true, silent = true, desc = 'Paste from system clipboard in insert mode' })
+vim.api.nvim_set_keymap(
+  'i',
+  '<C-v>',
+  '<C-r>+',
+  { noremap = true, silent = true, desc = 'Paste from system clipboard in insert mode' }
+)

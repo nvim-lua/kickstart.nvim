@@ -4,9 +4,7 @@ about: Create a report to help us improve
 title: ''
 labels: ''
 assignees: ''
-
 ---
-
 <!-- Any bug report not following this template will be immediately closed. Thanks -->
 
 ## Before Reporting an Issue

@@ -1,0 +1,53 @@
+# Security-focused pre-commit configuration with autoupdate settings
+default_install_hook_types: [pre-commit, pre-push]
+default_stages: [pre-commit, pre-merge-commit]
+minimum_pre_commit_version: "3.5.0"
+
+ci:
+    autofix_commit_msg: 'chore(pre-commit): auto fixes from pre-commit hooks'
+    autoupdate_commit_msg: 'chore(pre-commit): update pre-commit hook versions'
+    autoupdate_schedule: weekly
+    submodules: true
+    skip: []
+
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-yaml
+    -   id: check-json
+    -   id: check-added-large-files
+        args: ['--maxkb=500']
+    -   id: check-merge-conflict
+    -   id: detect-private-key
+    -   id: mixed-line-ending
+        args: ['--fix=lf']
+
+-   repo: https://github.com/streetsidesoftware/cspell-cli
+    rev: v8.17.2
+    hooks:
+    -   id: cspell
+        name: Spell Check
+        args: ["--config", ".cspell.json"]
+        stages: [pre-commit]
+
+# Temporarily commenting out stricter checks until we can fix all markdown and other issues
+# Will uncomment and fix gradually
+
+# -   repo: https://github.com/Calinou/pre-commit-luacheck
+#     rev: v1.0.0
+#     hooks:
+#     -   id: luacheck
+#         args: ['--config', '.luacheckrc']
+
+# -   repo: https://github.com/igorshubovych/markdownlint-cli
+#     rev: v0.39.0
+#     hooks:
+#     -   id: markdownlint
+#         args: ["--config", ".markdownlint.yaml"]
+#         files: \.(md|markdown)$
+
+# Additional hooks commented out for initial setup
+# Will be enabled incrementally as we fix issues

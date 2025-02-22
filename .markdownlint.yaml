@@ -1,0 +1,30 @@
+# Default state for all rules
+default: true
+
+# MD013/line-length - Line length
+MD013:
+  # Number of characters
+  line_length: 120
+  # Allow longer lines for code blocks
+  code_blocks: true
+  tables: true
+
+# MD024/no-duplicate-heading/no-duplicate-header - Multiple headings with the same content
+MD024:
+  # Only check sibling headings
+  allow_different_nesting: true
+
+# MD033/no-inline-html - Inline HTML
+MD033:
+  # Allow specific HTML tags
+  allowed_elements:
+    - details
+    - summary
+
+# MD041/first-line-heading/first-line-h1 - First line in a file should be a top-level heading
+MD041: false
+
+# MD004/ul-style - Unordered list style
+MD004:
+  # List style
+  style: "consistent"
