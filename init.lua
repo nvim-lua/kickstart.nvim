@@ -360,6 +360,15 @@ function Obsidian.open_external_file(filepath)
     return Utils.notify('Symlink failed', vim.log.levels.ERROR)
   end
 
+  -- Add these lines to refresh Obsidian on save
+  vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
+    buffer = vim.api.nvim_get_current_buf(),
+    callback = function()
+      -- Update symlink metadata to force Obsidian refresh
+      os.execute(string.format('touch -h %q', symlink)) -- -h flag affects symlink itself
+    end,
+  })
+
   vim.api.nvim_create_autocmd({ 'BufDelete', 'BufWipeout' }, {
     buffer = vim.api.nvim_get_current_buf(),
     callback = function()
