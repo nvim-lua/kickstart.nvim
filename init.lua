@@ -678,7 +678,7 @@ require('lazy').setup({
         'mypy',
         'black',
         -- 'debugypy',
-        'r-languageserver',
+        -- 'r-languageserver',
         -- 'clangd',
         'html-lsp',
         'css-lsp',
@@ -687,7 +687,7 @@ require('lazy').setup({
         'svelte-language-server',
         'tailwindcss',
         'zls',
-        'intelephense',
+        -- 'intelephense',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
