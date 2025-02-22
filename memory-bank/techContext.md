@@ -1,45 +1,58 @@
-# Technical Context
+# Neovim Configuration Technical Context
 
-## Core Technologies
-- Neovim (Text Editor)
-- Lua (Configuration Language)
-- Lazy.nvim (Plugin Manager)
+## Technologies Used
 
-## Major Dependencies
-1. LSP Servers & Tools
-   - lua_ls
-   - gopls
-   - pyright
-   - terraform-ls
-   - and many others managed by Mason
+### Core
+- Neovim (>= 0.8.0)
+- Lua (>= 5.1)
+- Git (for plugin management)
 
-2. Key Plugins
-   - nvim-lspconfig: LSP configuration
-   - telescope.nvim: Fuzzy finder
-   - nvim-treesitter: Syntax highlighting
-   - nvim-cmp: Completion engine
-   - conform.nvim: Code formatting
-   - which-key.nvim: Keybinding help
-   - mini.nvim: Collection of utilities
+### Plugin Management
+- lazy.nvim (plugin manager)
+- LSP configurations
+- Treesitter for syntax
+- Debug Adapter Protocol (DAP)
 
 ## Development Setup
-- Uses the Kickstart.nvim framework as base
-- Nerd Font required for icons
-- Python 3 support configured
-- Git integration via fugitive and gitsigns
+
+### Requirements
+1. Neovim installation
+2. Git for plugin management
+3. Language servers for LSP
+4. Compilation tools for Treesitter
+5. Debug adapters for debugging
+
+### Configuration Structure
+1. Main Configuration
+   - init.lua: Entry point
+   - lua/custom/: Custom configurations
+   - lua/kickstart/: Core functionality
+
+2. Plugin Management
+   - Lazy-loaded plugins
+   - Plugin-specific settings
+   - Custom plugin configurations
 
 ## Technical Constraints
-- Dependent on external LSP servers
-- Requires Neovim 0.8.0 or higher
-- Some features require system dependencies (make, git)
-- Terminal with true color support recommended
 
-## Configuration Structure
-```
-.
-├── init.lua (Main configuration)
-└── lua/
-    ├── kickstart/
-    │   └── plugins/ (Plugin-specific configs)
-    └── custom/
-        └── plugins/ (Custom plugin configs)
+### Performance
+- Lazy loading required for plugins
+- Careful management of startup time
+- Efficient event handling
+
+### Compatibility
+- Neovim version requirements
+- LSP server compatibility
+- Debug adapter requirements
+
+### Dependencies
+- External language servers
+- System-level development tools
+- Plugin-specific requirements
+
+## Development Tools
+1. LSP Servers
+2. Debug Adapters
+3. Treesitter Parsers
+4. Code Formatters
+5. Linters

@@ -1,73 +1,65 @@
-# System Architecture & Patterns
+# Neovim Configuration System Patterns
 
-## Core Architecture
-- Plugin management via lazy.nvim
-- LSP-based intellisense and code navigation
-- Event-driven configuration loading
-- Modular plugin configuration
-- Enhanced mode state management system
+## Architecture Overview
 
-## Key Design Patterns
+### Directory Structure
+```
+.
+├── init.lua              # Main entry point
+├── lua/
+│   ├── custom/          # Custom configurations
+│   │   └── plugins/     # Plugin-specific settings
+│   └── kickstart/       # Core functionality
+│       └── plugins/     # Plugin management
+```
 
-1. Mode Management
-   - Advanced state persistence
-   - Event-driven mode transitions
-   - Mode-specific context preservation
-   - Pre/post mode change hooks
-   - Mode validation system
-   - Mode-specific settings store
+## Design Patterns
 
-2. Event System
-   - Hierarchical event handling
-   - Event queueing mechanism
-   - Async event processing
-   - Event prioritization
-   - Mode-specific event handlers
+### Plugin Management
+- Module-based plugin organization
+- Lazy loading for performance
+- Plugin-specific configuration isolation
+- Conditional plugin loading
 
-3. Persistence Layer
-   - Versioned state storage
-   - State migration system
-   - Corruption detection
-   - Fallback mechanisms
-   - Incremental state updates
+### Configuration Patterns
+1. Modular Configuration
+   - Separate files for different concerns
+   - Clear dependency management
+   - Isolated plugin configurations
 
-4. Integration Patterns
-   - Mode-aware plugin system
-   - LSP integration with mode context
-   - Buffer grouping by mode
-   - Window layout persistence
-   - Mode-specific UI elements
+2. Event-Driven Setup
+   - Lazy plugin loading
+   - Event-based initialization
+   - Conditional feature enabling
 
-5. Configuration Patterns
-   - Centralized keybinding management
-   - Plugin-specific configuration in separate modules
-   - Default options set through vim.opt
-   - Autocmd groups for event handling
-   - Mode-specific settings and behaviors
+3. Error Handling
+   - Protected calls for plugin setup
+   - Fallback configurations
+   - Clear error reporting
 
-6. LSP Integration
-   - Mason for LSP server management
-   - Uniform LSP configuration across languages
-   - Shared capabilities for completion
-   - Mode-specific language server configurations
+## Component Relationships
+1. Core System
+   - init.lua loads core modules
+   - Establishes basic editor settings
+   - Sets up plugin management
 
-7. Component Relationships
-   - Mode Manager ↔ Event System
-   - Event System ↔ Persistence Layer
-   - Mode Manager ↔ Status Line
-   - LSP ↔ Mode Context
-   - Buffer Groups ↔ Mode State
-   - Window Layout ↔ Mode State
-   - Plugins ↔ Mode Context
+2. Plugin System
+   - Managed through lua/custom/plugins
+   - Isolated plugin configurations
+   - Dependency handling
 
-## Implementation Standards
-- Lua for all configuration
-- Consistent error handling
-- Modular plugin organization
-- Clear separation of concerns
-- Mode-aware functionality
-- State validation
-- Event-driven architecture
-- Robust error recovery
-- Configuration versioning
-- Context preservation
+3. Debug Integration
+   - Separate debug configuration
+   - Language-specific adapters
+   - Custom debug commands
+
+## Technical Decisions
+1. Lua-based configuration for:
+   - Better performance
+   - More powerful customization
+   - Cleaner syntax
+
+2. Modular structure for:
+   - Easier maintenance
+   - Better organization
+   - Simplified updates
