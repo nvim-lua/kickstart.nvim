@@ -465,12 +465,26 @@ vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter' }, {
   end,
 })
 
+-- Use a trap-based approach for VimLeave to ensure it runs before Neovim fully exits
+vim.api.nvim_create_autocmd('UIEnter', {
+  once = true,
+  callback = function()
+    -- Get Neovim's PID
+    local nvim_pid = vim.fn.getpid()
+
+    -- Create a trap in the parent shell that will kill Obsidian when Neovim exits
+    os.execute(string.format("trap 'pkill -9 -f obsidian' EXIT && " .. 'while kill -0 %d 2>/dev/null; do sleep 0.01; done & disown', nvim_pid))
+  end,
+})
+
 -- Cleanup temp directories on exit
 vim.api.nvim_create_autocmd('VimLeavePre', {
   callback = function()
     for _, vault in ipairs(vaults) do
       os.execute("rm -rf '" .. vault.path .. "_temp_preview/'*")
     end
+    -- Also ensure Obsidian is closed
+    close_obsidian()
   end,
 })
 -- [[ Basic Autocommands ]]
