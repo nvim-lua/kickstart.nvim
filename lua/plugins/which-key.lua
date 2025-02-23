@@ -57,7 +57,6 @@ return { -- Useful plugin to show you pending keybinds.
         g = '[G]rep',
         d = '[D]iagnostics',
         r = '[R]esume last search',
-        ['.'] = 'Recent files',
         ['/'] = 'Search in open files',
         n = '[N]eovim config files',
       }},
