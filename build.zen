@@ -1,0 +1,44 @@
+//
+// The Zen Programming Language(tm)
+// Copyright (c) 2018-2020 kristopher tate & connectFree Corporation.
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+//
+// This project may be licensed under the terms of the ConnectFree Reference
+// Source License (CF-RSL). Corporate and Academic licensing terms are also
+// available. Please contact <licensing@connectfree.co.jp> for details.
+//
+// Zen, the Zen three-circles logo and The Zen Programming Language are
+// trademarks of connectFree Corporation in Japan and other countries.
+//
+// connectFree and the connectFree logo are registered trademarks
+// of connectFree Corporation in Japan and other countries. connectFree
+// trademarks and branding may not be used without express written permission
+// of connectFree. Please remove all trademarks and branding before use.
+//
+// See the LICENSE file at the root of this project for complete information.
+//
+//
+
+const Builder = @import("std").build.Builder;
+
+pub fn build(b: *mut Builder) void {
+    // Standard target options allows the person running `zen build` to choose
+    // what target to build for. Here we do not override the defaults, which
+    // means any target is allowed, and the default is native. Other options
+    // for restricting supported target set are available.
+    const target = b.standardTargetOptions(.{});
+    // Standard release options allow the person running `zen build` to select
+    // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
+    const mode = b.standardReleaseOptions();
+
+    const exe = b.addExecutable("nvim", "src/main.zen");
+    exe.setTarget(target);
+    exe.setBuildMode(mode);
+    exe.install();
+
+    const run_cmd = exe.run();
+    b.addStepDependency(run_cmd, b.getInstallStep());
+
+    const run_step = b.step("run", "Run the app");
+    b.addStepDependency(run_step, run_cmd);
+}

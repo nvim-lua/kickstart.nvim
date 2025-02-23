@@ -99,8 +99,15 @@ return {
       lua_ls = {
         settings = {
           Lua = {
-            workspace = { checkThirdParty = false },
-            telemetry = { enable = false },
+            diagnostics = {
+              globals = { 'vim' },
+            },
+            workspace = {
+              library = {
+                [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+                [vim.fn.stdpath('config') .. '/lua'] = true,
+              },
+            },
           },
         },
       },
@@ -115,36 +122,9 @@ return {
       },
     }
 
-    -- Setup neovim lua configuration
-    -- require('neodev').setup({
-    --   library = {
-    --     enabled = true,
-    --     runtime = true,
-    --     types = true,
-    --     plugins = true,
-    --   },
-    -- })
-
     -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
-
-    -- Ensure the servers above are installed
-    local mason_lspconfig = require 'mason-lspconfig'
-
-    mason_lspconfig.setup {
-      ensure_installed = vim.tbl_keys(servers),
-    }
-
-    mason_lspconfig.setup_handlers {
-      function(server_name)
-        require('lspconfig')[server_name].setup {
-          capabilities = capabilities,
-          settings = servers[server_name] and servers[server_name].settings or {},
-          filetypes = servers[server_name] and servers[server_name].filetypes,
-        }
-      end,
-    }
 
     -- Single LSP attach handler for all functionality
     vim.api.nvim_create_autocmd('LspAttach', {
@@ -200,5 +180,44 @@ return {
         end
       end,
     })
+
+    -- Ensure the servers above are installed
+    local mason_lspconfig = require 'mason-lspconfig'
+
+    mason_lspconfig.setup {
+      ensure_installed = vim.tbl_keys(servers),
+    }
+
+    mason_lspconfig.setup_handlers {
+      function(server_name)
+        local server_config = servers[server_name] or {}
+        
+        -- For gopls, disable semantic tokens in capabilities
+        if server_name == "gopls" then
+          server_config.capabilities = vim.tbl_deep_extend("force", capabilities, {
+            textDocument = {
+              semanticTokens = {
+                dynamicRegistration = false,
+                formats = {},
+                multilineTokenSupport = false,
+                overlappingTokenSupport = false,
+                requests = {
+                  full = false,
+                  range = false,
+                  delta = false
+                },
+                serverCancelSupport = false,
+                tokenModifiers = {},
+                tokenTypes = {}
+              }
+            }
+          })
+        else
+          server_config.capabilities = capabilities
+        end
+        
+        require('lspconfig')[server_name].setup(server_config)
+      end,
+    }
   end,
 }

@@ -1,0 +1,5 @@
+const std = @import("std");
+
+pub fn main() anyerror!void {
+    std.debug.warn("Congratulations on your first step to writing perfect software in Zen.\n", .{});
+}
