@@ -137,6 +137,11 @@ return {
         local client = vim.lsp.get_client_by_id(args.data.client_id)
         if not client then return end
 
+        -- Disable semantic tokens for gopls
+        if client.name == "gopls" then
+          client.server_capabilities.semanticTokensProvider = nil
+        end
+
         -- Only set up document formatting for null-ls
         if client.name ~= "null-ls" then
           client.server_capabilities.documentFormattingProvider = false
@@ -188,36 +193,65 @@ return {
       ensure_installed = vim.tbl_keys(servers),
     }
 
+    -- Custom semantic tokens handler for gopls
+    local semantic_tokens_handler = function(err, result, ctx, config)
+      local client = vim.lsp.get_client_by_id(ctx.client_id)
+      if not client then return end
+
+      -- Check if client has the required semantic tokens capabilities
+      local semantic_tokens = client.server_capabilities.semanticTokensProvider
+      if not semantic_tokens or not semantic_tokens.legend then
+        -- If no legend is provided, disable semantic tokens for this client
+        client.server_capabilities.semanticTokensProvider = nil
+        return
+      end
+
+      -- If we have a valid legend, proceed with default handler
+      vim.lsp.semantic_tokens.on_full(err, result, ctx, config)
+    end
+
     mason_lspconfig.setup_handlers {
       function(server_name)
         local server_config = servers[server_name] or {}
         
-        -- For gopls, disable semantic tokens in capabilities
+        -- For gopls, add debug logging
         if server_name == "gopls" then
-          server_config.capabilities = vim.tbl_deep_extend("force", capabilities, {
-            textDocument = {
-              semanticTokens = {
-                dynamicRegistration = false,
-                formats = {},
-                multilineTokenSupport = false,
-                overlappingTokenSupport = false,
-                requests = {
-                  full = false,
-                  range = false,
-                  delta = false
-                },
-                serverCancelSupport = false,
-                tokenModifiers = {},
-                tokenTypes = {}
-              }
-            }
-          })
-        else
-          server_config.capabilities = capabilities
+          -- Create a custom on_attach that disables semantic tokens
+          local orig_on_attach = server_config.on_attach
+          server_config.on_attach = function(client, bufnr)
+            -- Disable semantic tokens for this client
+            client.server_capabilities.semanticTokensProvider = nil
+            -- Call original on_attach if it exists
+            if orig_on_attach then
+              orig_on_attach(client, bufnr)
+            end
+          end
         end
         
+        server_config.capabilities = capabilities
         require('lspconfig')[server_name].setup(server_config)
       end,
     }
+
+    -- Override the semantic tokens handler to be more resilient
+    vim.lsp.handlers['textDocument/semanticTokens/full'] = function(err, result, ctx, config)
+      -- If there's an error or no result, just return
+      if err or not result then return end
+
+      local client = vim.lsp.get_client_by_id(ctx.client_id)
+      if not client then return end
+
+      local bufnr = ctx.bufnr
+      if not bufnr then return end
+
+      -- Get the highlighter safely
+      local highlighter = vim.lsp.semantic_tokens.create_highlighter(bufnr, client)
+      if not highlighter then return end
+
+      -- Process the response safely
+      pcall(function()
+        highlighter:process_response(result, client, ctx.request.version)
+      end)
+    end
   end,
 }

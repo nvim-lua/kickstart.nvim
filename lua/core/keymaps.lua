@@ -129,12 +129,9 @@ M.dadbod_keymaps = {
 
 -- Session management keymaps (all under <leader>m for Memory)
 M.session_keymaps = {
-  { mode = 'n', lhs = '<leader>ms', rhs = function() _G.MiniSession.save() end, 
-    opts = { desc = 'Memory: Save session' } },
-  { mode = 'n', lhs = '<leader>ml', rhs = function() _G.MiniSession.load() end,
-    opts = { desc = 'Memory: Load session' } },
-  { mode = 'n', lhs = '<leader>md', rhs = function() _G.MiniSession.delete() end,
-    opts = { desc = 'Memory: Delete session' } },
+  { mode = 'n', lhs = '<leader>mw', rhs = function() require('mini.sessions').write() end, opts = { desc = 'Memory: Write session' } },
+  { mode = 'n', lhs = '<leader>mr', rhs = function() require('mini.sessions').read() end, opts = { desc = 'Memory: Read session' } },
+  { mode = 'n', lhs = '<leader>md', rhs = function() require('mini.sessions').delete() end, opts = { desc = 'Memory: Delete session' } },
 }
 
 -- Setup function for dadbod keymaps
@@ -293,6 +290,11 @@ local function init_keymaps()
 
   -- Set up session keymaps
   M.setup_session_keymaps()
+
+  -- Set up session keymaps
+  for _, mapping in ipairs(M.session_keymaps) do
+    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
+  end
 
   -- Set up git signs keymaps
   M.setup_gitsigns_keymaps()
