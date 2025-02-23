@@ -159,6 +159,8 @@ M.scratch_keymaps = {
     opts = { desc = 'Toggle scratch buffer' } },
   { mode = 'n', lhs = '<leader>S', rhs = function() require("snacks").scratch.select() end,
     opts = { desc = 'Select scratch buffer' } },
+  { mode = 'n', lhs = '<leader>nh', rhs = function() require("snacks.notifier").show_history() end,
+    opts = { desc = 'Show notification history' } },
 }
 
 -- Git signs keymaps (all under <leader>g for Git)
