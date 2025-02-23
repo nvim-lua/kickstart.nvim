@@ -221,11 +221,6 @@ local function init_keymaps()
     callback = setup_explorer_keymaps,
   })
 
-  -- Set up core keymaps
-  for _, mapping in ipairs(core_keymaps) do
-    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
-  end
-
   -- Set up LSP keymaps on attach
   vim.api.nvim_create_autocmd('LspAttach', {
     group = keymap_group,
@@ -234,7 +229,12 @@ local function init_keymaps()
     end,
   })
 
-  -- Set up other plugin keymaps
+  -- Set up core keymaps
+  for _, mapping in ipairs(core_keymaps) do
+    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
+  end
+
+  -- Set up plugin keymaps
   for _, mapping in ipairs(M.telescope_keymaps or {}) do
     vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
   end
@@ -247,21 +247,30 @@ local function init_keymaps()
     vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
   end
 
+  -- Set up snacks keymaps
   for _, mapping in ipairs(M.snacks_keymaps or {}) do
+    -- Skip explorer keymaps as they're handled by setup_explorer_keymaps
+    if mapping.lhs ~= '<leader>e' and mapping.lhs ~= '<leader>E' then
+      vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
+    end
+  end
+
+  -- Set up scratch buffer keymaps
+  for _, mapping in ipairs(M.scratch_keymaps or {}) do
     vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
   end
 
-  for _, mapping in ipairs(M.gitsigns_keymaps or {}) do
-    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
-  end
+  -- Set up database keymaps
+  M.setup_dadbod_keymaps()
 
-  for _, mapping in ipairs(M.dadbod_keymaps or {}) do
-    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
-  end
+  -- Set up session keymaps
+  M.setup_session_keymaps()
 
-  for _, mapping in ipairs(M.session_keymaps or {}) do
-    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
-  end
+  -- Set up git signs keymaps
+  M.setup_gitsigns_keymaps()
+
+  -- Set up leap keymaps
+  M.setup_leap_keymaps()
 end
 
 -- Initialize all keymaps
