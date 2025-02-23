@@ -1,4 +1,267 @@
-# kickstart.nvim
+# Customized Neovim Configuration
+
+This Neovim configuration is based on kickstart.nvim and has been customized with additional features and language support.
+
+## Features
+
+### Language Support
+
+#### Go Development
+- Full LSP support via `gopls`
+- Advanced formatting with `gofumpt`
+- Import management with `goimports`
+- Linting with `golangci-lint`
+- Debugging support with Delve
+
+#### Zig Development
+- LSP support via `zls`
+- Auto-formatting on save
+- Syntax highlighting
+
+#### C Development
+- LSP support via `clangd`
+- Code formatting with `clang-format`
+- Debugging with `codelldb`
+- Enhanced features through `clangd_extensions.nvim`:
+  - Inlay hints
+  - AST viewer
+  - Header/source switching
+  - Symbol info
+
+#### Python Development
+- LSP support via `pyright`
+- Code formatting with `black`
+- Linting with `ruff`
+- Debugging with `debugpy`
+- Virtual environment support
+- Auto-detection of Python path
+
+### Debug Adapter Protocol (DAP)
+Integrated debugging support with a consistent interface across languages:
+
+#### Keybindings
+- `<leader>pb` - Toggle breakpoint
+- `<leader>pc` - Continue debugging
+- `<leader>pn` - Step over (Next)
+- `<leader>pi` - Step into
+- `<leader>po` - Step out
+- `<leader>pr` - Debug REPL
+- `<leader>pl` - Run last debug session
+- `<leader>px` - Toggle debug UI
+
+#### Debug UI Features
+- Left sidebar:
+  - Scopes
+  - Breakpoints
+  - Call stack
+  - Watches
+- Bottom panel:
+  - REPL
+  - Console output
+
+### Additional Plugins and Features
+
+#### Snacks.nvim Integration
+- Smooth scrolling
+- Enhanced terminal support
+- Custom dashboard
+- Git integration
+- Improved display features
+
+#### Profiling Support
+Integrated profiling for multiple languages using `<leader>mp`:
+
+##### Go Profiling
+- Uses `pprof` for CPU and memory profiling
+- Runs benchmarks and generates profile data
+- Opens interactive web UI for visualization
+- Shows both CPU and memory profiles
+- Supports flame graphs and call graphs
+
+##### Python Profiling
+- Uses `py-spy` for sampling profiler
+- Non-intrusive profiling (doesn't modify code)
+- Generates SVG flame graphs
+- Shows CPU usage and call stacks
+- Works with running processes
+
+##### C/C++ Profiling
+- Uses `perf` for system-wide profiling
+- Shows CPU usage and call graphs
+- Supports hardware performance counters
+- Low-overhead profiling
+- Kernel and userspace profiling
+
+For Zig, profiling is still in development in the language tooling. Once stable profiling tools are available, they will be integrated.
+
+## Installation Guide
+
+### Core Dependencies
+
+```bash
+# Ubuntu/Debian
+sudo apt update
+sudo apt install -y git curl unzip ripgrep fd-find make gcc g++ xclip
+
+# Arch Linux
+sudo pacman -S git curl unzip ripgrep fd make gcc xclip
+```
+
+### Language-Specific Installation
+
+#### Go Development Tools
+```bash
+# Install Go
+wget https://go.dev/dl/go1.21.6.linux-amd64.tar.gz
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.21.6.linux-amd64.tar.gz
+echo 'export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin' >> ~/.bashrc
+source ~/.bashrc
+
+# Install Go tools (will be handled by Mason, but can be installed manually)
+go install golang.org/x/tools/gopls@latest
+go install mvdan.cc/gofumpt@latest
+go install golang.org/x/tools/cmd/goimports@latest
+go install github.com/go-delve/delve/cmd/dlv@latest
+go install github.com/google/pprof@latest
+```
+
+#### Zig Development Tools
+```bash
+# Install Zig (latest version)
+wget https://ziglang.org/download/0.11.0/zig-linux-x86_64-0.11.0.tar.xz
+sudo tar -C /usr/local -xf zig-linux-x86_64-0.11.0.tar.xz
+echo 'export PATH=$PATH:/usr/local/zig-linux-x86_64-0.11.0' >> ~/.bashrc
+source ~/.bashrc
+
+# ZLS will be installed by Mason
+```
+
+#### C/C++ Development Tools
+```bash
+# Ubuntu/Debian
+sudo apt install -y clang clangd clang-format lldb linux-perf
+
+# Arch Linux
+sudo pacman -S clang lldb perf
+```
+
+#### Python Development Tools
+```bash
+# Install Python and pip
+sudo apt install -y python3 python3-pip python3-venv
+
+# Install global tools (will be handled by Mason, but can be installed manually)
+pip3 install --user black ruff debugpy py-spy
+
+# For each project, it's recommended to use a virtual environment:
+python3 -m venv .venv
+source .venv/bin/activate
+pip install black ruff debugpy py-spy
+```
+
+### Neovim Installation
+
+#### Install Latest Neovim
+```bash
+# Ubuntu/Debian
+sudo add-apt-repository ppa:neovim-ppa/unstable
+sudo apt update
+sudo apt install -y neovim
+
+# Arch Linux
+sudo pacman -S neovim
+```
+
+#### Install Configuration
+```bash
+# Backup existing config if needed
+mv ~/.config/nvim ~/.config/nvim.bak
+mv ~/.local/share/nvim ~/.local/share/nvim.bak
+mv ~/.local/state/nvim ~/.local/state/nvim.bak
+mv ~/.cache/nvim ~/.cache/nvim.bak
+
+# Clone this configuration
+git clone https://github.com/yourusername/nvim-config.git ~/.config/nvim
+```
+
+### Post-Installation
+
+1. Start Neovim:
+   ```bash
+   nvim
+   ```
+   This will automatically:
+   - Install the plugin manager (Lazy)
+   - Install all plugins
+   - Install LSP servers and tools via Mason
+
+2. Verify installation:
+   ```
+   :checkhealth
+   ```
+
+3. Install language servers and tools:
+   ```
+   :Mason
+   ```
+   Use `i` to install any missing tools.
+
+### Troubleshooting
+
+#### Common Issues
+
+1. **LSP not working**
+   - Check if the language server is installed: `:Mason`
+   - Verify server status: `:LspInfo`
+   - Install language server manually if needed
+
+2. **Debugger not working**
+   - Ensure debugger is installed: `:Mason`
+   - Check if language tools are in PATH
+   - For Python, make sure you're in the correct virtual environment
+
+3. **Profiler issues**
+   - For Go: Ensure `pprof` is installed and `go` is in PATH
+   - For Python: Check `py-spy` installation and permissions
+   - For C/C++: `perf` might need root permissions: `sudo sysctl -w kernel.perf_event_paranoid=1`
+
+## Usage
+
+### Go Development
+1. Open a Go file
+2. LSP features will work automatically
+3. Use `gofumpt` for enhanced formatting
+4. Debug your Go programs with Delve
+
+### Zig Development
+1. Open a Zig file
+2. LSP features and formatting will work automatically
+
+### C Development
+1. Open a C file
+2. LSP features will work automatically
+3. For debugging:
+   - Build your program with debug symbols (`gcc -g`)
+   - Set breakpoints and start debugging
+   - Use the debug UI to inspect variables and control execution
+
+### Python Development
+1. Open a Python file
+2. LSP features will work automatically
+3. Use `black` for code formatting
+4. For debugging:
+   - Set breakpoints with `<leader>pb`
+   - Start debugging with `<leader>pc`
+   - Python path will be auto-detected from virtual environments
+   - Use the debug UI to inspect variables and control execution
+
+## Customization
+- LSP settings can be modified in `lua/plugins/nvim-lspconfig.lua`
+- Debug configurations are in `lua/plugins/coding.lua`
+- Additional language support can be added through Mason and appropriate LSP configurations
+
+## Contributing
+Feel free to submit issues and enhancement requests!
 
 ## Introduction
 
@@ -61,7 +324,7 @@ fork to your machine using one of the commands below, depending on your OS.
 
 You likely want to remove `lazy-lock.json` from your fork's `.gitignore` file
 too - it's ignored in the kickstart repo to make maintenance easier, but it's
-[recommended to track it in version control](https://lazy.folke.io/usage/lockfile).
+[recommended to track it in version control](https://lazy.folke.io/usage#lockfile).
 
 #### Clone kickstart.nvim
 > **NOTE**
@@ -235,4 +498,3 @@ sudo dnf install -y gcc make git ripgrep fd-find unzip neovim
 sudo pacman -S --noconfirm --needed gcc make git ripgrep fd unzip neovim
 ```
 </details>
-
