@@ -1,0 +1,316 @@
+-- Set <space> as the leader key
+-- See `:help mapleader`
+--  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+
+-- Core Neovim keymaps (non-plugin)
+local core_keymaps = {
+  -- Clear highlights on search when pressing <Esc> in normal mode
+  { mode = 'n', lhs = '<Esc>', rhs = '<cmd>nohlsearch<CR>', opts = { desc = 'Clear search highlights' } },
+
+  -- Exit terminal mode with a more discoverable shortcut
+  { mode = 't', lhs = '<Esc><Esc>', rhs = '<C-\\><C-n>', opts = { desc = 'Exit terminal mode' } },
+
+  -- Window navigation (Ctrl + hjkl)
+  { mode = 'n', lhs = '<C-h>', rhs = '<C-w><C-h>', opts = { desc = 'Focus: Window left' } },
+  { mode = 'n', lhs = '<C-l>', rhs = '<C-w><C-l>', opts = { desc = 'Focus: Window right' } },
+  { mode = 'n', lhs = '<C-j>', rhs = '<C-w><C-j>', opts = { desc = 'Focus: Window down' } },
+  { mode = 'n', lhs = '<C-k>', rhs = '<C-w><C-k>', opts = { desc = 'Focus: Window up' } },
+
+  -- Window resizing (Ctrl + Arrow keys)
+  { mode = 'n', lhs = '<C-Up>', rhs = '<cmd>resize +2<CR>', opts = { desc = 'Window: Increase height' } },
+  { mode = 'n', lhs = '<C-Down>', rhs = '<cmd>resize -2<CR>', opts = { desc = 'Window: Decrease height' } },
+  { mode = 'n', lhs = '<C-Left>', rhs = '<cmd>vertical resize -2<CR>', opts = { desc = 'Window: Decrease width' } },
+  { mode = 'n', lhs = '<C-Right>', rhs = '<cmd>vertical resize +2<CR>', opts = { desc = 'Window: Increase width' } },
+
+  -- Move lines up and down (Alt + jk)
+  { mode = 'n', lhs = '<A-j>', rhs = ':m .+1<CR>==', opts = { desc = 'Move line down', silent = true } },
+  { mode = 'n', lhs = '<A-k>', rhs = ':m .-2<CR>==', opts = { desc = 'Move line up', silent = true } },
+  { mode = 'v', lhs = '<A-j>', rhs = ":m '>+1<CR>gv=gv", opts = { desc = 'Move selection down', silent = true } },
+  { mode = 'v', lhs = '<A-k>', rhs = ":m '<-2<CR>gv=gv", opts = { desc = 'Move selection up', silent = true } },
+
+  -- Quick save and quit
+  { mode = 'n', lhs = '<leader>w', rhs = '<cmd>w<CR>', opts = { desc = 'Save file' } },
+  { mode = 'n', lhs = '<leader>W', rhs = '<cmd>wa<CR>', opts = { desc = 'Save all files' } },
+  { mode = 'n', lhs = '<leader>Q', rhs = '<cmd>qa<CR>', opts = { desc = 'Quit all' } },
+}
+
+-- LSP keymaps - these will be set up when LSP attaches to a buffer
+local M = {}
+function M.setup_lsp_keymaps(bufnr)
+  local keymaps = {
+    -- Go to definitions
+    { mode = 'n', lhs = 'gd', rhs = function() require('telescope.builtin').lsp_definitions() end, opts = { desc = 'LSP: Go to definition' } },
+    { mode = 'n', lhs = 'gr', rhs = function() require('telescope.builtin').lsp_references() end, opts = { desc = 'LSP: Find references' } },
+    { mode = 'n', lhs = 'gI', rhs = function() require('telescope.builtin').lsp_implementations() end, opts = { desc = 'LSP: Go to implementation' } },
+    { mode = 'n', lhs = 'gy', rhs = function() require('telescope.builtin').lsp_type_definitions() end, opts = { desc = 'LSP: Go to type definition' } },
+    
+    -- Symbol navigation
+    { mode = 'n', lhs = '<leader>ls', rhs = function() require('telescope.builtin').lsp_document_symbols() end, opts = { desc = 'LSP: Document symbols' } },
+    { mode = 'n', lhs = '<leader>lS', rhs = function() require('telescope.builtin').lsp_dynamic_workspace_symbols() end, opts = { desc = 'LSP: Workspace symbols' } },
+    
+    -- Code actions
+    { mode = 'n', lhs = '<leader>lr', rhs = vim.lsp.buf.rename, opts = { desc = 'LSP: Rename symbol' } },
+    { mode = 'n', lhs = '<leader>la', rhs = vim.lsp.buf.code_action, opts = { desc = 'LSP: Code action' } },
+    { mode = 'n', lhs = '<leader>lf', rhs = function() vim.lsp.buf.format({ async = true }) end, opts = { desc = 'LSP: Format code' } },
+    
+    -- Documentation
+    { mode = 'n', lhs = 'K', rhs = vim.lsp.buf.hover, opts = { desc = 'LSP: Show documentation' } },
+  }
+
+  -- First clear any existing LSP keymaps for this buffer
+  local lsp_maps = { 'gd', 'gr', 'gI', 'gy', 'K',
+                     '<leader>ls', '<leader>lS', '<leader>lr', '<leader>la', '<leader>lf' }
+  for _, lhs in ipairs(lsp_maps) do
+    pcall(vim.keymap.del, 'n', lhs, { buffer = bufnr })
+  end
+
+  -- Then set our keymaps with buffer local
+  for _, mapping in ipairs(keymaps) do
+    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, vim.tbl_extend('force', mapping.opts, {
+      buffer = bufnr,
+      replace_keycodes = false,
+      nowait = true,
+      silent = true,
+    }))
+  end
+end
+
+-- Telescope keymaps (all under <leader>s for Search)
+M.telescope_keymaps = {
+  -- Help
+  { mode = 'n', lhs = '<leader>sh', rhs = function() require('telescope.builtin').help_tags() end, opts = { desc = 'Search: Help' } },
+  { mode = 'n', lhs = '<leader>sk', rhs = function() require('telescope.builtin').keymaps() end, opts = { desc = 'Search: Keymaps' } },
+  
+  -- Files
+  { mode = 'n', lhs = '<leader>sf', rhs = function() require('telescope.builtin').find_files() end, opts = { desc = 'Search: Files' } },
+  { mode = 'n', lhs = '<leader>sr', rhs = function() require('telescope.builtin').oldfiles() end, opts = { desc = 'Search: Recent files' } },
+  
+  -- Text
+  { mode = 'n', lhs = '<leader>sg', rhs = function() require('telescope.builtin').live_grep() end, opts = { desc = 'Search: Text in workspace' } },
+  { mode = 'n', lhs = '<leader>sw', rhs = function() require('telescope.builtin').grep_string() end, opts = { desc = 'Search: Word under cursor' } },
+  { mode = 'n', lhs = '<leader>/', rhs = function() 
+    require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+      winblend = 10,
+      previewer = false,
+    })
+  end, opts = { desc = 'Search: Text in buffer' } },
+  { mode = 'n', lhs = '<leader>s/', rhs = function()
+    require('telescope.builtin').live_grep {
+      grep_open_files = true,
+      prompt_title = 'Live Grep in Open Files',
+    }
+  end, opts = { desc = 'Search: Text in open files' } },
+  
+  -- Workspace
+  { mode = 'n', lhs = '<leader>sd', rhs = function() require('telescope.builtin').diagnostics() end, opts = { desc = 'Search: Diagnostics' } },
+  { mode = 'n', lhs = '<leader>sb', rhs = function() require('telescope.builtin').buffers() end, opts = { desc = 'Search: Buffers' } },
+}
+
+-- Diagnostic keymaps (navigation with [d and ]d, details with <leader>t for trouble)
+M.diagnostic_keymaps = {
+  -- Navigation
+  { mode = 'n', lhs = '[d', rhs = vim.diagnostic.goto_prev, opts = { desc = 'Diagnostic: Previous' } },
+  { mode = 'n', lhs = ']d', rhs = vim.diagnostic.goto_next, opts = { desc = 'Diagnostic: Next' } },
+  
+  -- Viewing diagnostics (using <leader>t for Trouble)
+  { mode = 'n', lhs = '<leader>tt', rhs = vim.diagnostic.open_float, opts = { desc = 'Trouble: Show details' } },
+  { mode = 'n', lhs = '<leader>tl', rhs = vim.diagnostic.setloclist, opts = { desc = 'Trouble: Show list' } },
+}
+
+-- Database keymaps (all under <leader>D for Database, to avoid conflicts with diagnostics)
+M.dadbod_keymaps = {
+  { mode = 'n', lhs = '<leader>Dt', rhs = '<cmd>DBUIToggle<CR>', opts = { desc = 'Database: Toggle UI' } },
+  { mode = 'n', lhs = '<leader>Df', rhs = '<cmd>DBUIFindBuffer<CR>', opts = { desc = 'Database: Find buffer' } },
+  { mode = 'n', lhs = '<leader>Dr', rhs = '<cmd>DBUIRenameBuffer<CR>', opts = { desc = 'Database: Rename buffer' } },
+  { mode = 'n', lhs = '<leader>Dl', rhs = '<cmd>DBUILastQueryInfo<CR>', opts = { desc = 'Database: Last query' } },
+}
+
+-- Session management keymaps (all under <leader>m for Memory)
+M.session_keymaps = {
+  { mode = 'n', lhs = '<leader>ms', rhs = function() _G.MiniSession.save() end, 
+    opts = { desc = 'Memory: Save session' } },
+  { mode = 'n', lhs = '<leader>ml', rhs = function() _G.MiniSession.load() end,
+    opts = { desc = 'Memory: Load session' } },
+  { mode = 'n', lhs = '<leader>md', rhs = function() _G.MiniSession.delete() end,
+    opts = { desc = 'Memory: Delete session' } },
+}
+
+-- Setup function for dadbod keymaps
+function M.setup_dadbod_keymaps()
+  for _, mapping in ipairs(M.dadbod_keymaps) do
+    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
+  end
+end
+
+-- Setup function for session keymaps
+function M.setup_session_keymaps()
+  -- Session keymaps will be overridden by mini.lua
+  local keymaps = M.session_keymaps or {}
+  for _, mapping in ipairs(keymaps) do
+    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
+  end
+end
+
+-- Scratch buffer keymaps
+M.scratch_keymaps = {
+  { mode = 'n', lhs = '<leader>.', rhs = function() require("snacks").scratch() end, 
+    opts = { desc = 'Toggle scratch buffer' } },
+  { mode = 'n', lhs = '<leader>S', rhs = function() require("snacks").scratch.select() end,
+    opts = { desc = 'Select scratch buffer' } },
+}
+
+-- Setup function for git signs keymaps
+function M.setup_gitsigns_keymaps()
+  for _, mapping in ipairs(M.gitsigns_keymaps) do
+    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
+  end
+end
+
+-- Leap keymaps
+M.leap_keymaps = {
+  -- 's' for bidirectional search (both forward and backward)
+  { mode = { 'n', 'x', 'o' }, lhs = 's', rhs = function() require('leap').leap {} end,
+    opts = { desc = 'Leap: Search bidirectional' } },
+  
+  -- 'S' for searching in all windows
+  { mode = { 'n', 'x', 'o' }, lhs = 'S', rhs = function() 
+    require('leap').leap { target_windows = vim.tbl_filter(
+      function (win) return vim.api.nvim_win_get_config(win).focusable end,
+      vim.api.nvim_tabpage_list_wins(0)
+    )}
+  end, opts = { desc = 'Leap: Search across windows' } },
+}
+
+-- Setup function for leap keymaps
+function M.setup_leap_keymaps()
+  for _, mapping in ipairs(M.leap_keymaps) do
+    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
+  end
+end
+
+-- Initialize keymaps
+local function init_keymaps()
+  -- Create an autocmd group for our keymaps
+  local keymap_group = vim.api.nvim_create_augroup('custom_keymaps', { clear = true })
+
+  -- Function to set up snacks explorer keymaps
+  local function setup_explorer_keymaps()
+    -- First remove any existing mappings
+    for _, key in ipairs({ '<leader>e', '<leader>o' }) do
+      pcall(vim.keymap.del, 'n', key)
+      pcall(vim.keymap.del, 'n', key, { buffer = true })
+    end
+    
+    -- Set our mappings with high priority
+    for _, mapping in ipairs(M.snacks_keymaps) do
+      if mapping.lhs == '<leader>e' or mapping.lhs == '<leader>o' then
+        vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, {
+          desc = mapping.opts.desc .. ' (high priority)',
+          replace_keycodes = false,
+          nowait = true,
+          silent = true,
+        })
+      end
+    end
+  end
+
+  -- Set up autocmds to maintain our keymaps
+  vim.api.nvim_create_autocmd({ 'VimEnter', 'BufEnter', 'FileType' }, {
+    group = keymap_group,
+    callback = setup_explorer_keymaps,
+  })
+
+  -- Also set up the keymaps immediately
+  setup_explorer_keymaps()
+
+  -- Apply core keymaps
+  for _, mapping in ipairs(core_keymaps) do
+    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
+  end
+
+  -- Apply telescope keymaps
+  for _, mapping in ipairs(M.telescope_keymaps) do
+    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
+  end
+
+  -- Apply diagnostic keymaps
+  for _, mapping in ipairs(M.diagnostic_keymaps) do
+    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
+  end
+
+  -- Apply buffer keymaps
+  for _, mapping in ipairs(M.buffer_keymaps) do
+    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
+  end
+
+  -- Apply dadbod keymaps
+  M.setup_dadbod_keymaps()
+
+  -- Apply session keymaps
+  M.setup_session_keymaps()
+
+  -- Apply scratch keymaps
+  for _, mapping in ipairs(M.scratch_keymaps) do
+    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
+  end
+
+  -- Apply git signs keymaps
+  M.setup_gitsigns_keymaps()
+
+  -- Apply leap keymaps
+  M.setup_leap_keymaps()
+
+  -- Apply all other snacks keymaps (except scratch which is handled above)
+  for _, mapping in ipairs(M.snacks_keymaps) do
+    if mapping.lhs ~= '<leader>.' and mapping.lhs ~= '<leader>S' and 
+       mapping.lhs ~= '<leader>e' and mapping.lhs ~= '<leader>o' then
+      vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
+    end
+  end
+end
+
+-- Initialize keymaps
+init_keymaps()
+
+-- Debug command to check mappings
+vim.api.nvim_create_user_command('CheckMappings', function()
+  print("Current buffer:", vim.api.nvim_get_current_buf())
+  
+  print("\nGlobal mappings for <leader>e:")
+  local global_maps = vim.api.nvim_get_keymap('n')
+  for _, map in ipairs(global_maps) do
+    if map.lhs == '<leader>e' then
+      print(vim.inspect(map))
+    end
+  end
+  
+  print("\nBuffer-local mappings for <leader>e:")
+  local buf_maps = vim.api.nvim_buf_get_keymap(0, 'n')
+  for _, map in ipairs(buf_maps) do
+    if map.lhs == '<leader>e' then
+      print(vim.inspect(map))
+    end
+  end
+
+  -- Test explorer function
+  print("\nTesting explorer function:")
+  local success, picker = pcall(require, "snacks.picker")
+  if success then
+    print("Picker module loaded")
+    if type(picker.explorer) == "function" then
+      print("Explorer function exists")
+      success, err = pcall(picker.explorer)
+      if not success then
+        print("Error calling explorer:", err)
+      end
+    else
+      print("Explorer is not a function:", type(picker.explorer))
+    end
+  else
+    print("Error loading picker:", picker)
+  end
+end, {})
+
+return M

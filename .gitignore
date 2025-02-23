@@ -1,7 +1,39 @@
+# Generated files
 tags
-test.sh
 .luarc.json
-nvim
-
-spell/
 lazy-lock.json
+
+# Session files
+sessions/
+
+# Compiled Lua sources
+luac.out
+
+# Logs and databases
+*.log
+*.sqlite
+
+# Temporary files
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Plugin directories that should be ignored
+spell/
+.backup/
+.undo/
+.swap/
+
+# Local development files
+.env
+.envrc
+.direnv/
+test.sh
+test.py
+
+# Compiled plugins
+plugin/packer_compiled.lua
+
+# LSP data
+.lsp/
