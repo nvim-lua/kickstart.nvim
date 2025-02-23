@@ -198,119 +198,74 @@ local function init_keymaps()
   -- Function to set up snacks explorer keymaps
   local function setup_explorer_keymaps()
     -- First remove any existing mappings
-    for _, key in ipairs({ '<leader>e', '<leader>o' }) do
+    for _, key in ipairs({ '<leader>e', '<leader>E' }) do
       pcall(vim.keymap.del, 'n', key)
       pcall(vim.keymap.del, 'n', key, { buffer = true })
     end
     
     -- Set our mappings with high priority
-    for _, mapping in ipairs(M.snacks_keymaps) do
-      if mapping.lhs == '<leader>e' or mapping.lhs == '<leader>o' then
-        vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, {
-          desc = mapping.opts.desc .. ' (high priority)',
+    for _, mapping in ipairs(M.snacks_keymaps or {}) do
+      if mapping.lhs == '<leader>e' or mapping.lhs == '<leader>E' then
+        vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, vim.tbl_extend('force', mapping.opts, {
           replace_keycodes = false,
           nowait = true,
           silent = true,
-        })
+        }))
       end
     end
   end
 
   -- Set up autocmds to maintain our keymaps
-  vim.api.nvim_create_autocmd({ 'VimEnter', 'BufEnter', 'FileType' }, {
+  vim.api.nvim_create_autocmd({ 'VimEnter', 'BufEnter' }, {
     group = keymap_group,
     callback = setup_explorer_keymaps,
   })
 
-  -- Also set up the keymaps immediately
-  setup_explorer_keymaps()
-
-  -- Apply core keymaps
+  -- Set up core keymaps
   for _, mapping in ipairs(core_keymaps) do
     vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
   end
 
-  -- Apply telescope keymaps
-  for _, mapping in ipairs(M.telescope_keymaps) do
+  -- Set up LSP keymaps on attach
+  vim.api.nvim_create_autocmd('LspAttach', {
+    group = keymap_group,
+    callback = function(args)
+      M.setup_lsp_keymaps(args.buf)
+    end,
+  })
+
+  -- Set up other plugin keymaps
+  for _, mapping in ipairs(M.telescope_keymaps or {}) do
     vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
   end
 
-  -- Apply diagnostic keymaps
-  for _, mapping in ipairs(M.diagnostic_keymaps) do
+  for _, mapping in ipairs(M.diagnostic_keymaps or {}) do
     vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
   end
 
-  -- Apply buffer keymaps
-  for _, mapping in ipairs(M.buffer_keymaps) do
+  for _, mapping in ipairs(M.buffer_keymaps or {}) do
     vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
   end
 
-  -- Apply dadbod keymaps
-  M.setup_dadbod_keymaps()
-
-  -- Apply session keymaps
-  M.setup_session_keymaps()
-
-  -- Apply scratch keymaps
-  for _, mapping in ipairs(M.scratch_keymaps) do
+  for _, mapping in ipairs(M.snacks_keymaps or {}) do
     vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
   end
 
-  -- Apply git signs keymaps
-  M.setup_gitsigns_keymaps()
+  for _, mapping in ipairs(M.gitsigns_keymaps or {}) do
+    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
+  end
 
-  -- Apply leap keymaps
-  M.setup_leap_keymaps()
+  for _, mapping in ipairs(M.dadbod_keymaps or {}) do
+    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
+  end
 
-  -- Apply all other snacks keymaps (except scratch which is handled above)
-  for _, mapping in ipairs(M.snacks_keymaps) do
-    if mapping.lhs ~= '<leader>.' and mapping.lhs ~= '<leader>S' and 
-       mapping.lhs ~= '<leader>e' and mapping.lhs ~= '<leader>o' then
-      vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
-    end
+  for _, mapping in ipairs(M.session_keymaps or {}) do
+    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
   end
 end
 
--- Initialize keymaps
+-- Initialize all keymaps
 init_keymaps()
 
--- Debug command to check mappings
-vim.api.nvim_create_user_command('CheckMappings', function()
-  print("Current buffer:", vim.api.nvim_get_current_buf())
-  
-  print("\nGlobal mappings for <leader>e:")
-  local global_maps = vim.api.nvim_get_keymap('n')
-  for _, map in ipairs(global_maps) do
-    if map.lhs == '<leader>e' then
-      print(vim.inspect(map))
-    end
-  end
-  
-  print("\nBuffer-local mappings for <leader>e:")
-  local buf_maps = vim.api.nvim_buf_get_keymap(0, 'n')
-  for _, map in ipairs(buf_maps) do
-    if map.lhs == '<leader>e' then
-      print(vim.inspect(map))
-    end
-  end
-
-  -- Test explorer function
-  print("\nTesting explorer function:")
-  local success, picker = pcall(require, "snacks.picker")
-  if success then
-    print("Picker module loaded")
-    if type(picker.explorer) == "function" then
-      print("Explorer function exists")
-      success, err = pcall(picker.explorer)
-      if not success then
-        print("Error calling explorer:", err)
-      end
-    else
-      print("Explorer is not a function:", type(picker.explorer))
-    end
-  else
-    print("Error loading picker:", picker)
-  end
-end, {})
-
+-- Return the module
 return M
