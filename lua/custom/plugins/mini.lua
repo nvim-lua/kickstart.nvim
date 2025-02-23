@@ -5,6 +5,7 @@ return { -- Collection of various small independent plugins/modules
     require('mini.move').setup()
     require('mini.notify').setup()
     require('mini.starter').setup()
+    require('mini.tabline').setup()
     require('mini.statusline').setup {
       use_icons = vim.g.have_nerd_font,
     }

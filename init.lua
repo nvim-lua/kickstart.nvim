@@ -132,6 +132,40 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
+local floating_win = nil
+
+function FloatingTerm()
+  if floating_win and vim.api.nvim_win_is_valid(floating_win) then
+    vim.api.nvim_win_close(floating_win, true)
+    floating_win = nil
+    return
+  end
+
+  local buf = vim.api.nvim_create_buf(false, true)
+  local width = math.floor(vim.o.columns * 0.8)
+  local height = math.floor(vim.o.lines * 0.8)
+  local row = math.floor((vim.o.lines - height) / 2)
+  local col = math.floor((vim.o.columns - width) / 2)
+
+  floating_win = vim.api.nvim_open_win(buf, true, {
+    relative = 'editor',
+    width = width,
+    height = height,
+    row = row,
+    col = col,
+    style = 'minimal',
+    border = 'rounded',
+  })
+
+  vim.fn.termopen(vim.o.shell)
+  vim.cmd 'startinsert'
+
+  -- Map <Esc> to close the floating terminal when inside it
+  vim.api.nvim_buf_set_keymap(buf, 't', '<Esc>', '<C-\\><C-n>:lua FloatingTerm()<CR>', { noremap = true, silent = true })
+end
+
+vim.api.nvim_set_keymap('n', '<leader>t', ':lua FloatingTerm()<CR>', { noremap = true, silent = true })
+
 require('lazy').setup({ { import = 'custom.plugins' } }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
