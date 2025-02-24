@@ -893,33 +893,15 @@ require('lazy').setup({
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = false }, -- Disable italics in comments
-        },
-      }
 
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-<<<<<<< HEAD
-<<<<<<< HEAD
+
       vim.cmd.colorscheme 'monokai-pro'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
-=======
-      vim.cmd.colorscheme 'tokyonight-night'
->>>>>>> ebca680 (perf: load tokyonight.nvim in the intended way (#1360))
-=======
-      vim.cmd.colorscheme 'tokyonight-night'
-=======
-      vim.cmd.colorscheme 'monokai-pro'
-
-      -- You can configure highlights by doing something like:
-      vim.cmd.hi 'Comment gui=none'
->>>>>>> 9904631 (Feat: added hardtime)
->>>>>>> 3ddf1d1 (upstream changes)
     end,
   },
 
