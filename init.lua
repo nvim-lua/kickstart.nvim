@@ -315,7 +315,7 @@ require('lazy').setup {
       -- Useful for getting pretty icons, but requires special font.
       --  If you already have a Nerd Font, or terminal set up with fallback fonts
       --  you can enable this
-      -- { 'nvim-tree/nvim-web-devicons' }
+      { 'nvim-tree/nvim-web-devicons' },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -614,7 +614,7 @@ require('lazy').setup {
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = { 'black' },
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
@@ -658,7 +658,9 @@ require('lazy').setup {
       -- See `:help cmp`
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
-      luasnip.config.setup {}
+      luasnip.config.setup {
+        require('luasnip.loaders.from_lua').load { paths = './lua/custom/snippets/' },
+      }
 
       cmp.setup {
         snippet = {
