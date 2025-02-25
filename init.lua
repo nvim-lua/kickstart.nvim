@@ -787,9 +787,9 @@ require('lazy').setup({
   },
 
   {
-    'rebelot/kanagawa.nvim',
+    'blazkowolf/gruber-darker.nvim',
     init = function()
-      vim.cmd.colorscheme 'kanagawa-dragon'
+      vim.cmd.colorscheme 'lackluster-night'
     end,
   },
 
