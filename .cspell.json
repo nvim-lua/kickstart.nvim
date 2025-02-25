@@ -110,6 +110,7 @@
     "noinsert",
     "noremap",
     "norl",
+    "noto",
     "nside",
     "numhl",
     "nvim",
@@ -164,7 +165,8 @@
     "yamlls",
     "yinfei",
     "yinq",
-    "ymbols"
+    "ymbols",
+    "fonts-noto-color-emoji"
   ],
   "ignoreWords": [],
   "allowCompoundWords": true,
