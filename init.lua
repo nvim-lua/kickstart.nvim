@@ -1016,9 +1016,9 @@ vim.api.nvim_create_autocmd('BufWritePost', {
   end,
 })
 
-vim.g.expandtab = true
-vim.g.tabstop = 4
-vim.g.shiftwidth = 4
+vim.opt.tabstop = 4
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 4
 
 vim.keymap.set('n', '<leader>bd', ':bd<CR>')
 vim.keymap.set('n', '<leader>bD', ':bd!<CR>')
