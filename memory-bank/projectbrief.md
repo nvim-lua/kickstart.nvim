@@ -1,25 +1,30 @@
 # Neovim Configuration Project Brief
 
 ## Project Overview
-Custom Neovim configuration project focused on creating an optimized, maintainable, and feature-rich development environment using Lua.
+A Neovim configuration setup based on the kickstart framework, aimed at creating an efficient and feature-rich development environment.
 
 ## Core Requirements
-1. Modular plugin management
-2. Efficient code navigation and editing
-3. Debugging capabilities
-4. Code completion and LSP support
-5. Clean and maintainable configuration structure
+1. Maintain a modular and organized plugin configuration
+2. Ensure efficient code editing capabilities
+3. Provide robust debugging support
+4. Implement code linting functionality
+5. Configure auto-pairing for brackets and quotes
 
-## Project Goals
-- Create a well-organized Neovim configuration
-- Implement efficient plugin management
-- Establish consistent coding patterns
-- Enable debugging capabilities
-- Maintain documentation for future reference
+## Goals
+- Create a maintainable and extensible Neovim configuration
+- Optimize development workflow through carefully selected plugins
+- Ensure smooth integration between different plugin functionalities
+- Maintain clear documentation of configuration choices and patterns
 
-## Success Criteria
-1. Working plugin system
-2. Functional debugging setup
-3. Clear configuration structure
-4. Documented setup and usage
-5. Maintainable codebase
+## Technical Stack
+- Neovim
+- Lua programming language
+- Kickstart framework
+- Various Neovim plugins (debug, lint, autopairs, etc.)
+
+## Project Scope
+- Plugin configuration and management
+- Key mapping setup
+- Code editing enhancements
+- Development tool integration
+- Performance optimization

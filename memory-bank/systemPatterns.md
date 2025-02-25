@@ -1,65 +1,59 @@
 # Neovim Configuration System Patterns
 
 ## Architecture Overview
-
-### Directory Structure
 ```
 .
-├── init.lua              # Main entry point
-├── lua/
-│   ├── custom/          # Custom configurations
-│   │   └── plugins/     # Plugin-specific settings
-│   └── kickstart/       # Core functionality
-│       └── plugins/     # Plugin management
+├── init.lua                 # Main configuration entry point
+└── lua/
+    └── kickstart/
+        └── plugins/        # Plugin-specific configurations
+            ├── debug.lua   # DAP debugging setup
+            ├── lint.lua    # nvim-lint configuration
+            └── autopairs.lua # Auto-pairing setup
 ```
 
-## Design Patterns
+## Core Patterns
 
-### Plugin Management
-- Module-based plugin organization
-- Lazy loading for performance
-- Plugin-specific configuration isolation
-- Conditional plugin loading
+### Plugin Organization
+- Lazy.nvim for plugin management and lazy loading
+- Modular plugin configuration files
+- Clear separation of concerns per plugin
+- Event-based plugin loading for better startup time
 
-### Configuration Patterns
-1. Modular Configuration
-   - Separate files for different concerns
-   - Clear dependency management
-   - Isolated plugin configurations
+### LSP Integration
+- Mason.nvim for LSP server management
+- Comprehensive language server configurations
+- Integrated completion with nvim-cmp
+- Automatic server installation and setup
 
-2. Event-Driven Setup
-   - Lazy plugin loading
-   - Event-based initialization
-   - Conditional feature enabling
+### Development Tools Integration
+1. Debugging System
+   - nvim-dap for debug adapter protocol support
+   - Language-specific debug configurations (Go, Python)
+   - Integrated debug UI with nvim-dap-ui
+   - Custom keymaps for debug operations
 
-3. Error Handling
-   - Protected calls for plugin setup
-   - Fallback configurations
-   - Clear error reporting
+2. Linting Framework
+   - File-type specific linters
+   - Automatic lint on events (BufEnter, BufWritePost, InsertLeave)
+   - Configurable linter selection per filetype
+   - Integration with LSP diagnostics
+
+3. Code Completion
+   - nvim-cmp as completion engine
+   - LSP-based completions
+   - Snippet integration
+   - Auto-pairs integration for brackets/quotes
 
 ## Component Relationships
-1. Core System
-   - init.lua loads core modules
-   - Establishes basic editor settings
-   - Sets up plugin management
+1. Plugin Manager (lazy.nvim) → Plugin Configurations
+2. LSP Layer → Language Servers → Code Intelligence
+3. Debug Adapters → DAP UI → User Interface
+4. Linters → Diagnostic Framework → Error Reporting
 
-2. Plugin System
-   - Managed through lua/custom/plugins
-   - Isolated plugin configurations
-   - Dependency handling
-
-3. Debug Integration
-   - Separate debug configuration
-   - Language-specific adapters
-   - Custom debug commands
-
-## Technical Decisions
-1. Lua-based configuration for:
-   - Better performance
-   - More powerful customization
-   - Cleaner syntax
-
-2. Modular structure for:
-   - Easier maintenance
-   - Better organization
-   - Simplified updates
+## Design Decisions
+1. Event-driven plugin loading for performance
+2. Modular configuration for maintainability
+3. Extensive use of built-in LSP capabilities
+4. Integration between complementary tools (LSP, DAP, Linters)
+5. Custom keymaps for efficient workflow
