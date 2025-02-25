@@ -628,7 +628,13 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
-
+        kotlin_language_server = {
+          cmd = { vim.fn.stdpath 'data' .. '/mason/bin/kotlin-language-server' },
+          filetypes = { 'kotlin' },
+          root_dir = require('lspconfig').util.root_pattern('settings.gradle', 'settings.gradle.kts', 'build.gradle', 'build.gradle.kts', '.git')
+            or vim.fn.getcwd(),
+          capabilities = require('cmp_nvim_lsp').default_capabilities(),
+        },
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -665,6 +671,7 @@ require('lazy').setup({
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
       require('java').setup()
       require('lspconfig').jdtls.setup {}
+      require('lspconfig').kotlin_language_server.setup {}
       require('mason-lspconfig').setup {
         handlers = {
           function(server_name)
@@ -784,7 +791,10 @@ require('lazy').setup({
           ['<C-n>'] = cmp.mapping.select_next_item(),
           -- Select the [p]revious item
           ['<C-p>'] = cmp.mapping.select_prev_item(),
-
+          -- Confirm the suggestion
+          ['<Enter>'] = cmp.mapping.confirm { select = true },
+          -- Also confirm with Tab
+          ['<Tab>'] = cmp.mapping.confirm { select = true },
           -- Scroll the documentation window [b]ack / [f]orward
           ['<C-b>'] = cmp.mapping.scroll_docs(-4),
           ['<C-f>'] = cmp.mapping.scroll_docs(4),
@@ -840,25 +850,40 @@ require('lazy').setup({
       }
     end,
   },
+  {
+    'Mofiqul/vscode.nvim',
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
-    init = function()
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+    -- optionally, override the default options:
+    config = function()
+      local c = require('vscode.colors').get_colors()
+      require('vscode').setup {
+        -- Alternatively set style in setup
+        -- style = 'light'
 
-      -- You can configure highlights by doing something like:
-      vim.cmd.hi 'Comment gui=none'
+        -- Enable transparent background
+        transparent = false,
+
+        -- Enable italic comment
+        italic_comments = true,
+
+        -- Disable nvim-tree background color
+        disable_nvimtree_bg = true,
+
+        -- Override colors (see ./lua/vscode/colors.lua)
+        color_overrides = {
+          vscLineNumber = '#FFFFFF',
+        },
+
+        -- Override highlight groups (see ./lua/vscode/theme.lua)
+        group_overrides = {
+          -- this supports the same val table as vim.api.nvim_set_hl
+          -- use colors from this colorscheme by requiring vscode.colors!
+          Cursor = { fg = c.vscDarkBlue, bg = c.vscLightGreen, bold = true },
+        },
+      }
+      require('vscode').load()
     end,
   },
-
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
@@ -905,7 +930,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'java' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'java', 'kotlin' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
