@@ -658,9 +658,28 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
+        clangd = {
+          cmd = {
+            'clangd',
+            '--background-index', -- build a background index for faster navigation
+            '--clang-tidy', -- run clang-tidy for linting (if you have clang-tidy installed)
+            '--completion-style=detailed', -- more detailed auto-completion suggestions
+            '--header-insertion=never', -- adjust header insertion behavior if needed
+          },
+        },
         -- gopls = {},
-        -- pyright = {},
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                diagnosticMode = 'workspace', -- or "openFilesOnly" if you prefer less noise
+                typeCheckingMode = 'basic', -- options: off, basic, strict
+              },
+            },
+          },
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
