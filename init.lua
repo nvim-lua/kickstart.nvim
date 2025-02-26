@@ -186,7 +186,7 @@ vim.api.nvim_set_keymap('i', '<C-M-P>', '<ESC>oPi', { noremap = true })
 
 vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
-    vim.opt.guicursor = 'n-v-c:ver90,i:block-blinkwait400-blinkoff200-blinkon250,sm:block'
+    vim.opt.guicursor = 'n-v-c:block,i:block-blinkwait400-blinkoff200-blinkon250,sm:block'
   end,
 })
 
