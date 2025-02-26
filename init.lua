@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -652,7 +652,6 @@ require('lazy').setup({
       --    :Mason
       --
       -- You can press `g?` for help in this menu.
-      require('mason').setup()
       --
       -- `mason` had to be setup earlier: to configure its options see the
       -- `dependencies` table for `nvim-lspconfig` above.
@@ -662,9 +661,14 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'java-debug-adapter',
+        'java-test',
         'prettier',
+        'eslint_d',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+
+      -- Enable navigation in flutuate windows
       local cmp = require 'cmp'
       cmp.setup {
         mapping = {
@@ -674,6 +678,7 @@ require('lazy').setup({
       }
 
       require('mason-lspconfig').setup {
+        ensure_installed = { 'jdtls' },
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
@@ -681,7 +686,9 @@ require('lazy').setup({
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
+            if server_name ~= 'jdtls' then
+              require('lspconfig')[server_name].setup(server)
+            end
           end,
         },
       }
@@ -928,6 +935,7 @@ require('lazy').setup({
         'typescript',
         'yaml',
         'css',
+        'sql',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
@@ -959,7 +967,7 @@ require('lazy').setup({
   --
   require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
@@ -970,7 +978,6 @@ require('lazy').setup({
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   { import = 'custom.plugins' },
 
-  -- vim.keymap.set('n', '|', ':Neotree reveal<CR>', { desc = 'Toggle Neotree window', silent = true }),
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
