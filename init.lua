@@ -1017,6 +1017,36 @@ require('lazy').setup({
   -- Or use telescope!
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
   -- you can continue same window with `<space>sr` which resumes last telescope search
+  {
+    'nvim-neo-tree/neo-tree.nvim',
+    branch = 'v2.x', -- ensure you're using the correct branch version
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'MunifTanjim/nui.nvim',
+      'nvim-tree/nvim-web-devicons', -- only if you want icons
+    },
+    config = function()
+      require('neo-tree').setup {
+        close_if_last_window = true, -- Close Neo-tree if it is the last window
+        filesystem = {
+          use_libuv_file_watcher = true, -- uses OS file watchers for better performance
+        },
+        window = {
+          width = 30,
+          position = 'left',
+        },
+        default_component_configs = {
+          icon = {
+            folder_closed = '',
+            folder_open = '',
+            folder_empty = '',
+          },
+        },
+      }
+      -- Map <leader>e to toggle neo-tree
+      vim.keymap.set('n', '<leader>e', ':Neotree toggle<CR>', { desc = 'Toggle Neo-tree File Explorer' })
+    end,
+  },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
