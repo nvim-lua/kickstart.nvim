@@ -1,0 +1,104 @@
+-- ~/.config/nvim/lua/plugins.lua
+
+return {
+  -- ... other plugins ...
+
+  -- {
+  'marko-cerovac/material.nvim',
+  --   opts = {
+  --     contrast = {
+  --       terminal = false,
+  --       sidebars = false,
+  --       floating_windows = false,
+  --       cursor_line = false,
+  --       lsp_virtual_text = false,
+  --       non_current_windows = false,
+  --       filetypes = {},
+  --     },
+  --
+  --     styles = {
+  --
+  --       comments = { italic = false }, -- Ensure no italics are set here
+  --       strings = { italic = false }, -- Ensure no italics are set here
+  --       keywords = { italic = false }, -- Ensure no italics are set here
+  --       functions = { italic = false }, -- Ensure no italics are set here
+  --       variables = { italic = false },
+  --       operators = { italic = false },
+  --       types = { italic = false },
+  --     },
+  --
+  --     plugins = {
+  --       -- Available plugins:
+  --       -- "coc",
+  --       -- "colorful-winsep",
+  --       -- "dap",
+  --       -- "dashboard",
+  --       -- "eyeliner",
+  --       -- "fidget",
+  --       -- "flash",
+  --       'gitsigns',
+  --       -- "harpoon",
+  --       -- "hop",
+  --       -- "illuminate",
+  --       'indent-blankline',
+  --       -- "lspsaga",
+  --       -- "mini",
+  --       -- "neogit",
+  --       -- "neotest",
+  --       'neo-tree',
+  --       -- "neorg",
+  --       -- "noice",
+  --       -- "nvim-cmp",
+  --       -- "nvim-navic",
+  --       'nvim-tree',
+  --       -- "nvim-web-devicons",
+  --       'rainbow-delimiters',
+  --       -- "sneak",
+  --       'telescope',
+  --       -- "trouble",
+  --       'which-key',
+  --       'nvim-notify',
+  --     },
+  --
+  --     disable = {
+  --       colored_cursor = false,
+  --       borders = false,
+  --       background = false,
+  --       term_colors = false,
+  --       eob_lines = false,
+  --     },
+  --
+  --     high_visibility = {
+  --       lighter = false,
+  --       darker = false,
+  --     },
+  --
+  --     lualine_style = 'default',
+  --
+  --     async_loading = true,
+  --
+  --     custom_colors = nil,
+  --
+  --     custom_highlights = {
+  --       -- Explicitly disable italics for common highlight groups
+  --       Comment = { italic = false },
+  --       String = { italic = false },
+  --       Keyword = { italic = false },
+  --       Function = { italic = false },
+  --       Type = { italic = false },
+  --       Identifier = { italic = false },
+  --       -- Treesitter groups
+  --       TSKeyword = { italic = false },
+  --       TSKeywordFunction = { italic = false },
+  --       TSKeywordOperator = { italic = false },
+  --       -- Add more groups as necessary
+  --     },
+  --   },
+  --   config = function(_, opts)
+  --     require('material').setup(opts)
+  --     vim.cmd 'colorscheme material-palenight'
+  --   end,
+  --   priority = 1000,
+  -- },
+}
+-- ... other plugins ...

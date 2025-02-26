@@ -25,7 +25,7 @@ What is Kickstart?
   Kickstart.nvim is *not* a distribution.
 
   Kickstart.nvim is a starting point for your own configuration.
-    The goal is that you can read every line of code, top-to-bottom, understand
+    /// goal is that you can read every line of code, top-to-bottom, understand
     what your configuration is doing, and modify it to suit your needs.
 
     Once you've done that, you can start exploring, configuring and tinkering to
@@ -69,7 +69,7 @@ Kickstart Guide:
   I have left several `:help X` comments throughout the init.lua
     These are hints about where to find more information about the relevant settings,
     plugins or Neovim features used in Kickstart.
-
+	
    NOTE: Look for lines like this
 
     Throughout the file. These are for you, the reader, to help you understand what is happening.
@@ -81,17 +81,126 @@ If you experience any errors while trying to install kickstart, run `:checkhealt
 I hope you enjoy your Neovim journey,
 - TJ
 
-P.S. You can delete this when you're done too. It's your config now! :)
---]]
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
+
+-- Set <space> as the leader key
+-- See `:help mapleader`
+--  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
+P.S. You can delete this when you're done too. It's your config now! :)
+--]]
+vim.cmd [[ autocmd VimEnter * Neotree position=left ]]
+--AUTO RELOAD ON SAVE
+vim.api.nvim_create_autocmd('BufWritePost', {
+  pattern = '*', -- For all files
+  callback = function()
+    vim.cmd [[silent edit]] -- Reload the buffer silently
+  end,
+})
+-- Your existing Neovim configurations..
+vim.opt.autoread = true
+vim.cmd 'autocmd VimResume * checktime'
+
+-- Triger `autoread` when files changes on disk
+-- https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
+-- https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
+vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold', 'CursorHoldI' }, {
+  pattern = '*',
+  command = "if mode() !~ '\v(c|r.?|!|t)' && getcmdwintype() == '' | checktime | endif",
+})
+
+-- Notification after file change
+-- https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
+vim.api.nvim_create_autocmd({ 'FileChangedShellPost' }, {
+  pattern = '*',
+  command = "echohl WarningMsg | echo 'File changed on disk. Buffer reloaded.' | echohl None",
+})
+
+vim.lsp.inlay_hint.enable()
+-- vim.opt.tabstop = 2
+-- vim.opt.shiftwidth = 2
+-- vim.opt.softtabstop = 2
+vim.opt.expandtab = true
+-- Function to toggle transparency
+
+-- Initialize transparency state if not set
+if vim.g.transparency_enabled == nil then
+  vim.g.transparency_enabled = false
+end
+
+function ToggleTransparency()
+  if vim.g.transparency_enabled then
+    -- Disable transparency: set a non-transparent background color.
+    vim.cmd 'hi Normal guibg=#1e222a ctermbg=NONE'
+    vim.cmd 'hi NormalNC guibg=#1e222a ctermbg=NONE'
+    vim.g.transparency_enabled = false
+  else
+    -- Enable transparency: remove the background color.
+    vim.cmd 'hi Normal guibg=NONE ctermbg=NONE'
+    vim.cmd 'hi NormalNC guibg=NONE ctermbg=NONE'
+    vim.g.transparency_enabled = true
+  end
+end
+
+-- Create the command to toggle transparency
+vim.cmd 'command! Transp lua ToggleTransparency()'
+
+-- vim.api.nvim_command [[
+--     augroup ChangeBackgroundColour
+--         autocmd colorscheme * :hi normal guibg=#000000
+--     augroup END
+-- ]]
+
+vim.o.termguicolors = true
+vim.cmd [[silent! colorscheme snow]]
+-- Set <space> as the leader key
+-- See `:help mapleader`
+--  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
+vim.o.autoread = true
+vim.api.nvim_create_autocmd('BufEnter', {
+  group = vim.api.nvim_create_augroup('lazyvim_auto_reload', { clear = true }),
+  pattern = '*',
+  command = 'checktime',
+})
+-- Ensure Neovim recognizes .tf and .tfvars files as terraform
+-- vim.filetype.add {
+--   extension = {
+--     tf = 'terraform',
+--     tfvars = 'terraform', -- Include .tfvars files
+--   },
+-- }
+-- Refresh Neovim
+vim.api.nvim_set_keymap('n', '<leader>rr', ':lua os.exit(1)<CR>', { noremap = true, silent = true })
+-- Add custom key bindings
+vim.api.nvim_set_keymap('i', '<C-j>', '<Right>', { noremap = true })
+vim.api.nvim_set_keymap('i', '<C-g>', '<Left>', { noremap = true })
+vim.api.nvim_set_keymap('i', '<C-]>', '<C-o>$', { noremap = true })
+vim.api.nvim_set_keymap('i', '<C-f>', '<ESC>^', { noremap = true })
+vim.api.nvim_set_keymap('i', '<C-M-p>', '<ESC>opi', { noremap = true })
+vim.api.nvim_set_keymap('i', '<C-M-P>', '<ESC>oPi', { noremap = true })
+-- Block cursor
+-- vim.opt.guicursor = 'n-v-c:block,i:block-blinkwait700-blinkoff400-blinkon250,sm:block'
+-- vim.opt.guicursor = 'n-v-c:block,i:ver25-blinkon250-blinkoff400-blinkwait700,r:hor20,o:hor50,sm:block-blinkwait175-blinkoff150-blinkon175'
+
+vim.api.nvim_create_autocmd('VimEnter', {
+  callback = function()
+    vim.opt.guicursor = 'n-v-c:ver90,i:block-blinkwait400-blinkoff200-blinkon250,sm:block'
+  end,
+})
+
+--------------------------------------------------------------------
+
+if vim.fn.has 'termguicolors' == 1 then
+  vim.opt.termguicolors = true
+end
+
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -145,7 +254,8 @@ vim.opt.splitbelow = true
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+-- vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { tab = '│ ', trail = '·', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
@@ -465,11 +575,30 @@ require('lazy').setup({
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
     dependencies = {
+      'saghen/blink.cmp',
       -- Automatically install LSPs and related tools to stdpath for Neovim
+      { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
+      -- { 'williamboman/mason-lspconfig.nvim' },
+      {
+        'williamboman/mason-lspconfig.nvim',
+        dependencies = { 'williamboman/mason.nvim', 'neovim/nvim-lspconfig' },
+        config = function()
+          require('mason').setup()
+          require('mason-lspconfig').setup {
+            ensure_installed = { 'ts_ls', 'lua_ls', 'eslint' },
+            automatic_installation = true,
+          }
+
+          local lspconfig = require 'lspconfig'
+
+          -- Setup tsserver
+          lspconfig.ts_ls.setup {}
+
+          -- Setup other servers similarly
+        end,
+      },
       -- Mason must be loaded before its dependents so we need to set it up here.
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
-      { 'williamboman/mason.nvim', opts = {} },
-      'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
@@ -479,8 +608,22 @@ require('lazy').setup({
       'hrsh7th/cmp-nvim-lsp',
     },
     config = function()
-      -- Brief aside: **What is LSP?**
-      --
+      local capabilities = require('blink.cmp').get_lsp_capabilities()
+      require('lspconfig').lua_ls.setup { capabilities = capabilities }
+      -- Mason setup to ensure terraform-ls is installed
+      require('mason-lspconfig').setup {
+        ensure_installed = { 'terraformls', 'tflint' },
+        automatic_installation = {},
+      }
+
+      require('lspconfig').terraformls.setup {}
+      vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
+        pattern = { '*.tf', '*.tfvars' },
+        callback = function()
+          vim.lsp.buf.format()
+        end,
+      })
+      vim.keymap.set('n', 'gl', '<cmd>lua vim.diagnostic.open_float()<CR>', { noremap = true })
       -- LSP is an initialism you've probably heard, but might not understand what it is.
       --
       -- LSP stands for Language Server Protocol. It's a protocol that helps editors
@@ -658,18 +801,18 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
+        -- terraformls = {},
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
-        -- rust_analyzer = {},
+        rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
         --
-        -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
-        --
+        -- But for many setups, the LSP (`tsserver`) will work just fine
+        -- ts_ls = {}
 
         lua_ls = {
           -- cmd = { ... },
@@ -785,7 +928,7 @@ require('lazy').setup({
         dependencies = {
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
-          --    https://github.com/rafamadriz/friendly-snippets
+          --    https://github.com/rafamadriz/friendly-snippetjs
           -- {
           --   'rafamadriz/friendly-snippets',
           --   config = function()
@@ -902,7 +1045,15 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+
+      -- vim.cmd.colorscheme 'tokyonight-night'
+      -- vim.cmd.colorscheme 'kanagawa'
+      vim.cmd.colorscheme 'material-palenight'
+      -- vim.cmd.colorscheme 'obscure'
+      -- vim.cmd.colorscheme 'rose-pine'
+      -- You can configure highlights by doing something like:
+      vim.cmd.hi 'Comment gui=none'
+
     end,
   },
 
@@ -952,7 +1103,24 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = {
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc',
+        'c_sharp',
+        'python',
+        'typescript',
+        'javascript',
+        -- 'go',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -963,13 +1131,27 @@ require('lazy').setup({
         additional_vim_regex_highlighting = { 'ruby' },
       },
       indent = { enable = true, disable = { 'ruby' } },
+      -- custom_captures = {
+      --   -- Highlight the `return` keyword with the `ReturnKeyword` group
+      --   ['@keyword.return'] = 'ReturnKeyword',
+      -- },
     },
-    -- There are additional nvim-treesitter modules that you can use to interact
-    -- with nvim-treesitter. You should go explore a few and see what interests you:
-    --
-    --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-    --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-    --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+
+    config = function(_, opts)
+      -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
+      -- Prefer git instead of curl in order to improve connectivity in some environments
+      require('nvim-treesitter.install').prefer_git = true
+      ---@diagnostic disable-next-line: missing-fields
+      require('nvim-treesitter.configs').setup(opts)
+
+      -- There are additional nvim-treesitter modules that you can use to interact
+      -- with nvim-treesitter. You should go explore a few and see what interests you:
+      --
+      --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
+      --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
+      --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+    end,
+
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
@@ -980,24 +1162,20 @@ require('lazy').setup({
   --
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
-  --
-  -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
-  --
-  -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
-  -- Or use telescope!
-  -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
-  -- you can continue same window with `<space>sr` which resumes last telescope search
+  --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
+  { import = 'custom.plugins' },
+
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
