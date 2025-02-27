@@ -164,7 +164,15 @@ vim.opt.scrolloff = 10
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
+--  See `:help setloclist`
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+
+-- Show diagnostic under cursor in floating window.
+-- Alternative to virtual text when it overflow over the buffer
+--  See `:help open_float`
+vim.keymap.set('n', '<leader>xl', function()
+  vim.diagnostic.open_float { scope = 'line' }
+end, { desc = 'Show [L]ine Diagnostics' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
