@@ -98,10 +98,10 @@ local config = {
       format = {
         enabled = true,
         -- Formatting works by default, but you can refer to a specific file/URL if you choose
-        -- settings = {
-        --   url = "https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml",
-        --   profile = "GoogleStyle",
-        -- },
+        settings = {
+          path = '/home/lucas/magna-sistemas-java-code-formatter.xml',
+          profile = 'MagnaSistemasStyle',
+        },
       },
       completion = {
         favoriteStaticMembers = {

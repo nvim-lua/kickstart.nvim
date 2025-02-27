@@ -156,6 +156,22 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 15
 
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'java',
+  callback = function()
+    vim.opt_local.colorcolumn = '120'
+  end,
+})
+
+-- Set a vertical column marker at column 80
+-- vim.opt.colorcolumn = '120'
+
+-- If you want multiple column markers, you can do:
+-- vim.opt.colorcolumn = "80,100,120"
+
+-- To customize the color (to make it more transparent/subtle)
+vim.cmd [[highlight ColorColumn guibg=rgba(255,0,0,0.2) ctermbg=238]]
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -665,6 +681,7 @@ require('lazy').setup({
         'java-test',
         'prettier',
         'eslint_d',
+        'angular-language-server',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
