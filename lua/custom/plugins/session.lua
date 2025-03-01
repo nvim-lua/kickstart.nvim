@@ -6,8 +6,6 @@ return {
   ---@module "auto-session"
   ---@type AutoSession.Config
   opts = {
-    -- suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
-    allowed_dirs = { '~/development/nodejs/work' },
-    -- log_level = 'debug',
+    allowed_dirs = { '~/nodejs/work/*', '~/nodejs/private/*', '~/nodejs/playground/', '~/metadata/work/*', '~/golang/*' },
   },
 }

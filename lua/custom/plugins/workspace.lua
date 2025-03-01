@@ -5,7 +5,7 @@ return {
     config = function()
       require('workspace').setup {
         workspaces = {
-          { name = 'Work', path = '~/development/nodejs/work', keymap = { '<leader>w' } },
+          { name = 'Work', path = '~/nodejs/work', keymap = { '<leader>w' } },
         },
       }
 
