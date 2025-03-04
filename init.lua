@@ -92,7 +92,8 @@ require('lazy').setup({
     sources = { 'lazy' },
   },
 
-  'tpope/vim-sleuth',
+  -- sleuth was auto setting to 8 spaces on new/unknown files
+  -- 'tpope/vim-sleuth',
 
   {
     'lewis6991/gitsigns.nvim',
