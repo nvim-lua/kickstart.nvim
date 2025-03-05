@@ -1,5 +1,15 @@
 return {
   {
+    "felipeagc/fleet-theme-nvim",
+    lazy = false,
+    priority = 1000,
+    config = function ()
+      vim.cmd.colorscheme 'fleet'
+    end,
+    enabled = false,
+  },
+
+  {
     "tjdevries/colorbuddy.nvim",
     lazy = false,
     priority = 1000,
@@ -84,7 +94,7 @@ return {
     priority = 1000,
     config = function()
       require('rose-pine').setup {
-       
+
       }
 
       vim.cmd.colorscheme 'rose-pine-moon'
@@ -133,4 +143,29 @@ return {
     end,
     enabled = false,
   },
+
+  {
+    'vague2k/vague.nvim',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.cmd.colorscheme 'vague'
+    end,
+    enabled = false,
+  },
+
+  {
+    "blazkowolf/gruber-darker.nvim",
+    opts = {
+      bold = false,
+      italic = {
+        strings = false,
+      },
+    },
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.cmd.colorscheme 'gruber-darker'
+    end,
+  }
 }
