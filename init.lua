@@ -231,22 +231,6 @@ require('lazy').setup({
   -- For autosave functionality
   'pocco81/auto-save.nvim',
 
-  -- For view of open buffers
-  {
-    'romgrk/barbar.nvim',
-    dependencies = {
-      'lewis6991/gitsigns.nvim',
-      'nvim-tree/nvim-web-devicons',
-    },
-    init = function()
-      vim.g.barbar_auto_setup = false
-    end,
-    opts = {
-      animation = false,
-    },
-    version = '^1.0.0',
-  },
-
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
