@@ -987,6 +987,9 @@ require('lazy').setup({
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
 
+  -- cheat.sh
+  { 'dbeniamine/cheat.sh-vim' },
+
   -- Treewalker for nvim-treesitter based movements
   {
     'aaronik/treewalker.nvim',
