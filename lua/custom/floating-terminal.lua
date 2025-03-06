@@ -69,6 +69,6 @@ end
 
 -- Custom command for opening and closing floating terminal
 vim.api.nvim_create_user_command('FloatingTerminal', M.toggle_terminal, {})
-vim.keymap.set({ 'n', 't' }, '<leader>tt', M.toggle_terminal)
+vim.keymap.set({ 'n' }, '<leader>tt', M.toggle_terminal)
 
 return M
