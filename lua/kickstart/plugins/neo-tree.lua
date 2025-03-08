@@ -13,8 +13,13 @@ return {
   keys = {
     { '\\', ':Neotree reveal<CR>', { desc = 'NeoTree reveal' } },
   },
+
   opts = {
     filesystem = {
+      filtered_items = {
+        hide_dotfiles = false,
+        hide_gitignore = false,
+      },
       follow_current_file = {
         enable = true,
         leave_dirs_open = false,
