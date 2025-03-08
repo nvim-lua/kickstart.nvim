@@ -568,7 +568,7 @@ require('lazy').setup({
 
           -- Show LSP message
           map('gM', vim.diagnostic.open_float, '[G]oto [M]essage')
-              
+
           -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
           ---@param client vim.lsp.Client
           ---@param method vim.lsp.protocol.Method
@@ -581,7 +581,7 @@ require('lazy').setup({
               return client.supports_method(method, { bufnr = bufnr })
             end
           end
-              
+
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
