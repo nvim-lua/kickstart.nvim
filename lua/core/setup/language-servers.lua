@@ -14,7 +14,7 @@ local servers = {
   -- pyright = {},
   -- rust_analyzer = {},
   eslint = {},
-  tsserver = {
+  ts_ls = {
     typescript = {
       settings = {
         preferences = {
@@ -77,7 +77,9 @@ local function organize_imports()
   vim.lsp.buf.execute_command(params)
 end
 
-local tsserverKeymaps = require('core.keymaps.async.tsserver')
+-- TODO Add back OrganizeImports command
+
+local tsserverKeymaps = require('core.keymaps.async.ts_ls')
 
 local tsserver_on_attach = function(_, bufnr)
   lspKeymaps(bufnr)
@@ -87,7 +89,7 @@ local tsserver_on_attach = function(_, bufnr)
   })
 end
 
-require('lspconfig').tsserver.setup {
+require('lspconfig').ts_ls.setup {
   on_attach = tsserver_on_attach,
   capabilities = capabilities,
   commands = {
