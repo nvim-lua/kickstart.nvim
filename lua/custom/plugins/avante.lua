@@ -6,12 +6,12 @@ return {
     provider = 'copilot',
     copilot = {
       endpoint = 'https://api.githubcopilot.com',
-      model = 'gpt-4o-2024-08-06',
+      model = 'claude-3.5-sonnet',
       proxy = nil,
       allow_insecure = false,
       timeout = 30000,
-      temperature = 0,
-      max_tokens = 4096,
+      temperature = 0.1,
+      max_tokens = 8192,
     },
   },
   build = 'make',
@@ -41,5 +41,8 @@ return {
       },
       ft = { 'markdown', 'Avante' },
     },
+  },
+  keys = {
+    { '<leader>ax', '<cmd>AvanteClear<cr>', mode = 'n', desc = 'avante: clear chat' },
   },
 }
