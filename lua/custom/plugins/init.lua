@@ -2,11 +2,6 @@
 --  I promise not to create any merge conflicts in this directory :)
 --
 -- See the kickstart.nvim README for more information
-vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter' }, { command = 'checktime' })
-
-vim.api.nvim_create_user_command('DeleteOtherBuffers', function()
-  require('snacks').bufdelete.other()
-end, { desc = 'Delete Other Buffers' })
 
 -- Resizing windows
 vim.keymap.set('n', '<A-h>', '<C-w>5<', { desc = 'Decrease window width' })

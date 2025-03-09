@@ -1,13 +1,14 @@
+vim.api.nvim_create_user_command('DeleteOtherBuffers', function()
+  require('snacks').bufdelete.other()
+end, { desc = 'Delete Other Buffers' })
+
 return {
   'folke/snacks.nvim',
   ---@diagnostic disable-next-line: undefined-doc-name
   ---@type snacks.Config
   opts = {
-    lazygit = {
-      -- your lazygit configuration comes here
-      -- or leave it empty to use the default settings
-      -- refer to the configuration section below
-    },
+    lazygit = {},
+    gitbrowse = {},
   },
   keys = {
     {
@@ -33,5 +34,12 @@ return {
     },
     { '<leader>gb', '<cmd>Gitsigns blame<cr>', desc = 'Git blame' },
     { '<leader>gs', '<cmd>Telescope git_status<CR>', desc = 'Git Status' },
+    {
+      '<leader>go',
+      function()
+        Snacks.gitbrowse()
+      end,
+      desc = 'Git Browse',
+    },
   },
 }
