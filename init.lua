@@ -91,6 +91,9 @@ I hope you enjoy your Neovim journey,
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
+vim.g.db_ui_env_variable_url = 'postgres'
+vim.g.db_ui_env_variable_name = 'test'
+
 vim.cmd [[ autocmd VimEnter * Neotree position=left ]]
 --AUTO RELOAD ON SAVE
 vim.api.nvim_create_autocmd('BufWritePost', {
@@ -349,14 +352,14 @@ require('lazy').setup({
 
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
   -- If you prefer to call `setup` explicitly, use:
-  --    {
-  --        'lewis6991/gitsigns.nvim',
-  --        config = function()
-  --            require('gitsigns').setup({
-  --                -- Your gitsigns configuration here
-  --            })
-  --        end,
-  --    }
+  {
+    'lewis6991/gitsigns.nvim',
+    config = function()
+      require('gitsigns').setup {
+        -- Your gitsigns configuration here
+      }
+    end,
+  },
   --
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`.
@@ -585,7 +588,7 @@ require('lazy').setup({
         config = function()
           require('mason').setup()
           require('mason-lspconfig').setup {
-            ensure_installed = { 'ts_ls', 'lua_ls', 'eslint' },
+            ensure_installed = { 'ts_ls', 'lua_ls', 'eslint_lsp' },
             automatic_installation = true,
           }
 
@@ -593,8 +596,6 @@ require('lazy').setup({
 
           -- Setup tsserver
           lspconfig.ts_ls.setup {}
-
-          -- Setup other servers similarly
         end,
       },
       -- Mason must be loaded before its dependents so we need to set it up here.
@@ -904,7 +905,8 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettier', stop_after_first = true },
+        typescript = { 'prettier', stop_after_first = true },
       },
     },
   },
@@ -1048,12 +1050,11 @@ require('lazy').setup({
 
       -- vim.cmd.colorscheme 'tokyonight-night'
       -- vim.cmd.colorscheme 'kanagawa'
-      vim.cmd.colorscheme 'material-palenight'
+      vim.cmd.colorscheme 'material-deep-ocean'
       -- vim.cmd.colorscheme 'obscure'
       -- vim.cmd.colorscheme 'rose-pine'
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
-
     end,
   },
 
@@ -1110,8 +1111,6 @@ require('lazy').setup({
         'html',
         'lua',
         'luadoc',
-        'markdown',
-        'markdown_inline',
         'query',
         'vim',
         'vimdoc',
@@ -1151,7 +1150,6 @@ require('lazy').setup({
       --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
     end,
-
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
@@ -1175,7 +1173,6 @@ require('lazy').setup({
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   { import = 'custom.plugins' },
-
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
