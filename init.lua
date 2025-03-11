@@ -577,6 +577,20 @@ require('lazy').setup({
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
+    -- opts = {
+    --   servers = { eslint = {} },
+    --   setup = {
+    --     eslint = function()
+    --       require('lazyvim.util').lsp.on_attach(function(client)
+    --         if client.name == 'eslint' then
+    --           client.server_capabilities.documentFormattingProvider = true
+    --         elseif client.name == 'tsserver' then
+    --           client.server_capabilities.documentFormattingProvider = false
+    --         end
+    --       end)
+    --     end,
+    --   },
+    -- },
     dependencies = {
       'saghen/blink.cmp',
       -- Automatically install LSPs and related tools to stdpath for Neovim
@@ -588,7 +602,7 @@ require('lazy').setup({
         config = function()
           require('mason').setup()
           require('mason-lspconfig').setup {
-            ensure_installed = { 'ts_ls', 'lua_ls', 'eslint_lsp' },
+            ensure_installed = { 'lua_ls' },
             automatic_installation = true,
           }
 
@@ -882,23 +896,23 @@ require('lazy').setup({
       },
     },
     opts = {
-      notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
-        local lsp_format_opt
-        if disable_filetypes[vim.bo[bufnr].filetype] then
-          lsp_format_opt = 'never'
-        else
-          lsp_format_opt = 'fallback'
-        end
-        return {
-          timeout_ms = 500,
-          lsp_format = lsp_format_opt,
-        }
-      end,
+      -- notify_on_error = false,
+      -- format_on_save = function(bufnr)
+      --   -- Disable "format_on_save lsp_fallback" for languages that don't
+      --   -- have a well standardized coding style. You can add additional
+      --   -- languages here or re-enable it for the disabled ones.
+      --   local disable_filetypes = { c = true, cpp = true }
+      --   local lsp_format_opt
+      --   if disable_filetypes[vim.bo[bufnr].filetype] then
+      --     lsp_format_opt = 'never'
+      --   else
+      --     lsp_format_opt = 'fallback'
+      --   end
+      --   return {
+      --     timeout_ms = 500,
+      --     lsp_format = lsp_format_opt,
+      --   }
+      -- end,
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
@@ -907,6 +921,8 @@ require('lazy').setup({
         -- You can use 'stop_after_first' to run the first available formatter from the list
         javascript = { 'prettier', stop_after_first = true },
         typescript = { 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettier', stop_after_first = true },
+        javascriptreact = { 'prettier', stop_after_first = true },
       },
     },
   },
@@ -1109,6 +1125,7 @@ require('lazy').setup({
         'c',
         'diff',
         'html',
+        'css',
         'lua',
         'luadoc',
         'query',
@@ -1118,7 +1135,15 @@ require('lazy').setup({
         'python',
         'typescript',
         'javascript',
-        -- 'go',
+        'go',
+        'dockerfile',
+        'gitignore',
+        'graphql',
+        'query',
+        'markdown',
+        'markdown_inline',
+        'yaml',
+        'prisma'
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
@@ -1130,10 +1155,10 @@ require('lazy').setup({
         additional_vim_regex_highlighting = { 'ruby' },
       },
       indent = { enable = true, disable = { 'ruby' } },
-      -- custom_captures = {
-      --   -- Highlight the `return` keyword with the `ReturnKeyword` group
-      --   ['@keyword.return'] = 'ReturnKeyword',
-      -- },
+      custom_captures = {
+        -- Highlight the `return` keyword with the `ReturnKeyword` group
+        -- ['@keyword.return'] = 'ReturnKeyword',
+      },
     },
 
     config = function(_, opts)
