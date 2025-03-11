@@ -115,6 +115,7 @@ local config = {
         importOrder = {
           'java',
           'javax',
+          'jakarta',
           'lombok',
           'springfox',
           'org',
