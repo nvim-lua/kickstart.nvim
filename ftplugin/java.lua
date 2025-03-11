@@ -99,8 +99,7 @@ local config = {
         enabled = true,
         -- Formatting works by default, but you can refer to a specific file/URL if you choose
         settings = {
-          path = '/home/lucas/magna-sistemas-java-code-formatter.xml',
-          profile = 'MagnaSistemasStyle',
+          url = '/home/lucas/magna-sistemas-java-code-formatter.xml',
         },
       },
       completion = {
@@ -116,6 +115,7 @@ local config = {
         importOrder = {
           'java',
           'javax',
+          'jakarta',
           'lombok',
           'springfox',
           'org',

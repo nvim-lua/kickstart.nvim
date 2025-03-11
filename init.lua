@@ -156,10 +156,11 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 15
 
+-- Uncoment if you want a margin in filetypes
 vim.api.nvim_create_autocmd('FileType', {
   pattern = 'java',
   callback = function()
-    vim.opt_local.colorcolumn = '120'
+    vim.opt_local.colorcolumn = '200'
   end,
 })
 
@@ -337,7 +338,7 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch' },
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
-        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        --{ '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
     },
   },
@@ -677,11 +678,9 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
-        'java-debug-adapter',
         'java-test',
         'prettier',
         'eslint_d',
-        'angular-language-server',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -706,6 +705,10 @@ require('lazy').setup({
             if server_name ~= 'jdtls' then
               require('lspconfig')[server_name].setup(server)
             end
+          end,
+          -- TODO: configurar versão do angular e capabilities
+          angularls = function()
+            require('lspconfig').angularls.setup {}
           end,
         },
       }
