@@ -566,6 +566,8 @@ require('lazy').setup({
           --  For example, in C this would take you to the header.
           map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
+          map('gDef', vim.lsp.buf.hover, '[G]oto [Def]inition')
+
           -- Show LSP message
           map('gM', vim.diagnostic.open_float, '[G]oto [M]essage')
 
