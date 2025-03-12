@@ -18,6 +18,12 @@ return {
       window = {
         mappings = {
           ['\\'] = 'close_window',
+          ['<C-cr>'] = {
+            'open',
+            config = {
+              open_command = 'tabnew', -- Альтернативный вариант параметра
+            },
+          },
         },
       },
     },
