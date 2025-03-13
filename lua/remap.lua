@@ -1,8 +1,6 @@
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
-vim.keymap.set('i', 'jj', '<Esc>')
-
 -- clear higlight on search on pressing <Esc> in normal mode
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
