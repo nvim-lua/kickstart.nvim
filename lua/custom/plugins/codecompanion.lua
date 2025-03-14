@@ -36,9 +36,9 @@ return {
       },
     }
 
-    vim.keymap.set('n', '<leader>cc', '<cmd>CodeCompanionChat Toggle<cr>', { desc = '[CodeCompanion] Toggle chat' })
-    vim.keymap.set('v', '<leader>cc', '<cmd>CodeCompanionChat Toggle<cr>', { desc = '[CodeCompanion] Toggle chat' })
-    vim.keymap.set('n', '<leader>cp', '<cmd>CodeCompanionActions<cr>', { desc = '[CodeCompanion] Action' })
-    vim.keymap.set('v', '<leader>ca', '<cmd>CodeCompanionChat Add<cr>', { noremap = true, silent = true, desc = '[CodeCompanion] Add selection to chat' })
+    vim.keymap.set('n', '<leader>lc', '<cmd>CodeCompanionChat Toggle<cr>', { desc = '[CodeCompanion] Toggle chat' })
+    vim.keymap.set('v', '<leader>lc', '<cmd>CodeCompanionChat Toggle<cr>', { desc = '[CodeCompanion] Toggle chat' })
+    vim.keymap.set('n', '<leader>lp', '<cmd>CodeCompanionActions<cr>', { desc = '[CodeCompanion] Action' })
+    vim.keymap.set('v', '<leader>la', '<cmd>CodeCompanionChat Add<cr>', { noremap = true, silent = true, desc = '[CodeCompanion] Add selection to chat' })
   end,
 }
