@@ -10,7 +10,23 @@ return {
     ---@type snacks.Config
     opts = {
       bigfile = { enabled = true },
-      dashboard = { enabled = true },
+      dashboard = {
+        enabled = true,
+        sections = {
+          {
+            section = 'terminal',
+            cmd = 'chafa ~/.config/neofetch/ascii/patrick.png --format symbols --symbols vhalf --size 45x40',
+            height = 25,
+            padding = 1,
+          },
+          {
+            pane = 2,
+            { icon = ' ', title = 'Keymaps', section = 'keys', indent = 2, padding = 1 },
+            { icon = ' ', title = 'Recent Files', section = 'recent_files', indent = 2, padding = 1 },
+            { icon = ' ', title = 'Projects', section = 'projects', indent = 2, padding = 1 },
+          },
+        },
+      },
       notifier = {
         enabled = true,
         timeout = 3000,
@@ -149,66 +165,6 @@ return {
     opts = {},
   },
   {
-    'yetone/avante.nvim',
-    event = 'VeryLazy',
-    lazy = false,
-    version = false, -- set this if you want to always pull the latest change
-    opts = {
-      -- add any opts here
-    },
-    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-    build = 'make',
-    -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
-    dependencies = {
-      'stevearc/dressing.nvim',
-      'nvim-lua/plenary.nvim',
-      'MunifTanjim/nui.nvim',
-      --- The below dependencies are optional,
-      'hrsh7th/nvim-cmp', -- autocompletion for avante commands and mentions
-      'nvim-tree/nvim-web-devicons', -- or echasnovski/mini.icons
-      'zbirenbaum/copilot.lua', -- for providers='copilot'
-      {
-        -- support for image pasting
-        'HakonHarnes/img-clip.nvim',
-        event = 'VeryLazy',
-        opts = {
-          -- recommended settings
-          default = {
-            embed_image_as_base64 = false,
-            prompt_for_file_name = false,
-            drag_and_drop = {
-              insert_mode = true,
-            },
-            -- required for Windows users
-            use_absolute_path = true,
-          },
-        },
-      },
-      {
-        -- Make sure to set this up properly if you have lazy=true
-        'MeanderingProgrammer/render-markdown.nvim',
-        opts = {
-          file_types = { 'markdown', 'Avante' },
-        },
-        ft = { 'markdown', 'Avante' },
-      },
-    },
-    config = function()
-      require('avante').setup {
-        provider = 'openai',
-        auto_suggestions_provider = 'openai',
-        behaviour = {
-          auto_suggestions = true, -- experimental stage
-          auto_set_highlight_group = true,
-          auto_set_keymaps = true,
-          auto_apply_diff_after_generation = false,
-          support_paste_from_clipboard = true,
-          minimize_diff = true, -- whether to remove unchanged lines when applying a code block
-        },
-      }
-    end,
-  },
-  {
     'jose-elias-alvarez/null-ls.nvim',
     config = function()
       local null_ls = require 'null-ls'
@@ -330,39 +286,20 @@ return {
     version = '*',
     config = function()
       require('mini.icons').setup()
-      require('mini.sessions').setup()
     end,
   },
   {
-    'utilyre/barbecue.nvim',
-    name = 'barbecue',
-    version = '*',
+    'Bekaboo/dropbar.nvim',
+    -- optional, but required for fuzzy finder support
     dependencies = {
-      'SmiteshP/nvim-navic',
-      'nvim-tree/nvim-web-devicons', -- optional dependency
-    },
-    opts = {
-      -- configurations go here
+      'nvim-telescope/telescope-fzf-native.nvim',
+      build = 'make',
     },
     config = function()
-      require('barbecue').setup {
-        create_autocmd = false, -- prevent barbecue from updating itself automatically
-      }
-
-      vim.api.nvim_create_autocmd({
-        'WinScrolled', -- or WinResized on NVIM-v0.9 and higher
-        'BufWinEnter',
-        'CursorHold',
-        'InsertLeave',
-
-        -- include this if you have set `show_modified` to `true`
-        -- "BufModifiedSet",
-      }, {
-        group = vim.api.nvim_create_augroup('barbecue.updater', {}),
-        callback = function()
-          require('barbecue.ui').update()
-        end,
-      })
+      local dropbar_api = require 'dropbar.api'
+      vim.keymap.set('n', '<Leader>;', dropbar_api.pick, { desc = 'Pick symbols in winbar' })
+      vim.keymap.set('n', '[;', dropbar_api.goto_context_start, { desc = 'Go to start of current context' })
+      vim.keymap.set('n', '];', dropbar_api.select_next_context, { desc = 'Select next context' })
     end,
   },
   {
@@ -443,4 +380,85 @@ return {
     },
   },
   { 'ThePrimeagen/vim-be-good' },
+  {
+    'yetone/avante.nvim',
+    event = 'VeryLazy',
+    version = '*', -- Set this to "*" to always pull the latest release version, or set it to false to update to the latest code changes.
+    opts = {
+      -- add any opts here
+      -- for example
+      provider = 'openai',
+      openai = {
+        endpoint = 'https://api.openai.com/v1',
+        model = 'gpt-4o', -- your desired model (or use gpt-4o, etc.)
+        timeout = 30000, -- timeout in milliseconds
+        temperature = 0, -- adjust if needed
+        max_tokens = 4096,
+        -- reasoning_effort = "high" -- only supported for reasoning models (o1, etc.)
+      },
+      behaviour = {
+        auto_suggestions = true, -- Experimental stage
+        auto_set_highlight_group = true,
+        auto_set_keymaps = true,
+        auto_apply_diff_after_generation = false,
+        support_paste_from_clipboard = true,
+        minimize_diff = true, -- Whether to remove unchanged lines when applying a code block
+        enable_token_counting = true, -- Whether to enable token counting. Default to true.
+        enable_cursor_planning_mode = false, -- Whether to enable Cursor Planning Mode. Default to false.
+      },
+    },
+    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+    build = 'make',
+    -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+      'stevearc/dressing.nvim',
+      'nvim-lua/plenary.nvim',
+      'MunifTanjim/nui.nvim',
+      --- The below dependencies are optional,
+      'echasnovski/mini.pick', -- for file_selector provider mini.pick
+      'nvim-telescope/telescope.nvim', -- for file_selector provider telescope
+      'hrsh7th/nvim-cmp', -- autocompletion for avante commands and mentions
+      'ibhagwan/fzf-lua', -- for file_selector provider fzf
+      'nvim-tree/nvim-web-devicons', -- or echasnovski/mini.icons
+      'zbirenbaum/copilot.lua', -- for providers='copilot'
+      {
+        -- support for image pasting
+        'HakonHarnes/img-clip.nvim',
+        event = 'VeryLazy',
+        opts = {
+          -- recommended settings
+          default = {
+            embed_image_as_base64 = false,
+            prompt_for_file_name = false,
+            drag_and_drop = {
+              insert_mode = true,
+            },
+            -- required for Windows users
+            use_absolute_path = false,
+          },
+        },
+      },
+      {
+        -- Make sure to set this up properly if you have lazy=true
+        'MeanderingProgrammer/render-markdown.nvim',
+        opts = {
+          file_types = { 'markdown', 'Avante' },
+        },
+        ft = { 'markdown', 'Avante' },
+      },
+    },
+  },
+  {
+    'supermaven-inc/supermaven-nvim',
+    config = function()
+      require('supermaven-nvim').setup {
+        keymaps = {
+          accept_suggestion = '<D-l>',
+          clear_suggestion = '<D-]>',
+          accept_word = '<D-j>',
+        },
+      }
+    end,
+  },
 }
