@@ -264,6 +264,26 @@ return {
       'MunifTanjim/nui.nvim',
       -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
     },
+    config = function()
+      require('neo-tree').setup {
+        source_selector = {
+          winbar = true,
+          statusline = true,
+        },
+      }
+    end,
+    init = function()
+      if vim.fn.argc(-1) == 1 then
+        local stat = vim.loop.fs_stat(vim.fn.argv(0))
+        if stat and stat.type == 'directory' then
+          require('neo-tree').setup {
+            filesystem = {
+              hijack_netrw_behavior = 'open_current',
+            },
+          }
+        end
+      end
+    end,
   },
   {
     'SmiteshP/nvim-navic',
