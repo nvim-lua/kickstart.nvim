@@ -3,15 +3,24 @@ return {
   dependencies = {
     'nvim-lua/plenary.nvim',
     'nvim-treesitter/nvim-treesitter',
+    'j-hui/fidget.nvim',
     -- The following are optional:
     { 'MeanderingProgrammer/render-markdown.nvim', ft = { 'markdown', 'codecompanion' } },
   },
+  init = function()
+    require('custom.plugins.codecompanion.fidget-spinner'):init()
+  end,
   config = function()
     require('codecompanion').setup {
       adapters = {
         anthropic = require('codecompanion.adapters').extend('anthropic', {
           env = {
             api_key = 'CODECOMP_ANTHROPIC_API_KEY',
+          },
+        }),
+        deepseek = require('codecompanion.adapters').extend('deepseek', {
+          env = {
+            api_key = 'CODECOMP_DEEPSEEK_API_KEY',
           },
         }),
       },
