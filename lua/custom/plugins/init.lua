@@ -246,4 +246,7 @@ return {
     ---@type render.md.UserConfig
     opts = {},
   },
+
+  -- catppuccin if i want
+  { 'catppuccin/nvim', name = 'catppuccin', priority = 1000 },
 }
