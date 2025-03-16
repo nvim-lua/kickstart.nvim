@@ -219,7 +219,7 @@ on_attach =
     end,
   })
 
--- tab keybinds
+-- tab management keybinds
 local map = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
 
@@ -374,7 +374,9 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch' },
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
-        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>g', group = '[G]it', mode = { 'n', 'v' } },
+        { '<leader>u', group = 'Q[u]ick Settings' },
+        { '<leader>b', group = '[B]uffers' },
       },
     },
   },
