@@ -223,6 +223,9 @@ on_attach =
 local map = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
 
+-- open explorer
+map('n', '<leader>E', ':NvimTreeOpen<CR>', { desc = '[E]xplorer', silent = true, noremap = true })
+
 -- Move to previous/next
 map('n', '<A-,>', '<Cmd>BufferPrevious<CR>', opts)
 map('n', '<A-.>', '<Cmd>BufferNext<CR>', opts)
@@ -604,9 +607,6 @@ require('lazy').setup({
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
           map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
-
-          -- open explorer
-          map('<leader>E', ':NvimTreeOpen<CR>', '[E]xplorer')
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
