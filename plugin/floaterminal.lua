@@ -66,12 +66,35 @@ local function toggle_terminal(name)
   vim.cmd 'normal i'
 end
 
-local function handle_terminal_key()
+local function list_active_terminals()
+  local terminal_names = {}
+
+  -- Collect names of active terminals
+  for name, _ in pairs(terminals) do
+    table.insert(terminal_names, name)
+  end
+
+  return terminal_names
+end
+
+local function list_terminals()
+  local terminal_names = list_active_terminals()
+  print(vim.inspect(terminal_names))
+  -- If there are active terminals, show them in a Telescope picker
+  if #terminal_names > 0 then
+    -- show picker with terminals
+  else
+    vim.notify('No active terminals found', vim.log.levels.INFO)
+  end
+end
+
+-- Map the keys
+vim.keymap.set('n', '<space>t', function()
   vim.ui.input({ prompt = 'Enter terminal name: ' }, function(input)
     if input then
       toggle_terminal(input)
     end
   end)
-end
+end, { noremap = true, silent = true })
 
-vim.keymap.set('n', '<space>t', handle_terminal_key, { noremap = true, silent = true })
+vim.keymap.set('n', '<space>lt', list_terminals, { noremap = true, silent = true })
