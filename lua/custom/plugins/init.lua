@@ -273,4 +273,34 @@ return {
     },
     version = '^1.0.0', -- optional: only update when a new 1.x version is released
   },
+
+  -- Coq support lets hope this works
+  {
+    'whonore/Coqtail',
+    init = function()
+      vim.g.loaded_coqtail = 1
+      vim.g['coqtail#supported'] = 0
+    end,
+  },
+  {
+    'tomtomjhj/vscoq.nvim',
+    filetypes = 'coq',
+    dependencies = {
+      'neovim/nvim-lspconfig',
+      'whonore/Coqtail',
+    },
+    opts = {
+      vscoq = {
+        path = '/home/aadi/.opam/CP.2024.10.1~8.19~2024.10/bin/vscoqtop',
+      },
+      lsp = {
+        on_attach = function(client, bufnr)
+          -- In manual mode, use ctrl-alt-{j,k,l} to step.
+          vim.keymap.set({ 'n', 'i' }, '<M-j>', '<Cmd>VsCoq stepForward<CR>', { buffer = bufnr, desc = 'VsCoq step forward' })
+          vim.keymap.set({ 'n', 'i' }, '<M-k>', '<Cmd>VsCoq stepBackward<CR>', { buffer = bufnr, desc = 'VsCoq step backward' })
+          vim.keymap.set({ 'n', 'i' }, '<M-l>', '<Cmd>VsCoq interpretToPoint<CR>', { buffer = bufnr, desc = 'VsCoq interpret to point' })
+        end,
+      },
+    },
+  },
 }
