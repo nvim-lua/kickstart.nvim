@@ -25,9 +25,9 @@ vim.api.nvim_create_user_command('JumpToGlobalMark', function()
     char = char:upper()
   end
 
-  vim.cmd("normal! '" .. char)
+  vim.cmd("silent! normal! '" .. char)
 end, {})
 
 -- Map your preferred key combinations to the functions
-vim.keymap.set('n', '<C-m>', ':SetGlobalMark<CR>', { noremap = true })
-vim.keymap.set('n', '<C-s>', ':JumpToGlobalMark<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>m', ':SetGlobalMark<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-m>', ':JumpToGlobalMark<CR>', { noremap = true, silent = true })
