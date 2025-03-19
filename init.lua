@@ -668,33 +668,10 @@ require('lazy').setup({
 
           settings = {
             gopls = {
-              analyses = {
-                unusedparams = true, -- Highlights unused function parameters
-                unusedwrite = true, -- Highlights unused variable writes
-                unusedvariable = true, -- Highlights unused variables
-                fieldalignment = true, -- Checks struct field alignment
-                nilness = true, -- Checks for nil dereferences
-                shadow = true, -- Checks for shadowed variables
-                unusedresult = true, -- Highlights unused function return values
-              },
               staticcheck = true,
               completeUnimported = true, -- Suggests completions for unimported packages
               usePlaceholders = false, -- Adds placeholders for function arguments in completions
               completionDocumentation = true, -- Shows documentation for completion items
-              annotations = {
-                bounds = true, -- Highlights array/slice index out-of-bounds errors
-                escape = true, -- Highlights incorrect escape sequences in string literals
-                inline = true, -- Shows inline diagnostics in the code
-              },
-              workspace = {
-                usePlaceholders = false, -- Adds placeholders for function arguments in completions
-                semanticTokens = true, -- Enables semantic token highlighting
-                experimentalPostfixCompletions = true, -- Enables postfix completions (e.g., .if, .for)
-              },
-              formatting = {
-                gofumpt = true,
-                localimports = true,
-              },
             },
           },
         },
