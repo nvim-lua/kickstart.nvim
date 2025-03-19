@@ -3,12 +3,15 @@ return {
   event = 'VeryLazy',
   ---@type Flash.Config
   opts = {
-    jump = {
-      pos = 'end',
+    modes = {
+      char = {
+        enabled = false,
+        jump_labels = true,
+      },
     },
   },
   -- stylua: ignore
   keys = {
-    { "<space><space>", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+    { "/", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
   },
 }
