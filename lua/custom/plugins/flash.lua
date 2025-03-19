@@ -4,6 +4,9 @@ return {
   ---@type Flash.Config
   opts = {
     modes = {
+      search = {
+        enabled = true,
+      },
       char = {
         enabled = false,
         jump_labels = true,
@@ -12,6 +15,5 @@ return {
   },
   -- stylua: ignore
   keys = {
-    { "/", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
   },
 }
