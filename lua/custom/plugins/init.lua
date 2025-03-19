@@ -319,4 +319,17 @@ return {
     { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
   },
   },
+
+  -- symbols
+  {
+    'oskarrrrrrr/symbols.nvim',
+    config = function()
+      local r = require 'symbols.recipes'
+      require('symbols').setup(r.DefaultFilters, r.AsciiSymbols, {
+        -- custom settings here
+        -- e.g. hide_cursor = false
+      })
+      vim.keymap.set('n', ',s', '<cmd> Symbols<CR>')
+    end,
+  },
 }
