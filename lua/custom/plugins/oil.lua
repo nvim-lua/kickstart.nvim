@@ -9,7 +9,7 @@ return {
     skip_confirm_for_simple_edits = true,
 
     float = {
-      max_width = 0.7,
+      max_width = 0.8,
     },
     view_options = {
       show_hidden = true,
