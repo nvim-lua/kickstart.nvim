@@ -529,7 +529,27 @@ require('lazy').setup({
 
       local cmp_autopairs = require 'nvim-autopairs.completion.cmp'
       local cmp = require 'cmp'
-      cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
+
+      local Rule = require 'nvim-autopairs.rule'
+      local npairs = require 'nvim-autopairs'
+
+      local cond = require 'nvim-autopairs.conds'
+
+      require('nvim-treesitter.configs').setup {
+        ensure_installed = { 'latex', 'typst' },
+        highlight = { enable = true },
+      }
+
+      npairs.setup {
+        check_ts = true,
+      }
+
+      npairs.add_rules {
+        Rule('$', '$', { 'typst', 'typ', 'latex', 'tex' }):with_move(cond.none()):with_cr(cond.none()),
+        Rule('(', ')', { 'typst', 'typ', 'latex', 'tex' }),
+        Rule('{', '}', { 'typst', 'typ', 'latex', 'tex' }),
+        Rule('[', ']', { 'typst', 'typ', 'latex', 'tex' }),
+      }
 
       -- Brief aside: **What is LSP?**
       --
@@ -809,6 +829,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        typst = { 'typstfmt' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
