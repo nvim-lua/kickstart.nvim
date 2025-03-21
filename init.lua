@@ -113,6 +113,7 @@ map('n', '<leader>kkk', '<cmd>OpenK9sSplit<CR>', { desc = 'Open [k]9s in Split P
 map('n', '<leader>klv', '<cmd>ViewPodLogs<CR>', { desc = '[V]iew Pod Logs' })
 map('n', '<leader>klf', '<cmd>JsonFormatLogs<CR>', { desc = 'JSON Log [F]ormat' })
 map('n', '<leader>kkt', '<cmd>ToggleYamlHelm<CR>', { desc = '[T]oggle YAML/Helm' })
+map('n', '<leader>kka', '<cmd>KubectlApplyFromBuffer<CR>', { desc = '[A]pply Manifest from Buffer' })
 map('n', '<leader>kht', '<cmd>HelmTemplateFromBuffer<CR>', { desc = '[H]elm [T]emplate' })
 map('n', '<leader>khu', '<cmd>HelmDependencyUpdateFromBuffer<CR>', { desc = '[H]elm Dependency [U]pdate' })
 
