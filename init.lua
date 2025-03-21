@@ -110,6 +110,7 @@ vim.g.floaterm_title = 'Terminal ($1/$2)'
 -- Kubernetes keymaps
 map('n', '<leader>kkK', '<cmd>OpenK9s<CR>', { desc = 'Open [K]9s' })
 map('n', '<leader>kkk', '<cmd>OpenK9sSplit<CR>', { desc = 'Open [k]9s in Split Pane' })
+map('n', '<leader>kkc', '<cmd>SelectSplitCRD<CR>', { desc = 'View [C]RD in Split Pane' })
 map('n', '<leader>klv', '<cmd>ViewPodLogs<CR>', { desc = '[V]iew Pod Logs' })
 map('n', '<leader>klf', '<cmd>JsonFormatLogs<CR>', { desc = 'JSON Log [F]ormat' })
 map('n', '<leader>kkt', '<cmd>ToggleYamlHelm<CR>', { desc = '[T]oggle YAML/Helm' })
