@@ -107,6 +107,15 @@ map('n', '<leader>tn', '<Cmd>FloatermNew<CR>', { desc = '[T]erminal [New]' })
 map('n', '<leader>tN', '<Cmd>FloatermNext<CR>', { desc = 'Cycle Next Terminal' })
 vim.g.floaterm_title = 'Terminal ($1/$2)'
 
+-- Kubernetes keymaps
+map('n', '<leader>kkK', '<cmd>OpenK9s<CR>', { desc = 'Open [K]9s' })
+map('n', '<leader>kkk', '<cmd>OpenK9sSplit<CR>', { desc = 'Open [k]9s in Split Pane' })
+map('n', '<leader>klv', '<cmd>ViewPodLogs<CR>', { desc = '[V]iew Pod Logs' })
+map('n', '<leader>klf', '<cmd>JsonFormatLogs<CR>', { desc = 'JSON Log [F]ormat' })
+map('n', '<leader>kkt', '<cmd>ToggleYamlHelm<CR>', { desc = '[T]oggle YAML/Helm' })
+map('n', '<leader>kht', '<cmd>HelmTemplateFromBuffer<CR>', { desc = '[H]elm [T]emplate' })
+map('n', '<leader>khu', '<cmd>HelmDependencyUpdateFromBuffer<CR>', { desc = '[H]elm Dependency [U]pdate' })
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
@@ -322,6 +331,10 @@ require('lazy').setup({
 
       -- Document existing key chains
       spec = {
+        { '<leader>k', group = '[K]ubernetes' },
+        { '<leader>kk', group = '[K]ubectl' },
+        { '<leader>kl', group = '[L]ogs' },
+        { '<leader>kh', group = '[H]elm' },
         { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
         { '<leader>d', group = '[D]ocument' },
         { '<leader>r', group = '[R]ename' },
@@ -330,6 +343,7 @@ require('lazy').setup({
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>b', group = '[B]uffer' },
+        { '<leader>l', group = '[L]azy Git' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
     },
