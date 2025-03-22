@@ -184,13 +184,23 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
 -- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 -- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
-
-vim.keymap.set('n', 'L', '$')
-vim.keymap.set('n', 'H', '0')
-
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
 --
+-- TODO: EGEN TEXT
+vim.keymap.set('n', '<leader>ls', ':!start cmd.exe /K "live-server"<CR>', { desc = 'Live server Run' })
+vim.keymap.set('n', '<leader>e', ':Ex<CR>', { desc = 'Explore working directory' })
+-- vim.keymap.set('n', '<leader>lt', 'O', { desc = 'Define type for js' })
+vim.keymap.set('n', '<leader>lt', 'O/** @type {} */<Esc>F}i', { desc = 'Define type for js' })
+
+-- TODO: Bevægelse
+vim.keymap.set('n', 'L', '$')
+vim.keymap.set('n', 'H', '0')
+vim.keymap.set('v', 'L', '$')
+vim.keymap.set('v', 'H', '0')
+vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
+vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
+
 --  See `:help wincmd` for a list of all window commands
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
@@ -198,8 +208,9 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- TODO: EGEN TEXT
-vim.keymap.set('n', '<leader>p', ':!start cmd.exe /K "live-server"<CR>', { desc = 'Live server Run' })
-
+-- vim.keymap.set('n', '<leader>ls', ':!start cmd.exe /K "live-server"<CR>', { desc = 'Live server Run' })
+-- vim.keymap.set('n', '<leader>e', ':Ex<CR>', { desc = 'Explore working directory' })
+--
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
