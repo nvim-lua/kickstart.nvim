@@ -9,11 +9,22 @@ return {
     provider = 'openai',
     openai = {
       endpoint = 'https://api.openai.com/v1',
-      model = 'gpt-4o', -- your desired model (or use gpt-4o, etc.)
+      model = 'o3-mini', -- your desired model (or use gpt-4o, etc.)
       timeout = 30000, -- timeout in milliseconds
       temperature = 0, -- adjust if needed
-      max_tokens = 4096,
+      max_tokens = claude,
       -- reasoning_effort = "high" -- only supported for reasoning models (o1, etc.)
+    },
+    claude = {
+      endpoint = 'https://api.anthropic.com',
+      model = 'claude-3-5-sonnet-20241022',
+      timeout = 30000, -- Timeout in milliseconds
+      temperature = 0,
+      --max_tokens = 20000,
+      disable_tools = true, -- disable tools!
+    },
+    behaviour = {
+      enable_claude_text_editor_tool_mode = true,
     },
   },
   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
