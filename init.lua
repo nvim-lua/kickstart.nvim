@@ -190,7 +190,6 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 -- TODO: EGEN TEXT
 vim.keymap.set('n', '<leader>ls', ':!start cmd.exe /K "live-server"<CR>', { desc = 'Live server Run' })
 vim.keymap.set('n', '<leader>e', ':Ex<CR>', { desc = 'Explore working directory' })
--- vim.keymap.set('n', '<leader>lt', 'O', { desc = 'Define type for js' })
 vim.keymap.set('n', '<leader>lt', 'O/** @type {} */<Esc>F}i', { desc = 'Define type for js' })
 
 -- TODO: Bevægelse
@@ -207,9 +206,6 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
--- TODO: EGEN TEXT
--- vim.keymap.set('n', '<leader>ls', ':!start cmd.exe /K "live-server"<CR>', { desc = 'Live server Run' })
--- vim.keymap.set('n', '<leader>e', ':Ex<CR>', { desc = 'Explore working directory' })
 --
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
