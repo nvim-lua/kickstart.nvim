@@ -684,15 +684,6 @@ require('lazy').setup({
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-      -- Enable navigation in flutuate windows
-      local cmp = require 'cmp'
-      cmp.setup {
-        mapping = {
-          ['<C-k>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-j>'] = cmp.mapping.scroll_docs(4),
-        },
-      }
-
       require('mason-lspconfig').setup {
         ensure_installed = { 'jdtls' },
         handlers = {
@@ -818,9 +809,9 @@ require('lazy').setup({
           -- Select the [p]revious item
           ['<C-p>'] = cmp.mapping.select_prev_item(),
 
-          -- Scroll the documentation window [b]ack / [f]orward
-          ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-f>'] = cmp.mapping.scroll_docs(4),
+          -- Scroll the documentation window
+          ['<C-k>'] = cmp.mapping.scroll_docs(-4),
+          ['<C-j>'] = cmp.mapping.scroll_docs(4),
 
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
