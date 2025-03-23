@@ -463,10 +463,31 @@ end
 --  Add any additional override configuration in the following tables. They will be passed to
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
-  clangd = {},
+  clangd = {
+    cmd = {
+      "~/.local/share/nvim/mason/bin/clangd",
+      "--all-scopes-completion",
+      "--background-index",
+      "--clang-tidy",
+      "--completion-parse=always",
+      "--completion-style=bundled",
+      "--cross-file-rename",
+      "--debug-origin",
+      "--enable-config", -- clangd 11+ supports reading from .clangd configuration file
+      "--fallback-style=Qt",
+      "--folding-ranges",
+      "--function-arg-placeholders",
+      "--header-insertion=iwyu",
+      "--pch-storage=memory", -- could also be disk
+      "--suggest-missing-includes",
+      "-j=20",                -- number of workers
+      -- "--resource-dir="
+      "--log=error",
+    },
+  },
   gopls = {},
   -- solargraph = {},
-  -- ruby_ls = {},
+  ruby_lsp = {},
   sqlls = {},
   angularls = {},
   bashls = {},
