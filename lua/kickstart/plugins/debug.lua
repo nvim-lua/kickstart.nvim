@@ -135,6 +135,6 @@ return {
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
-    require('dap-python').setup '~/.virtualenvs/debugpy/bin/python3'
+    require('dap-python').setup 'python3'
   end,
 }
