@@ -36,7 +36,7 @@ vim.keymap.set('v', '>', '>gv', { desc = 'Indent right and stay in visual mode' 
 vim.keymap.set('n', '<leader>bh', '<cmd>BufferLineCloseLeft<cr>', { desc = 'Close buffers to the left' })
 vim.keymap.set('n', '<leader>bl', '<cmd>BufferLineCloseRight<cr>', { desc = 'Close buffers to the right' })
 vim.keymap.set('n', '<leader>bf', '<cmd>Telescope buffers<cr>', { desc = 'Find buffers' })
-vim.keymap.set('n', '<leader>c', '<cmd>bd!<CR>', { desc = 'Close buffer' })
+vim.keymap.set('n', '<leader>c', '<cmd>Bdelete!<CR>', { desc = 'Close buffer' })
 
 --- lsp
 vim.keymap.set('n', '<leader>la', '<cmd>lua vim.lsp.buf.code_action()<cr>', { desc = 'Code actions' })
