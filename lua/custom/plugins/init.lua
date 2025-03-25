@@ -13,6 +13,7 @@ return {
     end,
   },
   -------------------------------------UTILS-------------------------------------
+  require 'custom.plugins.avante',
   {
     'kdheepak/lazygit.nvim',
     lazy = true,
