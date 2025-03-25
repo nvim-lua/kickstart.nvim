@@ -11,7 +11,7 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '<leader>e', ':Neotree toggle<CR>', desc = 'NeoTree reveal', silent = true },
+    { '<leader>e', ':Neotree toggle reveal<CR>', desc = 'NeoTree reveal', silent = true },
   },
   opts = {
     filesystem = {
@@ -22,4 +22,23 @@ return {
       },
     },
   },
+  config = function()
+    require('neo-tree').setup {
+      popup_border_style = 'rounded',
+      close_if_last_window = true,
+      enable_git_status = true,
+      enable_diagnostics = true,
+      event_handlers = {
+        {
+          event = 'file_opened',
+          handler = function(file_path)
+            -- auto close
+            -- vimc.cmd("Neotree close")
+            -- OR
+            require('neo-tree.command').execute { action = 'close' }
+          end,
+        },
+      },
+    }
+  end,
 }

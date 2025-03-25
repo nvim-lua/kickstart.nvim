@@ -20,8 +20,8 @@ vim.keymap.set('n', '<leader>d', '<cmd>lua vim.diagnostic.open_float()<CR>', { d
 -- Files
 vim.keymap.set('n', '<leader>q', '<cmd>q!<cr>', { desc = '[Q]uit' })
 vim.keymap.set('n', '<leader>w', '<cmd>w!<cr>', { desc = '[W]rite file' })
-vim.keymap.set('n', '<leader>/', '<Plug>(comment_toggle_linewise_current)', { desc = 'Toggle comment line' })
 vim.keymap.set('n', '<leader>.', '<cmd>luafile %<CR>', { desc = 'Source Lua file' })
+vim.keymap.set('n', '<leader>/', '<Plug>(comment_toggle_linewise_current)', { desc = 'Toggle comment line' })
 vim.keymap.set('v', '<leader>/', '<Plug>(comment_toggle_linewise_visual)', { desc = 'Toggle comment for selection' })
 
 -- delete single character without copying into register
