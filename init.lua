@@ -916,6 +916,7 @@ require('lazy').setup({
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
+      vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
       require('mini.surround').setup()
 
       -- Simple and easy statusline.
