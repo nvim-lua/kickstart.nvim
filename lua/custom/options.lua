@@ -37,7 +37,7 @@ vim.opt.smartcase = true
 vim.opt.signcolumn = 'yes'
 
 -- Decrease update time
-vim.opt.updatetime = 250
+vim.opt.updatetime = 50
 
 -- Decrease mapped sequence wait time
 vim.opt.timeoutlen = 300
@@ -65,3 +65,25 @@ vim.opt.scrolloff = 10
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
 vim.opt.confirm = true
+
+vim.opt.relativenumber = true
+
+-- set to 0 becouse of empty line
+vim.opt.cmdheight = 0
+
+-- set cmd height when entering command mode
+vim.api.nvim_command 'autocmd CmdlineEnter * set cmdheight=1'
+vim.api.nvim_command 'autocmd CmdlineLeave * set cmdheight=0'
+vim.api.nvim_command 'autocmd RecordingEnter * set cmdheight=1'
+vim.api.nvim_command 'autocmd RecordingLeave * set cmdheight=0'
+
+-- auto resize screen
+-- Create an autocommand group for auto resizing
+vim.api.nvim_create_augroup('autoequalize', { clear = true })
+
+vim.api.nvim_create_autocmd({ 'VimEnter', 'VimResized' }, {
+  callback = function()
+    vim.cmd 'wincmd ='
+  end,
+  group = 'autoequalize',
+})

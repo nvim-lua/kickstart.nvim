@@ -14,6 +14,7 @@ return {
   },
   -------------------------------------UTILS-------------------------------------
   require 'custom.plugins.avante',
+  -- i use this so i can comment in TS components etc
   'JoosepAlviste/nvim-ts-context-commentstring',
   {
     'numToStr/Comment.nvim',
@@ -59,7 +60,7 @@ return {
         '<leader>y',
         mode = { 'n', 'v' },
         '<cmd>Yazi<cr>',
-        desc = 'Open yazi at the current file',
+        desc = 'Open [Y]azi at the current file',
       },
     },
     opts = {
