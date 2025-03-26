@@ -217,6 +217,24 @@ on_attach =
     end,
   })
 
+-- Persistence settings
+-- load the session for the current directory
+vim.keymap.set('n', '<leader>ws', function()
+  require('persistence').load()
+end)
+-- select a session to load
+vim.keymap.set('n', '<leader>wS', function()
+  require('persistence').select()
+end)
+-- load the last session
+vim.keymap.set('n', '<leader>wl', function()
+  require('persistence').load { last = true }
+end)
+-- stop Persistence => session won't be saved on exit
+vim.keymap.set('n', '<leader>wd', function()
+  require('persistence').stop()
+end)
+
 -- tab management keybinds
 local map = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
@@ -549,6 +567,8 @@ require('lazy').setup({
         Rule('(', ')', { 'typst', 'typ', 'latex', 'tex' }),
         Rule('{', '}', { 'typst', 'typ', 'latex', 'tex' }),
         Rule('[', ']', { 'typst', 'typ', 'latex', 'tex' }),
+        Rule('_', '_', { 'typst', 'markdown' }),
+        Rule('*', '*', 'typst'),
       }
 
       -- Brief aside: **What is LSP?**
