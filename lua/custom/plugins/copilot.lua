@@ -14,7 +14,9 @@ return {
   {
     'zbirenbaum/copilot-cmp',
     dependencies = 'copilot.lua',
-    opts = {},
+    opts = {
+      copilot_model = 'gpt-4o-copilot', -- Current LSP default is gpt-35-turbo, supports gpt-4o-copilot
+    },
     config = function(_, opts)
       local copilot_cmp = require 'copilot_cmp'
       copilot_cmp.setup(opts)
