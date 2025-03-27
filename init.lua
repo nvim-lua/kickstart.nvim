@@ -1073,9 +1073,10 @@ require('lazy').setup({
 
       -- vim.cmd.colorscheme 'tokyonight-night'
       -- vim.cmd.colorscheme 'kanagawa'
-      vim.cmd.colorscheme 'material-deep-ocean'
+      -- vim.cmd.colorscheme 'material-deep-ocean'
       -- vim.cmd.colorscheme 'obscure'
       -- vim.cmd.colorscheme 'rose-pine'
+      -- vim.cmd.colorscheme 'e-ink'
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
     end,
