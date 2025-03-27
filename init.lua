@@ -122,6 +122,9 @@ end)
 -- Enable break indent
 vim.opt.breakindent = true
 
+-- disable autoformat
+vim.g.autoformat = false
+
 -- Save undo history
 vim.opt.undofile = true
 
@@ -160,9 +163,20 @@ vim.opt.scrolloff = 10
 --turn off virtual lines ect.
 vim.diagnostic.config {
   virtual_text = false,
-  virtual_lines = true,
+  virtual_lines = false,
   underline = false,
 }
+
+-- Disable ESLint LSP server and hide virtual text in Neovim
+-- Add this to your init.lua or init.vim file
+local isLspDiagnosticsVisible = true
+vim.keymap.set('n', '<leader>lx', function()
+  isLspDiagnosticsVisible = not isLspDiagnosticsVisible
+  vim.diagnostic.config {
+    virtual_text = isLspDiagnosticsVisible,
+    underline = isLspDiagnosticsVisible,
+  }
+end)
 
 --pull in remaps
 --require 'remap'
@@ -606,7 +620,16 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        pylsp = {},
+        pylsp = {
+          plugins = {
+            pylint = { enabled = false },
+            pyflakes = { enabled = false },
+            pycodestyle = { enabled = false },
+            pydocstyle = { enabled = false },
+            autopep8 = { enabled = false },
+            flake8 = { enabled = false },
+          },
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
