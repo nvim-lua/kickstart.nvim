@@ -94,11 +94,11 @@ return {
   --       -- Add more groups as necessary
   --     },
   --   },
-  --   config = function(_, opts)
-  --     require('material').setup(opts)
-  --     vim.cmd 'colorscheme material-palenight'
-  --   end,
-  --   priority = 1000,
+    -- config = function(_, opts)
+    --   require('material').setup(opts)
+    --   vim.cmd 'colorscheme material-darker'
+    -- end,
+    -- priority = 1000,
   -- },
 }
 -- ... other plugins ...

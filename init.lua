@@ -91,6 +91,8 @@ I hope you enjoy your Neovim journey,
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
+vim.lsp.config('sqls', {})
+vim.lsp.enable('sqls')
 vim.g.db_ui_env_variable_url = 'postgres'
 vim.g.db_ui_env_variable_name = 'test'
 
@@ -588,20 +590,37 @@ require('lazy').setup({
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
-    -- opts = {
-    --   servers = { eslint = {} },
-    --   setup = {
-    --     eslint = function()
-    --       require('lazyvim.util').lsp.on_attach(function(client)
-    --         if client.name == 'eslint' then
-    --           client.server_capabilities.documentFormattingProvider = true
-    --         elseif client.name == 'tsserver' then
-    --           client.server_capabilities.documentFormattingProvider = false
-    --         end
-    --       end)
-    --     end,
-    --   },
-    -- },
+    opts = {
+      servers = {
+        eslint = {},
+        -- sqls = {
+          -- on_attach = function(client, bufnr)
+          --   client.supports_method('textDocument/formatting') = true
+          --   vim.api.nvim_create_autocmd('BufWritePre', {
+          --     buffer = bufnr,
+          --     callback = function()
+          --       vim.lsp.buf.format {
+          --         filter = function(c)
+          --           return c.name == 'sqls'
+          --         end,
+          --       }
+          --     end,
+          --   })
+          -- end,
+        -- },
+      },
+      --   setup = {
+      --     eslint = function()
+      --       require('lazyvim.util').lsp.on_attach(function(client)
+      --         if client.name == 'eslint' then
+      --           client.server_capabilities.documentFormattingProvider = true
+      --         elseif client.name == 'tsserver' then
+      --           client.server_capabilities.documentFormattingProvider = false
+      --         end
+      --       end)
+      --     end,
+      --   },
+    },
     dependencies = {
       'saghen/blink.cmp',
       -- Automatically install LSPs and related tools to stdpath for Neovim
@@ -618,7 +637,11 @@ require('lazy').setup({
           }
 
           local lspconfig = require 'lspconfig'
-
+          -- lspconfig.sqls.setup {
+          --   on_attach = function(client, bufnr)
+          --     require('sqls').on_attach(client, bufnr)
+          --   end,
+          -- }
           -- Setup tsserver
           lspconfig.ts_ls.setup {}
         end,
@@ -934,6 +957,13 @@ require('lazy').setup({
         typescript = { 'prettier', stop_after_first = true },
         typescriptreact = { 'prettier', stop_after_first = true },
         javascriptreact = { 'prettier', stop_after_first = true },
+        sql = { 'sqlfluff' },
+      },
+      formatters = {
+        sqlfluff = {
+          command = 'sqlfluff',
+          args = { 'format', '--dialect', 'postgres', '-' },
+        },
       },
     },
   },
@@ -1066,10 +1096,9 @@ require('lazy').setup({
   { -- You can easily change to a different colorscheme.
     -- Change the name of the colorscheme plugin below, and then
     -- change the command in the config to whatever the name of that colorscheme is.
-    --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
+    -- priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       ---@diagnostic disable-next-line: missing-fields
       require('tokyonight').setup {
@@ -1077,17 +1106,17 @@ require('lazy').setup({
           comments = { italic = false }, -- Disable italics in comments
         },
       }
-
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
 
       -- vim.cmd.colorscheme 'tokyonight-night'
       -- vim.cmd.colorscheme 'kanagawa'
-      -- vim.cmd.colorscheme 'material-deep-ocean'
+      -- vim.cmd.colorscheme 'material-darker'
+      vim.cmd.colorscheme 'material-darker'
       -- vim.cmd.colorscheme 'obscure'
       -- vim.cmd.colorscheme 'rose-pine'
-      -- vim.cmd.colorscheme 'e-ink'
+      -- vim.cmd.colorscheme 'nordfox'
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
     end,
