@@ -138,6 +138,10 @@ return {
       require('colorizer').setup()
     end,
   },
-
-  { 'sainnhe/gruvbox-material' },
+  {
+    'sainnhe/gruvbox-material',
+    config = function()
+      vim.cmd.colorscheme 'gruvbox-material'
+    end,
+  },
 } -- end of return
