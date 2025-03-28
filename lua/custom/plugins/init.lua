@@ -153,6 +153,12 @@ return {
       vim.keymap.set('n', '<leader>cp', function()
         vim.cmd [[Copilot toggle]]
       end, { noremap = true, silent = true, desc = 'Toggle Copilot' })
+
+      vim.keymap.set('i', '<F12>', 'copilot#Accept("\\<CR>")', {
+        expr = true,
+        replace_keycodes = false,
+      })
+      vim.g.copilot_no_tab_map = true
     end,
   },
   {
