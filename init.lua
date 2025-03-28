@@ -785,6 +785,7 @@ require('lazy').setup({
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'Jezda1337/nvim-html-css',
     },
     config = function()
       -- See `:help cmp`
@@ -861,7 +862,21 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
-          { name = 'codeium' },
+          {
+            name = 'html-css',
+            option = {
+              enable_on = { 'html' }, -- html is enabled by default
+              notify = false,
+              documentation = {
+                auto_show = true, -- show documentation on select
+              },
+              -- add any external scss like one below
+              style_sheets = {
+                'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
+                'https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css',
+              },
+            },
+          },
         },
       }
     end,
