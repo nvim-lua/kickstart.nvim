@@ -80,6 +80,7 @@ vim.keymap.set('n', '<leader>;', 'A;<esc>', { desc = 'Append [;] to line' })
 vim.keymap.set('n', '<leader>,', 'A,<esc>', { desc = 'Append [,] to line' })
 vim.keymap.set('n', '<leader><Tab>', ':bnext<CR>', { desc = 'Next buffer' })
 vim.keymap.set('n', '<leader><S-Tab>', ':bprev<CR>', { desc = 'Previous buffer' })
+vim.opt.winborder = 'rounded'
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -910,7 +911,7 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   require 'kickstart.plugins.debug',
-  require 'kickstart.plugins.indent_line',
+  -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
