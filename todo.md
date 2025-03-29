@@ -1,0 +1,3 @@
+- snippets
+- comic code nerdfont
+- telescope replacement

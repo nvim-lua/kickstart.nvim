@@ -5,7 +5,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -76,8 +76,8 @@ vim.opt.scrolloff = 10
 vim.keymap.set('n', '<leader><leader>', '<cmd>Neotree toggle<CR>')
 -- vim.keymap.set('n', '<leader><leader>g', '<cmd>Neotree float git_status<CR>')
 vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = 'Toggle [U]ndoTree' })
-vim.keymap.set('n', '<leader>;', 'A;<esc>', { desc = 'Append [;] to line' })
-vim.keymap.set('n', '<leader>,', 'A,<esc>', { desc = 'Append [,] to line' })
+-- vim.keymap.set('n', '<leader>;', 'A;<esc>', { desc = 'Append [;] to line' })
+-- vim.keymap.set('n', '<leader>,', 'A,<esc>', { desc = 'Append [,] to line' })
 vim.keymap.set('n', '<leader><Tab>', ':bnext<CR>', { desc = 'Next buffer' })
 vim.keymap.set('n', '<leader><S-Tab>', ':bprev<CR>', { desc = 'Previous buffer' })
 vim.opt.winborder = 'rounded'
@@ -398,6 +398,12 @@ require('lazy').setup({
           ['<Tab>'] = { 'select_next', 'fallback' },
           ['<S-Tab>'] = { 'select_prev', 'fallback' },
         },
+        appearance = {
+          nerd_font_variant = 'normal',
+        },
+        completion = {
+          documentation = { auto_show = true },
+        },
         sources = {
           -- add lazydev to your completion providers
           default = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' },
@@ -429,6 +435,24 @@ require('lazy').setup({
       'williamboman/mason.nvim',
       dependencies = { 'WhoIsSethDaniel/mason-tool-installer.nvim' },
       config = function()
+        local ensure_installed = vim.tbl_keys {}
+        vim.list_extend(ensure_installed, {
+          'stylua', -- Used to format Lua code
+          {
+            'lua-language-server',
+            settings = {
+              Lua = {
+                completion = {
+                  callSnippet = 'Replace',
+                },
+              },
+            },
+          },
+          'clangd',
+          'rust-analyzer',
+          'powershell-editor-services',
+        })
+        require('mason-tool-installer').setup { ensure_installed = ensure_installed }
         require('mason').setup()
       end,
     },
@@ -920,6 +944,7 @@ require('lazy').setup({
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   { import = 'custom.plugins' },
+  { import = 'misc' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
