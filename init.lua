@@ -807,6 +807,8 @@ require('lazy').setup({
       },
       'folke/lazydev.nvim',
     },
+    --- @module 'blink.cmp'
+    --- @type blink.cmp.Config
     opts = {
       keymap = {
         -- 'default' (recommended) for mappings similar to built-in completions
@@ -852,7 +854,7 @@ require('lazy').setup({
       snippets = { preset = 'luasnip' },
 
       -- Blink.cmp includes an optional, recommended rust fuzzy matcher,
-      -- which will automatically downloaded a prebuilt binary when enabled.
+      -- which automatically downloads a prebuilt binary when enabled.
       --
       -- By default, we use the Lua implementation instead, but you may enable
       -- the rust implementation via `'prefer_rust_with_warning'`
