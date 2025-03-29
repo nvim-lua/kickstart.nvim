@@ -5,7 +5,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed
-vim.g.have_nerd_font = true
+vim.g.have_nerd_font = false
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -259,6 +259,7 @@ require('lazy').setup({
   --
   -- Use the `dependencies` key to specify the dependencies of a particular plugin
 
+  --[[
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
@@ -303,7 +304,7 @@ require('lazy').setup({
       -- Telescope picker. This is really useful to discover what Telescope can
       -- do as well as how to actually do it!
 
-      -- [[ Configure Telescope ]]
+      --  Configure Telescope 
       -- See `:help telescope` and `:help telescope.setup()`
       require('telescope').setup {
         -- You can put your default mappings / updates / etc. in here
@@ -363,7 +364,80 @@ require('lazy').setup({
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
+  --]]
 
+  { -- LSP
+    { -- init.lua LSP config
+      'folke/lazydev.nvim',
+      ft = 'lua', -- only load on lua files
+      opts = {
+        library = {
+          -- See the configuration section for more details
+          -- Load luvit types when the `vim.uv` word is found
+          { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+        },
+      },
+    },
+    { -- blink autocompletion
+      'saghen/blink.cmp',
+      dependencies = { 'rafamadriz/friendly-snippets' },
+      version = '*',
+      ---@module 'blink.cmp'
+      ---@type blink.cmp.Config
+      opts = {
+        completion = {
+          list = {
+            selection = {
+              preselect = false,
+            },
+          },
+        },
+        keymap = {
+          preset = 'enter',
+          ['<Tab>'] = { 'select_next', 'fallback' },
+          ['<S-Tab>'] = { 'select_prev', 'fallback' },
+        },
+        sources = {
+          -- add lazydev to your completion providers
+          default = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' },
+          providers = {
+            lazydev = {
+              name = 'LazyDev',
+              module = 'lazydev.integrations.blink',
+              -- make lazydev completions top priority (see `:h blink.cmp`)
+              score_offset = 100,
+            },
+          },
+        },
+      },
+      opts_extend = { 'sources.default' },
+    },
+    { -- Built-in Neovim LSP support
+      vim.lsp.config('*', {
+        capabilities = {
+          textDocument = {
+            semanticTokens = {
+              multilineTokenSupport = true,
+            },
+          },
+        },
+        root_markers = { '.git' },
+      }),
+    },
+    { -- Mason (LSP package manager)
+      'williamboman/mason.nvim',
+      dependencies = { 'WhoIsSethDaniel/mason-tool-installer.nvim' },
+      config = function()
+        require('mason').setup()
+      end,
+    },
+    { -- LSP loading info in the bottom-right corner
+      'j-hui/fidget.nvim',
+      opts = {},
+    },
+  },
+
+  --[[
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
@@ -381,39 +455,11 @@ require('lazy').setup({
       { 'folke/neodev.nvim', opts = {} },
     },
     config = function()
-      -- Brief aside: **What is LSP?**
-      --
-      -- LSP is an initialism you've probably heard, but might not understand what it is.
-      --
-      -- LSP stands for Language Server Protocol. It's a protocol that helps editors
-      -- and language tooling communicate in a standardized fashion.
-      --
-      -- In general, you have a "server" which is some tool built to understand a particular
-      -- language (such as `gopls`, `lua_ls`, `rust_analyzer`, etc.). These Language Servers
-      -- (sometimes called LSP servers, but that's kind of like ATM Machine) are standalone
-      -- processes that communicate with some "client" - in this case, Neovim!
-      --
-      -- LSP provides Neovim with features like:
-      --  - Go to definition
-      --  - Find references
-      --  - Autocompletion
-      --  - Symbol Search
-      --  - and more!
-      --
-      -- Thus, Language Servers are external tools that must be installed separately from
-      -- Neovim. This is where `mason` and related plugins come into play.
-      --
-      -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
-      -- and elegantly composed help section, `:help lsp-vs-treesitter`
-
-      --  This function gets run when an LSP attaches to a particular buffer.
-      --    That is to say, every time a new file is opened that is associated with
-      --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
-      --    function will be executed to configure the current buffer
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
           -- NOTE: Remember that Lua is a real programming language, and as such it is possible
+          -- 
           -- to define small helper and utility functions so you don't have to repeat yourself.
           --
           -- In this case, we create a function that lets us more easily define mappings specific
@@ -586,6 +632,7 @@ require('lazy').setup({
       end
     end,
   },
+  --]]
 
   { -- DAP for Godot - https://docs.godotengine.org/en/stable/tutorials/editor/external_editor.html#lsp-dap-support
     'mfussenegger/nvim-dap',
@@ -647,6 +694,7 @@ require('lazy').setup({
     },
   },
 
+  --[[
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
     event = 'InsertEnter',
@@ -755,6 +803,7 @@ require('lazy').setup({
       }
     end,
   },
+  --]]
 
   { -- Install cutpuccin colorscheme
     'catppuccin/nvim',
