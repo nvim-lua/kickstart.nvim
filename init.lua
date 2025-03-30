@@ -1,6 +1,17 @@
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
+
+if vim.fn.exists 'g:os' == 0 then
+  local is_windows = vim.fn.has 'win64' == 1 or vim.fn.has 'win32' == 1 or vim.fn.has 'win16' == 1
+  if is_windows then
+    vim.g.os = 'Windows'
+  else
+    local uname_output = vim.fn.system 'uname'
+    vim.g.os = string.gsub(uname_output, '\n', '')
+  end
+end
+
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
@@ -452,7 +463,7 @@ require('lazy').setup({
       -- Where to put new notes. Valid options are
       --  * "current_dir" - put new notes in same directory as the current buffer.
       --  * "notes_subdir" - put new notes in the default notes subdirectory.
-      new_notes_location = 'notes_subdir',
+      new_notes_location = 'current_dir',
 
       -- Optional, customize how note IDs are generated given an optional title.
       ---@param title string|?
@@ -540,9 +551,13 @@ require('lazy').setup({
       ---@param url string
       follow_url_func = function(url)
         -- Open the URL in the default web browser.
-        vim.fn.jobstart { 'open', url } -- Mac OS
+
+        if vim.g.os == 'Windows' then
+          vim.cmd(':silent exec "!start ' .. url .. '"') -- Windows
+        else
+          vim.fn.jobstart { 'open', url } -- Mac OS
+        end
         -- vim.fn.jobstart({"xdg-open", url})  -- linux
-        -- vim.cmd(':silent exec "!start ' .. url .. '"') -- Windows
         -- vim.ui.open(url) -- need Neovim 0.10.0+
       end,
 
