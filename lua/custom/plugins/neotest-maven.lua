@@ -1,7 +1,7 @@
 return {
   {
-    --'lucas-garcia-rubio/neotest-maven',
-    dir = '~/Repositories/pessoal/plugins/neotest-maven',
+    'lucas-garcia-rubio/neotest-maven',
+    --dir = '~/Repositories/pessoal/plugins/neotest-maven',
     name = 'neotest-maven',
     ft = 'java',
     dependencies = {
