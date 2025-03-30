@@ -1174,7 +1174,7 @@ require('lazy').setup({
 
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'rust' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -1208,7 +1208,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
-  require 'kickstart.plugins.neo-tree',
+  -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -1325,11 +1325,11 @@ require('lazy').setup({
       ['g?'] = { 'actions.show_help', mode = 'n' },
       ['<CR>'] = 'actions.select',
       ['<C-s>'] = { 'actions.select', opts = { vertical = true } },
-      ['<C-h>'] = { 'actions.select', opts = { horizontal = true } },
+      -- ['<C-h>'] = { 'actions.select', opts = { horizontal = true } },
       ['<C-t>'] = { 'actions.select', opts = { tab = true } },
       ['<C-p>'] = 'actions.preview',
       ['<C-c>'] = { 'actions.close', mode = 'n' },
-      ['<C-l>'] = 'actions.refresh',
+      -- ['<C-l>'] = 'actions.refresh',
       ['-'] = { 'actions.parent', mode = 'n' },
       ['_'] = { 'actions.open_cwd', mode = 'n' },
       ['`'] = { 'actions.cd', mode = 'n' },
@@ -1390,4 +1390,4 @@ vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, {})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
-conceallevel = 2
+require 'oil'
