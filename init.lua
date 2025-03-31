@@ -329,11 +329,6 @@ require('lazy').setup({
   -- git-conflict
   { 'akinsho/git-conflict.nvim', version = '*', config = true },
 
-  -- git blame
-  {
-    'f-person/git-blame.nvim',
-  },
-
   -- neogit
   {
     'NeogitOrg/neogit',
