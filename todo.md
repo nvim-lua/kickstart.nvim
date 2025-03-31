@@ -1,13 +1,13 @@
 [] snippets
 
-[] look into re-adding nvim-lspconfig
+[x] look into re-adding nvim-lspconfig
 
-[] confirm LSP support is working fundamentally
+[x] confirm LSP support is working fundamentally
 
-[] powershell LSP
+[x] powershell LSP
 
 [] godot
 
 [x] comic code nerdfont
 
-[] telescope replacement
+[x] telescope replacement
