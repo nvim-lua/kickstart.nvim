@@ -368,7 +368,8 @@ require('lazy').setup({
   --]]
 
   { -- LSP
-    { -- init.lua LSP config
+    --[[ init.lua LSP config
+    { 
       'folke/lazydev.nvim',
       ft = 'lua', -- only load on lua files
       opts = {
@@ -379,6 +380,7 @@ require('lazy').setup({
         },
       },
     },
+    --]]
     { -- blink autocompletion
       'saghen/blink.cmp',
       dependencies = { 'rafamadriz/friendly-snippets' },
@@ -419,19 +421,8 @@ require('lazy').setup({
       },
       opts_extend = { 'sources.default' },
     },
-    { -- Built-in Neovim LSP support
-      vim.lsp.config('*', {
-        capabilities = {
-          textDocument = {
-            semanticTokens = {
-              multilineTokenSupport = true,
-            },
-          },
-        },
-        root_markers = { '.git' },
-      }),
-    },
-    { -- Mason (LSP package manager)
+    --[[ Mason (LSP package manager)
+    { 
       'williamboman/mason.nvim',
       dependencies = { 'WhoIsSethDaniel/mason-tool-installer.nvim' },
       config = function()
@@ -456,6 +447,7 @@ require('lazy').setup({
         require('mason').setup()
       end,
     },
+    --]]
 
     { -- FZF (Telescope replacement)
       'ibhagwan/fzf-lua',
@@ -476,10 +468,12 @@ require('lazy').setup({
       end,
     },
 
-    { -- LSP loading info in the bottom-right corner
+    --[[ LSP loading info in the bottom-right corner
+    { 
       'j-hui/fidget.nvim',
       opts = {},
     },
+    --]]
   },
 
   --[[
@@ -965,6 +959,7 @@ require('lazy').setup({
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   { import = 'custom.plugins' },
   { import = 'misc' },
+  { import = 'lsp' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
