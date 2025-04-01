@@ -1,10 +1,10 @@
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'sql',
-  callback = function()
-    vim.lsp.start {
-      name = 'sqls',
-      cmd = { 'sqls', 'stdio' },
-      root_dir = vim.fn.getcwd(),
-    }
-  end,
-})
+-- vim.api.nvim_create_autocmd('FileType', {
+--   pattern = 'sql',
+--   callback = function()
+--     vim.lsp.start {
+--       name = 'sqls',
+--       cmd = { 'sqls', 'stdio' },
+--       root_dir = vim.fn.getcwd(),
+--     }
+--   end,
+-- })

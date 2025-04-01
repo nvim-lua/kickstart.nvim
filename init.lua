@@ -91,11 +91,7 @@ I hope you enjoy your Neovim journey,
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
-vim.lsp.config('sqls', {})
-vim.lsp.enable('sqls')
-vim.g.db_ui_env_variable_url = 'postgres'
-vim.g.db_ui_env_variable_name = 'test'
-
+vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', { noremap = true })
 vim.cmd [[ autocmd VimEnter * Neotree position=left ]]
 --AUTO RELOAD ON SAVE
 vim.api.nvim_create_autocmd('BufWritePost', {
@@ -593,33 +589,7 @@ require('lazy').setup({
     opts = {
       servers = {
         eslint = {},
-        -- sqls = {
-          -- on_attach = function(client, bufnr)
-          --   client.supports_method('textDocument/formatting') = true
-          --   vim.api.nvim_create_autocmd('BufWritePre', {
-          --     buffer = bufnr,
-          --     callback = function()
-          --       vim.lsp.buf.format {
-          --         filter = function(c)
-          --           return c.name == 'sqls'
-          --         end,
-          --       }
-          --     end,
-          --   })
-          -- end,
-        -- },
       },
-      --   setup = {
-      --     eslint = function()
-      --       require('lazyvim.util').lsp.on_attach(function(client)
-      --         if client.name == 'eslint' then
-      --           client.server_capabilities.documentFormattingProvider = true
-      --         elseif client.name == 'tsserver' then
-      --           client.server_capabilities.documentFormattingProvider = false
-      --         end
-      --       end)
-      --     end,
-      --   },
     },
     dependencies = {
       'saghen/blink.cmp',
@@ -635,15 +605,6 @@ require('lazy').setup({
             ensure_installed = { 'lua_ls' },
             automatic_installation = true,
           }
-
-          local lspconfig = require 'lspconfig'
-          -- lspconfig.sqls.setup {
-          --   on_attach = function(client, bufnr)
-          --     require('sqls').on_attach(client, bufnr)
-          --   end,
-          -- }
-          -- Setup tsserver
-          lspconfig.ts_ls.setup {}
         end,
       },
       -- Mason must be loaded before its dependents so we need to set it up here.
@@ -861,8 +822,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        -- ts_ls = {}
-
+        ts_ls = {},
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -914,7 +874,6 @@ require('lazy').setup({
       }
     end,
   },
-
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
@@ -929,6 +888,7 @@ require('lazy').setup({
         desc = '[F]ormat buffer',
       },
     },
+
     opts = {
       -- notify_on_error = false,
       -- format_on_save = function(bufnr)
@@ -961,8 +921,21 @@ require('lazy').setup({
       },
       formatters = {
         sqlfluff = {
-          command = 'sqlfluff',
-          args = { 'format', '--dialect', 'postgres', '-' },
+          conmmand = 'sqlfluff',
+          args = {
+            'fix',
+            '--dialect',
+            'postgres',
+            '-n',
+            '-',
+          },
+          stdin = true,
+          condition = function()
+            return vim.fn.executable 'sqlfluff' == 1
+          end,
+          cwd = function(ctx)
+            return ctx.dirname or vim.fn.getcwd()
+          end,
         },
       },
     },
@@ -1111,12 +1084,14 @@ require('lazy').setup({
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
 
       -- vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'ash'
       -- vim.cmd.colorscheme 'kanagawa'
-      -- vim.cmd.colorscheme 'material-darker'
-      vim.cmd.colorscheme 'material-darker'
+      -- vim.cmd.colorscheme 'material-palenight'
+      -- vim.cmd.colorscheme 'material-deep-ocean'
       -- vim.cmd.colorscheme 'obscure'
       -- vim.cmd.colorscheme 'rose-pine'
       -- vim.cmd.colorscheme 'nordfox'
+      -- vim.cmd.colorscheme 'gruvbox-material'
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
     end,
@@ -1164,12 +1139,14 @@ require('lazy').setup({
   },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    optional = true,
     build = ':TSUpdate',
     event = { 'BufReadPre', 'BufNewFile' },
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
       ensure_installed = {
+        'sql',
         'bash',
         'c',
         'diff',
