@@ -97,6 +97,7 @@ return {
     if vim.fn.has 'win32' == 1 then
       require('lspconfig')['gdscript'].setup {
         cmd = { 'ncat', '127.0.0.1', '6005' },
+        capabilities = require('blink.cmp').get_lsp_capabilities(),
         name = 'godot',
       }
     else

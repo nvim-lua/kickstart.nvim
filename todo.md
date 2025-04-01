@@ -1,4 +1,4 @@
-[] snippets
+[x] snippets
 
 [x] look into re-adding nvim-lspconfig
 
