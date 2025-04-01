@@ -259,15 +259,15 @@ require('lazy').setup({
   },
 
   {
-  'nvimdev/dashboard-nvim',
-  event = 'VimEnter',
-  config = function()
-    require('dashboard').setup {
-      -- config
-    }
-  end,
-  dependencies = { {'nvim-tree/nvim-web-devicons'}}
-},
+    'nvimdev/dashboard-nvim',
+    event = 'VimEnter',
+    config = function()
+      require('dashboard').setup {
+        -- config
+      }
+    end,
+    dependencies = { { 'nvim-tree/nvim-web-devicons' } },
+  },
 
   {
     'windwp/nvim-autopairs',
@@ -889,7 +889,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'rose-pine'
+      vim.cmd.colorscheme 'slate'
       vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
 
       -- You can configure highlights by doing something like:
