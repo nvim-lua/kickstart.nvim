@@ -36,7 +36,7 @@ return {
     config = function()
       vim.cmd.colorscheme 'gruvbox-material'
     end,
-    enabled = false,
+    enabled = true,
   },
 
   {
@@ -77,7 +77,7 @@ return {
         },
       }
 
-      vim.cmd.colorscheme 'catppuccin-mocha'
+      vim.cmd.colorscheme 'catppuccin-macchiato'
 
       -- Hide all semantic highlights until upstream issues are resolved (https://github.com/catppuccin/nvim/issues/480)
       for _, group in ipairs(vim.fn.getcompletion('@lsp', 'highlight')) do
@@ -167,5 +167,6 @@ return {
     config = function()
       vim.cmd.colorscheme 'gruber-darker'
     end,
+    enabled = false,
   }
 }
