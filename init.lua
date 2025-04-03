@@ -302,14 +302,13 @@ require('lazy').setup({
       },
     },
   },
-
   -- themery
   {
     'zaldih/themery.nvim',
     lazy = false,
     config = function()
       require('themery').setup {
-        themes = { 'visual_studio_code', 'retrobox' },
+        themes = { 'visual_studio_code', 'retrobox', 'github_dark_high_contrast' },
         livePreview = true,
       }
     end,
@@ -323,8 +322,14 @@ require('lazy').setup({
     end,
   },
 
-  -- transparent windows
-  { 'xiyaowong/transparent.nvim' },
+  -- github theme
+  {
+    'projekt0n/github-nvim-theme',
+    name = 'github_dark_high_contrast',
+    config = function()
+      vim.cmd 'colorscheme github_dark_high_contrast'
+    end,
+  },
 
   -- git-conflict
   { 'akinsho/git-conflict.nvim', version = '*', config = true },
@@ -445,6 +450,8 @@ require('lazy').setup({
       }
     end,
   },
+
+  { 'rcarriga/nvim-dap-ui', dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' } },
   -- dap
   {
     'mfussenegger/nvim-dap',
@@ -455,11 +462,51 @@ require('lazy').setup({
       'nvim-neotest/nvim-nio',
       'williamboman/mason.nvim',
     },
+
     config = function()
       local dap = require 'dap'
       local ui = require 'dapui'
 
-      require('dapui').setup()
+      require('dapui').setup {
+        layouts = {
+          {
+            elements = {
+              {
+                elements = {
+                  {
+                    id = 'repl',
+                    size = 0.5,
+                  },
+                  {
+                    id = 'console',
+                    size = 0.5,
+                  },
+                },
+                position = 'bottom',
+                size = 10,
+              },
+              {
+                id = 'scopes',
+                size = 0.25,
+              },
+              {
+                id = 'breakpoints',
+                size = 0.25,
+              },
+              {
+                id = 'stacks',
+                size = 0.25,
+              },
+              {
+                id = 'watches',
+                size = 0.25,
+              },
+            },
+            position = 'bottom',
+            size = 40,
+          },
+        },
+      }
       require('dap-go').setup()
 
       dap.adapters.codelldb = {
@@ -511,7 +558,6 @@ require('lazy').setup({
       end
     end,
   },
-
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
