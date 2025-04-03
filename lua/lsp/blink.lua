@@ -1,7 +1,8 @@
 return { -- blink autocompletion
   'saghen/blink.cmp',
   dependencies = { 'rafamadriz/friendly-snippets' },
-  version = '*',
+  -- version = '*',
+  build = 'cargo build --release',
   ---@module 'blink.cmp'
   ---@type blink.cmp.Config
   opts = {
