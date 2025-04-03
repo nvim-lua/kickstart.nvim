@@ -6,6 +6,7 @@ return { -- blink autocompletion
   ---@type blink.cmp.Config
   opts = {
     completion = {
+      documentation = { auto_show = true },
       list = {
         selection = {
           preselect = false,
@@ -19,9 +20,6 @@ return { -- blink autocompletion
     },
     appearance = {
       nerd_font_variant = 'normal',
-    },
-    completion = {
-      documentation = { auto_show = true },
     },
     sources = {
       -- add lazydev to your completion providers
