@@ -6,7 +6,7 @@
 
 [x] powershell LSP
 
-[] godot
+[x] godot
 
 [x] comic code nerdfont
 
