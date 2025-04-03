@@ -162,6 +162,11 @@ vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.cindent = true
 
+-- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
+-- instead raise a dialog asking if you wish to save the current file(s)
+-- See `:help 'confirm'`
+vim.opt.confirm = true
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -194,12 +199,6 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-
--- ELB: Keybinds
-
--- ELB: Keybinds to make tabbing sane
-vim.keymap.set('n', 'gn', '<Cmd>tabnext<CR>', { desc = 'Move to the previous tab' })
-vim.keymap.set('n', 'gp', '<Cmd>tabprevious<CR>', { desc = 'Move to the next tab' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -756,16 +755,14 @@ require('lazy').setup({
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
         local disable_filetypes = { c = true, cpp = true }
-        local lsp_format_opt
         if disable_filetypes[vim.bo[bufnr].filetype] then
-          lsp_format_opt = 'never'
+          return nil
         else
-          lsp_format_opt = 'fallback'
+          return {
+            timeout_ms = 500,
+            lsp_format = 'fallback',
+          }
         end
-        return {
-          timeout_ms = 500,
-          lsp_format = lsp_format_opt,
-        }
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
@@ -997,7 +994,7 @@ require('lazy').setup({
   -- place them in the correct locations.
 
   -- NOTE: Next step on your Neovim journey: Add/Configure additional plugins for Kickstart
-  'github/copilot.vim', -- ELB: Adding copilot
+  -- 'github/copilot.vim', -- ELB: Adding copilot
 
   --
   --  Here are some example plugins that I've included in the Kickstart repository.
