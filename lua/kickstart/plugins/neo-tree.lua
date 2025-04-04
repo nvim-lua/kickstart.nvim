@@ -11,9 +11,14 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
+    { '\\', ':Neotree position=float<CR>', desc = 'NeoTree reveal in float mode', silent = true },
+    { '<leader>nds', ':Neotree document_symbols position=float<CR>', desc = 'NeoTree document symbols', silent = true },
   },
   opts = {
+    sources = {
+      'filesystem',
+      'document_symbols',
+    },
     filesystem = {
       window = {
         mappings = {
