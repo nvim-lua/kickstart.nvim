@@ -17,8 +17,7 @@ require('gruvbox-material').setup {
   signs = {
     highlight = true, -- whether to highlight signs
   },
-  customize = funtion(str_group, opt_table) {},
-  -- configuration accepts
+  --  customize = funtion(str_group, opt_table) {},
 }
 
 require('lualine').setup {
@@ -61,4 +60,10 @@ require('lualine').setup {
   winbar = {},
   inactive_winbar = {},
   extensions = {},
+}
+
+require('ibl').setup {
+  indent = {
+    char = '▏',
+  },
 }
