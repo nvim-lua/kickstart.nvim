@@ -155,7 +155,7 @@ return {
 
   {
     "echasnovski/mini.starter",
-    enabled = false,
+    enabled = true,
     config = function ()
       require('mini.starter').setup({
         -- Define the header

@@ -36,7 +36,7 @@ return {
     config = function()
       vim.cmd.colorscheme 'gruvbox-material'
     end,
-    enabled = true,
+    enabled = false,
   },
 
   {
@@ -168,5 +168,18 @@ return {
       vim.cmd.colorscheme 'gruber-darker'
     end,
     enabled = false,
+  },
+
+  {
+    'olivercederborg/poimandres.nvim',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require('poimandres').setup {
+        -- leave this setup function empty for default config
+        -- or refer to the configuration section
+        -- for configuration options
+      }
+    end,
   }
 }
