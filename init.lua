@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -302,6 +302,16 @@ require('lazy').setup({
       },
     },
   },
+  -- lspinfo borders
+  {
+    'folke/noice.nvim',
+    opts = {
+      presets = {
+        lsp_doc_border = true,
+      },
+    },
+  },
+
   -- themery
   {
     'zaldih/themery.nvim',
