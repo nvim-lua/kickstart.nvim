@@ -69,3 +69,5 @@ vim.opt.confirm = true
 vim.o.guicursor = 'a:block-Cursor/lCursor-blinkwait1000-blinkon100-blinkoff100'
 
 vim.opt.termguicolors = true
+
+vim.opt.wrap = false

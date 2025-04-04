@@ -1,3 +1,5 @@
+local colors = require('gruvbox-material.colors').get(vim.o.background, 'hard')
+
 require('gruvbox-material').setup {
   italics = false, -- enable italics in general
   contrast = 'hard', -- set contrast, can be any of "hard", "medium", "soft"
@@ -15,7 +17,7 @@ require('gruvbox-material').setup {
   signs = {
     highlight = true, -- whether to highlight signs
   },
-  customize = nil, -- customize the theme in any way you desire, see below what this
+  customize = funtion(str_group, opt_table) {},
   -- configuration accepts
 }
 
