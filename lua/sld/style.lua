@@ -18,12 +18,12 @@ require('gruvbox-material').setup {
     highlight = true, -- whether to highlight signs
   },
   customize = function(group, opt)
-    if group == 'Type' then
+    if group == '@type' then
       opt.link = nil
       opt.fg = colors.blue
     end
 
-    if group == 'Macro' then
+    if string.find(group, '.macro') then
       opt.link = nil
       opt.fg = colors.purple
     end
