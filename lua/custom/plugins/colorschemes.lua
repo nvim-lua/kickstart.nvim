@@ -97,9 +97,9 @@ return {
 
       }
 
-      vim.cmd.colorscheme 'rose-pine-moon'
+      vim.cmd.colorscheme 'rose-pine'
     end,
-    enabled = false,
+    enabled = true,
   },
 
   {
@@ -181,5 +181,16 @@ return {
         -- for configuration options
       }
     end,
-  }
+    enabled = false,
+  },
+
+  {
+    'datsfilipe/vesper.nvim',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.cmd.colorscheme 'vesper'
+    end,
+    enabled = false,
+  },
 }
