@@ -28,6 +28,18 @@ require('gruvbox-material').setup {
       opt.fg = colors.purple
     end
 
+    if string.find(group, '@variable') then
+      opt.link = nil
+      opt.fg = nil
+    end
+
+
+    if group == '@string' then
+      opt.link = nil
+      opt.fg = colors.yellow 
+    end
+
+
     return opt
   end,
 }
