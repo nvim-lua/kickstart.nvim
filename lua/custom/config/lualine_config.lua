@@ -38,13 +38,13 @@ local config = {
     -- Disable sections and component separators
     component_separators = '',
     section_separators = '',
-    theme = {
-      -- We are going to use lualine_c and lualine_x as left and
-      -- right sections. Both are highlighted by the c theme.
-      -- So we are just setting default looks of statusline
-      normal = { c = { fg = colors.fg, bg = colors.bg } },
-      inactive = { c = { fg = colors.fg, bg = colors.bg } },
-    },
+    -- theme = {
+    --   -- We are going to use lualine_c and lualine_x as left and
+    --   -- right sections. Both are highlighted by the c theme.
+    --   -- So we are just setting default looks of statusline
+    --   normal = { c = { fg = colors.fg, bg = colors.bg } },
+    --   inactive = { c = { fg = colors.fg, bg = colors.bg } },
+    -- },
   },
   sections = {
     -- these are to remove the defaults
@@ -130,11 +130,11 @@ ins_left {
   cond = conditions.buffer_not_empty,
 }
 
--- ins_left {
---   'filename',
---   cond = conditions.buffer_not_empty,
---   color = { fg = colors.magenta, gui = 'bold' },
--- }
+ins_left {
+  'filename',
+  cond = conditions.buffer_not_empty,
+  color = { fg = colors.magenta, gui = 'bold' },
+}
 
 ins_left { 'location', show_filename_only = false }
 ins_left { 'progress', color = { fg = colors.fg, gui = 'bold' } }
@@ -197,7 +197,7 @@ ins_right {
 ins_right {
   'branch',
   icon = '',
-  color = { fg = colors.violet, gui = 'bold' },
+  color = { fg = colors.red, gui = 'bold' },
 }
 
 ins_right {
