@@ -33,12 +33,30 @@ require('gruvbox-material').setup {
       opt.fg = nil
     end
 
-
     if group == '@string' then
       opt.link = nil
-      opt.fg = colors.yellow 
+      opt.fg = colors.yellow
     end
 
+    if group == '@keyword.modifier' then
+      opt.link = nil
+      opt.fg = colors.orange
+    end
+
+    if group == '@string.escape' then
+      opt.link = nil
+      opt.fg = colors.aqua
+    end
+
+    if group == '@property' then
+      opt.link = nil
+      opt.fg = nil
+    end
+
+    if group == '@module' then
+      opt.link = nil
+      opt.fg = colors.aqua
+    end
 
     return opt
   end,
