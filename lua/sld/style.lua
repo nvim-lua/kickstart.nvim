@@ -17,7 +17,19 @@ require('gruvbox-material').setup {
   signs = {
     highlight = true, -- whether to highlight signs
   },
-  --  customize = funtion(str_group, opt_table) {},
+  customize = function(group, opt)
+    if group == 'Type' then
+      opt.link = nil
+      opt.fg = colors.blue
+    end
+
+    if group == 'Macro' then
+      opt.link = nil
+      opt.fg = colors.purple
+    end
+
+    return opt
+  end,
 }
 
 require('lualine').setup {
