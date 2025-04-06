@@ -83,6 +83,39 @@ I hope you enjoy your Neovim journey,
 
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
+--
+--
+-- One last note before we leave you to play around: Lua is a real programming language.
+-- Why is that important? First of all, that you can use all the features of Lua,
+-- like variables, conditionals, loops and functions. Secondly, that you can interact with
+-- neovim in concise way. The following lines contain two examples that might give you some inspirations.
+-- This snippet adds a keymap to open a predefined file in a new tab:
+-- local function open_notes()
+--   vim.cmd 'tabnew'
+--   vim.cmd 'tabnext'
+--   local command = 'e' .. '/full_path/to_file' -- '..' is the build in string concatenation
+--   vim.cmd(command)
+-- end
+-- vim.keymap.set('n', '<leader>m', open_notes)
+--
+-- This is interesting because there are certainly plugins out there
+-- that provide this functionallity in a sophisticated manner.
+-- But a plugin might change, might not provide the options you like,
+-- or you might not use this feature at all. If you do not use it,
+-- simply delete this code and you are done. If you like it, you
+-- may expand to what you need and nothing else. And if this is to
+-- much work, you might end up using the plugin anyway, but based
+-- on valid effidence that you like this feature.
+--
+-- The following snippet loads/executes some lua file when a specific file is opened:
+-- if vim.fn.expand("%") == "file.txt" then
+-- 	vim.cmd("so ./additional_config.lua")
+-- end
+-- One use-case could be a journal where the script.lua automatically moves your cursor
+-- to the end of file and inserts the curent date when you open it. (This suggestion is certainly not
+-- the easiest example, but that it is possible at all should get your mind racing
+-- with possibilities.)
+-- Good luck tinkering :)
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
