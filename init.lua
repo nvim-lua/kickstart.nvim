@@ -164,6 +164,13 @@ require('lazy').setup({
   -- Use `opts = {}` to automatically pass options to a plugin's `setup()` function, forcing the plugin to be loaded.
   --
 
+  {
+    'jeangiraldoo/codedocs.nvim',
+    -- Remove the 'dependencies' section if you don't plan on using nvim-treesitter
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+    },
+  },
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
   -- If you prefer to call `setup` explicitly, use:
   --    {
@@ -359,6 +366,7 @@ require('lazy').setup({
         })
       end, { desc = '[/] Fuzzily search in current buffer' })
 
+      vim.keymap.set('n', '<leader>k', require('codedocs').insert_docs, { desc = 'Insert docstring' })
       -- It's also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
       vim.keymap.set('n', '<leader>s/', function()
