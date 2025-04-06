@@ -109,3 +109,14 @@ require('ibl').setup {
     char = '▏',
   },
 }
+
+vim.api.nvim_set_hl(0, 'CursorNormal', { bg = colors.green })
+vim.api.nvim_set_hl(0, 'CursorInsert', { bg = colors.red })
+vim.api.nvim_set_hl(0, 'CursorVisual', { bg = colors.purple })
+vim.api.nvim_set_hl(0, 'CursorCommand', { bg = colors.blue })
+vim.opt.guicursor = {
+  'n:block-CursorNormal-blinkwait1000-blinkon100-blinkoff100',
+  'i:block-CursorInsert-blinkwait1000-blinkon100-blinkoff100',
+  'v:block-CursorVisual-blinkwait1000-blinkon100-blinkoff100',
+  'c-ci-cr:block-CursorCommand-blinkwait1000-blinkon100-blinkoff100',
+}
