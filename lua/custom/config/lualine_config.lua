@@ -1,5 +1,3 @@
--- ~/.config/nvim/lua/custom/config/lualine_config.lua
-
 local lualine = require 'lualine'
 
 -- Color table for highlights
@@ -35,68 +33,49 @@ local conditions = {
 -- Config
 local config = {
   options = {
-    -- Disable sections and component separators
     component_separators = '',
     section_separators = '',
-    -- theme = {
-    --   -- We are going to use lualine_c and lualine_x as left and
-    --   -- right sections. Both are highlighted by the c theme.
-    --   -- So we are just setting default looks of statusline
-    --   normal = { c = { fg = colors.fg, bg = colors.bg } },
-    --   inactive = { c = { fg = colors.fg, bg = colors.bg } },
-    -- },
+    theme = {
+      normal = { c = { fg = colors.fg, bg = colors.bg } },
+      inactive = { c = { fg = colors.fg, bg = colors.bg } },
+    },
   },
   sections = {
-    -- these are to remove the defaults
-    lualine_a = {
-      -- {
-      --   'buffers',
-      --   show_filename_only = false,
-      -- },
-    },
-    lualine_b = {},
-    lualine_y = {},
-    lualine_z = {},
-    -- These will be filled later
-    lualine_c = {},
-    lualine_x = {},
-  },
-  inactive_sections = {
-    -- these are to remove the defaults
     lualine_a = {},
     lualine_b = {},
-    lualine_y = {},
-    lualine_z = {},
     lualine_c = {},
     lualine_x = {},
+    lualine_y = {},
+    lualine_z = {},
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {},
+    lualine_x = {},
+    lualine_y = {},
+    lualine_z = {},
   },
 }
 
--- Inserts a component in lualine_c at the left section
 local function ins_left(component)
   table.insert(config.sections.lualine_c, component)
 end
 
--- Inserts a component in lualine_x at the right section
 local function ins_right(component)
   table.insert(config.sections.lualine_x, component)
 end
 
+-- Left components
 ins_left {
-  function()
-    return '▊'
-  end,
-  color = { fg = colors.blue }, -- Sets highlighting of component
-  padding = { left = 0, right = 1 }, -- No space before this
+  function() return '▊' end,
+  color = { fg = colors.blue },
+  padding = { left = 0, right = 1 },
 }
 
 ins_left {
-  -- mode component
-  function()
-    return ''
-  end,
+  function() return '' end,
   color = function()
-    -- Auto change color according to Neovim's mode
     local mode_color = {
       n = colors.red,
       i = colors.green,
@@ -124,21 +103,25 @@ ins_left {
   padding = { right = 1 },
 }
 
-ins_left {
-  -- filesize component
-  'filesize',
-  cond = conditions.buffer_not_empty,
-}
-
+-- THIS IS THE MODIFIED COMPONENT (shows path)
 ins_left {
   'filename',
   cond = conditions.buffer_not_empty,
   color = { fg = colors.magenta, gui = 'bold' },
+  path = 1,  -- Show relative path (2-3 parent directories)
 }
 
-ins_left { 'location', show_filename_only = false }
+ins_left {
+  function()
+    local buf_count = #vim.fn.getbufinfo({buflisted = 1})
+    return 'Buffers: ' .. buf_count
+  end,
+  color = { fg = colors.cyan },
+}
+
+ins_left { 'location' }
 ins_left { 'progress', color = { fg = colors.fg, gui = 'bold' } }
-ins_left { 'buffers', show_filename_only = false }
+
 ins_left {
   'diagnostics',
   sources = { 'nvim_diagnostic' },
@@ -150,23 +133,14 @@ ins_left {
   },
 }
 
--- Insert mid section. You can make any number of sections in Neovim :)
--- for lualine it's any number greater than 2
-ins_left {
-  function()
-    return '%='
-  end,
-}
+ins_left { function() return '%=' end }
 
 ins_left {
-  -- Lsp server name
   function()
     local msg = 'No Active Lsp'
     local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
     local clients = vim.lsp.get_active_clients()
-    if next(clients) == nil then
-      return msg
-    end
+    if next(clients) == nil then return msg end
     for _, client in ipairs(clients) do
       local filetypes = client.config.filetypes
       if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
@@ -179,10 +153,10 @@ ins_left {
   color = { fg = '#ffffff', gui = 'bold' },
 }
 
--- Add components to right sections
+-- Right components
 ins_right {
-  'o:encoding', -- option component same as &encoding in viml
-  fmt = string.upper, -- Convert to uppercase
+  'o:encoding',
+  fmt = string.upper,
   cond = conditions.hide_in_width,
   color = { fg = colors.green, gui = 'bold' },
 }
@@ -190,19 +164,18 @@ ins_right {
 ins_right {
   'fileformat',
   fmt = string.upper,
-  icons_enabled = false, -- Disable icons
+  icons_enabled = false,
   color = { fg = colors.green, gui = 'bold' },
 }
 
 ins_right {
   'branch',
   icon = '',
-  color = { fg = colors.red, gui = 'bold' },
+  color = { fg = colors.violet, gui = 'bold' },
 }
 
 ins_right {
   'diff',
-  -- Symbols for diff
   symbols = { added = ' ', modified = '󰝤 ', removed = ' ' },
   diff_color = {
     added = { fg = colors.green },
@@ -213,12 +186,9 @@ ins_right {
 }
 
 ins_right {
-  function()
-    return '▊'
-  end,
+  function() return '▊' end,
   color = { fg = colors.blue },
   padding = { left = 1 },
 }
 
--- Initialize lualine with the configuration
 lualine.setup(config)
