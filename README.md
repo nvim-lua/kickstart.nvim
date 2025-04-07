@@ -167,7 +167,7 @@ This requires:
 - Install CMake and the Microsoft C++ Build Tools on Windows
 
 ```lua
-{'nvim-telescope/telescope-fzf-native.nvim', build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
+{'nvim-telescope/telescope-fzf-native.nvim', build = 'cmake -S. -Build -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
 ```
 </details>
 <details><summary>Windows with gcc/make using chocolatey</summary>
