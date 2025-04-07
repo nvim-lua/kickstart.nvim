@@ -1,3 +1,5 @@
+https://www.reddit.com/r/neovim/comments/193hxsb/i_write_sql_most_days_is_neovim_still_worth_it/
+
 # kickstart.nvim
 
 ## Introduction
