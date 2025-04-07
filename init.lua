@@ -168,7 +168,14 @@ require('lazy').setup({
 
   {
     'danymat/neogen',
-    config = true,
+    config = function()
+      require('neogen').setup {}
+
+      vim.keymap.set('n', '<leader>k', require('neogen').generate, {
+        noremap = true,
+        silent = true,
+      })
+    end,
     -- Uncomment next line if you want to follow only stable versions
     -- version = "*"
   },
@@ -367,10 +374,6 @@ require('lazy').setup({
         })
       end, { desc = '[/] Fuzzily search in current buffer' })
 
-      vim.keymap.set('n', '<leader>k', require('neogen').generate, {
-        noremap = true,
-        silent = true,
-      })
       -- It's also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
       vim.keymap.set('n', '<leader>s/', function()
