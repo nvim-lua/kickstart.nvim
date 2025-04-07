@@ -99,7 +99,7 @@ return {
 
       vim.cmd.colorscheme 'rose-pine'
     end,
-    enabled = true,
+    enabled = false,
   },
 
   {
