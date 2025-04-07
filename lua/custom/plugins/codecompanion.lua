@@ -13,6 +13,9 @@ return {
   config = function()
     require('codecompanion').setup {
       adapters = {
+        opts = {
+          show_defaults = false,
+        },
         anthropic = require('codecompanion.adapters').extend('anthropic', {
           env = {
             api_key = 'CODECOMP_ANTHROPIC_API_KEY',
@@ -23,10 +26,15 @@ return {
             api_key = 'CODECOMP_DEEPSEEK_API_KEY',
           },
         }),
+        gemini = require('codecompanion.adapters').extend('gemini', {
+          env = {
+            api_key = 'CODECOMP_GEMINI_API_KEY',
+          },
+        }),
       },
       strategies = {
         chat = {
-          adapter = 'anthropic',
+          adapter = 'gemini',
           slash_commands = {
             ['file'] = {
               -- Location to the slash command in CodeCompanion
@@ -40,7 +48,7 @@ return {
           },
         },
         inline = {
-          adapter = 'anthropic',
+          adapter = 'gemini',
         },
       },
     }
