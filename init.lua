@@ -157,6 +157,11 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+vim.o.tabstop = 2
+vim.o.softtabstop = 2
+vim.o.shiftwidth = 2
+vim.o.expandtab = true
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -174,6 +179,11 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = 'Quit' })
+vim.keymap.set('n', '<leader>w', '<cmd>w<CR>', { desc = 'Write (save)' })
+
+vim.keymap.set('n', '<C-Left>', '<cmd>bprevious<CR>', { desc = 'Go to the previous buffer' })
+vim.keymap.set('n', '<C-Right>', '<cmd>bnext<CR>', { desc = 'Go to the next buffer' })
 
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
@@ -270,6 +280,12 @@ require('lazy').setup({
   -- Then, because we use the `config` key, the configuration only runs
   -- after the plugin has been loaded:
   --  config = function() ... end
+
+  {
+    'ThePrimeagen/harpoon',
+    branch = 'harpoon2',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+  },
 
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
@@ -611,7 +627,8 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        -- gopls = {},
+        -- go?
+        gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -620,8 +637,15 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+        ts_ls = {},
         --
+
+        eslint = {
+          settings = {
+            -- Specify your ESLint config preferences here
+            workingDirectory = { mode = 'auto' },
+          },
+        },
 
         lua_ls = {
           -- cmd = {...},
@@ -652,6 +676,9 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+
+        'eslint-lsp',
+        'prettier',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -708,7 +735,8 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        jsx = { 'prettier' },
       },
     },
   },
@@ -781,6 +809,7 @@ require('lazy').setup({
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
           ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<enter>'] = cmp.mapping.confirm { select = true },
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
@@ -887,6 +916,28 @@ require('lazy').setup({
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
+  {
+    'numToStr/Comment.nvim',
+    config = function()
+      require('Comment').setup()
+    end,
+  },
+  {
+    'nvim-neo-tree/neo-tree.nvim',
+    branch = 'v3.x',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
+      'MunifTanjim/nui.nvim',
+      -- {"3rd/image.nvim", opts = {}}, -- Optional image support in preview window: See `# Preview Mode` for more information
+    },
+    lazy = false, -- neo-tree will lazily load itself
+    ---@module "neo-tree"
+    ---@type neotree.Config?
+    opts = {
+      -- fill any relevant options here
+    },
+  },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
@@ -959,3 +1010,122 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+--
+
+local harpoon = require 'harpoon'
+
+harpoon:setup()
+
+vim.keymap.set('n', '<leader>a', function()
+  harpoon:list():add()
+end)
+vim.keymap.set('n', '<C-e>', function()
+  harpoon.ui:toggle_quick_menu(harpoon:list())
+end)
+
+vim.keymap.set('n', '<C-h>', function()
+  harpoon:list():select(1)
+end)
+vim.keymap.set('n', '<C-t>', function()
+  harpoon:list():select(2)
+end)
+vim.keymap.set('n', '<C-n>', function()
+  harpoon:list():select(3)
+end)
+vim.keymap.set('n', '<C-s>', function()
+  harpoon:list():select(4)
+end)
+
+-- Toggle previous & next buffers stored within Harpoon list
+vim.keymap.set('n', '<C-Left', function()
+  harpoon:list():prev()
+end)
+vim.keymap.set('n', '<C-Right>', function()
+  harpoon:list():next()
+end)
+
+local mark = harpoon:list()
+local ui = harpoon.ui
+
+-- Set custom key mappings for Harpoon functions
+vim.keymap.set('n', '<leader>fha', function()
+  mark:add()
+end, { desc = 'Add File' })
+vim.keymap.set('n', '<leader>fhq', function()
+  ui:toggle_quick_menu(mark)
+end, { desc = 'Open Quick Menu' })
+
+-- Navigation to Harpoon files
+for i = 1, 9 do
+  vim.keymap.set('n', '<leader>fh' .. i, function()
+    mark:select(i)
+  end, { desc = 'File ' .. i })
+end
+
+-- Remove the current file from the Harpoon list with relative path conversion
+vim.keymap.set('n', '<leader>fhr', function()
+  local buf_name = vim.fn.fnamemodify(vim.fn.expand '%:p', ':~:.') -- Convert absolute to relative path
+  local found = false
+
+  -- Iterate through the mark.items table
+  for index, entry in ipairs(mark.items) do
+    if entry.value == buf_name then
+      table.remove(mark.items, index) -- Remove the matching entry
+      mark._length = mark._length - 1 -- Adjust the length
+      found = true
+      print('Removed from Harpoon: ' .. buf_name)
+      break
+    end
+  end
+
+  if not found then
+    print 'File not found in Harpoon list'
+  end
+end, { desc = 'Remove Current File' })
+
+-- Clear all files from the Harpoon list
+vim.keymap.set('n', '<leader>fhx', function()
+  for index = #mark.items, 1, -1 do
+    table.remove(mark.items, index)
+  end
+  print 'Cleared all marks'
+end, { desc = 'Clear All Marks' })
+
+-- Toggle previous & next buffers stored within Harpoon list
+vim.keymap.set('n', '<leader>fhp', function()
+  mark:prev()
+end, { desc = 'Previous Buffer' })
+vim.keymap.set('n', '<leader>fhn', function()
+  mark:next()
+end, { desc = 'Next Buffer' })
+
+----
+
+-- require('Comment').setup {
+--   -- Disable default `gc` mappings
+--   mappings = {
+--     basic = false, -- Disables `gc`, `gcc`, etc.
+--     extra = false, -- Disables `gco`, `gcO`, `gcA`, etc.
+--   },
+-- }
+
+-- Add your own keybindings
+local commentApi = require 'Comment.api'
+
+-- Normal Mode: Ctrl + /
+vim.keymap.set('n', '<C-_>', commentApi.toggle.linewise.current, { noremap = true, silent = true })
+
+-- Visual Mode: Ctrl + /
+vim.keymap.set('x', '<C-_>', function()
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<ESC>', true, false, true), 'nx', false)
+  commentApi.toggle.linewise(vim.fn.visualmode())
+end, { noremap = true, silent = true })
+
+--    ***  Neotree  ***
+
+vim.keymap.set('n', '<leader>e', '<Cmd>Neotree toggle<CR>')
+
+vim.keymap.set('n', '<leader>o', function()
+  vim.cmd 'Neotree reveal'
+  vim.cmd 'wincmd p' -- Switch back to the last window
+end)
