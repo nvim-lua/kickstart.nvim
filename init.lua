@@ -151,7 +151,7 @@ vim.opt.rtp:prepend(lazypath)
 --    :Lazy update
 --
 -- See HACK below...
--- jdtls_already_ran = false
+jdtls_already_ran = false
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
 
@@ -717,10 +717,10 @@ require('lazy').setup({
           end,
           jdtls = function()
             -- HACK: Don't know why this gets called more than once
-            -- if jdtls_already_ran then
-            --   return
-            -- end
-            -- jdtls_already_ran = true
+            if jdtls_already_ran then
+              return
+            end
+            jdtls_already_ran = true
             require('java').setup {
               -- Your custom jdtls settings goes here
               -- Do not automatically install JDK 17
