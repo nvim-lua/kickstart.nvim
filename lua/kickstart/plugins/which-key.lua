@@ -66,6 +66,14 @@ return {
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        -- Quarto
+        { '<leader>q', group = '[q]uarto' },
+        { '<leader>qh', ':QuartoHelp ', desc = '[h]elp' },
+        { '<leader>qp', ":lua require'quarto'.quartoPreview()<cr>", desc = '[p]review' },
+        -- Vim
+        { '<leader>v', group = '[v]im' },
+        { '<leader>vc', ':Telescope colorscheme<cr>', desc = '[c]olortheme' },
+        { '<leader>vt', toggle_light_dark_theme, desc = '[t]oggle light/dark theme' },
       },
     },
   },
