@@ -69,7 +69,7 @@ return {
         -- Quarto
         { '<leader>q', group = '[q]uarto' },
         { '<leader>qh', ':QuartoHelp ', desc = '[h]elp' },
-        { '<leader>qp', ":lua require'quarto'.quartoPreview()<cr>", desc = '[p]review' },
+        { '<leader>qp', ":lua require'quarto'.quartoPreview({ args = '--port 4242 --no-browser' })<cr>", desc = '[p]review' },
         -- Vim
         { '<leader>v', group = '[v]im' },
         { '<leader>vc', ':Telescope colorscheme<cr>', desc = '[c]olortheme' },
