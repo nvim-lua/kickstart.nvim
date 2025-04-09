@@ -6,9 +6,15 @@ vim.g.maplocalleader = ' '
 
 -- Custom remaps
 vim.keymap.set('n', '!', '_') -- For macos only
+
+-- Center the view when moving
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
+
+-- Access to file viewer easily
 vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
+
+-- End of custom remaps
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = false
