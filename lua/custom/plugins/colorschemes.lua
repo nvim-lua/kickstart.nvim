@@ -47,7 +47,7 @@ return {
       -- vim.g.sonokai_style = 'shusia'
       vim.cmd.colorscheme 'sonokai'
     end,
-    enabled = true,
+    enabled = false,
   },
 
   {
@@ -193,4 +193,15 @@ return {
     end,
     enabled = false,
   },
+
+  {
+    "lunacookies/vim-colors-xcode",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.defer_fn(function()
+        vim.cmd.colorscheme 'xcodedarkhc'
+      end, 0)
+    end,
+  }
 }
