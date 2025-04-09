@@ -244,10 +244,11 @@ vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- Buffer switch
 -- https://github.com/tpope/vim-unimpaired
-vim.keymap.set({ 'n' }, ']b', '<cmd>bnext<CR>', { silent = true })
-vim.keymap.set({ 'n' }, '[b', '<cmd>bprev<CR>', { silent = true })
-vim.keymap.set({ 'n' }, ']q', '<cmd>cnext<CR>', { silent = true })
-vim.keymap.set({ 'n' }, '[q', '<cmd>cprevious<CR>', { silent = true })
+-- No need since it is available in the default config since neovim 0.11
+-- vim.keymap.set({ 'n' }, ']b', '<cmd>bnext<CR>', { silent = true })
+-- vim.keymap.set({ 'n' }, '[b', '<cmd>bprev<CR>', { silent = true })
+-- vim.keymap.set({ 'n' }, ']q', '<cmd>cnext<CR>', { silent = true })
+-- vim.keymap.set({ 'n' }, '[q', '<cmd>cprevious<CR>', { silent = true })
 -- vim.keymap.set({ 'n', 'i', 'v' }, '<C-h>', '<cmd>bnext<CR>', { silent = true })
 -- vim.keymap.set({ 'n', 'i', 'v' }, '<C-l>', '<cmd>bprev<CR>', { silent = true })
 -- Close all buffers and keep the open one only
