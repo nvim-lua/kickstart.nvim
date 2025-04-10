@@ -109,6 +109,7 @@ P.S. You can delete this when you're done too. It's your config now! :)
 -- on valid effidence that you like this feature.
 --
 -- The following snippet loads/executes some lua file when a specific file is opened:
+--
 -- if vim.fn.expand("%") == "file.txt" then
 -- 	vim.cmd("so ./additional_config.lua")
 -- end
