@@ -116,6 +116,7 @@ P.S. You can delete this when you're done too. It's your config now! :)
 -- to the end of file and inserts the curent date when you open it. (This suggestion is certainly not
 -- the easiest example, but that it is possible at all should get your mind racing
 -- with possibilities.)
+--
 -- Good luck tinkering :)
 
 -- Set <space> as the leader key
