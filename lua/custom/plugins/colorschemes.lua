@@ -44,10 +44,10 @@ return {
     lazy = false,
     priority = 1000,
     config = function()
-      -- vim.g.sonokai_style = 'shusia'
+      vim.g.sonokai_style = 'shusia'
       vim.cmd.colorscheme 'sonokai'
     end,
-    enabled = false,
+    enabled = true,
   },
 
   {
@@ -203,5 +203,6 @@ return {
         vim.cmd.colorscheme 'xcodedarkhc'
       end, 0)
     end,
+    enabled = false,
   }
 }
