@@ -90,6 +90,7 @@ P.S. You can delete this when you're done too. It's your config now! :)
 -- like variables, conditionals, loops and functions. Secondly, that you can interact with
 -- neovim in a concise way. The following lines contain two examples that might give you some inspiration.
 -- This snippet adds a keymap to open a predefined file in a new tab:
+--
 -- local function open_notes()
 --   vim.cmd 'tabnew'
 --   vim.cmd 'tabnext'
