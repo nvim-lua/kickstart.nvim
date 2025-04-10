@@ -85,7 +85,7 @@ P.S. You can delete this when you're done too. It's your config now! :)
 --]]
 --
 --
--- One last note before we leave you to play around: Lua is a real programming language.
+-- One last note before we leave you to explore: Lua is a real programming language.
 -- Why is that important? First of all, that you can use all the features of Lua,
 -- like variables, conditionals, loops and functions. Secondly, that you can interact with
 -- neovim in concise way. The following lines contain two examples that might give you some inspirations.
