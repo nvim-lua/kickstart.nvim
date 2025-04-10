@@ -113,6 +113,7 @@ P.S. You can delete this when you're done too. It's your config now! :)
 -- if vim.fn.expand("%") == "file.txt" then
 -- 	vim.cmd("so ./additional_config.lua")
 -- end
+--
 -- One use-case could be a journal where the script.lua automatically moves your cursor
 -- to the end of file and inserts the curent date when you open it. (This suggestion is certainly not
 -- the easiest example, but that it is possible at all should get your mind racing
