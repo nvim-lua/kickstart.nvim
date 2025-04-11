@@ -121,6 +121,10 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
 
+-- Lazy keymaps
+vim.keymap.set('n', '<leader>ml', '<cmd>Lazy<cr>', { desc = 'Lazy' })
+vim.keymap.set('n', '<leader>mr', '<cmd>LspRestart<cr>', { desc = 'Restart LSP' })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -258,6 +262,7 @@ require('lazy').setup({
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
         { '<leader>m', group = '[M]isc' },
+        { '<leader>u', group = '[U]I' },
       },
     },
   },
@@ -620,6 +625,7 @@ require('lazy').setup({
           },
         },
 
+        -- NOTE: Dont forget to `npm i -g @vtsls/language-server`
         vtsls = {
           settings = {
             typescript = {
@@ -640,6 +646,7 @@ require('lazy').setup({
           },
         },
 
+        -- NOTE: Dont forget to `npm i -g @angular/language-server`
         angularls = {
           capabilities = lsp_capabilities,
           filetypes = { 'typescript', 'html', 'angular', 'htmlangular' },
@@ -656,6 +663,43 @@ require('lazy').setup({
               new_root_dir,
             }
           end,
+        },
+
+        -- NOTE: Dont forget to `npm i -g vscode-langservers-extracted`
+        cssls = {
+          capabilities = lsp_capabilities,
+          cmd = { 'vscode-css-language-server', '--stdio' },
+          filetypes = { 'css', 'scss' },
+          init_options = { provideFormatter = true },
+          -- TODO: Maybe I should use same patter for root finding as for "angularls" server?
+          root_dir = require('lspconfig.util').root_pattern('package.json', '.git'),
+          single_file_support = true,
+          settings = {
+            css = { validate = true },
+            scss = { validate = true },
+          },
+        },
+
+        -- TODO: Add emmet abbreviation
+        -- NOTE: Dont forget to `npm i -g vscode-langservers-extracted`
+        html = {
+          capabilities = lsp_capabilities,
+          cmd = { 'vscode-html-language-server', '--stdio' },
+          filetypes = { 'html', 'htmlangular' },
+          init_options = {
+            {
+              configurationSection = { 'html', 'css', 'javascript', 'htmlangular' },
+              embeddedLanguages = {
+                css = true,
+                javascript = true,
+              },
+              provideFormatter = true,
+            },
+          },
+          -- TODO: Maybe I should use same patter for root finding as for "angularls" server?
+          root_dir = require('lspconfig.util').root_pattern('package.json', '.git'),
+          single_file_support = true,
+          settings = {},
         },
       }
 
@@ -980,8 +1024,6 @@ require('lazy').setup({
       vim.keymap.del({ 'x', 'o' }, 'X')
     end,
   },
-
-  vim.keymap.set('n', '<leader>hl', '<cmd>Lazy<cr>', { desc = 'Lazy' }),
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
