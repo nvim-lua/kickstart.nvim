@@ -997,9 +997,9 @@ require('colorizer').setup()
 
 local lspconfig = require 'lspconfig'
 
-lspconfig['pyright'].setup {
-  trace = 'verbose',
-}
+-- lspconfig['pyright'].setup {
+--   trace = 'verbose',
+-- }
 
 require('lspconfig').texlab.setup {}
 
@@ -1053,6 +1053,8 @@ vim.api.nvim_create_autocmd('BufWritePost', {
 vim.opt.tabstop = 4
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 4
+
+vim.g.python_recommended_style = 0
 
 vim.keymap.set('n', '<leader>bd', ':bd<CR>')
 vim.keymap.set('n', '<leader>bD', ':bd!<CR>')
