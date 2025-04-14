@@ -51,6 +51,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
--- Quarto
+-- nvim-tree
+vim.keymap.set('n', 'f', ':NvimTreeOpen<cr>', { desc = 'Open file explorer.' })
+vim.keymap.set('n', 'f', ':NvimTreeClose<cr>', { desc = 'Close file explorer.' })
 
 -- vim: ts=2 sts=2 sw=2 et
