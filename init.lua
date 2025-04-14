@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -109,6 +109,7 @@ vim.opt.mouse = 'a'
 
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
+vim.opt.termguicolors = true
 
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
@@ -154,7 +155,7 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
+vim.opt.scrolloff = 15
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
@@ -246,8 +247,112 @@ require('lazy').setup({
   -- keys can be used to configure plugin behavior/loading/etc.
   --
   -- Use `opts = {}` to automatically pass options to a plugin's `setup()` function, forcing the plugin to be loaded.
-  --
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+  },
 
+  { 'KeitaNakamura/neodark.vim' },
+
+  { 'liuchengxu/space-vim-dark' },
+
+  {
+    'saecki/crates.nvim',
+    event = { 'BufRead Cargo.toml' },
+    config = function()
+      require('crates').setup()
+    end,
+  },
+  {
+    'goolord/alpha-nvim',
+    event = 'VimEnter',
+    enabled = true,
+    opts = function()
+      local dashboard = require 'alpha.themes.dashboard'
+      local logo = [[
+        JVIM :p
+      ]]
+
+      dashboard.section.header.val = vim.split(logo, '\n')
+      -- stylua: ignore
+      dashboard.section.buttons.val = {
+        dashboard.button("f", " " .. " Find file",       [[<cmd> Telescope find_files <cr>]]),
+        dashboard.button("n", " " .. " New file",        [[<cmd> ene <BAR> startinsert <cr>]]),
+        dashboard.button("r", " " .. " Recent files",    [[<cmd> lua LazyVim.pick("oldfiles")() <cr>]]),
+        dashboard.button("g", " " .. " Open finder",     [[<cmd> Neotree dir=~ position=current<cr>]]),
+        dashboard.button("c", " " .. " Config",          [[<cmd> edit ~/AppData/Local/nvim/init.lua <cr>]]),
+        dashboard.button("s", " " .. " Restore Session", [[<cmd> lua require("persistence").load() <cr>]]),
+        dashboard.button("l", "󰒲 " .. " Lazy",            "<cmd> Lazy <cr>"),
+        dashboard.button("q", " " .. " Quit",            "<cmd> qa <cr>"),
+      }
+      for _, button in ipairs(dashboard.section.buttons.val) do
+        button.opts.hl = 'AlphaButtons'
+        button.opts.hl_shortcut = 'AlphaShortcut'
+      end
+      dashboard.section.header.opts.hl = 'AlphaHeader'
+      dashboard.section.buttons.opts.hl = 'AlphaButtons'
+      dashboard.section.footer.opts.hl = 'AlphaFooter'
+      dashboard.opts.layout[1].val = 8
+      return dashboard
+    end,
+    config = function(_, dashboard)
+      -- close Lazy and re-open when the dashboard is ready
+      if vim.o.filetype == 'lazy' then
+        vim.cmd.close()
+        vim.api.nvim_create_autocmd('User', {
+          once = true,
+          pattern = 'AlphaReady',
+          callback = function()
+            require('lazy').show()
+          end,
+        })
+      end
+
+      require('alpha').setup(dashboard.opts)
+
+      vim.api.nvim_create_autocmd('User', {
+        once = true,
+        pattern = 'LazyVimStarted',
+        callback = function()
+          local stats = require('lazy').stats()
+          local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
+          dashboard.section.footer.val = '⚡ Neovim loaded ' .. stats.loaded .. '/' .. stats.count .. ' plugins in ' .. ms .. 'ms'
+          pcall(vim.cmd.AlphaRedraw)
+        end,
+      })
+    end,
+  },
+
+  {
+    'NeogitOrg/neogit',
+    dependencies = {
+      'nvim-lua/plenary.nvim', -- required
+      'sindrets/diffview.nvim', -- optional - Diff integration
+
+      -- Only one of these is needed.
+      'nvim-telescope/telescope.nvim', -- optional
+      'ibhagwan/fzf-lua', -- optional
+      'echasnovski/mini.pick', -- optional
+    },
+  },
+
+  {
+    'romgrk/barbar.nvim',
+    dependencies = {
+      'lewis6991/gitsigns.nvim', -- OPTIONAL: for git status
+      'nvim-tree/nvim-web-devicons', -- OPTIONAL: for file icons
+    },
+    init = function()
+      vim.g.barbar_auto_setup = false
+    end,
+    opts = {
+      -- lazy.nvim will automatically call setup for you. put your options here, anything missing will use the default:
+      -- animation = true,
+      -- insert_at_start = true,
+      -- …etc.
+    },
+    version = '^1.0.0', -- optional: only update when a new 1.x version is released
+  },
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
   -- If you prefer to call `setup` explicitly, use:
   --    {
@@ -470,6 +575,7 @@ require('lazy').setup({
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
+
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
@@ -886,7 +992,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'habamax'
     end,
   },
 
@@ -966,17 +1072,17 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
