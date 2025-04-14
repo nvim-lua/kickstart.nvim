@@ -11,19 +11,44 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
+    { '<leader>e', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
   },
   opts = {
     filesystem = {
+      bind_to_cwd = true,
+      commands = {
+        avante_add_files = function(state)
+          local node = state.tree:get_node()
+          local filepath = node:get_id()
+          local relative_path = require('avante.utils').relative_path(filepath)
+
+          local sidebar = require('avante').get()
+
+          local open = sidebar:is_open()
+          -- ensure avante sidebar is open
+          if not open then
+            require('avante.api').ask()
+            sidebar = require('avante').get()
+          end
+
+          sidebar.file_selector:add_selected_file(relative_path)
+
+          -- remove neo tree buffer
+          if not open then
+            sidebar.file_selector:remove_selected_file 'neo-tree filesystem [1]'
+          end
+        end,
+      },
       window = {
         mappings = {
-          ['\\'] = 'close_window',
+          ['<leader>e'] = 'close_window',
           ['<C-cr>'] = {
             'open',
             config = {
               open_command = 'tabnew', -- Альтернативный вариант параметра
             },
           },
+          ['oa'] = 'avante_add_files',
         },
       },
     },
