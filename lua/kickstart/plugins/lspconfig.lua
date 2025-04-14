@@ -1,5 +1,17 @@
 -- LSP Plugins
 return {
+
+  { -- for lsp features in code cells / embedded code
+    'jmbuhr/otter.nvim',
+    dependencies = {
+      {
+        'neovim/nvim-lspconfig',
+        'nvim-treesitter/nvim-treesitter',
+      },
+    },
+    opts = {},
+  },
+
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
     -- used for completion, annotations and signatures of Neovim apis
@@ -221,6 +233,20 @@ return {
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
+
+        julials = {},
+
+        harper_ls = {
+          filetypes = { 'lua', 'markdown', 'quarto' },
+          settings = {
+            ['harper-ls'] = {
+              linters = {
+                SentenceCapitalization = false,
+                SpellCheck = false,
+              },
+            },
+          },
+        },
 
         lua_ls = {
           -- cmd = { ... },

@@ -61,11 +61,13 @@ return {
       spec = {
         { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
         { '<leader>d', group = '[D]ocument' },
-        { '<leader>r', group = '[R]ename' },
         { '<leader>s', group = '[S]earch' },
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        -- Search and Replace
+        { '<leader>r', group = '[R]eplace' },
+        { '<leader>rf', [[:%s/\<<C-r><C-w>\>//g<Left><Left>]], desc = 'Search and replace in [f]ile' },
         -- Quarto
         { '<leader>q', group = '[q]uarto' },
         { '<leader>qh', ':QuartoHelp ', desc = '[h]elp' },
@@ -74,6 +76,11 @@ return {
         { '<leader>v', group = '[v]im' },
         { '<leader>vc', ':Telescope colorscheme<cr>', desc = '[c]olortheme' },
         { '<leader>vt', toggle_light_dark_theme, desc = '[t]oggle light/dark theme' },
+        -- Package/LS managers
+        { '<leader>l', ':Lazy<cr>', desc = '[L]azy' },
+        { '<leader>m', group = '[M]ason' },
+        { '<leader>mo', ':Mason<cr>', desc = '[O]pen' },
+        { '<leader>mi', ':MasonInstall ', desc = '[I]nstall' },
       },
     },
   },
