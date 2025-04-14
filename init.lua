@@ -552,6 +552,7 @@ require('lazy').setup({
             },
           },
         },
+        angularls = {},
       }
 
       -- Ensure the servers and tools above are installed
