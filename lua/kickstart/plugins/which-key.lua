@@ -1,3 +1,5 @@
+-- TODO: Add insert commands to insert comments
+
 -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
 --
 -- This is often very useful to both group configuration, as well as handle
@@ -65,9 +67,13 @@ return {
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>z', ':ZenMode<cr>', desc = '[Z]en mode' },
+        -- Toggle
+        { '<leader>st', ':TodoTelescope<cr>', desc = '[T]odo' },
         -- Search and Replace
         { '<leader>r', group = '[R]eplace' },
         { '<leader>rf', [[:%s/\<<C-r><C-w>\>//g<Left><Left>]], desc = 'Search and replace in [f]ile' },
+        -- TODO: add find+and replace for project dir
         -- Quarto
         { '<leader>q', group = '[q]uarto' },
         { '<leader>qh', ':QuartoHelp ', desc = '[h]elp' },
@@ -81,6 +87,8 @@ return {
         { '<leader>m', group = '[M]ason' },
         { '<leader>mo', ':Mason<cr>', desc = '[O]pen' },
         { '<leader>mi', ':MasonInstall ', desc = '[I]nstall' },
+        -- Insert comments
+        { '<leader>i', group = '[I]nsert' },
       },
     },
   },
