@@ -103,15 +103,16 @@ vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 --
 -- TODO: EGEN TEXT
 vim.keymap.set('n', '<leader>ls', ':!start cmd.exe /K "live-server"<CR>', { desc = 'Live server Run' })
+vim.keymap.set('n', '<leader>lr', ':!cargo run<CR>', { desc = 'Rust: Cargo Run' })
 vim.keymap.set('n', '<leader>e', ':Ex<CR>', { desc = 'Explore working directory' })
 vim.keymap.set('n', '<leader>lt', 'O/** @type {} */<Esc>F}i', { desc = 'Define type for js' })
 vim.keymap.set('i', '<CapsLock>', '<Esc>', { silent = true })
 
 -- TODO: Bevægelse
-vim.keymap.set('n', 'L', '$')
-vim.keymap.set('n', 'H', '0')
-vim.keymap.set('v', 'L', '$')
-vim.keymap.set('v', 'H', '0')
+vim.keymap.set({ 'n', 'x', 'o' }, 'L', '$')
+vim.keymap.set({ 'n', 'x', 'o' }, 'H', '^')
+-- vim.keymap.set('v', 'L', '$')
+-- vim.keymap.set('v', 'H', '0')
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 
