@@ -9,6 +9,9 @@ return {
   config = function()
     require('render-markdown').setup {
       file_types = { 'markdown', 'quarto' },
+      html = {
+        comment = { conceal = false },
+      },
     }
   end,
 }
