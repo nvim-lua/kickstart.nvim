@@ -1,0 +1,3 @@
+return {
+  { 'AvidDabbler/quantum.vim' },
+}
