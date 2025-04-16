@@ -7,10 +7,10 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.wrap = false
 
-vim.keymap.set('n', '<C-k>', '10k', { desc = 'Scroll up and center' })
-vim.keymap.set('n', '<C-j>', '10j', { desc = 'Scroll down and center' })
-vim.keymap.set('n', '<C-c>', 'ggVGy', { desc = 'copy file', noremap = true })
-vim.keymap.set('n', '<leader>e', ':Explore<CR>', { desc = 'copy file', noremap = true })
+vim.keymap.set('n', '<C-k>', '15k', { desc = 'Scroll up and center' })
+vim.keymap.set('n', '<C-j>', '15j', { desc = 'Scroll down and center' })
+vim.keymap.set('n', '<C-c>', 'ggVGy', { desc = 'Copy file' })
+vim.keymap.set('n', '<leader>e', ':Explore<CR>', { desc = 'Open explorer' })
 
 return {
   {
