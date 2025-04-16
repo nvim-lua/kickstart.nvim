@@ -37,7 +37,8 @@ return {
     config = function()
       require('lualine').setup {
         options = {
-          theme = bubbles_theme,
+          -- theme = bubbles_theme,
+          theme = 'vscode',
           component_separators = '',
           section_separators = { left = '', right = '' },
         },

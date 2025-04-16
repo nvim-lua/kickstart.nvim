@@ -764,7 +764,18 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        go = { 'goimports', 'gofmt' },
+        rust = { 'rustfmt', lsp_format = 'fallback' },
+        cpp = { 'clang-format' },
+        c = { 'clang-format' },
+        python = function(bufnr)
+          if require('conform').get_formatter_info('ruff_format', bufnr).available then
+            return { 'ruff_format' }
+          else
+            return { 'isort', 'black' }
+          end
+        end,
       },
     },
   },
@@ -873,11 +884,12 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
+    -- 'folke/tokyonight.nvim',
+    'Mofiqul/vscode.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
+      require('vscode').setup {
         styles = {
           comments = { italic = false }, -- Disable italics in comments
         },
@@ -886,7 +898,8 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      -- vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'vscode'
     end,
   },
 
