@@ -10,6 +10,7 @@ vim.opt.wrap = false
 vim.keymap.set('n', '<C-k>', '10k', { desc = 'Scroll up and center' })
 vim.keymap.set('n', '<C-j>', '10j', { desc = 'Scroll down and center' })
 vim.keymap.set('n', '<C-c>', 'ggVGy', { desc = 'copy file', noremap = true })
+vim.keymap.set('n', '<leader>e', ':Explore<CR>', { desc = 'copy file', noremap = true })
 
 return {
   {
@@ -67,5 +68,9 @@ return {
 
       neogit.setup {}
     end,
+  },
+
+  {
+    'mfussenegger/nvim-jdtls',
   },
 }
