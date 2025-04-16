@@ -802,8 +802,8 @@ require('lazy').setup({
           -- },
         },
         config = function()
-          require('luasnip.loaders.from_lua').load { paths = 'C:/Users/ricar/AppData/Local/nvim/lua/snippets/' }
-        end, 
+          require 'luaconfig.luasnip'
+        end,
         opts = {},
       },
       'folke/lazydev.nvim',
