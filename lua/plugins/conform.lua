@@ -28,13 +28,23 @@ return { -- Autoformat
         }
       end
     end,
+    formatters = {
+      ['zig-fmt'] = {
+        command = 'zig',
+        args = { 'fmt', '--stdin' },
+        stdin = true,
+      },
+    },
     formatters_by_ft = {
       lua = { 'stylua' },
-      -- Conform can also run multiple formatters sequentially
-      -- python = { "isort", "black" },
-      --
-      -- You can use 'stop_after_first' to run the first available formatter from the list
-      -- javascript = { "prettierd", "prettier", stop_after_first = true },
+      typescriptreact = { 'biome-check' },
+      javascriptreact = { 'biome-check' },
+      typescript = { 'biome-check' },
+      javascript = { 'biome-check' },
+      json = { 'biome-check' },
+      go = { 'gofmt' },
+      sql = { 'sqlfmt' },
+      zig = { 'zig-fmt' },
     },
   },
 }

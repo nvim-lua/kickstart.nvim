@@ -31,6 +31,7 @@ return {
   opts = {
     filesystem = {
       window = {
+        -- position = 'float',
         mappings = {
           ['l'] = 'open',
           ['h'] = 'close_node',
