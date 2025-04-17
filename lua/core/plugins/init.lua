@@ -185,6 +185,8 @@ local plugins = {
   require 'core.plugins.copilot',
 
   require 'core.plugins.markdown-preview',
+
+  require 'core.plugins.noice',
 }
 
 local pluginOptions = {}
