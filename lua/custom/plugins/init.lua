@@ -10,7 +10,7 @@ return {
 
       vim.keymap.set('n', '<leader>tt', function()
         require('trouble').toggle()
-      end)
+      end, { desc = '[T]oggle [t]rouble' })
 
       vim.keymap.set('n', '[t', function()
         require('trouble').next { skip_groups = true, jump = true }
@@ -31,4 +31,12 @@ return {
   { 'akinsho/toggleterm.nvim', version = '*', opts = {
     open_mapping = [[<c-\>]],
   } },
+  {
+    'FabijanZulj/blame.nvim',
+    config = function()
+      require('blame').setup()
+
+      vim.keymap.set('n', '<leader>tbf', ':BlameToggle<CR>', { noremap = true, silent = true, desc = '[T]oggle git [b]lame [f]ile' })
+    end,
+  },
 }
