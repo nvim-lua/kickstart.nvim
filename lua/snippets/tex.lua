@@ -13,13 +13,27 @@ vim.keymap.set({ 'i', 's' }, '<C-h>', function()
 end)
 
 return {
+  -- AUTOSNIPPETS
+  s(
+    { trig = ';ait', snippetType = 'autosnippet' },
+    fmt(
+      [[
+      \\
+      {} &= {}
+      ]],
+      { i(1), i(0) }
+    )
+  ),
+
+  -- NORMAL SNIPPETS
   s(
     'utninf',
     fmt(
       [[
-        \documentclass[12pt a4paper]{{article}}
+        \documentclass[12pt]{{article}}
         \usepackage[spanish]{{babel}}
         \usepackage[utf8]{{inputenc}}
+        \usepackage{{csquotes}}
         
         % Interlineado 1.5
         \usepackage{{setspace}}
@@ -29,7 +43,7 @@ return {
         \usepackage{{mathptmx}}
         
         % Acomodar margenes del documento
-        \usepackage[margin=2cm]{{geometry}}
+        \usepackage[a4paper, margin=2cm, top=3cm, headheight=50pt]{{geometry}}
 
         % Paquetes comunes
         \usepackage{{graphicx, float}}
@@ -37,14 +51,43 @@ return {
         \usepackage{{enumerate}}
         \usepackage[colorlinks=true, citecolor=blue]{{hyperref}}
 
+        % Encabezados
+        \usepackage{{fancyhdr}}
+        \pagestyle{{fancy}}
+        \fancyhf{{}}
+        \fancyfoot[C]{{\thepage}}
+        \fancyhead[L]{{
+          \includegraphics[height=1.2cm]{{C:/Users/ricar/OneDrive/Escritorio/Ingeniería en Sistemas/logo_utn.png}}
+          \shortstack[l]{{
+            {{\footnotesize Universidad Tecnológica Nacional}} \\
+            {{\footnotesize Facultad Regional Córdoba}} \\
+            {{\footnotesize Extensión Áulica Bariloche}}
+          }}
+        }}
+        \fancyhead[C]{{
+          \shortstack[c]{{
+            {{\footnotesize {}}} \\
+            {{\footnotesize {}}} \\
+            {{\footnotesize }}
+          }}
+        }}
+        \fancyhead[R]{{
+          \shortstack[r]{{
+            {{\footnotesize Profesor: {}}} \\
+            {{\footnotesize Alumno: Ricardo Nicolás Freccero}} \\
+            {{\footnotesize Fecha: {}}}
+          }}
+        }}
+
         % Para bibliografía
         %\usepackage[backend=biber, style=apa]{{biblatex}}
         %\addbibresource{{bibliografia.bib}}
 
         \begin{{document}}
+        \newgeometry{{margin=2cm, top=1.5cm}}
           \begin{{titlepage}}
             \centering
-            \includegraphics[width=\linewidth]{{C:/Users/ricar/OneDrive/Escritorio/Ingerniería en Sistemas/logo_utn.jpg}}\\[1cm]
+            \includegraphics[width=\linewidth]{{C:/Users/ricar/OneDrive/Escritorio/Ingeniería en Sistemas/logo_utn_frc.jpg}}\\
 
             \textsc{{
               \LARGE Universidad Tecnológica Nacional\\
@@ -60,11 +103,13 @@ return {
             \LARGE
             {}
             \rule{{\linewidth}}{{1.0mm}}\\
-            \Large
+            \large
             \begin{{flushleft}}
               Profesor: {}
 
               Ayudante: {}
+
+              Fecha: {}
             \end{{flushleft}}
 
             \vfill
@@ -75,6 +120,7 @@ return {
             \end{{flushright}}
           \end{{titlepage}}
           
+          \restoregeometry
           \tableofcontents
           \newpage
 
@@ -95,12 +141,17 @@ return {
         \end{{document}}
       ]],
       {
-        i(1),
+        rep(2),
+        rep(3),
+        rep(5),
+        rep(7),
+        i(1, 'Año'),
         i(2, 'Materia'),
-        i(3, 'Número del TP'),
-        i(4, 'Nombre del TP'),
-        i(5),
-        i(6),
+        i(3, 'Trabajo Práctico N°'),
+        i(4, 'Título'),
+        i(5, 'Nombre Profesor'),
+        i(6, 'Nombre Ayudante'),
+        i(7, 'Fecha'),
         i(0),
       }
     )
@@ -124,7 +175,7 @@ return {
       }
     )
   ),
-  s('item', t '\\item '),
+  s('item', { t { '', '', '\\item ' } }),
   s(
     'begin',
     fmt(
@@ -150,7 +201,7 @@ return {
       [[
         \begin{{figure}}{}
           \centering
-          \includegraphics[width={}\linewidth{{{}}}
+          \includegraphics[width={}\linewidth]{{{}}}
           \caption{{{}}}
           \label{{fig:{}}}
         \end{{figure}}
@@ -165,6 +216,26 @@ return {
         i(3),
         i(4),
         i(5),
+        i(0),
+      }
+    )
+  ),
+  s(
+    'align',
+    fmt(
+      [[
+        \begin{{align}}{}
+          {} &= {}
+        \end{{align}}
+        {}
+      ]],
+      {
+        c(1, {
+          t '',
+          fmt('[{}]', { i(1, 'H') }),
+        }),
+        i(2),
+        i(3),
         i(0),
       }
     )
