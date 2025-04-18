@@ -653,7 +653,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        ts_ls = {},
+        -- ts_ls = {},
         --
 
         lua_ls = {
@@ -669,6 +669,16 @@ require('lazy').setup({
               diagnostics = { disable = { 'missing-fields' } },
             },
           },
+        },
+        ts_ls = {
+          root_dir = require('lspconfig').util.root_pattern { 'package.json', 'tsconfig.json' },
+          single_file_support = false,
+          settings = {},
+        },
+        denols = {
+          root_dir = require('lspconfig').util.root_pattern { 'deno.json', 'deno.jsonc' },
+          single_file_support = false,
+          settings = {},
         },
       }
 
@@ -755,6 +765,7 @@ require('lazy').setup({
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         javascript = { 'prettierd', 'prettier', 'prettierrc', stop_after_first = true },
+        typescript = { 'prettier', ' prettierd', 'prettierrc', stop_after_first = true },
       },
     },
   },
@@ -794,7 +805,7 @@ require('lazy').setup({
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
-      'Jezda1337/nvim-html-css',
+      -- 'Jezda1337/nvim-html-css',
     },
     config = function()
       -- See `:help cmp`
@@ -871,21 +882,21 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
-          {
-            name = 'html-css',
-            option = {
-              enable_on = { 'html' }, -- html is enabled by default
-              notify = false,
-              documentation = {
-                auto_show = true, -- show documentation on select
-              },
-              -- add any external scss like one below
-              style_sheets = {
-                'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
-                'https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css',
-              },
-            },
-          },
+          -- {
+          --   name = 'html-css',
+          --   option = {
+          --     enable_on = { 'html' }, -- html is enabled by default
+          --     notify = false,
+          --     documentation = {
+          --       auto_show = true, -- show documentation on select
+          --     },
+          --     -- add any external scss like one below
+          --     style_sheets = {
+          --       'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
+          --       'https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css',
+          --     },
+          --   },
+          -- },
         },
       }
     end,
@@ -898,10 +909,10 @@ require('lazy').setup({
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     'folke/tokyonight.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
+    opts = {
+      transparent = true,
+    },
     init = function()
-      require('tokyonight').setup {
-        transparent = true,
-      }
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
