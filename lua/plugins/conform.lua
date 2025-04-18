@@ -4,16 +4,16 @@ return { -- Autoformat
   cmd = { 'ConformInfo' },
   keys = {
     {
-      '<leader>f',
+      '<leader>ff',
       function()
-        require('conform').format { async = true, lsp_format = 'fallback' }
+        require('conform').format { async = true, lsp_format = 'first' }
       end,
-      mode = '',
+      mode = { 'n', 'v' },
       desc = '[F]ormat buffer',
     },
   },
   opts = {
-    notify_on_error = false,
+    notify_on_error = true,
     format_on_save = function(bufnr)
       -- Disable "format_on_save lsp_fallback" for languages that don't
       -- have a well standardized coding style. You can add additional
@@ -24,7 +24,7 @@ return { -- Autoformat
       else
         return {
           timeout_ms = 500,
-          lsp_format = 'fallback',
+          lsp_format = 'first',
         }
       end
     end,
@@ -33,6 +33,9 @@ return { -- Autoformat
         command = 'zig',
         args = { 'fmt', '--stdin' },
         stdin = true,
+      },
+      biome = {
+        --require_cwd = true,
       },
     },
     formatters_by_ft = {
