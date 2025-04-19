@@ -651,7 +651,9 @@ require('lazy').setup({
           capabilities = lsp_capabilities,
           filetypes = { 'typescript', 'html', 'angular', 'htmlangular' },
           root_dir = function(fname)
-            return require('lspconfig.util').root_pattern('angular.json', 'workspace.json', 'nx.json', 'package.json', 'tsconfig.base.json')(fname)
+            return require('lspconfig.util').root_pattern('angular.json', 'workspace.json', 'nx.json', 'package.json', 'tsconfig.base.json', 'project.json')(
+              fname
+            )
           end,
           on_new_config = function(new_config, new_root_dir)
             new_config.cmd = {
@@ -913,7 +915,7 @@ require('lazy').setup({
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       require('everforest').setup {
-        background = 'medium',
+        background = 'hard',
         ui_contrast = 'low',
       }
 
@@ -1034,7 +1036,7 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',

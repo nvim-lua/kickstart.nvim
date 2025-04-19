@@ -23,36 +23,51 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+
+    -- Web
+    {
+      'microsoft/vscode-chrome-debug',
+      version = '1.x',
+      build = 'npm i && npm run build',
+    },
   },
   keys = {
     -- Basic debugging keymaps, feel free to change to your liking!
     {
-      '<F5>',
+      '<F8>',
       function()
         require('dap').continue()
       end,
       desc = 'Debug: Start/Continue',
     },
     {
-      '<F1>',
+      '<F10>',
       function()
         require('dap').step_into()
       end,
       desc = 'Debug: Step Into',
     },
     {
-      '<F2>',
+      '<F9>',
       function()
         require('dap').step_over()
       end,
       desc = 'Debug: Step Over',
     },
     {
-      '<F3>',
+      '<F11>',
       function()
         require('dap').step_out()
       end,
       desc = 'Debug: Step Out',
+    },
+    -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
+    {
+      '<F6>',
+      function()
+        require('dapui').toggle()
+      end,
+      desc = 'Debug: See last session result.',
     },
     {
       '<leader>b',
@@ -67,14 +82,6 @@ return {
         require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ')
       end,
       desc = 'Debug: Set Breakpoint',
-    },
-    -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-    {
-      '<F7>',
-      function()
-        require('dapui').toggle()
-      end,
-      desc = 'Debug: See last session result.',
     },
   },
   config = function()
@@ -135,6 +142,29 @@ return {
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
+
+    dap.adapters.chrome = {
+      type = 'executable',
+      command = 'node',
+      args = { vim.fn.stdpath 'data' .. '/lazy/vscode-chrome-debug/out/src/chromeDebug.js' }, -- TODO adjust
+    }
+
+    -- TODO: Figure out how to launch chrome automatically
+    -- TODO: Figure out why I have two additional configurations when starting debugger: "Launch Chrome Debugger", "Debug App Two"
+    -- now I have to do "open -a "Google Chrome" --args --remote-debugging-port=9222"
+    dap.configurations.typescript = {
+      {
+        name = 'Attach to Chrome',
+        type = 'chrome',
+        request = 'attach',
+        program = '${file}',
+        cwd = vim.fn.getcwd(),
+        sourceMaps = true,
+        protocol = 'inspector',
+        port = 9222,
+        webRoot = '${workspaceFolder}',
+      },
+    }
 
     -- Install golang specific config
     require('dap-go').setup {
