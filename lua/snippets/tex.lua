@@ -13,9 +13,196 @@ vim.keymap.set({ 'i', 's' }, '<C-h>', function()
 end)
 
 return {
-  -- AUTOSNIPPETS
+  -- NOTE: AUTOSNIPPETS
+
+  -- NOTE: ENVIRONMENTS
+
   s(
-    { trig = ';ait', snippetType = 'autosnippet' },
+    { trig = ';ben', snippetType = 'autosnippet', wordTrig = false },
+    fmt(
+      [[
+        \begin{{enumerate}}{}
+          \item {}
+        \end{{enumerate}}
+        {}
+      ]],
+      {
+        c(1, {
+          t '',
+          fmt('[A{}]', { i(1, '.') }),
+          fmt('[a{}]', { i(1, '.') }),
+          fmt('[i{}]', { i(1, '.') }),
+          fmt('[{}]', { i(1) }),
+        }),
+        i(2),
+        i(0),
+      }
+    )
+  ),
+
+  s(
+    { trig = ':ben', snippetType = 'autosnippet', wordTrig = false },
+    fmt(
+      [[
+        \begin{{enumerate*}}{}
+          \item {}
+        \end{{enumerate*}}
+        {}
+      ]],
+      {
+        c(1, {
+          t '',
+          fmt('[A{}]', { i(1, '.') }),
+          fmt('[a{}]', { i(1, '.') }),
+          fmt('[i{}]', { i(1, '.') }),
+          fmt('[{}]', { i(1) }),
+        }),
+        i(2),
+        i(0),
+      }
+    )
+  ),
+
+  s(
+    { trig = ';bal', snippetType = 'autosnippet', wordTrig = false },
+    fmt(
+      [[
+        \begin{{align}}
+          {} &= {}
+        \end{{align}}
+        {}
+      ]],
+      {
+        i(1),
+        i(2),
+        i(0),
+      }
+    )
+  ),
+
+  s(
+    { trig = ':bal', snippetType = 'autosnippet', wordTrig = false },
+    fmt(
+      [[
+        \begin{{align*}}
+          {} &= {}
+        \end{{align*}}
+        {}
+      ]],
+      {
+        i(1),
+        i(2),
+        i(0),
+      }
+    )
+  ),
+
+  s(
+    { trig = ';bit', snippetType = 'autosnippet', wordTrig = false },
+    fmt(
+      [[
+      \begin{{itemize}}
+        \item {}
+      \end{{itemize}}
+      {}
+      ]],
+      {
+        i(1),
+        i(0),
+      }
+    )
+  ),
+
+  -- NOTE: MATH
+
+  s(
+    { trig = ';int', snippetType = 'autosnippet', wordTrig = false },
+    fmt(
+      [[
+    \int{} {} \,d{}
+    ]],
+      {
+        c(1, {
+          t '',
+          sn(nil, fmt('_{{{}}}^{{{}}}', { i(1), i(2) })),
+        }),
+        i(2),
+        i(0),
+      }
+    )
+  ),
+
+  s(
+    { trig = ';iint', snippetType = 'autosnippet', wordTrig = false },
+    fmt(
+      [[
+      \iint{} {} \,d{} \,d{}
+      ]],
+      {
+        c(1, {
+          t '',
+          sn(
+            nil,
+            fmt(
+              [[
+              _{{{}}}
+              ]],
+              {
+                i(1),
+              }
+            )
+          ),
+        }),
+        i(2),
+        i(3),
+        i(0),
+      }
+    )
+  ),
+
+  s(
+    { trig = ';iiint', snippetType = 'autosnippet', wordTrig = false },
+    fmt(
+      [[
+      \iiint{} {} \,d{} \,d{} \,d{}
+      ]],
+      {
+        c(1, {
+          t '',
+          sn(
+            nil,
+            fmt([[_{{{}}}]], {
+              i(0),
+            })
+          ),
+        }),
+        i(2),
+        i(3),
+        i(4),
+        i(0),
+      }
+    )
+  ),
+
+  s(
+    { trig = ';dv', snippetType = 'autosnippet', wordTrig = false },
+    fmt([[\\dv{}]], {
+      c(1, {
+        sn(nil, fmt([[{{{}}}]], { i(1) })),
+        sn(nil, fmt([[{{{}}}{{{}}}]], { i(1), i(0) })),
+        sn(nil, fmt([[[{}]{{{}}}{{{}}}]], { i(1), i(2), i(0) })),
+      }),
+    })
+  ),
+
+  -- NOTE: SECTIONS
+
+  -- NOTE: MISCELLANEOUS
+
+  s({ trig = ';it', snippetType = 'autosnippet', wordTrig = false }, { t { '', '', '\\item' } }),
+
+  s(
+    { trig = ';atm', snippetType = 'autosnippet', wordTrig = false },
     fmt(
       [[
       \\
@@ -135,7 +322,7 @@ return {
 
           \section{{Conclusión}}
 
-
+          %\addcontentsline{{toc}}{{section}}{{Referencias}}
           %\printbibliography
           
         \end{{document}}
@@ -183,6 +370,7 @@ return {
         \begin{{{}}}{}
           {}
         \end{{{}}}
+        {}
       ]],
       {
         i(1, 'environment'),
@@ -190,8 +378,9 @@ return {
           t '',
           fmt('[{}]', { i(1, 'opcional') }),
         }),
-        i(0),
+        i(3),
         rep(1),
+        i(0),
       }
     )
   ),
