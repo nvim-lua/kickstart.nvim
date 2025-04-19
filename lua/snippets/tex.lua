@@ -12,6 +12,29 @@ vim.keymap.set({ 'i', 's' }, '<C-h>', function()
   end
 end)
 
+-- Generador dinámico de matrices
+local function matrix_generator(_, snip)
+  local dims = snip.captures[1] -- Extraído del regex (por ejemplo, "3x3")
+  local n, m = dims:match '(%d+)x(%d+)'
+  n = tonumber(n)
+  m = tonumber(m)
+  local nodes = {}
+
+  for row = 1, n do
+    for col = 1, m do
+      table.insert(nodes, i((row - 1) * m + col, ''))
+      if col < m then
+        table.insert(nodes, t ' & ')
+      end
+    end
+    if row < n then
+      table.insert(nodes, t { ' \\\\', '' })
+    end
+  end
+
+  return sn(nil, nodes)
+end
+
 return {
   -- NOTE: AUTOSNIPPETS
 
@@ -109,6 +132,29 @@ return {
       {
         i(1),
         i(0),
+      }
+    )
+  ),
+
+  s(
+    { trig = ';mat(%d+x%d+)', regTrig = true, name = 'Matrix' },
+    fmt(
+      [[
+      \begin{{{}}}
+      {}
+      \end{{{}}}
+      ]],
+      {
+        c(1, {
+          t 'bmatrix',
+          t 'pmatrix',
+          t 'Bmatrix',
+          t 'vmatrix',
+          t 'Vmatrix',
+          t 'matrix',
+        }),
+        d(2, matrix_generator, {}),
+        rep(1),
       }
     )
   ),
