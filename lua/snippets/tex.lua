@@ -44,21 +44,13 @@ return {
     { trig = ';ben', snippetType = 'autosnippet', wordTrig = false },
     fmt(
       [[
-        \begin{{enumerate}}{}
+        \begin{{enumerate}}[{}]
           \item {}
         \end{{enumerate}}
-        {}
       ]],
       {
-        c(1, {
-          t '',
-          fmt('[A{}]', { i(1, '.') }),
-          fmt('[a{}]', { i(1, '.') }),
-          fmt('[i{}]', { i(1, '.') }),
-          fmt('[{}]', { i(1) }),
-        }),
+        i(1, '1.'),
         i(2),
-        i(0),
       }
     )
   ),
@@ -67,21 +59,13 @@ return {
     { trig = ':ben', snippetType = 'autosnippet', wordTrig = false },
     fmt(
       [[
-        \begin{{enumerate*}}{}
+        \begin{{enumerate*}}[{}]
           \item {}
         \end{{enumerate*}}
-        {}
       ]],
       {
-        c(1, {
-          t '',
-          fmt('[A{}]', { i(1, '.') }),
-          fmt('[a{}]', { i(1, '.') }),
-          fmt('[i{}]', { i(1, '.') }),
-          fmt('[{}]', { i(1) }),
-        }),
+        i(1, '1.'),
         i(2),
-        i(0),
       }
     )
   ),
@@ -93,12 +77,10 @@ return {
         \begin{{align}}
           {} &= {}
         \end{{align}}
-        {}
       ]],
       {
         i(1),
         i(2),
-        i(0),
       }
     )
   ),
@@ -110,12 +92,10 @@ return {
         \begin{{align*}}
           {} &= {}
         \end{{align*}}
-        {}
       ]],
       {
         i(1),
         i(2),
-        i(0),
       }
     )
   ),
@@ -127,17 +107,15 @@ return {
       \begin{{itemize}}
         \item {}
       \end{{itemize}}
-      {}
       ]],
       {
         i(1),
-        i(0),
       }
     )
   ),
 
   s(
-    { trig = ';mat(%d+x%d+)', regTrig = true, name = 'Matrix' },
+    { trig = ';mat(%d+x%d+)', regTrig = true, name = 'matriz' },
     fmt(
       [[
       \begin{{{}}}
@@ -165,15 +143,13 @@ return {
     { trig = ';int', snippetType = 'autosnippet', wordTrig = false },
     fmt(
       [[
-    \int{} {} \,d{}
+    \int_{{{}}}^{{{}}} {} \,d{}
     ]],
       {
-        c(1, {
-          t '',
-          sn(nil, fmt('_{{{}}}^{{{}}}', { i(1), i(2) })),
-        }),
+        i(1),
         i(2),
-        i(0),
+        i(3),
+        i(4),
       }
     )
   ),
@@ -182,16 +158,13 @@ return {
     { trig = ';iint', snippetType = 'autosnippet', wordTrig = false },
     fmt(
       [[
-      \iint{} {} \,d{} \,d{}
+      \iint_{{{}}} {} \,d{} \,d{}
       ]],
       {
-        c(1, {
-          t '',
-          sn(nil, fmt([[ _{{{}}} ]], { i(1) })),
-        }),
+        i(1),
         i(2),
         i(3),
-        i(0),
+        i(4),
       }
     )
   ),
@@ -200,44 +173,41 @@ return {
     { trig = ';iiint', snippetType = 'autosnippet', wordTrig = false },
     fmt(
       [[
-      \iiint{} {} \,d{} \,d{} \,d{}
+      \iiint_{{{}}} {} \,d{} \,d{} \,d{}
       ]],
       {
-        c(1, {
-          t '',
-          sn(nil, fmt([[_{{{}}}]], { i(1) })),
-        }),
+        i(1),
         i(2),
         i(3),
         i(4),
-        i(0),
+        i(5),
       }
     )
   ),
 
   s(
     { trig = ';dv', snippetType = 'autosnippet', wordTrig = false },
-    fmt([[\dv{}]], {
-      c(1, {
-        sn(nil, fmt([[{{{}}}]], { i(1) })),
-        sn(nil, fmt([[{{{}}}{{{}}}]], { i(1), i(2) })),
-        sn(nil, fmt([[[{}]{{{}}}{{{}}}]], { i(1), i(2), i(3) })),
-      }),
+    fmt([[\dv[{}]{{{}}}{{{}}}]], {
+      i(1),
+      i(2),
+      i(3),
     })
   ),
 
   s(
     { trig = ';dp', snippetType = 'autosnippet', wordTrig = false },
-    fmt([[\pdv{}{}]], {
-      c(1, { fmt('{{{}}}', { i(1) }), fmt('[{}]', { i(1) }) }),
-      c(2, { fmt('{{{}}}', { i(1) }), fmt('{{{}}}{{{}}}', { i(1), i(2) }), fmt('{{{}}}{{{}}}{{{}}}', { i(1), i(2), i(3) }) }),
+    fmt([[\pdv[{}]{{{}}}{{{}}}]], {
+      i(1),
+      i(2),
+      i(3),
     })
   ),
 
   s(
     { trig = ';sum', snippetType = 'autosnippet', wordTrig = false },
-    fmt('\\sum{} {}', {
-      c(1, { t '', fmt('_{{{}}}^{{{}}}', { i(1), i(2) }) }),
+    fmt('\\sum_{{{}}}^{{{}}} {}', {
+      i(1),
+      i(2),
       i(0),
     })
   ),
@@ -268,6 +238,38 @@ return {
       ]],
       { i(1) }
     )
+  ),
+
+  s(
+    { trig = ';log', snippetType = 'autosnippet' },
+    fmt('\\log_{{{}}}{{{}}}', {
+      i(1, 'b'),
+      i(2, 'x'),
+    })
+  ),
+
+  s(
+    { trig = ';ln', snippetType = 'autosnippet' },
+    fmt('\\ln{{{}}}', {
+      i(1, 'x'),
+    })
+  ),
+
+  s(
+    { trig = ';rai', snippetType = 'autosnippet' },
+    fmt('\\sqrt[{}]{{{}}}', {
+      i(1, 'n'),
+      i(2, 'x'),
+    })
+  ),
+
+  s(
+    { trig = ';lim', snippetType = 'autosnippet' },
+    fmt('\\lim_{{{} \\to {}}}{{{}}}', {
+      i(1, 'x'),
+      c(2, { t '\\infty', t '-\\infty' }),
+      i(3, ''),
+    })
   ),
 
   -- NOTE: SECTIONS
@@ -419,26 +421,6 @@ return {
     )
   ),
   s(
-    'enumerate',
-    fmt(
-      [[
-        \begin{{enumerate}}{}
-          \item {}
-        \end{{enumerate}}
-      ]],
-      {
-        c(1, {
-          t '',
-          fmt('[A{}]', { i(1, '.') }),
-          fmt('[a{}]', { i(1, '.') }),
-          fmt('[i{}]', { i(1, '.') }),
-        }),
-        i(0),
-      }
-    )
-  ),
-  s('item', { t { '', '', '\\item ' } }),
-  s(
     'begin',
     fmt(
       [[
@@ -480,26 +462,6 @@ return {
         i(3),
         i(4),
         i(5),
-        i(0),
-      }
-    )
-  ),
-  s(
-    'align',
-    fmt(
-      [[
-        \begin{{align}}{}
-          {} &= {}
-        \end{{align}}
-        {}
-      ]],
-      {
-        c(1, {
-          t '',
-          fmt('[{}]', { i(1, 'H') }),
-        }),
-        i(2),
-        i(3),
         i(0),
       }
     )
