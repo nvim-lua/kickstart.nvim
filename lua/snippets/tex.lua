@@ -141,17 +141,7 @@ return {
       {
         c(1, {
           t '',
-          sn(
-            nil,
-            fmt(
-              [[
-              _{{{}}}
-              ]],
-              {
-                i(1),
-              }
-            )
-          ),
+          sn(nil, fmt([[ _{{{}}} ]], { i(1) })),
         }),
         i(2),
         i(3),
@@ -169,12 +159,7 @@ return {
       {
         c(1, {
           t '',
-          sn(
-            nil,
-            fmt([[_{{{}}}]], {
-              i(0),
-            })
-          ),
+          sn(nil, fmt([[_{{{}}}]], { i(1) })),
         }),
         i(2),
         i(3),
@@ -186,20 +171,64 @@ return {
 
   s(
     { trig = ';dv', snippetType = 'autosnippet', wordTrig = false },
-    fmt([[\\dv{}]], {
+    fmt([[\dv{}]], {
       c(1, {
         sn(nil, fmt([[{{{}}}]], { i(1) })),
-        sn(nil, fmt([[{{{}}}{{{}}}]], { i(1), i(0) })),
-        sn(nil, fmt([[[{}]{{{}}}{{{}}}]], { i(1), i(2), i(0) })),
+        sn(nil, fmt([[{{{}}}{{{}}}]], { i(1), i(2) })),
+        sn(nil, fmt([[[{}]{{{}}}{{{}}}]], { i(1), i(2), i(3) })),
       }),
     })
+  ),
+
+  s(
+    { trig = ';dp', snippetType = 'autosnippet', wordTrig = false },
+    fmt([[\pdv{}{}]], {
+      c(1, { fmt('{{{}}}', { i(1) }), fmt('[{}]', { i(1) }) }),
+      c(2, { fmt('{{{}}}', { i(1) }), fmt('{{{}}}{{{}}}', { i(1), i(2) }), fmt('{{{}}}{{{}}}{{{}}}', { i(1), i(2), i(3) }) }),
+    })
+  ),
+
+  s(
+    { trig = ';sum', snippetType = 'autosnippet', wordTrig = false },
+    fmt('\\sum{} {}', {
+      c(1, { t '', fmt('_{{{}}}^{{{}}}', { i(1), i(2) }) }),
+      i(0),
+    })
+  ),
+
+  s({ trig = ';sin', snippetType = 'autosnippet', wordTrig = false }, fmt('\\sin{} {}', { i(1), i(2) })),
+
+  s({ trig = ';cos', snippetType = 'autosnippet', wordTrig = false }, fmt('\\cos{} {}', { i(1), i(2) })),
+
+  s({ trig = ';tan', snippetType = 'autosnippet', wordTrig = false }, fmt('\\tan{} {}', { i(1), i(2) })),
+
+  s({ trig = ';sec', snippetType = 'autosnippet', wordTrig = false }, fmt('\\sec{} {}', { i(1), i(2) })),
+
+  s({ trig = ';csc', snippetType = 'autosnippet', wordTrig = false }, fmt('\\csc{} {}', { i(1), i(2) })),
+
+  s({ trig = ';cot', snippetType = 'autosnippet', wordTrig = false }, fmt('\\cot{} {}', { i(1), i(2) })),
+
+  s({ trig = ';fr', snippetType = 'autosnippet', wordTrig = false }, fmt('\\frac{{{}}}{{{}}}', { i(1), i(2) })),
+
+  s({ trig = ';eql', snippetType = 'autosnippet', wordTrig = false }, fmt('$ {} $', { i(1) })),
+
+  s(
+    { trig = ';eqb', snippetType = 'autosnippet', wordTrig = false },
+    fmt(
+      [[
+      \[
+      {}
+      \]
+      ]],
+      { i(1) }
+    )
   ),
 
   -- NOTE: SECTIONS
 
   -- NOTE: MISCELLANEOUS
 
-  s({ trig = ';it', snippetType = 'autosnippet', wordTrig = false }, { t { '', '', '\\item' } }),
+  s({ trig = ';it', snippetType = 'autosnippet', wordTrig = false }, { t { '', '', '\\item ' } }),
 
   s(
     { trig = ';atm', snippetType = 'autosnippet', wordTrig = false },
