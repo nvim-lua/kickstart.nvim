@@ -15,7 +15,7 @@ end)
 -- Generador dinámico de matrices
 local function matrix_generator(_, snip)
   local dims = snip.captures[1] -- Extraído del regex (por ejemplo, "3x3")
-  local n, m = dims:match '(%d+)x(%d+)'
+  local n, m = dims:match '(%d+)p(%d+)'
   n = tonumber(n)
   m = tonumber(m)
   local nodes = {}
@@ -115,7 +115,7 @@ return {
   ),
 
   s(
-    { trig = ';mat(%d+x%d+)', regTrig = true, name = 'matriz' },
+    { trig = ';mat(%d+p%d+)', regTrig = true, name = 'matriz' },
     fmt(
       [[
       \begin{{{}}}
@@ -133,6 +133,20 @@ return {
         }),
         d(2, matrix_generator, {}),
         rep(1),
+      }
+    )
+  ),
+
+  s(
+    { trig = ';sel', snippetType = 'autosnippet', wordTrig = false },
+    fmt(
+      [[
+      \begin{{cases}}
+        {}
+      \end{{cases}}
+      ]],
+      {
+        i(1),
       }
     )
   ),
@@ -212,17 +226,17 @@ return {
     })
   ),
 
-  s({ trig = ';sin', snippetType = 'autosnippet', wordTrig = false }, fmt('\\sin{} {}', { i(1), i(2) })),
+  s({ trig = ';sin', snippetType = 'autosnippet', wordTrig = false }, fmt('\\sin^{{{}}} {}', { i(1), i(2) })),
 
-  s({ trig = ';cos', snippetType = 'autosnippet', wordTrig = false }, fmt('\\cos{} {}', { i(1), i(2) })),
+  s({ trig = ';cos', snippetType = 'autosnippet', wordTrig = false }, fmt('\\cos^{{{}}} {}', { i(1), i(2) })),
 
-  s({ trig = ';tan', snippetType = 'autosnippet', wordTrig = false }, fmt('\\tan{} {}', { i(1), i(2) })),
+  s({ trig = ';tg', snippetType = 'autosnippet', wordTrig = false }, fmt('\\tg^{{{}}} {}', { i(1), i(2) })),
 
-  s({ trig = ';sec', snippetType = 'autosnippet', wordTrig = false }, fmt('\\sec{} {}', { i(1), i(2) })),
+  s({ trig = ':sin', snippetType = 'autosnippet', wordTrig = false }, fmt('\\csc^{{{}}} {}', { i(1), i(2) })),
 
-  s({ trig = ';csc', snippetType = 'autosnippet', wordTrig = false }, fmt('\\csc{} {}', { i(1), i(2) })),
+  s({ trig = ':cos', snippetType = 'autosnippet', wordTrig = false }, fmt('\\sec^{{{}}} {}', { i(1), i(2) })),
 
-  s({ trig = ';cot', snippetType = 'autosnippet', wordTrig = false }, fmt('\\cot{} {}', { i(1), i(2) })),
+  s({ trig = ':tg', snippetType = 'autosnippet', wordTrig = false }, fmt('\\cot^{{{}}} {}', { i(1), i(2) })),
 
   s({ trig = ';fr', snippetType = 'autosnippet', wordTrig = false }, fmt('\\frac{{{}}}{{{}}}', { i(1), i(2) })),
 
@@ -243,23 +257,23 @@ return {
   s(
     { trig = ';log', snippetType = 'autosnippet' },
     fmt('\\log_{{{}}}{{{}}}', {
-      i(1, 'b'),
-      i(2, 'x'),
+      i(1),
+      i(2),
     })
   ),
 
   s(
     { trig = ';ln', snippetType = 'autosnippet' },
     fmt('\\ln{{{}}}', {
-      i(1, 'x'),
+      i(1),
     })
   ),
 
   s(
     { trig = ';rai', snippetType = 'autosnippet' },
     fmt('\\sqrt[{}]{{{}}}', {
-      i(1, 'n'),
-      i(2, 'x'),
+      i(1),
+      i(2),
     })
   ),
 
@@ -273,6 +287,48 @@ return {
   ),
 
   -- NOTE: SECTIONS
+
+  s({ trig = ';sec', snippetType = 'autosnippet', wordTrig = false }, fmt('\\section{{{}}}', { i(1) })),
+
+  s({ trig = ';ssc', snippetType = 'autosnippet', wordTrig = false }, fmt('\\subsection{{{}}}', { i(1) })),
+
+  s({ trig = ';sss', snippetType = 'autosnippet', wordTrig = false }, fmt('\\subsubsection{{{}}}', { i(1) })),
+
+  s({ trig = ':sec', snippetType = 'autosnippet', wordTrig = false }, fmt('\\section*{{{}}}', { i(1) })),
+
+  s({ trig = ':ssc', snippetType = 'autosnippet', wordTrig = false }, fmt('\\subsection*{{{}}}', { i(1) })),
+
+  s({ trig = ':sss', snippetType = 'autosnippet', wordTrig = false }, fmt('\\subsubsection*{{{}}}', { i(1) })),
+
+  -- NOTE:  LOGIC OPERATORS
+
+  s({ trig = ';fall', snippetType = 'autosnippet', wordTrig = false }, { t '\\forall' }),
+
+  s({ trig = ';exis', snippetType = 'autosnippet', wordTrig = false }, { t '\\exists' }),
+
+  s({ trig = ';imp', snippetType = 'autosnippet', wordTrig = false }, { t '\\implies ' }),
+
+  s({ trig = ';dimp', snippetType = 'autosnippet', wordTrig = false }, { t '\\iff ' }),
+
+  s({ trig = ';sub', snippetType = 'autosnippet', wordTrig = false }, { t '\\subset ' }),
+
+  s({ trig = ';sup', snippetType = 'autosnippet', wordTrig = false }, { t '\\supset ' }),
+
+  s({ trig = ';esub', snippetType = 'autosnippet', wordTrig = false }, { t '\\subseteq ' }),
+
+  s({ trig = ';esup', snippetType = 'autosnippet', wordTrig = false }, { t '\\supseteq ' }),
+
+  s({ trig = ';cap', snippetType = 'autosnippet', wordTrig = false }, { t '\\cap ' }),
+
+  s({ trig = ';cup', snippetType = 'autosnippet', wordTrig = false }, { t '\\cup ' }),
+
+  s({ trig = ';per', snippetType = 'autosnippet', wordTrig = false }, { t '\\in ' }),
+
+  s({ trig = ';and', snippetType = 'autosnippet', wordTrig = false }, { t '\\land ' }),
+
+  s({ trig = ';or', snippetType = 'autosnippet', wordTrig = false }, { t '\\lor ' }),
+
+  s({ trig = ';xor', snippetType = 'autosnippet', wordTrig = false }, { t '\\oplus ' }),
 
   -- NOTE: MISCELLANEOUS
 
@@ -288,6 +344,32 @@ return {
       { i(1), i(0) }
     )
   ),
+
+  s({ trig = ';mod', snippetType = 'autosnippet', wordTrig = false }, fmt('\\left|{}\\right|', { i(1) })),
+
+  s({ trig = ';sq', snippetType = 'autosnippet', wordTrig = false }, fmt('\\left[{}\\right]', { i(1) })),
+
+  s({ trig = ';pa', snippetType = 'autosnippet', wordTrig = false }, fmt('\\left({}\\right)', { i(1) })),
+
+  s({ trig = ';ll', snippetType = 'autosnippet', wordTrig = false }, { t '\\left\\{', i(1), t '\\right\\}' }),
+
+  s({ trig = ';ere', snippetType = 'autosnippet', wordTrig = false }, fmt('\\mathbb{{R}}^{{{}}}', { i(1) })),
+
+  s({ trig = ';to', snippetType = 'autosnippet', wordTrig = false }, { t '\\to' }),
+
+  s({ trig = ';mid', snippetType = 'autosnippet', wordTrig = false }, { t '\\mid' }),
+
+  s({ trig = ';vec', snippetType = 'autosnippet', wordTrig = false }, fmt('\\vec{{{}}}', { i(1) })),
+
+  s({ trig = ';tbf', snippetType = 'autosnippet', wordTrig = false }, fmt('\\textbf{{{}}}', { i(1) })),
+
+  s({ trig = ';tit', snippetType = 'autosnippet', wordTrig = false }, fmt('\\textit{{{}}}', { i(1) })),
+
+  s({ trig = ';seg', snippetType = 'autosnippet', wordTrig = false }, fmt('\\overline{{{}}}', { i(1) })),
+
+  s({ trig = ';sb', snippetType = 'autosnippet', wordTrig = false }, fmt('_{{{}}}', { i(1) })),
+
+  s({ trig = ';ala', snippetType = 'autosnippet', wordTrig = false }, fmt('^{{{}}}', { i(1) })),
 
   -- NORMAL SNIPPETS
   s(
@@ -312,8 +394,15 @@ return {
         % Paquetes comunes
         \usepackage{{graphicx, float}}
         \usepackage{{amsfonts, amssymb, amsmath}}
+        \usepackage{{physics}}
         \usepackage{{enumerate}}
         \usepackage[colorlinks=true, citecolor=blue]{{hyperref}}
+
+        % Para graficar
+        \usepackage{{pgfplots}}
+        \usepackage{{tikz, color}}
+        \usepackage{{tikz-3dplot}}
+        \pgfplotsset{{width=15cm, compat=1.12}}
 
         % Encabezados
         \usepackage{{fancyhdr}}
