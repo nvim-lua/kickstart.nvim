@@ -272,10 +272,10 @@ return {
       dap.configurations[language] = {
         -- NOTE: Tested configs
         -- NOTE: inspired by https://github.com/StevanFreeborn/nvim-config/blob/main/lua/plugins/debugging.lua
-        -- TODO: Figure out why I have two additional configurations when starting debugger: "Launch Chrome Debugger", "Debug App Two"
-        -- now I have to do "open -a "Google Chrome" --args --remote-debugging-port=9222"
+        -- NOTE: If debug launch suggests strange entries which are not provided by setup (like I had "Launch Chrome Debugger") - check ".vscode" folder of project; launch.config from there is automatically added
         {
           -- TODO: Figure out how to launch chrome automatically
+          -- now I have to do "open -a "Google Chrome" --args --remote-debugging-port=9222"
           -- url = enter_launch_url,
           name = 'Attach to Chrome',
           type = 'pwa-chrome',
