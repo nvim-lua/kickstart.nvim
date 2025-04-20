@@ -4,26 +4,11 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- ( Custom remaps
--- vim.keymap.set('n', '!', '_') -- For macos only
-
--- Center the view when moving
-vim.keymap.set('n', '<C-d>', '<C-d>zz')
-vim.keymap.set('n', '<C-u>', '<C-u>zz')
-
--- Access to file viewer easily
-vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, { desc = '[P]roject files [V]iewer' })
-
-vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
-vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
-
--- Undotree
-vim.keymap.set('n', '<F5>', vim.cmd.UndotreeToggle)
-
--- End of custom remaps )
+-- Custom remaps
+require 'custom.remap'
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -171,12 +156,7 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup {
 
-  {
-    'rose-pine/neovim',
-    name = 'rose-pine',
-  },
-
-  'mbbill/undotree',
+  { import = 'custom.plugins' },
 
   'tpope/vim-sleuth',
 
@@ -655,13 +635,17 @@ require('lazy').setup {
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bibtex', 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
       auto_install = true,
       highlight = {
         enable = true,
-        additional_vim_regex_highlighting = { 'ruby' },
+        -- additional_vim_regex_highlighting = { 'ruby', 'latex' },
+        disable = { 'latex' },
       },
-      indent = { enable = true, disable = { 'ruby' } },
+      indent = {
+        enable = true,
+        disable = { 'ruby', 'latex' },
+      },
     },
   },
   ui = {
@@ -682,61 +666,3 @@ require('lazy').setup {
     },
   },
 }
-
-require('rose-pine').setup {
-  variant = 'auto', -- auto, main, moon, or dawn
-  dark_variant = 'main', -- main, moon, or dawn
-  dim_inactive_windows = false,
-  extend_background_behind_borders = true,
-
-  enable = {
-    terminal = true,
-    legacy_highlights = true, -- Improve compatibility for previous versions of Neovim
-    migrations = true, -- Handle deprecated options automatically
-  },
-
-  styles = {
-    bold = true,
-    italic = true,
-    transparency = true,
-  },
-
-  groups = {
-    border = 'muted',
-    link = 'iris',
-    panel = 'surface',
-
-    error = 'love',
-    hint = 'iris',
-    info = 'foam',
-    note = 'pine',
-    todo = 'rose',
-    warn = 'gold',
-
-    git_add = 'foam',
-    git_change = 'rose',
-    git_delete = 'love',
-    git_dirty = 'rose',
-    git_ignore = 'muted',
-    git_merge = 'iris',
-    git_rename = 'pine',
-    git_stage = 'iris',
-    git_text = 'rose',
-    git_untracked = 'subtle',
-
-    h1 = 'iris',
-    h2 = 'foam',
-    h3 = 'rose',
-    h4 = 'gold',
-    h5 = 'pine',
-    h6 = 'foam',
-  },
-
-  palette = {},
-
-  highlight_groups = {},
-
-  before_highlight = function(group, highlight, palette) end,
-}
-
-vim.cmd 'colorscheme rose-pine'
