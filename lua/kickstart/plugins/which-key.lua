@@ -68,7 +68,7 @@ return {
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
         { '<leader>z', ':ZenMode<cr>', desc = '[Z]en mode' },
-        -- Toggle
+        -- Search
         { '<leader>st', ':TodoTelescope<cr>', desc = '[T]odo' },
         -- Search and Replace
         { '<leader>r', group = '[R]eplace' },
@@ -77,16 +77,17 @@ return {
         -- Quarto
         { '<leader>q', group = '[q]uarto' },
         { '<leader>qh', ':QuartoHelp ', desc = '[h]elp' },
-        { '<leader>qp', ":lua require'quarto'.quartoPreview({ args = '--port 4242 --no-browser' })<cr>", desc = '[p]review' },
+        { '<leader>qf', ":lua require'quarto'.quartoPreview({ args = '--port 4242 --no-browser' })<cr>", desc = '[f]ixed port preview' },
+        { '<leader>qq', ':QuartoClosePreview<cr>', desc = '[q]uit preview' },
+        { '<leader>qp', ':QuartoPreview<cr>', desc = '[p]review' },
         -- Vim
         { '<leader>v', group = '[v]im' },
         { '<leader>vc', ':Telescope colorscheme<cr>', desc = '[c]olortheme' },
         { '<leader>vt', toggle_light_dark_theme, desc = '[t]oggle light/dark theme' },
-        -- Package/LS managers
-        { '<leader>l', ':Lazy<cr>', desc = '[L]azy' },
-        { '<leader>m', group = '[M]ason' },
-        { '<leader>mo', ':Mason<cr>', desc = '[O]pen' },
-        { '<leader>mi', ':MasonInstall ', desc = '[I]nstall' },
+        { '<leader>vl', ':Lazy<cr>', desc = '[L]azy' },
+        { '<leader>vm', group = '[M]ason' },
+        { '<leader>vmo', ':Mason<cr>', desc = '[O]pen' },
+        { '<leader>vmi', ':MasonInstall ', desc = '[I]nstall' },
         -- Insert comments
         { '<leader>i', group = '[I]nsert' },
       },

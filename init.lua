@@ -44,7 +44,9 @@ What is Kickstart?
 Kickstart Guide:
 
   TODO: The very first thing you should do is to run the command `:Tutor` in Neovim.
-
+  TODO: Consider wezterm instead of tmux: https://www.florianbellmann.com/blog/switch-from-tmux-to-wezterm#wezterm-meets-neovim
+  TODO: Understand LuaSnip better and add snippets for todo-comments: https://github.com/L3MON4D3/LuaSnip/wiki/Cool-Snippets#all---todo-commentsnvim-snippets
+  TODO: More on nvim with Quarto: https://petejon.es/posts/2025-01-29-using-neovim-for-r/
     If you don't know what this means, type the following:
       - <escape key>
       - :
@@ -107,4 +109,3 @@ require 'lazy-plugins'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
-
