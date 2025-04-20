@@ -720,7 +720,7 @@ require('lazy').setup({
       --   -- certain features of an LSP (for example, turning off formatting for ts_ls)
       --   local capabilities = require('blink.cmp').get_lsp_capabilities()
       --   config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, config.capabilities or {})
-      --   require('mason-lspconfig')[server_name].setup(config)
+      --   require('mason-lspconfig')[server].setup(config)
       -- else
       --   vim.lsp.config(server, config)
       --   vim.lsp.enable(server)
