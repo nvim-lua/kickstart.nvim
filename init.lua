@@ -768,7 +768,16 @@ require('lazy').setup({
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         javascript = { 'prettierd', 'prettier', 'prettierrc', stop_after_first = true },
-        typescript = { 'deno_fmt', 'prettier', ' prettierd', 'prettierrc', stop_after_first = true },
+        typescript = function()
+          local root_dir = vim.loop.cwd()
+          local deno_json_path = root_dir .. '/deno.json'
+          local deno_jsonc_path = root_dir .. '/deno.jsonc'
+          if vim.loop.fs_stat(deno_json_path) or vim.loop.fs_stat(deno_jsonc_path) then
+            return { 'deno_fmt' }
+          else
+            return { 'prettier', 'prettierd', 'prettierrc', stop_after_first = true }
+          end
+        end,
       },
     },
   },
