@@ -26,62 +26,143 @@ return {
 
     -- Web
     {
-      'microsoft/vscode-chrome-debug',
-      version = '1.x',
-      build = 'npm i && npm run build',
+      'microsoft/vscode-js-debug',
+      -- TODO: check wheter vscode-js-debug has some "build dap server script in package.json"
+      build = 'npm i && npx gulp dapDebugServer',
     },
   },
   keys = {
-    -- Basic debugging keymaps, feel free to change to your liking!
+    { -- NOTE: Temporary solution to open chrome - until I'll figure out how to run it automatically
+      '<leader>dd',
+      ':!open -a "Google Chrome" --args --remote-debugging-port=9222<CR>',
+    },
+    -- TODO: change lua formatter to keep such entries in one line
     {
-      '<F8>',
+      '<leader>dB',
+      function()
+        require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+      end,
+      desc = 'Breakpoint Condition',
+    },
+    {
+      '<leader>db',
+      function()
+        require('dap').toggle_breakpoint()
+      end,
+      desc = 'Toggle Breakpoint',
+    },
+    {
+      '<leader>dc',
       function()
         require('dap').continue()
       end,
-      desc = 'Debug: Start/Continue',
+      desc = 'Run/Continue',
     },
     {
-      '<F10>',
+      '<leader>da',
+      function()
+        require('dap').continue { before = get_args }
+      end,
+      desc = 'Run with Args',
+    },
+    {
+      '<leader>dC',
+      function()
+        require('dap').run_to_cursor()
+      end,
+      desc = 'Run to Cursor',
+    },
+    {
+      '<leader>dg',
+      function()
+        require('dap').goto_()
+      end,
+      desc = 'Go to Line (No Execute)',
+    },
+    {
+      '<leader>di',
       function()
         require('dap').step_into()
       end,
-      desc = 'Debug: Step Into',
+      desc = 'Step Into',
     },
     {
-      '<F9>',
+      '<leader>dj',
       function()
-        require('dap').step_over()
+        require('dap').down()
       end,
-      desc = 'Debug: Step Over',
+      desc = 'Down',
     },
     {
-      '<F11>',
+      '<leader>dk',
+      function()
+        require('dap').up()
+      end,
+      desc = 'Up',
+    },
+    {
+      '<leader>dl',
+      function()
+        require('dap').run_last()
+      end,
+      desc = 'Run Last',
+    },
+    {
+      '<leader>do',
       function()
         require('dap').step_out()
       end,
-      desc = 'Debug: Step Out',
+      desc = 'Step Out',
+    },
+    {
+      '<leader>dO',
+      function()
+        require('dap').step_over()
+      end,
+      desc = 'Step Over',
+    },
+    {
+      '<leader>dP',
+      function()
+        require('dap').pause()
+      end,
+      desc = 'Pause',
     },
     -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
     {
-      '<F6>',
+      '<leader>dl',
       function()
         require('dapui').toggle()
       end,
       desc = 'Debug: See last session result.',
     },
     {
-      '<leader>b',
+      '<leader>dr',
       function()
-        require('dap').toggle_breakpoint()
+        require('dap').repl.toggle()
       end,
-      desc = 'Debug: Toggle Breakpoint',
+      desc = 'Toggle REPL',
     },
     {
-      '<leader>B',
+      '<leader>ds',
       function()
-        require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+        require('dap').session()
       end,
-      desc = 'Debug: Set Breakpoint',
+      desc = 'Session',
+    },
+    {
+      '<leader>dt',
+      function()
+        require('dap').terminate()
+      end,
+      desc = 'Terminate',
+    },
+    {
+      '<leader>dw',
+      function()
+        require('dap.ui.widgets').hover()
+      end,
+      desc = 'Widgets',
     },
   },
   config = function()
@@ -143,28 +224,113 @@ return {
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
-    dap.adapters.chrome = {
-      type = 'executable',
-      command = 'node',
-      args = { vim.fn.stdpath 'data' .. '/lazy/vscode-chrome-debug/out/src/chromeDebug.js' }, -- TODO adjust
-    }
+    for _, adapterType in ipairs { 'node', 'chrome', 'msedge' } do
+      local pwaType = 'pwa-' .. adapterType
 
-    -- TODO: Figure out how to launch chrome automatically
-    -- TODO: Figure out why I have two additional configurations when starting debugger: "Launch Chrome Debugger", "Debug App Two"
-    -- now I have to do "open -a "Google Chrome" --args --remote-debugging-port=9222"
-    dap.configurations.typescript = {
-      {
-        name = 'Attach to Chrome',
-        type = 'chrome',
-        request = 'attach',
-        program = '${file}',
-        cwd = vim.fn.getcwd(),
-        sourceMaps = true,
-        protocol = 'inspector',
-        port = 9222,
-        webRoot = '${workspaceFolder}',
-      },
-    }
+      dap.adapters[pwaType] = {
+        type = 'server',
+        host = 'localhost',
+        port = '${port}',
+        executable = {
+          command = 'node',
+          args = {
+            vim.fn.stdpath 'data' .. '/lazy/vscode-js-debug/dist/src/dapDebugServer.js',
+            '${port}',
+          },
+        },
+      }
+
+      -- this allow us to handle launch.json configurations
+      -- which specify type as "node" or "chrome" or "msedge"
+      dap.adapters[adapterType] = function(cb, config)
+        local nativeAdapter = dap.adapters[pwaType]
+
+        config.type = pwaType
+
+        if type(nativeAdapter) == 'function' then
+          nativeAdapter(cb, config)
+        else
+          cb(nativeAdapter)
+        end
+      end
+    end
+
+    local enter_launch_url = function()
+      local co = coroutine.running()
+      return coroutine.create(function()
+        vim.ui.input({ prompt = 'Enter URL: ', default = 'http://localhost:4201' }, function(url)
+          if url == nil or url == '' then
+            return
+          else
+            coroutine.resume(co, url)
+          end
+        end)
+      end)
+    end
+
+    for _, language in ipairs { 'typescript', 'javascript', 'typescriptreact', 'javascriptreact', 'vue' } do
+      dap.configurations[language] = {
+        -- NOTE: Tested configs
+        -- NOTE: inspired by https://github.com/StevanFreeborn/nvim-config/blob/main/lua/plugins/debugging.lua
+        -- TODO: Figure out why I have two additional configurations when starting debugger: "Launch Chrome Debugger", "Debug App Two"
+        -- now I have to do "open -a "Google Chrome" --args --remote-debugging-port=9222"
+        {
+          -- TODO: Figure out how to launch chrome automatically
+          -- url = enter_launch_url,
+          name = 'Attach to Chrome',
+          type = 'pwa-chrome',
+          request = 'attach',
+          program = '${file}',
+          cwd = vim.fn.getcwd(),
+          sourceMaps = true,
+          protocol = 'inspector',
+          port = 9222,
+          webRoot = '${workspaceFolder}',
+        },
+        {
+          -- TODO: This config launches chrome, breapoints are working, but it's very slow for some reason
+          type = 'pwa-chrome',
+          request = 'launch',
+          name = 'Launch Chrome (nvim-dap)',
+          url = enter_launch_url,
+          webRoot = '${workspaceFolder}',
+          sourceMaps = true,
+        },
+
+        -- NOTE: Untested configs
+        {
+          type = 'pwa-node',
+          request = 'launch',
+          name = 'Launch file using Node.js (nvim-dap)',
+          program = '${file}',
+          cwd = '${workspaceFolder}',
+        },
+        {
+          type = 'pwa-node',
+          request = 'attach',
+          name = 'Attach to process using Node.js (nvim-dap)',
+          processId = require('dap.utils').pick_process,
+          cwd = '${workspaceFolder}',
+        },
+        -- requires ts-node to be installed globally or locally
+        {
+          type = 'pwa-node',
+          request = 'launch',
+          name = 'Launch file using Node.js with ts-node/register (nvim-dap)',
+          program = '${file}',
+          cwd = '${workspaceFolder}',
+          runtimeArgs = { '-r', 'ts-node/register' },
+        },
+        {
+          type = 'pwa-msedge',
+          request = 'launch',
+          name = 'Launch Edge (nvim-dap)',
+          url = enter_launch_url,
+          webRoot = '${workspaceFolder}',
+          sourceMaps = true,
+        },
+      }
+    end
 
     -- Install golang specific config
     require('dap-go').setup {
