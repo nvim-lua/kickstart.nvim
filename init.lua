@@ -705,14 +705,19 @@ require('lazy').setup({
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-      -- Handle LSP setups
-      -- See :help vim.lsp.enable
-      for server, config in pairs(servers) do
-        vim.lsp.config(server, config)
-        vim.lsp.enable(server)
-      end
+      require('mason-lspconfig').setup {
+        ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
+        automatic_installation = false,
+        handlers = {
+          function(server_name)
+            local config = servers[server_name] or {}
+            vim.lsp.config(server_name, config)
+            vim.lsp.enable(server_name)
+          end,
+        },
+      }
       -- NOTE: Some servers still require the nvim-lspconfig setup until they are updated
-      -- Use this template inside the for loop if you encounter issues with an lsp
+      -- Add this template inside the handler function after initializing config if you encounter issues with any lsp
       --
       -- if server == 'example_server' or server == 'example_server2' then
       --   -- This handles overriding only values explicitly passed
@@ -721,12 +726,10 @@ require('lazy').setup({
       --   local capabilities = require('blink.cmp').get_lsp_capabilities()
       --   config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, config.capabilities or {})
       --   require('mason-lspconfig')[server].setup(config)
-      -- else
-      --   vim.lsp.config(server, config)
-      --   vim.lsp.enable(server)
+      --   return
       -- end
       --
-      -- LSP servers and clients are able to communicate to each other what features they support.
+      --  LSP servers and clients are able to communicate to each other what features they support.
       --  With nvim-lspconfig setup, Neovim doesn't support everything that is in the LSP specification.
       --  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
       --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
