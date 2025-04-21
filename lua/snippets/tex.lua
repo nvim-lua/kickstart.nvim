@@ -226,19 +226,19 @@ return {
     })
   ),
 
-  s({ trig = ';sin', snippetType = 'autosnippet', wordTrig = false }, fmt('\\sin^{{{}}} {}', { i(1), i(2) })),
+  s({ trig = ';sin', snippetType = 'autosnippet', wordTrig = false }, fmt('\\sin^{{{}}}', { i(1) })),
 
-  s({ trig = ';cos', snippetType = 'autosnippet', wordTrig = false }, fmt('\\cos^{{{}}} {}', { i(1), i(2) })),
+  s({ trig = ';cos', snippetType = 'autosnippet', wordTrig = false }, fmt('\\cos^{{{}}}', { i(1) })),
 
-  s({ trig = ';tg', snippetType = 'autosnippet', wordTrig = false }, fmt('\\tg^{{{}}} {}', { i(1), i(2) })),
+  s({ trig = ';tg', snippetType = 'autosnippet', wordTrig = false }, fmt('\\tg^{{{}}}', { i(1) })),
 
-  s({ trig = ':sin', snippetType = 'autosnippet', wordTrig = false }, fmt('\\csc^{{{}}} {}', { i(1), i(2) })),
+  s({ trig = ':sin', snippetType = 'autosnippet', wordTrig = false }, fmt('\\csc^{{{}}}', { i(1) })),
 
-  s({ trig = ':cos', snippetType = 'autosnippet', wordTrig = false }, fmt('\\sec^{{{}}} {}', { i(1), i(2) })),
+  s({ trig = ':cos', snippetType = 'autosnippet', wordTrig = false }, fmt('\\sec^{{{}}}', { i(1) })),
 
-  s({ trig = ':tg', snippetType = 'autosnippet', wordTrig = false }, fmt('\\cot^{{{}}} {}', { i(1), i(2) })),
+  s({ trig = ':tg', snippetType = 'autosnippet', wordTrig = false }, fmt('\\cot^{{{}}}', { i(1) })),
 
-  s({ trig = ';fr', snippetType = 'autosnippet', wordTrig = false }, fmt('\\frac{{{}}}{{{}}}', { i(1), i(2) })),
+  s({ trig = ';fra', snippetType = 'autosnippet', wordTrig = false }, fmt('\\frac{{{}}}{{{}}}', { i(1), i(2) })),
 
   s({ trig = ';eql', snippetType = 'autosnippet', wordTrig = false }, fmt('$ {} $', { i(1) })),
 
@@ -281,7 +281,16 @@ return {
     { trig = ';lim', snippetType = 'autosnippet' },
     fmt('\\lim_{{{} \\to {}}}{{{}}}', {
       i(1, 'x'),
-      c(2, { t '\\infty', t '-\\infty' }),
+      c(2, { fmt('{}', { i(1) }), t '\\infty', t '-\\infty' }),
+      i(3, ''),
+    })
+  ),
+
+  s(
+    { trig = ';ilim', snippetType = 'autosnippet' },
+    fmt('\\displaystyle \\lim_{{{} \\to {}}}{{{}}}', {
+      i(1, 'x'),
+      c(2, { fmt('{}', { i(1) }), t '\\infty', t '-\\infty' }),
       i(3, ''),
     })
   ),
@@ -308,7 +317,7 @@ return {
 
   s({ trig = ';imp', snippetType = 'autosnippet', wordTrig = false }, { t '\\implies ' }),
 
-  s({ trig = ';dimp', snippetType = 'autosnippet', wordTrig = false }, { t '\\iff ' }),
+  s({ trig = ';iff', snippetType = 'autosnippet', wordTrig = false }, { t '\\iff ' }),
 
   s({ trig = ';sub', snippetType = 'autosnippet', wordTrig = false }, { t '\\subset ' }),
 
@@ -323,6 +332,10 @@ return {
   s({ trig = ';cup', snippetType = 'autosnippet', wordTrig = false }, { t '\\cup ' }),
 
   s({ trig = ';per', snippetType = 'autosnippet', wordTrig = false }, { t '\\in ' }),
+
+  s({ trig = ';nper', snippetType = 'autosnippet', wordTrig = false }, { t '\\notin ' }),
+
+  s({ trig = ';vacio', snippetType = 'autosnippet', wordTrig = false }, { t '\\emptyset ' }),
 
   s({ trig = ';and', snippetType = 'autosnippet', wordTrig = false }, { t '\\land ' }),
 
@@ -344,6 +357,8 @@ return {
       { i(1), i(0) }
     )
   ),
+
+  s({ trig = ';vmod', snippetType = 'autosnippet', wordTrig = false }, fmt('\\lVert{}\\rVert', { i(1) })),
 
   s({ trig = ';mod', snippetType = 'autosnippet', wordTrig = false }, fmt('\\left|{}\\right|', { i(1) })),
 
@@ -370,6 +385,31 @@ return {
   s({ trig = ';sb', snippetType = 'autosnippet', wordTrig = false }, fmt('_{{{}}}', { i(1) })),
 
   s({ trig = ';ala', snippetType = 'autosnippet', wordTrig = false }, fmt('^{{{}}}', { i(1) })),
+
+  s({ trig = ';ulin', snippetType = 'autosnippet', wordTrig = false }, fmt('\\underline{{{}}}', { i(1) })),
+
+  s({ trig = ';ref', snippetType = 'autosnippet', wordTrig = false }, fmt('\\ref{{{}}}', { i(1) })),
+
+  s({ trig = ';aql', snippetType = 'autosnippet', wordTrig = false }, { t ' &= ' }),
+
+  s(
+    { trig = ';txbox', snippetType = 'autosnippet', wordTrig = false },
+    fmt(
+      [[
+      \fbox\parbox{{{}\linewidth}}{{
+      \textbf{{{}}}
+      {}
+      }}
+      ]],
+      {
+        i(1, '0.9'),
+        i(2, 'Título'),
+        i(3),
+      }
+    )
+  ),
+
+  s({ trig = ';eqbox', snippetType = 'autosnippet', wordTrig = false }, fmt([[ \centerline{{$ \boxed{{{}}} $}} ]], { i(1) })),
 
   -- NORMAL SNIPPETS
   s(
