@@ -71,6 +71,9 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- It was in the nvim-highlight-colors instructions for highlighting css colors
+vim.opt.termguicolors = true
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -374,6 +377,12 @@ require('lazy').setup({
   },
   { 'Bilal2453/luvit-meta', lazy = true },
   {
+    'brenoprata10/nvim-highlight-colors',
+    config = function()
+      require('nvim-highlight-colors').turnOn()
+    end,
+  },
+  {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
     dependencies = {
@@ -381,6 +390,7 @@ require('lazy').setup({
       { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
+      'nvim-java/nvim-java',
 
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -553,6 +563,7 @@ require('lazy').setup({
           },
         },
         angularls = {},
+        zls = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -580,6 +591,12 @@ require('lazy').setup({
             -- certain features of an LSP (for example, turning off formatting for tsserver)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
+          end,
+
+          jdtls = function()
+            require('java').setup {}
+
+            require('lspconfig').jdtls.setup {}
           end,
         },
       }
@@ -630,6 +647,7 @@ require('lazy').setup({
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        zig = { 'zig fmt' },
       },
     },
   },
@@ -747,6 +765,9 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+        },
+        formattting = {
+          format = require('nvim-highlight-colors').format,
         },
       }
     end,
