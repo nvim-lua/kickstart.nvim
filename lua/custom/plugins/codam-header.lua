@@ -1,17 +1,13 @@
--- Codam header
 return {
-  config = function()
-    require('codamheader').setup {
-      auto_update = true,
-      user = 'dponte',
-      mail = 'dponte@student.codam.nl',
-      git = {
-        enabled = false,
-        bin = 'git',
-        user_global = true,
-        email_global = true,
-      },
-      exascii_left = false,
-    }
+  "f-ras/codam-header.nvim",
+  cmd = { "Stdheader" },
+  opts = {
+    auto_update = true, -- Update header when saving.
+    user = 'dponte',
+      mail = 'dponte@student.codam.nl', -- Your mail.
+    -- add other options.
+  },
+  config = function(_, opts)
+    require("codamheader").setup(opts)
   end,
 }
