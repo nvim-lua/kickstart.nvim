@@ -2,7 +2,8 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 vim.opt.number = true
-vim.g.loaded_netrw = false
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
