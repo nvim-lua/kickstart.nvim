@@ -242,6 +242,10 @@ return {
 
   s({ trig = ';eql', snippetType = 'autosnippet', wordTrig = false }, fmt('$ {} $', { i(1) })),
 
+  s({ trig = ';neq', snippetType = 'autosnippet', wordTrig = false }, t '\\neq'),
+
+  s({ trig = ';aprox', snippetType = 'autosnippet', wordTrig = false }, t '\\approx'),
+
   s(
     { trig = ';eqb', snippetType = 'autosnippet', wordTrig = false },
     fmt(
@@ -343,7 +347,42 @@ return {
 
   s({ trig = ';xor', snippetType = 'autosnippet', wordTrig = false }, { t '\\oplus ' }),
 
+  s({ trig = ';to', snippetType = 'autosnippet', wordTrig = false }, { t '\\to' }),
+
+  s({ trig = ';mid', snippetType = 'autosnippet', wordTrig = false }, { t '\\mid' }),
+
   -- NOTE: MISCELLANEOUS
+
+  s({ trig = ';alpha', snippetType = 'autosnippet', wordTrig = false }, { t '\\alpha' }),
+  s({ trig = ';beta', snippetType = 'autosnippet', wordTrig = false }, { t '\\beta' }),
+  s({ trig = ';gamma', snippetType = 'autosnippet', wordTrig = false }, { t '\\gamma' }),
+  s({ trig = ';delta', snippetType = 'autosnippet', wordTrig = false }, { t '\\delta' }),
+  s({ trig = ';epsi', snippetType = 'autosnippet', wordTrig = false }, { t '\\varepsilon' }),
+  s({ trig = ';theta', snippetType = 'autosnippet', wordTrig = false }, { t '\\theta' }),
+  s({ trig = ';kappa', snippetType = 'autosnippet', wordTrig = false }, { t '\\kappa' }),
+  s({ trig = ';lambda', snippetType = 'autosnippet', wordTrig = false }, { t '\\lambda' }),
+  s({ trig = ';mu', snippetType = 'autosnippet', wordTrig = false }, { t '\\mu' }),
+  s({ trig = ';pi', snippetType = 'autosnippet', wordTrig = false }, { t '\\pi' }),
+  s({ trig = ';rho', snippetType = 'autosnippet', wordTrig = false }, { t '\\rho' }),
+  s({ trig = ';sigma', snippetType = 'autosnippet', wordTrig = false }, { t '\\sigma' }),
+  s({ trig = ';tau', snippetType = 'autosnippet', wordTrig = false }, { t '\\tau' }),
+  s({ trig = ';phi', snippetType = 'autosnippet', wordTrig = false }, { t '\\phi' }),
+  s({ trig = ';psi', snippetType = 'autosnippet', wordTrig = false }, { t '\\psi' }),
+  s({ trig = ';omega', snippetType = 'autosnippet', wordTrig = false }, { t '\\omega' }),
+
+  s({ trig = ':gamma', snippetType = 'autosnippet', wordTrig = false }, { t '\\Gamma' }),
+  s({ trig = ':delta', snippetType = 'autosnippet', wordTrig = false }, { t '\\Delta' }),
+  s({ trig = ':theta', snippetType = 'autosnippet', wordTrig = false }, { t '\\Theta' }),
+  s({ trig = ':lamda', snippetType = 'autosnippet', wordTrig = false }, { t '\\Lambda' }),
+  s({ trig = ':pi', snippetType = 'autosnippet', wordTrig = false }, { t '\\Pi' }),
+  s({ trig = ':sigma', snippetType = 'autosnippet', wordTrig = false }, { t '\\Sigma' }),
+  s({ trig = ':phi', snippetType = 'autosnippet', wordTrig = false }, { t '\\Phi' }),
+  s({ trig = ':psi', snippetType = 'autosnippet', wordTrig = false }, { t '\\Psi' }),
+  s({ trig = ':omega', snippetType = 'autosnippet', wordTrig = false }, { t '\\Omega' }),
+
+  s({ trig = ';prima', snippetType = 'autosnippet', wordTrig = false }, t '^{\\prime}'),
+
+  s({ trig = ';txt', snippetType = 'autosnippet', wordTrig = false }, fmt('\\text{{{}}}', { i(1) })),
 
   s({ trig = ';it', snippetType = 'autosnippet', wordTrig = false }, { t { '', '', '\\item ' } }),
 
@@ -370,10 +409,6 @@ return {
 
   s({ trig = ';ere', snippetType = 'autosnippet', wordTrig = false }, fmt('\\mathbb{{R}}^{{{}}}', { i(1) })),
 
-  s({ trig = ';to', snippetType = 'autosnippet', wordTrig = false }, { t '\\to' }),
-
-  s({ trig = ';mid', snippetType = 'autosnippet', wordTrig = false }, { t '\\mid' }),
-
   s({ trig = ';vec', snippetType = 'autosnippet', wordTrig = false }, fmt('\\vec{{{}}}', { i(1) })),
 
   s({ trig = ';tbf', snippetType = 'autosnippet', wordTrig = false }, fmt('\\textbf{{{}}}', { i(1) })),
@@ -388,18 +423,23 @@ return {
 
   s({ trig = ';ulin', snippetType = 'autosnippet', wordTrig = false }, fmt('\\underline{{{}}}', { i(1) })),
 
+  s({ trig = ';oll', snippetType = 'autosnippet', wordTrig = false }, fmt('\\overbrace{{{}}}^{{{}}}', { i(1), i(2) })),
+
+  s({ trig = ';ull', snippetType = 'autosnippet', wordTrig = false }, fmt('\\underbrace{{{}}}_{{{}}}', { i(1), i(2) })),
+
   s({ trig = ';ref', snippetType = 'autosnippet', wordTrig = false }, fmt('\\ref{{{}}}', { i(1) })),
 
   s({ trig = ';aql', snippetType = 'autosnippet', wordTrig = false }, { t ' &= ' }),
 
   s(
-    { trig = ';txbox', snippetType = 'autosnippet', wordTrig = false },
+    { trig = ';tbox', snippetType = 'autosnippet', wordTrig = false },
     fmt(
       [[
-      \fbox\parbox{{{}\linewidth}}{{
+      \fbox{{\parbox{{{}\linewidth}}{{
       \textbf{{{}}}
+      
       {}
-      }}
+      }}}}\vspace{{0.2cm}}
       ]],
       {
         i(1, '0.9'),
@@ -409,7 +449,7 @@ return {
     )
   ),
 
-  s({ trig = ';eqbox', snippetType = 'autosnippet', wordTrig = false }, fmt([[ \centerline{{$ \boxed{{{}}} $}} ]], { i(1) })),
+  s({ trig = ';ebox', snippetType = 'autosnippet', wordTrig = false }, fmt([[ \centerline{{\boxed{{{}}}}} ]], { i(1) })),
 
   -- NORMAL SNIPPETS
   s(
