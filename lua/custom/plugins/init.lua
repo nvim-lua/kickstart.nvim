@@ -23,14 +23,19 @@ return {
       vim.keymap.set('n', '<leader>/', builtin.lgrep_curbuf, { desc = '[/] Fuzzily search in current buffer' })
     end,
   },
+  {
+    'echasnovski/mini.pairs',
+    version = false,
+    config = function()
+      require('mini.pairs').setup()
+    end,
+  },
   'JoosepAlviste/nvim-ts-context-commentstring',
   {
     'iamcco/markdown-preview.nvim',
     cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
     ft = { 'markdown' },
-    build = function()
-      vim.fn['mkdp#util#install']()
-    end,
+    build = ':call mkdp#util#install()',
   },
   {
     'OXY2DEV/markview.nvim',
