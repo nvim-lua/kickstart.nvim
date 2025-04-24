@@ -98,6 +98,16 @@ return { -- Main LSP Configuration
 
     local capabilities = require('blink.cmp').get_lsp_capabilities()
 
+    require('lspconfig').sourcekit.setup {
+      capabilities = {
+        workspace = {
+          didChangeWatchedFiles = {
+            dynamicRegistration = true,
+          },
+        },
+      },
+    }
+
     local servers = {
       lua_ls = {
         settings = {
