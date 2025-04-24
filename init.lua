@@ -232,6 +232,7 @@ require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   'github/copilot.vim', -- GitHub Copilot
+  'tpope/vim-fugitive', -- Git commands in nvim
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -446,6 +447,25 @@ require('lazy').setup({
     end,
   },
 
+  -- Git Blame Plugin
+  {
+    'f-person/git-blame.nvim',
+    -- load the plugin at startup
+    event = 'VeryLazy',
+    -- Because of the keys part, you will be lazy loading this plugin.
+    -- The plugin will only load once one of the keys is used.
+    -- If you want to load the plugin at startup, add something like event = "VeryLazy",
+    -- or lazy = false. One of both options will work.
+    opts = {
+      -- your configuration comes here
+      -- for example
+      enabled = true, -- if you want to enable the plugin
+      message_template = ' <author> • <date> • <summary> ', -- template for the blame message, check the Message template section for more options
+      date_format = '%Y-%m-%d %H:%M', -- template for the date, check Date format section for more options
+      virtual_text_column = 1, -- virtual text start column, check Start virtual text at column section for more options
+    },
+  },
+
   -- LSP Plugins
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
@@ -556,7 +576,8 @@ require('lazy').setup({
           --  the definition of its *type*, not where it was *defined*.
           map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
 
-          map('K', vim.lsp.buf.hover, 'Hover Documentation')
+          -- Show the signature of the symbol under your cursor.
+          map('gh', vim.lsp.buf.hover, 'Hover Documentation')
 
           -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
           ---@param client vim.lsp.Client
