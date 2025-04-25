@@ -1,3 +1,8 @@
+-- Plugins in this file
+-- Git Blame Plugin
+-- File Explorer
+-- GitHub Copilot Chat
+
 return {
   -- Git Blame Plugin
   {
