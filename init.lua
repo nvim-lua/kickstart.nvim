@@ -1091,6 +1091,59 @@ require('lazy').setup({
       require('nvim-dap-virtual-text').setup()
     end,
   },
+
+  {
+    'saecki/crates.nvim',
+    event = { 'BufRead Cargo.toml' },
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      require('crates').setup {
+        null_ls = {
+          enabled = true,
+          name = 'crates.nvim',
+        },
+        popup = {
+          border = 'rounded',
+          show_version_date = true,
+          show_dependency_version = true,
+        },
+        src = {
+          cmp = {
+            enabled = true,
+          },
+        },
+      }
+
+      -- Add keymaps specifically for Cargo.toml
+      vim.api.nvim_create_autocmd('BufRead', {
+        group = vim.api.nvim_create_augroup('CratesNvimSetup', { clear = true }),
+        pattern = 'Cargo.toml',
+        callback = function()
+          local crates = require 'crates'
+          local opts = { noremap = true, silent = true }
+
+          -- Update crate
+          vim.keymap.set('n', '<leader>ct', crates.toggle, { buffer = true, desc = 'Crates: [T]oggle' })
+          vim.keymap.set('n', '<leader>cr', crates.reload, { buffer = true, desc = 'Crates: [R]eload' })
+
+          -- Version management
+          vim.keymap.set('n', '<leader>cv', crates.show_versions_popup, { buffer = true, desc = 'Crates: Show [V]ersions' })
+          vim.keymap.set('n', '<leader>cf', crates.show_features_popup, { buffer = true, desc = 'Crates: Show [F]eatures' })
+
+          -- Dependencies
+          vim.keymap.set('n', '<leader>cu', crates.update_crate, { buffer = true, desc = 'Crates: [U]pdate Crate' })
+          vim.keymap.set('n', '<leader>ca', crates.update_all_crates, { buffer = true, desc = 'Crates: Update [A]ll' })
+          vim.keymap.set('n', '<leader>cU', crates.upgrade_crate, { buffer = true, desc = 'Crates: [U]pgrade Crate' })
+          vim.keymap.set('n', '<leader>cA', crates.upgrade_all_crates, { buffer = true, desc = 'Crates: Upgrade [A]ll' })
+
+          -- Open documentation
+          vim.keymap.set('n', 'K', crates.show_popup, { buffer = true, desc = 'Crates: Show Popup' })
+          vim.keymap.set('n', '<leader>cd', crates.open_documentation, { buffer = true, desc = 'Crates: Open [D]ocumentation' })
+          vim.keymap.set('n', '<leader>cR', crates.open_repository, { buffer = true, desc = 'Crates: Open [R]epository' })
+        end,
+      })
+    end,
+  },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
