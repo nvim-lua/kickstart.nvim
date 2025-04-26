@@ -339,6 +339,10 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        -- Added for Rust
+        { '<leader>r', group = '[R]ust', mode = { 'n', 'v' } },
+        { '<leader>d', group = '[D]ebug', mode = { 'n', 'v' } },
+        { '<leader>c', group = '[C]rates', mode = { 'n', 'v' } },
       },
     },
   },
