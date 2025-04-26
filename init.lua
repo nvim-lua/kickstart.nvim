@@ -1144,6 +1144,102 @@ require('lazy').setup({
       })
     end,
   },
+
+  {
+    'simrat39/rust-tools.nvim',
+    dependencies = {
+      'neovim/nvim-lspconfig',
+      'nvim-lua/plenary.nvim',
+      'mfussenegger/nvim-dap',
+    },
+    config = function()
+      local rt = require 'rust-tools'
+
+      rt.setup {
+        server = {
+          -- Standalone file support
+          standalone = true,
+
+          -- Pass in your existing rust_analyzer settings
+          settings = {
+            ['rust-analyzer'] = {
+              cargo = {
+                allFeatures = true,
+                loadOutDirsFromCheck = true,
+                runBuildScripts = true,
+              },
+              -- Add clippy lints for better code suggestions
+              checkOnSave = {
+                command = 'clippy',
+                extraArgs = { '--no-deps' },
+              },
+              procMacro = {
+                enable = true,
+              },
+            },
+          },
+
+          -- Configure LSP handlers
+          on_attach = function(_, bufnr)
+            -- Hover actions
+            vim.keymap.set('n', 'K', rt.hover_actions.hover_actions, { buffer = bufnr, desc = 'Rust: Hover Actions' })
+
+            -- Code action groups
+            vim.keymap.set('n', '<Leader>ra', rt.code_action_group.code_action_group, { buffer = bufnr, desc = 'Rust: Code [A]ction Group' })
+
+            -- Moving items
+            vim.keymap.set('n', '<Leader>rmj', function()
+              rt.move_item.move_item(false)
+            end, { buffer = bufnr, desc = 'Rust: Move Item Down' })
+            vim.keymap.set('n', '<Leader>rmk', function()
+              rt.move_item.move_item(true)
+            end, { buffer = bufnr, desc = 'Rust: Move Item Up' })
+
+            -- Debugging
+            vim.keymap.set('n', '<Leader>rdd', rt.debuggables.debuggables, { buffer = bufnr, desc = 'Rust: [D]ebuggables' })
+            vim.keymap.set('n', '<Leader>rr', rt.runnables.runnables, { buffer = bufnr, desc = 'Rust: [R]unnables' })
+
+            -- Expand macros
+            vim.keymap.set('n', '<Leader>rem', rt.expand_macro.expand_macro, { buffer = bufnr, desc = 'Rust: [E]xpand [M]acro' })
+
+            -- Parent modules
+            vim.keymap.set('n', '<Leader>rpp', rt.parent_module.parent_module, { buffer = bufnr, desc = 'Rust: [P]arent Module' })
+
+            -- Join lines
+            vim.keymap.set('n', '<Leader>rj', rt.join_lines.join_lines, { buffer = bufnr, desc = 'Rust: [J]oin Lines' })
+
+            -- SSR (Structural Search Replace)
+            vim.keymap.set('n', '<Leader>rss', rt.ssr.ssr, { buffer = bufnr, desc = 'Rust: [S]tructural [S]earch [R]eplace' })
+          end,
+        },
+
+        -- Set dap adapter if using nvim-dap
+        dap = {
+          adapter = {
+            type = 'executable',
+            command = 'lldb-vscode',
+            name = 'rt_lldb',
+          },
+        },
+
+        -- Tools configuration
+        tools = {
+          -- Automatically set inlay hints
+          autoSetHints = true,
+
+          -- Hover actions configuration
+          hover_actions = {
+            auto_focus = true,
+          },
+
+          -- Code action groups configuration
+          code_action_group = {
+            auto_focus = true,
+          },
+        },
+      }
+    end,
+  },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
