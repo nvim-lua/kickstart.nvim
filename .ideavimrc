@@ -1,0 +1,42 @@
+set scrolloff=5
+
+set incsearch
+
+let mapleader = " "
+
+set clipboard+=unnamedplus
+
+" Don't use Ex mode, use Q for formatting.
+map Q gq
+
+" --- Enable IdeaVim plugins https://jb.gg/ideavim-plugins
+
+" Highlight copied text
+Plug 'machakann/vim-highlightedyank'
+" Commentary plugin
+Plug 'tpope/vim-commentary'
+
+set NERDTree
+
+nnoremap <leader><space> :action GotoFile<CR>
+nnoremap <leader>e :action ActivateProjectToolWindow<CR>
+
+nnoremap <leader>cr :action RenameElement<CR>
+nnoremap <leader>bd :action CloseContent<CR>
+nnoremap <leader>bo :action CloseAllEditorsButActive<CR>
+
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+nnoremap <C-h> :action PreviousTab<CR>
+nnoremap <C-l> :action NextTab<CR>
+
+nnoremap <leader>h :action ActivateProjectToolWindow<CR>
+nnoremap <leader>j :action ActivateRunToolWindow<CR>
+nnoremap <leader>k :action ActivateFindToolWindow<CR>
+nnoremap <leader>l :action ActivateTerminalToolWindow<CR>
+
+autocmd FileType nerdtree nmap <buffer> l <Plug>NERDTreeExpand
+autocmd FileType nerdtree nmap <buffer> h <Plug>NERDTreeCollapse
