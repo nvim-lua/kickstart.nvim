@@ -1,4 +1,4 @@
-# newbim.nvim
+# newbim
 
 ## Introduction
 
