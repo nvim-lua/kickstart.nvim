@@ -1011,6 +1011,86 @@ require('lazy').setup({
   -- Or use telescope!
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
   -- you can continue same window with `<space>sr` which resumes last telescope search
+  {
+    'mfussenegger/nvim-dap',
+    dependencies = {
+      -- Creates a beautiful debugger UI
+      'rcarriga/nvim-dap-ui',
+
+      -- Installs the debug adapters for you
+      'williamboman/mason.nvim',
+      'jay-babu/mason-nvim-dap.nvim',
+
+      -- Add your own adapters here
+      'theHamsta/nvim-dap-virtual-text',
+    },
+    config = function()
+      local dap = require 'dap'
+      local dapui = require 'dapui'
+
+      -- Set up UI
+      dapui.setup()
+
+      -- Automatically open UI when debugging starts
+      dap.listeners.after.event_initialized['dapui_config'] = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated['dapui_config'] = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited['dapui_config'] = function()
+        dapui.close()
+      end
+
+      -- Configure Rust adapter
+      dap.adapters.lldb = {
+        type = 'executable',
+        command = '/usr/bin/lldb-vscode', -- adjust path as needed
+        name = 'lldb',
+      }
+
+      dap.configurations.rust = {
+        {
+          name = 'Launch',
+          type = 'lldb',
+          request = 'launch',
+          program = function()
+            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/target/debug/', 'file')
+          end,
+          cwd = '${workspaceFolder}',
+          stopOnEntry = false,
+          args = {},
+          -- if you need to run with terminal emulation:
+          runInTerminal = false,
+        },
+        {
+          name = 'Attach to process',
+          type = 'lldb',
+          request = 'attach',
+          pid = require('dap.utils').pick_process,
+          args = {},
+        },
+      }
+
+      -- Add keymaps
+      vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint, { desc = 'Debug: Toggle [B]reakpoint' })
+      vim.keymap.set('n', '<leader>dc', dap.continue, { desc = 'Debug: [C]ontinue' })
+      vim.keymap.set('n', '<leader>do', dap.step_over, { desc = 'Debug: Step [O]ver' })
+      vim.keymap.set('n', '<leader>di', dap.step_into, { desc = 'Debug: Step [I]nto' })
+      vim.keymap.set('n', '<leader>ds', dap.step_out, { desc = 'Debug: [S]tep Out' })
+      vim.keymap.set('n', '<leader>dr', dap.repl.open, { desc = 'Debug: Open [R]EPL' })
+      vim.keymap.set('n', '<leader>du', dapui.toggle, { desc = 'Debug: Toggle [U]I' })
+
+      -- Make sure required tools are installed
+      require('mason-nvim-dap').setup {
+        ensure_installed = { 'codelldb' },
+        automatic_installation = true,
+      }
+
+      -- Virtual text for debug info
+      require('nvim-dap-virtual-text').setup()
+    end,
+  },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
