@@ -17,4 +17,3 @@ return { -- You can easily change to a different colorscheme.
     vim.cmd.hi 'Comment gui=none'
   end,
 }
-
