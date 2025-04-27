@@ -74,6 +74,12 @@ vim.opt.scrolloff = 10
 -- It was in the nvim-highlight-colors instructions for highlighting css colors
 vim.opt.termguicolors = true
 
+-- virtual_text enables inline error messgages
+-- idk what virtual_lines does yet
+vim.diagnostic.config {
+  virtual_lines = { current_line = true },
+}
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
