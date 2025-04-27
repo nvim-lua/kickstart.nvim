@@ -3,6 +3,12 @@ return {
   version = '*',
   event = "VimEnter",
   config = function()
+    -- Function to get current directory name
+    local function get_session_name()
+      local cwd = vim.fn.getcwd()
+      return vim.fn.fnamemodify(cwd, ':t')
+    end
+
     require('mini.sessions').setup({
       -- Whether to read latest session if Neovim opened without file arguments
       autoread = false,
@@ -49,5 +55,17 @@ return {
       -- Whether to print session path after action
       verbose = { read = false, write = true, delete = true },
     })
-  end
+
+    -- Set up autocommands for auto-saving
+    local session_group = vim.api.nvim_create_augroup('mini_sessions', { clear = true })
+    vim.api.nvim_create_autocmd('VimLeavePre', {
+      group = session_group,
+      callback = function()
+        local name = get_session_name()
+        if name then
+          require('mini.sessions').write(name, { force = true })
+        end
+      end,
+    })
+  end,
 }

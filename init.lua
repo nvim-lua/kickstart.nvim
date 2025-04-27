@@ -1,16 +1,13 @@
+---@diagnostic disable: undefined-global
 local config_path = vim.fn.stdpath 'config'
-package.path = config_path .. '/?.lua;' .. config_path .. '/?/init.lua;' .. package.path
+local lua_path = config_path .. '/lua'
+package.path = lua_path .. '/?.lua;' .. lua_path .. '/?/init.lua;' .. config_path .. '/?.lua;' .. config_path .. '/?/init.lua;' .. package.path
 
-require 'core.keymaps'
-require 'options.autocmds'
-require 'options.settings'
--- require 'plugins.init'
+require('core.keymaps').setup()
+require('options.autocmds').setup()
+require('options.settings').setup()
 
 local plugins = require 'plugins'
-
--- Set leader key before lazy.nvim
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -44,20 +41,6 @@ require('lazy').setup({ plugins }, {
     },
   },
 })
-
--- Set up swap file directory to be in a central location
-vim.opt.directory = vim.fn.stdpath('data') .. '/swapfiles/'
-
--- Create the swap directory if it doesn't exist
-local swap_dir = vim.fn.stdpath('data') .. '/swapfiles'
-if vim.fn.isdirectory(swap_dir) == 0 then
-  vim.fn.mkdir(swap_dir, 'p')
-end
-
--- Configure swap file behavior
-vim.opt.swapfile = true  -- Keep swap files for recovery
-vim.opt.updatetime = 300 -- Save swap file after 300ms of inactivity
-vim.opt.updatecount = 100 -- Write to swap file after 100 characters
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

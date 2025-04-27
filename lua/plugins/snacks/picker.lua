@@ -18,6 +18,9 @@ return {
           severity = { pos = "right" },
         },
         matcher = { sort_empty = false, fuzzy = false },
+        -- Add safety options
+        safe_update = true,  -- Skip updates if buffer is being written/closed
+        ignore_nil_buffers = true,  -- Skip nil buffers during updates
       }
     }
   },

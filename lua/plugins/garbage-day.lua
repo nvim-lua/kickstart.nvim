@@ -1,6 +1,6 @@
 -- Garbage collector that stops inactive LSP clients to free RAM
 return {
-  'zeioth/garbage-day.nvim',
+  --[[ 'zeioth/garbage-day.nvim',
   dependencies = 'neovim/nvim-lspconfig',
   event = 'VeryLazy',
   opts = {
@@ -17,5 +17,5 @@ return {
       pause = 110,    -- Lower pause for more frequent but shorter GC pauses
       step_mul = 100, -- Lower step multiplier for smoother collection
     },
-  },
+  }, ]]
 }

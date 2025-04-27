@@ -3,6 +3,7 @@
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
+---@diagnostic disable: undefined-global
 -- Make line numbers default
 vim.opt.number = true
 vim.o.relativenumber = true
@@ -54,7 +55,9 @@ vim.opt.wrap = false
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+-- Do not set 'tab' in listchars so ibl can show its own indent guides
+-- Use a vertical bar for tabs so ibl and listchars both show vertical guides
+vim.opt.listchars = { tab = '│ ', trail = '·', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
@@ -69,7 +72,40 @@ vim.opt.scrolloff = 10
 vim.opt.winbar = ""
 
 -- Set diagnostic signs
-vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError" })
-vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn" })
-vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo" })
-vim.fn.sign_define("DiagnosticSignHint", { text = "󰌵", texthl = "DiagnosticSignHint" })
+vim.diagnostic.config({
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = "",
+      [vim.diagnostic.severity.WARN] = "",
+      [vim.diagnostic.severity.INFO] = "",
+      [vim.diagnostic.severity.HINT] = "󰌵",
+    },
+    texthl = {
+      [vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
+      [vim.diagnostic.severity.WARN] = "DiagnosticSignWarn",
+      [vim.diagnostic.severity.INFO] = "DiagnosticSignInfo",
+      [vim.diagnostic.severity.HINT] = "DiagnosticSignHint",
+    },
+  },
+})
+
+-- Add module interface for settings
+local M = {}
+
+function M.setup()
+  -- Leader keys
+  vim.g.mapleader = ' '
+  vim.g.maplocalleader = ' '
+
+  -- Ensure swapfile directory exists and configure swapfile settings
+  local swap_dir = vim.fn.stdpath('data') .. '/swapfiles'
+  if vim.fn.isdirectory(swap_dir) == 0 then
+    vim.fn.mkdir(swap_dir, 'p')
+  end
+  vim.opt.directory = swap_dir
+  vim.opt.swapfile = true
+  vim.opt.updatetime = 300
+  vim.opt.updatecount = 100
+end
+
+return M

@@ -1,5 +1,7 @@
+---@diagnostic disable: undefined-global
 return { -- Autoformat
   'stevearc/conform.nvim',
+  enabled = false,
   event = { 'BufWritePre' },
   cmd = { 'ConformInfo' },
   keys = {
@@ -18,7 +20,7 @@ return { -- Autoformat
       -- Disable "format_on_save lsp_fallback" for languages that don't
       -- have a well standardized coding style. You can add additional
       -- languages here or re-enable it for the disabled ones.
-      local disable_filetypes = { c = true, cpp = true }
+      local disable_filetypes = {}  -- C and C++ now enabled for format-on-save
       local lsp_format_opt
       if disable_filetypes[vim.bo[bufnr].filetype] then
         lsp_format_opt = 'never'
@@ -32,6 +34,9 @@ return { -- Autoformat
     end,
     formatters_by_ft = {
       lua = { 'stylua' },
+      go = { 'gofumpt', 'goimports' },  -- Run gofumpt first, then goimports
+      c = { 'clang_format' },           -- Add clang-format for C
+      cpp = { 'clang_format' },         -- Add clang-format for C++
       -- Conform can also run multiple formatters sequentially
       -- python = { "isort", "black" },
       --
