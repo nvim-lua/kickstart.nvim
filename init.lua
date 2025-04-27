@@ -658,6 +658,19 @@ require('lazy').setup({
                         },
                     },
                 },
+                angularls = {
+                    cmd = { 'ngserver' },
+                    arg = {
+                        '--stdio',
+                        '--tsProbeLocations',
+                        '/usr/lib/node_modules/',
+                        '--ngProbeLocations',
+                        '/usr/lib/node_modules/@angular/language-server/node_modules',
+                    },
+                    filetypes = { 'typescript', 'html', 'typescriptreact', 'typescript.tsx', 'htmlangular' },
+                    root_markers = { 'angular.json', 'nx.json' },
+                    settings = {},
+                },
             }
 
             -- Ensure the servers and tools above are installed
@@ -948,12 +961,12 @@ require('lazy').setup({
     --  Here are some example plugins that I've included in the Kickstart repository.
     --  Uncomment any of the lines below to enable them (you will need to restart nvim).
     --
-    -- require 'kickstart.plugins.debug',
-    -- require 'kickstart.plugins.indent_line',
-    -- require 'kickstart.plugins.lint',
-    -- require 'kickstart.plugins.autopairs',
-    -- require 'kickstart.plugins.neo-tree',
-    -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+    require 'kickstart.plugins.debug',
+    require 'kickstart.plugins.indent_line',
+    require 'kickstart.plugins.lint',
+    require 'kickstart.plugins.autopairs',
+    require 'kickstart.plugins.neo-tree',
+    require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
     -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
     --    This is the easiest way to modularize your config.
