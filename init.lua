@@ -51,11 +51,28 @@ vim.g.have_nerd_font = false
 require 'options'
 
 -- [[ Basic Keymaps ]]
---  See `:help vim.keymap.set()`
+--  `:help vim.keymap.set()`
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+
+-- Resize window
+-- Leader+<: Decrease window width
+vim.keymap.set('n', '<leader><', '<cmd>vertical resize -5<CR>', { silent = true, desc = 'Decrease window width' })
+
+-- Leader+>: Increase window width
+vim.keymap.set('n', '<leader>>', '<cmd>vertical resize +5<CR>', { silent = true, desc = 'Increase window width' })
+
+-- Alternative keys for larger adjustments
+vim.keymap.set('n', '<leader>[', '<cmd>vertical resize -10<CR>', { silent = true, desc = 'Decrease window width more' })
+vim.keymap.set('n', '<leader>]', '<cmd>vertical resize +10<CR>', { silent = true, desc = 'Increase window width more' })
+
+-- Leader+=: Equal width for all windows
+vim.keymap.set('n', '<leader>=', '<C-w>=', { silent = true, desc = 'Equal size all windows' })
+
+-- Leader+|: Maximize current window width
+vim.keymap.set('n', '<leader>|', '<C-w>|', { silent = true, desc = 'Maximize window width' })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
@@ -342,13 +359,6 @@ require('lazy').setup({
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
-  -- {
-  --   'nvim-tree/nvim-tree.lua',
-  --   dependencies = { 'nvim-tree/nvim-web-devicons' }, -- Optional, for file icons
-  --   config = function()
-  --     require('nvim-tree').setup {}
-  --   end,
-  -- },
 
   -- LSP Plugins
   {
@@ -764,6 +774,13 @@ require('lazy').setup({
     },
   },
 
+  {
+    'tanvirtin/monokai.nvim',
+    config = function()
+      -- pcall(vim.cmd, [[colorscheme monokai]])
+      require('monokai').setup { palette = require('monokai').classic }
+    end,
+  },
   { -- You can easily change to a different colorscheme.
     -- Change the name of the colorscheme plugin below, and then
     -- change the command in the config to whatever the name of that colorscheme is.
@@ -775,7 +792,7 @@ require('lazy').setup({
       ---@diagnostic disable-next-line: missing-fields
       require('tokyonight').setup {
         styles = {
-          comments = { italic = false }, -- Disable italics in comments
+          -- comments = { italic = false }, -- Disable italics in comments
         },
       }
 
@@ -783,13 +800,6 @@ require('lazy').setup({
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       vim.cmd.colorscheme 'tokyonight-night'
-    end,
-  },
-  {
-    'tanvirtin/monokai.nvim',
-    config = function()
-      -- pcall(vim.cmd, [[colorscheme monokai]])
-      require('monokai').setup { palette = require('monokai').classic }
     end,
   },
 
@@ -842,6 +852,7 @@ require('lazy').setup({
       ensure_installed = {
         'bash',
         'c',
+        'cpp',
         'diff',
         'html',
         'lua',
