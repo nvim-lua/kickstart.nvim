@@ -114,10 +114,18 @@ examples of adding popularly requested plugins.
 > [!NOTE]
 > For more information about a particular plugin check its repository's documentation.
 
-
-### Getting Started
+#### Read The Friendly Documentation
 
 [The Only Video You Need to Get Started with Neovim](https://youtu.be/m8C0Cq9Uv9o)
+
+### Helpful Links
+
+[Convert image to DOT ASCII Art for dashboard](https://emojicombos.com/dot-art-generator )
+
+[ASCII text generator](https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something%20)
+
+[If you like nvim may be you can also like lazygit, try it](https://github.com/jesseduffield/lazygit)
+
 
 ### FAQ
 
