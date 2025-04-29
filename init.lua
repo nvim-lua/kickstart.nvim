@@ -406,6 +406,16 @@ require('lazy').setup({
         --   },
         -- },
         -- pickers = {}
+        defaults = {
+          wrap_results = false,
+          initial_mode = 'insert',
+          path_display = {
+            shorten = {
+              len = 1,
+              exclude = { -1, -2 },
+            },
+          },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
