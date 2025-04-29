@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 -- Import all configurations
 local core = require("plugins.snacks.core")
 local display = require("plugins.snacks.display")
@@ -27,7 +28,6 @@ return {
     "MunifTanjim/nui.nvim",
     "echasnovski/mini.nvim",
   },
-  ---@type snacks.Config
   opts = merge_tables(
     core,
     display,
@@ -44,6 +44,6 @@ return {
   end,
   init = function()
     -- Make snacks available globally for debugging
-    _G.Snacks = require("plugins.snacks")
+    _G.Snacks = require("plugins.snacks.init")
   end,
 }

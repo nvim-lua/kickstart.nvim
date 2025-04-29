@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 local plugins = {}
 
 local plugin_files = vim.fn.globpath(vim.fn.stdpath('config') .. '/lua/plugins', '*.lua', false, true)

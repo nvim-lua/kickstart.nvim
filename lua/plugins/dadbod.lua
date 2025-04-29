@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 -- Database explorer and query runner
 return {
   'tpope/vim-dadbod',

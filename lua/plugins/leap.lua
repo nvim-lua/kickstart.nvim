@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 -- Quick navigation plugin
 return {
   'ggandor/leap.nvim',

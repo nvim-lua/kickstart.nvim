@@ -59,6 +59,12 @@ vim.opt.list = true
 -- Use a vertical bar for tabs so ibl and listchars both show vertical guides
 vim.opt.listchars = { tab = '│ ', trail = '·', nbsp = '␣' }
 
+-- Set tab size and convert tabs to spaces
+vim.opt.tabstop = 2        -- Number of visual spaces per TAB
+vim.opt.shiftwidth = 2     -- Number of spaces to use for each step of (auto)indent
+vim.opt.softtabstop = 2    -- Number of spaces that a <Tab> counts for while performing editing operations
+vim.opt.expandtab = true   -- Use spaces instead of tabs
+
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
 

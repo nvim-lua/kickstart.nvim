@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 return {
   'echasnovski/mini.sessions',
   version = '*',
