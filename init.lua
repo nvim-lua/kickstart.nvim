@@ -743,7 +743,8 @@ require('lazy').setup({
       {
         '<leader>f',
         function()
-          require('conform').format { async = true, lsp_format = 'fallback' }
+          -- тут не ясно почему он не использует все форматеры которе соответствуют формату файла
+          require('conform').format { async = true, formatters = { 'gofumpt', 'goimports' }, lsp_format = 'fallback' }
         end,
         mode = '',
         desc = '[F]ormat buffer',
