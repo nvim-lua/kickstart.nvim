@@ -30,6 +30,7 @@ return {
   },
   opts = {
     filesystem = {
+      follow_current_file = { enabled = true },
       window = {
         -- position = 'float',
         mappings = {
