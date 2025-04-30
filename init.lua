@@ -719,13 +719,13 @@ require('lazy').setup({
       -- NOTE: Some servers still require the nvim-lspconfig setup until they are updated
       -- Add this template inside the handler function after initializing config if you encounter issues with any lsp
       --
-      -- if server == 'example_server' or server == 'example_server2' then
+      -- if server_name == 'example_server' or server_name == 'example_server2' then
       --   -- This handles overriding only values explicitly passed
       --   -- by the server configuration above. Useful when disabling
       --   -- certain features of an LSP (for example, turning off formatting for ts_ls)
       --   local capabilities = require('blink.cmp').get_lsp_capabilities()
       --   config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, config.capabilities or {})
-      --   require('mason-lspconfig')[server].setup(config)
+      --   require('mason-lspconfig')[server_name].setup(config)
       --   return
       -- end
       --
