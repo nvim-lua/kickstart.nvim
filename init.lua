@@ -744,7 +744,7 @@ require('lazy').setup({
         '<leader>f',
         function()
           -- тут не ясно почему он не использует все форматеры которе соответствуют формату файла
-          require('conform').format { async = true, formatters = { 'gofumpt', 'goimports' }, lsp_format = 'fallback' }
+          require('conform').format { async = true, lsp_format = 'fallback' }
         end,
         mode = '',
         desc = '[F]ormat buffer',
@@ -768,6 +768,8 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        go = { 'gofmt', 'goimports' },
+        bash = { 'shfmt' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
