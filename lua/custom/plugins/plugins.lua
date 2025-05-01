@@ -10,14 +10,12 @@ return {
   {
     'nvim-tree/nvim-tree.lua',
     config = function()
+      local api = require 'nvim-tree.api'
       vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
-      vim.api.nvim_create_autocmd('BufReadPost', {
-        callback = function(data)
-          local api = require 'nvim-tree.api'
-          api.tree.open()
-        end,
-      })
+      vim.keymap.set('n', '<leader>st', function()
+        api.tree.toggle()
+      end, { desc = '[S]earch file tree [T]oggle' })
       require('nvim-tree').setup {
         sort = { sorter = 'case_sensitive' },
         view = { width = 30 },
