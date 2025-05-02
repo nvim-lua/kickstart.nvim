@@ -2,4 +2,12 @@
 --  I promise not to create any merge conflicts in this directory :)
 --
 -- See the kickstart.nvim README for more information
-return {}
+return {
+  { import = 'custom.plugins.theme' },
+  { import = 'custom.plugins.telescope' },
+  { import = 'custom.plugins.lsp' },
+  { import = 'custom.plugins.formatting' },
+  { import = 'custom.plugins.treesitter' },
+  { import = 'custom.plugins.completion' },
+  { import = 'custom.plugins.nvim-tmux-navigator' },
+}
