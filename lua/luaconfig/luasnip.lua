@@ -26,6 +26,10 @@ local ls = require 'luasnip'
 --
 -- -- Este shorcut es para recargar los snippets para que no tenga que cerrar nvim
 -- -- y volverlo a abir cada vez que hago un cambio
-vim.keymap.set('n', '<leader><localleader>s', '<cmd>source C:/Users/ricar/AppData/Local/nvim/lua/luaconfig/luasnip.lua<CR>')
+vim.keymap.set('n', '<leader><localleader>s', function()
+  local path = vim.fn.stdpath 'config' .. '/lua/luaconfig/luasnip.lua'
+  vim.cmd('source ' .. path)
+end)
 
-require('luasnip.loaders.from_lua').load { paths = 'C:/Users/ricar/AppData/Local/nvim/lua/snippets/' }
+local path = vim.fn.stdpath 'config' .. '/lua/snippets/'
+require('luasnip.loaders.from_lua').load { paths = path }

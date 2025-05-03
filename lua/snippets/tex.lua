@@ -307,82 +307,100 @@ return {
 
   s({ trig = ';sss', snippetType = 'autosnippet', wordTrig = false }, fmt('\\subsubsection{{{}}}', { i(1) })),
 
+  s({ trig = ';spar', snippetType = 'autosnippet', wordTrig = false }, fmt('\\paragraph{{{}}}\\mbox{{}}', { i(1) })),
+
   s({ trig = ':sec', snippetType = 'autosnippet', wordTrig = false }, fmt('\\section*{{{}}}', { i(1) })),
 
   s({ trig = ':ssc', snippetType = 'autosnippet', wordTrig = false }, fmt('\\subsection*{{{}}}', { i(1) })),
 
   s({ trig = ':sss', snippetType = 'autosnippet', wordTrig = false }, fmt('\\subsubsection*{{{}}}', { i(1) })),
 
+  s({ trig = ':spar', snippetType = 'autosnippet', wordTrig = false }, fmt('\\paragraph*{{{}}}\\mbox{{}}', { i(1) })),
+
   -- NOTE:  LOGIC OPERATORS
 
-  s({ trig = ';fall', snippetType = 'autosnippet', wordTrig = false }, { t '\\forall' }),
+  s({ trig = ';fall', snippetType = 'autosnippet', wordTrig = false }, { t ' \\forall ' }),
 
-  s({ trig = ';exis', snippetType = 'autosnippet', wordTrig = false }, { t '\\exists' }),
+  s({ trig = ';exis', snippetType = 'autosnippet', wordTrig = false }, { t ' \\exists ' }),
 
-  s({ trig = ';imp', snippetType = 'autosnippet', wordTrig = false }, { t '\\implies ' }),
+  s({ trig = ';imp', snippetType = 'autosnippet', wordTrig = false }, { t ' \\implies ' }),
 
-  s({ trig = ';iff', snippetType = 'autosnippet', wordTrig = false }, { t '\\iff ' }),
+  s({ trig = ';iff', snippetType = 'autosnippet', wordTrig = false }, { t ' \\iff ' }),
 
-  s({ trig = ';sub', snippetType = 'autosnippet', wordTrig = false }, { t '\\subset ' }),
+  s({ trig = ';sub', snippetType = 'autosnippet', wordTrig = false }, { t ' \\subset ' }),
 
-  s({ trig = ';sup', snippetType = 'autosnippet', wordTrig = false }, { t '\\supset ' }),
+  s({ trig = ';sup', snippetType = 'autosnippet', wordTrig = false }, { t ' \\supset ' }),
 
-  s({ trig = ';esub', snippetType = 'autosnippet', wordTrig = false }, { t '\\subseteq ' }),
+  s({ trig = ';esub', snippetType = 'autosnippet', wordTrig = false }, { t ' \\subseteq ' }),
 
-  s({ trig = ';esup', snippetType = 'autosnippet', wordTrig = false }, { t '\\supseteq ' }),
+  s({ trig = ';esup', snippetType = 'autosnippet', wordTrig = false }, { t ' \\supseteq ' }),
 
-  s({ trig = ';cap', snippetType = 'autosnippet', wordTrig = false }, { t '\\cap ' }),
+  s({ trig = ';cap', snippetType = 'autosnippet', wordTrig = false }, { t ' \\cap ' }),
 
-  s({ trig = ';cup', snippetType = 'autosnippet', wordTrig = false }, { t '\\cup ' }),
+  s({ trig = ';cup', snippetType = 'autosnippet', wordTrig = false }, { t ' \\cup ' }),
 
-  s({ trig = ';per', snippetType = 'autosnippet', wordTrig = false }, { t '\\in ' }),
+  s({ trig = ':cup', snippetType = 'autosnippet', wordTrig = false }, fmt(' \\bigcup_{{{}}}^{{{}}} ', { i(1), i(2) })),
 
-  s({ trig = ';nper', snippetType = 'autosnippet', wordTrig = false }, { t '\\notin ' }),
+  s({ trig = ';per', snippetType = 'autosnippet', wordTrig = false }, { t ' \\in ' }),
 
-  s({ trig = ';vacio', snippetType = 'autosnippet', wordTrig = false }, { t '\\emptyset ' }),
+  s({ trig = ';nper', snippetType = 'autosnippet', wordTrig = false }, { t ' \\notin ' }),
 
-  s({ trig = ';and', snippetType = 'autosnippet', wordTrig = false }, { t '\\land ' }),
+  s({ trig = ';vacio', snippetType = 'autosnippet', wordTrig = false }, { t ' \\varnothing ' }),
 
-  s({ trig = ';or', snippetType = 'autosnippet', wordTrig = false }, { t '\\lor ' }),
+  s({ trig = ';equiv', snippetType = 'autosnippet', wordTrig = false }, { t ' \\equiv ' }),
 
-  s({ trig = ';xor', snippetType = 'autosnippet', wordTrig = false }, { t '\\oplus ' }),
+  s({ trig = ';and', snippetType = 'autosnippet', wordTrig = false }, { t ' \\land ' }),
 
-  s({ trig = ';to', snippetType = 'autosnippet', wordTrig = false }, { t '\\to' }),
+  s({ trig = ';or', snippetType = 'autosnippet', wordTrig = false }, { t ' \\lor ' }),
 
-  s({ trig = ';mid', snippetType = 'autosnippet', wordTrig = false }, { t '\\mid' }),
+  s({ trig = ';xor', snippetType = 'autosnippet', wordTrig = false }, { t ' \\oplus ' }),
+
+  s({ trig = ';to', snippetType = 'autosnippet', wordTrig = false }, { t ' \\to ' }),
+
+  s({ trig = ';mid', snippetType = 'autosnippet', wordTrig = false }, { t ' \\mid ' }),
 
   -- NOTE: MISCELLANEOUS
 
-  s({ trig = ';alpha', snippetType = 'autosnippet', wordTrig = false }, { t '\\alpha' }),
+  s({ trig = ';alfa', snippetType = 'autosnippet', wordTrig = false }, { t '\\alpha' }),
   s({ trig = ';beta', snippetType = 'autosnippet', wordTrig = false }, { t '\\beta' }),
-  s({ trig = ';gamma', snippetType = 'autosnippet', wordTrig = false }, { t '\\gamma' }),
+  s({ trig = ';gama', snippetType = 'autosnippet', wordTrig = false }, { t '\\gamma' }),
   s({ trig = ';delta', snippetType = 'autosnippet', wordTrig = false }, { t '\\delta' }),
   s({ trig = ';epsi', snippetType = 'autosnippet', wordTrig = false }, { t '\\varepsilon' }),
   s({ trig = ';theta', snippetType = 'autosnippet', wordTrig = false }, { t '\\theta' }),
   s({ trig = ';kappa', snippetType = 'autosnippet', wordTrig = false }, { t '\\kappa' }),
-  s({ trig = ';lambda', snippetType = 'autosnippet', wordTrig = false }, { t '\\lambda' }),
+  s({ trig = ';lamda', snippetType = 'autosnippet', wordTrig = false }, { t '\\lambda' }),
   s({ trig = ';mu', snippetType = 'autosnippet', wordTrig = false }, { t '\\mu' }),
   s({ trig = ';pi', snippetType = 'autosnippet', wordTrig = false }, { t '\\pi' }),
   s({ trig = ';rho', snippetType = 'autosnippet', wordTrig = false }, { t '\\rho' }),
   s({ trig = ';sigma', snippetType = 'autosnippet', wordTrig = false }, { t '\\sigma' }),
   s({ trig = ';tau', snippetType = 'autosnippet', wordTrig = false }, { t '\\tau' }),
-  s({ trig = ';phi', snippetType = 'autosnippet', wordTrig = false }, { t '\\phi' }),
+  s({ trig = ';fi', snippetType = 'autosnippet', wordTrig = false }, { t '\\varphi' }),
   s({ trig = ';psi', snippetType = 'autosnippet', wordTrig = false }, { t '\\psi' }),
   s({ trig = ';omega', snippetType = 'autosnippet', wordTrig = false }, { t '\\omega' }),
 
-  s({ trig = ':gamma', snippetType = 'autosnippet', wordTrig = false }, { t '\\Gamma' }),
+  s({ trig = ':gama', snippetType = 'autosnippet', wordTrig = false }, { t '\\Gamma' }),
   s({ trig = ':delta', snippetType = 'autosnippet', wordTrig = false }, { t '\\Delta' }),
   s({ trig = ':theta', snippetType = 'autosnippet', wordTrig = false }, { t '\\Theta' }),
   s({ trig = ':lamda', snippetType = 'autosnippet', wordTrig = false }, { t '\\Lambda' }),
   s({ trig = ':pi', snippetType = 'autosnippet', wordTrig = false }, { t '\\Pi' }),
   s({ trig = ':sigma', snippetType = 'autosnippet', wordTrig = false }, { t '\\Sigma' }),
-  s({ trig = ':phi', snippetType = 'autosnippet', wordTrig = false }, { t '\\Phi' }),
+  s({ trig = ':fi', snippetType = 'autosnippet', wordTrig = false }, { t '\\Phi' }),
   s({ trig = ':psi', snippetType = 'autosnippet', wordTrig = false }, { t '\\Psi' }),
   s({ trig = ':omega', snippetType = 'autosnippet', wordTrig = false }, { t '\\Omega' }),
+
+  s({ trig = ';inft', snippetType = 'autosnippet', wordTrig = false }, { t '\\infty ' }),
+
+  s({ trig = ';dot', snippetType = 'autosnippet', wordTrig = false }, { t '\\dots ' }),
+
+  s({ trig = ';por', snippetType = 'autosnippet', wordTrig = false }, { t '\\times ' }),
 
   s({ trig = ';prima', snippetType = 'autosnippet', wordTrig = false }, t '^{\\prime}'),
 
   s({ trig = ';txt', snippetType = 'autosnippet', wordTrig = false }, fmt('\\text{{{}}}', { i(1) })),
+
+  s({ trig = ';esp', snippetType = 'autosnippet', wordTrig = false }, t '\\quad '),
+
+  s({ trig = ':esp', snippetType = 'autosnippet', wordTrig = false }, t '\\qquad '),
 
   s({ trig = ';it', snippetType = 'autosnippet', wordTrig = false }, { t { '', '', '\\item ' } }),
 
@@ -490,7 +508,7 @@ return {
         \fancyhf{{}}
         \fancyfoot[C]{{\thepage}}
         \fancyhead[L]{{
-          \includegraphics[height=1.2cm]{{C:/Users/ricar/OneDrive/Escritorio/Ingeniería en Sistemas/logo_utn.png}}
+          \includegraphics[height=1.2cm]{{~/imagenes/logo_utn.png}}
           \shortstack[l]{{
             {{\footnotesize Universidad Tecnológica Nacional}} \\
             {{\footnotesize Facultad Regional Córdoba}} \\
@@ -520,7 +538,7 @@ return {
         \newgeometry{{margin=2cm, top=1.5cm}}
           \begin{{titlepage}}
             \centering
-            \includegraphics[width=\linewidth]{{C:/Users/ricar/OneDrive/Escritorio/Ingeniería en Sistemas/logo_utn_frc.jpg}}\\
+            \includegraphics[width=\linewidth]{{~/imagenes/logo_utn_frc.jpg}}\\
 
             \textsc{{
               \LARGE Universidad Tecnológica Nacional\\
