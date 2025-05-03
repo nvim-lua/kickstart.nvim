@@ -151,6 +151,18 @@ return {
     )
   ),
 
+  s(
+    { trig = ';tkz', snippetType = 'autosnippet', wordTrig = false },
+    fmt(
+      [[
+      \begin{{tikzpicture}}
+      {}
+      \end{{tikzpicture}}
+      ]],
+      { i(1) }
+    )
+  ),
+
   -- NOTE: MATH
 
   s(
@@ -359,6 +371,35 @@ return {
 
   s({ trig = ';mid', snippetType = 'autosnippet', wordTrig = false }, { t ' \\mid ' }),
 
+  -- NOTE: AUTOMATAS
+
+  s(
+    { trig = ';nodo', snippetType = 'autosnippet' },
+    fmt('\\node[{}, {}, {}, yshift={}cm, xshift={}cm] ({}) {{${}$}};', {
+      i(1, 'state'),
+      i(2, 'initial'),
+      i(3, 'posicion'),
+      i(4, '0'),
+      i(5, '0'),
+      i(6, 'nombre'),
+      i(7, 'texto'),
+    })
+  ),
+
+  s(
+    { trig = ';dibnodo', snippetType = 'autosnippet' },
+    fmt('({}) edge[{}, {}, {}] node{{${}$}} ({})', {
+      i(1, 'nombre salida'),
+      i(2, 'posicion texto'),
+      i(3, 'angulo salida'),
+      i(4, 'angulo entrada'),
+      i(5, 'texto flecha'),
+      i(6, 'nombre llegada'),
+    })
+  ),
+
+  s({ trig = ';dibujar', snippetType = 'autosnippet', wordTrig = false }, fmt('\\draw   {}\n;', { i(1) })),
+
   -- NOTE: MISCELLANEOUS
 
   s({ trig = ';alfa', snippetType = 'autosnippet', wordTrig = false }, { t '\\alpha' }),
@@ -469,7 +510,7 @@ return {
 
   s({ trig = ';ebox', snippetType = 'autosnippet', wordTrig = false }, fmt([[ \centerline{{\boxed{{{}}}}} ]], { i(1) })),
 
-  -- NORMAL SNIPPETS
+  -- NOTE: NORMAL SNIPPETS
   s(
     'utninf',
     fmt(
@@ -501,6 +542,17 @@ return {
         \usepackage{{tikz, color}}
         \usepackage{{tikz-3dplot}}
         \pgfplotsset{{width=15cm, compat=1.12}}
+
+        % Para automatas
+        \usetikzlibrary{{automata, positioning, arrows, calc}}
+        \tikzset{{
+                ->,  % makes the edges directed
+                >=stealth, % makes the arrow heads bold
+                shorten >=2pt, shorten <=2pt, % shorten the arrow
+                node distance=3cm, % specifies the minimum distance between two nodes. Change if n
+                every state/.style={{draw=blue!55,very thick,fill=blue!20}}, % sets the properties for each ’state’ n
+                initial text=$ $, % sets the text that appears on the start arrow
+        }}
 
         % Encabezados
         \usepackage{{fancyhdr}}
