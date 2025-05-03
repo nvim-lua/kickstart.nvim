@@ -1,6 +1,15 @@
 {
   "extras": [
-
+    "lazyvim.plugins.extras.coding.yanky",
+    "lazyvim.plugins.extras.editor.neo-tree",
+    "lazyvim.plugins.extras.lang.haskell",
+    "lazyvim.plugins.extras.lang.markdown",
+    "lazyvim.plugins.extras.lang.python",
+    "lazyvim.plugins.extras.lang.rust",
+    "lazyvim.plugins.extras.lang.zig",
+    "lazyvim.plugins.extras.test.core",
+    "lazyvim.plugins.extras.ui.alpha",
+    "lazyvim.plugins.extras.util.mini-hipatterns"
   ],
   "install_version": 8,
   "news": {
