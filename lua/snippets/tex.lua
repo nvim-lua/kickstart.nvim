@@ -155,9 +155,11 @@ return {
     { trig = ';tkz', snippetType = 'autosnippet', wordTrig = false },
     fmt(
       [[
+      \begin{{center}}
       \begin{{tikzpicture}}
       {}
       \end{{tikzpicture}}
+      \end{{center}}
       ]],
       { i(1) }
     )
@@ -253,10 +255,6 @@ return {
   s({ trig = ';fra', snippetType = 'autosnippet', wordTrig = false }, fmt('\\frac{{{}}}{{{}}}', { i(1), i(2) })),
 
   s({ trig = ';eql', snippetType = 'autosnippet', wordTrig = false }, fmt('$ {} $', { i(1) })),
-
-  s({ trig = ';neq', snippetType = 'autosnippet', wordTrig = false }, t '\\neq'),
-
-  s({ trig = ';aprox', snippetType = 'autosnippet', wordTrig = false }, t '\\approx'),
 
   s(
     { trig = ';eqb', snippetType = 'autosnippet', wordTrig = false },
@@ -371,6 +369,8 @@ return {
 
   s({ trig = ';mid', snippetType = 'autosnippet', wordTrig = false }, { t ' \\mid ' }),
 
+  s({ trig = ';move', snippetType = 'autosnippet', wordTrig = false }, { t ' \\vdash ' }),
+
   -- NOTE: AUTOMATAS
 
   s(
@@ -388,13 +388,12 @@ return {
 
   s(
     { trig = ';dibnodo', snippetType = 'autosnippet' },
-    fmt('({}) edge[{}, {}, {}] node{{${}$}} ({})', {
+    fmt('({}) edge[{}, {}] node{{{}}} ({})', {
       i(1, 'nombre salida'),
       i(2, 'posicion texto'),
-      i(3, 'angulo salida'),
-      i(4, 'angulo entrada'),
-      i(5, 'texto flecha'),
-      i(6, 'nombre llegada'),
+      i(3, 'bend left'),
+      i(4, 'texto flecha'),
+      i(5, 'nombre llegada'),
     })
   ),
 
@@ -429,11 +428,21 @@ return {
   s({ trig = ':psi', snippetType = 'autosnippet', wordTrig = false }, { t '\\Psi' }),
   s({ trig = ':omega', snippetType = 'autosnippet', wordTrig = false }, { t '\\Omega' }),
 
-  s({ trig = ';inft', snippetType = 'autosnippet', wordTrig = false }, { t '\\infty ' }),
+  s({ trig = ';neq', snippetType = 'autosnippet', wordTrig = false }, t '\\neq '),
+
+  s({ trig = ';leq', snippetType = 'autosnippet', wordTrig = false }, t '\\leq '),
+
+  s({ trig = ';geq', snippetType = 'autosnippet', wordTrig = false }, t '\\geq '),
+
+  s({ trig = ';aprox', snippetType = 'autosnippet', wordTrig = false }, t '\\approx '),
+
+  s({ trig = ';inft', snippetType = 'autosnippet', wordTrig = false }, { t '\\infty' }),
 
   s({ trig = ';dot', snippetType = 'autosnippet', wordTrig = false }, { t '\\dots ' }),
 
   s({ trig = ';por', snippetType = 'autosnippet', wordTrig = false }, { t '\\times ' }),
+
+  s({ trig = ';circ', snippetType = 'autosnippet', wordTrig = false }, { t '\\circledcirc ' }),
 
   s({ trig = ';prima', snippetType = 'autosnippet', wordTrig = false }, t '^{\\prime}'),
 
