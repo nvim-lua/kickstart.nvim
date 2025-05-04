@@ -34,7 +34,7 @@ return {
   keys = {
     { -- NOTE: Temporary solution to open chrome - until I'll figure out how to run it automatically
       '<leader>dd',
-      ':!open -a "Google Chrome" --args --remote-debugging-port=9222<CR>',
+      ':!open -a "Google Chrome" --args --remote-debugging-port=9222<CR><CR>',
     },
     -- TODO: change lua formatter to keep such entries in one line
     {

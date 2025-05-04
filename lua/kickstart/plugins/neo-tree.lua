@@ -14,6 +14,11 @@ return {
     { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
   },
   opts = {
+    default_component_configs = {
+      indent = {
+        indent_size = 1,
+      },
+    },
     filesystem = {
       window = {
         mappings = {

@@ -772,6 +772,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        htmlangular = { 'prettier' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -915,7 +916,7 @@ require('lazy').setup({
     config = function()
       require('everforest').setup {
         background = 'hard',
-        ui_contrast = 'low',
+        ui_contrast = 'high',
       }
 
       -- Load the colorscheme here.
