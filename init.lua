@@ -742,7 +742,8 @@ require('lazy').setup({
       appearance = {
         -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
         -- Adjusts spacing to ensure icons are aligned
-        nerd_font_variant = 'mono',
+        -- nerd_font_variant = 'mono',
+        nerd_font_variant = 'normal',
       },
 
       completion = {
@@ -773,7 +774,109 @@ require('lazy').setup({
       signature = { enabled = true },
     },
   },
+  {
+    'loctvl842/monokai-pro.nvim',
+    opts = {
+      transparent_background = true,
+      terminal_colors = true,
+      devicons = true, -- highlight the icons of `nvim-web-devicons`
+      styles = {
+        comment = { italic = true },
+        keyword = { italic = true }, -- any other keyword
+        type = { italic = true }, -- (preferred) int, long, char, etc
+        storageclass = { italic = true }, -- static, register, volatile, etc
+        structure = { italic = true }, -- struct, union, enum, etc
+        parameter = { italic = true }, -- parameter pass in function
+        annotation = { italic = true },
+        tag_attribute = { italic = true }, -- attribute of tag in reactjs
+      },
+      filter = 'pro', -- classic | octagon | pro | machine | ristretto | spectrum
+      -- Enable this will disable filter option
+      day_night = {
+        enable = false, -- turn off by default
+        day_filter = 'pro', -- classic | octagon | pro | machine | ristretto | spectrum
+        night_filter = 'spectrum', -- classic | octagon | pro | machine | ristretto | spectrum
+      },
+      inc_search = 'background', -- underline | background
+      background_clear = {
+        -- -- "float_win",
+        -- "toggleterm",
+        'telescope',
+        -- "which-key",
+        'renamer',
+        'notify',
+        'nvim-tree',
+        'neo-tree',
+        'bufferline', -- better used if background of `neo-tree` or `nvim-tree` is cleared
+      }, -- "float_win", "toggleterm", "telescope", "which-key", "renamer", "neo-tree", "nvim-tree", "bufferline"
+      plugins = {
+        bufferline = {
+          underline_selected = false,
+          underline_visible = false,
+        },
+        indent_blankline = {
+          context_highlight = 'default', -- default | pro
+          context_start_underline = false,
+        },
+      },
+      ---@param cs Colorscheme
+      ---@param p ColorschemeOptions
+      ---@param Config MonokaiProOptions
+      ---@param hp Helper
+      override = function(cs, p, Config, hp) end,
+    },
+    config = function(_, opts)
+      require('monokai-pro').setup(opts)
+      vim.cmd 'colorscheme monokai-pro'
+    end,
+  },
+  {
 
+    'polirritmico/monokai-nightasty.nvim',
+    lazy = false,
+    priority = 1000,
+    keys = {
+      { '<leader>tt', '<Cmd>MonokaiToggleLight<CR>', desc = 'Monokai-Nightasty: Toggle dark/light theme.' },
+    },
+    ---@module "monokai-nightasty"
+    ---@type monokai.UserConfig
+    opts = {
+      dark_style_background = 'transparent', -- default | dark | transparent | #RRGGBB
+      light_style_background = 'transparent', -- default | dark | transparent | #RRGGBB
+      markdown_header_marks = true,
+      hl_styles = {
+        keywords = { italic = true },
+        comments = { italic = true },
+        floats = 'dark',
+      },
+      terminal_colors = function(colors)
+        return { fg = colors.fg_dark }
+      end,
+      on_colors = function(colors)
+        if vim.o.background == 'light' then
+          -- Custom colors for light theme
+          colors.comment = '#2d7e79'
+          colors.lualine.normal_bg = '#7ebd00'
+        else
+          -- Custom colors for dark theme
+          colors.border = colors.magenta
+          colors.lualine.normal_bg = colors.green
+        end
+      end,
+      on_highlights = function(highlights, colors)
+        -- You could add styles like bold, underline, italic
+        highlights.TelescopeSelection = { bold = true }
+        highlights.TelescopeBorder = { fg = colors.grey }
+        highlights['@lsp.type.property.lua'] = { fg = colors.fg }
+      end,
+    },
+    config = function(_, opts)
+      vim.opt.cursorline = true -- Highlight line at the cursor position
+      vim.o.background = 'dark' -- Default to dark theme
+
+      require('monokai-nightasty').load(opts)
+    end,
+  },
   {
     'tanvirtin/monokai.nvim',
     config = function()
@@ -791,8 +894,9 @@ require('lazy').setup({
     config = function()
       ---@diagnostic disable-next-line: missing-fields
       require('tokyonight').setup {
+        transparent = true,
         styles = {
-          -- comments = { italic = false }, -- Disable italics in comments
+          comments = { italic = true }, -- Disable italics in comments
         },
       }
 
