@@ -115,6 +115,20 @@ return {
   ),
 
   s(
+    { trig = ';algd', snippetType = 'autosnippet', wordTrig = false },
+    fmt(
+      [[
+      \begin{{aligned}}
+        {}
+      \end{{aligned}}
+      ]],
+      {
+        i(1),
+      }
+    )
+  ),
+
+  s(
     { trig = ';mat(%d+p%d+)', regTrig = true, name = 'matriz' },
     fmt(
       [[
@@ -157,6 +171,20 @@ return {
       [[
       \begin{{center}}
       \begin{{tikzpicture}}
+      {}
+      \end{{tikzpicture}}
+      \end{{center}}
+      ]],
+      { i(1) }
+    )
+  ),
+
+  s(
+    { trig = ';automata', snippetType = 'autosnippet', wordTrig = false },
+    fmt(
+      [[
+      \begin{{center}}
+      \begin{{tikzpicture}}[automata]
       {}
       \end{{tikzpicture}}
       \end{{center}}
@@ -369,7 +397,13 @@ return {
 
   s({ trig = ';mid', snippetType = 'autosnippet', wordTrig = false }, { t ' \\mid ' }),
 
-  s({ trig = ';move', snippetType = 'autosnippet', wordTrig = false }, { t ' \\vdash ' }),
+  s({ trig = ';move', snippetType = 'autosnippet', wordTrig = false }, { t ' \\mapsto ' }),
+
+  s({ trig = ';eot', snippetType = 'autosnippet', wordTrig = false }, { t ' \\dashv ' }),
+
+  s({ trig = ';bot', snippetType = 'autosnippet', wordTrig = false }, { t ' \\vdash ' }),
+
+  s({ trig = ';cpot', snippetType = 'autosnippet', wordTrig = false }, fmt(' \\mathcal{{P}}({}) ', { i(1) })),
 
   -- NOTE: AUTOMATAS
 
@@ -387,7 +421,7 @@ return {
   ),
 
   s(
-    { trig = ';dibnodo', snippetType = 'autosnippet' },
+    { trig = ';arista', snippetType = 'autosnippet' },
     fmt('({}) edge[{}, {}] node{{{}}} ({})', {
       i(1, 'nombre salida'),
       i(2, 'posicion texto'),
@@ -398,6 +432,56 @@ return {
   ),
 
   s({ trig = ';dibujar', snippetType = 'autosnippet', wordTrig = false }, fmt('\\draw   {}\n;', { i(1) })),
+
+  -- NOTE: DIBUJOS TIKZ
+
+  s(
+    { trig = ';flecha', snippetType = 'autosnippet' },
+    fmt('\\draw [->, draw={}, thick] ({}) edge[{}, {}] node{{{}}} ({});', {
+      i(1, 'color'),
+      i(2, 'nombre salida'),
+      i(3, 'posicion texto'),
+      i(4, 'bend left'),
+      i(5, 'texto flecha'),
+      i(6, 'nombre llegada'),
+    })
+  ),
+
+  s(
+    { trig = ';punto', snippetType = 'autosnippet' },
+    fmt('\\node[{}, yshift={}cm, xshift={}cm] ({}) {{${}$}};', {
+      i(1, 'posicion'),
+      i(2, '0'),
+      i(3, '0'),
+      i(4, 'nombre'),
+      i(5, 'texto'),
+    })
+  ),
+
+  s(
+    { trig = ';grupo', snippetType = 'autosnippet' },
+    fmt('\\node[fit={}] ({}) {{{}}};', {
+      i(1, 'nodos'),
+      i(2, 'nombre'),
+      i(3, 'texto'),
+    })
+  ),
+
+  s(
+    { trig = ';embrace', snippetType = 'autosnippet' },
+    fmt(
+      [[
+      \draw [decorate, decoration={{brace, amplitude=5pt}}] ({}.north east) -- ({}.south east);
+      \draw [decorate, decoration={{brace, amplitude=5pt, mirror}}] ({}.north west) -- ({}.south west);
+      ]],
+      {
+        i(1, 'grupo'),
+        rep(1),
+        rep(1),
+        rep(1),
+      }
+    )
+  ),
 
   -- NOTE: MISCELLANEOUS
 
@@ -448,6 +532,8 @@ return {
 
   s({ trig = ';txt', snippetType = 'autosnippet', wordTrig = false }, fmt('\\text{{{}}}', { i(1) })),
 
+  s({ trig = ';guion', snippetType = 'autosnippet', wordTrig = false }, t '\\text{{\\textminus}}'),
+
   s({ trig = ';esp', snippetType = 'autosnippet', wordTrig = false }, t '\\quad '),
 
   s({ trig = ':esp', snippetType = 'autosnippet', wordTrig = false }, t '\\qquad '),
@@ -460,6 +546,17 @@ return {
       [[
       \\
       {} &= {}
+      ]],
+      { i(1), i(0) }
+    )
+  ),
+
+  s(
+    { trig = ';apr', snippetType = 'autosnippet', wordTrig = false },
+    fmt(
+      [[
+      \\
+      {} &:= {}
       ]],
       { i(1), i(0) }
     )
@@ -498,6 +595,8 @@ return {
   s({ trig = ';ref', snippetType = 'autosnippet', wordTrig = false }, fmt('\\ref{{{}}}', { i(1) })),
 
   s({ trig = ';aql', snippetType = 'autosnippet', wordTrig = false }, { t ' &= ' }),
+
+  s({ trig = ';prod', snippetType = 'autosnippet', wordTrig = false }, { t ' &:= ' }),
 
   s(
     { trig = ';tbox', snippetType = 'autosnippet', wordTrig = false },
