@@ -4,6 +4,22 @@
 -- See the kickstart.nvim README for more information
 return {
   {
+    'akinsho/git-conflict.nvim',
+    version = '*',
+    config = function()
+      require('git-conflict').setup()
+
+      -- Optional: Set up keymaps for common conflict resolution commands
+      vim.keymap.set('n', '<leader>co', '<cmd>GitConflictChooseOurs<CR>', { desc = '[GIT] Choose Ours' })
+      vim.keymap.set('n', '<leader>ct', '<cmd>GitConflictChooseTheirs<CR>', { desc = '[GIT] Choose Theirs' })
+      vim.keymap.set('n', '<leader>cb', '<cmd>GitConflictChooseBoth<CR>', { desc = '[GIT] Choose Both' })
+      vim.keymap.set('n', '<leader>c0', '<cmd>GitConflictChooseNone<CR>', { desc = '[GIT] Choose None' })
+      vim.keymap.set('n', ']x', '<cmd>GitConflictNextConflict<CR>', { desc = '[GIT] Next Conflict' })
+      vim.keymap.set('n', '[x', '<cmd>GitConflictPrevConflict<CR>', { desc = '[GIT] Prev Conflict' })
+    end,
+  },
+  {
+
     'sphamba/smear-cursor.nvim',
     event = 'VeryLazy',
     config = function()
@@ -11,8 +27,8 @@ return {
         cursor_color = '#ff8800',
         stiffness = 1,
         trailing_stiffness = 0.35,
-        trailing_exponent = 15,
-        hide_target_hack = false,
+        trailing_exponent = 25,
+        hide_target_hack = true,
         gamma = 1,
       }
     end,
