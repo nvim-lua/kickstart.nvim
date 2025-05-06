@@ -1056,3 +1056,19 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+local toggleterm = require 'toggleterm'
+
+toggleterm.setup {
+  open_mapping = 'T', -- press T in normal or terminal to toggle
+  direction = 'float', -- use a floating window
+  float_opts = {
+    border = 'single', -- or "double", "curved", etc.
+    -- dynamic sizing: 85% of the current editor dimensions
+    width = function()
+      return math.floor(vim.o.columns * 0.85)
+    end,
+    height = function()
+      return math.floor(vim.o.lines * 0.85)
+    end,
+  },
+}

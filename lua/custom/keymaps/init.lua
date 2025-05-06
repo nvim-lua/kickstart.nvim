@@ -22,26 +22,4 @@ vim.keymap.set('n', 'J', ':m .+1<CR>==', { noremap = true, silent = true })
 -- Move current line up with K
 vim.keymap.set('n', 'K', ':m .-2<CR>==', { noremap = true, silent = true })
 
--- Map <leader>T to toggle terminal
-vim.keymap.set('n', 'T', function()
-  local Terminal = require('toggleterm.terminal').Terminal
-  local float_term = Terminal:new {
-    direction = 'float',
-    hidden = true, -- ensures it doesn't persist visually
-  }
-  float_term:toggle()
-  require('toggleterm').toggle_all()
-end, { desc = 'Toggle Floating Terminal' })
-
-vim.keymap.set('n', '<leader>bd', function()
-  -- Close all open toggleterm terminals
-  require('toggleterm').toggle_all()
-
-  -- Then close the current buffer
-  vim.cmd 'bdelete!'
-end, { desc = 'Close buffer and toggleterm' })
-
-vim.keymap.set('n', '<leader>/', require('telescope.builtin').current_buffer_fuzzy_find, { desc = '[/] Fuzzy search in current buffer' })
-vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { desc = 'Exit terminal mode' })
-
 return {}
