@@ -4,6 +4,23 @@
 -- See the kickstart.nvim README for more information
 return {
   {
+    'akinsho/toggleterm.nvim',
+    version = '*',
+    config = function()
+      require('toggleterm').setup {
+        direction = 'float',
+        float_opts = {
+          border = 'curved',
+          width = 100,
+          height = 30,
+          winblend = 0,
+        },
+        open_mapping = [[<C-\>]],
+        start_in_insert = true,
+      }
+    end,
+  },
+  {
     'folke/tokyonight.nvim',
     lazy = false,
     priority = 1000,

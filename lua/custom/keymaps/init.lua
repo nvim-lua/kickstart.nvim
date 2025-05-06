@@ -40,4 +40,7 @@ vim.keymap.set('n', '<leader>bd', function()
   vim.cmd 'bdelete!'
 end, { desc = 'Close buffer and toggleterm' })
 
+vim.keymap.set('n', '<leader>/', require('telescope.builtin').current_buffer_fuzzy_find, { desc = '[/] Fuzzy search in current buffer' })
+vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { desc = 'Exit terminal mode' })
+
 return {}
