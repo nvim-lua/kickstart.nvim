@@ -9,16 +9,6 @@ vim.opt.encoding = 'UTF-8'
 vim.opt.wrap = false
 vim.opt.termguicolors = true
 vim.opt.autoindent = true
-vim.api.nvim_create_augroup('neotree', {})
-vim.api.nvim_create_autocmd('UiEnter', {
-  desc = 'Open Neotree automatically',
-  group = 'neotree',
-  callback = function()
-    if vim.fn.argc() == 0 then
-      vim.cmd 'NvimTreeToggle'
-    end
-  end,
-})
 vim.opt.number = true
 vim.opt.mouse = 'a'
 vim.opt.showmode = false

@@ -3,7 +3,6 @@
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 
-vim.keymap.set('n', '<leader>mt', '<cmd>NvimTreeFocus<CR>')
 vim.keymap.set('n', '<C-o>', '<cmd>ClangdSwitchSourceHeader<CR>', { desc = 'Swith to source/header file' })
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
