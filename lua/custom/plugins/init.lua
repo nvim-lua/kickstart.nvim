@@ -4,6 +4,20 @@
 -- See the kickstart.nvim README for more information
 return {
   {
+    'sphamba/smear-cursor.nvim',
+    event = 'VeryLazy',
+    config = function()
+      require('smear_cursor').setup {
+        cursor_color = '#ff8800',
+        stiffness = 1,
+        trailing_stiffness = 0.35,
+        trailing_exponent = 15,
+        hide_target_hack = false,
+        gamma = 1,
+      }
+    end,
+  },
+  {
     'akinsho/toggleterm.nvim',
     version = '*',
     config = function()

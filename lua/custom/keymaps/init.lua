@@ -30,6 +30,7 @@ vim.keymap.set('n', 'T', function()
     hidden = true, -- ensures it doesn't persist visually
   }
   float_term:toggle()
+  require('toggleterm').toggle_all()
 end, { desc = 'Toggle Floating Terminal' })
 
 vim.keymap.set('n', '<leader>bd', function()
