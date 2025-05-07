@@ -14,6 +14,7 @@ return {
     { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
   },
   opts = {
+    popup_border_style = 'NC', -- or "" to use 'winborder' on Neovim v0.11+
     filesystem = {
       window = {
         mappings = {
