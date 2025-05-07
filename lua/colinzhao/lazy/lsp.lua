@@ -135,7 +135,13 @@ return { -- LSP Configuration & Plugins
     --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
     local servers = {
       ocamllsp = {},
-      clangd = {},
+      clangd = {
+        cmd = {
+          'clangd',
+          '--query-driver=/opt/homebrew/bin/g++-14,/opt/homebrew/bin/gcc-14',
+          '--header-insertion=never',
+        },
+      },
       bashls = {},
       gopls = {},
       pyright = {
