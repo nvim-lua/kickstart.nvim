@@ -248,11 +248,6 @@ require('lazy').setup({
   -- Use `opts = {}` to automatically pass options to a plugin's `setup()` function, forcing the plugin to be loaded.
   --
 
-  { -- shows a floating buffer with the most useful vim keymaps
-    'Hashino/tutorial.nvim',
-    opts = {},
-  },
-
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
   -- If you prefer to call `setup` explicitly, use:
   --    {
@@ -277,6 +272,26 @@ require('lazy').setup({
         delete = { text = '_' },
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
+      },
+    },
+  },
+
+  { -- shows a floating buffer with the most useful vim keymaps
+    'Hashino/tutorial.nvim',
+    opts = {
+      enabled = true, -- whether to show Tutorial on startup
+
+      -- window configs of the floating Tutorial buffer
+      -- see :h nvim_open_win() for available options
+      float_win_config = {
+        relative = 'editor',
+
+        anchor = 'SW',
+
+        style = 'minimal',
+        border = 'rounded', -- see :h winborder for available options
+
+        noautocmd = true,
       },
     },
   },
