@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -268,14 +268,32 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-
+  --NOTE: nvim-tree - FQ
+  {
+    'nvim-tree/nvim-tree.lua',
+    dependencies = {
+      'nvim-tree/nvim-web-devicons', -- optional, for file icons
+    },
+    version = '*',
+    lazy = false,
+    config = function()
+      require('nvim-tree').setup {}
+      -- Optional: Keybinding to toggle nvim-tree
+      vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = 'Toggle File Explorer (nvim-tree)' })
+    end,
+  },
+  -- --NOTE: Kanso Theme - FQ
+  -- {
+  --   'webhooked/kanso.nvim',
+  --   lazy = false,
+  --   priority = 1000,
+  -- },
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
   --
   -- Use `opts = {}` to automatically pass options to a plugin's `setup()` function, forcing the plugin to be loaded.
   --
-
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
   -- If you prefer to call `setup` explicitly, use:
   --    {
@@ -370,8 +388,13 @@ require('lazy').setup({
       },
     },
   },
-
-  --NOTE: Avante!
+  --NOTE: Avante blink cmp
+  {
+    'Kaiser-Yang/blink-cmp-avante',
+    dependencies = { 'saghen/blink.cmp', 'yetone/avante.nvim' },
+    lazy = false,
+  },
+  --NOTE: Avante! Setup
 
   {
     'yetone/avante.nvim',
@@ -380,10 +403,10 @@ require('lazy').setup({
     opts = {
       -- add any opts here
       -- for example
-      provider = 'openai',
+      provider = 'claude',
       openai = {
-        endpoint = 'https://api.openai.com/v1',
-        model = 'gpt-4o', -- your desired model (or use gpt-4o, etc.)
+        endpoint = 'https://api.anthropic.com',
+        model = 'claude-3-7-sonnet-20250219', -- your desired model (or use gpt-4o, etc.)
         timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
         temperature = 0,
         max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
@@ -432,7 +455,6 @@ require('lazy').setup({
       },
     },
   },
-
   -- NOTE: Plugins can specify dependencies.
   --
   -- The dependencies are proper plugin specifications as well - anything
@@ -864,6 +886,10 @@ require('lazy').setup({
     event = 'VimEnter',
     version = '1.*',
     dependencies = {
+      --
+      --
+      --
+      'Kaiser-Yang/blink-cmp-avante',
       -- Snippet Engine
       {
         'L3MON4D3/LuaSnip',
@@ -935,13 +961,58 @@ require('lazy').setup({
         documentation = { auto_show = false, auto_show_delay_ms = 500 },
       },
 
+      --   providers = {
+      --     lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
+      --     avante_commands = {
+      --       name = 'avante_commands',
+      --       module = 'blink.compat.source',
+      --       score_offset = 90,
+      --       opts = {},
+      --     },
+      --     avante_files = {
+      --       name = 'avante_files',
+      --       module = 'blink.compat.source',
+      --       score_offset = 100,
+      --       opts = {},
+      --     },
+      --     avante_mentions = {
+      --       name = 'avante_mentions',
+      --       module = 'blink.compat.source',
+      --       score_offset = 1000,
+      --       opts = {},
+      --     },
+      --   },
+      -- },
+      --
       sources = {
-        default = { 'lsp', 'path', 'snippets', 'lazydev' },
+        default = { 'avante', 'lsp', 'path', 'snippets', 'lazydev' },
         providers = {
-          lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
+          lazydev = {
+            module = 'lazydev.integrations.blink',
+            score_offset = 100,
+          },
+          avante = {
+            name = 'Avante',
+            module = 'blink-cmp-avante',
+            opts = {
+              command = {
+                get_kind_name = function()
+                  return 'AvanteCmd'
+                end,
+              },
+              mention = {
+                get_kind_name = function()
+                  return 'AvanteMention'
+                end,
+              },
+              kind_icons = {
+                AvanteCmd = '',
+                AvanteMention = '',
+              },
+            },
+          },
         },
       },
-
       snippets = { preset = 'luasnip' },
 
       -- Blink.cmp includes an optional, recommended rust fuzzy matcher,
@@ -963,21 +1034,50 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
+    -- 'folke/tokyonight.nvim',
+
+    'webhooked/kanso.nvim',
+    commit = '62e9c5d',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = false }, -- Disable italics in comments
+      -- -@diagnostic disable-next-line: missing-fields
+      -- require('tokyonight').setup {
+      --   styles = {
+      --     comments = { italic = false }, -- Disable italics in comments
+      --   },
+      -- }
+      -- Default options:
+      require('kanso').setup {
+        compile = false, -- enable compiling the colorscheme
+        undercurl = true, -- enable undercurls
+        commentStyle = { italic = true },
+        functionStyle = {},
+        keywordStyle = { italic = true },
+        statementStyle = {},
+        typeStyle = {},
+        disableItalics = false,
+        transparent = false, -- do not set background color
+        dimInactive = false, -- dim inactive window `:h hl-NormalNC`
+        terminalColors = true, -- define vim.g.terminal_color_{0,17}
+        colors = { -- add/modify theme and palette colors
+          palette = {},
+          theme = { zen = {}, pearl = {}, ink = {}, all = {} },
+        },
+        overrides = function(colors) -- add/modify highlights
+          return {}
+        end,
+        theme = 'zen', -- Load "zen" theme
+        background = { -- map the value of 'background' option to a theme
+          dark = 'zen', -- try "ink" or "zen"!
+          light = 'pearl',
         },
       }
 
-      -- Load the colorscheme here.
+      -- -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       -- vim.cmd.colorscheme 'tokyonight-night'
-      vim.cmd.colorscheme 'default'
+      vim.cmd.colorscheme 'kanso-zen'
     end,
   },
 
@@ -1094,6 +1194,8 @@ require('lazy').setup({
     },
   },
 })
+-- vim.api.nvim_set_hl(0, 'BlinkCmpKindAvanteCmd', { default = false, fg = '#89b4fa' })
+-- vim.api.nvim_set_hl(0, 'BlinkCmpKindAvanteMention', { default = false, fg = '#f38ba8' })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
