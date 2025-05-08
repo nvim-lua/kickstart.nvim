@@ -277,8 +277,9 @@ require('lazy').setup({
   -- after the plugin has been loaded:
   --  config = function() ... end
 
- 
+  {
 
+  },
 {
   -- Useful plugin to show you pending keybinds.
   'folke/which-key.nvim',
@@ -464,6 +465,22 @@ require('lazy').setup({
       'hrsh7th/nvim-cmp',
     },
     config = function()
+      local cmp = require 'cmp'
+      cmp.setup({
+        mapping = cmp.mapping.preset.insert({
+          ["<C-Space>"] = cmp.mapping.complete(),
+          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+          ["<C-j>"] = cmp.mapping.select_next_item(),
+          ["<C-k>"] = cmp.mapping.select_prev_item(),
+        }),
+        sources = cmp.config.sources({
+          { name = "nvim_lsp" },
+          { name = "luasnip" },
+        }, {
+            { name = "buffer" },
+          }),
+      })
+
       -- Brief aside: **What is LSP?**
       --
       -- LSP is an initialism you've probably heard, but might not understand what it is.
@@ -650,17 +667,13 @@ require('lazy').setup({
             },
           },
         },
-
-        -- currently using csharp-language-server from mason
-
-        -- omnisharp = {
-        --   cmd = { 'omnisharp', '--languageserver' },
-        --   filetypes = { 'cs', 'vb', 'cshtml', 'razor', 'html' },
-        --   root_dir = function(fname)
-        --     return require('lspconfig').util.root_pattern('*.sln', '*.csproj', '*.fsproj', '*.vbproj', '*.vcxproj')(fname) or vim.fn.getcwd()
-        --   end,
-        -- },
-        --
+        omnisharp = {
+          cmd = { 'omnisharp', '--languageserver' },
+          filetypes = { 'cs', 'vb', 'cshtml', 'razor', 'html' },
+          root_dir = function(fname)
+            return require('lspconfig').util.root_pattern('*.sln', '*.csproj', '*.fsproj', '*.vbproj', '*.vcxproj')(fname) or vim.fn.getcwd()
+          end,
+        },
       }
 
       -- Ensure the servers and tools above are installed
