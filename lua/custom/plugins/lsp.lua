@@ -1,6 +1,7 @@
--- LSP configuration override
-
 return {
+  -- ========================================
+  -- LSP Configuration Override (via mason-lspconfig)
+  -- ========================================
   {
     'neovim/nvim-lspconfig',
     -- Define dependencies required by lspconfig and related features
@@ -9,21 +10,19 @@ return {
       { 'williamboman/mason.nvim', opts = {} }, -- Basic setup for mason
       {
         'williamboman/mason-lspconfig.nvim',
-        -- This table overrides the `ensure_installed` option for mason-lspconfig
+        -- This table defines the options for mason-lspconfig
+        -- It tells mason-lspconfig which servers Mason should install.
         opts = {
           ensure_installed = {
-            -- List ALL servers you want mason-lspconfig to manage installation for
-            'lua_ls', -- Keep kickstart default
-            'clangd', -- Your addition
-            'pyright', -- Your addition
+            'lua_ls',
+            'clangd',
+            'pyright',
             -- Add others like 'bashls', 'yamlls', 'nixd', 'gopls', 'rust_analyzer' etc. if needed
           },
-          -- Optional: Configure automatic setup (might replace manual loop below)
-          -- automatic_installation = false, -- v2 uses different approach
         },
       },
       -- Optional: Tool installer for linters/formatters not handled by LSP
-      -- 'WhoIsSethDaniel/mason-tool-installer.nvim', -- If you use it, configure its ensure_installed separately
+      -- 'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Status updates for LSP
       { 'j-hui/fidget.nvim', opts = {} },
@@ -35,15 +34,19 @@ return {
       -- This config function runs AFTER the plugin and its dependencies are loaded.
       -- It sets up the LSP servers based on the configurations provided.
 
-      -- Get LSP capabilities from nvim-cmp
+      -- Get LSP capabilities, augmented by nvim-cmp
       local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
-      --
-      -- Call mason-lspconfig's setup function (mainly for ensure_installed)
-      require('mason-lspconfig').setup(opts)
 
-      -- Manually iterate through the servers list and set them up with lspconfig
-      local servers_to_setup = require('mason-lspconfig').get_ensure_installed()
+      -- Call mason-lspconfig's setup function. This primarily ensures that the
+      -- ensure_installed list above is processed by Mason for installation.
+      -- We don't rely on this setup call to configure the servers below anymore.
+      -- require('mason-lspconfig').setup(opts) -- This might not even be needed if opts are passed automatically
 
+      -- Manually define the list of servers we want lspconfig to setup.
+      -- This list should match the 'ensure_installed' list for mason-lspconfig above.
+      local servers_to_setup = { 'lua_ls', 'clangd', 'pyright' } -- <-- EXPLICIT LIST HERE
+
+      -- Iterate through the defined servers list and set them up with lspconfig
       for _, server_name in ipairs(servers_to_setup) do
         -- print('Setting up LSP server: ' .. server_name) -- Debug print
         require('lspconfig')[server_name].setup {
