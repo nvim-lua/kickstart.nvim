@@ -1,0 +1,23 @@
+return {
+  -- {
+  --   'CopilotC-Nvim/CopilotChat.nvim',
+  --   dependencies = {
+  --     -- { 'zbirenbaum/copilot.lua' }, -- or zbirenbaum/copilot.lua
+  --     { 'github/copilot.vim' },
+  --     { 'nvim-lua/plenary.nvim', branch = 'master' }, -- for curl, log and async functions
+  --   },
+  --   build = 'make tiktoken', -- Only on MacOS or Linux
+  --   opts = {},
+  --   -- config = function()
+  --   --   require('copilot').setup {
+  --   --     suggestion = {
+  --   --       enabled = false,
+  --   --       auto_trigger = true,
+  --   --       keymap = {
+  --   --         accept = '<Tab>',
+  --   --       },
+  --   --     },
+  --   --   }
+  --   -- end,
+  -- },
+}

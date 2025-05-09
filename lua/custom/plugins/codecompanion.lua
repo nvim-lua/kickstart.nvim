@@ -7,12 +7,41 @@ return {
       'nvim-treesitter/nvim-treesitter',
     },
     opts = {
+      display = {
+        chat = {
+          show_settings = true,
+        },
+      },
+      extensions = {
+        mcphub = {
+          callback = 'mcphub.extensions.codecompanion',
+          opts = {
+            make_vars = true,
+            make_slash_commands = true,
+            show_result_in_chat = true,
+          },
+        },
+      },
+      adapters = {
+        copilot = function()
+          return require('codecompanion.adapters').extend('copilot', {
+            schema = {
+              model = {
+                default = 'gpt-4o',
+              },
+            },
+          })
+        end,
+      },
       strategies = {
         chat = {
-          adapter = 'openai',
+          adapter = 'copilot',
         },
         inline = {
-          adapter = 'openai',
+          adapter = 'copilot',
+        },
+        cmd = {
+          adapter = 'copilot',
         },
       },
       prompt_library = {
@@ -34,13 +63,13 @@ return {
                   vim.g.codecompanion_auto_tool_mode = true
                   return [[### Steps to Follow
 
-You are required to create a Pull Request description based on the file at .github/pull_request_template.md. You must use @cmd_runner to read that file.
+  You are required to create a Pull Request description based on the file at .github/pull_request_template.md. You must use @cmd_runner to read that file.
 
-1. The file is in Portuguese, so you must complete the description in Portuguese as well.
-2. Use @cmd_runner to get the git diff of the current branch, by using the command `git diff origin/HEAD`.
-3. Based on that diff, you will generate a Pull Request description based on .github/pull_request_template.md.
-4. If necessary, you can obtain the name of the branch by using the command `git rev-parse --abbrev-ref HEAD`.
-5. Write the entire pull request description.]]
+  1. The file is in Portuguese, so you must complete the description in Portuguese as well.
+  2. Use @cmd_runner to get the git diff of the current branch, by using the command `git diff origin/HEAD`.
+  3. Based on that diff, you will generate a Pull Request description based on .github/pull_request_template.md.
+  4. If necessary, you can obtain the name of the branch by using the command `git rev-parse --abbrev-ref HEAD`.
+  5. Write the entire pull request description.]]
                 end,
               },
             },
