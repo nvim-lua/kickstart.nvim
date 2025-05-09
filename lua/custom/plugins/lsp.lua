@@ -18,8 +18,8 @@ return {
             'pyright', -- Your addition
             -- Add others like 'bashls', 'yamlls', 'nixd', 'gopls', 'rust_analyzer' etc. if needed
           },
-          -- You can add other mason-lspconfig options here if needed
-          -- automatic_installation = true, -- Example: if you want auto-install
+          -- Optional: Configure automatic setup (might replace manual loop below)
+          -- automatic_installation = false, -- v2 uses different approach
         },
       },
       -- Optional: Tool installer for linters/formatters not handled by LSP
@@ -37,30 +37,22 @@ return {
 
       -- Get LSP capabilities from nvim-cmp
       local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+      --
+      -- Call mason-lspconfig's setup function (mainly for ensure_installed)
+      require('mason-lspconfig').setup(opts)
 
-      -- Setup LSP servers using mason-lspconfig
-      -- This iterates through the servers listed in `ensure_installed` above
-      -- and calls lspconfig's setup function for each.
-      require('mason-lspconfig').setup_handlers {
-        function(server_name) -- Default handler
-          require('lspconfig')[server_name].setup {
-            capabilities = capabilities, -- Pass cmp capabilities to the server
-            -- Add any server-specific overrides here if needed, e.g.:
-            -- on_attach = function(client, bufnr) ... end,
-            -- settings = { ... },
-          }
-        end,
-        -- Example of specific setup for a server if needed:
-        -- ['lua_ls'] = function()
-        --   require('lspconfig').lua_ls.setup {
-        --     capabilities = capabilities,
-        --     settings = { Lua = { completion = { callSnippet = 'Replace' } } },
-        --   }
-        -- end,
-      }
+      -- Manually iterate through the servers list and set them up with lspconfig
+      local servers_to_setup = require('mason-lspconfig').get_ensure_installed()
+
+      for _, server_name in ipairs(servers_to_setup) do
+        -- print('Setting up LSP server: ' .. server_name) -- Debug print
+        require('lspconfig')[server_name].setup {
+          capabilities = capabilities, -- Pass augmented capabilities
+          -- Add any server-specific overrides here if needed
+        }
+      end
 
       -- Setup keymaps and diagnostics based on kickstart's original init.lua LSP section
-      -- This ensures the standard LSP keymaps (gd, gr, etc.) are set on attach.
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach-override', { clear = true }),
         callback = function(event)
@@ -69,7 +61,7 @@ return {
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
 
-          -- Standard LSP keymaps (copy these from kickstart init.lua or customize)
+          -- Standard LSP keymaps
           map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
           map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
           map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -80,21 +72,25 @@ return {
           map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
           map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
 
-          -- Highlight references (optional, from kickstart)
+          -- Highlight references
           local client = vim.lsp.get_client_by_id(event.data.client_id)
-          if client and client.supports_method 'textDocument/documentHighlight' then
+          local function client_supports_method(client, method, bufnr)
+            if vim.fn.has 'nvim-0.11' == 1 then
+              return client:supports_method(method, { bufnr = bufnr })
+            else
+              return client.supports_method(method, { bufnr = bufnr })
+            end
+          end
+          if client and client_supports_method(client, 'textDocument/documentHighlight', event.buf) then
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight-override', { clear = false })
-            vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-              buffer = event.buf,
-              group = highlight_augroup,
-              callback = vim.lsp.buf.document_highlight,
-            })
-            vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-              buffer = event.buf,
-              group = highlight_augroup,
-              callback = vim.lsp.buf.clear_references,
-            })
-            -- Ensure highlight group is cleared on detach
+            vim.api.nvim_create_autocmd(
+              { 'CursorHold', 'CursorHoldI' },
+              { buffer = event.buf, group = highlight_augroup, callback = vim.lsp.buf.document_highlight }
+            )
+            vim.api.nvim_create_autocmd(
+              { 'CursorMoved', 'CursorMovedI' },
+              { buffer = event.buf, group = highlight_augroup, callback = vim.lsp.buf.clear_references }
+            )
             vim.api.nvim_create_autocmd('LspDetach', {
               group = vim.api.nvim_create_augroup('kickstart-lsp-detach-override', { clear = true }),
               callback = function(event2)
@@ -104,8 +100,8 @@ return {
             })
           end
 
-          -- Inlay hints toggle (optional, from kickstart)
-          if client and client.supports_method 'textDocument/inlayHint' then
+          -- Inlay hints toggle
+          if client and client_supports_method(client, 'textDocument/inlayHint', event.buf) then
             map('<leader>th', function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
             end, '[T]oggle Inlay [H]ints')
@@ -113,26 +109,23 @@ return {
         end,
       })
 
-      -- Diagnostic configuration (can be kept from kickstart or customized)
+      -- Diagnostic configuration
       vim.diagnostic.config {
         severity_sort = true,
         float = { border = 'rounded', source = 'if_many' },
         underline = { severity = vim.diagnostic.severity.ERROR },
-        signs = vim.g.have_nerd_font
-            and {
-              text = {
-                [vim.diagnostic.severity.ERROR] = '󰅚 ', -- Error icon
-                [vim.diagnostic.severity.WARN] = '󰀪 ', -- Warning icon
-                [vim.diagnostic.severity.INFO] = '󰋽 ', -- Info icon
-                [vim.diagnostic.severity.HINT] = '󰌶 ', -- Hint icon
-              },
-            }
-          or {}, -- Use kickstart's sign definitions
+        signs = vim.g.have_nerd_font and {
+          text = {
+            [vim.diagnostic.severity.ERROR] = '󰅚 ',
+            [vim.diagnostic.severity.WARN] = '󰀪 ',
+            [vim.diagnostic.severity.INFO] = '󰋽 ',
+            [vim.diagnostic.severity.HINT] = '󰌶 ',
+          },
+        } or {},
         virtual_text = {
           source = 'if_many',
           spacing = 2,
           format = function(diagnostic)
-            -- Map diagnostic severity to the message itself (simple format)
             local diagnostic_message = {
               [vim.diagnostic.severity.ERROR] = diagnostic.message,
               [vim.diagnostic.severity.WARN] = diagnostic.message,
@@ -146,14 +139,12 @@ return {
     end, -- End of config function
   },
 
-  -- Add the lazydev setup here as well, as it relates to LSP for Lua development
+  -- lazydev setup
   {
     'folke/lazydev.nvim',
     ft = 'lua',
     opts = {
-      library = {
-        { path = 'luvit-meta/library', words = { 'vim%.uv' } }, -- Corrected path if using luvit types
-      },
+      library = { { path = 'luvit-meta/library', words = { 'vim%.uv' } } },
     },
   },
 }

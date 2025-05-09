@@ -1,5 +1,3 @@
--- Autocompletion configuration (nvim-cmp)
-
 return {
   {
     'hrsh7th/nvim-cmp',
@@ -11,7 +9,7 @@ return {
       { -- LuaSnip and its potential build step
         'L3MON4D3/LuaSnip',
         -- Follow latest V2 release.
-        version = 'v2.*', -- <--- REVERTED TO USING VERSION
+        version = 'v2.*',
         -- tag = '<your-desired-luasnip-tag>', -- Removed tag specification
         -- install jsregexp (optional!:).
         build = (function()

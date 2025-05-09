@@ -1,5 +1,3 @@
--- Treesitter configuration override
-
 return {
   -- ========================================
   -- Treesitter Configuration Override
