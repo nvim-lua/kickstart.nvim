@@ -6,4 +6,5 @@ return {
   require 'custom.plugins.flash',
   require 'custom.plugins.autopairs',
   require 'custom.plugins.wilder',
+  require 'custom.plugins.lazygit',
 }
