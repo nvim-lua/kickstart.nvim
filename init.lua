@@ -440,7 +440,14 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      -- vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+
+      vim.keymap.set(
+        'n',
+        '<leader><leader>',
+        '<cmd>Telescope buffers sort_mru=true sort_lastused=true initial_mode=normal<cr>',
+        { desc = '[ ] Open telescope buffers' }
+      )
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -576,6 +583,10 @@ require('lazy').setup({
           --  Useful when you're not sure what type a variable is and you want to see
           --  the definition of its *type*, not where it was *defined*.
           map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
+
+          -- map('[d', vim.diagnostic.get_prev(), 'Go to previous [D]iagnostic message')
+          -- map(']d', vim.diagnostic.get_next(), 'Go to next [D]iagnostic message')
+          -- map('<leader>cd', vim.diagnostic.open_float, '[C]ode [D]iagnostics for line') -- show diagnostics for line
 
           -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
           ---@param client vim.lsp.Client
