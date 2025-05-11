@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -179,20 +179,41 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
--- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+-- set tab to 2 spacebar
+-- vim.cmd 'set expandtab'
+-- vim.cmd 'set tabstop=2'
+-- vim.cmd 'set softtabstop=2'
+-- vim.cmd 'set shiftwidth=2'
+
+-- change alt + m to : for easier command access
+vim.keymap.set({ 'n', 'v' }, 'n', 'h', { noremap = true })
+vim.keymap.set({ 'n', 'v' }, 'e', 'j', { noremap = true })
+vim.keymap.set({ 'n', 'v' }, 'i', 'k', { noremap = true })
+vim.keymap.set({ 'n', 'v' }, 'o', 'l', { noremap = true })
+
+vim.keymap.set({ 'n', 'v' }, 'h', 'i', { noremap = true })
+vim.keymap.set({ 'n', 'v' }, 'j', 'n', { noremap = true })
+vim.keymap.set({ 'n', 'v' }, 'k', 'o', { noremap = true })
+vim.keymap.set({ 'n', 'v' }, 'l', 'e', { noremap = true })
+-- for shift version
+vim.keymap.set({ 'n', 'v' }, 'N', 'H', { noremap = true })
+vim.keymap.set({ 'n', 'v' }, 'E', 'J', { noremap = true })
+vim.keymap.set({ 'n', 'v' }, 'I', 'K', { noremap = true })
+vim.keymap.set({ 'n', 'v' }, 'O', 'L', { noremap = true })
+
+vim.keymap.set({ 'n', 'v' }, 'H', 'I', { noremap = true })
+vim.keymap.set({ 'n', 'v' }, 'J', 'N', { noremap = true })
+vim.keymap.set({ 'n', 'v' }, 'K', 'O', { noremap = true })
+vim.keymap.set({ 'n', 'v' }, 'L', 'E', { noremap = true })
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
 --
 --  See `:help wincmd` for a list of all window commands
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set('n', '<C-n>', '<C-w><C-n>', { desc = 'Move focus to the left window' })
+vim.keymap.set('n', '<C-e>', '<C-w><C-e>', { desc = 'Move focus to the right window' })
+vim.keymap.set('n', '<C-i>', '<C-w><C-i>', { desc = 'Move focus to the lower window' })
+vim.keymap.set('n', '<C-o>', '<C-w><C-o>', { desc = 'Move focus to the upper window' })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -663,9 +684,9 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
-        -- gopls = {},
-        -- pyright = {},
+        clangd = {},
+        --gopls = {},
+        pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -966,10 +987,10 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
