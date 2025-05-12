@@ -722,6 +722,7 @@ require('lazy').setup({
       require('mason-lspconfig').setup {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
         automatic_installation = false,
+        automatic_enable = true, -- See https://github.com/mason-org/mason-lspconfig.nvim?tab=readme-ov-file#default-configuration
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
