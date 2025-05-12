@@ -1,16 +1,8 @@
 local set = vim.opt_local
 
-<<<<<<< Updated upstream
 set.shiftwidth = 4
 set.tabstop = 4
 vim.g.sleuth_automatic = 0
-=======
--- Use tabs instead of spaces
-set.expandtab = false  -- Use real tabs, not spaces
-set.shiftwidth = 4     -- Size of an indent
-set.tabstop = 4        -- Size of a tab
-set.softtabstop = 0    -- Disable softtabstop
->>>>>>> Stashed changes
 set.commentstring = '/* %s */'
 
 -- Define a custom command ':IntMain' that inserts int main() {} template
