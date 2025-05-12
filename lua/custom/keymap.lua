@@ -5,12 +5,12 @@
 
 vim.keymap.set('n', '<C-o>', '<cmd>ClangdSwitchSourceHeader<CR>', { desc = 'Swith to source/header file' })
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
-vim.keymap.set('n', '<leader>z', require('telescope').extensions.zoxide.list, { desc = '[Z]oxide to different dir' })
-vim.keymap.set('n', '<leader>jl', require('telescope.builtin').jumplist, { desc = '[J]ump [L]ist' })
+-- vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
+-- vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
+-- vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
+-- vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+-- vim.keymap.set('n', '<leader>z', require('telescope').extensions.zoxide.list, { desc = '[Z]oxide to different dir' })
+-- vim.keymap.set('n', '<leader>jl', require('telescope.builtin').jumplist, { desc = '[J]ump [L]ist' })
 vim.keymap.set('n', '<leader>ft', function()
   vim.g.disable_format = not vim.g.disable_autoformat
 end, { desc = 'Auto[F]ormat [T]oggle ' })

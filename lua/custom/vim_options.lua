@@ -28,3 +28,7 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 vim.opt.hlsearch = true
+vim.opt.spell = true
+vim.opt.spelllang = { 'en_us' }
+vim.opt.spelloptions:append 'camel'
+vim.opt.spellcapcheck = '' -- disable checking for capital letters at the start of sentences
