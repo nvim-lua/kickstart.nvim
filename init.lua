@@ -11,7 +11,7 @@ vim.g.loaded_netrwPlugin = 1
 vim.opt.termguicolors = true
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- Load options from options.lua
 require 'options'
@@ -708,8 +708,8 @@ require('lazy').setup({
       appearance = {
         -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
         -- Adjusts spacing to ensure icons are aligned
-        -- nerd_font_variant = 'mono',
-        nerd_font_variant = 'normal',
+        nerd_font_variant = 'mono',
+        -- nerd_font_variant = 'normal',
       },
 
       completion = {
@@ -797,7 +797,6 @@ require('lazy').setup({
     end,
   },
   {
-
     'polirritmico/monokai-nightasty.nvim',
     lazy = false,
     priority = 1000,
@@ -846,7 +845,6 @@ require('lazy').setup({
   {
     'tanvirtin/monokai.nvim',
     config = function()
-      -- pcall(vim.cmd, [[colorscheme monokai]])
       require('monokai').setup { palette = require('monokai').classic }
     end,
   },
