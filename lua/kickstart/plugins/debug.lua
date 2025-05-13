@@ -33,7 +33,62 @@ return {
     { '<F2>', function() require('dap').step_over() end, desc = 'Debug: Step Over' },
     { '<F3>', function() require('dap').step_out() end, desc = 'Debug: Step Out' },
     { '<leader>b', function() require('dap').toggle_breakpoint() end, desc = 'Debug: Toggle Breakpoint' },
-    { '<leader>B', function() require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ') end, desc = 'Debug: Set Breakpoint' },
+    {
+      '<leader>B',
+      function()
+        local dap = require 'dap'
+        -- Search for an existing breakpoing on this line in this buffer
+        ---@return dap.SourceBreakpoint bp that was either found, or an empty placeholder
+        local function find_bp()
+          local buf_bps = require('dap.breakpoints').get(vim.fn.bufnr())[vim.fn.bufnr()]
+          ---@type dap.SourceBreakpoint
+          local bp = { condition = '', logMessage = '', hitCondition = '', line = vim.fn.line '.' }
+          for _, candidate in ipairs(buf_bps) do
+            if candidate.line and candidate.line == vim.fn.line '.' then
+              bp = candidate
+              break
+            end
+          end
+          return bp
+        end
+
+        -- Elicit customization via a UI prompt
+        ---@param bp dap.SourceBreakpoint a breakpoint
+        local function customize_bp(bp)
+          local fields = {
+            ('Condition: (%s)\n'):format(bp.condition),
+            ('Hit Condition: (%s)\n'):format(bp.hitCondition),
+            ('Log Message: (%s)\n'):format(bp.logMessage),
+          }
+          vim.ui.select(fields, {
+            prompt = 'Edit breakpoint',
+          }, function(choice)
+            if choice == fields[1] then
+              bp.condition = vim.fn.input {
+                prompt = 'Condition: ',
+                default = bp.condition,
+              }
+            elseif choice == fields[2] then
+              bp.hitCondition = vim.fn.input {
+                prompt = 'Hit Condition: ',
+                default = bp.hitCondition,
+              }
+            elseif choice == fields[3] then
+              bp.logMessage = vim.fn.input {
+                prompt = 'Log Message: ',
+                default = bp.logMessage,
+              }
+            end
+
+            -- Set breakpoint for current line, with customizations (see h:dap.set_breakpoint())
+            dap.set_breakpoint(bp.condition, bp.hitCondition, bp.logMessage)
+          end)
+        end
+
+        customize_bp(find_bp())
+      end,
+      desc = 'Debug: Edit Breakpoint',
+    },
     -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
     { '<F7>', function() require('dapui').toggle() end, desc = 'Debug: See last session result.' },
   },
