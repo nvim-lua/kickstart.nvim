@@ -18,7 +18,7 @@ return {
         -- Ensure 'ruff' is installed via Home Manager (pkgs.ruff)
         python = { 'ruff_format', 'ruff_fix' },
         -- python = { 'isort', 'black' },
-        nix = { 'nixpkgs-fmt' }, -- Add nix formatter
+        nix = { 'nixpkgs_fmt' }, -- Add nix formatter
         -- Add other filetypes and formatters, e.g.:
         -- javascript = { "prettier" },
         -- typescript = { "prettier" },
