@@ -17,6 +17,7 @@ return {
             'lua_ls',
             'clangd',
             'pyright',
+            'nixd',
             -- Add others like 'bashls', 'yamlls', 'nixd', 'gopls', 'rust_analyzer' etc. if needed
           },
         },
