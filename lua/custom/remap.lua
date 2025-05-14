@@ -6,6 +6,8 @@ vim.keymap.set('n', '<C-u>', '<C-u>zz')
 
 -- Access to file viewer easily
 vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, { desc = '[P]roject files [V]iewer' })
+vim.keymap.set('n', '<leader>pb', '<cmd>make<CR>', { desc = '[P]roject [B]uild' })
+vim.keymap.set('n', '<leader>pc', '<cmd>make clean<CR>', { desc = '[P]roject [C]lean' })
 
 vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
 vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
