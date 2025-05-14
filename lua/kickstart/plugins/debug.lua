@@ -64,9 +64,67 @@ return {
     {
       '<leader>B',
       function()
-        require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+        require 'dap.protocol'
+        local dap = require 'dap'
+        -- Search for an existing breakpoint on this line in this buffer
+        ---@return dap.SourceBreakpoint bp that was either found, or an empty placeholder
+        local function find_bp()
+          local buf_bps = require('dap.breakpoints').get(vim.fn.bufnr())[vim.fn.bufnr()]
+          ---@type dap.SourceBreakpoint
+          local bp = { condition = '', logMessage = '', hitCondition = '', line = vim.fn.line '.' }
+          for _, candidate in ipairs(buf_bps) do
+            if candidate.line and candidate.line == vim.fn.line '.' then
+              bp = candidate
+              break
+            end
+          end
+          return bp
+        end
+
+        -- Elicit customization via a UI prompt
+        ---@param bp dap.SourceBreakpoint a breakpoint
+        local function customize_bp(bp)
+          local props = {
+            ['Condition'] = {
+              value = bp.condition,
+              setter = function(v)
+                bp.condition = v
+              end,
+            },
+            ['Hit Condition'] = {
+              value = bp.hitCondition,
+              setter = function(v)
+                bp.hitCondition = v
+              end,
+            },
+            ['Log Message'] = {
+              value = bp.logMessage,
+              setter = function(v)
+                bp.logMessage = v
+              end,
+            },
+          }
+          local menu_options = {}
+          for k, v in pairs(props) do
+            table.insert(menu_options, ('%s: %s'):format(k, v.value))
+          end
+          vim.ui.select(menu_options, {
+            prompt = 'Edit Breakpoint',
+          }, function(choice)
+            local prompt = (tostring(choice)):gsub(':.*', '')
+            props[prompt].setter(vim.fn.input {
+              prompt = ('[%s] '):format(prompt),
+              default = props[prompt].value,
+            })
+
+            -- Set breakpoint for current line, with customizations (see h:dap.set_breakpoint())
+            dap.set_breakpoint(bp.condition, bp.hitCondition, bp.logMessage)
+          end)
+        end
+
+        customize_bp(find_bp())
       end,
-      desc = 'Debug: Set Breakpoint',
+      desc = 'Debug: Edit Breakpoint',
     },
     -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
     {
