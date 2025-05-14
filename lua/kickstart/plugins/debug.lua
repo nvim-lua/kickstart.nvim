@@ -36,8 +36,9 @@ return {
     {
       '<leader>B',
       function()
+        require 'dap.protocol'
         local dap = require 'dap'
-        -- Search for an existing breakpoing on this line in this buffer
+        -- Search for an existing breakpoint on this line in this buffer
         ---@return dap.SourceBreakpoint bp that was either found, or an empty placeholder
         local function find_bp()
           local buf_bps = require('dap.breakpoints').get(vim.fn.bufnr())[vim.fn.bufnr()]
@@ -55,30 +56,38 @@ return {
         -- Elicit customization via a UI prompt
         ---@param bp dap.SourceBreakpoint a breakpoint
         local function customize_bp(bp)
-          local fields = {
-            ('Condition: (%s)\n'):format(bp.condition),
-            ('Hit Condition: (%s)\n'):format(bp.hitCondition),
-            ('Log Message: (%s)\n'):format(bp.logMessage),
+          local props = {
+            ['Condition'] = {
+              value = bp.condition,
+              setter = function(v)
+                bp.condition = v
+              end,
+            },
+            ['Hit Condition'] = {
+              value = bp.hitCondition,
+              setter = function(v)
+                bp.hitCondition = v
+              end,
+            },
+            ['Log Message'] = {
+              value = bp.logMessage,
+              setter = function(v)
+                bp.logMessage = v
+              end,
+            },
           }
-          vim.ui.select(fields, {
-            prompt = 'Edit breakpoint',
+          local menu_options = {}
+          for k, v in pairs(props) do
+            table.insert(menu_options, ('%s: %s'):format(k, v.value))
+          end
+          vim.ui.select(menu_options, {
+            prompt = 'Edit Breakpoint',
           }, function(choice)
-            if choice == fields[1] then
-              bp.condition = vim.fn.input {
-                prompt = 'Condition: ',
-                default = bp.condition,
-              }
-            elseif choice == fields[2] then
-              bp.hitCondition = vim.fn.input {
-                prompt = 'Hit Condition: ',
-                default = bp.hitCondition,
-              }
-            elseif choice == fields[3] then
-              bp.logMessage = vim.fn.input {
-                prompt = 'Log Message: ',
-                default = bp.logMessage,
-              }
-            end
+            local prompt = (tostring(choice)):gsub(':.*', '')
+            props[prompt].setter(vim.fn.input {
+              prompt = ('[%s] '):format(prompt),
+              default = props[prompt].value,
+            })
 
             -- Set breakpoint for current line, with customizations (see h:dap.set_breakpoint())
             dap.set_breakpoint(bp.condition, bp.hitCondition, bp.logMessage)
