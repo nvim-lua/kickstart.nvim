@@ -53,7 +53,6 @@ return packer.startup(function(use)
   use "lunarvim/darkplus.nvim"
   use "akinsho/bufferline.nvim"
   use "moll/vim-bbye"
-
   -- cmp plugins
   use "hrsh7th/nvim-cmp" -- The completion plugin
   use "hrsh7th/cmp-buffer" -- buffer completions

@@ -35,11 +35,16 @@ keymap('n', '<C-Right>', ':vertical resize +2<CR>', opts)
 
 -- Navigate buffers
 keymap('n', '<S-l>', ':bnext<CR>', opts)
+keymap("n", "<leader>n", ":bnext<CR>", opts)
 keymap('n', '<S-h>', ':bprevious<CR>', opts)
+keymap("n", "<leader>p", ":bprev<CR>", opts)
 
 -- Insert --
--- Press jk fast to enter
+-- Press fast to exit
 keymap('i', 'jk', '<ESC>', opts)
+
+-- Jump to beginning of line
+keymap('n', '<leader>h', '^', opts)
 
 -- Visual --
 -- Stay in indent mode
@@ -49,7 +54,9 @@ keymap('v', '>', '>gv', opts)
 -- Move text up and down
 keymap('v', '<A-j>', ':m .+1<CR>==', opts)
 keymap('v', '<A-k>', ':m .-2<CR>==', opts)
-keymap('v', 'p', '"_dP', opts)
+-- paste over currently selected text without yanking it
+keymap('v', 'p', '"_dp', opts)
+keymap('v', 'P', '"_dP', opts)
 
 -- Visual Block --
 -- Move text up and down
@@ -83,7 +90,6 @@ vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' }
 vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
 vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
--- Slightly advanced example of overriding default behavior and theme
 vim.keymap.set('n', '<leader>/', function()
   -- You can pass additional configuration to Telescope to change the theme, layout, etc.
   builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
@@ -108,4 +114,19 @@ end, { desc = '[S]earch [N]eovim files' })
 
 -- Nvimtree
 keymap("n", "<leader>e", ":NvimTreeToggle<cr>", opts)
-keymap("n", "<leader>f", ":Format<cr>", opts)
+-- keymap("n", "<leader>f", ":Format<cr>", opts)
+keymap("n", "<leader>w", ":w<cr>", opts)
+keymap("n", "<leader>q", ":q<cr>", opts)
+keymap("n", "<leader>d", ":bdelete<cr>", opts)
+
+keymap("n", "<C-d>", "<C-d>zz", opts)
+keymap("n", "<C-u>", "<C-u>zz", opts)
+
+-- Move line on the screen rather than by line in the file
+vim.keymap.set("n", "j", "gj", opts)
+vim.keymap.set("n", "k", "gk", opts)
+
+-- Select all
+vim.keymap.set("n", "<C-a>", "ggVG", opts)
+
+vim.keymap.set("n", "YY", "va{Vy", opts)
