@@ -86,6 +86,14 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'neo-tree',
+  callback = function()
+    vim.wo.winfixwidth = true
+  end,
+})
+
 require 'config.keymap'
 require 'config.lazy'
 
