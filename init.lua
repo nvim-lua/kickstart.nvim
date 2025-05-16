@@ -215,7 +215,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
-    vim.hl.on_yank()
+    vim.highlight.on_yank()
   end,
 })
 
@@ -493,8 +493,8 @@ require('lazy').setup({
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
-      { 'mason-org/mason.nvim', opts = {} },
-      'mason-org/mason-lspconfig.nvim',
+      { 'mason-org/mason.nvim', version = '^1.0.0', opts = {} },
+      { 'mason-org/mason-lspconfig.nvim', version = '^1.0.0' },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
@@ -694,7 +694,98 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
-
+        intelephense = {
+          settings = {
+            intelephense = {
+              stubs = {
+                'apache',
+                'bcmath',
+                'bz2',
+                'calendar',
+                'com_dotnet',
+                'Core',
+                'ctype',
+                'curl',
+                'date',
+                'dba',
+                'dom',
+                'enchant',
+                'exif',
+                'FFI',
+                'fileinfo',
+                'filter',
+                'fpm',
+                'ftp',
+                'gd',
+                'gettext',
+                'gmp',
+                'hash',
+                'iconv',
+                'imap',
+                'intl',
+                'json',
+                'ldap',
+                'libxml',
+                'mbstring',
+                'meta',
+                'mysqli',
+                'oci8',
+                'odbc',
+                'openssl',
+                'pcntl',
+                'pcre',
+                'PDO',
+                'pdo_ibm',
+                'pdo_mysql',
+                'pdo_pgsql',
+                'pdo_sqlite',
+                'pgsql',
+                'Phar',
+                'posix',
+                'pspell',
+                'readline',
+                'Reflection',
+                'session',
+                'shmop',
+                'SimpleXML',
+                'snmp',
+                'soap',
+                'sockets',
+                'sodium',
+                'SPL',
+                'sqlite3',
+                'standard',
+                'superglobals',
+                'sysvmsg',
+                'sysvsem',
+                'sysvshm',
+                'tidy',
+                'tokenizer',
+                'xml',
+                'xmlreader',
+                'xmlrpc',
+                'xmlwriter',
+                'xsl',
+                'Zend OPcache',
+                'zip',
+                'zlib',
+              },
+              files = {
+                maxSize = 5000000,
+              },
+              environment = {
+                includePaths = {},
+              },
+              format = {
+                enable = true,
+              },
+              completion = {
+                importFunction = true,
+                importClass = true,
+              },
+            },
+          },
+        },
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -731,6 +822,7 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
         'html-lsp',
+        'intelephense',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
