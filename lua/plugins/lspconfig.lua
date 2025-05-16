@@ -98,8 +98,9 @@ return { -- Main LSP Configuration
     }
 
     local capabilities = require('blink.cmp').get_lsp_capabilities()
+    local lspconfig = require 'lspconfig'
 
-    require('lspconfig').sourcekit.setup {
+    lspconfig.sourcekit.setup {
       capabilities = {
         workspace = {
           didChangeWatchedFiles = {
@@ -107,6 +108,15 @@ return { -- Main LSP Configuration
           },
         },
       },
+    }
+
+    lspconfig.omnisharp.setup {
+      capabilities = capabilities,
+      enable_roslyn_analysers = true,
+      enable_import_completion = true,
+      organize_imports_on_format = true,
+      enable_decompilation_support = true,
+      filetypes = { 'cs', 'vb', 'csproj', 'sln', 'slnx', 'props', 'csx', 'targets', 'tproj', 'slngen', 'fproj' },
     }
 
     local servers = {
