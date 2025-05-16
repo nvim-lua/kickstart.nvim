@@ -1,4 +1,7 @@
 # kickstart.nvim
+## Custom installation
+### Packages required
+- LazyGit - Simple graphical interface for git integration (required github connection to work)
 
 ## Introduction
 
