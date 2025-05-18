@@ -1,5 +1,4 @@
-x = [1, 2, 3]
+items = [1, 2, 3]
 
-for item in x:
-    print(item)
-# print(type(mydict))
+print([x**2 for x in items])
+print(items*2)

@@ -130,3 +130,4 @@ vim.keymap.set("n", "k", "gk", opts)
 vim.keymap.set("n", "<C-a>", "ggVG", opts)
 
 vim.keymap.set("n", "YY", "va{Vy", opts)
+vim.keymap.set("n", "<leader>r", ":w<CR>:!python3 %<CR>", { noremap = true, silent = true })

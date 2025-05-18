@@ -15,11 +15,9 @@ return {
       local api = require("nvim-tree.api")
       
       return {
-        -- disable_netrw = false,
-        -- hiack_netrw = true,
         view = {
           width = 35,
-          side = "left",
+          side = "right",
           preserve_window_proportions = true,
         },
         hijack_cursor = true,
@@ -78,70 +76,3 @@ return {
     end,
   }
 }
-
-
---     local function opts(desc)
---       return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
---     end
-
---     -- default mappings
---     api.config.mappings.default_on_attach(bufnr)
-
---     -- custom mappings
---   end
-
-
---   -- set termguicolors to enable highlight groups
---   vim.opt.termguicolors = true
-
---   -- OR setup with some options
---   nvim_tree.setup({
---     on_attach = my_on_attach,
---     sort_by = "case_sensitive",
---     renderer = {
---         highlight_git = true,
---         root_folder_modifier = ":t",
---         icons = {
---             show = {
---                 file = true,
---                 folder = true,
---                 folder_arrow = true,
---                 git = true,
---             },
---             glyphs = {
---                 default = "",
---                 symlink = "",
---                 git = {
---                     unstaged = "",
---                     staged = "S",
---                     unmerged = "",
---                     renamed = "➜",
---                     deleted = "",
---                     untracked = "U",
---                     ignored = "◌",
---                 },
---                 folder = {
---                     default = "",
---                     open = "",
---                     empty = "",
---                     empty_open = "",
---                     symlink = "",
---                 },
---             }
---         }
---     },
---     filters = {
---       dotfiles = true,
---     },
---     update_cwd = true,
---     diagnostics = {
---         enable = true,
---         icons = {
---             hint = "",
---             info = "",
---             warning = "",
---             error = "",
---         },
---     },
---   })
--- }

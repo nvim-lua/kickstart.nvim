@@ -4,7 +4,6 @@ return {
   { "windwp/nvim-autopairs" }, -- Autopairs
   -- "numToStr/Comment.nvim" -- Easily comment stuff
   { 'kyazdani42/nvim-web-devicons' },
-    { 'kyazdani42/nvim-tree.lua' },
   -- Colorschemes
   -- "lunarvim/colorschemes" -- A bunch of colorschemes you can try out
   { "lunarvim/darkplus.nvim" },
