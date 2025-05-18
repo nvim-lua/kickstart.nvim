@@ -58,3 +58,18 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
+
+-- buffers
+
+local function close_other_buffers()
+  local current = vim.api.nvim_get_current_buf()
+  local bufs = vim.api.nvim_list_bufs()
+
+  for _, buf in ipairs(bufs) do
+    if vim.api.nvim_buf_is_loaded(buf) and buf ~= current then
+      vim.api.nvim_buf_delete(buf, { force = true })
+    end
+  end
+end
+vim.keymap.set('n', '<leader>bd', ':bd<CR>', { desc = 'Close current buffer' })
+vim.keymap.set('n', '<leader>bo', close_other_buffers, { desc = 'Close all buffers except current' })

@@ -54,6 +54,8 @@ vim.opt.splitbelow = true
 vim.opt.list = false
 vim.opt.listchars = { trail = '·', nbsp = '␣', tab = '  ' }
 
+vim.opt.wrap = false
+
 vim.opt.tabstop = 2 -- Number of spaces that a <Tab> in the file counts for
 vim.opt.shiftwidth = 2 -- Number of spaces to use for each step of (auto)indent
 vim.opt.expandtab = true -- Use spaces instead of actual tab characters
@@ -86,6 +88,14 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'neo-tree',
+  callback = function()
+    vim.wo.winfixwidth = true
+  end,
+})
+
 require 'config.keymap'
 require 'config.lazy'
 
