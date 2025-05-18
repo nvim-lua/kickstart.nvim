@@ -14,8 +14,8 @@ return {
         disable_netrw = true, -- Disable netrw
         hijack_netrw = true, -- Hijack netrw for nvim-tree
         view = {
-          side = 'left',
-          width = 30,
+          side = 'right', -- Position of the tree
+          width = 40,          
         },
         renderer = {
           icons = {
@@ -44,5 +44,15 @@ return {
         },
       }
     end,
+  },
+
+  -- Add lazygit.nvim plugin
+  {
+    'kdheepak/lazygit.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    cmd = { 'LazyGit' },
+    keys = {
+      { '<leader>gg', '<cmd>LazyGit<CR>', desc = 'Open LazyGit' },
+    },
   },
 }
