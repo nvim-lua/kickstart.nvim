@@ -265,7 +265,12 @@ require('lazy').setup({
       {
         '<leader>sd',
         function()
-          Snacks.picker.diagnostics()
+          Snacks.picker.diagnostics {
+            layout = {
+              preview = 'main',
+              preset = 'ivy_split',
+            },
+          }
         end,
         desc = 'Diagnostics',
       },
@@ -576,7 +581,7 @@ require('lazy').setup({
       })
     end,
   },
-  require 'custom/plugins/tabby',
+  -- require 'custom/plugins/tabby',
   {
     'christoomey/vim-tmux-navigator',
     cmd = {
@@ -1030,10 +1035,27 @@ require('lazy').setup({
             },
           },
         },
+        bashls = {
+          filetypes = { 'sh', 'bash' },
+          cmd = { 'bash-language-server', 'start' },
+          shellcheckPath = '$HOME/.local/share/nvim/mason/bin/shellcheck',
+        },
+        texlab = {
+          settings = {
+            texlab = {
+              build = {
+                args = { '-X', 'compile', '%f', '--synctex', '--keep-logs', '--keep-intermediates' },
+                executable = 'tectonic',
+              },
+            },
+          },
+        },
         pyright = {},
         ruff = {
-          enabled = true,
-          formatEnabled = true,
+          settings = {
+            enabled = true,
+            formatEnabled = true,
+          },
         },
         cmake = {},
         lua_ls = {
@@ -1058,6 +1080,9 @@ require('lazy').setup({
       --    :Mason
       --
       --  You can press `g?` for help in this menu.
+      for server_name, server in pairs(servers) do
+        vim.lsp.config(server_name, server)
+      end
       require('mason').setup()
 
       -- You can add other tools here that you want Mason to install
@@ -1068,21 +1093,10 @@ require('lazy').setup({
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-      require('mason-lspconfig').setup {
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for ts_ls)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-          end,
-        },
-      }
+      require('mason-lspconfig').setup {}
     end,
   },
-  { 'anuvyklack/pretty-fold.nvim', config = true },
+  { 'bbjornstad/pretty-fold.nvim', config = true },
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
@@ -1118,6 +1132,9 @@ require('lazy').setup({
         cpp = { 'clang-format' },
         json = { 'clang-format' },
         lua = { 'stylua' },
+        latex = { 'texlab' },
+        bash = { 'shellcheck' },
+        sh = { 'shellcheck' },
         -- Conform can also run multiple formatters sequentially
         python = { 'ruff_format', 'ruff_fix', 'ruff_organize_imports' },
         ['*'] = { 'codespell' },
