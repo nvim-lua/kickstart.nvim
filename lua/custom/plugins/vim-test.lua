@@ -5,9 +5,11 @@ return {
     'mikelue/vim-maven-plugin',
   },
   init = function()
-    vim.g['test#strategy'] = 'dispatch'
+    vim.g['test#strategy'] = { nearest = 'neovim', file = 'neovim', suite = 'neovim' }
+    vim.g['test#neovim#start_normal'] = 1
+    vim.g['test#basic#start_normal'] = 1
     -- vim.g.test_echo_command = 1 -- Adicionado para mostrar o comando de teste
-    vim.g['test#java#maventest#options'] = '-B'
+    -- vim.g['test#java#maventest#options'] = '-B' -- Necessário em caso de parsing para quickfix list
 
     vim.api.nvim_create_autocmd('FileType', {
       pattern = { 'java' },

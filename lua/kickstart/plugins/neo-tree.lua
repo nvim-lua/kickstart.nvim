@@ -11,7 +11,7 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '\\', ':Neotree position=float<CR>', desc = 'NeoTree reveal in float mode', silent = true },
+    { '\\', ':Neotree reveal position=float<CR>', desc = 'NeoTree reveal in float mode', silent = true },
     { '<leader>nds', ':Neotree document_symbols position=float<CR>', desc = 'NeoTree document symbols', silent = true },
   },
   opts = {
