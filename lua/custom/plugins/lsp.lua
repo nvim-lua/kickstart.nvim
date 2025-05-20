@@ -17,11 +17,6 @@ return {
     config = function(_, opts)
       -- This config function runs AFTER the plugin and its dependencies are loaded.
       -- It sets up the LSP servers.
-      local nix_paths_status, nix_paths = pcall(require, 'custom.nix_paths')
-      if not nix_paths_status then
-        print('Error loading custom.nix_paths: ' .. (nix_paths or 'Unknown error'))
-        nix_paths = {} -- Provide an empty table to avoid further errors
-      end
 
       -- Get LSP capabilities, augmented by nvim-cmp
       local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -41,34 +36,13 @@ return {
 
       -- Iterate through the defined servers list and set them up with lspconfig
       for _, server_name in ipairs(servers_to_setup) do
-        local server_opts = {
-          capabilities = capabilities,
-        }
-
-        if server_name == 'clangd' then
-          if nix_paths.clangd_query_driver and nix_paths.macos_sdk_path and nix_paths.libcxx_include_path then
-            server_opts.cmd = {
-              'clangd',
-              '--query-driver=' .. nix_paths.clangd_query_driver,
-              -- '-isysroot',
-              -- nix_paths.macos_sdk_path,
-              -- '-isystem',
-              -- nix_paths.libcxx_include_path,
-            }
-          else
-            print 'Warning: Nix paths for clangd not fully defined in custom.nix_paths.lua. Clangd might not work correctly.'
-            -- Fallback or default cmd if paths are missing
-            server_opts.cmd = { 'clangd' }
-          end
-        end
-        require('lspconfig')[server_name].setup(server_opts)
         -- print('Attempting to set up LSP server: ' .. server_name) -- Debug print
-        -- require('lspconfig')[server_name].setup {
-        --   capabilities = capabilities, -- Pass augmented capabilities
-        --   -- Add any server-specific overrides here if needed, e.g.:
-        --   -- For lua_ls:
-        --   -- settings = { Lua = { diagnostics = { globals = {'vim'} } } },
-        -- }
+        require('lspconfig')[server_name].setup {
+          capabilities = capabilities, -- Pass augmented capabilities
+          -- Add any server-specific overrides here if needed, e.g.:
+          -- For lua_ls:
+          -- settings = { Lua = { diagnostics = { globals = {'vim'} } } },
+        }
       end
 
       -- Setup keymaps and diagnostics based on kickstart's original init.lua LSP section
