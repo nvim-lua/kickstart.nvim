@@ -19,6 +19,7 @@ return {
       -- It sets up the LSP servers.
 
       -- Load Nix-provided paths from the generated Lua file
+      package.loaded['custom.nix_paths'] = nil
       local nix_paths_status, nix_paths = pcall(require, 'custom.nix_paths')
       if not nix_paths_status then
         vim.notify('Error loading custom.nix_paths: ' .. (nix_paths or 'Unknown error'), vim.log.levels.ERROR)
