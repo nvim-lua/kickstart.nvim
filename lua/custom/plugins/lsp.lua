@@ -12,7 +12,7 @@ return {
             -- Dependencies for nvim-lspconfig itself, if any.
             -- Mason and mason-lspconfig are removed as Nix handles LSP installation.
             { 'j-hui/fidget.nvim', opts = {} }, -- Useful status updates for LSP
-            'hrsh7th/cmp-nvim-lsp',       -- LSP completion source for nvim-cmp
+            'hrsh7th/cmp-nvim-lsp',             -- LSP completion source for nvim-cmp
         },
         config = function(_, opts)
             -- This config function runs AFTER the plugin and its dependencies are loaded.
@@ -28,7 +28,7 @@ return {
                 "clangd",
                 "pyright",
                 "nixd",
-                "ruff_lsp",
+                "ruff",
                 -- Add other servers like "bashls", "yamlls", "gopls", "rust_analyzer" etc.
                 -- Ensure the corresponding packages (e.g., pkgs.bash-language-server)
                 -- are in your Home Manager home.packages list.
@@ -82,10 +82,13 @@ return {
                         vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' },
                             { buffer = event.buf, group = highlight_augroup, callback = vim.lsp.buf.clear_references })
                         vim.api.nvim_create_autocmd('LspDetach',
-                            { group = vim.api.nvim_create_augroup('kickstart-lsp-detach-override', { clear = true }), callback = function(
-                                event2)
-                                vim.lsp.buf.clear_references(); vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight-override', buffer = event2.buf }
-                            end })
+                            {
+                                group = vim.api.nvim_create_augroup('kickstart-lsp-detach-override', { clear = true }),
+                                callback = function(
+                                    event2)
+                                    vim.lsp.buf.clear_references(); vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight-override', buffer = event2.buf }
+                                end
+                            })
                     end
 
                     -- Inlay hints toggle
@@ -110,9 +113,13 @@ return {
                 virtual_text = {
                     source = 'if_many', spacing = 2,
                     format = function(diagnostic)
-                        local diagnostic_message = { [vim.diagnostic.severity.ERROR] = diagnostic.message,
-                            [vim.diagnostic.severity.WARN] = diagnostic.message, [vim.diagnostic.severity.INFO] =
-                        diagnostic.message, [vim.diagnostic.severity.HINT] = diagnostic.message }
+                        local diagnostic_message = {
+                            [vim.diagnostic.severity.ERROR] = diagnostic.message,
+                            [vim.diagnostic.severity.WARN] = diagnostic.message,
+                            [vim.diagnostic.severity.INFO] =
+                                diagnostic.message,
+                            [vim.diagnostic.severity.HINT] = diagnostic.message
+                        }
                         return diagnostic_message[diagnostic.severity]
                     end,
                 },
