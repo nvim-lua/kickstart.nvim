@@ -81,8 +81,6 @@ return {
       }
       print('DEBUG: servers table content: ' .. vim.inspect(servers))
 
-      local _ = next(servers)
-      print 'DEBUG: Called next(servers) once.'
       -- print('DEBUG: next(servers) returned key: ' .. tostring(first_key) .. ', value: ' .. vim.inspect(first_value))
       -- if first_key == nil then
       --   print "DEBUG: The 'servers' table is effectively empty for iteration with pairs()."
@@ -92,7 +90,7 @@ return {
 
       -- Iterate through the defined servers list and set them up with lspconfig
       print 'LSPConfig: Iterating servers...'
-      for server_name, server_config_override in ipairs(servers) do
+      for server_name, server_config_override in pairs(servers) do
         print('Attempting to set up LSP server: ' .. server_name) -- Debug print
         local server_ops = {
           capabilities = capabilities,
