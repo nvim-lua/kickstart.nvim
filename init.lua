@@ -960,6 +960,16 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'FabijanZulj/blame.nvim',
+    lazy = false,
+    config = function()
+      require('blame').setup {}
+
+      vim.keymap.set('n', '<leader>gb', '<cmd>BlameToggle<CR>', { desc = 'Toggle blame' })
+    end,
+  },
+
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
