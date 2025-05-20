@@ -81,13 +81,14 @@ return {
       }
       print('DEBUG: servers table content: ' .. vim.inspect(servers))
 
-      local first_key, first_value = next(servers)
-      print('DEBUG: next(servers) returned key: ' .. tostring(first_key) .. ', value: ' .. vim.inspect(first_value))
-      if first_key == nil then
-        print "DEBUG: The 'servers' table is effectively empty for iteration with pairs()."
-      else
-        print "DEBUG: The 'servers' table is NOT empty for iteration."
-      end
+      local _ = next(servers)
+      print 'DEBUG: Called next(servers) once.'
+      -- print('DEBUG: next(servers) returned key: ' .. tostring(first_key) .. ', value: ' .. vim.inspect(first_value))
+      -- if first_key == nil then
+      --   print "DEBUG: The 'servers' table is effectively empty for iteration with pairs()."
+      -- else
+      --   print "DEBUG: The 'servers' table is NOT empty for iteration."
+      -- end
 
       -- Iterate through the defined servers list and set them up with lspconfig
       print 'LSPConfig: Iterating servers...'
