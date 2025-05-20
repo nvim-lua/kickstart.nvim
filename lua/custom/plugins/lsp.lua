@@ -49,16 +49,27 @@ return {
         },
         clangd = {
           cmd = (function()
-            if nix_paths.clang_driver_path then
+            if nix_paths.clang_driver_path and nix_paths.macos_sdk_path and nix_paths.libcxx_include_path then
               return {
                 'clangd',
                 '--query-driver=' .. nix_paths.clang_driver_path,
+                -- Explicitly pass system root and C++ standard library include path as clangd arguments.
+                -- These are compiler flags that clangd can use to understand the environment.
+                '--compile-commands-dir='
+                  .. vim.fn.getcwd()
+                  .. '/build', -- Assuming compile_commands.json is in <project_root>/build
+                '-extra-arg=-isysroot=' .. nix_paths.macos_sdk_path,
+                '-extra-arg=-isystem=' .. nix_paths.libcxx_include_path,
+                -- You could also try adding the resource-dir from compile_commands.json if needed:
+                -- "-extra-arg=-resource-dir=/nix/store/YOUR_CLANG_RESOURCE_DIR_HASH/lib/clang/VERSION"
               }
             else
-              vim.notify('Warning: Nix path for clang_driver_path not defined. clangd might not work correctly.', vim.log.levels.WARN)
+              vim.notify('Warning: One or more Nix paths for clangd (driver, sdk, libcxx) not defined. Clangd might have issues.', vim.log.levels.WARN)
               return { 'clangd' } -- Fallback
             end
           end)(),
+          -- Ensure clangd knows the project root to find compile_commands.json and .clangd
+          root_dir = require('lspconfig.util').root_pattern('compile_commands.json', '.git', '.clangd'),
         },
         pyright = {
           settings = {
