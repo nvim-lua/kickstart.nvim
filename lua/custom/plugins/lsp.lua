@@ -79,6 +79,7 @@ return {
         -- Ensure the corresponding packages (e.g., pkgs.bash-language-server)
         -- are in your Home Manager home.packages list.
       }
+      print('DEBUG: servers table content: ' .. vim.inspect(servers))
 
       -- Iterate through the defined servers list and set them up with lspconfig
       print 'LSPConfig: Iterating servers...'
@@ -97,6 +98,7 @@ return {
         end
         -- require('lspconfig')[server_name].setup(server_ops)
       end
+      print 'LSPConfig: Finished iterating servers.'
 
       -- Setup keymaps and diagnostics based on kickstart's original init.lua LSP section
       vim.api.nvim_create_autocmd('LspAttach', {
