@@ -18,31 +18,73 @@ return {
       -- This config function runs AFTER the plugin and its dependencies are loaded.
       -- It sets up the LSP servers.
 
+      -- Load Nix-provided paths from the generated Lua file
+      local nix_paths_status, nix_paths = pcall(require, 'custom.nix_paths')
+      if not nix_paths_status then
+        vim.notify('Error loading custom.nix_paths: ' .. (nix_paths or 'Unknown error'), vim.log.levels.ERROR)
+        nix_paths = {} -- Provide an empty table to avoid further errors
+      end
+
       -- Get LSP capabilities, augmented by nvim-cmp
       local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
       -- Define the list of LSP servers you want to configure.
       -- These servers must be installed via Nix/Home Manager and be in your PATH.
-      local servers_to_setup = {
-        'lua_ls',
-        'clangd',
-        'pyright',
-        'nixd',
-        'ruff',
+      local servers = {
+        lua_ls = {
+          -- cmd = { ... }
+          -- filetypes = { ... }
+          -- capabilities = {}
+          settings = {
+            Lua = {
+              completion = {
+                callSnippet = 'Replace',
+              },
+              diagnostics = { disable = { 'missing-fields' } },
+            },
+          },
+        },
+        clangd = {
+          cmd = (function()
+            if nix_paths.clang_driver_path then
+              return {
+                'clangd',
+                '--query-driver=' .. nix_paths.clang_driver_path,
+              }
+            else
+              vim.notify('Warning: Nix path for clang_driver_path not defined. clangd might not work correctly.', vim.log.levels.WARN)
+              return { 'clangd' } -- Fallback
+            end
+          end)(),
+        },
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                autoSearchPaths = true,
+                diagnosticMode = 'openFilesOnly',
+                useLibraryCodeForTypes = true,
+                typeCheckingMode = 'basic',
+              },
+            },
+            positionEncoding = 'utf-8',
+          },
+        },
+        nixd = {},
+        ruff = {},
         -- Add other servers like "bashls", "yamlls", "gopls", "rust_analyzer" etc.
         -- Ensure the corresponding packages (e.g., pkgs.bash-language-server)
         -- are in your Home Manager home.packages list.
       }
 
       -- Iterate through the defined servers list and set them up with lspconfig
-      for _, server_name in ipairs(servers_to_setup) do
-        -- print('Attempting to set up LSP server: ' .. server_name) -- Debug print
-        require('lspconfig')[server_name].setup {
-          capabilities = capabilities, -- Pass augmented capabilities
-          -- Add any server-specific overrides here if needed, e.g.:
-          -- For lua_ls:
-          -- settings = { Lua = { diagnostics = { globals = {'vim'} } } },
+      for server_name, server_config_override in ipairs(servers) do
+        local server_ops = {
+          capabilities = capabilities,
         }
+        server_ops = vim.tbl_deep_extend('force', server_ops, server_config_override or {})
+        -- print('Attempting to set up LSP server: ' .. server_name) -- Debug print
+        require('lspconfig')[server_name].setup(server_ops)
       end
 
       -- Setup keymaps and diagnostics based on kickstart's original init.lua LSP section
