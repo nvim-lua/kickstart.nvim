@@ -17,6 +17,11 @@ return {
     config = function(_, opts)
       -- This config function runs AFTER the plugin and its dependencies are loaded.
       -- It sets up the LSP servers.
+      local nix_paths_status, nix_paths = pcall(require, 'custom.nix_paths')
+      if not nix_paths_status then
+        print('Error loading custom.nix_paths: ' .. (nix_paths or 'Unknown error'))
+        nix_paths = {} -- Provide an empty table to avoid further errors
+      end
 
       -- Get LSP capabilities, augmented by nvim-cmp
       local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
