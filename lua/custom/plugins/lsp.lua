@@ -26,7 +26,7 @@ return {
         nix_paths = {} -- Provide an empty table to avoid further errors
       end
 
-      print('DEBUG: nix_paths content: ' .. vim.inspect(nix_paths))
+      -- print('DEBUG: nix_paths content: ' .. vim.inspect(nix_paths))
 
       -- Get LSP capabilities, augmented by nvim-cmp
       local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -88,7 +88,7 @@ return {
         -- Ensure the corresponding packages (e.g., pkgs.bash-language-server)
         -- are in your Home Manager home.packages list.
       }
-      print('DEBUG: servers table content: ' .. vim.inspect(servers))
+      -- print('DEBUG: servers table content: ' .. vim.inspect(servers))
 
       -- print('DEBUG: next(servers) returned key: ' .. tostring(first_key) .. ', value: ' .. vim.inspect(first_value))
       -- if first_key == nil then
@@ -98,9 +98,9 @@ return {
       -- end
 
       -- Iterate through the defined servers list and set them up with lspconfig
-      print 'LSPConfig: Iterating servers...'
+      -- print 'LSPConfig: Iterating servers...'
       for server_name, server_config_override in pairs(servers) do
-        print('Attempting to set up LSP server: ' .. server_name) -- Debug print
+        -- print('Attempting to set up LSP server: ' .. server_name) -- Debug print
         local server_ops = {
           capabilities = capabilities,
         }
@@ -108,13 +108,13 @@ return {
         local setup_ok, setup_err = pcall(require('lspconfig')[server_name].setup, server_ops)
         if not setup_ok then
           vim.notify("Error setting up LSP server '" .. server_name .. "': " .. tostring(setup_err), vim.log.levels.ERROR)
-          print('LSPConfig ERROR for ' .. server_name .. ': ' .. tostring(setup_err)) -- DEBUG
+          -- print('LSPConfig ERROR for ' .. server_name .. ': ' .. tostring(setup_err)) -- DEBUG
         else
-          print('LSPConfig: Successfully called setup for: ' .. server_name) -- DEBUG
+          -- print('LSPConfig: Successfully called setup for: ' .. server_name) -- DEBUG
         end
         -- require('lspconfig')[server_name].setup(server_ops)
       end
-      print 'LSPConfig: Finished iterating servers.'
+      -- print 'LSPConfig: Finished iterating servers.'
 
       -- Setup keymaps and diagnostics based on kickstart's original init.lua LSP section
       vim.api.nvim_create_autocmd('LspAttach', {
