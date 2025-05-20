@@ -81,13 +81,21 @@ return {
       }
 
       -- Iterate through the defined servers list and set them up with lspconfig
+      print 'LSPConfig: Iterating servers...'
       for server_name, server_config_override in ipairs(servers) do
+        print('Attempting to set up LSP server: ' .. server_name) -- Debug print
         local server_ops = {
           capabilities = capabilities,
         }
         server_ops = vim.tbl_deep_extend('force', server_ops, server_config_override or {})
-        -- print('Attempting to set up LSP server: ' .. server_name) -- Debug print
-        require('lspconfig')[server_name].setup(server_ops)
+        local setup_ok, setup_err = pcall(require('lspconfig')[server_name].setup, server_ops)
+        if not setup_ok then
+          vim.notify("Error setting up LSP server '" .. server_name .. "': " .. tostring(setup_err), vim.log.levels.ERROR)
+          print('LSPConfig ERROR for ' .. server_name .. ': ' .. tostring(setup_err)) -- DEBUG
+        else
+          print('LSPConfig: Successfully called setup for: ' .. server_name) -- DEBUG
+        end
+        -- require('lspconfig')[server_name].setup(server_ops)
       end
 
       -- Setup keymaps and diagnostics based on kickstart's original init.lua LSP section
