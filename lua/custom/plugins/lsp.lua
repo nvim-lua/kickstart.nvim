@@ -25,6 +25,8 @@ return {
         nix_paths = {} -- Provide an empty table to avoid further errors
       end
 
+      print('DEBUG: nix_paths content: ' .. vim.inspect(nix_paths))
+
       -- Get LSP capabilities, augmented by nvim-cmp
       local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
