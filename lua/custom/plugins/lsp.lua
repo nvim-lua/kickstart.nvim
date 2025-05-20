@@ -50,10 +50,10 @@ return {
             server_opts.cmd = {
               'clangd',
               '--query-driver=' .. nix_paths.clangd_query_driver,
-              '-isysroot',
-              nix_paths.macos_sdk_path,
-              '-isystem',
-              nix_paths.libcxx_include_path,
+              -- '-isysroot',
+              -- nix_paths.macos_sdk_path,
+              -- '-isystem',
+              -- nix_paths.libcxx_include_path,
             }
           else
             print 'Warning: Nix paths for clangd not fully defined in custom.nix_paths.lua. Clangd might not work correctly.'
