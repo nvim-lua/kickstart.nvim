@@ -19,12 +19,12 @@ return {
       -- It sets up the LSP servers.
 
       -- Load Nix-provided paths from the generated Lua file
-      package.loaded['custom.nix_paths'] = nil
-      local nix_paths_status, nix_paths = pcall(require, 'custom.nix_paths')
-      if not nix_paths_status then
-        vim.notify('Error loading custom.nix_paths: ' .. (nix_paths or 'Unknown error'), vim.log.levels.ERROR)
-        nix_paths = {} -- Provide an empty table to avoid further errors
-      end
+      -- package.loaded['custom.nix_paths'] = nil
+      -- local nix_paths_status, nix_paths = pcall(require, 'custom.nix_paths')
+      -- if not nix_paths_status then
+      --   vim.notify('Error loading custom.nix_paths: ' .. (nix_paths or 'Unknown error'), vim.log.levels.ERROR)
+      --   nix_paths = {} -- Provide an empty table to avoid further errors
+      -- end
 
       -- print('DEBUG: nix_paths content: ' .. vim.inspect(nix_paths))
 
@@ -48,26 +48,26 @@ return {
           },
         },
         clangd = {
-          cmd = (function()
-            if nix_paths.clang_driver_path then
-              return {
-                'clangd',
-                '--query-driver=' .. nix_paths.clang_driver_path,
-                -- No other compiler flags like -isysroot or -isystem should be passed directly here.
-                -- Clangd gets those from compile_commands.json or by querying the driver.
-                '--compile-commands-dir='
-                  .. vim.fn.getcwd()
-                  .. '/build', -- Ensure clangd finds compile_commands.json
-              }
-            else
-              vim.notify(
-                'Warning: Nix path for clang_driver_path not defined in custom.nix_paths.lua. Clangd might use system clangd or have issues.',
-                vim.log.levels.WARN
-              )
-              return { 'clangd' } -- Fallback
-            end
-          end)(),
-          root_dir = require('lspconfig.util').root_pattern('compile_commands.json', '.git'), -- Helps find project root
+          -- cmd = (function()
+          --   if nix_paths.clang_driver_path then
+          --     return {
+          --       'clangd',
+          --       '--query-driver=' .. nix_paths.clang_driver_path,
+          --       -- No other compiler flags like -isysroot or -isystem should be passed directly here.
+          --       -- Clangd gets those from compile_commands.json or by querying the driver.
+          --       '--compile-commands-dir='
+          --         .. vim.fn.getcwd()
+          --         .. '/build', -- Ensure clangd finds compile_commands.json
+          --     }
+          --   else
+          --     vim.notify(
+          --       'Warning: Nix path for clang_driver_path not defined in custom.nix_paths.lua. Clangd might use system clangd or have issues.',
+          --       vim.log.levels.WARN
+          --     )
+          --     return { 'clangd' } -- Fallback
+          --   end
+          -- end)(),
+          root_dir = require('lspconfig.util').root_pattern('compile_commands.json', '.git', '.clangd'), -- Helps find project root
         },
         pyright = {
           settings = {
