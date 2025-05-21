@@ -208,6 +208,7 @@ require('lazy').setup({
           'omnisharp',
           'prettierd',
           'tinymist',
+          'prettypst',
         })
 
         -- Skip automatic setup for servers
