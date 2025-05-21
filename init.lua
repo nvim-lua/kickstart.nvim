@@ -180,11 +180,10 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- set tab to 2 spacebar
--- vim.cmd 'set expandtab'
--- vim.cmd 'set tabstop=2'
--- vim.cmd 'set softtabstop=2'
--- vim.cmd 'set shiftwidth=2'
-
+vim.cmd 'set expandtab'
+vim.cmd 'set tabstop=2'
+vim.cmd 'set softtabstop=2'
+vim.cmd 'set shiftwidth=2'
 -- change alt + m to : for easier command access
 vim.keymap.set({ 'n', 'v' }, 'n', 'h', { noremap = true })
 vim.keymap.set({ 'n', 'v' }, 'e', 'j', { noremap = true })
