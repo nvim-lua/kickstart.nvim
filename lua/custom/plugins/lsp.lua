@@ -18,16 +18,6 @@ return {
       -- This config function runs AFTER the plugin and its dependencies are loaded.
       -- It sets up the LSP servers.
 
-      -- Load Nix-provided paths from the generated Lua file
-      -- package.loaded['custom.nix_paths'] = nil
-      -- local nix_paths_status, nix_paths = pcall(require, 'custom.nix_paths')
-      -- if not nix_paths_status then
-      --   vim.notify('Error loading custom.nix_paths: ' .. (nix_paths or 'Unknown error'), vim.log.levels.ERROR)
-      --   nix_paths = {} -- Provide an empty table to avoid further errors
-      -- end
-
-      -- print('DEBUG: nix_paths content: ' .. vim.inspect(nix_paths))
-
       -- Get LSP capabilities, augmented by nvim-cmp
       local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
@@ -48,25 +38,6 @@ return {
           },
         },
         clangd = {
-          -- cmd = (function()
-          --   if nix_paths.clang_driver_path then
-          --     return {
-          --       'clangd',
-          --       '--query-driver=' .. nix_paths.clang_driver_path,
-          --       -- No other compiler flags like -isysroot or -isystem should be passed directly here.
-          --       -- Clangd gets those from compile_commands.json or by querying the driver.
-          --       '--compile-commands-dir='
-          --         .. vim.fn.getcwd()
-          --         .. '/build', -- Ensure clangd finds compile_commands.json
-          --     }
-          --   else
-          --     vim.notify(
-          --       'Warning: Nix path for clang_driver_path not defined in custom.nix_paths.lua. Clangd might use system clangd or have issues.',
-          --       vim.log.levels.WARN
-          --     )
-          --     return { 'clangd' } -- Fallback
-          --   end
-          -- end)(),
           root_dir = require('lspconfig.util').root_pattern('compile_commands.json', '.git', '.clangd'), -- Helps find project root
         },
         pyright = {
@@ -89,19 +60,9 @@ return {
         -- Ensure the corresponding packages (e.g., pkgs.bash-language-server)
         -- are in your Home Manager home.packages list.
       }
-      -- print('DEBUG: servers table content: ' .. vim.inspect(servers))
-
-      -- print('DEBUG: next(servers) returned key: ' .. tostring(first_key) .. ', value: ' .. vim.inspect(first_value))
-      -- if first_key == nil then
-      --   print "DEBUG: The 'servers' table is effectively empty for iteration with pairs()."
-      -- else
-      --   print "DEBUG: The 'servers' table is NOT empty for iteration."
-      -- end
 
       -- Iterate through the defined servers list and set them up with lspconfig
-      -- print 'LSPConfig: Iterating servers...'
       for server_name, server_config_override in pairs(servers) do
-        -- print('Attempting to set up LSP server: ' .. server_name) -- Debug print
         local server_ops = {
           capabilities = capabilities,
         }
@@ -109,13 +70,9 @@ return {
         local setup_ok, setup_err = pcall(require('lspconfig')[server_name].setup, server_ops)
         if not setup_ok then
           vim.notify("Error setting up LSP server '" .. server_name .. "': " .. tostring(setup_err), vim.log.levels.ERROR)
-          -- print('LSPConfig ERROR for ' .. server_name .. ': ' .. tostring(setup_err)) -- DEBUG
         else
-          -- print('LSPConfig: Successfully called setup for: ' .. server_name) -- DEBUG
         end
-        -- require('lspconfig')[server_name].setup(server_ops)
       end
-      -- print 'LSPConfig: Finished iterating servers.'
 
       -- Setup keymaps and diagnostics based on kickstart's original init.lua LSP section
       vim.api.nvim_create_autocmd('LspAttach', {
