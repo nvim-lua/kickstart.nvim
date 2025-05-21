@@ -207,6 +207,7 @@ require('lazy').setup({
           'clang-format',
           'omnisharp',
           'prettierd',
+          'tinymist',
         })
 
         -- Skip automatic setup for servers
