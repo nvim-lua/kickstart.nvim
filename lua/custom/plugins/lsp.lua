@@ -84,6 +84,7 @@ return {
         },
         nixd = {},
         ruff = {},
+        texlab = {},
         -- Add other servers like "bashls", "yamlls", "gopls", "rust_analyzer" etc.
         -- Ensure the corresponding packages (e.g., pkgs.bash-language-server)
         -- are in your Home Manager home.packages list.
