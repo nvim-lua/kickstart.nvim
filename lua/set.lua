@@ -11,7 +11,7 @@ vim.opt.relativenumber = true
 
 vim.opt.termguicolors = true
 
-vim.opt.colorcolumn = '100'
+vim.opt.colorcolumn = '80'
 
 vim.g.have_nerd_font = false
 
