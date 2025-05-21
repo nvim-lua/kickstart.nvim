@@ -157,7 +157,7 @@ vim.opt.scrolloff = 10
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 
--- vim.opt.background = 'light'
+vim.opt.background = 'dark'
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -187,6 +187,8 @@ vim.keymap.set('n', '<leader>cn', ':cnext<CR>', { desc = 'next in quickfix list'
 vim.keymap.set('n', '<leader>cp', ':cprev<CR>', { desc = 'previous in quickfix list' })
 vim.keymap.set('n', '<leader>cdo', ':cdo ', { desc = 'do quick action to all' })
 vim.keymap.set('n', '<leader>gp', ':grep ', { desc = 'vim grep' })
+vim.keymap.set('v', '<leader>sf', vim.lsp.buf.format, { desc = 'Format selected' })
+vim.keymap.set('n', '<leader>uf', ':UndotreeToggle<CR>', { desc = 'Toggle undo tree' })
 
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
@@ -707,7 +709,7 @@ require('lazy').setup({
         else
           lsp_format_opt = 'fallback'
         end
-        local disable_global = { javascript = true, javascriptreact = true, typescript = true, typescriptreact = true }
+        local disable_global = { javascript = true, javascriptreact = true, typescript = true, typescriptreact = true, scss = true }
         if disable_global[vim.bo[bufnr].filetype] then
           return
         end
@@ -849,10 +851,10 @@ require('lazy').setup({
   --     -- Load the colorscheme here.
   --     -- Like many other themes, this one has different styles, and you could load
   --     -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-  --     vim.cmd.colorscheme 'tokyonight'
-  --
-  --     -- You can configure highlights by doing something like:
-  --     vim.cmd.hi 'Comment gui=none'
+  --     -- vim.cmd.colorscheme 'tokyonight'
+  --     --
+  --     -- -- You can configure highlights by doing something like:
+  --     -- vim.cmd.hi 'Comment gui=none'
   --   end,
   -- },
 
@@ -934,10 +936,10 @@ require('lazy').setup({
   {
     'deparr/tairiki.nvim',
     lazy = false,
-    -- priority = 1001,
-    -- init = function()
-    --   vim.cmd.colorscheme 'tairiki'
-    -- end,
+    priority = 1001,
+    init = function()
+      -- vim.cmd.colorscheme 'tairiki'
+    end,
   },
   {
     'nvim-tree/nvim-tree.lua',
@@ -972,14 +974,13 @@ require('lazy').setup({
     },
   },
   {
-    'oxfist/night-owl.nvim',
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    -- 'oxfist/night-owl.nvim',
+    -- lazy = false, -- make sure we load this during startup if it is your main colorscheme
     -- priority = 1000, -- make sure to load this before all the other start plugins
-    config = function()
-      -- load the colorscheme here
-      vim.o.background = 'dark'
-      vim.cmd.colorscheme 'night-owl'
-    end,
+    -- config = function()
+    --   vim.o.background = 'dark'
+    --   vim.cmd.colorscheme 'night-owl'
+    -- end,
   },
   {
     'xiyaowong/transparent.nvim',
@@ -1013,7 +1014,9 @@ require('lazy').setup({
           'StatusLineNC',
           'EndOfBuffer',
         },
-        extra_groups = {}, -- table: additional groups that should be cleared
+        extra_groups = {
+          'NvimTreeNormal',
+        }, -- table: additional groups that should be cleared
         exclude_groups = {}, -- table: groups you don't want to clear
       }
     end,
@@ -1038,12 +1041,57 @@ require('lazy').setup({
   },
   {
     'Mofiqul/vscode.nvim',
-    lazy = false,
-    -- priority = 1001,
+    -- lazy = false,
+    -- -- priority = 1001,
     -- init = function()
-    --   vim.cmd.colorscheme 'vscode'
+    --   -- vim.cmd.colorscheme 'vscode'
     -- end,
   },
+  {
+    -- 'rose-pine/neovim',
+    -- lazy = false,
+    -- priority = 1002,
+    -- config = function()
+    --   vim.cmd.colorscheme 'rose-pine-dawn'
+    -- end,
+  },
+  -- {
+  --   'maxmx03/solarized.nvim',
+  --   lazy = false,
+  --   priority = 1000,
+  --   ---@type solarized.config
+  --   opts = {},
+  --   config = function(_, opts)
+  --     vim.o.termguicolors = true
+  --     vim.o.background = 'light'
+  --     require('solarized').setup(opts)
+  --     vim.cmd.colorscheme 'solarized'
+  --   end,
+  -- },
+  {
+    'maxmx03/fluoromachine.nvim',
+    -- lazy = false,
+    -- priority = 1000,
+    -- config = function()
+    --   local fm = require 'fluoromachine'
+    --
+    --   fm.setup {
+    --     glow = false,
+    --     theme = 'delta',
+    --     transparent = true,
+    --   }
+    --
+    --   vim.cmd.colorscheme 'fluoromachine'
+    -- end,
+  },
+  -- {
+  --   'AlexvZyl/nordic.nvim',
+  --   lazy = false,
+  --   priority = 1002,
+  --   config = function()
+  --     vim.cmd 'colorscheme rose-pine'
+  --   end,
+  -- },
   -- {
   -- 'Yazeed1s/minimal.nvim',
   -- lazy = false,
@@ -1052,6 +1100,35 @@ require('lazy').setup({
   --   vim.cmd.colorscheme 'minimal'
   -- end,
   -- },
+  {
+    'EdenEast/nightfox.nvim',
+    lazy = false,
+    -- priority = 1002,
+    -- init = function()
+    --   vim.cmd.colorscheme 'nightfox'
+    -- end,
+  },
+  {
+    'ayu-theme/ayu-vim',
+    -- lazy = false,
+    -- priority = 1003,
+    -- init = function()
+    --   vim.cmd.colorscheme 'ayu'
+    -- end,
+  },
+
+  {
+    'Mofiqul/dracula.nvim',
+    lazy = false,
+    priority = 1003,
+    init = function()
+      vim.cmd.colorscheme 'dracula-soft'
+    end,
+  },
+  {
+    'mbbill/undotree',
+    lazy = false,
+  },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
@@ -1072,6 +1149,14 @@ require('lazy').setup({
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   -- { import = 'custom.plugins' },
+  -- {
+  --   'shaunsingh/moonlight.nvim',
+  --   lazy = false,
+  --   priority = 1003,
+  --   init = function()
+  --     vim.cmd.colorscheme 'moonlight'
+  --   end,
+  -- },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
