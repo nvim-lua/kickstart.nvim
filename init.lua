@@ -621,6 +621,11 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         gopls = {},
+        dockerls = {},
+        yamlls = {},
+        bashls = {},
+        -- gh_actions_ls = {},
+        marksman = {},
         -- pyright = {},
         rust_analyzer = {},
         ruff = {}, -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -660,10 +665,9 @@ require('lazy').setup({
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
+        -- 'stylua', -- Used to format Lua code
         'ruff',
         'rust_analyzer',
-        -- 'go',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -678,6 +682,8 @@ require('lazy').setup({
             require('lspconfig')[server_name].setup(server)
           end,
         },
+        automatic_installation = true,
+        ensure_installed = ensure_installed,
       }
     end,
   },
@@ -969,7 +975,7 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
