@@ -1,7 +1,5 @@
 return {
   "folke/snacks.nvim",
-  priority = 9999,
-  lazy = false,
   opts = {
     notifier = { enabled = true },
     dashboard = {
@@ -42,3 +40,4 @@ return {
     },
   },
 }
+

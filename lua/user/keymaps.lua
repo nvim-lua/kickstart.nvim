@@ -57,7 +57,6 @@ keymap('v', '<A-k>', ':m .-2<CR>==', opts)
 -- paste over currently selected text without yanking it
 keymap('v', 'p', '"_dp', opts)
 keymap('v', 'P', '"_dP', opts)
-
 -- Visual Block --
 -- Move text up and down
 keymap('x', 'J', ":move '>+1<CR>gv-gv", opts)
@@ -131,3 +130,6 @@ vim.keymap.set("n", "<C-a>", "ggVG", opts)
 
 vim.keymap.set("n", "YY", "va{Vy", opts)
 vim.keymap.set("n", "<leader>r", ":w<CR>:!python3 %<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader><leader>x", ":source %<CR>", opts)
+vim.keymap.set("n", "<leader>x", ":.lua<CR>", opts)
+vim.keymap.set("v", "<leader>x", ":lua<CR>", opts)
