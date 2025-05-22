@@ -8,7 +8,6 @@ return {
     -- main = 'nvim-treesitter.configs', -- Keep if needed from kickstart
     opts = { -- Use opts to merge/override defaults
       ensure_installed = {
-        -- List ALL parsers you want installed based on your previous config
         'bash',
         'c',
         'cmake',
@@ -20,16 +19,14 @@ return {
         'make',
         'markdown',
         'markdown_inline',
-        'nix', -- Added based on previous diff
-        'python', -- Added based on previous diff
+        'nix',
+        'python',
         'query',
         'vim',
         'vimdoc',
-        'yaml', -- Added based on previous diff
-        -- Add any others you commonly use
+        'yaml',
       },
-      -- Autoinstall languages that are not installed
-      auto_install = true, -- Keep kickstart's default or set as desired
+      auto_install = true,
 
       -- Keep other kickstart defaults like highlight/indent settings unless you want to change them
       highlight = {

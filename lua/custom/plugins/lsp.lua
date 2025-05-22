@@ -9,8 +9,6 @@ return {
     'neovim/nvim-lspconfig',
     event = { 'BufReadPre', 'BufNewFile' }, -- Load LSP config early
     dependencies = {
-      -- Dependencies for nvim-lspconfig itself, if any.
-      -- Mason and mason-lspconfig are removed as Nix handles LSP installation.
       { 'j-hui/fidget.nvim', opts = {} }, -- Useful status updates for LSP
       'hrsh7th/cmp-nvim-lsp', -- LSP completion source for nvim-cmp
     },
@@ -38,7 +36,8 @@ return {
           },
         },
         clangd = {
-          root_dir = require('lspconfig.util').root_pattern('compile_commands.json', '.git', '.clangd'), -- Helps find project root
+          cmd = { 'clangd', '--compile-commands-dir=build' },
+          root_dir = require('lspconfig.util').root_pattern('CMakeLists.tst', '.git'),
         },
         pyright = {
           settings = {
@@ -56,9 +55,11 @@ return {
         nixd = {},
         ruff = {},
         texlab = {},
-        -- Add other servers like "bashls", "yamlls", "gopls", "rust_analyzer" etc.
-        -- Ensure the corresponding packages (e.g., pkgs.bash-language-server)
-        -- are in your Home Manager home.packages list.
+        cmake = {
+          cmd = { 'cmake-language-server', '--stdio' },
+          filetypes = { 'cmake' },
+          root_dir = require('lspconfig.util').root_pattern('CMakeLists.tst', '.git'),
+        },
       }
 
       -- Iterate through the defined servers list and set them up with lspconfig
