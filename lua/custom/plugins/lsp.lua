@@ -36,8 +36,9 @@ return {
           },
         },
         clangd = {
-          cmd = { 'clangd', '--compile-commands-dir=build' },
-          root_dir = require('lspconfig.util').root_pattern('CMakeLists.tst', '.git'),
+          cmd = { 'clangd' },
+          filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
+          root_dir = require('lspconfig.util').root_pattern('CMakeLists.txt', '.git'),
         },
         pyright = {
           settings = {
@@ -56,9 +57,9 @@ return {
         ruff = {},
         texlab = {},
         cmake = {
-          cmd = { 'cmake-language-server', '--stdio' },
+          cmd = { 'cmake-language-server' },
           filetypes = { 'cmake' },
-          root_dir = require('lspconfig.util').root_pattern('CMakeLists.tst', '.git'),
+          root_dir = require('lspconfig.util').root_pattern('CMakeLists.txt', '.git'),
         },
       }
 
