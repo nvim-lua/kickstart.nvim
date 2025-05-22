@@ -93,12 +93,22 @@ vim.keymap.set('n', 'c#', '*``cgN')
 
 vim.keymap.set('n', 'L', '$')
 vim.keymap.set('n', 'H', '^')
+vim.keymap.set('n', 'J', '}')
+vim.keymap.set('n', 'K', '{')
+
+vim.keymap.set('n', '<C-a>', 'ggVG"+y')
+vim.keymap.set('x', '<', '<gv')
+vim.keymap.set('x', '>', '>gv')
+
+vim.keymap.set('x', 'p', 'P')
 
 vim.api.nvim_set_keymap('n', '<C-t>', ':lua InsertTodo()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('i', '<C-t>', '// todo: ', { noremap = true, silent = true })
 
 vim.api.nvim_set_keymap('n', '<C-i>', ':lua InsertId()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('i', '<C-i>', '[Id()]', { noremap = true, silent = true })
+
+vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
 
 --  See `:help wincmd` for a list of all window commands
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
