@@ -284,6 +284,26 @@ require('lazy').setup({
     },
   },
 
+  { -- shows a floating buffer with the most useful vim keymaps
+    'Hashino/tutorial.nvim',
+    opts = {
+      enabled = true, -- whether to show Tutorial on startup
+
+      -- window configs of the floating Tutorial buffer
+      -- see :h nvim_open_win() for available options
+      float_win_config = {
+        relative = 'editor',
+
+        anchor = 'SW',
+
+        style = 'minimal',
+        border = 'rounded', -- see :h winborder for available options
+
+        noautocmd = true,
+      },
+    },
+  },
+
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
