@@ -23,9 +23,9 @@ return {
   { "rafamadriz/friendly-snippets" }, -- a bunch of snippets to use
 
 -- LSP
-  { "neovim/nvim-lspconfig" }, -- enable LSP
-  { "williamboman/mason.nvim" }, -- simple to use language server installer
-  { "williamboman/mason-lspconfig.nvim" }, -- simple to use language server installer
+  -- { "neovim/nvim-lspconfig" }, -- enable LSP
+  -- { "williamboman/mason.nvim" }, -- simple to use language server installer
+  -- { "williamboman/mason-lspconfig.nvim" }, -- simple to use language server installer
 
 -- Telescope
   { "nvim-telescope/telescope-media-files.nvim" },

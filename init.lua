@@ -16,11 +16,10 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require('lazy').setup('plugins', {
-  change_detection = {
-    notify = false,
-  },
-})
+require('lazy').setup {
+  { import = 'plugins' },
+  { import = 'plugins.lsp' },
+}
 
 require 'user.options'
 require 'user.keymaps'
@@ -30,3 +29,6 @@ require 'user.autocmds'
 -- require 'user.lsp'
 -- require 'user.treesitter'
 -- require 'user.autopairs'
+
+vim.lsp.enable('pyright')
+vim.lsp.enable('lua_ls')

@@ -13,17 +13,14 @@ return {
     },
     opts = function()
       local api = require("nvim-tree.api")
-      
       return {
         view = {
           width = 35,
-          side = "right",
+          side = "left",
           preserve_window_proportions = true,
-        },
-        hijack_cursor = true,
-        view = {
           adaptive_size = true,
         },
+        hijack_cursor = true,
         renderer = {
           highlight_git = true,
           highlight_opened_files = "name",
