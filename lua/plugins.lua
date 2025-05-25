@@ -1,6 +1,6 @@
 return {
-  {'folke/tokyonight.nvim'},
-  { "nvim-lua/popup.nvim" }, -- An implementation of the Popup API from vim in Neovim 
+  { 'folke/tokyonight.nvim' },
+  { "nvim-lua/popup.nvim" },   -- An implementation of the Popup API from vim in Neovim
   { "nvim-lua/plenary.nvim" }, -- Useful lua functions used ny lots of plugins
   { "windwp/nvim-autopairs" }, -- Autopairs
   -- "numToStr/Comment.nvim" -- Easily comment stuff
@@ -9,25 +9,12 @@ return {
   -- "lunarvim/colorschemes" -- A bunch of colorschemes you can try out
   { "lunarvim/darkplus.nvim" },
   { "moll/vim-bbye" },
--- cmp plugins
-  -- { "hrsh7th/nvim-cmp" }, -- The completion plugin
-  -- { "hrsh7th/cmp-buffer" }, -- buffer completions
-  -- { "hrsh7th/cmp-path" }, -- path completions
-  -- { "hrsh7th/cmp-nvim-lua" }, 
-  -- { "hrsh7th/cmp-cmdline" }, -- cmdline completions
-  -- { "saadparwaiz1/cmp_luasnip" }, -- snippet completions
-  -- { "hrsh7th/cmp-nvim-lsp" },
 
--- snippets
-  { "L3MON4D3/LuaSnip" }, --snippet engine
+  -- snippets
+  { "L3MON4D3/LuaSnip" },             --snippet engine
   { "rafamadriz/friendly-snippets" }, -- a bunch of snippets to use
 
--- LSP
-  -- { "neovim/nvim-lspconfig" }, -- enable LSP
-  -- { "williamboman/mason.nvim" }, -- simple to use language server installer
-  -- { "williamboman/mason-lspconfig.nvim" }, -- simple to use language server installer
-
--- Telescope
+  -- Telescope
   { "nvim-telescope/telescope-media-files.nvim" },
 
   -- Treesitter
@@ -37,4 +24,24 @@ return {
   },
   --  "p00f/nvim-ts-rainbow"
   --  "nvim-treesitter/playground"
+  { "neovim/nvim-lspconfig" },
+  { "williamboman/mason.nvim" },
+  { "williamboman/mason-lspconfig.nvim" },
+  {
+      "hrsh7th/nvim-cmp",
+      dependencies = {
+          'hrsh7th/cmp-nvim-lsp',
+          'hrsh7th/cmp-buffer',
+          'hrsh7th/cmp-path',
+          'hrsh7th/cmp-cmdline',
+          'L3MON4D3/LuaSnip',
+          'saadparwaiz1/cmp_luasnip',
+          'hrsh7th/cmp-vsnip',
+          'hrsh7th/vim-vsnip',
+          'rafamadriz/friendly-snippets',
+      }
+  },
+  { 'mfussenegger/nvim-lint', },
+  { 'mfussenegger/nvim-dap' },
+  { 'mhartington/formatter.nvim' }
 }

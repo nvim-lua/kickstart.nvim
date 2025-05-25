@@ -18,7 +18,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup {
   { import = 'plugins' },
-  { import = 'plugins.lsp' },
+  -- { import = 'plugins.lsp' },
 }
 
 require 'user.options'
@@ -30,5 +30,5 @@ require 'user.autocmds'
 -- require 'user.treesitter'
 -- require 'user.autopairs'
 
-vim.lsp.enable('pyright')
-vim.lsp.enable('lua_ls')
+-- vim.lsp.enable('pyright')
+-- vim.lsp.enable('lua_ls')
