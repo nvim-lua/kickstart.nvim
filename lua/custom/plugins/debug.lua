@@ -62,6 +62,9 @@ return {
         type = 'executable',
         command = 'lldb-dap',
         name = 'lldb-dap (Nix)',
+        env = {
+          LLDB_DEBUGSERVER_PATH = '/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/Resources/debugserver',
+        },
       }
       dap.configurations.cpp = {
         {
