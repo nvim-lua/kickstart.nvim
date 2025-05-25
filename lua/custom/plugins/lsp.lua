@@ -40,7 +40,7 @@ return {
         clangd = {
           cmd = {
             'clangd',
-            '--compile-commands-dir=build',
+            '--compile-commands-dir=build/debug',
             '--query-driver=' .. vim.fn.trim(vim.fn.system 'which clang++'),
             '--resource-dir=' .. vim.fn.trim(vim.fn.system 'clang++ --print-resource-dir'),
           },
