@@ -4,11 +4,12 @@
 vim.g.have_nerd_font = true
 
 -- Indentation settings
-vim.o.expandtab = true
 vim.o.smartindent = true
 vim.o.autoindent = true
-vim.o.tabstop = 4
-vim.o.shiftwidth = 4
+vim.o.expandtab = true
+vim.o.tabstop = 2
+vim.o.shiftwidth = 2
+vim.o.softtabstop = 2
 
 -- Add any other custom vim.o or vim.g settings from your old config here
 -- For example, if you changed defaults for:
