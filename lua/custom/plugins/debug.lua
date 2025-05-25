@@ -69,12 +69,34 @@ return {
           type = 'lldb',
           request = 'launch',
           program = function()
-            local debug_bin = vim.fn.getcwd() .. '/build/debug/cpp-hello'
-            if vim.fn.filereadable(debug_bin) == 1 then
-              return debug_bin
-            else
-              -- return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+            local pickers = require 'telescope.pickers'
+            local finders = require 'telescope.finders'
+            local conf = require('telescope.config').values
+            local entry_maker = function(entry)
+              return {
+                value = entry,
+                display = entry,
+                ordinal = entry,
+              }
             end
+
+            local co = coroutine.running()
+            pickers
+              .new({}, {
+                prompt_title = 'Select binary',
+                finder = finders.new_oneshot_job { 'fd', '--type=f', '', 'build/debug', 'build/release' },
+                sorter = conf.generic_sorter {},
+                attach_mappings = function(_, map)
+                  map('i', '<CR>', function(bufnr)
+                    local entry = require('telescope.actions.state').get_selected_entry()
+                    require('telescope.actions').close(bufnr)
+                    coroutine.resume(co, entry.value)
+                  end)
+                  return true
+                end,
+              })
+              :find()
+            return coroutine.yield()
           end,
           cwd = '${workspaceFolder}',
           stopOnEntry = false,
