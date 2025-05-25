@@ -55,7 +55,6 @@ return {
     },
     config = function()
       local dap = require 'dap'
-      local pick_executable = require('custom.utils').pick_executable
 
       -- Configure the LLDB DAP adapter for C/C++
       -- Assumes 'lldb-dap' executable is in PATH (from pkgs.llvmPackages_XX.lldb)
@@ -69,12 +68,14 @@ return {
           name = 'Launch C/C++ (lldb-dap)',
           type = 'lldb',
           request = 'launch',
-          program = function()
-            return coroutine.create(function()
-              local executable = pick_executable(vim.fn.getcwd() .. '/build')
-              coroutine.yield(executable)
-            end)
-          end,
+          program = coroutine.wrap(function()
+            local exe = require('custom.utils').pick_executable(vim.fn.getcwd() .. '/build')
+            if not exe then
+              vim.notify('Debug session cancelled: executable not selected', vim.log.levels.INFO)
+              return nil
+            end
+            return exe
+          end),
           cwd = '${workspaceFolder}',
           stopOnEntry = false,
           args = {},

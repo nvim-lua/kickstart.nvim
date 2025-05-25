@@ -27,6 +27,9 @@ local function pick_executable(start_dir)
     return
   end
 
+  local actions = require 'telescope.actions'
+  local action_state = require 'telescope.actions.state'
+
   require('telescope.pickers')
     .new({}, {
       prompt_title = 'Select Executable',
@@ -36,9 +39,17 @@ local function pick_executable(start_dir)
       sorter = require('telescope.config').values.generic_sorter {},
       attach_mappings = function(_, map)
         map('i', '<CR>', function(prompt_bufnr)
-          local entry = require('telescope.actions.state').get_selected_entry()
-          require('telescope.actions').close(prompt_bufnr)
+          local entry = action_state.get_selected_entry()
+          actions.close(prompt_bufnr)
           coroutine.resume(co, entry.value)
+        end)
+        map('i', '<Esc>', function(prompt_bufnr)
+          actions.close(prompt_bufnr)
+          coroutine.resume(co, nil)
+        end)
+        map('n', 'q', function(prompt_bufnr)
+          actions.close(prompt_bufnr)
+          coroutine.resume(co, nil)
         end)
         return true
       end,
