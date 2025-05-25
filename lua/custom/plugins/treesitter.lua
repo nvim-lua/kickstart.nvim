@@ -6,6 +6,8 @@ return {
     'nvim-treesitter/nvim-treesitter',
     -- build = ':TSUpdate', -- Keep build command if needed from kickstart
     -- main = 'nvim-treesitter.configs', -- Keep if needed from kickstart
+    event = { 'BufReadPost', 'BufNewFile' },
+    build = ':TSUpdate',
     opts = { -- Use opts to merge/override defaults
       ensure_installed = {
         'bash',
@@ -38,6 +40,9 @@ return {
         -- disable = { 'ruby' }, -- Keep if needed
       },
     },
+    config = function(_, opts)
+      require('nvim-treesitter.configs').setup(opts)
+    end,
     -- If kickstart used a config function for treesitter and you need to replicate
     -- parts of it that aren't handled by opts, add it here.
     -- config = function(_, opts)

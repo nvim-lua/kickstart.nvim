@@ -11,4 +11,8 @@ return {
   { import = 'custom.plugins.telescope' },
   { import = 'custom.plugins.theme' },
   { import = 'custom.plugins.treesitter' },
+  {
+    'nvim-tree/nvim-web-devicons',
+    lazy = true,
+  },
 }
