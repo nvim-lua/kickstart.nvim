@@ -42,7 +42,7 @@ return {
             'clangd',
             '--compile-commands-dir=build',
             '--query-driver=' .. vim.fn.trim(vim.fn.system 'which clang++'),
-            '--resource-dir' .. vim.fn.trim(vim.fn.system 'clang++ --print-resource-dir'),
+            '--resource-dir=' .. vim.fn.trim(vim.fn.system 'clang++ --print-resource-dir'),
           },
           filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
           root_dir = require('lspconfig.util').root_pattern('CMakeLists.txt', '.git'),
