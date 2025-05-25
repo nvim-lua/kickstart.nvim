@@ -30,6 +30,36 @@ return {
       local luasnip = require 'luasnip'
       luasnip.config.setup {} -- Setup luasnip first
 
+      local function toggle_path_completion()
+        local config = cmp.get_config()
+        local snippet = config.snippet
+        local completion = config.completion
+        local mapping = config.mapping
+
+        local path_enabled = vim.tbl_any(function(src)
+          return src.name == 'path'
+        end, config.sources)
+
+        local new_sources = {
+          { name = 'lazydev', group_index = 0 },
+          { name = 'nvim_lsp' },
+          { name = 'luasnip' },
+        }
+
+        if not path_enabled then
+          table.insert(new_sources, { name = 'path' })
+        end
+
+        cmp.setup {
+          snippet = snippet,
+          completion = completion,
+          mapping = mapping,
+          sources = new_sources,
+        }
+
+        print('Path completion ' .. (path_enabled and 'disabled' or 'enabled'))
+      end
+
       -- Configure nvim-cmp
       cmp.setup {
         snippet = {
@@ -76,10 +106,7 @@ return {
         -- Add other cmp setup options from your old config if any
       }
 
-      -- *** FIX: Require and setup your custom toggle module AFTER cmp is setup ***
-      -- Ensure the 'custom.toggle-path-cmp' module exists in lua/custom/
-      local completion_toggle = require 'custom.toggle-path-cmp'
-      vim.keymap.set('n', '<leader>tp', completion_toggle.toggle_path_completion, { desc = '[T]oggle [p]ath autocompletion' })
+      vim.keymap.set('n', '<leader>tp', toggle_path_completion, { desc = '[T]oggle [p]ath completion' })
     end, -- End of config function
   },
 }
