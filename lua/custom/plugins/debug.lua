@@ -71,7 +71,7 @@ return {
           request = 'launch',
           program = function()
             return coroutine.create(function()
-              local executable = pick_executable(ivim.fn.getcwd() .. '/build')
+              local executable = pick_executable(vim.fn.getcwd() .. '/build')
               coroutine.yield(executable)
             end)
           end,
