@@ -32,6 +32,7 @@ local function collect_executables(start_dir)
 end
 
 local function pick_executable(start_dir)
+  vim.notify('pick_executable() was triggered with start_dir=' .. start_dir, vim.log.levels.INFO)
   return async.wrap(function(_start_dir, on_choice)
     local executables = collect_executables(_start_dir)
     if #executables == 0 then
