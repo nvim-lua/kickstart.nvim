@@ -10,12 +10,11 @@ local function collect_executables(start_dir)
   local fd_result = vim
     .system({
       'fd',
-      '--type',
-      'x',
+      '.',
+      start_dir,
       '--exec',
       'file',
       '{}',
-      start_dir,
     }, { text = true })
     :wait()
 
