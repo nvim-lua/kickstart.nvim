@@ -71,7 +71,7 @@ return {
           program = function()
             local utils = require 'custom.utils'
             local cwd = vim.fn.getcwd()
-            local co = utils.pick_executable(cwd .. '/build')
+            local co = utils.pick_executable 'build'
             local ok, result = coroutine.resume(co)
             return ok and result or nil
           end,
