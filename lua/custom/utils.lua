@@ -30,8 +30,6 @@ end
 
 local function pick_executable(start_dir)
   return async.wrap(function(_start_dir, on_choice)
-    print('pick_executable() was triggered with start_dir=' .. _start_dir)
-
     local executables = collect_executables(_start_dir)
 
     if #executables == 0 then

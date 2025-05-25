@@ -57,6 +57,7 @@ return {
     },
     config = function()
       local dap = require 'dap'
+      local dapui = require 'dapui'
       local async = require 'plenary.async'
 
       -- Configure the LLDB DAP adapter for C/C++
@@ -73,7 +74,7 @@ return {
           type = 'lldb',
           request = 'launch',
           program = function()
-            return require('custom.utils').pick_executable(vim.fn.getcwd() .. '/build/debug')
+            return require('custom.utils').pick_executable(vim.fn.getcwd() .. '/build')
           end,
           cwd = '${workspaceFolder}',
           stopOnEntry = false,
@@ -115,26 +116,39 @@ return {
       -- If you added 'leoluz/nvim-dap-go' as a dependency:
       -- require('dap-go').setup() -- Call its setup function
 
-      -- Your preferred DAP keybindings
-      vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint, { desc = 'DAP: Toggle [B]reakpoint' })
-      vim.keymap.set('n', '<leader>dc', dap.continue, { desc = 'DAP: [C]ontinue' })
-      vim.keymap.set('n', '<leader>dj', dap.step_into, { desc = 'DAP: Step [I]nto (j)' })
-      vim.keymap.set('n', '<leader>dk', dap.step_over, { desc = 'DAP: Step [O]ver (k)' })
-      vim.keymap.set('n', '<leader>do', dap.step_out, { desc = 'DAP: Step [O]ut' })
-      vim.keymap.set('n', '<leader>dr', dap.repl.open, { desc = 'DAP: Open [R]EPL' })
-      vim.keymap.set('n', '<leader>dl', dap.run_last, { desc = 'DAP: Run [L]ast' })
-      vim.keymap.set('n', '<leader>du', function()
-        require('dapui').toggle()
-      end, { desc = 'DAP: Toggle [U]I' })
-      vim.keymap.set('n', '<leader>dt', dap.terminate, { desc = 'DAP: [T]erminate' })
-
-      vim.keymap.set('n', '<F5>', function()
+      -- Launch and Control
+      vim.keymap.set('n', '<leader>dc', function()
         async.run(function()
           dap.continue()
+          if not dapui.windows or vim.tbl_isempty(dapui.windows) then
+            dapui.open()
+          end
         end)
-      end, { desc = 'DAP Continue (async-safe)' })
-      -- Kickstart's <F7> to toggle UI (can be added if you like it)
-      -- vim.keymap.set('n', '<F7>', function() require('dapui').toggle() end, { desc = 'Debug: Toggle UI' })
+      end, { desc = 'DAP: [C]ontinue show UI (async-safe)' })
+      vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint, { desc = 'DAP: Toggle [B]reakpoint' })
+      vim.keymap.set('n', '<leader>dl', dap.run_last, { desc = 'DAP: Run [L]ast' })
+
+      -- DAP: Stepping
+      vim.keymap.set('n', '<leader>di', dap.step_into, { desc = 'DAP: Step [I]nto' })
+      vim.keymap.set('n', '<leader>dk', dap.step_over, { desc = 'DAP: Step [O]ver (k)' })
+      vim.keymap.set('n', '<leader>do', dap.step_out, { desc = 'DAP: Step [O]ut' })
+      vim.keymap.set('n', '<leader>dx', function()
+        async.run(function()
+          dap.run_to_cursor()
+        end)
+      end, { desc = 'DAP: Run to Cursor (x) (asyn-safe)' })
+
+      -- DAP: Termination
+      vim.keymap.set('n', '<leader>dt', function()
+        async.run(function()
+          dap.terminate()
+          dapui.close()
+        end)
+      end, { desc = 'DAP: [T]erminate (async-safe)' })
+
+      -- DAP: UI
+      vim.keymap.set('n', '<leader>dr', dap.repl.open, { desc = 'DAP: Open [R]EPL' })
+      vim.keymap.set('n', '<leader>du', dapui.toggle, { desc = 'DAP: Toggle [U]I' })
     end,
   },
 }
