@@ -13,6 +13,8 @@ return {
       'hrsh7th/cmp-nvim-lsp', -- LSP completion source for nvim-cmp
     },
     config = function(_, opts)
+      -- local query_driver = vim.fn.trim(vim.fn.system 'which clang++')
+      -- local resource_dir = vim.fn.trim(vim.fn.system 'clang++ --print-resource-dir')
       -- This config function runs AFTER the plugin and its dependencies are loaded.
       -- It sets up the LSP servers.
 
@@ -36,7 +38,12 @@ return {
           },
         },
         clangd = {
-          cmd = { 'clangd' },
+          cmd = {
+            'clangd',
+            '--compile-commands-dir=build',
+            '--query-driver=' .. vim.fn.trim(vim.fn.system 'which clang++'),
+            '--resource-dir' .. vim.fn.trim(vim.fn.system 'clang++ --print-resource-dir'),
+          },
           filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
           root_dir = require('lspconfig.util').root_pattern('CMakeLists.txt', '.git'),
         },
