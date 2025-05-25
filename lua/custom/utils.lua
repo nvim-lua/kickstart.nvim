@@ -8,7 +8,7 @@ local function collect_executables(dir)
   local files = vim.fn.globpath(dir, '**', true, true)
   local binaries = {}
   for _, path in ipairs(files) do
-    if vim.fn.filereadable(path) == 1 and is_executable(path) then
+    if vim.fn.filereadable(path) == 1 and is_executable(path) and not path:match 'CMakeFiles' then
       table.insert(binaries, path)
     end
   end
