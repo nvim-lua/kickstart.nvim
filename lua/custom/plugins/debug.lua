@@ -60,7 +60,7 @@ return {
       -- Assumes 'lldb-dap' executable is in PATH (from pkgs.llvmPackages_XX.lldb)
       dap.adapters.lldb = {
         type = 'executable',
-        command = '/nix/store/143hsrh16zml9n71xk9ysr81z0s1rvpk-lldb-19.1.7/bin/lldb-dap',
+        command = 'lldb-dap',
         name = 'lldb-dap (Nix)',
         env = {
           LLDB_DEBUGSERVER_PATH = '/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/Resources/debugserver',
@@ -72,11 +72,11 @@ return {
           type = 'lldb',
           request = 'launch',
           program = function()
-            local debug_bin = vim.fn.getcwd() .. 'build/debug/cpp-hello'
+            local debug_bin = vim.fn.getcwd() .. '/build/debug/cpp-hello'
             if vim.fn.filereadable(debug_bin) == 1 then
               return debug_bin
             else
-              return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+              -- return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
             end
           end,
           cwd = '${workspaceFolder}',
