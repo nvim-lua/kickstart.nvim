@@ -68,7 +68,12 @@ return {
           name = 'Launch C/C++ (lldb-dap)',
           type = 'lldb',
           request = 'launch',
-          program = require('custom.utils').pick_executable,
+          program = function()
+            local utils = require 'custom.utils'
+            local co = utils.pick_executable '${workspaceFolder}/build'
+            local ok, result = coroutine.resume(co)
+            return ok and result or nil
+          end,
           cwd = '${workspaceFolder}',
           stopOnEntry = false,
           args = {},
