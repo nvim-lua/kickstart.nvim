@@ -55,7 +55,6 @@ return {
     },
     config = function()
       local dap = require 'dap'
-      local utils = require 'custom.utils'
 
       -- Configure the LLDB DAP adapter for C/C++
       -- Assumes 'lldb-dap' executable is in PATH (from pkgs.llvmPackages_XX.lldb)
@@ -71,7 +70,7 @@ return {
           type = 'lldb',
           request = 'launch',
           program = function()
-            return utils.pick_executable_for_dap(vim.fn.getcwd() .. '/build')
+            return require('custom.utils').pick_executable(vim.fn.getcwd() .. '/build')
           end,
           cwd = '${workspaceFolder}',
           stopOnEntry = false,

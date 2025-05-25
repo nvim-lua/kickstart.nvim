@@ -1,4 +1,4 @@
-local async = require 'plenary.async.util'
+local async = require 'plenary.async'
 local pickers = require 'telescope.pickers'
 local finders = require 'telescope.finders'
 local sorters = require('telescope.config').values
@@ -18,53 +18,41 @@ local function collect_executables(start_dir)
   return results
 end
 
-local function pick_executable(start_dir, on_choice)
-  local executables = collect_executables(start_dir)
-  if #executables == 0 then
-    vim.notify('No executables found in ' .. start_dir, vim.log.levels.WARN)
-    on_choice(nil)
-    return
-  end
-
-  pickers
-    .new({}, {
-      prompt_title = 'Select Executable',
-      finder = finders.new_table { results = executables },
-      sorter = sorters.generic_sorter {},
-      attach_mappings = function(_, map)
-        actions.select_default:replace(function(prompt_bufnr)
-          local entry = action_state.get_selected_entry()
-          actions.close(prompt_bufnr)
-          on_result(entry.value)
-        end)
-        map('i', '<Esc>', function(buf)
-          actions.close(buf)
-          on_result(nil)
-        end)
-        map('n', 'q', function(buf)
-          actions.close(buf)
-          on_result(nil)
-        end)
-        return true
-      end,
-    })
-    :find()
-end
-
-local function pick_executable_for_dap(start_dir)
-  return async.void(function()
-    local co = coroutine.running()
-    pick_executable(start_dir, function(choice)
-      coroutine.resume(co, choice)
-    end)
-    local result = coroutine.yield()
-    if not result then
-      vim.notify('Debug launch cancelled', vim.log.levels.INFO)
+local function pick_executable(start_dir)
+  return async.wrap(function(start_dir, on_choice)
+    local executables = collect_executables(start_dir)
+    if #executables == 0 then
+      vim.notify('No executables found in ' .. start_dir, vim.log.levels.WARN)
+      on_choice(nil)
+      return
     end
-    return result
-  end)()
+
+    pickers
+      .new({}, {
+        prompt_title = 'Select Executable',
+        finder = finders.new_table { results = executables },
+        sorter = sorters.generic_sorter {},
+        attach_mappings = function(_, map)
+          actions.select_default:replace(function(prompt_bufnr)
+            local entry = action_state.get_selected_entry()
+            actions.close(prompt_bufnr)
+            on_choice(entry.value)
+          end)
+          map('i', '<Esc>', function(buf)
+            actions.close(buf)
+            on_choice(nil)
+          end)
+          map('n', 'q', function(buf)
+            actions.close(buf)
+            on_choice(nil)
+          end)
+          return true
+        end,
+      })
+      :find()
+  end, 2)(start_dir)
 end
 
 return {
-  pick_executable_for_dap = pick_executable_for_dap,
+  pick_executable = pick_executable,
 }
