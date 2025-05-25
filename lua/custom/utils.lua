@@ -7,20 +7,18 @@ local action_state = require 'telescope.actions.state'
 
 local function collect_executables(start_dir)
   local results = {}
-  local fd_result = vim
-    .system({
-      'fd',
-      '.',
-      start_dir,
-      '--exec',
-      'file',
-      '{}',
-    }, { text = true })
-    :wait()
 
-  local lines = vim.split(fd_result.stdout, '\n', { trimempty = true })
+  -- Add '.', start_dir so it works with your fd version
+  local fd = vim.fn.systemlist {
+    'fd',
+    '.',
+    start_dir,
+    '--exec',
+    'file',
+    '{}',
+  }
 
-  for _, line in ipairs(lines) do
+  for _, line in ipairs(fd) do
     local path, typeinfo = line:match '^(.-):%s*(.+)$'
     if path and not path:match 'CMakeFiles' and typeinfo and (typeinfo:match 'Mach%-O' or typeinfo:match 'ELF') then
       table.insert(results, path)
@@ -31,9 +29,11 @@ local function collect_executables(start_dir)
 end
 
 local function pick_executable(start_dir)
-  vim.notify('pick_executable() was triggered with start_dir=' .. start_dir, vim.log.levels.INFO)
   return async.wrap(function(_start_dir, on_choice)
+    print('pick_executable() was triggered with start_dir=' .. _start_dir)
+
     local executables = collect_executables(_start_dir)
+
     if #executables == 0 then
       vim.notify('No executables found in ' .. _start_dir, vim.log.levels.WARN)
       on_choice(nil)
@@ -46,9 +46,9 @@ local function pick_executable(start_dir)
         finder = finders.new_table { results = executables },
         sorter = sorters.generic_sorter {},
         attach_mappings = function(_, map)
-          actions.select_default:replace(function(bufnr)
+          actions.select_default:replace(function(prompt_bufnr)
             local entry = action_state.get_selected_entry()
-            actions.close(bufnr)
+            actions.close(prompt_bufnr)
             on_choice(entry.value)
           end)
           map('i', '<Esc>', function(bufnr)

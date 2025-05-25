@@ -70,7 +70,7 @@ return {
           type = 'lldb',
           request = 'launch',
           program = function()
-            return require('custom.utils').pick_executable(vim.fn.getcwd() .. '/build')
+            return require('custom.utils').pick_executable(vim.fn.getcwd() .. '/build/debug')
           end,
           cwd = '${workspaceFolder}',
           stopOnEntry = false,
