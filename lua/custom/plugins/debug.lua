@@ -11,6 +11,7 @@ return {
         'rcarriga/nvim-dap-ui',
         dependencies = { 'nvim-neotest/nvim-nio' }, -- nvim-dap-ui often needs nio
         config = function()
+          local asyn = require 'plenary.async'
           local dapui = require 'dapui'
           dapui.setup {
             -- Borrowed icon and control settings from kickstart/plugins/debug.lua
@@ -35,6 +36,7 @@ return {
 
           -- Automatically open/close dapui when DAP session starts/stops
           local dap = require 'dap'
+
           dap.listeners.after.event_initialized['dapui_config'] = function()
             dapui.open()
           end
@@ -55,6 +57,7 @@ return {
     },
     config = function()
       local dap = require 'dap'
+      local async = require 'plenary.async'
 
       -- Configure the LLDB DAP adapter for C/C++
       -- Assumes 'lldb-dap' executable is in PATH (from pkgs.llvmPackages_XX.lldb)
@@ -124,6 +127,12 @@ return {
         require('dapui').toggle()
       end, { desc = 'DAP: Toggle [U]I' })
       vim.keymap.set('n', '<leader>dt', dap.terminate, { desc = 'DAP: [T]erminate' })
+
+      vim.keymap.set('n', '<F5>', function()
+        async.run(function()
+          dap.continue()
+        end)
+      end, { desc = 'DAP Continue (async-safe)' })
       -- Kickstart's <F7> to toggle UI (can be added if you like it)
       -- vim.keymap.set('n', '<F7>', function() require('dapui').toggle() end, { desc = 'Debug: Toggle UI' })
     end,
