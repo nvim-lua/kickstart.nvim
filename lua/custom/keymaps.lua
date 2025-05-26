@@ -20,7 +20,9 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Add any other general-purpose keymaps you want here
-vim.keymap.set('n', '
+vim.keymap.set('n', '<leader>T', function()
+  require('custom.utils'):pick_target()
+end, {desc = "Choose [T]arget"})
 
 -- Standard practice for Lua modules that don't need to return complex data
 return {}
