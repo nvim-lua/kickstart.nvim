@@ -74,8 +74,9 @@ return {
           type = 'lldb',
           request = 'launch',
           program = function()
-            local target = require('custom.target'):get_target()
-            return require('custom.utils').pick_executable(vim.fn.getcwd() .. '/' .. target)
+            local utils = require 'custom.utils'
+            local target = utils:get_target()
+            return utils.pick_executable(vim.fn.getcwd() .. '/' .. target)
           end,
           cwd = '${workspaceFolder}',
           stopOnEntry = false,
