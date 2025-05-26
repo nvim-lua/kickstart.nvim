@@ -108,6 +108,10 @@ return {
   end,
 
   reload_clangd = function(self)
+    print ' reload_clangd called'
+    local target = self:get_target()
+    local cmd = self:make_clangd_cmd(target)
+    print(' clangd cmd:', vim.inspect(cmd))
     local lspconfig = require 'lspconfig'
     local buf = vim.api.nvim_get_current_buf()
     local ft = vim.bo[buf].filetype
@@ -123,6 +127,7 @@ return {
     end
 
     vim.defer_fn(function()
+      print ' calling clangd.setup'
       local cmd = self:make_clangd_cmd(self:get_target())
       vim.print(cmd)
       vim.notify(vim.inspect(cmd), vim.log.levels.INFO)
