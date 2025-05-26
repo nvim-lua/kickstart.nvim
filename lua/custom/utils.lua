@@ -123,6 +123,9 @@ return {
     end
 
     vim.defer_fn(function()
+      local cmd = self:make_clangd_cmd(self:get_target())
+      vim.print(cmd)
+      vim.notify(vim.inspect(cmd), vim.log.levels.INFO)
       lspconfig.clangd.setup {
         cmd = self:make_clangd_cmd(self:get_target()),
       }
