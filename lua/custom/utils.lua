@@ -111,7 +111,7 @@ return {
     local lspconfig = require 'lspconfig'
     local clients = vim.lsp.get_active_clients { name = 'clangd' }
 
-    for _, cliet in ipairs(clients) do
+    for _, client in ipairs(clients) do
       client.stop()
     end
 
