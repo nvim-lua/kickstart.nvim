@@ -75,7 +75,7 @@ return {
           request = 'launch',
           program = function()
             local target = require('custom.target'):get_target()
-            return require('custom.utils').pick_executable(vim.fn.getcwd() .. / .. target)
+            return require('custom.utils').pick_executable(vim.fn.getcwd() .. '/' .. target)
           end,
           cwd = '${workspaceFolder}',
           stopOnEntry = false,
