@@ -109,20 +109,24 @@ return {
 
   reload_clangd = function(self)
     local lspconfig = require 'lspconfig'
-    local clients = vim.lsp.get_clients { name = 'clangd' }
+    local buf = vim.api.nvim_get_current_buf()
+    local ft = vim.bo[buf].filetype
+    if vim.api.nvim_buf_get_name(buf) == '' or not vim.tbl_contains({ 'c', 'cpp', 'objc', 'objcpp' }, ft) then
+      vim.notify('Not reloading clangd: no file or wrong filetype', vim.log.levels.WARN)
+      return
+    end
 
-    for _, client in ipairs(clients) do
-      client.stop()
+    for _, client in ipairs(vim.lsp.get_clients()) do
+      if client.name == 'clangd' then
+        client.stop()
+      end
     end
 
     vim.defer_fn(function()
       lspconfig.clangd.setup {
         cmd = self:make_clangd_cmd(self:get_target()),
       }
-      local bufname = vim.api.nvim_buf_get_name(0)
-      if bufname ~= '' then
-        vim.cmd 'edit'
-      end
+      vim.cmd 'edit'
     end, 200)
   end,
 }
