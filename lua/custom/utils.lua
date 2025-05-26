@@ -119,7 +119,10 @@ return {
       lspconfig.clangd.setup {
         cmd = self:make_clangd_cmd(self:get_target()),
       }
-      vim.cmd 'edit'
+      local bufname = vim.api.nvim_buf_get_name(0)
+      if bufname ~= '' then
+        vim.cmd 'edit'
+      end
     end, 200)
   end,
 }
