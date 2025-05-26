@@ -66,6 +66,7 @@ end
 
 return {
   pick_executable = pick_executable,
+
   clangd_base_cmd = {
     'clangd',
     '--background-index',
@@ -74,7 +75,6 @@ return {
     '--query-driver=' .. vim.fn.trim(vim.fn.system 'which clang++'),
     '--resource-dir=' .. vim.fn.trim(vim.fn.system 'clang++ --print-resource-dir'),
   },
-
   make_clangd_cmd = function(self, compile_commands_dir)
     local cmd = vim.deepcopy(self.clangd_base_cmd)
     table.insert(cmd, '--compile-commands-dir=' .. compile_commands_dir)
@@ -91,6 +91,7 @@ return {
 
   set_target = function(self, dir)
     vim.g.current_target_dir = dir
+    print(' set_target:', dir)
     self:reload_clangd()
   end,
 
@@ -108,33 +109,65 @@ return {
   end,
 
   reload_clangd = function(self)
-    print ' reload_clangd called'
-    local target = self:get_target()
-    local cmd = self:make_clangd_cmd(target)
-    print(' clangd cmd:', vim.inspect(cmd))
     local lspconfig = require 'lspconfig'
-    local buf = vim.api.nvim_get_current_buf()
-    local ft = vim.bo[buf].filetype
-    if vim.api.nvim_buf_get_name(buf) == '' or not vim.tbl_contains({ 'c', 'cpp', 'objc', 'objcpp' }, ft) then
-      vim.notify('Not reloading clangd: no file or wrong filetype', vim.log.levels.WARN)
-      return
-    end
+    local configs = require"lspconfig.configs")
+
+    local cmd = self:make_clangd_cmd(self:get_target())
+    print(' clangd cmd:', vim.inspect(cmd))
 
     for _, client in ipairs(vim.lsp.get_clients()) do
       if client.name == 'clangd' then
+        print(' stopping old clangd')
         client.stop()
       end
     end
 
-    vim.defer_fn(function()
-      print ' calling clangd.setup'
-      local cmd = self:make_clangd_cmd(self:get_target())
-      vim.print(cmd)
-      vim.notify(vim.inspect(cmd), vim.log.levels.INFO)
-      lspconfig.clangd.setup {
-        cmd = self:make_clangd_cmd(self:get_target()),
-      }
-      vim.cmd 'edit'
-    end, 200)
-  end,
+  if not configs.clangd then
+    configs.clangd = {
+    default_config = {
+    cmd = cmd,
+    filetypes = { 'c', 'cpp', 'objc', 'objcpp' },
+    root_dir = lspconfig.util.root_pattern("compile_commands.json", '.git'),
+    single_file_support = true,
+    },
+  }
+else
+  configs.clangd.default_config.cmd = cmd
+end
+
+  lspconfig.clangd.setup({ cmd = cmd })
+
+local buf = vim.api.nvim_get_current_buf()
+  local name = vim.api.nvim_buf_get_name(buf)
+  loal ft = vim.bo[buf].filetype
+
+ if name ~= "" and ft:match('c') then
+    print(" reopening buffer to auto-attach clangd")
+    vim.cmd("edit")
+else
+  print(" Skipping buffer reload: name or filetype invalid")
+  end
+end,
+
+list_attached_clients = function()
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  if vim.tbl_isempty(clients) then
+    print("No LSP clients attached to this buffer.")
+    return
+  end
+  for _, client in ipairs(clients) do
+    print("LSP:", client.name, "id:", client.id)
+  end
+end,
+
+list_attached_clients = function()
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  if vim.tbl_isempty(clients) then
+    print("No LSP clients attached to this buffer.")
+    return
+  end
+  for _, client in ipairs(clients) do
+    print("LSP:", client.name, "id:", client.id)
+  end
+end,
 }
