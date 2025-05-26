@@ -109,7 +109,7 @@ return {
 
   reload_clangd = function(self)
     local lspconfig = require 'lspconfig'
-    local clients = vim.lsp.get_active_clients { name = 'clangd' }
+    local clients = vim.lsp.get_clients { name = 'clangd' }
 
     for _, client in ipairs(clients) do
       client.stop()
