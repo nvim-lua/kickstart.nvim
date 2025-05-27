@@ -110,7 +110,7 @@ return {
 
   reload_clangd = function(self)
     local lspconfig = require 'lspconfig'
-    local configs = require"lspconfig.configs")
+    local configs = require("lspconfig.configs")
 
     local cmd = self:make_clangd_cmd(self:get_target())
     print(' clangd cmd:', vim.inspect(cmd))
