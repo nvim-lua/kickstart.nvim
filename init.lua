@@ -773,6 +773,8 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         htmlangular = { 'prettier' },
+        angular = { 'prettier' },
+        typescript = { 'prettier', 'eslint_d' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -957,6 +959,8 @@ require('lazy').setup({
     },
     config = function()
       vim.keymap.set('n', '<leader>gg', '<cmd>LazyGit<CR>', { desc = 'LazyGit' })
+
+      require('telescope').load_extension 'lazygit'
     end,
   },
 
