@@ -94,72 +94,77 @@ vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
--- See `:help vim.opt`
+-- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
 -- Make line numbers default
-vim.opt.number = true
+vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+-- vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
-vim.opt.mouse = 'a'
+vim.o.mouse = 'a'
 
 -- Don't show the mode, since it's already in the status line
-vim.opt.showmode = false
+vim.o.showmode = false
 
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 vim.schedule(function()
-  vim.opt.clipboard = 'unnamedplus'
+  vim.o.clipboard = 'unnamedplus'
 end)
 
 -- Enable break indent
-vim.opt.breakindent = true
+vim.o.breakindent = true
 
 -- Save undo history
-vim.opt.undofile = true
+vim.o.undofile = true
 
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
+vim.o.ignorecase = true
+vim.o.smartcase = true
 
 -- Keep signcolumn on by default
-vim.opt.signcolumn = 'yes'
+vim.o.signcolumn = 'yes'
 
 -- Decrease update time
-vim.opt.updatetime = 250
+vim.o.updatetime = 250
 
 -- Decrease mapped sequence wait time
-vim.opt.timeoutlen = 300
+vim.o.timeoutlen = 300
 
 -- Configure how new splits should be opened
-vim.opt.splitright = true
-vim.opt.splitbelow = true
+vim.o.splitright = true
+vim.o.splitbelow = true
 
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
-vim.opt.list = true
+--
+--  Notice listchars is set using `vim.opt` instead of `vim.o`.
+--  It is very similar to `vim.o` but offers an interface for conveniently interacting with tables.
+--   See `:help lua-options`
+--   and `:help lua-options-guide`
+vim.o.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
-vim.opt.inccommand = 'split'
+vim.o.inccommand = 'split'
 
 -- Show which line your cursor is on
-vim.opt.cursorline = true
+vim.o.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
+vim.o.scrolloff = 10
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
-vim.opt.confirm = true
+vim.o.confirm = true
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -205,12 +210,12 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
---  See `:help vim.highlight.on_yank()`
+--  See `:help vim.hl.on_yank()`
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
-    vim.highlight.on_yank()
+    vim.hl.on_yank()
   end,
 })
 
@@ -223,8 +228,11 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   if vim.v.shell_error ~= 0 then
     error('Error cloning lazy.nvim:\n' .. out)
   end
-end ---@diagnostic disable-next-line: undefined-field
-vim.opt.rtp:prepend(lazypath)
+end
+
+---@type vim.Option
+local rtp = vim.opt.rtp
+rtp:prepend(lazypath)
 
 -- [[ Configure and install plugins ]]
 --
@@ -239,7 +247,7 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -295,7 +303,7 @@ require('lazy').setup({
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
       -- delay between pressing a key and opening which-key (milliseconds)
-      -- this setting is independent of vim.opt.timeoutlen
+      -- this setting is independent of vim.o.timeoutlen
       delay = 0,
       icons = {
         -- set icon mappings to true if you have a Nerd Font
@@ -474,8 +482,8 @@ require('lazy').setup({
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
-      { 'williamboman/mason.nvim', opts = {} },
-      'williamboman/mason-lspconfig.nvim',
+      { 'mason-org/mason.nvim', opts = {} },
+      'mason-org/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
