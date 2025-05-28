@@ -4,6 +4,9 @@
 -- See the kickstart.nvim README for more information
 vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
 
+vim.keymap.set('n', '<leader>cpd', ':Copilot disable<cr>', { silent = true, noremap = true }) -- Disable Copilot
+vim.keymap.set('n', '<leader>cpe', ':Copilot enable<cr>', { silent = true, noremap = true }) -- Enable Copilot
+
 return {
   {
     'ibhagwan/fzf-lua',
@@ -141,5 +144,33 @@ return {
     config = function(_, opts)
       require('lsp_signature').setup(opts)
     end,
+  },
+  {
+    'olimorris/codecompanion.nvim',
+    opts = {},
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-treesitter/nvim-treesitter',
+    },
+    config = function()
+      require('codecompanion').setup {
+        strategies = {
+          chat = {
+            adapter = 'copilot',
+          },
+          inline = {
+            adapter = 'copilot',
+          },
+          agent = {
+            adapter = 'copilot',
+          },
+        },
+      }
+    end,
+  },
+  {
+    'github/copilot.vim',
+    lazy = false,
+    config = function() end,
   },
 }
