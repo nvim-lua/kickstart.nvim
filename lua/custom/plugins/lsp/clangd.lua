@@ -8,7 +8,7 @@ local function find_compile_commands()
   table.sort(results, function(a, b)
     return a:match 'debug' and not b:match 'debug'
   end)
-  return results[1] and vim.fn.fnamemodify(results[1], ':h') or nil
+  return vim.fn.fnamemodify(results[1] or '', ':h')
 end
 
 function M.stop_clangd()
@@ -20,7 +20,7 @@ function M.stop_clangd()
   end
 end
 
-function M.start_clangd(commands_dir)
+function M.start_clangd(dir)
   M.stop_clangd()
 
   local cmd = {
@@ -31,31 +31,42 @@ function M.start_clangd(commands_dir)
     '--query-driver=' .. vim.fn.exepath 'clang++',
     '--resource-dir=' .. vim.fn.systemlist({ 'clang++', '--print-resource-dir' })[1],
   }
-  if commands_dir then
-    table.insert(cmd, '--compile-commands-dir=' .. commands_dir)
+  if dir and dir ~= '' then
+    table.insert(cmd, '--compile-commands-dir=' .. dir)
+    vim.notify('[clangd] Setting up with: ' .. dir)
+  else
+    table.insert(cmd, '--compile-commands-dir=.')
+    vim.notify '[clangd] No compile_commands.json found.\nUse <leader>cc to manually set location'
   end
-
-  print(vim.inspect(cmd))
 
   lspconfig.clangd.setup {
     cmd = cmd,
+    filetypes = M.clang_filetypes,
     root_dir = lspconfig.util.root_pattern '.git',
-    -- single_file_support = true,
     capabilities = require('blink.cmp').get_lsp_capabilities(),
+    single_file_support = true,
   }
+end
+
+function M.reload_clangd()
+  M.stop_clangd()
 
   vim.defer_fn(function()
-    for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-      local ft = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
-      if vim.tbl_contains(M.clang_filetypes, ft) then
-        local client = vim.lsp.get_clients({ name = 'clangd' })[1]
-        if client then
-          vim.lsp.buf_attach_client(bufnr, client.id)
-        end
-      end
-    end
+    M.start_clangd(find_compile_commands())
   end, 100)
 end
+
+--     for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+--       local ft = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
+--       if vim.tbl_contains(M.clang_filetypes, ft) then
+--         local client = vim.lsp.get_clients({ name = 'clangd' })[1]
+--         if client then
+--           vim.lsp.buf_attach_client(bufnr, client.id)
+--         end
+--       end
+--     end
+--   end, 100)
+-- end
 
 function M.pick_commands_dir()
   local pickers = require 'telescope.pickers'
@@ -69,11 +80,11 @@ function M.pick_commands_dir()
       attach_mappings = function(_, map)
         map('i', '<CR>', function(prompt_bufnr)
           local entry = require('telescope.actions.state').get_selected_entry()
-          local dir = entry[1]
           require('telescope.actions').close(prompt_bufnr)
-          if dir then
-            M.start_clangd(dir)
-          end
+          M.stop_clangd()
+          vim.defer_fn(function()
+            M.start_clangd(entry[1])
+          end, 100)
         end)
         return true
       end,
@@ -120,22 +131,23 @@ return {
   'neovim/nvim-lspconfig',
   ft = M.clang_filetypes,
   config = function()
-    vim.api.nvim_create_autocmd('FileType', {
-      pattern = M.clang_filetypes,
-      group = vim.api.nvim_create_augroup('clangd-setup', { clear = true }),
-      callback = function()
-        if not vim.lsp.get_clients({ name = 'clangd' })[1] then
-          local dir = find_compile_commands()
-          if dir then
-            vim.notify('[clangd] Starting with compile_commands from: ' .. dir)
-            M.start_clangd(dir)
-          else
-            vim.notify '[clangd] No compile_commands found. Using fallback config.\nUse <leader>cc to manually set location.'
-            M.start_clangd(nil)
-          end
-        end
-      end,
-    })
+    -- vim.api.nvim_create_autocmd('FileType', {
+    --   pattern = M.clang_filetypes,
+    --   group = vim.api.nvim_create_augroup('clangd-setup', { clear = true }),
+    --   callback = function()
+    --     if not vim.lsp.get_clients({ name = 'clangd' })[1] then
+    --       local dir = find_compile_commands()
+    --       if dir then
+    --         vim.notify('[clangd] Starting with compile_commands from: ' .. dir)
+    --         M.start_clangd(dir)
+    --       else
+    --         vim.notify '[clangd] No compile_commands found. Using fallback config.\nUse <leader>cc to manually set location.'
+    --         M.start_clangd(nil)
+    --       end
+    --     end
+    --   end,
+    -- })
+    M.start_clangd(find_compile_commands())
 
     vim.keymap.set('n', '<leader>cc', M.pick_commands_dir, { desc = 'Pick location of compile_commands.json for clangd' })
   end,
