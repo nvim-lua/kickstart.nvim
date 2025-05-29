@@ -37,6 +37,9 @@ function M.start_clangd(dir)
   if dir and dir ~= '' then
     vim.notify('[clangd] Setting up with: ' .. dir)
     table.insert(cmd, '--compile-commands-dir=' .. dir)
+    M.watch_compile_commands(dir)
+  else
+    vim.notify('[clangd] Empty or nil dir: ' .. dir)
   end
 
   lspconfig.clangd.setup {
@@ -126,8 +129,7 @@ return {
   config = function()
     local dir = find_compile_commands()
     M.start_clangd(dir)
-    M.watch_compile_commands(dir)
 
-    vim.keymap.set('n', '<leader>cc', M.pick_commands_dir, { desc = 'Pick location of compile_commands.json for clangd' })
+    vim.keymap.set('n', '<leader>lc', M.pick_commands_dir, { desc = '[L]ocate [c]ompile_commands.json for clangd' })
   end,
 }
