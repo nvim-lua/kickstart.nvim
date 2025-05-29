@@ -19,7 +19,7 @@ return {
         statusline.section_diagnostics {},
         statusline.section_filename {},
         statusline.section_fileinfo {},
-        statusline.section_target {},
+        -- statusline.section_target {},
         statusline.section_location {}
 
       return statusline.combine_groups {

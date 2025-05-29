@@ -8,7 +8,7 @@ return {
         '--background-index',
         '--clang-tidy',
         '--header-insertion=never',
-        '--query-driver=' .. vim.vn.exepath 'clang++',
+        '--query-driver=' .. vim.fn.exepath 'clang++',
         '--resource-dir=' .. vim.fn.trim(vim.fn.system 'clang++ --print-resource-dir'),
         '--compile-commands-dir=' .. commands_dir,
       }
