@@ -105,11 +105,11 @@ function M.watch_compile_commands(dir)
       return
     end
 
-    if fname then
-      vim.schedule(function()
-        vim.notify('[clangd] File triggered: ' .. fname)
-      end)
-    end
+    -- if fname then
+    --   vim.schedule(function()
+    --     vim.notify('[clangd] File triggered: ' .. fname)
+    --   end)
+    -- end
 
     if fname and fname:match 'compile_commands%.json$' and status.change then
       vim.schedule(function()
