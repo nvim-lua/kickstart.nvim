@@ -95,9 +95,9 @@ function M.watch_compile_commands(dir)
   end
 
   watcher:start(watch_path, { recursive = true }, function(err, fname, status)
-    vim.schedule(function()
-      print('[clangd] Watcher triggered: ', fname, vim.inspect(status))
-    end)
+    -- vim.schedule(function()
+    --   print('[clangd] Watcher triggered: ', fname, vim.inspect(status))
+    -- end)
     if err then
       vim.schedule(function()
         vim.notify('[clangd] Watcher error: ' .. err, vim.log.levels.ERROR)
