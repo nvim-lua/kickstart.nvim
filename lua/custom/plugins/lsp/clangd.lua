@@ -144,9 +144,9 @@ return {
       callback = function(args)
         local ft = vim.bo[args.buf].filetype
         if vim.tbl_contains(M.clang_filetypes, ft) then
+          print('[clangd] BufReadPost fired for ft=' .. ft)
           local dir = find_compile_commands()
           M.start_clangd(dir)
-
           vim.keymap.set('n', '<leader>lc', M.pick_commands_dir, { desc = '[L]ocate [c]ompile_commands.json for clangd' })
           vim.api.nvim_clear_autocmds { group = 'clangd-once' }
         end
