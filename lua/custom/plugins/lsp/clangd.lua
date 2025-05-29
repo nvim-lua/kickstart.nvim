@@ -60,7 +60,8 @@ function M.pick_commands_dir()
           local entry = require('telescope.actions.state').get_selected_entry()
           local commands_dir = entry[1]
           require('telescope.actions').close(prompt_bufnr)
-          reload_clangd(commands_dir)
+          if commands_dir ~= '' then
+            M.setup_clangd(commands_dir)
         end)
         return true
       end,
