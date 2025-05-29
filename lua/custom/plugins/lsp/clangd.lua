@@ -47,12 +47,12 @@ function M.setup_clangd(commands_dir)
     capabilities = require('blink.cmp').get_lsp_capabilities(),
   }
 
-  for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-    local ft = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
-    if vim.tbl_contains(M.clang_filetypes, ft) then
-      vim.lsp.buf_attach_client(bufnr, vim.lsp.get_clients({ name = 'clangd' })[1].id)
-    end
-  end
+  -- for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+  --   local ft = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
+  --   if vim.tbl_contains(M.clang_filetypes, ft) then
+  --     vim.lsp.buf_attach_client(bufnr, vim.lsp.get_clients({ name = 'clangd' })[1].id)
+  --   end
+  -- end
 end
 
 function M.pick_commands_dir()
