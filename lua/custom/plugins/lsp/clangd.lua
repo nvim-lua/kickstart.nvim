@@ -16,13 +16,13 @@ local function make_clangd_cmd()
     '--clang-tidy',
     '--header-insertion=never',
     '--query-driver=' .. vim.fn.exepath 'clang++',
-    '--resource-dir=' .. vim.fn.trim(vim.fn.system 'clang++ --print-resource-dir',
+    '--resource-dir=' .. vim.fn.trim(vim.fn.system 'clang++ --print-resource-dir'),
     '--compile-commands-dir=' .. current_target,
   }
 end
 
 local function reload_clangd()
-  for _, client in pairs(vim.lsp.get_active_clients()) do
+  for _, client in pairs(vim.lsp.get_clients()) do
     if client.name == 'clangd' then
       client.stop()
     end
@@ -52,8 +52,8 @@ end
 function M.setup()
   lspconfig.clangd.setup {
     cmd = make_clangd_cmd(),
-    filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' };
-    root_dir = lspconfig.util.root_pattern('.git'),
+    filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
+    root_dir = lspconfig.util.root_pattern '.git',
     single_file_support = true,
     capabilities = capabilities,
   }
