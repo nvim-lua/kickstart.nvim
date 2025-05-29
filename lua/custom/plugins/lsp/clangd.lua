@@ -127,8 +127,8 @@ return {
   'neovim/nvim-lspconfig',
   ft = M.clang_filetypes,
   config = function()
-    vim.notify('[clangd] find_compile_commands() returned: "' .. dir .. '"')
     local dir = find_compile_commands()
+    vim.notify('[clangd] find_compile_commands() returned: "' .. dir .. '"')
     M.start_clangd(dir)
     M.watch_compile_commands(dir)
 
