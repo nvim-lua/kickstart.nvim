@@ -35,6 +35,8 @@ function M.start_clangd(commands_dir)
     table.insert(cmd, '--compile_commands-dir=' .. commands_dir)
   end
 
+  print(vim.inspect(cmd))
+
   lspconfig.clangd.setup {
     cmd = cmd,
     root_dir = lspconfig.util.root_pattern '.git',
