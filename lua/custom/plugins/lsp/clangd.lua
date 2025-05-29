@@ -15,7 +15,7 @@ end
 function M.stop_clangd()
   for _, client in ipairs(vim.lsp.get_clients()) do
     if client.name == 'clangd' then
-      client.stop()
+      client.stop { force = true }
     end
   end
 end
