@@ -7,10 +7,16 @@ local watcher
 
 local function find_compile_commands()
   local lines = vim.fn.systemlist { 'fd', '-u', '-t', 'f', 'compile_commands.json' }
+
+  if vim.tbl_isempty(lines) then
+    return nil
+  end
+
   table.sort(lines, function(a, b)
     return a:match 'debug' and not b:match 'debug'
   end)
-  return vim.fn.fnamemodify(lines[1] or '', ':h')
+
+  return vim.fn.fnamemodify(lines[1], ':h')
 end
 
 function M.stop_clangd()
@@ -102,10 +108,11 @@ return {
   ft = M.clang_filetypes,
   config = function()
     local dir = find_compile_commands()
-    vim.notify('[clangd] Found compile_commands at: ' .. dir)
-    if dir ~= '' then
+    if dir then
+      vim.notify('[clangd] Found compile_commands at: ' .. dir)
       M.setup_clangd(dir)
     else
+      vim.notify '[clangd] No compile_commands found, watching ...'
       M.watch_compile_commands()
     end
 
