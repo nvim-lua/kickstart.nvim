@@ -7,15 +7,12 @@ local watcher
 
 local function find_compile_commands()
   local lines = vim.fn.systemlist { 'fd', '-u', '-t', 'f', 'compile_commands.json' }
-
   if vim.tbl_isempty(lines) then
     return nil
   end
-
   table.sort(lines, function(a, b)
     return a:match 'debug' and not b:match 'debug'
   end)
-
   return vim.fn.fnamemodify(lines[1], ':h')
 end
 
@@ -80,27 +77,38 @@ function M.pick_commands_dir()
 end
 
 function M.watch_compile_commands()
-  if watcher then
-    return
-  end
-
   vim.notify('clangd: Starting watcher for compile_commands.json', vim.log.levels.INFO)
   local uv = vim.uv or vim.loop
-  watcher = uv.new_fs_event()
-  local cwd = vim.fn.getcwd()
+  local check_interval = 1000 -- ms
 
-  watcher:start(
-    cwd,
-    { recursive = true },
-    vim.schedule_wrap(function(_, fname, status)
-      if fname and fname:match 'compile_commands%.json$' and status.change then
-        vim.notify('[clangd] Detected change: ' .. fname, vim.log.levels.INFO)
-        watcher:stop()
-        watcher = nil
+  local function try_attach()
+    local dir = find_compile_commands()
+    if dir then
+      vim.notify('[clangd] Found compile_commands at: ' .. dir)
+      M.setup_clangd(dir)
+      return true
+    end
+    return false
+  end
+
+  local timer = uv.new_timer()
+  timer:start(0, check_interval, function()
+    if try_attach() then
+      timer:stop()
+      timer:close()
+    end
+  end)
+
+  local fs_watcher = uv.new_fs_event()
+  fs_watcher:start(vim.fn.getcwd(), { recursive = true }, function(_, fname, status)
+    if fname and fname:match 'compile_commands%.json$' and status.change then
+      fs_watcher:stop()
+      vim.schedule(function()
+        vim.notify '[clangd] Detected compile_commands.json change, reloading ...'
         M.setup_clangd(vim.fn.fnamemodify(fname, ':h'))
-      end
-    end)
-  )
+      end)
+    end
+  end)
 end
 
 return {
