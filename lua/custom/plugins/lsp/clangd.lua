@@ -114,7 +114,7 @@ function M.pick_commands_dir()
           local entry = require('telescope.actions.state').get_selected_entry()
           require('telescope.actions').close(prompt_bufnr)
           vim.defer_fn(function()
-            M.reload_clangd(entry[1])
+            M.start_clangd(entry[1])
           end, 100)
         end)
         return true
