@@ -47,6 +47,9 @@ function M.start_clangd(dir)
     root_dir = lspconfig.util.root_pattern '.git',
     capabilities = require('blink.cmp').get_lsp_capabilities(),
     single_file_support = true,
+    on_attach = function(client, bufnr)
+      vim.notify('[clangd] Attached to buffer ' .. bufnr)
+    end,
   }
 end
 
@@ -84,7 +87,7 @@ function M.watch_compile_commands(dir)
         return
       end
 
-      if fname and fname:match '.*/compile_commands%.json$' and status.change then
+      if fname and fname:match '[/\\]compile_commands%.json$' and status.change then
         if debounce_timer then
           debounce_timer:stop()
           debounce_timer:close()
