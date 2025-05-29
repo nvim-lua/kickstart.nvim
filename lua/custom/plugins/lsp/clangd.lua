@@ -95,13 +95,28 @@ function M.watch_compile_commands(dir)
   end
 
   watcher:start(watch_path, { recursive = true }, function(err, fname, status)
-    print('[clangd] Watcher triggered: ', fname, vim.inspect(status))
+    vim.schedule(function()
+      print('[clangd] Watcher triggered: ', fname, vim.inspect(status))
+    end)
     if err then
       vim.schedule(function()
         vim.notify('[clangd] Watcher error: ' .. err, vim.log.levels.ERROR)
       end)
       return
     end
+
+    if fname then
+      vim.schedule(function()
+        vim.notify('[clangd] File triggered: ' .. fname)
+      end)
+    end
+
+    if fname and fname:match 'compile_commands%.json$' and status.change then
+      vim.schedule(function()
+        vim.notify '[clangd] Matched pattern for compile_commands.json'
+      end)
+    end
+
     if fname and fname:match 'compile_commands%.json$' and status.change then
       if debounce_timer then
         debounce_timer.stop()
