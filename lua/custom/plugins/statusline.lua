@@ -5,10 +5,10 @@ return {
     local statusline = require 'mini.statusline'
 
     -- Add new section function
-    statusline.section_target = function()
-      local target = require('custom.utils'):get_target()
-      return target and (' ' .. target) or ''
-    end
+    -- statusline.section_target = function()
+    --   local target = require('custom.utils'):get_target()
+    --   return target and (' ' .. target) or ''
+    -- end
 
     -- Override content.active to include target
     opts.content = opts.content or {}
