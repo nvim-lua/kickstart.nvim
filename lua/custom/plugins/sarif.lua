@@ -1,0 +1,3 @@
+return {
+  'fguisso/sfer.nvim',
+}
