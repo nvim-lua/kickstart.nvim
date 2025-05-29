@@ -101,9 +101,9 @@ function M.watch_compile_commands(dir)
   local watch_path = dir or vim.fn.getcwd()
   local watch_file = watch_path .. '/compile_commands.json'
 
-  if not vim.fn.filereadable(watch_file) then
-    return
-  end
+  -- if not vim.fn.filereadable(watch_file) then
+  --   return
+  -- end
 
   watcher = uv.new_fs_event()
   watcher:start(
