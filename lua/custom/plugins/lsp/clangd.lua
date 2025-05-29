@@ -71,9 +71,9 @@ function M.watch_compile_commands(dir)
   local watch_path = dir or vim.fn.getcwd()
   local watch_file = watch_path .. '/compile_commands.json'
 
-  -- if not M.auto_watch_enabled or not vim.fn.filereadable(watch_file) then
-  --   return
-  -- end
+  if not M.auto_watch_enabled or not vim.fn.filereadable(watch_file) then
+    return
+  end
 
   watcher = uv.new_fs_event()
   watcher:start(
@@ -128,7 +128,6 @@ return {
   ft = M.clang_filetypes,
   config = function()
     local dir = find_compile_commands()
-    vim.notify('[clangd] find_compile_commands() returned: "' .. dir .. '"')
     M.start_clangd(dir)
     M.watch_compile_commands(dir)
 
