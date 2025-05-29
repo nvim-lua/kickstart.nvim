@@ -129,9 +129,7 @@ return {
   config = function()
     local dir = find_compile_commands()
     M.start_clangd(dir)
-    if dir ~= '' then
-      M.watch_compile_commands(dir)
-    end
+    M.watch_compile_commands(dir)
 
     vim.keymap.set('n', '<leader>cc', M.pick_commands_dir, { desc = 'Pick location of compile_commands.json for clangd' })
   end,
