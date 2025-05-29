@@ -5,10 +5,14 @@ local lspconfig = require 'lspconfig'
 
 local function find_compile_commands()
   local results = vim.fn.systemlist { 'fd', '-u', '-t', 'f', 'compile_commands.json' }
+  if vim.tbl_isempty(results) then
+    return nil
+  end
+
   table.sort(results, function(a, b)
     return a:match 'debug' and not b:match 'debug'
   end)
-  return vim.fn.fnamemodify(results[1] or '', ':h')
+  return vim.fn.fnamemodify(results[1], ':h')
 end
 
 function M.stop_clangd()
@@ -31,14 +35,14 @@ function M.start_clangd(dir)
     '--clang-tidy',
     '--header-insertion=never',
     '--query-driver=' .. vim.fn.exepath 'clang++',
-    '--resource-dir=' .. vim.fn.systemlist({ 'clang++', '--print-resource-dir' })[1] or '',
+    '--resource-dir=' .. vim.fn.systemlist({ 'clang++', '--print-resource-dir' })[1],
   }
   if dir and dir ~= '' then
     vim.notify('[clangd] Setting up with: ' .. dir)
     table.insert(cmd, '--compile-commands-dir=' .. dir)
     M.watch_compile_commands(dir)
   else
-    vim.notify '[clangd] Empty or nil --compile-commands-dir'
+    vim.notify '[clangd] Could not find compile_commands.json.\nUse <leader>lc to manually set location when available.'
   end
 
   lspconfig.clangd.setup {
@@ -68,13 +72,6 @@ function M.watch_compile_commands(dir)
     debounce_timer:stop()
     debounce_timer:close()
     debounce_timer = nil
-  end
-
-  local dir = dir or vim.fn.getcwd()
-  local file = dir .. '/compile_commands.json'
-
-  if not vim.fn.filereadable(file) then
-    vim.notify '[clangd] No compile_commands.json found.\nUse <leader>cc to manually set location when available.'
   end
 
   watcher = uv.new_fs_event()
