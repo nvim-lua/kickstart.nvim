@@ -1,45 +1,48 @@
 local M = {}
 
--- local Path = require 'plenary.path'
 local pickers = require 'telescope.pickers'
 local finders = require 'telescope.finders'
 local conf = require('telescope.config').values
 
-local current_target = './build/debug'
-
-local function make_clangd_cmd()
+local function build_cmd(commands_dir)
   return {
     'clangd',
     '--background-index',
     '--clang-tidy',
     '--header-insertion=never',
-    '--query-driver=' .. vim.fn.exepath 'clang++',
+    '--query-driver=' .. vim.vn.exepath 'clang++',
     '--resource-dir=' .. vim.fn.trim(vim.fn.system 'clang++ --print-resource-dir'),
-    '--compile-commands-dir=' .. current_target,
+    '--compile-commands-dir=' .. commands_dir,
   }
 end
 
-local function reload_clangd()
-  for _, client in pairs(vim.lsp.get_clients()) do
-    if client.name == 'clangd' then
-      client.stop()
-    end
-  end
-  M.setup()
+function M.reload_clangd(commands_dir)
+  local lspconfig = require 'lspconfig'
+
+  commands_dir = commands_dir or './build/debug'
+
+  lspconfig.clangd.setup {
+    cmd = build_cmd(commands_dir),
+    root_dir = lspconfig.util.root_pattern '.git',
+    single_file_support = true,
+    capabilities = require('blink.cmp').get_lsp_capabilities(),
+  }
+
+  vim.cmd.edit()
 end
 
-function M.pick_target()
+function M.pick_commands_dir()
   pickers
     .new({}, {
-      prompt_title = 'Choose build target',
+      prompt_title = 'Choose compile_commands.json location',
       finder = finders.new_oneshot_job { 'fd', '-u', 'compile_commands.json', '-x', 'dirname', '{}' },
       sorter = conf.generic_sorter {},
       attach_mappings = function(_, map)
         map('i', '<CR>', function(prompt_bufnr)
           local entry = require('telescope.actions.state').get_selected_entry()
-          current_target = entry[1]
+          local commands_dir = entry[1]
           require('telescope.actions').close(prompt_bufnr)
-          reload_clangd()
+          M.reload_clangd(commands_dir)
         end)
         return true
       end,
@@ -47,19 +50,11 @@ function M.pick_target()
     :find()
 end
 
-function M.setup()
-  local lspconfig = require 'lspconfig'
-  local capabilities = require('blink.cmp').get_lsp_capabilities()
-
-  lspconfig.clangd.setup {
-    cmd = make_clangd_cmd(),
-    filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
-    root_dir = lspconfig.util.root_pattern '.git',
-    single_file_support = true,
-    capabilities = capabilities,
-  }
-end
-
-M.setup()
-
-return {}
+return {
+  'neovim/nvim-lspconfig',
+  ft = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
+  config = function()
+    M.reload_clangd()
+    vim.keymap.set('n', '<leader>cc', M.pick_commands_dir, { desc = 'Pick location of compile_commands.json for clangd' })
+  end,
+}
