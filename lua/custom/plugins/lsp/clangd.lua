@@ -37,9 +37,6 @@ function M.start_clangd(dir)
   if dir and dir ~= '' then
     vim.notify('[clangd] Setting up with: ' .. dir)
     table.insert(cmd, '--compile-commands-dir=' .. dir)
-  else
-    vim.notify '[clangd] No compile_commands.json found.\nUse <leader>cc to manually set location'
-    table.insert(cmd, '--compile-commands-dir=.')
   end
 
   lspconfig.clangd.setup {
@@ -71,8 +68,8 @@ function M.watch_compile_commands(dir)
   local watch_path = dir or vim.fn.getcwd()
   local watch_file = watch_path .. '/compile_commands.json'
 
-  if not M.auto_watch_enabled or not vim.fn.filereadable(watch_file) then
-    return
+  if not vim.fn.filereadable(watch_file) then
+    vim.notify '[clangd] No compile_commands.json found.\nUse <leader>cc to manually set location when available.'
   end
 
   watcher = uv.new_fs_event()
