@@ -107,14 +107,19 @@ return {
   'neovim/nvim-lspconfig',
   ft = M.clang_filetypes,
   config = function()
-    local dir = find_compile_commands()
-    if dir then
-      vim.notify('[clangd] Found compile_commands at: ' .. dir)
-      M.setup_clangd(dir)
-    else
-      vim.notify '[clangd] No compile_commands found, watching ...'
-      M.watch_compile_commands()
-    end
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = M.clang_filetypes,
+      callback = function()
+        local dir = find_compile_commands()
+        if dir then
+          vim.notify('[clangd] Found compile_commands at: ' .. dir)
+          M.setup_clangd(dir)
+        else
+          vim.notify '[clangd] No compile_commands found, watching ...'
+          M.watch_compile_commands()
+        end
+      end,
+    })
 
     vim.keymap.set('n', '<leader>cc', M.pick_commands_dir, { desc = 'Pick location of compile_commands.json for clangd' })
   end,
