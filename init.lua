@@ -102,7 +102,20 @@ vim.g.have_nerd_font = false
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+
+vim.o.relativenumber = true
+
+vim.keymap.set('n', '<A-s>', ':w<CR>', { desc = 'Save' })
+
+-- Add keymaps for vertical and horizontal splits
+vim.keymap.set('n', '<A-v>', ':vsplit<CR>', { desc = 'Split vertically' })
+vim.keymap.set('n', '<A-h>', ':split<CR>', { desc = 'Split horizontally' })
+
+-- Add Alt + f as open foles
+vim.keymap.set('n', '<A-f>', ':Ex<CR>', { desc = 'Open file explorer' })
+
+-- Add alt + q to quit
+vim.keymap.set('n', '<A-q>', '<cmd>q<cr>', { desc = 'Quit' })
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -171,7 +184,9 @@ vim.o.confirm = true
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+-- vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+-- Replaced with a better approach that doesn't override Escape's normal function
+vim.keymap.set('n', '<leader>/', '<cmd>nohlsearch<CR>', { desc = 'Clear search highlights' })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
@@ -182,7 +197,7 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 --
 -- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
 -- or just use <C-\><C-n> to exit terminal mode
-vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
@@ -973,18 +988,18 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
@@ -1014,3 +1029,19 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+--
+-- This changes the current dir of Neovim to the current buffer's directory
+vim.api.nvim_create_autocmd('BufEnter', {
+  pattern = '*',
+  callback = function()
+    -- Check if the buffer has a file name and is not a temporary/special buffer
+    local filePath = vim.api.nvim_buf_get_name(0) -- 0 for current buffer
+    if filePath and filePath ~= '' and vim.fn.filereadable(filePath) == 1 then
+      local dir = vim.fn.fnamemodify(filePath, ':p:h') -- :p for full path, :h for head (directory)
+      if dir and dir ~= '' and vim.fn.isdirectory(dir) == 1 then
+        vim.cmd('silent! lcd ' .. vim.fn.escape(dir, ' '))
+      end
+    end
+  end,
+  desc = "Change local CWD to buffer's directory on BufEnter",
+})
