@@ -3,7 +3,7 @@ local M = {}
 M.clang_filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' }
 
 local lspconfig = require 'lspconfig'
-local watcher = nil
+local watcher
 
 local function find_compile_commands()
   local lines = vim.fn.systemlist { 'fd', '-u', '-t', 'f', 'compile_commands.json' }
@@ -17,6 +17,7 @@ function M.stop_clangd()
   for _, client in ipairs(vim.lsp.get_clients()) do
     if client.name == 'clangd' then
       client.stop { force = true }
+      vim.notify '[clangd] stopped clangd'
     end
   end
 end
@@ -77,11 +78,11 @@ function M.watch_compile_commands()
     return
   end
 
+  vim.notify('clangd: Starting watcher for compile_commands.json', vim.log.levels.INFO)
   local uv = vim.uv or vim.loop
   watcher = uv.new_fs_event()
   local cwd = vim.fn.getcwd()
 
-  vim.notify('clangd: Watching for compile_commands.json in ' .. cwd, vim.log.levels.INFO)
   watcher:start(
     cwd,
     { recursive = true },
@@ -101,6 +102,7 @@ return {
   ft = M.clang_filetypes,
   config = function()
     local dir = find_compile_commands()
+    vim.notify('[clangd] Found compile_commands at: ' .. dir)
     if dir ~= '' then
       M.setup_clangd(dir)
     else
