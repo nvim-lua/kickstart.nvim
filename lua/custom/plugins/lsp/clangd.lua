@@ -95,6 +95,7 @@ function M.watch_compile_commands(dir)
   end
 
   watcher:start(watch_path, { recursive = true }, function(err, fname, status)
+    print('[clangd] Watcher triggered: ', fname, vim.inspect(status))
     if err then
       vim.schedule(function()
         vim.notify('[clangd] Watcher error: ' .. err, vim.log.levels.ERROR)
@@ -110,8 +111,8 @@ function M.watch_compile_commands(dir)
       debounce_timer:start(200, 0, function()
         vim.schedule(function()
           vim.notify '[clangd] Detected compile_commands.json change. Reloading ...'
-          -- M.start_clangd(watch_path)
-          M.reload_clangd()
+          watcher:stop()
+          M.start_clangd(vim.fn.fnamemodify(fname, ':h')
         end)
       end)
     end
