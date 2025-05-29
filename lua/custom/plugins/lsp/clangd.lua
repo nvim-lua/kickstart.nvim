@@ -23,8 +23,6 @@ function M.stop_clangd()
 end
 
 function M.start_clangd(dir)
-  M.stop_clangd()
-
   local cmd = {
     'clangd',
     '--background-index',
@@ -50,11 +48,13 @@ function M.start_clangd(dir)
   }
 end
 
-function M.reload_clangd()
+function M.reload_clangd(dir)
   M.stop_clangd()
 
+  dir = dir or find_compile_commands()
+
   vim.defer_fn(function()
-    M.start_clangd(find_compile_commands())
+    M.start_clangd(dir)
   end, 100)
 end
 
@@ -82,10 +82,22 @@ function M.pick_commands_dir()
     :find()
 end
 
+local watcher, debounce_timer
+
 function M.watch_compile_commands(dir)
   local uv = vim.uv or vim.loop
-  local watcher = uv.new_fs_event()
-  local debounce_timer
+
+  if watcher then
+    watcher:stop()
+    watcher:close()
+    watcher = nil
+  end
+
+  if debounce_timer then
+    debounce_timer:stop()
+    debounce_timer:close()
+    debounce_timer = nil
+  end
 
   local watch_path = dir or vim.fn.getcwd()
   local watch_file = watch_path .. '/compile_commands.json'
@@ -94,46 +106,29 @@ function M.watch_compile_commands(dir)
     return
   end
 
-  watcher:start(watch_path, { recursive = true }, function(err, fname, status)
-    -- vim.schedule(function()
-    --   print('[clangd] Watcher triggered: ', fname, vim.inspect(status))
-    -- end)
-    if err then
-      vim.schedule(function()
+  watcher = uv.new_fs_event()
+  watcher:start(
+    watch_path,
+    { recursive = true },
+    vim.schedule_wrap(function(err, fname, status)
+      if err then
         vim.notify('[clangd] Watcher error: ' .. err, vim.log.levels.ERROR)
-      end)
-      return
-    end
-
-    -- if fname then
-    --   vim.schedule(function()
-    --     vim.notify('[clangd] File triggered: ' .. fname)
-    --   end)
-    -- end
-
-    if fname and fname:match 'compile_commands%.json$' and status.change then
-      vim.schedule(function()
-        vim.notify '[clangd] Matched pattern for compile_commands.json'
-      end)
-    end
-
-    if fname and fname:match 'compile_commands%.json$' and status.change then
-      if debounce_timer then
-        debounce_timer.stop()
-        debounce_timer.close()
+        return
       end
-      debounce_timer = uv.new_timer()
-      debounce_timer:start(200, 0, function()
-        vim.schedule(function()
-          vim.notify '[clangd] Detected compile_commands.json change. Reloading ...'
-          watcher:stop()
-          M.start_clangd(vim.fn.fnamemodify(fname, ':h'))
-        end)
-      end)
-    end
-  end)
 
-  vim.notify('[clangd] Watching: ' .. watch_file)
+      if fname and fname:match '.*/compile_commands%.json$' and status.change then
+        debounce_timer = uv.new_timer()
+        debounce_timer:start(200, 0, function()
+          vim.schedule(function()
+            vim.notify '[clangd] Detected compile_commands.json change. Reloading ...'
+            watch_path = vim.fn.fnamemodify(fname, ':h')
+            M.start_clangd(watch_path)
+            M.watch_compile_commands(watch_path)
+          end)
+        end)
+      end
+    end)
+  )
 end
 
 return {
