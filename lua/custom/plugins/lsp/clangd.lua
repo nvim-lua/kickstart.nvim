@@ -3,6 +3,7 @@ local M = {}
 M.clang_filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' }
 
 local lspconfig = require 'lspconfig'
+local watcher = nil
 
 local function find_compile_commands()
   local lines = vim.fn.systemlist { 'fd', '-u', '-t', 'f', 'compile_commands.json' }
@@ -21,6 +22,7 @@ function M.stop_clangd()
 end
 
 function M.setup_clangd(commands_dir)
+  vim.notify('[clangd] Setting up with: ' .. commands_dir)
   M.stop_clangd()
 
   lspconfig.clangd.setup {
@@ -71,16 +73,23 @@ function M.pick_commands_dir()
 end
 
 function M.watch_compile_commands()
+  if watcher then
+    return
+  end
+
   local uv = vim.uv or vim.loop
-  local watcher = uv.new_fs_event()
+  watcher = uv.new_fs_event()
   local cwd = vim.fn.getcwd()
 
+  vim.notify('clangd: Watching for compile_commands.json in ' .. cwd, vim.log.levels.INFO)
   watcher:start(
     cwd,
     { recursive = true },
     vim.schedule_wrap(function(_, fname, status)
       if fname and fname:match 'compile_commands%.json$' and status.change then
+        vim.notify('[clangd] Detected change: ' .. fname, vim.log.levels.INFO)
         watcher:stop()
+        watcher = nil
         M.setup_clangd(vim.fn.fnamemodify(fname, ':h'))
       end
     end)
