@@ -87,12 +87,8 @@ function M.watch_compile_commands(dir)
         return
       end
 
-      vim.notify('[clangd] Watcher triggered: ' .. fname)
-      if fname:match '[/\\]compile_commands%.json$' then
-        vim.notify '[clangd] MATCHED compile_commands.json'
-      end
-
       if fname and fname:match '[/\\]compile_commands%.json$' and status.change then
+        vim.notify('[clangd] Watcher triggered: ' .. fname)
         if debounce_timer then
           debounce_timer:stop()
           debounce_timer:close()
@@ -123,8 +119,15 @@ function M.pick_commands_dir()
           local entry = require('telescope.actions.state').get_selected_entry()
           require('telescope.actions').close(prompt_bufnr)
           vim.defer_fn(function()
-            if entry and type(entry[1]) == 'string' then
-              M.start_clangd(entry[1])
+            if entry then
+              if type(entry[1]) == 'string' then
+                vim.notify('[clangd] pick_commands_dir: ' .. entry[1])
+                M.start_clangd(entry[1])
+              else
+                vim.notify('[clangd] pick_commands_dir: ' .. entry[1])
+              end
+            else
+              vim.notify '[clangd] pick_commands_dir is nil'
             end
           end, 100)
         end)
