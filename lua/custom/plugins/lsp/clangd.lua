@@ -14,8 +14,10 @@ end
 function M.stop_clangd()
   for _, client in ipairs(vim.lsp.get_clients()) do
     if client.name == 'clangd' then
-      client.stop { force = true }
-      vim.notify '[clangd] stopped clangd'
+      pcall(function()
+        client.stop { force = true }
+      end)
+      vim.notify '[clangd] Stopped clangd'
     end
   end
 end
@@ -32,11 +34,11 @@ function M.start_clangd(dir)
     '--resource-dir=' .. vim.fn.systemlist({ 'clang++', '--print-resource-dir' })[1],
   }
   if dir and dir ~= '' then
-    table.insert(cmd, '--compile-commands-dir=' .. dir)
     vim.notify('[clangd] Setting up with: ' .. dir)
+    table.insert(cmd, '--compile-commands-dir=' .. dir)
   else
-    table.insert(cmd, '--compile-commands-dir=.')
     vim.notify '[clangd] No compile_commands.json found.\nUse <leader>cc to manually set location'
+    table.insert(cmd, '--compile-commands-dir=.')
   end
 
   lspconfig.clangd.setup {
@@ -55,18 +57,6 @@ function M.reload_clangd()
     M.start_clangd(find_compile_commands())
   end, 100)
 end
-
---     for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
---       local ft = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
---       if vim.tbl_contains(M.clang_filetypes, ft) then
---         local client = vim.lsp.get_clients({ name = 'clangd' })[1]
---         if client then
---           vim.lsp.buf_attach_client(bufnr, client.id)
---         end
---       end
---     end
---   end, 100)
--- end
 
 function M.pick_commands_dir()
   local pickers = require 'telescope.pickers'
@@ -92,62 +82,53 @@ function M.pick_commands_dir()
     :find()
 end
 
--- function M.watch_compile_commands()
---   vim.notify('clangd: Starting watcher for compile_commands.json', vim.log.levels.INFO)
---   local uv = vim.uv or vim.loop
---   local check_interval = 1000 -- ms
---
---   local function try_attach()
---     local dir = find_compile_commands()
---     if dir then
---       vim.notify('[clangd] Found compile_commands at: ' .. dir)
---       M.setup_clangd(dir)
---       return true
---     end
---     return false
---   end
---
---   local timer = uv.new_timer()
---   timer:start(0, check_interval, function()
---     if try_attach() then
---       timer:stop()
---       timer:close()
---     end
---   end)
---
---   local fs_watcher = uv.new_fs_event()
---   fs_watcher:start(vim.fn.getcwd(), { recursive = true }, function(_, fname, status)
---     if fname and fname:match 'compile_commands%.json$' and status.change then
---       fs_watcher:stop()
---       vim.schedule(function()
---         vim.notify '[clangd] Detected compile_commands.json change, reloading ...'
---         M.setup_clangd(vim.fn.fnamemodify(fname, ':h'))
---       end)
---     end
---   end)
--- end
+function M.watch_compile_commands(dir)
+  local uv = vim.uv or vim.loop
+  local watcher = uv.new_fs_event()
+  local debounce_timer
+
+  local watch_path = dir or vim.fn.getcwd()
+  local watch_file = watch_path .. '/compile_commands.json'
+
+  if not vim.fn.filereadable(watch_file) then
+    return
+  end
+
+  watcher:start(watch_path, { recursive = true }, function(err, fname, status)
+    if err then
+      vim.schedule(function()
+        vim.notify('[clangd] Watcher error: ' .. err, vim.log.levels.ERROR)
+      end)
+      return
+    end
+    if fname and fname:match 'compile_commands%.json$' and status.change then
+      if debounce_timer then
+        debounce_timer.stop()
+        debounce_timer.close()
+      end
+      debounce_timer = uv.new_timer()
+      debounce_timer:start(200, 0, function()
+        vim.schedule(function()
+          vim.notify '[clangd] Detected compile_commands.json change. Reloading ...'
+          -- M.start_clangd(watch_path)
+          M.reload_clangd()
+        end)
+      end)
+    end
+  end)
+
+  vim.notify('[clangd] Watching: ' .. watch_file)
+end
 
 return {
   'neovim/nvim-lspconfig',
   ft = M.clang_filetypes,
   config = function()
-    -- vim.api.nvim_create_autocmd('FileType', {
-    --   pattern = M.clang_filetypes,
-    --   group = vim.api.nvim_create_augroup('clangd-setup', { clear = true }),
-    --   callback = function()
-    --     if not vim.lsp.get_clients({ name = 'clangd' })[1] then
-    --       local dir = find_compile_commands()
-    --       if dir then
-    --         vim.notify('[clangd] Starting with compile_commands from: ' .. dir)
-    --         M.start_clangd(dir)
-    --       else
-    --         vim.notify '[clangd] No compile_commands found. Using fallback config.\nUse <leader>cc to manually set location.'
-    --         M.start_clangd(nil)
-    --       end
-    --     end
-    --   end,
-    -- })
-    M.start_clangd(find_compile_commands())
+    local dir = find_compile_commands()
+    M.start_clangd(dir)
+    if dir ~= '' then
+      M.watch_compile_commands(dir)
+    end
 
     vim.keymap.set('n', '<leader>cc', M.pick_commands_dir, { desc = 'Pick location of compile_commands.json for clangd' })
   end,
