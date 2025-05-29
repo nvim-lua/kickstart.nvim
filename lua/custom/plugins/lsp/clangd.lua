@@ -120,7 +120,7 @@ return {
   config = function()
     vim.api.nvim_create_autocmd('FileType', {
       pattern = M.clang_filetypes,
-      group = vim.api.nvim_create_autocmd('clangd-setup', { clear = true }),
+      group = vim.api.nvim_create_augroup('clangd-setup', { clear = true }),
       callback = function()
         if not vim.lsp.get_clients({ name = 'clangd' })[1] then
           local dir = find_compile_commands()
