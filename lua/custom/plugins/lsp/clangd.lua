@@ -124,12 +124,22 @@ return {
   'neovim/nvim-lspconfig',
   ft = M.clang_filetypes,
   config = function()
-    local dir = find_compile_commands()
-    M.start_clangd(dir)
-    if dir ~= '' then
-      M.watch_compile_commands(dir)
-    end
+    vim.api.nvim_create_autocmd('BufReadPost', {
+      group = vim.api.nvim_create_augroup('clangd-lazy-init', { clear = true }),
+      pattern = '*',
+      callback = function(args)
+        local ft = vim.bo[args.buf].filetype
+        if vim.tbl_contains(M.clang_filetypes, ft) then
+          local dir = find_compile_commands()
+          M.start_clangd(dir)
+          if dir ~= '' then
+            M.watch_compile_commands(dir)
+          end
 
-    vim.keymap.set('n', '<leader>cc', M.pick_commands_dir, { desc = 'Pick location of compile_commands.json for clangd' })
+          vim.keymap.set('n', '<leader>cc', M.pick_commands_dir, { desc = 'Pick location of compile_commands.json for clangd' })
+          vim.api.nvim_clear_autocmds { group = 'clangd-lazy-init' }
+        end
+      end,
+    })
   end,
 }
