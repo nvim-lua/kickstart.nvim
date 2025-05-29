@@ -118,14 +118,22 @@ return {
   'neovim/nvim-lspconfig',
   ft = M.clang_filetypes,
   config = function()
-    local dir = find_compile_commands()
-    if dir then
-      vim.notify('[clangd] Starting with compile_commands from: ' .. dir)
-      M.start_clangd(dir)
-    else
-      vim.notify '[clangd] No compile_commands found. Using fallback config.\nUse <leader>cc to manually set location.'
-      M.start_clangd(nil)
-    end
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = M.clang_filetypes,
+      group = vim.api.nvim_create_autocmd('clangd-setup', { clear = true }),
+      callback = function()
+        if not vim.lsp.get_clients({ name = 'clangd' })[1] then
+          local dir = find_compile_commands()
+          if dir then
+            vim.notify('[clangd] Starting with compile_commands from: ' .. dir)
+            M.start_clangd(dir)
+          else
+            vim.notify '[clangd] No compile_commands found. Using fallback config.\nUse <leader>cc to manually set location.'
+            M.start_clangd(nil)
+          end
+        end
+      end,
+    })
 
     vim.keymap.set('n', '<leader>cc', M.pick_commands_dir, { desc = 'Pick location of compile_commands.json for clangd' })
   end,
