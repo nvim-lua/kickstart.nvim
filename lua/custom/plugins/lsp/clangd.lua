@@ -39,9 +39,9 @@ function M.setup_clangd(commands_dir)
   }
 
   for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-    local ft = vim.api.nvim_buf_get_option(bufnr, 'filetype')
+    local ft = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
     if vim.tbl_contains(M.clang_filetypes, ft) then
-      vim.lsp.buf_attach_client(bufnr, vim.lsp.get_active_clients({ name = 'clangd' })[1].id)
+      vim.lsp.buf_attach_client(bufnr, vim.lsp.get_clients({ name = 'clangd' })[1].id)
     end
   end
 end
@@ -62,6 +62,7 @@ function M.pick_commands_dir()
           require('telescope.actions').close(prompt_bufnr)
           if commands_dir ~= '' then
             M.setup_clangd(commands_dir)
+          end
         end)
         return true
       end,
