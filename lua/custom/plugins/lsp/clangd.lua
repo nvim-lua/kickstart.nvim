@@ -96,6 +96,6 @@ return {
       M.watch_compile_commands()
     end
 
-    vim.keymap.set('n', '<leader>cc', pick_commands_dir, { desc = 'Pick location of compile_commands.json for clangd' })
+    vim.keymap.set('n', '<leader>cc', M.pick_commands_dir, { desc = 'Pick location of compile_commands.json for clangd' })
   end,
 }
