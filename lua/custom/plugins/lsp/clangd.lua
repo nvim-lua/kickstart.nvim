@@ -1,8 +1,6 @@
 local M = {}
 
-local lspconfig = require 'lspconfig'
-local capabilities = require('blink.cmp').get_lsp_capabilities()
-local Path = require 'plenary.path'
+-- local Path = require 'plenary.path'
 local pickers = require 'telescope.pickers'
 local finders = require 'telescope.finders'
 local conf = require('telescope.config').values
@@ -50,6 +48,9 @@ function M.pick_target()
 end
 
 function M.setup()
+  local lspconfig = require 'lspconfig'
+  local capabilities = require('blink.cmp').get_lsp_capabilities()
+
   lspconfig.clangd.setup {
     cmd = make_clangd_cmd(),
     filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
@@ -59,4 +60,6 @@ function M.setup()
   }
 end
 
-return M
+M.setup()
+
+return {}

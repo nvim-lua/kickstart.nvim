@@ -30,9 +30,7 @@ local servers = {
 
 for server_name, server in pairs(servers) do
   server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-  require('lspconfig')[server_name].setup(server)
+  lspconfig[server_name].setup(server)
 end
-
-require('custom.plugins.lsp.clangd').setup()
 
 return {}
