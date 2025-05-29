@@ -1,5 +1,6 @@
 local M = {}
 M.clang_filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' }
+M.auto_watch_enabled = true
 
 local lspconfig = require 'lspconfig'
 
@@ -23,6 +24,8 @@ function M.stop_clangd()
 end
 
 function M.start_clangd(dir)
+  M.stop_clangd()
+
   local cmd = {
     'clangd',
     '--background-index',
@@ -48,14 +51,53 @@ function M.start_clangd(dir)
   }
 end
 
-function M.reload_clangd(dir)
-  M.stop_clangd()
+local watcher, debounce_timer
 
-  dir = dir or find_compile_commands()
+function M.watch_compile_commands(dir)
+  local uv = vim.uv or vim.loop
 
-  vim.defer_fn(function()
-    M.start_clangd(dir)
-  end, 100)
+  if watcher then
+    watcher:stop()
+    watcher:close()
+    watcher = nil
+  end
+
+  if debounce_timer then
+    debounce_timer:stop()
+    debounce_timer:close()
+    debounce_timer = nil
+  end
+
+  local watch_path = dir or vim.fn.getcwd()
+  local watch_file = watch_path .. '/compile_commands.json'
+
+  if not M.auto_watch_enabled or not vim.fn.filereadable(watch_file) then
+    return
+  end
+
+  watcher = uv.new_fs_event()
+  watcher:start(
+    watch_path,
+    { recursive = true },
+    vim.schedule_wrap(function(err, fname, status)
+      if err then
+        vim.notify('[clangd] Watcher error: ' .. err, vim.log.levels.ERROR)
+        return
+      end
+
+      if fname and fname:match '.*/compile_commands%.json$' and status.change then
+        debounce_timer = uv.new_timer()
+        debounce_timer:start(200, 0, function()
+          vim.schedule(function()
+            vim.notify '[clangd] Detected compile_commands.json change. Reloading ...'
+            watch_path = vim.fn.fnamemodify(fname, ':h')
+            M.start_clangd(watch_path)
+            M.watch_compile_commands(watch_path)
+          end)
+        end)
+      end
+    end)
+  )
 end
 
 function M.pick_commands_dir()
@@ -81,55 +123,6 @@ function M.pick_commands_dir()
     :find()
 end
 
-local watcher, debounce_timer
-
-function M.watch_compile_commands(dir)
-  local uv = vim.uv or vim.loop
-
-  if watcher then
-    watcher:stop()
-    watcher:close()
-    watcher = nil
-  end
-
-  if debounce_timer then
-    debounce_timer:stop()
-    debounce_timer:close()
-    debounce_timer = nil
-  end
-
-  local watch_path = dir or vim.fn.getcwd()
-  local watch_file = watch_path .. '/compile_commands.json'
-
-  -- if not vim.fn.filereadable(watch_file) then
-  --   return
-  -- end
-
-  watcher = uv.new_fs_event()
-  watcher:start(
-    watch_path,
-    { recursive = true },
-    vim.schedule_wrap(function(err, fname, status)
-      if err then
-        vim.notify('[clangd] Watcher error: ' .. err, vim.log.levels.ERROR)
-        return
-      end
-
-      if fname and fname:match '.*/compile_commands%.json$' and status.change then
-        debounce_timer = uv.new_timer()
-        debounce_timer:start(200, 0, function()
-          vim.schedule(function()
-            vim.notify '[clangd] Detected compile_commands.json change. Reloading ...'
-            watch_path = vim.fn.fnamemodify(fname, ':h')
-            M.reload_clangd(watch_path)
-            M.watch_compile_commands(watch_path)
-          end)
-        end)
-      end
-    end)
-  )
-end
-
 return {
   'neovim/nvim-lspconfig',
   ft = M.clang_filetypes,
@@ -144,6 +137,8 @@ return {
           M.start_clangd(dir)
           if dir ~= '' then
             M.watch_compile_commands(dir)
+          else
+            M.watch_compile_commands()
           end
 
           vim.keymap.set('n', '<leader>cc', M.pick_commands_dir, { desc = 'Pick location of compile_commands.json for clangd' })
