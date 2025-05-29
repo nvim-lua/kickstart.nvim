@@ -112,7 +112,7 @@ function M.watch_compile_commands(dir)
         vim.schedule(function()
           vim.notify '[clangd] Detected compile_commands.json change. Reloading ...'
           watcher:stop()
-          M.start_clangd(vim.fn.fnamemodify(fname, ':h')
+          M.start_clangd(vim.fn.fnamemodify(fname, ':h'))
         end)
       end)
     end
