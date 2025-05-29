@@ -1,6 +1,5 @@
 local M = {}
 M.clang_filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' }
-M.auto_watch_enabled = true
 
 local lspconfig = require 'lspconfig'
 
@@ -32,14 +31,14 @@ function M.start_clangd(dir)
     '--clang-tidy',
     '--header-insertion=never',
     '--query-driver=' .. vim.fn.exepath 'clang++',
-    '--resource-dir=' .. vim.fn.systemlist({ 'clang++', '--print-resource-dir' })[1],
+    '--resource-dir=' .. vim.fn.systemlist({ 'clang++', '--print-resource-dir' })[1] or '',
   }
   if dir and dir ~= '' then
     vim.notify('[clangd] Setting up with: ' .. dir)
     table.insert(cmd, '--compile-commands-dir=' .. dir)
     M.watch_compile_commands(dir)
   else
-    vim.notify('[clangd] Empty or nil dir: ' .. dir)
+    vim.notify '[clangd] Empty or nil --compile-commands-dir'
   end
 
   lspconfig.clangd.setup {
@@ -68,16 +67,16 @@ function M.watch_compile_commands(dir)
     debounce_timer = nil
   end
 
-  local watch_path = dir or vim.fn.getcwd()
-  local watch_file = watch_path .. '/compile_commands.json'
+  local dir = dir or vim.fn.getcwd()
+  local file = dir .. '/compile_commands.json'
 
-  if not vim.fn.filereadable(watch_file) then
+  if not vim.fn.filereadable(file) then
     vim.notify '[clangd] No compile_commands.json found.\nUse <leader>cc to manually set location when available.'
   end
 
   watcher = uv.new_fs_event()
   watcher:start(
-    watch_path,
+    dir,
     { recursive = true },
     vim.schedule_wrap(function(err, fname, status)
       if err then
@@ -86,13 +85,15 @@ function M.watch_compile_commands(dir)
       end
 
       if fname and fname:match '.*/compile_commands%.json$' and status.change then
+        if debounce_timer then
+          debounce_timer:stop()
+          debounce_timer:close()
+        end
         debounce_timer = uv.new_timer()
         debounce_timer:start(200, 0, function()
           vim.schedule(function()
             vim.notify '[clangd] Detected compile_commands.json change. Reloading ...'
-            watch_path = vim.fn.fnamemodify(fname, ':h')
-            M.start_clangd(watch_path)
-            M.watch_compile_commands(watch_path)
+            M.start_clangd(vim.fn.fnamemodify(fname, ':h'))
           end)
         end)
       end
@@ -114,7 +115,7 @@ function M.pick_commands_dir()
           local entry = require('telescope.actions.state').get_selected_entry()
           require('telescope.actions').close(prompt_bufnr)
           vim.defer_fn(function()
-            if entry then
+            if entry and type(entry[1]) == 'string' then
               M.start_clangd(entry[1])
             end
           end, 100)
