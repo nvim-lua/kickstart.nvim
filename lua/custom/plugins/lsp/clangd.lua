@@ -32,7 +32,7 @@ function M.start_clangd(commands_dir)
     '--resource-dir=' .. vim.fn.systemlist({ 'clang++', '--print-resource-dir' })[1],
   }
   if commands_dir then
-    table.insert(cmd, '--compile_commands-dir=' .. commands_dir)
+    table.insert(cmd, '--compile-commands-dir=' .. commands_dir)
   end
 
   print(vim.inspect(cmd))
