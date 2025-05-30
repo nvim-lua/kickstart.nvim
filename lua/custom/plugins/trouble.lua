@@ -78,7 +78,7 @@ return {
   config = function(_, opts)
     require('trouble').setup(opts)
     -- Add which-key group
-    -- local ok, which_key = pcall(require, 'which-key')
+    local ok, which_key = pcall(require, 'which-key')
     -- if ok then
     --   -- Use standard which-key format that's known to work
     --   which_key.register({

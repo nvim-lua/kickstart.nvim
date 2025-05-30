@@ -23,8 +23,8 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
-    'mfussenegger/nvim-dap-python',
-    'theHamsta/nvim-dap-virtual-text',
+    'mfussenegger/nvim-dap-python', -- Uncomment to add Python support
+    'theHamsta/nvim-dap-virtual-text', -- Uncomment to add virtual text support
   },
   keys = {
     -- Basic debugging keymaps, feel free to change to your liking!
@@ -42,7 +42,9 @@ return {
       end,
       desc = 'Debug: Step Into',
     },
-    {
+    {Read debug.lua, lines 1 to 153
+
+
       '<F2>',
       function()
         require('dap').step_over()
@@ -123,6 +125,18 @@ return {
       },
     }
 
+    -- Change breakpoint icons
+    -- vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
+    -- vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
+    -- local breakpoint_icons = vim.g.have_nerd_font
+    --     and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
+    --   or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
+    -- for type, icon in pairs(breakpoint_icons) do
+    --   local tp = 'Dap' .. type
+    --   local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
+    --   vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
+    -- end
+
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
@@ -131,51 +145,35 @@ return {
     require('dap-go').setup {
       delve = {
         -- On Windows delve must be run attached or it crashes.
-        -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md\#configuring
+        -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
         detached = vim.fn.has 'win32' == 0,
       },
     }
 
     -- Python configuration
-    require('dap-python').setup('python')
+    require('dap-python').setup('python') -- Uses the Python in your PATH
     require('dap-python').test_runner = 'pytest'
     
-    -- Initialize the Python configuration table if it doesn't exist
-    dap.configurations.python = dap.configurations.python or {
-  {
-    -- The first three options are required by nvim-dap
-    type = 'python'; -- the type here established the link to the adapter definition: `dap.adapters.python`
-    request = 'launch';
-    name = "Launch file";
-
-    -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
-
-    program = "${file}"; -- This configuration will launch the current file if used.
-    pythonPath = function()
-      -- debugpy supports launching an application with a different interpreter then the one used to launch debugpy itself.
-      -- The code below looks for a `venv` or `.venv` folder in the current directly and uses the python within.
-      -- You could adapt this - to for example use the `VIRTUAL_ENV` environment variable.
-      local cwd = vim.fn.getcwd()
-      if vim.fn.executable(cwd .. '/venv/bin/python') == 1 then
-        return cwd .. '/venv/bin/python'
-      elseif vim.fn.executable(cwd .. '/.venv/bin/python') == 1 then
-        return cwd .. '/.venv/bin/python'
-      else
-        return '/usr/bin/python'
-      end
-    end;
-  },
-}
+    -- Make sure the configurations table exists
+    dap.configurations.python = dap.configurations.python or {}
     
-    -- Add a basic Python configuration if none exists
-    -- if #dap.configurations.python == 0 then
-    --   table.insert(dap.configurations.python, {
-    --     type = 'python',
-    --     request = 'launch',
-    --     name = 'Launch file',
-    --     program = '${file}',
-    --     pythonPath = 'python'
-    --   })
-    -- end
+    -- Add some common Python debug configurations
+    table.insert(dap.configurations.python, {
+      type = 'python',
+      request = 'launch',
+      name = 'Launch file',
+      program = '${file}',
+      pythonPath = function()
+        -- Try to detect python path from virtual environment
+        local cwd = vim.fn.getcwd()
+        if vim.fn.executable(cwd .. '/venv/bin/python') == 1 then
+          return cwd .. '/venv/bin/python'
+        elseif vim.fn.executable(cwd .. '/.venv/bin/python') == 1 then
+          return cwd .. '/.venv/bin/python'
+        else
+          return 'python'
+        end
+      end,
+    })
   end,
 }
