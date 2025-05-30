@@ -45,6 +45,7 @@ function M.start_clangd(dir)
     vim.notify '[clangd] Could not find compile_commands.json.\nUse <leader>lc to manually set location when available.'
   end
 
+  print(vim.inspect(cmd))
   lspconfig.clangd.setup {
     cmd = cmd,
     filetypes = M.clang_filetypes,
