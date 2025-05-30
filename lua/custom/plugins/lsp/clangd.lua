@@ -43,6 +43,8 @@ function M.start_clangd(dir)
     M.watch_compile_commands(dir)
   else
     vim.notify '[clangd] Could not find compile_commands.json.\nUse <leader>lc to manually set location when available.'
+    vim.notify '[clangd] Setting up with: "."'
+    table.insert(cmd, '--compile-commands-dir="."')
   end
 
   print(vim.inspect(cmd))
