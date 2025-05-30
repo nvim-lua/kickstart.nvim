@@ -3,7 +3,7 @@ M.clang_filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' }
 
 local lspconfig = require 'lspconfig'
 
-local function find_compile_commands()
+function M.find_compile_commands()
   local results = vim.fn.systemlist { 'fd', '-u', '-t', 'f', 'compile_commands.json' }
   if vim.tbl_isempty(results) then
     return nil
