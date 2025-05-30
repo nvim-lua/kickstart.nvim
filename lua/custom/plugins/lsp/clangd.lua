@@ -149,6 +149,7 @@ return {
           vim.api.nvim_clear_autocmds { group = 'clangd-once' }
         end
       end,
+      once = true,
     })
 
     vim.keymap.set('n', '<leader>lc', M.pick_commands_dir, {
