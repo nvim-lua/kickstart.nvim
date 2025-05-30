@@ -37,15 +37,13 @@ function M.start_clangd(dir)
     '--query-driver=' .. vim.fn.exepath 'clang++',
     '--resource-dir=' .. vim.fn.systemlist({ 'clang++', '--print-resource-dir' })[1],
   }
-  if dir and dir ~= '' then
-    vim.notify('[clangd] Setting up with: ' .. dir)
-    table.insert(cmd, '--compile-commands-dir=' .. dir)
-    M.watch_compile_commands(dir)
-  else
+  if not dir or dir == '' then
     vim.notify '[clangd] Could not find compile_commands.json.\nUse <leader>lc to manually set location when available.'
-    vim.notify '[clangd] Setting up with: "."'
-    table.insert(cmd, '--compile-commands-dir="."')
+    dir = '.'
   end
+  vim.notify('[clangd] Setting up with: ' .. dir)
+  table.insert(cmd, '--compile-commands-dir=' .. dir)
+  M.watch_compile_commands(dir)
 
   print(vim.inspect(cmd))
   lspconfig.clangd.setup {
