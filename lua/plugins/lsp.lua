@@ -22,5 +22,5 @@ return {
     { 'rafamadriz/friendly-snippets' },
   },
   -- Use the lazy option to lazy-load the plugin on events or commands
-  lazy = true,
+  lazy = false,
 }

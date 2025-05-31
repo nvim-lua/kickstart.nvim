@@ -3,7 +3,7 @@ return {
   {
     'hrsh7th/nvim-cmp',
     dependencies = {
-      'luckasRanarison/tailwind-tools.nvim',
+      -- 'luckasRanarison/tailwind-tools.nvim',
       'onsails/lspkind-nvim',
       -- Snippet Engine & its associated nvim-cmp source
       'L3MON4D3/LuaSnip',
@@ -16,11 +16,11 @@ return {
     opts = function()
       return {
         -- ...
-        formatting = {
-          format = require('lspkind').cmp_format {
-            before = require('tailwind-tools.cmp').lspkind_format,
-          },
-        },
+        -- formatting = {
+        --   format = require('lspkind').cmp_format {
+        --     before = require('tailwind-tools.cmp').lspkind_format,
+        --   },
+        -- },
       }
     end,
   },
