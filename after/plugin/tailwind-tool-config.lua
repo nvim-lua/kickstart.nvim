@@ -1,0 +1,3 @@
+require("tailwind-tools").setup({
+ 
+})
