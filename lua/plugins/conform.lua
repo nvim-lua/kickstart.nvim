@@ -48,6 +48,7 @@ return { -- Autoformat
       go = { 'gofmt' },
       sql = { 'sqlfmt' },
       zig = { 'zig-fmt' },
+      fish = { 'fish_indent' },
     },
   },
 }
