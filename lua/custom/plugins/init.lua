@@ -7,7 +7,21 @@ vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
 vim.keymap.set('n', '<leader>cpd', ':Copilot disable<cr>', { silent = true, noremap = true }) -- Disable Copilot
 vim.keymap.set('n', '<leader>cpe', ':Copilot enable<cr>', { silent = true, noremap = true }) -- Enable Copilot
 
+vim.g.copilot_enabled = false
+
 return {
+  {
+    'olrtg/nvim-emmet',
+    config = function()
+      vim.keymap.set({ 'n', 'v' }, '<leader>xe', require('nvim-emmet').wrap_with_abbreviation)
+    end,
+  },
+  -- {
+  --   'nvimdev/indentmini.nvim',
+  --   config = function()
+  --     require('indentmini').setup()
+  --   end,
+  -- },
   {
     'ibhagwan/fzf-lua',
     dependencies = { 'echasnovski/mini.icons' },
@@ -140,7 +154,10 @@ return {
   {
     'ray-x/lsp_signature.nvim',
     event = 'VeryLazy',
-    opts = {},
+    enabled = false,
+    opts = {
+      toggle_key = '<C-k>', -- toggle signature help on and off
+    },
     config = function(_, opts)
       require('lsp_signature').setup(opts)
     end,
