@@ -269,6 +269,10 @@ require('lazy').setup({
   --        end,
   --    }
   --
+  -- For plugins written in VimScript, use `init = function() ... end` to set
+  -- configuration options, usually in the format `vim.g.*`. This can also
+  -- contain conditionals or any other setup logic you need for the plugin.
+  --
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`.
   --
