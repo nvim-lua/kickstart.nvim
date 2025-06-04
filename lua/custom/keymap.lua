@@ -44,3 +44,76 @@ vim.keymap.set('n', '<c-j>', '<cmd>TmuxNavigateDown<cr>', { desc = 'Move to down
 vim.keymap.set('n', '<c-k>', '<cmd>TmuxNavigateUp<cr>', { desc = 'Move to up pane in tumx' })
 vim.keymap.set('n', '<c-l>', '<cmd>TmuxNavigateRight<cr>', { desc = 'Move to right pane in tumx' })
 vim.keymap.set('n', '<c-\\>', '<cmd>TmuxNavigatePrevious<cr>', { desc = 'Move to last pane in tumx' })
+
+vim.keymap.set('n', '<leader>dt', function()
+  require('dap').toggle_breakpoint()
+end, {
+  desc = 'Toggle Breakpoint',
+  nowait = true,
+  remap = false,
+})
+vim.keymap.set('n', '<leader>dc', function()
+  require('dap').continue()
+end, {
+  desc = 'Continue',
+  nowait = true,
+  remap = false,
+})
+vim.keymap.set('n', '<leader>di', function()
+  require('dap').step_into()
+end, {
+  desc = 'Step Into',
+  nowait = true,
+  remap = false,
+})
+vim.keymap.set('n', '<leader>do', function()
+  require('dap').step_over()
+end, {
+  desc = 'Step Over',
+  nowait = true,
+  remap = false,
+})
+vim.keymap.set('n', '<leader>du', function()
+  require('dap').step_out()
+end, {
+  desc = 'Step Out',
+  nowait = true,
+  remap = false,
+})
+vim.keymap.set('n', '<leader>dr', function()
+  require('dap').repl.open()
+end, {
+  desc = 'Open REPL',
+  nowait = true,
+  remap = false,
+})
+vim.keymap.set('n', '<leader>dl', function()
+  require('dap').run_last()
+end, {
+  desc = 'Run Last',
+  nowait = true,
+  remap = false,
+})
+vim.keymap.set('n', '<leader>dq', function()
+  require('dap').terminate()
+  require('dapui').close()
+  require('nvim-dap-virtual-text').toggle()
+end, {
+  desc = 'Terminate',
+  nowait = true,
+  remap = false,
+})
+vim.keymap.set('n', '<leader>db', function()
+  require('dap').list_breakpoints()
+end, {
+  desc = 'List Breakpoints',
+  nowait = true,
+  remap = false,
+})
+vim.keymap.set('n', '<leader>de', function()
+  require('dap').set_exception_breakpoints { 'all' }
+end, {
+  desc = 'Set Exception Breakpoints',
+  nowait = true,
+  remap = false,
+})
