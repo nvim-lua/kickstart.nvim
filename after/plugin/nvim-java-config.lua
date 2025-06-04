@@ -33,7 +33,6 @@ capabilities.textDocument.foldingRange = {
   lineFoldingOnly = true,
 }
 
-require('java').setup()
 require('lspconfig').jdtls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
