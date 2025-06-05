@@ -110,39 +110,6 @@ vim.opt.mouse = 'a'
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
 
--- -- Sync clipboard between OS and Neovim.
--- --  Schedule the setting after `UiEnter` because it can increase startup-time.
--- --  Remove this option if you want your OS clipboard to remain independent.
--- --  See `:help 'clipboard'`
--- vim.opt.clipboard = 'unnamedplus'
--- vim.keymap.set({ 'n', 'x' }, '<leader>y', '"+y', { desc = 'Copy to system clipboard' })
--- vim.keymap.set({ 'n', 'x' }, '<leader>Y', '"+yg_', { desc = 'Copy to system clipboard' })
--- vim.keymap.set({ 'n', 'x' }, '<leader>p', '"+p', { desc = 'Paste from system clipboard' })
--- vim.keymap.set({ 'n', 'x' }, '<leader>P', '"+P', { desc = 'Paste from system clipboard' })
--- test
-
--- vim.g.clipboard = {
---   name = 'OSC 52',
---   copy = {
---     ['+'] = require('vim.ui.clipboard.osc52').copy '+',
---     ['*'] = require('vim.ui.clipboard.osc52').copy '*',
---   },
---   paste = {
---     ['+'] = require('vim.ui.clipboard.osc52').paste '+',
---     ['*'] = require('vim.ui.clipboard.osc52').paste '*',
---   },
--- }
-
-vim.api.nvim_create_autocmd('TextYankPost', {
-  callback = function()
-    vim.highlight.on_yank()
-    local copy_to_unnamedplus = require('vim.ui.clipboard.osc52').copy '+'
-    copy_to_unnamedplus(vim.v.event.regcontents)
-    local copy_to_unnamed = require('vim.ui.clipboard.osc52').copy '*'
-    copy_to_unnamed(vim.v.event.regcontents)
-  end,
-})
-
 -- Enable break indent
 vim.opt.breakindent = true
 
@@ -239,31 +206,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
-vim.api.nvim_create_autocmd('TermOpen', {
-  desc = 'gets rid of line numbers when using terminal',
-  group = vim.api.nvim_create_augroup('custom-term-open', { clear = true }),
-  callback = function()
-    vim.opt.number = false
-    vim.opt.relativenumber = false
-  end,
-})
-
-vim.keymap.set('n', '<space>st', function()
-  vim.cmd.vnew()
-  vim.cmd.term()
-  vim.cmd.wincmd 'J'
-  vim.api.nvim_win_set_height(0, 15)
-end)
-
-vim.api.nvim_set_keymap('t', '<C-Space>', '<C-\\><C-n>', { noremap = true })
-
-vim.api.nvim_create_autocmd('Filetype', {
-  pattern = 'terraform',
-  callback = function()
-    vim.bo.commentstring = '# %s'
-  end,
-})
-
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -273,8 +215,11 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   if vim.v.shell_error ~= 0 then
     error('Error cloning lazy.nvim:\n' .. out)
   end
-end ---@diagnostic disable-next-line: undefined-field
-vim.opt.rtp:prepend(lazypath)
+end
+
+---@type vim.Option
+local rtp = vim.opt.rtp
+rtp:prepend(lazypath)
 
 -- [[ Configure and install plugins ]]
 --
@@ -289,7 +234,7 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -324,14 +269,6 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
     },
-  },
-
-  {
-    'windwp/nvim-autopairs',
-    event = 'InsertEnter',
-    config = true,
-    -- use opts = {} for passing setup options
-    -- this is equivalent to setup({}) function
   },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
@@ -1034,7 +971,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
