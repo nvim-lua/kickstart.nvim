@@ -25,6 +25,14 @@ vim.keymap.set('n', '<space>st', function()
   vim.api.nvim_win_set_height(0, 15)
 end)
 
+vim.keymap.set(
+  'n',
+  'K', -- Override Neovim's built-in hover keymap with rustaceanvim's hover actions
+  function()
+    vim.cmd.RustLsp { 'hover', 'actions' }
+  end
+)
+
 vim.api.nvim_set_keymap('t', '<C-Space>', '<C-\\><C-n>', { noremap = true })
 
 vim.api.nvim_create_autocmd('Filetype', {
