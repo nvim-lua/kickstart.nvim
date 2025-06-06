@@ -1214,36 +1214,6 @@ require('lazy').setup({
     end,
   },
   {
-    'yetone/avante.nvim',
-    event = 'VeryLazy',
-    build = 'make',
-    opts = {
-      -- provider = 'deepseek',
-      -- vendors = {
-      --   deepseek = {
-      --     __inherited_from = 'openai',
-      --     api_key_name = 'DEEPSEEK_API_KEY',
-      --     endpoint = 'https://api.deepseek.com',
-      --     model = 'deepseek-coder',
-      --   },
-      -- }, -- add any opts here
-    },
-    dependencies = {
-      'nvim-tree/nvim-web-devicons', -- or echasnovski/mini.icons
-      'stevearc/dressing.nvim',
-      'nvim-lua/plenary.nvim',
-      'MunifTanjim/nui.nvim',
-      --- The below is optional, make sure to setup it properly if you have lazy=true
-      {
-        'MeanderingProgrammer/render-markdown.nvim',
-        opts = {
-          file_types = { 'markdown', 'Avante' },
-        },
-        ft = { 'markdown', 'Avante' },
-      },
-    },
-  },
-  {
     'saghen/blink.cmp',
     lazy = false, -- lazy loading handled internally
     -- optional: provides snippets for the snippet source
