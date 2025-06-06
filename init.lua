@@ -100,9 +100,8 @@ vim.g.have_nerd_font = false
 
 -- Make line numbers default
 vim.o.number = true
--- You can also add relative line numbers, to help with jumping.
---  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+-- You can also add relative line numbers, to help with jumping. Experiment for yourself to see if you like it!
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -229,6 +228,10 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
     error('Error cloning lazy.nvim:\n' .. out)
   end
 end
+
+vim.cmd [[
+autocmd FileType dart setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+]]
 
 ---@type vim.Option
 local rtp = vim.opt.rtp
@@ -462,6 +465,45 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'wojciech-kulik/xcodebuild.nvim',
+    dependencies = {
+      'nvim-telescope/telescope.nvim',
+      'MunifTanjim/nui.nvim',
+      --   "folke/snacks.nvim", -- (optional) to show previews
+      -- "nvim-tree/nvim-tree.lua", -- (optional) to manage project files
+      -- "stevearc/oil.nvim", -- (optional) to manage project files
+      --"nvim-treesitter/nvim-treesitter", -- (optional) for Quick tests support (required Swift parser)
+    },
+    config = function()
+      require('xcodebuild').setup {
+        -- put some options here or leave it empty to use default settings
+      }
+    end,
+  },
+  {
+    'stevearc/oil.nvim',
+    ---@module 'oil'
+    ---@type oil.SetupOpts
+    opts = {
+      columns = {
+        'icon',
+        'size',
+      },
+      view_options = {
+        show_hidden = true,
+        is_hidden_file = function(name, bufnr)
+          local m = name:match '^%.'
+          return m ~= nil
+        end,
+      },
+    },
+    -- Optional dependencies
+    dependencies = { { 'echasnovski/mini.icons', opts = {} } },
+    -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
+    -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
+    lazy = false,
+  },
   -- LSP Plugins
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
@@ -474,6 +516,15 @@ require('lazy').setup({
         { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
       },
     },
+  },
+  {
+    'nvim-flutter/flutter-tools.nvim',
+    lazy = false,
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'stevearc/dressing.nvim', -- optional for vim.ui.select
+    },
+    config = true,
   },
   {
     -- Main LSP Configuration
@@ -522,6 +573,20 @@ require('lazy').setup({
       --    That is to say, every time a new file is opened that is associated with
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
       --    function will be executed to configure the current buffer
+      require('lspconfig').sourcekit.setup {
+        capabilities = {
+          workspace = {
+            didChangeWatchedFiles = {
+              dynamicRegistration = true,
+            },
+          },
+        },
+      }
+      local lspCapabilities = vim.lsp.protocol.make_client_capabilities()
+      lspCapabilities.textDocument.completion.completionItem.snippetSupport = true
+      require('lspconfig').pyright.setup {
+        capabilities = lspCapabilities,
+      }
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
@@ -682,8 +747,6 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
-        --
-
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -768,6 +831,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        swift = { 'swiftformat' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -835,7 +899,7 @@ require('lazy').setup({
         -- <c-k>: Toggle signature help
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
-        preset = 'default',
+        preset = 'enter',
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -975,7 +1039,7 @@ require('lazy').setup({
   --
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
