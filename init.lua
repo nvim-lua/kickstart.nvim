@@ -860,24 +860,28 @@ require('lazy').setup({
       signature = { enabled = true },
     },
   },
-
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'rebelot/kanagawa.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
-    name = 'kanagawa-dragon',
+  {
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    priority = 1000,
     config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('kanagawa').setup {
-        commentStyle = { italic = true },
-        -- statementStyle = { bold = false },
-        theme = 'dragon',
+      require('catppuccin').setup {
+        flavour = 'mocha',
       }
-      vim.cmd 'colorscheme kanagawa-dragon'
+      vim.cmd 'colorscheme catppuccin'
     end,
+    --  'rebelot/kanagawa.nvim',
+    --  priority = 1000, -- Make sure to load this before all the other start plugins.
+    --  name = 'kanagawa-dragon',
+    --  config = function()
+    --    ---@diagnostic disable-next-line: missing-fields
+    --    require('kanagawa').setup {
+    --      commentStyle = { italic = true },
+    --      -- statementStyle = { bold = false },
+    --      theme = 'dragon',
+    --    }
+    --    vim.cmd 'colorscheme kanagawa-dragon'
+    --  end,
     -- 'vague2k/vague.nvim',
     -- priority = 1000,
     -- name = 'vague',
@@ -940,9 +944,9 @@ require('lazy').setup({
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
-  {
-    'nvim-treesitter/nvim-treesitter-context',
-  },
+  --  {
+  --    'nvim-treesitter/nvim-treesitter-context',
+  -- },
   {
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
@@ -985,7 +989,7 @@ require('lazy').setup({
       -- if you want to open yazi instead of netrw, see below for more info
       open_for_directories = false,
       keymaps = {
-        show_help = '<f1>',
+        show_help = '~',
       },
     },
     -- 👇 if you use `open_for_directories=true`, this is recommended
@@ -993,35 +997,6 @@ require('lazy').setup({
       -- More details: https://github.com/mikavilpas/yazi.nvim/issues/802
       -- vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
-    end,
-  },
-  {
-    'goolord/alpha-nvim',
-    config = function()
-      local alpha = require 'alpha'
-      local dashboard = require 'alpha.themes.dashboard'
-      dashboard.section.header.val = {
-        '                                                     ',
-        '  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ',
-        '  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ',
-        '  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ',
-        '  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ',
-        '  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ',
-        '  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ',
-        '                                                     ',
-      }
-
-      -- Set menu
-      dashboard.section.buttons.val = {
-        dashboard.button('e', '  > New file', ':ene <BAR> startinsert <CR>'),
-        dashboard.button('f', '  > Find file', ':cd $HOME/dev | Telescope find_files<CR>'),
-        dashboard.button('r', '  > Recent', ':Telescope oldfiles<CR>'),
-        dashboard.button('s', '  > Settings', ':e $MYVIMRC | :cd %:p:h | split . | wincmd k | pwd<CR>'),
-        dashboard.button('q', '  > Quit NVIM', ':qa<CR>'),
-      }
-
-      -- Send config to alpha
-      alpha.setup(dashboard.opts)
     end,
   },
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
