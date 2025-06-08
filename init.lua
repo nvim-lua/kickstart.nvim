@@ -277,7 +277,10 @@ require('lazy').setup({
     version = '*',
     lazy = false,
     config = function()
-      require('nvim-tree').setup {}
+      require('nvim-tree').setup {
+        sync_root_with_cwd = true,
+        respect_buf_cwd = true,
+      }
       -- Optional: Keybinding to toggle nvim-tree
       vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = 'Toggle File Explorer (nvim-tree)' })
     end,
@@ -321,7 +324,17 @@ require('lazy').setup({
       },
     },
   },
+  -- NOTE: CLaude code  Plugin
 
+  {
+    'greggh/claude-code.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim', -- Required for git operations
+    },
+    config = function()
+      require('claude-code').setup()
+    end,
+  },
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
@@ -335,7 +348,6 @@ require('lazy').setup({
   --
   -- Then, because we use the `opts` key (recommended), the configuration runs
   -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
-
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
@@ -385,73 +397,6 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
-      },
-    },
-  },
-  --NOTE: Avante blink cmp
-  {
-    'Kaiser-Yang/blink-cmp-avante',
-    dependencies = { 'saghen/blink.cmp', 'yetone/avante.nvim' },
-    lazy = false,
-  },
-  --NOTE: Avante! Setup
-
-  {
-    'yetone/avante.nvim',
-    event = 'VeryLazy',
-    version = false, -- Never set this value to "*"! Never!
-    opts = {
-      -- add any opts here
-      -- for example
-      provider = 'claude',
-      openai = {
-        endpoint = 'https://api.anthropic.com',
-        model = 'claude-3-7-sonnet-20250219', -- your desired model (or use gpt-4o, etc.)
-        timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
-        temperature = 0,
-        max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
-        --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
-      },
-    },
-    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-    build = 'make',
-    -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter',
-      'stevearc/dressing.nvim',
-      'nvim-lua/plenary.nvim',
-      'MunifTanjim/nui.nvim',
-      --- The below dependencies are optional,
-      'echasnovski/mini.pick', -- for file_selector provider mini.pick
-      'nvim-telescope/telescope.nvim', -- for file_selector provider telescope
-      'hrsh7th/nvim-cmp', -- autocompletion for avante commands and mentions
-      'ibhagwan/fzf-lua', -- for file_selector provider fzf
-      'nvim-tree/nvim-web-devicons', -- or echasnovski/mini.icons
-      'zbirenbaum/copilot.lua', -- for providers='copilot'
-      {
-        -- support for image pasting
-        'HakonHarnes/img-clip.nvim',
-        event = 'VeryLazy',
-        opts = {
-          -- recommended settings
-          default = {
-            embed_image_as_base64 = false,
-            prompt_for_file_name = false,
-            drag_and_drop = {
-              insert_mode = true,
-            },
-            -- required for Windows users
-            use_absolute_path = true,
-          },
-        },
-      },
-      {
-        -- Make sure to set this up properly if you have lazy=true
-        'MeanderingProgrammer/render-markdown.nvim',
-        opts = {
-          file_types = { 'markdown', 'Avante' },
-        },
-        ft = { 'markdown', 'Avante' },
       },
     },
   },
@@ -886,10 +831,6 @@ require('lazy').setup({
     event = 'VimEnter',
     version = '1.*',
     dependencies = {
-      --
-      --
-      --
-      'Kaiser-Yang/blink-cmp-avante',
       -- Snippet Engine
       {
         'L3MON4D3/LuaSnip',
@@ -907,12 +848,12 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
+          {
+            'rafamadriz/friendly-snippets',
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load()
+            end,
+          },
         },
         opts = {},
       },
@@ -961,55 +902,12 @@ require('lazy').setup({
         documentation = { auto_show = false, auto_show_delay_ms = 500 },
       },
 
-      --   providers = {
-      --     lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
-      --     avante_commands = {
-      --       name = 'avante_commands',
-      --       module = 'blink.compat.source',
-      --       score_offset = 90,
-      --       opts = {},
-      --     },
-      --     avante_files = {
-      --       name = 'avante_files',
-      --       module = 'blink.compat.source',
-      --       score_offset = 100,
-      --       opts = {},
-      --     },
-      --     avante_mentions = {
-      --       name = 'avante_mentions',
-      --       module = 'blink.compat.source',
-      --       score_offset = 1000,
-      --       opts = {},
-      --     },
-      --   },
-      -- },
-      --
       sources = {
-        default = { 'avante', 'lsp', 'path', 'snippets', 'lazydev' },
+        default = { 'lsp', 'path', 'snippets', 'lazydev' },
         providers = {
           lazydev = {
             module = 'lazydev.integrations.blink',
             score_offset = 100,
-          },
-          avante = {
-            name = 'Avante',
-            module = 'blink-cmp-avante',
-            opts = {
-              command = {
-                get_kind_name = function()
-                  return 'AvanteCmd'
-                end,
-              },
-              mention = {
-                get_kind_name = function()
-                  return 'AvanteMention'
-                end,
-              },
-              kind_icons = {
-                AvanteCmd = '',
-                AvanteMention = '',
-              },
-            },
           },
         },
       },
@@ -1194,8 +1092,54 @@ require('lazy').setup({
     },
   },
 })
--- vim.api.nvim_set_hl(0, 'BlinkCmpKindAvanteCmd', { default = false, fg = '#89b4fa' })
--- vim.api.nvim_set_hl(0, 'BlinkCmpKindAvanteMention', { default = false, fg = '#f38ba8' })
+
+-- NOTE: Claude Code Plugin Config
+require('claude-code').setup {
+  -- Terminal window settings
+  window = {
+    split_ratio = 0.3, -- Percentage of screen for the terminal window (height for horizontal, width for vertical splits)
+    position = 'vertical', -- Position of the window: "botright", "topleft", "vertical", "rightbelow vsplit", etc.
+    enter_insert = true, -- Whether to enter insert mode when opening Claude Code
+    hide_numbers = true, -- Hide line numbers in the terminal window
+    hide_signcolumn = true, -- Hide the sign column in the terminal window
+  },
+  -- File refresh settings
+  refresh = {
+    enable = true, -- Enable file change detection
+    updatetime = 100, -- updatetime when Claude Code is active (milliseconds)
+    timer_interval = 1000, -- How often to check for file changes (milliseconds)
+    show_notifications = true, -- Show notification when files are reloaded
+  },
+  -- Git project settings
+  git = {
+    use_git_root = true, -- Set CWD to git root when opening Claude Code (if in git project)
+  },
+  -- Command settings
+  command = 'claude', -- Command used to launch Claude Code
+  -- Command variants
+  command_variants = {
+    -- Conversation management
+    continue = '--continue', -- Resume the most recent conversation
+    resume = '--resume', -- Display an interactive conversation picker
+
+    -- Output options
+    verbose = '--verbose', -- Enable verbose logging with full turn-by-turn output
+  },
+  -- Keymaps
+  keymaps = {
+    toggle = {
+      normal = '<C-,>', -- Normal mode keymap for toggling Claude Code, false to disable
+      terminal = '<C-,>', -- Terminal mode keymap for toggling Claude Code, false to disable
+      variants = {
+        continue = '<leader>cC', -- Normal mode keymap for Claude Code with continue flag
+        verbose = '<leader>cV', -- Normal mode keymap for Claude Code with verbose flag
+      },
+    },
+    window_navigation = true, -- Enable window navigation keymaps (<C-h/j/k/l>)
+    scrolling = true, -- Enable scrolling keymaps (<C-f/b>) for page up/down
+  },
+}
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+vim.g.python3_host_prog = '/Users/fq/.pyenv/versions/3.13.1/envs/rca/bin/python3'
