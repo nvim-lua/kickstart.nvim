@@ -156,7 +156,7 @@ vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 vim.o.inccommand = 'split'
 
 -- Show which line your cursor is on
-vim.o.cursorline = true
+vim.o.cursorline = false
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.o.scrolloff = 10
@@ -894,7 +894,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'vim'
     end,
   },
 
@@ -1014,3 +1014,29 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+-- fix colors in tmux
+vim.o.termguicolors = true
+vim.cmd 'colorscheme vim'
+
+-- my custom keys
+vim.keymap.set('n', '<PageUp>', function()
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-u>', true, true, true), 'n', true)
+end, { desc = 'Page Up' })
+
+vim.keymap.set('n', '<PageDown>', function()
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-d>', true, true, true), 'n', true)
+end, { desc = 'Page Down' })
+
+-- Map Ctrl+S to save the current file in insert mode and normal mode
+vim.api.nvim_set_keymap('i', '<C-s>', '<Esc>:w<CR>a', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-s>', '<Esc>:w<CR>', { noremap = true, silent = true })
+--vim.fn.expand('%')
+vim.api.nvim_set_keymap('n', '<F1>', ":lua vim.cmd('!ansible-vault decrypt ' .. vim.fn.expand('%'))<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<F2>', ":lua vim.cmd('!ansible-vault encrypt ' .. vim.fn.expand('%'))<CR>", { noremap = true, silent = true })
+-- open new tab with lead & mt
+vim.keymap.set('n', '<leader>mt', function()
+  local content = vim.api.nvim_buf_get_lines(0, 0, -1, false) -- Get current buffer content
+  vim.cmd 'tabnew' -- Open a new tab
+  vim.api.nvim_buf_set_lines(0, 0, -1, false, content) -- Set new buffer content
+end, { noremap = true, silent = true })
