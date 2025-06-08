@@ -614,7 +614,15 @@ require('lazy').setup({
       --  1) via the mason package manager; or
       --  2) via your system's package manager; or
       --  3) via a release binary from a language server's repo that's accessible somewhere on your system.
-      --
+
+      -- The servers table comprises of the following sub-tables:
+      -- 1. mason
+      -- 2. others
+      -- Both these tables have an identical structure of language server names as keys and
+      -- a table of language server configuration as values.
+      ---@class LspServersConfig
+      ---@field mason table<string, vim.lsp.Config>
+      ---@field others table<string, vim.lsp.Config>
       local servers = {
         --  Add any additional override configuration in any of the following tables. Available keys are:
         --  - cmd (table): Override the default command used to start the server
@@ -696,7 +704,7 @@ require('lazy').setup({
       -- to the default language server configs as provided by nvim-lspconfig or
       -- define a custom server config that's unavailable on nvim-lspconfig.
       for server, config in pairs(vim.tbl_extend('keep', servers.mason, servers.others)) do
-        if vim.fn.empty(config) ~= 1 then vim.lsp.config(server, config) end
+        if not vim.tbl_isempty(config) then vim.lsp.config(server, config) end
       end
 
       -- After configuring our language servers, we now enable them
@@ -706,7 +714,7 @@ require('lazy').setup({
       }
 
       -- Manually run vim.lsp.enable for all language servers that are *not* installed via Mason
-      if vim.fn.empty(servers.others) ~= 1 then vim.lsp.enable(vim.tbl_keys(servers.others)) end
+      if not vim.tbl_isempty(servers.others) then vim.lsp.enable(vim.tbl_keys(servers.others)) end
     end,
   },
 
