@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -328,8 +328,7 @@ require('lazy').setup({
         { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
         { '<leader>d', group = '[D]ocument' },
         { '<leader>r', group = '[R]ename' },
-        { '<leader>s', group = '[S]earch' },
-        { '<leader>w', group = '[W]orkspace' },
+
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
@@ -393,11 +392,12 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
+        defaults = {
+          file_ignore_patterns = { 'third_party/.*' },
+          --   mappings = {
+          --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+          --   },
+        },
         -- pickers = {}
         extensions = {
           ['ui-select'] = {
@@ -658,7 +658,7 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
+        clangd = {},
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
@@ -1022,3 +1022,61 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+-- My custom configurations
+
+-- Do not continue comment on new line
+vim.cmd 'autocmd BufEnter * set formatoptions-=cro'
+vim.cmd 'autocmd BufEnter * setlocal formatoptions-=cro'
+
+-- Switch buffers
+vim.keymap.set('n', '<Tab>', ':bnext<CR>', { desc = 'Next Buffer' })
+vim.keymap.set('n', '<S-Tab>', ':bprevious<CR>', { desc = 'Previous Buffer' })
+
+-- Builds
+vim.opt.makeprg = 'cmake --build build'
+
+vim.keymap.set('n', '<leader>cc', function()
+  vim.cmd '!cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+  print '🔄 compile_commands.json updated!'
+end, { desc = '[C]Make: Update compile_commands.json ' })
+
+local function find_executable()
+  -- Find only macOS executable inside `build/`
+  local handle = io.popen 'find build -type f -perm +111' -- Find files with exec
+  if not handle then
+    print '⚠️ Error: Could not execute command.'
+    return nil
+  end
+
+  local exec = handle:read '*l' -- Read first result
+  handle:close()
+
+  if exec and exec ~= '' then
+    return exec
+  else
+    print '⚠️ No exectuable found in build/. Did you build the project?'
+    return nil
+  end
+end
+
+vim.keymap.set('n', '<leader>m', function()
+  vim.cmd 'make' -- Run `:make` (compiles the project
+  vim.cmd 'silent! redraw!' -- Skip the "Press ENTER" prompt
+
+  -- Check if there are compilation errors
+  -- local errors = vim.fn.getqflist()
+  -- if #errors > 0 then
+  --   vim.cmd 'copen' -- Open the quickfix list to show errors
+  --   print '❌ Compilation failed. Check quickfix list.'
+  --   return
+  -- end
+
+  -- Check if there are compilation errors
+  local exec = find_executable()
+  if exec then
+    vim.cmd('! ' .. exec) -- Run the executable
+  else
+    print '⚠️ No executable found in build/.'
+  end
+end, { desc = '[M]ake & Run' })
