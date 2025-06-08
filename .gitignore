@@ -5,4 +5,4 @@ nvim
 
 spell/
 .DS_Store
-#lazy-lock.json
+lazy-lock.json
