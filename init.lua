@@ -1015,9 +1015,12 @@ require('lazy').setup({
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 
+-- ansible auto set lenguage
+vim.cmd 'autocmd BufRead,BufNewFile *.yml set filetype=yaml.ansible'
+
 -- fix colors in tmux
 vim.o.termguicolors = true
-vim.cmd 'colorscheme vim'
+-- vim.cmd 'colorscheme vim'
 
 -- my custom keys
 vim.keymap.set('n', '<PageUp>', function()
