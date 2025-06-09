@@ -634,6 +634,16 @@ require('lazy').setup({
             end
           end
 
+          -- Show diagnostics in floating window on cursor hold
+          local diagnostic_augroup = vim.api.nvim_create_augroup('kickstart-lsp-diagnostics', { clear = false })
+          vim.api.nvim_create_autocmd('CursorHold', {
+            buffer = event.buf,
+            group = diagnostic_augroup,
+            callback = function()
+              vim.diagnostic.open_float(nil, { focus = false, scope = 'cursor' })
+            end,
+          })
+
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
@@ -659,6 +669,7 @@ require('lazy').setup({
               callback = function(event2)
                 vim.lsp.buf.clear_references()
                 vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+                vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-diagnostics', buffer = event2.buf }
               end,
             })
           end
