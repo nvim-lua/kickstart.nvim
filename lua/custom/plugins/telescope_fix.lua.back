@@ -1,0 +1,34 @@
+-- Fix for Telescope error with nil paths
+-- return {
+--   "nvim-telescope/telescope.nvim",
+--   -- This will only modify the existing telescope configuration
+--   config = function()
+--     local telescope = require('telescope')
+    
+--     -- Only apply our patch if telescope is loaded
+--     local utils = require('telescope.utils')
+--     local original_path_expand = utils.path_expand
+    
+--     -- Override path_expand with a safer version that handles nil paths
+--     utils.path_expand = function(path)
+--       if path == nil then
+--         -- Return the current working directory if path is nil
+--         return vim.fn.getcwd() or vim.fn.expand('%:p:h') or '.'
+--       end
+--       return original_path_expand(path)
+--     end
+    
+--     -- Any additional telescope settings can be set here
+--     telescope.setup({
+--       defaults = {
+--         path_display = { "truncate" },
+--         mappings = {
+--           i = {
+--             ["<C-u>"] = false,
+--             ["<C-d>"] = false,
+--           },
+--         },
+--       },
+--     })
+--   end,
+-- }

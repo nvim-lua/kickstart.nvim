@@ -174,8 +174,10 @@ return {
     
     -- Toggle inline chat for quick questions about the current line
     vim.keymap.set("n", "<leader>cl", function()
-      select.line()
-      chat.toggle()
+      -- Use chat.ask with a line selector instead of separate select.line() call
+      chat.ask("What does this line of code do?", {
+        selection = select.line,  -- Pass the function reference, not the function call
+      })
     end, { desc = "Chat About Current Line" })
     
     -- Open Copilot Chat with a custom prompt

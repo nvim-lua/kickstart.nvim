@@ -25,12 +25,12 @@ return {
     -- Plugin configuration
     config = function()
       -- Configure floating window border
-      require("lazygit").setup({
-        floating_window_winblend = 0, -- transparency of floating window
-        floating_window_scaling_factor = 0.9, -- scaling factor for floating window
-        floating_window_border_chars = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' }, -- customize floating window border chars
-        lazygit_floating_window_use_plenary = true, -- use plenary.nvim to manage floating window if available
-      })
+      -- require("lazygit").setup({
+      --   -- floating_window_winblend = 0, -- transparency of floating window
+      --   floating_window_scaling_factor = 0.9, -- scaling factor for floating window
+      --   floating_window_border_chars = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' }, -- customize floating window border chars
+      --   lazygit_floating_window_use_plenary = true, -- use plenary.nvim to manage floating window if available
+      -- })
     end,
   }
 }

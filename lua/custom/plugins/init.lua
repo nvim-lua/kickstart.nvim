@@ -12,4 +12,8 @@ return {
   { import = "custom.plugins.harpoon" },
   { import = "custom.plugins.lazygit" },
   { import = "custom.plugins.toggleterm" },
+  { import = "custom.plugins.comment" },
+  { import = "custom.plugins.leetcode" },
+  -- { import = "custom.plugins.telescope_fix" },
+  { import = "custom.plugins.catppuccin" },
 }
