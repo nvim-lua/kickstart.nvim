@@ -155,7 +155,7 @@ require('lazy').setup({
     config = function()
       require('supermaven-nvim').setup {
         keymaps = {
-          accept_suggestion = '<C-a>',
+          accept_suggestion = '<C-CR>',
           clear_suggestion = '<C-]>',
           accept_word = '<C-j>',
         },
@@ -960,7 +960,6 @@ require('lazy').setup({
   -- Or use telescope!
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
   -- you can continue same window with `<space>sr` which resumes last telescope search
-
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
