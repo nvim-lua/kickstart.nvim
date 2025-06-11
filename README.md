@@ -1,5 +1,9 @@
 # kickstart.nvim
 
+## Errors
+
+If you get a Mason error ensure that you are using version 11+ of neovim
+
 ## Introduction
 
 A starting point for Neovim that is:
