@@ -13,8 +13,8 @@ return {
   -- NOTE: And you can specify dependencies as well
   dependencies = {
     -- Creates a beautiful debugger UI
-    'nvim-neotest/nvim-nio',
     'rcarriga/nvim-dap-ui',
+    'nvim-neotest/nvim-nio',
 
     -- Installs the debug adapters for you
     'williamboman/mason.nvim',
@@ -27,6 +27,58 @@ return {
     'julianolf/nvim-dap-lldb',
     'vadimcn/codelldb',
   },
+  keys = {
+    {
+      '<F5>',
+      function()
+        require('dap').continue()
+      end,
+      desc = 'Debug: Start/Continue',
+    },
+    {
+      '<F1>',
+      function()
+        require('dap').step_into()
+      end,
+      desc = 'Debug: Step Into',
+    },
+    {
+      '<F2>',
+      function()
+        require('dap').step_over()
+      end,
+      desc = 'Debug: Step Over',
+    },
+    {
+      '<F3>',
+      function()
+        require('dap').step_out()
+      end,
+      desc = 'Debug: Step Out',
+    },
+    {
+      '<leader>b',
+      function()
+        require('dap').toggle_breakpoint()
+      end,
+      desc = 'Debug: Toggle Breakpoint',
+    },
+    {
+      '<leader>B',
+      function()
+        require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+      end,
+      desc = 'Debug: Set Breakpoint',
+    },
+    -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
+    {
+      '<F7>',
+      function()
+        require('dapui').toggle()
+      end,
+      desc = 'Debug: See last session result.',
+    },
+  },
 
   config = function()
     local dap = require 'dap'
@@ -34,7 +86,7 @@ return {
 
     dap.adapters.lldb = {
       type = 'server',
-      command = vim.fn.expand('$HOME/.local/share/nvim/mason/bin/codelldb'),
+      command = vim.fn.expand '$HOME/.local/share/nvim/mason/bin/codelldb',
       host = '127.0.0.1',
       port = 13000,
     }
@@ -66,7 +118,7 @@ return {
       -- online, please don't ask me how to install them :)
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
-        -- 'delve',
+        'delve',
         'js',
         'node2',
         'cppdbg',
@@ -75,22 +127,11 @@ return {
         'javatest',
       },
       handlers = {
-        function(config)
-          require('mason-nvim-dap').default_setup(config)
-        end
-      }
+        -- function(config)
+        --   require('mason-nvim-dap').default_setup(config)
+        -- end,
+      },
     }
-
-    -- Basic debugging keymaps, feel free to change to your liking!
-    vim.keymap.set('n', '<F5>', dap.continue, { desc = '[DAP] Continue' })
-    vim.keymap.set('n', '<F1>', dap.step_over, { desc = '[DAP] Over' })
-    vim.keymap.set('n', '<F2>', dap.step_into, { desc = '[DAP] Into' })
-    vim.keymap.set('n', '<F3>', dap.step_out, { desc = '[DAP] Out' })
-    vim.keymap.set('n', '<F6>', dap.toggle_breakpoint, { desc = '[DAP] Breakpoint toggle' })
-    vim.keymap.set('n', '<F7>', function()
-      dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
-    end, { desc = '[DAP] Conditional Breakpoint' })
-
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
     dapui.setup {
@@ -108,57 +149,61 @@ return {
           step_back = 'b',
           run_last = '▶▶',
           terminate = '⏹',
+          disconnect = '⏏',
         },
       },
     }
 
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
-    -- dap.listeners.before.event_terminated['dapui_config'] = dapui.close
-    -- dap.listeners.before.event_exited['dapui_config'] = dapui.close
+    dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+    dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
     dap.defaults.fallback.exception_breakpoints = { 'Notice', 'Warning', 'Error', 'Exception' }
 
     -- Install golang specific config
-    require('dap-go').setup()
-
-    -- Install javascript specific config
-    require("dap-vscode-js").setup {
-      debugger_path = vim.fn.stdpath("data") .. "/mason/packages/js-debug-adapter",
-      debugger_cmd = { "js-debug-adapter" },
-      adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" },
+    require('dap-go').setup{
+      delve = {
+        detached = vim.fn.has 'win32' == 0,
+      },
     }
 
+    -- Install javascript specific config
+    require('dap-vscode-js').setup {
+      debugger_path = vim.fn.stdpath 'data' .. '/mason/packages/js-debug-adapter',
+      debugger_cmd = { 'js-debug-adapter' },
+      adapters = { 'pwa-node', 'pwa-chrome', 'pwa-msedge', 'node-terminal', 'pwa-extensionHost' },
+    }
 
-    for _, jsLang in ipairs({ 'typescript', 'javascript' }) do
-      require("dap").configurations[jsLang] = {
+    for _, jsLang in ipairs { 'typescript', 'javascript' } do
+      require('dap').configurations[jsLang] = {
         {
-          type = "pwa-node",
-          request = "launch",
-          name = "Launch file",
-          program = "${file}",
-          cwd = "${workspaceFolder}",
+          type = 'pwa-node',
+          request = 'launch',
+          name = 'Launch file',
+          program = '${file}',
+          cwd = '${workspaceFolder}',
         },
         {
-          type = "pwa-node",
-          request = "attach",
-          name = "Attach",
-          processId = require 'dap.utils'.pick_process,
-          cwd = "${workspaceFolder}",
+          type = 'pwa-node',
+          request = 'attach',
+          name = 'Attach',
+          processId = require('dap.utils').pick_process,
+          cwd = '${workspaceFolder}',
         },
         {
-          type = "pwa-node",
-          request = "launch",
-          name = "Debug Jest Tests",
+          type = 'pwa-node',
+          request = 'launch',
+          name = 'Debug Jest Tests',
           -- trace = true, -- include debugger info
-          runtimeExecutable = "node",
+          runtimeExecutable = 'node',
           runtimeArgs = {
-            "./node_modules/jest/bin/jest.js",
-            "--runInBand",
+            './node_modules/jest/bin/jest.js',
+            '--runInBand',
           },
-          rootPath = "${workspaceFolder}",
-          cwd = "${workspaceFolder}",
-          console = "integratedTerminal",
-          internalConsoleOptions = "neverOpen",
+          rootPath = '${workspaceFolder}',
+          cwd = '${workspaceFolder}',
+          console = 'integratedTerminal',
+          internalConsoleOptions = 'neverOpen',
         },
         {
           name = 'Debug Main Process (Electron)',
