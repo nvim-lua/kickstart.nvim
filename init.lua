@@ -140,6 +140,10 @@ vim.opt.timeoutlen = 300
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
+-- If i put this 2 line here swap window goaway
+vim.o.backup = false
+vim.o.swapfile = false
+
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
@@ -162,6 +166,10 @@ vim.opt.confirm = true
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
+
+-- Multitab if it can be call that, you visual (<S-v>) some line and can tab all line in one time
+vim.keymap.set('x', '<S-tab>', '<gv')
+vim.keymap.set('x', '<tab>', '>gv|')
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
@@ -770,6 +778,7 @@ require('lazy').setup({
         lua = { 'stylua' },
         go = { 'gofmt', 'goimports' },
         bash = { 'shfmt' },
+        python = { 'black', 'ruff', 'isort' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
