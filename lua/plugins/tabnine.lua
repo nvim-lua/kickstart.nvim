@@ -13,12 +13,17 @@ return {
       log_file_path = nil,
       ignore_certificate_errors = false,
     }
-    require('tabnine.status').disable_tabnine()
+    if vim.g.tabnine_enable then
+      require('tabnine.status').enable_tabnine()
+    else
+      require('tabnine.status').disable_tabnine()
+    end
   end,
   lazy = false,
   keys = {
-    { '<leader>lc', '<cmd>TabnineChat<cr>', desc = '[L]LM [C]hat' },
-    { '<leader>lt', '<cmd>TabnineToggle<cr>', desc = '[L]LM [T]oggle' },
-    { '<leader>ls', '<cmd>TabnineStatus<cr>', desc = '[L]LM [S]tatus' },
+    { '<leader>t9', '<cmd>TabnineToggle<cr>', desc = '[T]oggle' },
+    { '<leader>l9e', '<cmd>TabnineEnable<cr>', desc = 'T9 [E]nable' },
+    { '<leader>l9c', '<cmd>TabnineChat<cr>', desc = 'T9 [C]hat' },
+    { '<leader>l9s', '<cmd>TabnineStatus<cr>', desc = 'T9 [S]tatus' },
   },
 }

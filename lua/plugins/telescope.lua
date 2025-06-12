@@ -49,7 +49,6 @@ return {
       vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Find [G]rep' })
       vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Find [B]uffers' })
       vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Find [H]elp tags' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()

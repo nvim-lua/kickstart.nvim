@@ -1,6 +1,11 @@
 return {
-  { -- Emacs-style keybindings in insert mode
+  {
     'millerjason/neovimacs.nvim',
-    opts = {},
+    opts = {
+      VM_Enabled = vim.g.neovimacs_bindings,
+      VM_StartInsert = vim.g.neovimacs_insert,
+      VM_UnixConsoleMetaSendsEsc = false,
+      TabIndentStyle = 'none', -- 'emacs', 'never', 'whitespace', 'startofline'
+    },
   },
 }
