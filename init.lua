@@ -1080,3 +1080,6 @@ vim.keymap.set('n', '<leader>m', function()
     print '⚠️ No executable found in build/.'
   end
 end, { desc = '[M]ake & Run' })
+
+vim.bo.tabstop = 4
+vim.bo.shiftwidth = 4
