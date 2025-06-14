@@ -16,4 +16,6 @@ return {
   { import = "custom.plugins.leetcode" },
   -- { import = "custom.plugins.telescope_fix" },
   { import = "custom.plugins.catppuccin" },
+  { import = "custom.plugins.neorg" },
+  { import = "custom.plugins.which_key_integration" }, -- Load which-key integration
 }

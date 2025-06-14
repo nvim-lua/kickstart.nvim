@@ -91,6 +91,9 @@ local vim = vim
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- Test leader key mapping
+vim.keymap.set('n', '<leader>zz', function() print("Leader key is working!") end, { desc = "Test leader key" })
+
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
@@ -320,59 +323,112 @@ require('lazy').setup({
   -- Then, because we use the `opts` key (recommended), the configuration runs
   -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
 
-  { -- Useful plugin to show you pending keybinds.
-    'folke/which-key.nvim',
-    event = 'VimEnter', -- Sets the loading event to 'VimEnter'
-    opts = {
-      -- delay between pressing a key and opening which-key (milliseconds)
-      -- this setting is independent of vim.o.timeoutlen
-      delay = 0,
-      icons = {
-        -- set icon mappings to true if you have a Nerd Font
-        mappings = vim.g.have_nerd_font,
-        -- If you are using a Nerd Font: set icons.keys to an empty table which will use the
-        -- default which-key.nvim defined Nerd Font icons, otherwise define a string table
-        keys = vim.g.have_nerd_font and {} or {
-          Up = '<Up> ',
-          Down = '<Down> ',
-          Left = '<Left> ',
-          Right = '<Right> ',
-          C = '<C-…> ',
-          M = '<M-…> ',
-          D = '<D-…> ',
-          S = '<S-…> ',
-          CR = '<CR> ',
-          Esc = '<Esc> ',
-          ScrollWheelDown = '<ScrollWheelDown> ',
-          ScrollWheelUp = '<ScrollWheelUp> ',
-          NL = '<NL> ',
-          BS = '<BS> ',
-          Space = '<Space> ',
-          Tab = '<Tab> ',
-          F1 = '<F1>',
-          F2 = '<F2>',
-          F3 = '<F3>',
-          F4 = '<F4>',
-          F5 = '<F5>',
-          F6 = '<F6>',
-          F7 = '<F7>',
-          F8 = '<F8>',
-          F9 = '<F9>',
-          F10 = '<F10>',
-          F11 = '<F11>',
-          F12 = '<F12>',
-        },
-      },
+  -- NOTE: which-key is now configured in custom/plugins/which_key_integration.lua
+  -- { -- Useful plugin to show you pending keybinds.
+  --   'folke/which-key.nvim',
+  --   event = 'VimEnter', -- Sets the loading event to 'VimEnter'
+  --   opts = {
+  --     -- delay between pressing a key and opening which-key (milliseconds)
+  --     -- this setting is independent of vim.o.timeoutlen
+  --     delay = 0,
+  --     icons = {
+  --       -- set icon mappings to true if you have a Nerd Font
+  --       mappings = vim.g.have_nerd_font,
+  --       -- If you are using a Nerd Font: set icons.keys to an empty table which will use the
+  --       -- default which-key.nvim defined Nerd Font icons, otherwise define a string table
+  --       keys = vim.g.have_nerd_font and {} or {
+  --         Up = '<Up> ',
+  --         Down = '<Down> ',  -- { -- Useful plugin to show you pending keybinds.
+  --   'folke/which-key.nvim',
+  --   event = 'VimEnter', -- Sets the loading event to 'VimEnter'
+  --   opts = {
+  --     -- delay between pressing a key and opening which-key (milliseconds)
+  --     -- this setting is independent of vim.o.timeoutlen
+  --     delay = 0,
+  --     icons = {
+  --       -- set icon mappings to true if you have a Nerd Font
+  --       mappings = vim.g.have_nerd_font,
+  --       -- If you are using a Nerd Font: set icons.keys to an empty table which will use the
+  --       -- default which-key.nvim defined Nerd Font icons, otherwise define a string table
+  --       keys = vim.g.have_nerd_font and {} or {
+  --         Up = '<Up> ',
+  --         Down = '<Down> ',
+  --         Left = '<Left> ',
+  --         Right = '<Right> ',
+  --         C = '<C-…> ',
+  --         M = '<M-…> ',
+  --         D = '<D-…> ',
+  --         S = '<S-…> ',
+  --         CR = '<CR> ',
+  --         Esc = '<Esc> ',
+  --         ScrollWheelDown = '<ScrollWheelDown> ',
+  --         ScrollWheelUp = '<ScrollWheelUp> ',
+  --         NL = '<NL> ',
+  --         BS = '<BS> ',
+  --         Space = '<Space> ',
+  --         Tab = '<Tab> ',
+  --         F1 = '<F1>',
+  --         F2 = '<F2>',
+  --         F3 = '<F3>',
+  --         F4 = '<F4>',
+  --         F5 = '<F5>',
+  --         F6 = '<F6>',
+  --         F7 = '<F7>',
+  --         F8 = '<F8>',
+  --         F9 = '<F9>',
+  --         F10 = '<F10>',
+  --         F11 = '<F11>',
+  --         F12 = '<F12>',
+  --       },
+  --     },
 
-      -- Document existing key chains
-      spec = {
-        { '<leader>s', group = '[S]earch' },
-        { '<leader>t', group = '[T]oggle' },
-        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
-        { '<leader>b', group = '[B]uffer' },
-      },
-    },
-  },
+  --     -- Document existing key chains
+  --     spec = {
+  --       { '<leader>s', group = '[S]earch' },
+  --       { '<leader>t', group = '[T]oggle' },
+  --       { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+  --       { '<leader>b', group = '[B]uffer' },
+  --     },
+  --   },
+  -- },
+  --         Left = '<Left> ',
+  --         Right = '<Right> ',
+  --         C = '<C-…> ',
+  --         M = '<M-…> ',
+  --         D = '<D-…> ',
+  --         S = '<S-…> ',
+  --         CR = '<CR> ',
+  --         Esc = '<Esc> ',
+  --         ScrollWheelDown = '<ScrollWheelDown> ',
+  --         ScrollWheelUp = '<ScrollWheelUp> ',
+  --         NL = '<NL> ',
+  --         BS = '<BS> ',
+  --         Space = '<Space> ',
+  --         Tab = '<Tab> ',
+  --         F1 = '<F1>',
+  --         F2 = '<F2>',
+  --         F3 = '<F3>',
+  --         F4 = '<F4>',
+  --         F5 = '<F5>',
+  --         F6 = '<F6>',
+  --         F7 = '<F7>',
+  --         F8 = '<F8>',
+  --         F9 = '<F9>',
+  --         F10 = '<F10>',
+  --         F11 = '<F11>',
+  --         F12 = '<F12>',
+  --       },
+  --     },
+
+  --     -- Document existing key chains
+  --     spec = {
+  --       { '<leader>s', group = '[S]earch' },
+  --       { '<leader>t', group = '[T]oggle' },
+  --       { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+  --       { '<leader>b', group = '[B]uffer' },
+  --     },
+  --   },
+  -- },
 
   -- NOTE: Plugins can specify dependencies.
   --
@@ -458,7 +514,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', function() builtin.buffers() end, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>bb', function() builtin.buffers() end, { desc = '[B]uffers [B]rowse' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()

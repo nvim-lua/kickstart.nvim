@@ -1,192 +1,287 @@
--- filepath: /home/kali/.config/nvim/lua/custom/plugins/copilot-chat.lua
--- GitHub Copilot Chat configuration
--- An advanced setup for Copilot Chat in Neovim
+--gitHub Copilot Chat configuration - Latest v3+ setup
+-- Comprehensive configuration with all features and working keymaps
 -- https://github.com/CopilotC-Nvim/CopilotChat.nvim
-
--- Declare vim as global
-local vim = vim
 
 return {
   "CopilotC-Nvim/CopilotChat.nvim",
-  branch = "main", -- Ensure we're using the stable main branch
   dependencies = {
-    -- Dependencies for CopilotChat
-    { "github/copilot.vim" },        -- The base Copilot plugin
-    { "nvim-lua/plenary.nvim" },     -- Common Lua functions
-    { "nvim-telescope/telescope.nvim" }, -- For nice UI integration
-    { "nvim-tree/nvim-web-devicons" }, -- Icons for enhanced UI
+    { "github/copilot.vim" }, -- or zbirenbaum/copilot.lua
+    { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
   },
-  -- Load after GitHub Copilot and when a file is opened
-  event = { "VeryLazy" },
+  build = "make tiktoken", -- Only on MacOS or Linux
+  event = "VeryLazy",
   
   config = function()
     local chat = require("CopilotChat")
     local select = require("CopilotChat.select")
     
-    -- Configure the plugin with advanced settings
+    -- Setup CopilotChat with comprehensive configuration
     chat.setup({
-      -- Show Copilot Chat window border
+      -- Model configuration
+      model = 'gpt-4.1', -- Default model to use, see ':CopilotChatModels' for available models
+      agent = 'copilot', -- Default agent to use, see ':CopilotChatAgents' for available agents
+      context = nil, -- Default context or array of contexts to use
+      
+      -- Temperature for GPT responses (0.1 = more focused, 1.0 = more creative)
+      temperature = 0.1,
+      
+      -- Window configuration
       window = {
-        border = "rounded", -- Make the window look nice
-        width = 80,        -- Default width
-        height = 20,       -- Default height
-        title = {
-          name = "Copilot Chat", -- Custom title
-          alignment = "center",  -- Center the title
-        },
+        layout = 'vertical', -- 'vertical', 'horizontal', 'float', 'replace'
+        width = 0.5, -- fractional width of parent
+        height = 0.5, -- fractional height of parent
+        -- Options for floating windows
+        relative = 'editor', -- 'editor', 'win', 'cursor', 'mouse'
+        border = 'rounded', -- 'none', 'single', 'double', 'rounded', 'solid', 'shadow'
+        title = 'Copilot Chat',
+        footer = nil,
+        zindex = 1,
       },
       
-      -- File context features
-      context = {
-        -- Include 5 lines above and below the cursor for context
-        cursor_context = 5,
-        
-        -- Include the entire selection when using visual mode
-        selection_context = true,
-        
-        -- Show context-aware commit history
-        git_context = true,
-      },
+      -- UI settings
+      show_help = true, -- Shows help message as virtual lines when waiting for user input
+      highlight_selection = true, -- Highlight selection in source buffer
+      highlight_headers = true, -- Highlight headers in chat
+      auto_follow_cursor = true, -- Auto-follow cursor in chat
+      auto_insert_mode = false, -- Automatically enter insert mode when opening window
+      insert_at_end = false, -- Move cursor to end of buffer when inserting text
+      clear_chat_on_new_prompt = false, -- Clears chat on every new prompt
       
-      -- Enable debug (set to true only when troubleshooting)
-      debug = false,
+      -- Chat features
+      chat_autocomplete = true, -- Enable chat autocompletion
       
-      -- Enable syntax highlighting in response
-      syntax_highlighting = true,
+      -- Default selection (uses visual selection or falls back to buffer)
+      selection = function(source)
+        return select.visual(source) or select.buffer(source)
+      end,
       
-      -- Enable auto-sizing of response window
-      auto_size = true,
-      
-      -- Define prompts that can be used in commands
+      -- Custom prompts for various coding tasks
       prompts = {
-        -- Default prompts
+        -- Code explanation
         Explain = {
-          prompt = "Explain how the following code works in detail:\n```$filetype\n$selection\n```",
+          prompt = 'Write an explanation for the selected code as paragraphs of text.',
+          system_prompt = 'COPILOT_EXPLAIN',
         },
-        FixCode = {
-          prompt = "Fix the following code. Provide the corrected version and explanations for the fixes:\n```$filetype\n$selection\n```",
+        
+        -- Code review
+        Review = {
+          prompt = 'Review the selected code.',
+          system_prompt = 'COPILOT_REVIEW',
         },
+        
+        -- Bug fixes
+        Fix = {
+          prompt = 'There is a problem in this code. Identify the issues and rewrite the code with fixes. Explain what was wrong and how your changes address the problems.',
+        },
+        
+        -- Code optimization
         Optimize = {
-          prompt = "Optimize the following code. Provide the optimized version and explain the improvements:\n```$filetype\n$selection\n```",
+          prompt = 'Optimize the selected code to improve performance and readability. Explain your optimization strategy and the benefits of your changes.',
         },
-        -- Advanced prompts
-        Documentation = {
-          prompt = "Generate comprehensive documentation for this code:\n```$filetype\n$selection\n```\nInclude descriptions of parameters, return values, exceptions, and provide usage examples.",
+        
+        -- Documentation generation
+        Docs = {
+          prompt = 'Please add documentation comments to the selected code.',
         },
-        BestPractices = {
-          prompt = "Review this code for best practices and suggest improvements:\n```$filetype\n$selection\n```",
-        },
+        
+        -- Test generation
         Tests = {
-          prompt = "Generate unit tests for the following code:\n```$filetype\n$selection\n```",
+          prompt = 'Please generate tests for my code.',
         },
-        -- Context-aware code generation
-        Implement = {
-          prompt = "Implement the following functionality: $input\nMake it work with the following context:\n```$filetype\n$selection\n```",
-          strategy = "quick_fix", -- Use the quick fix strategy for implementation
+        
+        -- Commit message generation
+        Commit = {
+          prompt = 'Write commit message for the change with commitizen convention. Keep the title under 50 characters and wrap message at 72 characters. Format as a gitcommit code block.',
+          context = 'git:staged',
         },
-        RefactorToPattern = {
-          prompt = "Refactor the following code to use the $input design pattern. Explain the benefits of this refactoring:\n```$filetype\n$selection\n```",
+        
+        -- Custom advanced prompts
+        Refactor = {
+          prompt = 'Please refactor the following code to improve its structure and readability. Explain the changes you made and why they improve the code.',
+        },
+        
+        BestPractices = {
+          prompt = 'Review this code for best practices and suggest improvements. Focus on code quality, maintainability, and adherence to language-specific conventions.',
+        },
+        
+        Security = {
+          prompt = 'Analyze this code for potential security vulnerabilities and suggest fixes. Consider common security issues like injection attacks, authentication, authorization, and data validation.',
+        },
+        
+        Performance = {
+          prompt = 'Analyze this code for performance issues and suggest optimizations. Consider algorithmic complexity, memory usage, and language-specific performance patterns.',
+        },
+        
+        -- Context-aware prompts
+        ImplementFeature = {
+          prompt = 'Based on the selected code, implement the following feature: ',
+          mapping = '<leader>cif',
+          description = 'Implement a new feature based on existing code',
+        },
+        
+        ExplainError = {
+          prompt = 'Explain this error and provide a solution: ',
+          mapping = '<leader>cee',
+          description = 'Explain error and provide solution',
+        },
+      },
+      
+      -- Custom mappings for chat buffer
+      mappings = {
+        complete = {
+          insert = '<Tab>',
+        },
+        close = {
+          normal = 'q',
+          insert = '<C-c>',
+        },
+        reset = {
+          normal = '<C-l>',
+          insert = '<C-l>',
+        },
+        submit_prompt = {
+          normal = '<CR>',
+          insert = '<C-s>',
+        },
+        toggle_sticky = {
+          normal = 'grr',
+        },
+        clear_stickies = {
+          normal = 'grx',
+        },
+        accept_diff = {
+          normal = '<C-y>',
+          insert = '<C-y>',
+        },
+        jump_to_diff = {
+          normal = 'gj',
+        },
+        quickfix_answers = {
+          normal = 'gqa',
+        },
+        quickfix_diffs = {
+          normal = 'gqd',
+        },
+        yank_diff = {
+          normal = 'gy',
+          register = '"',
+        },
+        show_diff = {
+          normal = 'gd',
+          full_diff = false,
+        },
+        show_info = {
+          normal = 'gi',
+        },
+        show_context = {
+          normal = 'gc',
+        },
+        show_help = {
+          normal = 'gh',
         },
       },
     })
     
-    -- Add custom keymaps for the chat buffer
-    vim.api.nvim_create_autocmd("FileType", {
-      pattern = "copilot-chat",
-      callback = function()
-        local buf = vim.api.nvim_get_current_buf()
-        
-        -- Close window with 'q'
-        vim.keymap.set("n", "q", function()
-          vim.cmd("close")
-        end, { buffer = buf, silent = true })
-        
-        -- Reset chat with Ctrl+L
-        vim.keymap.set("n", "<C-l>", function()
-          chat.reset()
-        end, { buffer = buf, silent = true })
-        
-        -- -- Submit prompt with Enter in insert mode
-        -- vim.keymap.set("i", "<CR>", function()
-        --   -- require("CopilotChat").submit_prompt()
-        --   chat.submit_prompt()
-        -- end, { buffer = buf, silent = true })
-        
-        -- -- Submit prompt with Enter in normal mode
-        -- vim.keymap.set("n", "<CR>", function()
-        --   require("CopilotChat").submit_prompt()
-        -- end, { buffer = buf, silent = true })
-        
-        -- Show diff with Ctrl+D
-        vim.keymap.set("n", "<C-d>", function()
-          require("CopilotChat").show_diff()
-        end, { buffer = buf, silent = true })
-        
-        -- Accept diff with Ctrl+Y
-        vim.keymap.set("n", "<C-y>", function()
-          require("CopilotChat").accept_diff()
-        end, { buffer = buf, silent = true })
-      end
-    })
+    -- Global keymaps for CopilotChat
+    -- Core commands
+    vim.keymap.set("n", "<leader>cc", function() chat.toggle() end, { desc = "Toggle Copilot Chat" })
+    vim.keymap.set("n", "<leader>co", function() chat.open() end, { desc = "Open Copilot Chat" })
+    vim.keymap.set("n", "<leader>cx", function() chat.close() end, { desc = "Close Copilot Chat" })
+    vim.keymap.set("n", "<leader>cr", function() chat.reset() end, { desc = "Reset Copilot Chat" })
+    vim.keymap.set("n", "<leader>cs", function() chat.stop() end, { desc = "Stop Copilot Chat" })
     
-    -- Set up key bindings
-    vim.keymap.set("n", "<leader>cc", "<cmd>CopilotChat<CR>", { desc = "Copilot Chat" })
-    vim.keymap.set("n", "<leader>ce", "<cmd>CopilotChatExplain<CR>", { desc = "Explain Code" })
-    vim.keymap.set("n", "<leader>cf", "<cmd>CopilotChatFixCode<CR>", { desc = "Fix Code" })
-    vim.keymap.set("n", "<leader>co", "<cmd>CopilotChatOptimize<CR>", { desc = "Optimize Code" })
-    vim.keymap.set("n", "<leader>cd", "<cmd>CopilotChatDocumentation<CR>", { desc = "Generate Documentation" })
-    vim.keymap.set("n", "<leader>ct", "<cmd>CopilotChatTests<CR>", { desc = "Generate Tests" })
-    vim.keymap.set("n", "<leader>cb", "<cmd>CopilotChatBestPractices<CR>", { desc = "Check Best Practices" })
+    -- Prompt-based commands - these work with current selection
+    vim.keymap.set({"n", "v"}, "<leader>cce", "<cmd>CopilotChatExplain<cr>", { desc = "Explain code" })
+    vim.keymap.set({"n", "v"}, "<leader>ccr", "<cmd>CopilotChatReview<cr>", { desc = "Review code" })
+    vim.keymap.set({"n", "v"}, "<leader>ccf", "<cmd>CopilotChatFix<cr>", { desc = "Fix code" })
+    vim.keymap.set({"n", "v"}, "<leader>cco", "<cmd>CopilotChatOptimize<cr>", { desc = "Optimize code" })
+    vim.keymap.set({"n", "v"}, "<leader>ccd", "<cmd>CopilotChatDocs<cr>", { desc = "Generate docs" })
+    vim.keymap.set({"n", "v"}, "<leader>cct", "<cmd>CopilotChatTests<cr>", { desc = "Generate tests" })
+    vim.keymap.set({"n", "v"}, "<leader>ccrf", "<cmd>CopilotChatRefactor<cr>", { desc = "Refactor code" })
+    vim.keymap.set({"n", "v"}, "<leader>ccb", "<cmd>CopilotChatBestPractices<cr>", { desc = "Best practices" })
+    vim.keymap.set({"n", "v"}, "<leader>ccs", "<cmd>CopilotChatSecurity<cr>", { desc = "Security review" })
+    vim.keymap.set({"n", "v"}, "<leader>ccp", "<cmd>CopilotChatPerformance<cr>", { desc = "Performance review" })
     
-    -- Visual mode mappings for selected code
-    vim.keymap.set("v", "<leader>ce", ":CopilotChatExplain<CR>", { desc = "Explain Selected Code" })
-    vim.keymap.set("v", "<leader>cf", ":CopilotChatFixCode<CR>", { desc = "Fix Selected Code" })
-    vim.keymap.set("v", "<leader>co", ":CopilotChatOptimize<CR>", { desc = "Optimize Selected Code" })
-    vim.keymap.set("v", "<leader>cd", ":CopilotChatDocumentation<CR>", { desc = "Document Selected Code" })
-    vim.keymap.set("v", "<leader>ct", ":CopilotChatTests<CR>", { desc = "Generate Tests for Selected Code" })
+    -- Git integration
+    vim.keymap.set("n", "<leader>ccg", "<cmd>CopilotChatCommit<cr>", { desc = "Generate commit message" })
     
-    -- Create a custom input command with implementation suggestions
-    vim.keymap.set("v", "<leader>ci", function()
-      vim.ui.input({ prompt = "What would you like to implement? " }, function(input)
-        if input then
-          select.selection()
-          chat.ask("Implement: " .. input)
+    -- Advanced features
+    vim.keymap.set("n", "<leader>ccm", "<cmd>CopilotChatModels<cr>", { desc = "Select model" })
+    vim.keymap.set("n", "<leader>cca", "<cmd>CopilotChatAgents<cr>", { desc = "Select agent" })
+    vim.keymap.set("n", "<leader>ccp", "<cmd>CopilotChatPrompts<cr>", { desc = "Select prompt" })
+    
+    -- Chat history
+    vim.keymap.set("n", "<leader>ccl", function()
+      vim.ui.input({ prompt = "Load chat (name): " }, function(name)
+        if name then
+          chat.load(name)
         end
       end)
-    end, { desc = "Implement Functionality" })
+    end, { desc = "Load chat history" })
     
-    -- Add quick access to buffer context
-    vim.keymap.set("n", "<leader>cb", function()
-      chat.ask("What does this code do? Consider the full context of the file.", {
-        selection = select.buffer,
-      })
-    end, { desc = "Explain Buffer" })
-    
-    -- Refactor the current selection to use a specific design pattern
-    vim.keymap.set("v", "<leader>cr", function()
-      vim.ui.input({ prompt = "Which design pattern to refactor to? " }, function(input)
-        if input then
-          select.selection()
-          chat.ask("RefactorToPattern: " .. input)
+    vim.keymap.set("n", "<leader>ccS", function()
+      vim.ui.input({ prompt = "Save chat (name): " }, function(name)
+        if name then
+          chat.save(name)
         end
       end)
-    end, { desc = "Refactor to Design Pattern" })
+    end, { desc = "Save chat history" })
     
-    -- Toggle inline chat for quick questions about the current line
-    vim.keymap.set("n", "<leader>cl", function()
-      -- Use chat.ask with a line selector instead of separate select.line() call
-      chat.ask("What does this line of code do?", {
-        selection = select.line,  -- Pass the function reference, not the function call
-      })
-    end, { desc = "Chat About Current Line" })
-    
-    -- Open Copilot Chat with a custom prompt
-    vim.keymap.set("n", "<leader>cp", function()
+    -- Custom prompts with input
+    vim.keymap.set({"n", "v"}, "<leader>cci", function()
       vim.ui.input({ prompt = "Ask Copilot: " }, function(input)
         if input then
           chat.ask(input)
         end
       end)
-    end, { desc = "Ask Copilot" })
+    end, { desc = "Ask custom question" })
+    
+    -- Context-specific commands
+    vim.keymap.set("n", "<leader>ccbf", function()
+      chat.ask("Explain what this file does and its main purpose.", {
+        selection = select.buffer,
+      })
+    end, { desc = "Explain buffer" })
+    
+    vim.keymap.set("n", "<leader>ccgd", function()
+      chat.ask("Explain these git changes.", {
+        context = "git",
+      })
+    end, { desc = "Explain git diff" })
+    
+    -- Line-specific command
+    vim.keymap.set("n", "<leader>ccl", function()
+      chat.ask("Explain this line of code in detail.", {
+        selection = select.line,
+      })
+    end, { desc = "Explain current line" })
+    
+    -- Quick actions for selected text
+    vim.keymap.set("v", "<leader>cq", function()
+      chat.ask("Quick question about this code: " .. vim.fn.input("Question: "), {
+        selection = select.visual,
+      })
+    end, { desc = "Quick question about selection" })
+    
+    -- Buffer auto-commands for chat window
+    vim.api.nvim_create_autocmd("BufEnter", {
+      pattern = "copilot-*",
+      callback = function()
+        -- Set buffer-local options for better UX
+        vim.opt_local.relativenumber = false
+        vim.opt_local.number = false
+        vim.opt_local.cursorline = false
+        vim.opt_local.signcolumn = "no"
+        vim.opt_local.foldcolumn = "0"
+      end,
+    })
+    
+    -- Notification on chat completion
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "CopilotChatComplete",
+      callback = function()
+        vim.notify("Copilot Chat response complete", vim.log.levels.INFO)
+      end,
+    })
   end,
 }

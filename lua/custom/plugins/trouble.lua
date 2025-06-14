@@ -77,17 +77,14 @@ return {
   },
   config = function(_, opts)
     require('trouble').setup(opts)
-    -- Add which-key group
+    
+    -- Add which-key group using the new v3 spec API
     local ok, which_key = pcall(require, 'which-key')
-    -- if ok then
-    --   -- Use standard which-key format that's known to work
-    --   which_key.register({
-    --     ["<leader>x"] = { name = "Trouble/Diagnostics" },
-    --   })
-      
-    --   which_key.register({
-    --     ["g"] = { name = "Goto" },
-    --   })
-    -- end
+    if ok then
+      which_key.add({
+        { "<leader>x", group = "Trouble/Diagnostics" },
+        { "g", group = "Goto" },
+      })
+    end
   end,
 }

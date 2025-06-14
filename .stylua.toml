@@ -1,3 +1,4 @@
+# filepath: /home/kali/.config/nvim/.stylua.toml
 column_width = 160
 line_endings = "Unix"
 indent_type = "Spaces"
