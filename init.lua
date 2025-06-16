@@ -1438,6 +1438,14 @@ require('lazy').setup({
       })
     end,
   },
+  {
+    'lervag/wiki.vim',
+    -- tag = "v0.10", -- uncomment to pin to a specific release
+    init = function()
+      -- wiki.vim configuration goes here, e.g.
+      vim.g.wiki_root = '~/Documents/wiki'
+    end,
+  },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
