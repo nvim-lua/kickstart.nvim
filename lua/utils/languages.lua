@@ -88,9 +88,9 @@ local Languages = {
         },
       },
     },
-    -- ['nil_ls'] = {
-    --   alias = 'nil',
-    -- },
+    ['nil_ls'] = {
+      alias = 'nil',
+    },
   },
   ['bash'] = {
     bashls = {
