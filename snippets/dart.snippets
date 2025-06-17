@@ -12,3 +12,18 @@ snippet phr "AppLocalizations"
    AppLocalizations.of(context)!.$1
 snippet imploc "Import AppLocalizations"
    import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+snippet gap "Create a gap with const" 
+   const Gap($1),
+snippet useEffect "Create an empty useEffect"
+   useEffect(() {
+      $1
+      return;
+   }, []);
+snippet clm "Create column with empty children"
+   Column(children: [
+      $1
+   ],)
+snippet row "Create row with empty children"
+   Row(children: [
+      $1
+   ],)

@@ -1,6 +1,7 @@
 return {
   'akinsho/flutter-tools.nvim',
   lazy = false,
+  branch = 'main',
   dependencies = {
     'nvim-lua/plenary.nvim',
     'stevearc/dressing.nvim', -- optional for vim.ui.select
@@ -27,15 +28,19 @@ return {
           project_config = true,
         }
       },
-      debugger = {           -- integrate with nvim dap + install dart code debugger
+      debugger = { -- integrate with nvim dap + install dart code debugger
         enabled = true,
-        run_via_dap = false, -- use dap instead of a plenary job to run flutter apps
+        register_configurations = function(_)
+          require("dap").configurations.dart = {}
+          require("dap.ext.vscode").load_launchjs()
+        end,
+        run_via_dap = true, -- use dap instead of a plenary job to run flutter apps
         -- if empty dap will not stop on any exceptions, otherwise it will stop on those specified
         -- see |:help dap.set_exception_breakpoints()| for more info
-        exception_breakpoints = {}
       },
       root_patterns = { ".git", "pubspec.yaml" }, -- patterns to find the root of your flutter project
-      fvm = true,                                 -- takes priority over path, uses <workspace>/.fvm/flutter_sdk if enabled
+      -- root_patterns = { ".git", "youfeel_flutter/pubspec.yaml" }, -- patterns to find the root of your flutter project
+      fvm = false,                                -- takes priority over path, uses <workspace>/.fvm/flutter_sdk if enabled
       widget_guides = {
         enabled = false,
       },
@@ -45,7 +50,7 @@ return {
         enabled = true         -- set to false to disable
       },
       dev_log = {
-        enabled = true,
+        enabled = false,
         notify_errors = false, -- if there is an error whilst running then notify the user
         open_cmd = "tabedit",  -- command to us
       },
@@ -81,19 +86,23 @@ return {
           -- enableSnippets = true,
           previewLsp = true,
           updateImportsOnRename = true, -- Whether to update imports and other directives when files are renamed. Required for `FlutterRename` command.
+          lineLength = vim.o.textwidth,
         }
       }
     }
+
     -- [[ Configure Flutter tools]]
-    vim.keymap.set('n', '<leader>r', require('telescope').extensions.flutter.commands, { desc = 'Open command Flutter' })
+    vim.keymap.set('n', '<leader>r', function()
+      require('telescope').extensions.flutter.commands()
+    end, { desc = 'Open command Flutter' })
     vim.keymap.set('n', '<leader>br', function()
       vim.cmd('20new')
-      vim.cmd('te fvm flutter packages pub run build_runner build --delete-conflicting-outputs')
+      vim.cmd('te dart run build_runner build --delete-conflicting-outputs && exit')
       vim.cmd('2sleep | normal G')
     end)
     vim.keymap.set('n', '<leader>bt', function()
       vim.cmd('20new')
-      vim.cmd('te sh scripts/create_clean_lcov_and_generate_html.sh')
+      vim.cmd('te flutter test')
       vim.cmd('2sleep | normal G')
     end)
     -- '<Cmd>20new | te fvm flutter pub get && fvm flutter packages pub run build_runner build --delete-conflicting-outputs<CR> | $')

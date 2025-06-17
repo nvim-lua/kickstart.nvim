@@ -42,6 +42,7 @@ P.S. You can delete this when you're done too. It's your config now :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+vim.opt.textwidth = 80
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -218,6 +219,10 @@ vim.o.smartcase = true
 -- Keep signcolumn on by default
 vim.wo.signcolumn = 'yes'
 
+-- Cursor UI
+vim.opt.cursorline = true
+-- vim.opt.guicursor = "i:block-blinkwait1000-blinkon500-blinkoff500";
+
 -- Decrease update time
 vim.o.updatetime = 100
 vim.o.timeoutlen = 100
@@ -229,7 +234,6 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
-
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -239,6 +243,7 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -269,8 +274,8 @@ vim.filetype.add({
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim',
-    'dart', 'prisma', 'graphql', 'json', 'markdown' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'ruby',
+    'dart', 'prisma', 'graphql', 'json', 'markdown', 'kotlin', 'terraform' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -335,6 +340,10 @@ require('nvim-treesitter.configs').setup {
 
 vim.api.nvim_set_keymap('i', 'kj', '<ESC>', { noremap = true })
 
+-- Git
+vim.keymap.set('n', '<leader>Go', '<Cmd>GitConflictChooseOurs<CR>', { desc = '[G]it Conflict Choose [o]urs' })
+vim.keymap.set('n', '<leader>Gt', '<Cmd>GitConflictChooseTheirs<CR>', { desc = '[G]it Conflict Choose [t]heirs' })
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
@@ -353,7 +362,7 @@ vim.keymap.set("n", "<leader>vs", "<Cmd>vs<CR>", { desc = "[V]ertical [S]plit" }
 vim.keymap.set("n", "<leader>s", '<Cmd>w<CR>', { desc = "[S]ave file" })
 
 -- Quit from terminal
-vim.api.nvim_set_keymap('t', '<Leader><ESC>', '<C-\\><C-n>', { noremap = true })
+-- vim.api.nvim_set_keymap('t', '<Leader><ESC>', '<C-\\><C-n>', { noremap = true })
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
@@ -371,7 +380,7 @@ local on_attach = function(_, bufnr)
   end
 
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-  nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+  nmap('<leader>c', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
   nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -411,10 +420,12 @@ local servers = {
   -- gopls = {},
   -- pyright = {},
   -- rust_analyzer = {}
-  tsserver = {},
+  ts_ls = {},
   prismals = {},
   graphql = {},
   clangd = {},
+  terraformls = {},
+  kotlin_language_server = {},
   -- prettierd = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} }
   lua_ls = {
@@ -471,23 +482,77 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 -- Ensure the servers above are installed
-local mason_lspconfig = require 'mason-lspconfig'
+local mason_lspconfig = require('mason-lspconfig')
 local lspconfig = require('lspconfig')
 
 mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
+  automatic_enable = false
 }
 
-mason_lspconfig.setup_handlers {
-  function(server_name)
-    lspconfig[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
-    }
-  end
-}
+-- mason_lspconfig.setup_handlers {
+--   function(server_name)
+--     lspconfig[server_name].setup {
+--       capabilities = capabilities,
+--       on_attach = on_attach,
+--       settings = servers[server_name],
+--       filetypes = (servers[server_name] or {}).filetypes,
+--       automatic_enable = false
+--     }
+--   end
+-- }
+
+lspconfig.gopls.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+  settings = {
+    gopls = {
+      ["ui.inlayhint.hints"] = {
+        compositeLiteralFields = true,
+        constantValues = true,
+        parameterNames = true,
+      },
+    },
+  },
+})
+
+lspconfig.lua_ls.setup({
+  capabilities = capabilities,
+  on_attach = on_attach,
+  settings = {
+    Lua = {
+      telemetry = {
+        enable = false,
+      },
+    },
+  },
+  on_init = function(client)
+    if client.workspace_folders then
+      local path = client.workspace_folders[1].name
+      if
+          path ~= vim.fn.stdpath("config")
+          and (vim.loop.fs_stat(path .. "/.luarc.json") or vim.loop.fs_stat(path .. "/.luarc.jsonc"))
+      then
+        return
+      end
+    end
+    client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
+      runtime = {
+        version = "LuaJIT",
+      },
+      workspace = {
+        checkThirdParty = false,
+        library = {
+          vim.env.VIMRUNTIME,
+          "${3rd}/luv/library",
+        },
+      },
+    })
+  end,
+})
+
+require("mason").setup()
+require("mason-lspconfig").setup()
 
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 -- lspconfig.dartls.setup({
