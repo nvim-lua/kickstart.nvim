@@ -174,7 +174,7 @@ require('lazy').setup({
               run_on = 'type', -- or `save`
             },
           },
-          csharp_ls = {},
+          omnisharp = {},
           netcoredbg = {},
           clangd = {
             cmd = { 'clangd', '--background-index', '--clang-tidy' },
