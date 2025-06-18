@@ -29,7 +29,12 @@ return {
     opts = {},
     config = function()
       require('fzf-lua').setup {
-        grep = {},
+        grep = {
+          formatter = 'path.filename_first',
+        },
+        files = {
+          formatter = 'path.filename_first', -- places file name first
+        },
       }
 
       local builtin = require 'fzf-lua'
@@ -95,11 +100,11 @@ return {
         },
         -- you can enable a preset for easier configuration
         presets = {
-          bottom_search = true, -- use a classic bottom cmdline for search
+          bottom_search = false, -- use a classic bottom cmdline for search
           command_palette = true, -- position the cmdline and popupmenu together
           long_message_to_split = true, -- long messages will be sent to a split
           inc_rename = false, -- enables an input dialog for inc-rename.nvim
-          lsp_doc_border = false, -- add a border to hover docs and signature help
+          lsp_doc_border = true, -- add a border to hover docs and signature help
         },
       }
     end,
@@ -111,6 +116,23 @@ return {
       --   If not available, we use `mini` as the fallback
       'rcarriga/nvim-notify',
     },
+  },
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require('lualine').setup {
+        sections = {
+          lualine_x = {
+            {
+              require('noice').api.statusline.mode.get,
+              cond = require('noice').api.statusline.mode.has,
+              color = { fg = '#ff9e64' },
+            },
+          },
+        },
+      }
+    end,
   },
   {
     'nvimdev/lspsaga.nvim',
