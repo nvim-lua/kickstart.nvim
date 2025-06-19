@@ -15,7 +15,7 @@
 ========         `"")----------------(""`   ___________      ========
 ========        /::::::::::|  |::::::::::\  \ no mouse \     ========
 ========       /:::========|  |==hjkl==:::\  \ required \    ========
-========      '""""""""""""'  '""""""""""""'  '""""""""""'   ========
+========      '""""""""""""'  '""""""""""""'smarttab  '""""""""""'   ========
 ========                                                     ========
 =====================================================================
 =====================================================================
@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -126,7 +126,15 @@ vim.o.undofile = true
 
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 vim.o.ignorecase = true
+
+-- Override 'ignorecase' if search pattern contains uppercase letters
 vim.o.smartcase = true
+
+-- Show search matches as you type
+vim.o.incsearch = true
+
+-- Highlight all matches of the last search
+vim.o.hlsearch = true
 
 -- Keep signcolumn on by default
 vim.o.signcolumn = 'yes'
@@ -165,6 +173,18 @@ vim.o.scrolloff = 10
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
 vim.o.confirm = true
+
+-- Highlight matching parentheses and brackets
+vim.o.showmatch = true
+
+--Enable automatic indentation
+vim.o.autoindent = true
+
+--Enable smart indentation
+vim.o.smartindent = true
+
+--Round indent to multiple of 'hiftwidth'
+vim.o.shiftround = false
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
