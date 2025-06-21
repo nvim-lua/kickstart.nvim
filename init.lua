@@ -859,16 +859,43 @@ require('lazy').setup({
   --     end,
   --   },
   --
-  {
-
-    'rebelot/kanagawa.nvim',
+ {
+    "catppuccin/nvim",
+    name = "catppuccin",
     priority = 1000,
-    init = function()
-      vim.cmd.colorscheme 'kanagawa-dragon'
-      vim.cmd.hi 'Comment gui=none'
+    config = function()
+        require("catppuccin").setup({
+            flavour = "mocha", -- latte, frappe, macchiato, mocha
+            background = { -- :h background
+                dark = "mocha",
+            },
+            transparent_background = true, -- disables setting the background color
+            term_colors = true, -- sets terminal colors
+            styles = {
+                comments = { "italic" },
+                conditionals = { "italic" },
+                loops = {},
+                functions = {},
+                keywords = {},
+                strings = {},
+                variables = {},
+                numbers = {}, 
+                booleans = {},
+                properties = {},
+                types = {},
+                operators = {},
+            },
+             color_overrides = {
+                mocha = {
+                    base = "#000000", -- Set the background to pure black
+                    mantle = "#000000",
+                    crust = "#000000",
+                },
+            },
+        })
+        vim.cmd.colorscheme "catppuccin"
     end,
-  },
-
+},
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 

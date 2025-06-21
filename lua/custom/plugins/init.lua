@@ -15,7 +15,7 @@ return {
         hijack_netrw = true, -- Hijack netrw for nvim-tree
         view = {
           side = 'right', -- Position of the tree
-          width = 40,          
+          width = 40,
         },
         renderer = {
           icons = {
@@ -54,5 +54,17 @@ return {
     keys = {
       { '<leader>gg', '<cmd>LazyGit<CR>', desc = 'Open LazyGit' },
     },
+  },
+
+  -- Aerial plugin to see document signatures
+  {
+    'stevearc/aerial.nvim',
+    cmd = { 'AerialToggle' },
+    keys = {
+      { '<leader>ga', '<cmd>AerialToggle<CR>', desc = 'Toggle Aerial Outline' },
+    },
+    config = function()
+      require('aerial').setup()
+    end,
   },
 }
