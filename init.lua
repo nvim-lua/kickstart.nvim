@@ -594,7 +594,7 @@ require('lazy').setup({
         gopls = {},
         pyright = {},
         -- rust_analyzer = {},
-        elixir-ls = {},
+        elixir_ls = {},
         lexical = {},
         ruff = {},
         sqls = {},
