@@ -32,3 +32,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
+
+-- * Manage plugins here
+if true then
+  require("vscode-plugins")
+end
