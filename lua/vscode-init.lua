@@ -1,5 +1,16 @@
 -- VSCode Specific Neovim configuration
 
+-- * Custom Keybings * --
+
+-- local keymap = vim.keymap.set
+-- local opts = { nmap = true, silent = true }
+
+-- Remap leader key
+-- keymap("n", "<Space>", "", opts)
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+
+-- * VSCode Neovim Configuration
 vim.g.have_nerd_font = true
 
 -- Sync clipboard between OS and Neovim.
