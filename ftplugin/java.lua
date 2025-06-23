@@ -1,6 +1,6 @@
 local jdtls_ok, jdtls = pcall(require, 'jdtls')
 if not jdtls_ok then
-  vim.notify 'JDTLS not found, install with `:MasonInstall jdtls`'
+  vim.notify('JDTLS not found, install with `:MasonInstall jdtls`', vim.log.levels.ERROR)
   return
 end
 
@@ -11,19 +11,41 @@ local path_to_plugins = jdtls_path .. '/plugins/'
 local path_to_jar = vim.fn.glob(path_to_plugins .. 'org.eclipse.equinox.launcher_*.jar')
 local lombok_path = vim.fn.glob(path_to_plugins .. 'lombok.jar')
 
+-- Debug: Print paths
+-- print("JDTLS Path: " .. jdtls_path)
+-- print("LSP Server Path: " .. path_to_lsp_server)
+-- print("JAR Path: " .. path_to_jar)
+-- print("Lombok Path: " .. lombok_path)
+
+-- Check if paths exist
+if vim.fn.executable(vim.fn.glob('/Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home/bin/java')) == 0 then
+  vim.notify('Java 17 not found at expected path', vim.log.levels.ERROR)
+  return
+end
+
+if path_to_jar == '' then
+  vim.notify('JDTLS JAR not found', vim.log.levels.ERROR)
+  return
+end
+
 -- Java home directories
-local java_17_home = '/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home'
+local java_17_home = '/Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home'
 
 -- Root directory detection
 local root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew', 'pom.xml', 'build.gradle'})
-if root_dir == '' then return end
+if root_dir == '' then 
+  print("No root directory found")
+  return 
+end
+
+-- print("Root directory: " .. root_dir)
 
 -- Workspace setup
 local project_name = vim.fn.fnamemodify(root_dir, ':p:h:t')
 local workspace_dir = vim.fn.stdpath('data') .. '/site/java/workspace-root/' .. project_name
 vim.fn.mkdir(workspace_dir, 'p')
 
-print(workspace_dir)
+-- print("Workspace directory: " .. workspace_dir)
 
 -- Main Config
 local config = {
@@ -33,7 +55,7 @@ local config = {
     '-Dosgi.bundles.defaultStartLevel=4',
     '-Declipse.product=org.eclipse.jdt.ls.core.product',
     '-Dlog.protocol=true',
-    '-Dlog.level=ALL',
+    '-Dlog.level=ALL',  -- Changed back to ALL for debugging
     '-Xms1g',
     '--add-modules=ALL-SYSTEM',
     '--add-opens', 'java.base/java.util=ALL-UNNAMED',
@@ -80,11 +102,14 @@ local config = {
 
 -- Keymaps setup
 config.on_attach = function(_, bufnr)
-  -- Your keymaps here
+  vim.notify('JDTLS attached to buffer ' .. bufnr, vim.log.levels.INFO)
   vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { buffer = bufnr })
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = bufnr })
-  -- Add other keymaps from your deleted nvim-java-config
 end
 
--- Start JDTLS
+-- Debug: Print config command
+-- print("JDTLS Command: " .. table.concat(config.cmd, ' '))
+--
+-- -- Start JDTLS
+-- print("Starting JDTLS...")
 jdtls.start_or_attach(config)
