@@ -83,10 +83,9 @@ local Languages = {
           options = {
             nixos = {
               expr = '(builtins.getFlake "/home/peter/nodes/nixos-minipc").nixosConfigurations.peter-laptop.options',
-              -- expr = '(builtins.getFlake ("git+file://" + toString ./.)).nixosConfigurations.k-on.options',
             },
             home_manager = {
-              expr = '(builtins.getFlake ("git+file://" + toString ./.)).homeConfigurations."ruixi@k-on".options',
+              expr = '(builtins.getFlake "/home/peter/nodes/nixos-minipc").nixosConfigurations.peter@peter-laptop.options',
             },
           },
         },
