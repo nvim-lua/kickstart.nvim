@@ -68,6 +68,9 @@ local Languages = {
     },
   },
   ['nix'] = {
+    ['nil_ls'] = {
+      alias = 'nil',
+    },
     nixd = {
       settings = {
         nixd = {
@@ -79,7 +82,8 @@ local Languages = {
           },
           options = {
             nixos = {
-              expr = '(builtins.getFlake ("git+file://" + toString ./.)).nixosConfigurations.k-on.options',
+              expr = '(builtins.getFlake "/home/peter/nodes/nixos-minipc").nixosConfigurations.peter-laptop.options',
+              -- expr = '(builtins.getFlake ("git+file://" + toString ./.)).nixosConfigurations.k-on.options',
             },
             home_manager = {
               expr = '(builtins.getFlake ("git+file://" + toString ./.)).homeConfigurations."ruixi@k-on".options',
@@ -87,9 +91,6 @@ local Languages = {
           },
         },
       },
-    },
-    ['nil_ls'] = {
-      alias = 'nil',
     },
   },
   ['bash'] = {
