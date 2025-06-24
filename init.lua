@@ -217,6 +217,7 @@ local function DockerFileTypeDetectionAutoCommand()
     end
   end
 
+  -- Hacky way to configure correct filetype for docker-compose LSP
   -- vim.api.nvim_create_augroup('DockerFileTypeDetection', { clear = true })
   vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
     pattern = tbl,
