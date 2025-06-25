@@ -73,6 +73,9 @@ require('lazy').setup({
   require 'plugins.autopairs',
   require 'plugins.gitsigns',
   require 'plugins.indent-blankline',
+  require 'plugins.alpha',
+  require 'plugins.autotag',
+  require 'plugins.colorizer',
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
