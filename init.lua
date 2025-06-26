@@ -806,6 +806,10 @@ require('lazy').setup({
           --   end,
           -- },
         },
+        config = function()
+          -- Load your custom Lua-based snippets
+          require('luasnip.loaders.from_lua').load { paths = '~/.config/nvim/lua/snippets' }
+        end,
         opts = {},
       },
       'folke/lazydev.nvim',
@@ -1017,10 +1021,9 @@ require('lazy').setup({
 
 -- ansible auto set lenguage
 vim.cmd 'autocmd BufRead,BufNewFile *.yml set filetype=yaml.ansible'
-
 -- fix colors in tmux
 vim.o.termguicolors = true
--- vim.cmd 'colorscheme vim'
+vim.cmd 'colorscheme vim'
 
 -- my custom keys
 vim.keymap.set('n', '<PageUp>', function()
@@ -1043,3 +1046,11 @@ vim.keymap.set('n', '<leader>mt', function()
   vim.cmd 'tabnew' -- Open a new tab
   vim.api.nvim_buf_set_lines(0, 0, -1, false, content) -- Set new buffer content
 end, { noremap = true, silent = true })
+
+require('lspconfig').docker_compose_language_service.setup {
+  cmd = { 'docker-compose-langserver', '--stdio' },
+  filetypes = { 'yaml.docker-compose' },
+  root_dir = function(fname)
+    return require('lspconfig.util').find_git_ancestor(fname) or vim.loop.cwd()
+  end,
+}
