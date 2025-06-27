@@ -1,6 +1,5 @@
 --[[
-
-=====================================================================
+======================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
 =====================================================================
 ========                                    .-----.          ========
@@ -181,6 +180,9 @@ vim.api.nvim_set_keymap('i', '<C-]>', '<C-o>$', { noremap = true })
 vim.api.nvim_set_keymap('i', '<C-f>', '<ESC>^', { noremap = true })
 vim.api.nvim_set_keymap('i', '<C-M-p>', '<ESC>opi', { noremap = true })
 vim.api.nvim_set_keymap('i', '<C-M-P>', '<ESC>oPi', { noremap = true })
+vim.api.nvim_set_keymap('i', '<M-->', '–', { noremap = true })
+vim.api.nvim_set_keymap('i', '<M-=>', '—', { noremap = true })
+
 -- Block cursor
 -- vim.opt.guicursor = 'n-v-c:block,i:block-blinkwait700-blinkoff400-blinkon250,sm:block'
 -- vim.opt.guicursor = 'n-v-c:block,i:ver25-blinkon250-blinkoff400-blinkwait700,r:hor20,o:hor50,sm:block-blinkwait175-blinkoff150-blinkon175'
@@ -409,6 +411,11 @@ require('lazy').setup({
       -- delay between pressing a key and opening which-key (milliseconds)
       -- this setting is independent of vim.opt.timeoutlen
       delay = 0,
+      plugins = {
+        spelling = {
+          enabled = true
+        }
+      },
       icons = {
         -- set icon mappings to true if you have a Nerd Font
         mappings = vim.g.have_nerd_font,
