@@ -1,6 +1,6 @@
 return { -- Autoformat
   'stevearc/conform.nvim',
-  event = { 'BufWritePre' },
+  event = { 'BufWritePre', 'bufNewFile' },
   cmd = { 'ConformInfo' },
   keys = {
     {
@@ -33,6 +33,13 @@ return { -- Autoformat
       python = { 'ruff_fix', 'ruff_format', 'ruff_organize_imports' },
       -- You can use 'stop_after_first' to run the first available formatter from the list
       javascript = { 'prettierd' },
+      typescript = { 'prettierd' },
+      vue = { 'prettierd' },
+      html = { 'prettierd' },
+      css = { 'prettierd' },
+      json = { 'prettierd' },
+      jsonc = { 'prettierd' },
+      yaml = { 'prettierd' },
       go = { 'goimports', 'golines' },
     },
   },
