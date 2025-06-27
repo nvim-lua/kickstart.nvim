@@ -491,6 +491,8 @@ require('lazy').setup({
       },
     },
   },
+  { 'hrsh7th/nvim-cmp' },
+  { 'hrsh7th/cmp-nvim-lsp' },
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
@@ -687,7 +689,9 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        clangd = {},
+        clangd = {
+          capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities),
+        },
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
@@ -860,7 +864,7 @@ require('lazy').setup({
       appearance = {
         -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
         -- Adjusts spacing to ensure icons are aligned
-        nerd_font_variant = 'mono',
+        nerd_font_variant = 'normal',
       },
 
       completion = {
