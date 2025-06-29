@@ -32,6 +32,7 @@ require('lazy').setup({
   require 'plugins.rhubarb',
   require 'plugins.lsp',
   require 'plugins.conform',
+  require 'plugins.nvim-lint',
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
@@ -407,7 +408,7 @@ require('lazy').setup({
   --
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
-  require 'kickstart.plugins.lint',
+  -- require 'kickstart.plugins.lint',
 
   -- NOTE: The import beloterminal.shop music videow can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
