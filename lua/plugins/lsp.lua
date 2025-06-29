@@ -271,7 +271,6 @@ return {
       'prettierd',
       'jsonlint',
       'markdownlint',
-      'mdformat',
       'yamllint',
       'eslint_d',
     })

@@ -41,7 +41,7 @@ return { -- Autoformat
       jsonc = { 'prettierd' },
       yaml = { 'prettierd' },
       go = { 'goimports', 'golines' },
-      markdown = { 'mdformat' },
+      markdown = { 'prettierd' },
     },
   },
 }
