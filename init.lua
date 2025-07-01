@@ -717,6 +717,19 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
         'ansiblels', -- ansible
+        {
+          'gopls',
+          condition = function()
+            return vim.fn.executable 'go' == 1
+          end,
+        },
+        {
+          'powershell_ls',
+          condition = function()
+            return vim.fn.executable 'pwsh' == 1
+          end,
+        },
+        'dockerls', -- dockerfile
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
