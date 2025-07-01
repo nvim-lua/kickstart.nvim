@@ -715,8 +715,7 @@ require('lazy').setup({
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
-        'ansiblels', -- ansible
+        { 'bash-language-server', auto_update = true },
         {
           'gopls',
           condition = function()
@@ -724,11 +723,14 @@ require('lazy').setup({
           end,
         },
         {
-          'powershell_ls',
+          'powershell_es',
           condition = function()
             return vim.fn.executable 'pwsh' == 1
           end,
         },
+        -- no extra requirement list
+        'ansiblels', -- ansible
+        'stylua', -- Used to format Lua code
         'dockerls', -- dockerfile
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
