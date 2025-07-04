@@ -1,178 +1,157 @@
-local ls = require 'luasnip'
+local ls = require("luasnip")
 local s = ls.snippet
 local t = ls.text_node
 local i = ls.insert_node
-local f = ls.function_node
-local c = ls.choice_node
-local d = ls.dynamic_node
-local r = ls.restore_node
-local fmt = require('luasnip.extras.fmt').fmt
+local fmt = require("luasnip.extras.fmt").fmt
+
+-- Configure snippet options
+local snippet_opts = {
+  condition = function()
+    return not ls.in_snippet()
+  end,
+  show_condition = function()
+    return not ls.in_snippet()
+  end
+}
 
 return {
+  -- Complete main setup
+  s("main", fmt([[
+    using System;
 
-  s(
-    'cww',
-    fmt('Console.WriteLine({});{}', {
-      i(1, ''),
-      i(0),
-    })
-  ),
+    namespace {};
 
-  s(
-    'cw',
-    fmt('Console.Write({});{}', {
-      i(1, ''),
-      i(0),
-    })
-  ),
+    class Program
+    {{
+        static void Main(string[] args)
+        {{
+            {}
+        }}
+    }}
+  ]], { i(1, "MyApp"), i(2, 'Console.WriteLine("Hello, World!");') }), snippet_opts),
 
-  s(
-    'do',
-    fmt(
-      [[
-do
-{{
-{}}} while ({});
-{}]],
-      {
-        i(2),
-        i(1),
-        i(0),
-      }
-    )
-  ),
+  -- Namespace
+  s("namespace", fmt([[
+    namespace {};
 
-  s(
-    'while',
-    fmt(
-      [[
-while ({})
-{{
-{}}}
-{}]],
-      {
-        i(1),
-        i(2),
-        i(0),
-      }
-    )
-  ),
+    {}
+  ]], { i(1, "MyNamespace"), i(2) }), snippet_opts),
 
-  s(
-    'fo',
-    fmt(
-      [[
-for (int {} = 0; {} < {}; {}++)
-{{
-{}}}
-{}]],
-      {
-        i(2, 'i'),
-        f(function(args)
-          return args[1][1]
-        end, { 2 }),
-        i(1, '1'),
-        f(function(args)
-          return args[1][1]
-        end, { 2 }),
-        i(3),
-        i(0),
-      }
-    )
-  ),
+  -- Class
+  s("class", fmt([[
+    public class {}
+    {{
+        {}
+    }}
+  ]], { i(1, "MyClass"), i(2) }), snippet_opts),
 
-  s(
-    'forr',
-    fmt(
-      [[
-for (int {} = {} - 1; {} >= 0; {}--)
-{{
-{}}}
-{}]],
-      {
-        i(2, 'i'),
-        i(1, 'length'),
-        f(function(args)
-          return args[1][1]
-        end, { 2 }),
-        f(function(args)
-          return args[1][1]
-        end, { 2 }),
-        i(3),
-        i(0),
-      }
-    )
-  ),
+  -- Method
+  s("method", fmt([[
+    public {} {}({})
+    {{
+        {}
+    }}
+  ]], { i(1, "void"), i(2, "MyMethod"), i(3), i(4) }), snippet_opts),
 
-  s('cc', t 'Console.Clear();'),
+  -- Property
+  s("prop", fmt([[
+    public {} {} {{ get; set; }}
+  ]], { i(1, "string"), i(2, "MyProperty") }), snippet_opts),
 
-  s('crk', t 'Console.ReadKey(true);'),
+  -- Auto property with init
+  s("propi", fmt([[
+    public {} {} {{ get; init; }}
+  ]], { i(1, "string"), i(2, "MyProperty") }), snippet_opts),
 
-  s('crl', t 'Console.ReadLine();'),
+  -- Constructor
+  s("ctor", fmt([[
+    public {}({})
+    {{
+        {}
+    }}
+  ]], { i(1, "ClassName"), i(2), i(3) }), snippet_opts),
 
-  s(
-    'foreach',
-    fmt(
-      [[
-foreach ({})
-{{
-{}}}{}]],
-      {
-        i(1),
-        i(2),
-        i(0),
-      }
-    )
-  ),
+  -- Interface
+  s("interface", fmt([[
+    public interface {}
+    {{
+        {}
+    }}
+  ]], { i(1, "IMyInterface"), i(2) }), snippet_opts),
 
-  s(
-    'cla',
-    fmt(
-      [[
-class {}
-{{
-{}}}
-  ]],
-      {
-        i(1, 'ClassName'),
-        i(0),
-      }
-    )
-  ),
+  -- For loop
+  s("for", fmt([[
+    for (int {} = 0; {} < {}; {}++)
+    {{
+        {}
+    }}
+  ]], { i(1, "i"), i(1), i(2, "10"), i(1), i(3) }), snippet_opts),
 
-  s(
-    'inter',
-    fmt(
-      [[
-interface {}
-{{
-{}}}
-  ]],
-      {
-        i(1, 'IInterfaceName'),
-        i(0),
-      }
-    )
-  ),
+  -- Foreach loop
+  s("foreach", fmt([[
+    foreach ({} {} in {})
+    {{
+        {}
+    }}
+  ]], { i(1, "var"), i(2, "item"), i(3, "collection"), i(4) }), snippet_opts),
 
-  s(
-    'enu',
-    fmt(
-      [[
-enum {}
-{{
-{}}}
-  ]],
-      {
-        i(1, 'EnumName'),
-        i(0),
-      }
-    )
-  ),
+  -- If statement
+  s("if", fmt([[
+    if ({})
+    {{
+        {}
+    }}
+  ]], { i(1, "condition"), i(2) }), snippet_opts),
 
-  s('comment', {
-    t { '/*', '' },
-    i(1),
-    t { '', '*/' },
-  }),
+  -- Console.WriteLine
+  s("cw", fmt([[
+    Console.WriteLine({});
+  ]], { i(1, '"Hello"') }), snippet_opts),
+
+  -- Console.Write
+  s("cwn", fmt([[
+    Console.Write({});
+  ]], { i(1, '"Hello"') }), snippet_opts),
+
+  -- Try-catch
+  s("try", fmt([[
+    try
+    {{
+        {}
+    }}
+    catch ({})
+    {{
+        {}
+    }}
+  ]], { i(1), i(2, "Exception ex"), i(3, "throw;") }), snippet_opts),
+
+  -- Variable declaration
+  s("var", fmt([[
+    var {} = {};
+  ]], { i(1, "name"), i(2, "value") }), snippet_opts),
+
+  -- String variable
+  s("string", fmt([[
+    string {} = {};
+  ]], { i(1, "name"), i(2, '""') }), snippet_opts),
+
+  -- Record
+  s("record", fmt([[
+    public record {}({});
+  ]], { i(1, "MyRecord"), i(2, "string Name") }), snippet_opts),
+
+  -- List declaration
+  s("list", fmt([[
+    List<{}> {} = [{}];
+  ]], { i(1, "string"), i(2, "list"), i(3) }), snippet_opts),
+
+  -- Dictionary declaration
+  s("dict", fmt([[
+    Dictionary<{}, {}> {} = [];
+  ]], { i(1, "string"), i(2, "string"), i(3, "dict") }), snippet_opts),
+
+  -- Array declaration
+  s("array", fmt([[
+    {}[] {} = [{}];
+  ]], { i(1, "string"), i(2, "array"), i(3) }), snippet_opts),
 }
