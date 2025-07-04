@@ -85,6 +85,10 @@ return {
             prompt = 'Edit Breakpoint',
             format_item = function(item) return ('%s: %s'):format(item, props[item].value) end,
           }, function(choice)
+            if choice == nil then
+              -- User cancelled the selection
+              return
+            end
             props[prompt].setter(vim.fn.input {
               prompt = ('[%s] '):format(prompt),
               default = props[prompt].value,
