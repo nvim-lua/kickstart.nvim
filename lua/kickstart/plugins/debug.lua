@@ -52,7 +52,6 @@ return {
           return { condition = '', logMessage = '', hitCondition = '', line = vim.fn.line '.' }
         end
 
-
         -- Elicit customization via a UI prompt
         ---@param bp dap.SourceBreakpoint a breakpoint
         local function customize_bp(bp)
@@ -82,7 +81,9 @@ return {
           end
           vim.ui.select(menu_options, {
             prompt = 'Edit Breakpoint',
-            format_item = function(item) return ('%s: %s'):format(item, props[item].value) end,
+            format_item = function(item)
+              return ('%s: %s'):format(item, props[item].value)
+            end,
           }, function(choice)
             if choice == nil then
               -- User cancelled the selection
