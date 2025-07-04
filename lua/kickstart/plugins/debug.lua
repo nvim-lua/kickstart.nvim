@@ -89,9 +89,10 @@ return {
               -- User cancelled the selection
               return
             end
-            props[prompt].setter(vim.fn.input {
-              prompt = ('[%s] '):format(prompt),
-              default = props[prompt].value,
+              props[choice].setter(vim.fn.input {
+              prompt = ('[%s] '):format(choice),
+              default = props[choice].value,
+
             })
 
             -- Set breakpoint for current line, with customizations (see h:dap.set_breakpoint())
