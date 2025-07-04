@@ -36,7 +36,6 @@ return {
     {
       '<leader>B',
       function()
-        require 'dap.protocol'
         local dap = require 'dap'
 
         -- Search for an existing breakpoint on this line in this buffer
