@@ -78,13 +78,13 @@ return {
             },
           }
           local menu_options = {}
-          for k, v in pairs(props) do
-            table.insert(menu_options, ('%s: %s'):format(k, v.value))
+          for k, _ in pairs(props) do
+            table.insert(menu_options, k)
           end
           vim.ui.select(menu_options, {
             prompt = 'Edit Breakpoint',
+            format_item = function(item) return ('%s: %s'):format(item, props[item].value) end,
           }, function(choice)
-            local prompt = (tostring(choice)):gsub(':.*', '')
             props[prompt].setter(vim.fn.input {
               prompt = ('[%s] '):format(prompt),
               default = props[prompt].value,
