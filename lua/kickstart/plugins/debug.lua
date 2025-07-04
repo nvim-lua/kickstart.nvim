@@ -57,21 +57,15 @@ return {
           local props = {
             ['Condition'] = {
               value = bp.condition,
-              setter = function(v)
-                bp.condition = v
-              end,
+              setter = function(v) bp.condition = v end,
             },
             ['Hit Condition'] = {
               value = bp.hitCondition,
-              setter = function(v)
-                bp.hitCondition = v
-              end,
+              setter = function(v) bp.hitCondition = v end,
             },
             ['Log Message'] = {
               value = bp.logMessage,
-              setter = function(v)
-                bp.logMessage = v
-              end,
+              setter = function(v) bp.logMessage = v end,
             },
           }
           local menu_options = {}
@@ -80,9 +74,7 @@ return {
           end
           vim.ui.select(menu_options, {
             prompt = 'Edit Breakpoint',
-            format_item = function(item)
-              return ('%s: %s'):format(item, props[item].value)
-            end,
+            format_item = function(item) return ('%s: %s'):format(item, props[item].value) end,
           }, function(choice)
             if choice == nil then
               -- User cancelled the selection
