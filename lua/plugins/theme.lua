@@ -27,7 +27,7 @@ return {
           focus_fg = '#ddb795',
           property = '#b6c4dc',
           number = '#C2966B',
-          parameter = '#b8a2ba',
+          parameter = '#d9c8ce',
           class = '#b06767',
           namespace = '#748fa7',
           keyword = '#7894AB',
@@ -193,6 +193,21 @@ return {
         hi('LspSignatureActiveParameter', c.parameter, '', 'bold')
         hi('LspCodeLens', c.comment, '', '')
         hi('LspInlayHint', c.comment, '', 'italic')
+
+        -- Language-specific highlights (after general highlights)
+        hi('@type.go', c.keyword, '', '')
+        hi('@type.builtin.go', c.keyword, '', '')
+        hi('@lsp.type.type.go', c.keyword, '', '')
+        hi('@keyword.function.go', c.control_kw, '', '')
+        hi('@keyword.return.go', '#4a5f7a', '', '')
+        hi('@function.macro.rust', c.class, '', '')
+        hi('@lsp.type.decorator.rust', c.class, '', '')
+        hi('@lsp.typemod.decorator.attribute.rust', c.class, '', '')
+        hi('@lsp.typemod.decorator.defaultLibrary.rust', c.class, '', '')
+        hi('@lsp.typemod.decorator.library.rust', c.class, '', '')
+        hi('@keyword.return.c_sharp', '#4a5f7a', '', '')
+        hi('@keyword.exception.c_sharp', '#8b4242', '', '')
+        hi('@lsp.type.parameter.cs', c.parameter, '', '')
 
         -- Telescope
         hi('TelescopeNormal', c.white, c.black, '')
