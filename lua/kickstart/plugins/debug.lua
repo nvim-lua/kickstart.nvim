@@ -38,20 +38,21 @@ return {
       function()
         require 'dap.protocol'
         local dap = require 'dap'
+
         -- Search for an existing breakpoint on this line in this buffer
         ---@return dap.SourceBreakpoint bp that was either found, or an empty placeholder
         local function find_bp()
           local buf_bps = require('dap.breakpoints').get(vim.fn.bufnr())[vim.fn.bufnr()]
           ---@type dap.SourceBreakpoint
-          local bp = { condition = '', logMessage = '', hitCondition = '', line = vim.fn.line '.' }
           for _, candidate in ipairs(buf_bps) do
             if candidate.line and candidate.line == vim.fn.line '.' then
-              bp = candidate
-              break
+              return candidate
             end
           end
-          return bp
+
+          return { condition = '', logMessage = '', hitCondition = '', line = vim.fn.line '.' }
         end
+
 
         -- Elicit customization via a UI prompt
         ---@param bp dap.SourceBreakpoint a breakpoint
