@@ -150,6 +150,35 @@ examples of adding popularly requested plugins.
     * [Restructure the configuration](https://github.com/nvim-lua/kickstart.nvim/issues/218)
     * [Reorganize init.lua into a multi-file setup](https://github.com/nvim-lua/kickstart.nvim/pull/473)
 
+
+## Configuration
+
+This section provides quick links to the configuration of each plugin.
+
+### Plugins configured in `init.lua`
+
+- [guess-indent.nvim](init.lua#L250)
+- [gitsigns.nvim](init.lua#L275)
+- [which-key.nvim](init.lua#L302)
+- [telescope.nvim](init.lua#L362)
+- [lazydev.nvim](init.lua#L469)
+- [nvim-lspconfig](init.lua#L480)
+- [conform.nvim](init.lua#L762)
+- [blink.cmp](init.lua#L803)
+- [tokyonight.nvim](init.lua#L906)
+- [todo-comments.nvim](init.lua#L924)
+- [mini.nvim](init.lua#L927)
+- [nvim-treesitter](init.lua#L964)
+
+### Plugins with dedicated configuration files
+
+- [autopairs.lua](lua/kickstart/plugins/autopairs.lua)
+- [debug.lua](lua/kickstart/plugins/debug.lua)
+- [gitsigns.lua](lua/kickstart/plugins/gitsigns.lua)
+- [indent_line.lua](lua/kickstart/plugins/indent_line.lua)
+- [lint.lua](lua/kickstart/plugins/lint.lua)
+- [neo-tree.lua](lua/kickstart/plugins/neo-tree.lua)
+
 ### Install Recipes
 
 Below you can find OS specific install instructions for Neovim and dependencies.
