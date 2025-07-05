@@ -270,7 +270,6 @@ return {
       'golines',
       'prettierd',
       'jsonlint',
-      'markdownlint',
       'yamllint',
       'eslint_d',
     })

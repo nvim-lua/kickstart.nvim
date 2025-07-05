@@ -7,7 +7,6 @@ return {
       local lint = require 'lint'
       lint.linters_by_ft = {
         yaml = { 'yamllint' },
-        markdown = { 'markdownlint' },
         typescript = { 'eslint_d' },
         javascript = { 'eslint_d' },
         vue = { 'eslint_d' },
