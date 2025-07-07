@@ -147,7 +147,18 @@ require('lazy').setup({
       },
     },
   },
+  { -- AutoSession takes advantage of Neovim's existing session management capabilities to provide seamless automatic session management
+    'rmagatti/auto-session',
+    lazy = false,
 
+    ---enables autocomptete for opts
+    ---@module "auto-session"
+    ---@type AutoSession.Config
+    opts = {
+      suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
+      -- log_level = 'debug',
+    },
+  },
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
@@ -740,6 +751,18 @@ require('lazy').setup({
       signature = { enabled = true },
     },
   },
+  -- -- Norminette checker
+  -- {
+  --   'hardyrafael17/norminette42.nvim',
+  --   config = function()
+  --     local norminette = require 'norminette'
+  --     norminette.setup {
+  --       runOnSave = true,
+  --       maxErrorsToShow = 5,
+  --       active = true,
+  --     }
+  --   end,
+  -- },
   {
     'loctvl842/monokai-pro.nvim',
     opts = {
