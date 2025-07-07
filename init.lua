@@ -1112,5 +1112,27 @@ require('lspconfig').pylsp.setup {
 vim.keymap.set('t', '<ESC>', '<C-\\><C-n>', {})
 vim.keymap.set('n', '<leader>xt', ':Telescope colorscheme<CR>', {})
 vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
+vim.keymap.set('n', '<leader>xs', function()
+  local current_file = vim.fn.expand '%:p'
+
+  local base = vim.fn.expand '%:r' -- gets full path without extension
+  local ext = vim.fn.expand '%:e' -- gets the file extension
+
+  local target
+  if ext == 'ts' then
+    target = base .. '.html'
+  elseif ext == 'html' then
+    target = base .. '.ts'
+  else
+    print 'Not a .ts or .html file'
+    return
+  end
+
+  if vim.fn.filereadable(target) == 1 then
+    vim.cmd('edit ' .. target)
+  else
+    print('File does not exist: ' .. target)
+  end
+end, { desc = 'Switch between .ts and .html files' })
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
