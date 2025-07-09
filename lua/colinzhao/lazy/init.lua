@@ -81,4 +81,7 @@ return {
   {
     'prisma/vim-prisma',
   },
+  
+  -- Claude integration
+  require 'colinzhao.lazy.claude',
 }

@@ -3,7 +3,12 @@ test.sh
 .luarc.json
 nvim
 
+hihi
+
 spell/
 lazy-lock.json
 
 **/.DS_Store
+
+# Development tracking
+.agent-work
