@@ -671,17 +671,17 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
+        clangd = {},
         -- gopls = {},
         -- pyright = {},
-        -- rust_analyzer = {},
+        rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+        ts_ls = {},
         --
 
         lua_ls = {
@@ -825,8 +825,9 @@ require('lazy').setup({
         -- For an understanding of why the 'default' preset is recommended,
         -- you will need to read `:help ins-completion`
         --
-        -- No, but seriously. Please read `:help ins-completion`, it is really good!
-        --
+        ['<Tab>'] = { 'select_next' }, -- Tab selects next item
+        ['<S-Tab>'] = { 'select_prev' }, -- Shift+Tab selects previous
+        ['<CR>'] = { 'select_and_accept', 'fallback' },
         -- All presets have the following mappings:
         -- <tab>/<s-tab>: move to right/left of your snippet expansion
         -- <c-space>: Open menu or open docs if already open
@@ -851,6 +852,11 @@ require('lazy').setup({
         -- By default, you may press `<c-space>` to show the documentation.
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
         documentation = { auto_show = false, auto_show_delay_ms = 500 },
+        menu = {
+          draw = {
+            columns = { { 'label', 'label_description', gap = 1 } },
+          },
+        },
       },
 
       sources = {
@@ -888,6 +894,7 @@ require('lazy').setup({
       require('tokyonight').setup {
         styles = {
           comments = { italic = false }, -- Disable italics in comments
+          keywords = { italic = false },
         },
       }
 
@@ -976,9 +983,9 @@ require('lazy').setup({
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
