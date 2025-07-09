@@ -12,3 +12,6 @@ lazy-lock.json
 
 # Development tracking
 .agent-work
+
+# Claude Code hooks
+.claude/

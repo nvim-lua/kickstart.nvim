@@ -9,5 +9,6 @@ return {
   dependencies = {
     'nvim-telescope/telescope.nvim',  -- For agent picker
     'tpope/vim-fugitive',            -- Already installed, for diffs
+    'sindrets/diffview.nvim',        -- For advanced diff viewing
   },
 } 

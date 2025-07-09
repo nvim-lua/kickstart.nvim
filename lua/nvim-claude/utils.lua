@@ -113,4 +113,38 @@ function M.tmux_supports_length_percent()
   return M.tmux_version() >= 3.4
 end
 
+-- Write JSON to file
+function M.write_json(path, data)
+  local success, json = pcall(vim.fn.json_encode, data)
+  if not success then
+    return false, 'Failed to encode JSON: ' .. json
+  end
+  
+  local file = io.open(path, 'w')
+  if not file then 
+    return false, 'Failed to open file for writing: ' .. path
+  end
+  
+  -- Pretty print JSON
+  local formatted = json:gsub('},{', '},\n    {'):gsub('\\{', '{\n  '):gsub('\\}', '\n}')
+  file:write(formatted)
+  file:close()
+  return true, nil
+end
+
+-- Read JSON from file
+function M.read_json(path)
+  local content = M.read_file(path)
+  if not content then
+    return nil, 'Failed to read file: ' .. path
+  end
+  
+  local success, data = pcall(vim.fn.json_decode, content)
+  if not success then
+    return nil, 'Failed to decode JSON: ' .. data
+  end
+  
+  return data, nil
+end
+
 return M 

@@ -115,14 +115,19 @@ function M.setup(user_config)
   M.utils = require('nvim-claude.utils')
   M.commands = require('nvim-claude.commands')
   M.registry = require('nvim-claude.registry')
+  M.hooks = require('nvim-claude.hooks')
+  M.diff_review = require('nvim-claude.diff-review')
   
   -- Initialize submodules with config
   M.tmux.setup(M.config.tmux)
   M.git.setup(M.config.agents)
   M.registry.setup(M.config.agents)
+  M.hooks.setup()
+  M.diff_review.setup()
   
   -- Set up commands
   M.commands.setup(M)
+  M.hooks.setup_commands()
   
   -- Set up keymappings if enabled
   if M.config.mappings then
