@@ -68,9 +68,18 @@ function M.pre_tool_use_hook()
     return
   end
   
-  -- Store the baseline commit reference
-  M.baseline_commit = 'HEAD'
-  utils.write_file(baseline_file, 'HEAD')
+  -- Store the actual commit hash instead of 'HEAD'
+  local hash_cmd = string.format('cd "%s" && git rev-parse HEAD', git_root)
+  local commit_hash, hash_err = utils.exec(hash_cmd)
+  
+  if not hash_err and commit_hash and commit_hash ~= '' then
+    commit_hash = commit_hash:gsub('%s+', '')
+    M.baseline_commit = commit_hash
+    utils.write_file(baseline_file, commit_hash)
+  else
+    M.baseline_commit = 'HEAD'
+    utils.write_file(baseline_file, 'HEAD')
+  end
   
   vim.notify('New baseline commit created: ' .. commit_msg, vim.log.levels.INFO)
 end

@@ -25,3 +25,7 @@ Now baseline exists - this should work properly!
 Testing with debug logs to see what's happening in the hooks.
 
 After reloading hooks module - this should create debug logs!
+
+Testing after manual baseline creation - this should work now!
+
+After manually initializing stash session - test the browsing commands!

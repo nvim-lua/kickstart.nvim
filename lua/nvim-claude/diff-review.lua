@@ -130,7 +130,7 @@ end
 -- Get Claude stashes (only stashes with [claude-edit] messages)
 function M.get_claude_stashes()
   local utils = require('nvim-claude.utils')
-  local cmd = 'git stash list --grep="claude-edit"'
+  local cmd = 'git stash list'
   local result = utils.exec(cmd)
   
   if not result or result == '' then
@@ -139,7 +139,7 @@ function M.get_claude_stashes()
   
   local stashes = {}
   for line in result:gmatch('[^\n]+') do
-    if line ~= '' then
+    if line ~= '' and line:match('%[claude%-edit%]') then
       local stash_ref = line:match('^(stash@{%d+})')
       if stash_ref then
         table.insert(stashes, {
@@ -174,19 +174,25 @@ function M.open_diffview()
     -- Try to recover stash-based session from baseline
     local utils = require('nvim-claude.utils')
     local baseline_ref = utils.read_file('/tmp/claude-baseline-commit')
-    if baseline_ref and baseline_ref ~= '' then
-      baseline_ref = baseline_ref:gsub('%s+', '')
-      local claude_stashes = M.get_claude_stashes()
-      if claude_stashes and #claude_stashes > 0 then
-        M.current_review = {
-          baseline_ref = baseline_ref,
-          timestamp = os.time(),
-          claude_stashes = claude_stashes,
-          current_stash_index = 0, -- Show cumulative view by default
-          is_stash_based = true
-        }
-        vim.notify('Recovered Claude stash session from baseline', vim.log.levels.INFO)
+    
+    -- If no baseline file, but we have Claude stashes, use HEAD as baseline
+    local claude_stashes = M.get_claude_stashes()
+    if claude_stashes and #claude_stashes > 0 then
+      if not baseline_ref or baseline_ref == '' then
+        baseline_ref = 'HEAD'
+        vim.notify('No baseline found, using HEAD as baseline', vim.log.levels.INFO)
+      else
+        baseline_ref = baseline_ref:gsub('%s+', '')
       end
+      
+      M.current_review = {
+        baseline_ref = baseline_ref,
+        timestamp = os.time(),
+        claude_stashes = claude_stashes,
+        current_stash_index = 0, -- Show cumulative view by default
+        is_stash_based = true
+      }
+      vim.notify(string.format('Recovered Claude stash session with %d stashes', #claude_stashes), vim.log.levels.INFO)
     end
     
     if not M.current_review then
