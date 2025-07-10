@@ -358,7 +358,7 @@ function M.uninstall_hooks()
   end
 end
 
--- MULTI-FILE TEST: Commands for manual hook management
+-- Commands for manual hook management
 function M.setup_commands()
   vim.api.nvim_create_user_command('ClaudeTestHooks', function()
     M.test_hooks()
