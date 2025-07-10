@@ -9,7 +9,7 @@ function M.setup()
   vim.defer_fn(function()
     M.cleanup_old_commits()
   end, 200)
-  
+
   -- Create baseline on startup if we're in a git repo
   vim.defer_fn(function()
     M.create_startup_baseline()
@@ -190,47 +190,47 @@ end
 -- Create baseline on Neovim startup
 function M.create_startup_baseline()
   local utils = require 'nvim-claude.utils'
-  
+
   -- Check if we're in a git repository
   local git_root = utils.get_project_root()
   if not git_root then
     return
   end
-  
+
   -- Check if we already have a baseline
   local baseline_file = '/tmp/claude-baseline-commit'
   local existing_baseline = utils.read_file(baseline_file)
-  
+
   -- If we have a valid baseline, keep it
   if existing_baseline and existing_baseline ~= '' then
     existing_baseline = existing_baseline:gsub('%s+', '')
     local check_cmd = string.format('cd "%s" && git rev-parse --verify %s^{commit} 2>/dev/null', git_root, existing_baseline)
     local check_result, check_err = utils.exec(check_cmd)
-    
-    if check_result and not check_err and check_result:match('^%x+') then
+
+    if check_result and not check_err and check_result:match '^%x+' then
       -- Baseline is valid
       vim.notify('Claude baseline loaded: ' .. existing_baseline:sub(1, 7), vim.log.levels.INFO)
       return
     end
   end
-  
+
   -- Create new baseline of current state
   local timestamp = os.time()
   local commit_msg = string.format('claude-baseline-%d (startup)', timestamp)
-  
+
   -- Stage all current changes
   local add_cmd = string.format('cd "%s" && git add -A', git_root)
   utils.exec(add_cmd)
-  
+
   -- Create baseline commit
   local commit_cmd = string.format('cd "%s" && git commit -m "%s" --allow-empty', git_root, commit_msg)
   local commit_result, commit_err = utils.exec(commit_cmd)
-  
-  if not commit_err or commit_err:match('nothing to commit') then
+
+  if not commit_err or commit_err:match 'nothing to commit' then
     -- Get the commit hash
     local hash_cmd = string.format('cd "%s" && git rev-parse HEAD', git_root)
     local commit_hash, hash_err = utils.exec(hash_cmd)
-    
+
     if not hash_err and commit_hash then
       commit_hash = commit_hash:gsub('%s+', '')
       utils.write_file(baseline_file, commit_hash)
@@ -358,7 +358,7 @@ function M.uninstall_hooks()
   end
 end
 
--- Commands for manual hook management
+-- MULTI-FILE TEST: Commands for manual hook management
 function M.setup_commands()
   vim.api.nvim_create_user_command('ClaudeTestHooks', function()
     M.test_hooks()
