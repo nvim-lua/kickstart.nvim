@@ -81,3 +81,9 @@ AUTOMATIC INLINE DIFF: This should appear automatically without any prompts!
 NEW EDIT: This line is different from the baseline and should trigger inline diff!
 
 RESTART TEST: Testing if inline diff works after Neovim restart!
+
+BASELINE FIX TEST: This should properly update baseline when accepted!
+
+DEBUG BASELINE: This edit includes debugging to see why baseline commits fail!
+
+AFTER RESTART: Testing baseline commit creation with debug output!

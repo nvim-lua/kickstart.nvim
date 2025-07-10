@@ -13,8 +13,6 @@ end
 
 -- Pre-tool-use hook: Create baseline commit only if one doesn't exist
 function M.pre_tool_use_hook()
-
-
   local utils = require 'nvim-claude.utils'
 
   -- Check if we're in a git repository
@@ -30,11 +28,14 @@ function M.pre_tool_use_hook()
   if existing_baseline and existing_baseline ~= '' then
     existing_baseline = existing_baseline:gsub('%s+', '')
     -- Verify the baseline commit still exists
-    local check_cmd = string.format('cd "%s" && git rev-parse --verify %s', git_root, existing_baseline)
+    local check_cmd = string.format('cd "%s" && git rev-parse --verify %s^{commit} 2>/dev/null', git_root, existing_baseline)
     local check_result, check_err = utils.exec(check_cmd)
 
-    if not check_err then
-          return
+    -- If we got a result and no error, the commit exists
+    if check_result and not check_err and check_result:match('^%x+') then
+      -- Baseline is valid, keep using it
+      M.baseline_commit = existing_baseline
+      return
     end
   end
 
@@ -47,7 +48,7 @@ function M.pre_tool_use_hook()
   local add_result, add_err = utils.exec(add_cmd)
 
   if add_err then
-      return
+    return
   end
 
   -- Create a temporary commit
@@ -55,7 +56,7 @@ function M.pre_tool_use_hook()
   local commit_result, commit_err = utils.exec(commit_cmd)
 
   if commit_err and not commit_err:match 'nothing to commit' then
-      return
+    return
   end
 
   -- Store the actual commit hash instead of 'HEAD'
@@ -70,23 +71,15 @@ function M.pre_tool_use_hook()
     M.baseline_commit = 'HEAD'
     utils.write_file(baseline_file, 'HEAD')
   end
-
 end
 
 -- Post-tool-use hook: Create stash of Claude's changes and trigger diff review
 function M.post_tool_use_hook()
-
-
-  
-
   -- Run directly without vim.schedule for testing
   local utils = require 'nvim-claude.utils'
-  
 
   -- Refresh all buffers to show Claude's changes
   vim.cmd 'checktime'
-  
-  
 
   -- Check if Claude made any changes
   local git_root = utils.get_project_root()
@@ -109,7 +102,6 @@ function M.post_tool_use_hook()
       table.insert(modified_files, file)
     end
   end
-  
 
   -- Get the baseline commit reference first
   local baseline_ref = utils.read_file '/tmp/claude-baseline-commit'
@@ -146,7 +138,6 @@ function M.post_tool_use_hook()
             -- Get the original content (from baseline)
             local baseline_cmd = string.format('cd "%s" && git show %s:%s 2>/dev/null', git_root, baseline_ref or 'HEAD', file)
             local original_content, orig_err = utils.exec(baseline_cmd)
-            
 
             if not orig_err and original_content then
               -- Get current content
@@ -156,7 +147,6 @@ function M.post_tool_use_hook()
               -- Show inline diff
               inline_diff.show_inline_diff(buf, original_content, current_content)
               opened_inline = true
-              
 
               -- Switch to that buffer if it's not the current one
               if buf ~= vim.api.nvim_get_current_buf() then
