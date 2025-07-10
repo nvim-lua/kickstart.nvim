@@ -22,3 +22,4 @@ This line was added by Claude!
 Testing hooks - this should trigger pre and post hooks!
 Hooks are now properly installed!
 Testing hook debug logging!
+Another test edit to see the diff!
