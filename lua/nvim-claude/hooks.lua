@@ -120,10 +120,10 @@ function M.post_tool_use_hook()
         baseline_ref = baseline_ref:gsub('%s+', '') -- trim whitespace
       end
       
-      -- Trigger diff review
+      -- Trigger diff review - always show cumulative diff against baseline
       local ok, diff_review = pcall(require, 'nvim-claude.diff-review')
       if ok then
-        diff_review.handle_claude_edit('stash@{0}', baseline_ref)
+        diff_review.handle_cumulative_diff(baseline_ref)
       else
         vim.notify('Diff review module not available: ' .. tostring(diff_review), vim.log.levels.ERROR)
       end
