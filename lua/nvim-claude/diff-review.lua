@@ -171,20 +171,21 @@ end
 -- Open diffview for current review
 function M.open_diffview()
   if not M.current_review then
-    -- Try to recover cumulative session from baseline
+    -- Try to recover stash-based session from baseline
     local utils = require('nvim-claude.utils')
     local baseline_ref = utils.read_file('/tmp/claude-baseline-commit')
     if baseline_ref and baseline_ref ~= '' then
       baseline_ref = baseline_ref:gsub('%s+', '')
-      local changed_files = M.get_changed_files_since_baseline(baseline_ref)
-      if changed_files and #changed_files > 0 then
+      local claude_stashes = M.get_claude_stashes()
+      if claude_stashes and #claude_stashes > 0 then
         M.current_review = {
           baseline_ref = baseline_ref,
           timestamp = os.time(),
-          changed_files = changed_files,
-          is_cumulative = true
+          claude_stashes = claude_stashes,
+          current_stash_index = 0, -- Show cumulative view by default
+          is_stash_based = true
         }
-        vim.notify('Recovered cumulative review session from baseline', vim.log.levels.INFO)
+        vim.notify('Recovered Claude stash session from baseline', vim.log.levels.INFO)
       end
     end
     
@@ -194,7 +195,13 @@ function M.open_diffview()
     end
   end
   
-  -- Use cumulative diff if available
+  -- Use stash-based diff if available
+  if M.current_review.is_stash_based then
+    M.open_cumulative_stash_view()
+    return
+  end
+  
+  -- Legacy: Use cumulative diff if available
   if M.current_review.is_cumulative then
     M.open_cumulative_diffview()
     return

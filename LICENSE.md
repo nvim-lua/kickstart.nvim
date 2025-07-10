@@ -18,18 +18,4 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Testing dynamic hooks after restart!
-
-Dynamic hooks are now working properly!
-
-Testing cumulative changes - this should accumulate with previous edits.
-
-Now using stash-based tracking to exclude manual edits!
-
-Starting Claude stash history - this should be the first stash entry.
-
-Second edit after manually creating baseline - this should create a stash!
-
-Third edit - testing if modules are reloaded properly.
-
-Fresh Neovim session - this should create the first Claude stash!
+Fresh restart - testing stash browsing with updated recovery logic!
