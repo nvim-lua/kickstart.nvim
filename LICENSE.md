@@ -94,7 +94,7 @@ TEST EDIT #1: Testing if diffs appear consistently!
 
 TEST EDIT #2: Checking consistency of diff display!
 
-VISUAL FIX TEST: Changed highlight group for replacements!
+RESTART TEST: Testing with fresh Neovim session!
 
 SANITY CHECK: First edit after Neovim restart - will the diff appear?
 
