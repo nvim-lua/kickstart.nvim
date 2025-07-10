@@ -27,3 +27,9 @@ Testing cumulative changes - this should accumulate with previous edits.
 Now using stash-based tracking to exclude manual edits!
 
 Starting Claude stash history - this should be the first stash entry.
+
+Second edit after manually creating baseline - this should create a stash!
+
+Third edit - testing if modules are reloaded properly.
+
+Fresh Neovim session - this should create the first Claude stash!
