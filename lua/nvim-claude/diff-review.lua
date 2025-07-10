@@ -85,7 +85,7 @@ function M.open_diffview()
     if stash_list and stash_list:match('%[claude%-edit%]') then
       local stash_ref = stash_list:match('(stash@{%d+})')
       if stash_ref then
-        local pre_edit_ref = utils.read_file('/tmp/claude-pre-edit-commit')
+        local pre_edit_ref = utils.read_file('/tmp/claude-baseline-commit')
         if pre_edit_ref then
           pre_edit_ref = pre_edit_ref:gsub('%s+', '')
         end
