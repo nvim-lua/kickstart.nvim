@@ -1,6 +1,6 @@
 MIT License
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+MULTI-EDIT TEST #1: Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -10,7 +10,7 @@ furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+MULTI-EDIT TEST #2: THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -90,11 +90,11 @@ AFTER RESTART: Testing baseline commit creation with debug output!
 
 BASELINE ISSUE: The pre-hook runs after edits, so baseline includes changes!
 
-TEST EDIT #1: Testing if diffs appear consistently!
+MULTI-EDIT TEST #3: Testing multiple hunks and navigation!
 
 TEST EDIT #2: Checking consistency of diff display!
 
 FIXED DISPLAY: Deletions now positioned correctly above replacements!
 
-SANITY CHECK: First edit after Neovim restart - will the diff appear?
+MULTI-EDIT TEST #4: Testing hunk navigation with ]h and [h!
 
