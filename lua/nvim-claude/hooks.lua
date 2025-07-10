@@ -116,6 +116,15 @@ function M.post_tool_use_hook()
       return
     end
     
+    -- Get list of modified files
+    local modified_files = {}
+    for line in status_result:gmatch('[^\n]+') do
+      local file = line:match('^.M (.+)$') or line:match('^M. (.+)$') or line:match('^.. (.+)$')
+      if file then
+        table.insert(modified_files, file)
+      end
+    end
+    
     -- Create a stash of Claude's changes (but keep them in working directory)
     local timestamp = os.date('%Y-%m-%d %H:%M:%S')
     local stash_msg = string.format('[claude-edit] %s', timestamp)
@@ -136,12 +145,54 @@ function M.post_tool_use_hook()
         baseline_ref = baseline_ref:gsub('%s+', '') -- trim whitespace
       end
       
-      -- Trigger diff review - show Claude stashes against baseline
-      local ok, diff_review = pcall(require, 'nvim-claude.diff-review')
-      if ok then
-        diff_review.handle_claude_stashes(baseline_ref)
-      else
-        vim.notify('Diff review module not available: ' .. tostring(diff_review), vim.log.levels.ERROR)
+      -- Check if any modified files are currently open in buffers
+      local inline_diff = require('nvim-claude.inline-diff')
+      local opened_inline = false
+      
+      for _, file in ipairs(modified_files) do
+        local full_path = git_root .. '/' .. file
+        
+        -- Find buffer with this file
+        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+          if vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_is_loaded(buf) then
+            local buf_name = vim.api.nvim_buf_get_name(buf)
+            if buf_name == full_path or buf_name:match('/' .. file:gsub('([^%w])', '%%%1') .. '$') then
+              -- Get the original content (from baseline)
+              local baseline_cmd = string.format('cd "%s" && git show %s:%s 2>/dev/null', git_root, baseline_ref or 'HEAD', file)
+              local original_content, orig_err = utils.exec(baseline_cmd)
+              
+              if not orig_err and original_content then
+                -- Get current content
+                local current_lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+                local current_content = table.concat(current_lines, '\n')
+                
+                -- Show inline diff
+                inline_diff.show_inline_diff(buf, original_content, current_content)
+                opened_inline = true
+                
+                -- Switch to that buffer if it's not the current one
+                if buf ~= vim.api.nvim_get_current_buf() then
+                  vim.api.nvim_set_current_buf(buf)
+                end
+                
+                break -- Only show inline diff for first matching buffer
+              end
+            end
+          end
+        end
+        
+        if opened_inline then break end
+      end
+      
+      -- If no inline diff was shown, fall back to regular diff review
+      if not opened_inline then
+        -- Trigger diff review - show Claude stashes against baseline
+        local ok, diff_review = pcall(require, 'nvim-claude.diff-review')
+        if ok then
+          diff_review.handle_claude_stashes(baseline_ref)
+        else
+          vim.notify('Diff review module not available: ' .. tostring(diff_review), vim.log.levels.ERROR)
+        end
       end
     else
       vim.notify('Failed to create stash of Claude changes', vim.log.levels.ERROR)

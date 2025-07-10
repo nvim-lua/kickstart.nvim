@@ -10,5 +10,6 @@ return {
     'nvim-telescope/telescope.nvim',  -- For agent picker
     'tpope/vim-fugitive',            -- Already installed, for diffs
     'sindrets/diffview.nvim',        -- For advanced diff viewing
+    'axkirillov/unified.nvim',       -- For unified diff view with fine-grained hunk staging
   },
 } 

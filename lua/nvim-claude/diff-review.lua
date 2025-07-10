@@ -166,6 +166,13 @@ function M.setup_keybindings()
   vim.keymap.set('n', '<leader>dh', M.browse_claude_stashes, { desc = 'Browse Claude stash history' })
   vim.keymap.set('n', '<leader>dp', M.previous_stash, { desc = 'View previous Claude stash' })
   vim.keymap.set('n', '<leader>dn', M.next_stash, { desc = 'View next Claude stash' })
+  
+  -- Unified view
+  vim.keymap.set('n', '<leader>du', M.open_unified_view, { desc = 'Open Claude diff in unified view' })
+  
+  -- Hunk operations
+  vim.keymap.set('n', '<leader>dka', M.accept_hunk_at_cursor, { desc = 'Accept Claude hunk at cursor' })
+  vim.keymap.set('n', '<leader>dkr', M.reject_hunk_at_cursor, { desc = 'Reject Claude hunk at cursor' })
 end
 
 -- Open diffview for current review
@@ -578,6 +585,271 @@ function M.telescope_claude_stashes()
       return true
     end,
   }):find()
+end
+
+-- Generate combined patch from all Claude stashes
+function M.generate_claude_patch()
+  if not M.current_review or not M.current_review.is_stash_based then
+    vim.notify('No Claude stash session active', vim.log.levels.ERROR)
+    return nil
+  end
+  
+  local utils = require('nvim-claude.utils')
+  local baseline_ref = M.current_review.baseline_ref
+  
+  -- Generate diff from baseline to current working directory
+  local cmd = string.format('git diff %s', baseline_ref)
+  local patch, err = utils.exec(cmd)
+  
+  if err then
+    vim.notify('Failed to generate patch: ' .. err, vim.log.levels.ERROR)
+    return nil
+  end
+  
+  return patch
+end
+
+-- Open unified view for Claude changes
+function M.open_unified_view()
+  if not M.current_review then
+    -- Try to recover stash-based session from baseline
+    local utils = require('nvim-claude.utils')
+    local baseline_ref = utils.read_file('/tmp/claude-baseline-commit')
+    
+    -- If no baseline file, but we have Claude stashes, use HEAD as baseline
+    local claude_stashes = M.get_claude_stashes()
+    if claude_stashes and #claude_stashes > 0 then
+      if not baseline_ref or baseline_ref == '' then
+        baseline_ref = 'HEAD'
+        vim.notify('No baseline found, using HEAD as baseline', vim.log.levels.INFO)
+      else
+        baseline_ref = baseline_ref:gsub('%s+', '')
+      end
+      
+      M.current_review = {
+        baseline_ref = baseline_ref,
+        timestamp = os.time(),
+        claude_stashes = claude_stashes,
+        current_stash_index = 0,
+        is_stash_based = true
+      }
+      vim.notify(string.format('Recovered Claude stash session with %d stashes', #claude_stashes), vim.log.levels.INFO)
+    end
+    
+    if not M.current_review then
+      vim.notify('No active review session', vim.log.levels.INFO)
+      return
+    end
+  end
+  
+  -- Check if unified.nvim is available and load it
+  local ok, unified = pcall(require, 'unified')
+  if not ok then
+    vim.notify('unified.nvim not available, falling back to diffview', vim.log.levels.WARN)
+    M.open_diffview()
+    return
+  end
+  
+  -- Ensure unified.nvim is set up
+  pcall(unified.setup, {})
+  
+  -- Use unified.nvim to show diff against baseline
+  local baseline_ref = M.current_review.baseline_ref
+  
+  -- Try the command with pcall to catch errors
+  local cmd_ok, cmd_err = pcall(function()
+    vim.cmd('Unified ' .. baseline_ref)
+  end)
+  
+  if not cmd_ok then
+    vim.notify('Unified command failed: ' .. tostring(cmd_err) .. ', falling back to diffview', vim.log.levels.WARN)
+    M.open_diffview()
+    return
+  end
+  
+  vim.notify('Claude unified diff opened. Use ]h/[h to navigate hunks', vim.log.levels.INFO)
+end
+
+
+-- Accept hunk at cursor position
+function M.accept_hunk_at_cursor()
+  -- Get current buffer and check if we're in a diff view
+  local bufname = vim.api.nvim_buf_get_name(0)
+  local filetype = vim.bo.filetype
+  
+  -- Check for various diff view types
+  local is_diff_view = bufname:match('diffview://') or 
+                      bufname:match('Claude Unified Diff') or
+                      filetype == 'diff' or
+                      filetype == 'git'
+  
+  if not is_diff_view then
+    vim.notify('This command only works in diff views', vim.log.levels.WARN)
+    return
+  end
+  
+  -- Get current file and line from cursor position
+  local cursor_line = vim.api.nvim_win_get_cursor(0)[1]
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  
+  -- Parse diff to find current hunk
+  local hunk_info = M.find_hunk_at_line(lines, cursor_line)
+  if not hunk_info then
+    vim.notify('No hunk found at cursor position', vim.log.levels.WARN)
+    return
+  end
+  
+  -- Apply the hunk
+  M.apply_hunk(hunk_info)
+end
+
+-- Reject hunk at cursor position
+function M.reject_hunk_at_cursor()
+  -- Get current buffer and check if we're in a diff view
+  local bufname = vim.api.nvim_buf_get_name(0)
+  local filetype = vim.bo.filetype
+  
+  -- Check for various diff view types
+  local is_diff_view = bufname:match('diffview://') or 
+                      bufname:match('Claude Unified Diff') or
+                      filetype == 'diff' or
+                      filetype == 'git'
+  
+  if not is_diff_view then
+    vim.notify('This command only works in diff views', vim.log.levels.WARN)
+    return
+  end
+  
+  -- Get current file and line from cursor position
+  local cursor_line = vim.api.nvim_win_get_cursor(0)[1]
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  
+  -- Parse diff to find current hunk
+  local hunk_info = M.find_hunk_at_line(lines, cursor_line)
+  if not hunk_info then
+    vim.notify('No hunk found at cursor position', vim.log.levels.WARN)
+    return
+  end
+  
+  vim.notify(string.format('Rejected hunk in %s at lines %d-%d', hunk_info.file, hunk_info.old_start, hunk_info.old_start + hunk_info.old_count - 1), vim.log.levels.INFO)
+end
+
+-- Find hunk information at given line in diff buffer
+function M.find_hunk_at_line(lines, target_line)
+  local current_file = nil
+  local in_hunk = false
+  local hunk_start_line = nil
+  local hunk_lines = {}
+  
+  for i, line in ipairs(lines) do
+    -- File header
+    if line:match('^diff %-%-git') or line:match('^diff %-%-cc') then
+      current_file = line:match('b/(.+)$')
+    elseif line:match('^%+%+%+ b/(.+)') then
+      current_file = line:match('^%+%+%+ b/(.+)')
+    end
+    
+    -- Hunk header
+    if line:match('^@@') then
+      -- If we were in a hunk that included target line, return it
+      if in_hunk and hunk_start_line and target_line >= hunk_start_line and target_line < i then
+        return M.parse_hunk_info(hunk_lines, current_file, hunk_start_line)
+      end
+      
+      -- Start new hunk
+      in_hunk = true
+      hunk_start_line = i
+      hunk_lines = {line}
+    elseif in_hunk then
+      -- Collect hunk lines
+      if line:match('^[%+%-%s]') then
+        table.insert(hunk_lines, line)
+      else
+        -- End of hunk
+        if hunk_start_line and target_line >= hunk_start_line and target_line < i then
+          return M.parse_hunk_info(hunk_lines, current_file, hunk_start_line)
+        end
+        in_hunk = false
+      end
+    end
+  end
+  
+  -- Check last hunk
+  if in_hunk and hunk_start_line and target_line >= hunk_start_line then
+    return M.parse_hunk_info(hunk_lines, current_file, hunk_start_line)
+  end
+  
+  return nil
+end
+
+-- Parse hunk information from diff lines
+function M.parse_hunk_info(hunk_lines, file, start_line)
+  if #hunk_lines == 0 then return nil end
+  
+  local header = hunk_lines[1]
+  local old_start, old_count, new_start, new_count = header:match('^@@ %-(%d+),?(%d*) %+(%d+),?(%d*) @@')
+  
+  if not old_start then return nil end
+  
+  return {
+    file = file,
+    old_start = tonumber(old_start),
+    old_count = tonumber(old_count) or 1,
+    new_start = tonumber(new_start),
+    new_count = tonumber(new_count) or 1,
+    lines = hunk_lines,
+    buffer_start_line = start_line
+  }
+end
+
+-- Apply a specific hunk to the working directory
+function M.apply_hunk(hunk_info)
+  local utils = require('nvim-claude.utils')
+  
+  -- Create a patch with just this hunk
+  local patch_lines = {
+    'diff --git a/' .. hunk_info.file .. ' b/' .. hunk_info.file,
+    'index 0000000..0000000 100644',
+    '--- a/' .. hunk_info.file,
+    '+++ b/' .. hunk_info.file
+  }
+  
+  -- Add hunk lines
+  for _, line in ipairs(hunk_info.lines) do
+    table.insert(patch_lines, line)
+  end
+  
+  local patch_content = table.concat(patch_lines, '\n')
+  
+  -- Write patch to temp file
+  local temp_patch = '/tmp/claude-hunk-patch.diff'
+  utils.write_file(temp_patch, patch_content)
+  
+  -- Apply the patch
+  local git_root = utils.get_project_root()
+  if not git_root then
+    vim.notify('Not in a git repository', vim.log.levels.ERROR)
+    return
+  end
+  
+  local cmd = string.format('cd "%s" && git apply --cached "%s"', git_root, temp_patch)
+  local result, err = utils.exec(cmd)
+  
+  if err then
+    -- Try without --cached
+    cmd = string.format('cd "%s" && git apply "%s"', git_root, temp_patch)
+    result, err = utils.exec(cmd)
+    
+    if err then
+      vim.notify('Failed to apply hunk: ' .. err, vim.log.levels.ERROR)
+      return
+    end
+  end
+  
+  vim.notify(string.format('Applied hunk to %s', hunk_info.file), vim.log.levels.INFO)
+  
+  -- Refresh the buffer if it's open
+  vim.cmd('checktime')
 end
 
 return M

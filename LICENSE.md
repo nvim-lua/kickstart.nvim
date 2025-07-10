@@ -29,3 +29,9 @@ After reloading hooks module - this should create debug logs!
 Testing after manual baseline creation - this should work now!
 
 After manually initializing stash session - test the browsing commands!
+
+Testing unified.nvim integration - this should create a Claude stash that we can view in unified mode with fine-grained hunk accept/reject functionality!
+
+After nvim reload - testing unified view with <leader>du to see fine-grained hunk staging!
+
+Testing inline diff viewer - Claude's changes should appear directly in this buffer with virtual text showing additions and highlights for deletions!
