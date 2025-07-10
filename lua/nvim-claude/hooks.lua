@@ -5,12 +5,7 @@ local M = {}
 M.pre_edit_commit = nil
 
 function M.setup()
-  -- Auto-cleanup old Claude commits on startup
-  vim.defer_fn(function()
-    M.cleanup_old_commits()
-  end, 200)
-
-  -- Create baseline on startup if we're in a git repo
+  -- Setup persistence layer on startup
   vim.defer_fn(function()
     M.create_startup_baseline()
   end, 500)
@@ -27,6 +22,7 @@ end
 function M.post_tool_use_hook()
   -- Run directly without vim.schedule for testing
   local utils = require 'nvim-claude.utils'
+  local persistence = require 'nvim-claude.inline-diff-persistence'
 
   -- Refresh all buffers to show Claude's changes
   vim.cmd 'checktime'
@@ -53,26 +49,15 @@ function M.post_tool_use_hook()
     end
   end
 
-  -- Get the baseline commit reference first
-  local baseline_ref = utils.read_file '/tmp/claude-baseline-commit'
-  if baseline_ref then
-    baseline_ref = baseline_ref:gsub('%s+', '') -- trim whitespace
+  -- Get the stash reference from pre-hook
+  local stash_ref = persistence.current_stash_ref
+  if not stash_ref then
+    -- If no pre-hook stash, create one now
+    stash_ref = persistence.create_stash('nvim-claude: changes detected ' .. os.date('%Y-%m-%d %H:%M:%S'))
+    persistence.current_stash_ref = stash_ref
   end
 
-  -- Create a stash of Claude's changes (but keep them in working directory)
-  local timestamp = os.date '%Y-%m-%d %H:%M:%S'
-  local stash_msg = string.format('[claude-edit] %s', timestamp)
-
-  -- Use git stash create to create stash without removing changes
-  local stash_cmd = string.format('cd "%s" && git stash create -u', git_root)
-  local stash_hash, stash_err = utils.exec(stash_cmd)
-
-  if not stash_err and stash_hash and stash_hash ~= '' then
-    -- Store the stash with a message
-    stash_hash = stash_hash:gsub('%s+', '') -- trim whitespace
-    local store_cmd = string.format('cd "%s" && git stash store -m "%s" %s', git_root, stash_msg, stash_hash)
-    utils.exec(store_cmd)
-
+  if stash_ref then
     -- Check if any modified files are currently open in buffers
     local inline_diff = require 'nvim-claude.inline-diff'
     local opened_inline = false
@@ -85,9 +70,9 @@ function M.post_tool_use_hook()
         if vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_is_loaded(buf) then
           local buf_name = vim.api.nvim_buf_get_name(buf)
           if buf_name == full_path or buf_name:match('/' .. file:gsub('([^%w])', '%%%1') .. '$') then
-            -- Get the original content (from baseline)
-            local baseline_cmd = string.format('cd "%s" && git show %s:%s 2>/dev/null', git_root, baseline_ref or 'HEAD', file)
-            local original_content, orig_err = utils.exec(baseline_cmd)
+            -- Get the original content from stash
+            local stash_cmd = string.format('cd "%s" && git show %s:%s 2>/dev/null', git_root, stash_ref, file)
+            local original_content, orig_err = utils.exec(stash_cmd)
 
             if not orig_err and original_content then
               -- Get current content
@@ -116,14 +101,12 @@ function M.post_tool_use_hook()
 
     -- If no inline diff was shown, fall back to regular diff review
     if not opened_inline then
-      -- Trigger diff review - show Claude stashes against baseline
+      -- Trigger diff review with stash reference
       local ok, diff_review = pcall(require, 'nvim-claude.diff-review')
       if ok then
-        diff_review.handle_claude_stashes(baseline_ref)
-      else
+        diff_review.handle_claude_edit(stash_ref, nil)
       end
     end
-  else
   end
 end
 
@@ -132,6 +115,7 @@ function M.test_inline_diff()
   vim.notify('Testing inline diff manually...', vim.log.levels.INFO)
 
   local utils = require 'nvim-claude.utils'
+  local persistence = require 'nvim-claude.inline-diff-persistence'
   local git_root = utils.get_project_root()
 
   if not git_root then
@@ -163,12 +147,20 @@ function M.test_inline_diff()
   if inline_diff.original_content[bufnr] then
     original_content = inline_diff.original_content[bufnr]
     vim.notify('Using updated baseline from memory (length: ' .. #original_content .. ')', vim.log.levels.INFO)
-  else
-    -- Fall back to git baseline
-    local baseline_ref = utils.read_file '/tmp/claude-baseline-commit' or 'HEAD'
-    baseline_ref = baseline_ref:gsub('%s+', '')
+  elseif persistence.current_stash_ref then
+    -- Try to get from stash
+    local stash_cmd = string.format('cd "%s" && git show %s:%s 2>/dev/null', git_root, persistence.current_stash_ref, relative_path)
+    local git_err
+    original_content, git_err = utils.exec(stash_cmd)
 
-    local baseline_cmd = string.format('cd "%s" && git show %s:%s 2>/dev/null', git_root, baseline_ref, relative_path)
+    if git_err then
+      vim.notify('Failed to get stash content: ' .. git_err, vim.log.levels.ERROR)
+      return
+    end
+    vim.notify('Using stash baseline: ' .. persistence.current_stash_ref, vim.log.levels.INFO)
+  else
+    -- Fall back to HEAD
+    local baseline_cmd = string.format('cd "%s" && git show HEAD:%s 2>/dev/null', git_root, relative_path)
     local git_err
     original_content, git_err = utils.exec(baseline_cmd)
 
@@ -176,7 +168,7 @@ function M.test_inline_diff()
       vim.notify('Failed to get baseline content: ' .. git_err, vim.log.levels.ERROR)
       return
     end
-    vim.notify('Using git baseline', vim.log.levels.INFO)
+    vim.notify('Using HEAD as baseline', vim.log.levels.INFO)
   end
 
   -- Get current content
@@ -187,65 +179,33 @@ function M.test_inline_diff()
   inline_diff.show_inline_diff(bufnr, original_content, current_content)
 end
 
--- Create baseline on Neovim startup
+-- Create baseline on Neovim startup (now just sets up persistence)
 function M.create_startup_baseline()
-  local utils = require 'nvim-claude.utils'
-
-  -- Check if we're in a git repository
-  local git_root = utils.get_project_root()
-  if not git_root then
-    return
-  end
-
-  -- Check if we already have a baseline
-  local baseline_file = '/tmp/claude-baseline-commit'
-  local existing_baseline = utils.read_file(baseline_file)
-
-  -- If we have a valid baseline, keep it
-  if existing_baseline and existing_baseline ~= '' then
-    existing_baseline = existing_baseline:gsub('%s+', '')
-    local check_cmd = string.format('cd "%s" && git rev-parse --verify %s^{commit} 2>/dev/null', git_root, existing_baseline)
-    local check_result, check_err = utils.exec(check_cmd)
-
-    if check_result and not check_err and check_result:match '^%x+' then
-      -- Baseline is valid
-      vim.notify('Claude baseline loaded: ' .. existing_baseline:sub(1, 7), vim.log.levels.INFO)
-      return
-    end
-  end
-
-  -- Create new baseline of current state
-  local timestamp = os.time()
-  local commit_msg = string.format('claude-baseline-%d (startup)', timestamp)
-
-  -- Stage all current changes
-  local add_cmd = string.format('cd "%s" && git add -A', git_root)
-  utils.exec(add_cmd)
-
-  -- Create baseline commit
-  local commit_cmd = string.format('cd "%s" && git commit -m "%s" --allow-empty', git_root, commit_msg)
-  local commit_result, commit_err = utils.exec(commit_cmd)
-
-  if not commit_err or commit_err:match 'nothing to commit' then
-    -- Get the commit hash
-    local hash_cmd = string.format('cd "%s" && git rev-parse HEAD', git_root)
-    local commit_hash, hash_err = utils.exec(hash_cmd)
-
-    if not hash_err and commit_hash then
-      commit_hash = commit_hash:gsub('%s+', '')
-      utils.write_file(baseline_file, commit_hash)
-      vim.notify('Claude baseline created: ' .. commit_hash:sub(1, 7), vim.log.levels.INFO)
-    end
-  end
+  local persistence = require 'nvim-claude.inline-diff-persistence'
+  
+  -- Setup persistence autocmds
+  persistence.setup_autocmds()
+  
+  -- Try to restore any saved diffs
+  persistence.restore_diffs()
 end
 
 -- Manual hook testing
 function M.test_hooks()
   vim.notify('=== Testing nvim-claude hooks ===', vim.log.levels.INFO)
+  
+  local persistence = require 'nvim-claude.inline-diff-persistence'
 
-  -- Test pre-tool-use hook
-  vim.notify('1. Testing pre-tool-use hook (creating snapshot)...', vim.log.levels.INFO)
-  M.pre_tool_use_hook()
+  -- Test creating a stash
+  vim.notify('1. Creating test stash...', vim.log.levels.INFO)
+  local stash_ref = persistence.create_stash('nvim-claude: test stash')
+  
+  if stash_ref then
+    persistence.current_stash_ref = stash_ref
+    vim.notify('Stash created: ' .. stash_ref, vim.log.levels.INFO)
+  else
+    vim.notify('Failed to create stash', vim.log.levels.ERROR)
+  end
 
   -- Simulate making a change
   vim.notify('2. Make some changes to test files now...', vim.log.levels.INFO)
@@ -386,6 +346,12 @@ function M.setup_commands()
     local inline_diff = require 'nvim-claude.inline-diff'
     inline_diff.original_content[bufnr] = current_content
 
+    -- Save updated state
+    local persistence = require 'nvim-claude.inline-diff-persistence'
+    if persistence.current_stash_ref then
+      persistence.save_state({ stash_ref = persistence.current_stash_ref })
+    end
+
     vim.notify('Baseline updated to current buffer state', vim.log.levels.INFO)
   end, {
     desc = 'Update Claude baseline to current buffer state',
@@ -448,15 +414,8 @@ function M.setup_commands()
   })
 end
 
--- Cleanup old Claude commits and temp files
-function M.cleanup_old_commits()
-  local utils = require 'nvim-claude.utils'
-
-  local git_root = utils.get_project_root()
-  if not git_root then
-    return
-  end
-
+-- Cleanup old temp files (no longer cleans up commits)
+function M.cleanup_old_files()
   -- Clean up old temp files
   local temp_files = {
     '/tmp/claude-pre-edit-commit',
@@ -469,31 +428,6 @@ function M.cleanup_old_commits()
     if vim.fn.filereadable(file) == 1 then
       vim.fn.delete(file)
     end
-  end
-
-  -- Clean up old Claude commits (keep only the last 5)
-  local log_cmd =
-    string.format('cd "%s" && git log --oneline --grep="claude-" --grep="claude-baseline" --grep="claude-pre-edit" --all --max-count=10', git_root)
-  local log_result = utils.exec(log_cmd)
-
-  if log_result and log_result ~= '' then
-    local commits = {}
-    for line in log_result:gmatch '[^\n]+' do
-      local hash = line:match '^(%w+)'
-      if hash then
-        table.insert(commits, hash)
-      end
-    end
-
-    -- Keep only the last 5 Claude commits, remove the rest
-    -- DISABLED: This was causing rebases that broke the workflow
-    -- if #commits > 5 then
-    --   for i = 6, #commits do
-    --     local reset_cmd = string.format('cd "%s" && git rebase --onto %s^ %s', git_root, commits[i], commits[i])
-    --     utils.exec(reset_cmd)
-    --   end
-    --   vim.notify('Cleaned up old Claude commits', vim.log.levels.DEBUG)
-    -- end
   end
 end
 

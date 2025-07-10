@@ -98,3 +98,6 @@ SEPARATED HUNK #4: Final test with better hunk separation!
 
 MULTI-EDIT TEST #4: Testing hunk navigation with ]h and [h!
 
+## PERSISTENCE TEST
+This tests our new stash-based persistence system that doesn't create git commits!
+

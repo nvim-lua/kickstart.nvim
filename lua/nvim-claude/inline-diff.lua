@@ -349,11 +349,13 @@ function M.accept_current_hunk(bufnr)
   local hunk = diff_data.hunks[diff_data.current_hunk]
   if not hunk then return end
   
-  -- Update the baseline to include this accepted change
-  M.update_baseline_after_accept(bufnr, hunk)
-  
   -- Mark as applied (the changes are already in the buffer)
   diff_data.applied_hunks[diff_data.current_hunk] = true
+  
+  -- Update in-memory baseline to current state
+  local current_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  local current_content = table.concat(current_lines, '\n')
+  M.original_content[bufnr] = current_content
   
   -- Remove this hunk from the diff data since it's accepted
   table.remove(diff_data.hunks, diff_data.current_hunk)
@@ -364,6 +366,10 @@ function M.accept_current_hunk(bufnr)
   end
   
   vim.notify(string.format('Accepted hunk - %d hunks remaining', #diff_data.hunks), vim.log.levels.INFO)
+  
+  -- Save state for persistence
+  local persistence = require('nvim-claude.inline-diff-persistence')
+  persistence.save_state({ stash_ref = persistence.current_stash_ref })
   
   if #diff_data.hunks == 0 then
     -- No more hunks to review
@@ -387,67 +393,17 @@ function M.reject_current_hunk(bufnr)
   -- Revert the hunk by applying original content
   M.revert_hunk_changes(bufnr, hunk)
   
-  -- Create a new baseline commit with the rejected changes reverted
-  local utils = require('nvim-claude.utils')
-  local git_root = utils.get_project_root()
-  
-  if git_root then
-    -- Save the buffer to ensure changes are on disk
-    vim.api.nvim_buf_call(bufnr, function()
-      if vim.bo.modified then
-        vim.cmd('write')
-        vim.notify('Buffer saved', vim.log.levels.INFO)
-      else
-        vim.notify('Buffer already saved', vim.log.levels.INFO)
-      end
-    end)
-    
-    -- Stage only the current file (now with hunk reverted)
-    local file_path = vim.api.nvim_buf_get_name(bufnr)
-    local relative_path = file_path:gsub('^' .. git_root .. '/', '')
-    
-    -- Create a new baseline commit with only this file
-    local timestamp = os.time()
-    local commit_msg = string.format('claude-baseline-%d (rejected changes)', timestamp)
-    
-    -- Use git commit with only the specific file
-    local commit_cmd = string.format('cd "%s" && git add "%s" && git commit -m "%s" -- "%s"', 
-      git_root, relative_path, commit_msg, relative_path)
-    local commit_result, commit_err = utils.exec(commit_cmd)
-    
-    vim.notify('Commit command: ' .. commit_cmd, vim.log.levels.DEBUG)
-    vim.notify('Commit result: ' .. (commit_result or 'nil'), vim.log.levels.DEBUG)
-    
-    if commit_result and (commit_result:match('1 file changed') or commit_result:match('create mode') or commit_result:match('nothing to commit')) then
-      -- Get the new commit hash
-      local hash_cmd = string.format('cd "%s" && git rev-parse HEAD', git_root)
-      local commit_hash, hash_err = utils.exec(hash_cmd)
-      
-      if not hash_err and commit_hash then
-        commit_hash = commit_hash:gsub('%s+', '')
-        -- Update the baseline file
-        utils.write_file('/tmp/claude-baseline-commit', commit_hash)
-        
-        -- Update in-memory baseline
-        local current_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-        local current_content = table.concat(current_lines, '\n')
-        M.original_content[bufnr] = current_content
-        
-        if commit_result:match('nothing to commit') then
-          vim.notify('No changes to commit after rejection, baseline updated', vim.log.levels.INFO)
-        else
-          vim.notify('Baseline commit created after rejection: ' .. commit_hash:sub(1, 7), vim.log.levels.INFO)
-        end
-      else
-        vim.notify('Failed to get commit hash: ' .. (hash_err or 'unknown'), vim.log.levels.ERROR)
-      end
-    else
-      vim.notify('Failed to create baseline commit for rejection', vim.log.levels.ERROR)
-      if commit_err then
-        vim.notify('Error: ' .. commit_err, vim.log.levels.ERROR)
-      end
+  -- Save the buffer to ensure changes are on disk
+  vim.api.nvim_buf_call(bufnr, function()
+    if vim.bo.modified then
+      vim.cmd('write')
     end
-  end
+  end)
+  
+  -- Update in-memory baseline to current state (with rejected changes)
+  local current_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  local current_content = table.concat(current_lines, '\n')
+  M.original_content[bufnr] = current_content
   
   -- Remove this hunk from the diff data since it's rejected
   table.remove(diff_data.hunks, diff_data.current_hunk)
@@ -458,6 +414,10 @@ function M.reject_current_hunk(bufnr)
   end
   
   vim.notify(string.format('Rejected hunk - %d hunks remaining', #diff_data.hunks), vim.log.levels.INFO)
+  
+  -- Save state for persistence
+  local persistence = require('nvim-claude.inline-diff-persistence')
+  persistence.save_state({ stash_ref = persistence.current_stash_ref })
   
   if #diff_data.hunks == 0 then
     -- No more hunks to review
@@ -612,6 +572,22 @@ function M.close_inline_diff(bufnr, keep_baseline)
     M.original_content[bufnr] = nil
   end
   
+  -- Check if all diffs are closed
+  local has_active_diffs = false
+  for _, diff in pairs(M.active_diffs) do
+    if diff then
+      has_active_diffs = true
+      break
+    end
+  end
+  
+  -- If no more active diffs, clear persistence state
+  if not has_active_diffs then
+    local persistence = require('nvim-claude.inline-diff-persistence')
+    persistence.clear_state()
+    persistence.current_stash_ref = nil
+  end
+  
   vim.notify('Inline diff closed', vim.log.levels.INFO)
 end
 
@@ -620,71 +596,11 @@ function M.has_active_diff(bufnr)
   return M.active_diffs[bufnr] ~= nil
 end
 
--- Update baseline content after accepting a hunk
+-- Update baseline content after accepting a hunk (deprecated - no longer creates commits)
 function M.update_baseline_after_accept(bufnr, hunk)
-  local utils = require('nvim-claude.utils')
-  local git_root = utils.get_project_root()
-  
-  if not git_root then
-    vim.notify('Not in a git repository', vim.log.levels.ERROR)
-    return
-  end
-  
-  -- Save the buffer to ensure changes are on disk
-  vim.api.nvim_buf_call(bufnr, function()
-    if vim.bo.modified then
-      vim.cmd('write')
-      vim.notify('Buffer saved', vim.log.levels.INFO)
-    else
-      vim.notify('Buffer already saved', vim.log.levels.INFO)
-    end
-  end)
-  
-  -- Stage only the current file
-  local file_path = vim.api.nvim_buf_get_name(bufnr)
-  local relative_path = file_path:gsub('^' .. git_root .. '/', '')
-  
-  -- Create a new baseline commit with only this file
-  local timestamp = os.time()
-  local commit_msg = string.format('claude-baseline-%d (accepted changes)', timestamp)
-  
-  -- Use git commit with only the specific file
-  local commit_cmd = string.format('cd "%s" && git add "%s" && git commit -m "%s" -- "%s"', 
-    git_root, relative_path, commit_msg, relative_path)
-  local commit_result, commit_err = utils.exec(commit_cmd)
-  
-  vim.notify('Commit command: ' .. commit_cmd, vim.log.levels.INFO)
-  vim.notify('Commit result: ' .. (commit_result or 'nil'), vim.log.levels.INFO)
-  
-  if commit_result and (commit_result:match('1 file changed') or commit_result:match('create mode') or commit_result:match('nothing to commit')) then
-    -- Commit was successful or there was nothing to commit (file already at desired state)
-    local hash_cmd = string.format('cd "%s" && git rev-parse HEAD', git_root)
-    local commit_hash, hash_err = utils.exec(hash_cmd)
-    
-    if not hash_err and commit_hash then
-      commit_hash = commit_hash:gsub('%s+', '')
-      -- Update the baseline file
-      utils.write_file('/tmp/claude-baseline-commit', commit_hash)
-      
-      -- Update in-memory baseline
-      local current_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-      local current_content = table.concat(current_lines, '\n')
-      M.original_content[bufnr] = current_content
-      
-      if commit_result:match('nothing to commit') then
-        vim.notify('No changes to commit, baseline updated to current state', vim.log.levels.INFO)
-      else
-        vim.notify('Baseline commit created: ' .. commit_hash:sub(1, 7), vim.log.levels.INFO)
-      end
-    else
-      vim.notify('Failed to get commit hash: ' .. (hash_err or 'unknown'), vim.log.levels.ERROR)
-    end
-  else
-    vim.notify('Failed to create baseline commit', vim.log.levels.ERROR)
-    if commit_err then
-      vim.notify('Error: ' .. commit_err, vim.log.levels.ERROR)
-    end
-  end
+  -- This function is deprecated but kept for compatibility
+  -- The baseline update is now handled directly in accept_current_hunk
+  vim.notify('update_baseline_after_accept is deprecated', vim.log.levels.DEBUG)
 end
 
 -- Test keymap functionality
