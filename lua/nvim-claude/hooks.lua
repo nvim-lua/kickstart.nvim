@@ -5,8 +5,6 @@ local M = {}
 M.pre_edit_commit = nil
 
 function M.setup()
-  vim.notify('Hooks module loaded', vim.log.levels.DEBUG)
-
   -- Auto-cleanup old Claude commits on startup
   vim.defer_fn(function()
     M.cleanup_old_commits()
@@ -15,18 +13,13 @@ end
 
 -- Pre-tool-use hook: Create baseline commit only if one doesn't exist
 function M.pre_tool_use_hook()
-  vim.notify('Pre-hook called', vim.log.levels.INFO)
 
-  -- Debug log
-  local debug_msg = string.format('Pre-hook executing at %s', os.date '%Y-%m-%d %H:%M:%S')
-  vim.fn.writefile({ debug_msg }, '/tmp/claude-pre-hook-debug.log', 'a')
 
   local utils = require 'nvim-claude.utils'
 
   -- Check if we're in a git repository
   local git_root = utils.get_project_root()
   if not git_root then
-    vim.notify('Not in a git repository', vim.log.levels.WARN)
     return
   end
 
@@ -41,8 +34,7 @@ function M.pre_tool_use_hook()
     local check_result, check_err = utils.exec(check_cmd)
 
     if not check_err then
-      vim.notify('Using existing baseline commit: ' .. existing_baseline, vim.log.levels.INFO)
-      return
+          return
     end
   end
 
@@ -55,8 +47,7 @@ function M.pre_tool_use_hook()
   local add_result, add_err = utils.exec(add_cmd)
 
   if add_err then
-    vim.notify('Failed to stage changes: ' .. add_err, vim.log.levels.ERROR)
-    return
+      return
   end
 
   -- Create a temporary commit
@@ -64,8 +55,7 @@ function M.pre_tool_use_hook()
   local commit_result, commit_err = utils.exec(commit_cmd)
 
   if commit_err and not commit_err:match 'nothing to commit' then
-    vim.notify('Failed to create baseline commit: ' .. commit_err, vim.log.levels.ERROR)
-    return
+      return
   end
 
   -- Store the actual commit hash instead of 'HEAD'
@@ -81,39 +71,26 @@ function M.pre_tool_use_hook()
     utils.write_file(baseline_file, 'HEAD')
   end
 
-  vim.notify('New baseline commit created: ' .. commit_msg, vim.log.levels.INFO)
 end
 
 -- Post-tool-use hook: Create stash of Claude's changes and trigger diff review
 function M.post_tool_use_hook()
-  vim.notify('Post-hook called', vim.log.levels.INFO)
 
-  -- Debug log
-  local debug_msg = string.format('Post-hook executing at %s', os.date '%Y-%m-%d %H:%M:%S')
-  vim.fn.writefile({ debug_msg }, '/tmp/claude-post-hook-debug.log', 'a')
 
-  vim.notify('Post-tool-use hook triggered', vim.log.levels.INFO)
   
-  -- Debug: Write immediately
-  vim.fn.writefile({ 'Post-hook: Starting execution' }, '/tmp/claude-inline-debug.log', 'a')
 
   -- Run directly without vim.schedule for testing
   local utils = require 'nvim-claude.utils'
   
-  vim.fn.writefile({ 'Post-hook: After require utils' }, '/tmp/claude-inline-debug.log', 'a')
 
   -- Refresh all buffers to show Claude's changes
   vim.cmd 'checktime'
   
-  vim.fn.writefile({ 'Post-hook: After checktime' }, '/tmp/claude-inline-debug.log', 'a')
   
-  -- Debug: Log current buffers
-  vim.fn.writefile({ string.format('Post-hook: Checking %d buffers', #vim.api.nvim_list_bufs()) }, '/tmp/claude-post-hook-debug.log', 'a')
 
   -- Check if Claude made any changes
   local git_root = utils.get_project_root()
   if not git_root then
-    vim.notify('Not in a git repository', vim.log.levels.WARN)
     return
   end
 
@@ -121,7 +98,6 @@ function M.post_tool_use_hook()
   local status_result = utils.exec(status_cmd)
 
   if not status_result or status_result == '' then
-    vim.notify('No changes detected from Claude', vim.log.levels.INFO)
     return
   end
 
@@ -134,8 +110,6 @@ function M.post_tool_use_hook()
     end
   end
   
-  -- Debug: Log modified files
-  vim.fn.writefile({ string.format('Post-hook: Found %d modified files: %s', #modified_files, vim.inspect(modified_files)) }, '/tmp/claude-post-hook-debug.log', 'a')
 
   -- Get the baseline commit reference first
   local baseline_ref = utils.read_file '/tmp/claude-baseline-commit'
@@ -163,21 +137,16 @@ function M.post_tool_use_hook()
 
     for _, file in ipairs(modified_files) do
       local full_path = git_root .. '/' .. file
-      vim.fn.writefile({ string.format('Post-hook: Checking file %s', file) }, '/tmp/claude-inline-debug.log', 'a')
 
       -- Find buffer with this file
       for _, buf in ipairs(vim.api.nvim_list_bufs()) do
         if vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_is_loaded(buf) then
           local buf_name = vim.api.nvim_buf_get_name(buf)
-          vim.fn.writefile({ string.format('Post-hook: Buffer %d has name %s', buf, buf_name) }, '/tmp/claude-inline-debug.log', 'a')
           if buf_name == full_path or buf_name:match('/' .. file:gsub('([^%w])', '%%%1') .. '$') then
-            vim.fn.writefile({ string.format('Post-hook: Found matching buffer %d for %s', buf, file) }, '/tmp/claude-inline-debug.log', 'a')
             -- Get the original content (from baseline)
             local baseline_cmd = string.format('cd "%s" && git show %s:%s 2>/dev/null', git_root, baseline_ref or 'HEAD', file)
-            vim.fn.writefile({ string.format('Post-hook: Running baseline cmd: %s', baseline_cmd) }, '/tmp/claude-inline-debug.log', 'a')
             local original_content, orig_err = utils.exec(baseline_cmd)
             
-            vim.fn.writefile({ string.format('Post-hook: Baseline result - err: %s, content length: %d', tostring(orig_err), original_content and #original_content or 0) }, '/tmp/claude-inline-debug.log', 'a')
 
             if not orig_err and original_content then
               -- Get current content
@@ -188,11 +157,9 @@ function M.post_tool_use_hook()
               inline_diff.show_inline_diff(buf, original_content, current_content)
               opened_inline = true
               
-              vim.notify(string.format('Showing inline diff for %s in buffer %d', file, buf), vim.log.levels.INFO)
 
               -- Switch to that buffer if it's not the current one
               if buf ~= vim.api.nvim_get_current_buf() then
-                vim.notify('Switching to buffer with changes', vim.log.levels.INFO)
                 vim.api.nvim_set_current_buf(buf)
               end
 
@@ -214,11 +181,9 @@ function M.post_tool_use_hook()
       if ok then
         diff_review.handle_claude_stashes(baseline_ref)
       else
-        vim.notify('Diff review module not available: ' .. tostring(diff_review), vim.log.levels.ERROR)
       end
     end
   else
-    vim.notify('Failed to create stash of Claude changes', vim.log.levels.ERROR)
   end
 end
 
@@ -440,7 +405,6 @@ function M.setup_commands()
     -- Check if we're in a git repository
     local git_root = utils.get_project_root()
     if not git_root then
-      vim.notify('Not in a git repository', vim.log.levels.WARN)
       return
     end
 
