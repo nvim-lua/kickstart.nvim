@@ -114,16 +114,16 @@ function M.post_tool_use_hook()
       local store_cmd = string.format('cd "%s" && git stash store -m "%s" %s', git_root, stash_msg, stash_hash)
       utils.exec(store_cmd)
       
-      -- Get the pre-edit commit reference
-      local pre_edit_ref = utils.read_file('/tmp/claude-pre-edit-commit')
-      if pre_edit_ref then
-        pre_edit_ref = pre_edit_ref:gsub('%s+', '') -- trim whitespace
+      -- Get the baseline commit reference
+      local baseline_ref = utils.read_file('/tmp/claude-baseline-commit')
+      if baseline_ref then
+        baseline_ref = baseline_ref:gsub('%s+', '') -- trim whitespace
       end
       
       -- Trigger diff review
       local ok, diff_review = pcall(require, 'nvim-claude.diff-review')
       if ok then
-        diff_review.handle_claude_edit('stash@{0}', pre_edit_ref)
+        diff_review.handle_claude_edit('stash@{0}', baseline_ref)
       else
         vim.notify('Diff review module not available: ' .. tostring(diff_review), vim.log.levels.ERROR)
       end
