@@ -9,6 +9,7 @@ local ns_id = vim.api.nvim_create_namespace('nvim_claude_inline_diff')
 -- State tracking
 M.active_diffs = {} -- Track active inline diffs by buffer number
 M.original_content = {} -- Store original buffer content
+M.diff_files = {} -- Track all files with diffs for navigation
 
 -- Initialize inline diff for a buffer
 function M.show_inline_diff(bufnr, old_content, new_content)
@@ -16,6 +17,12 @@ function M.show_inline_diff(bufnr, old_content, new_content)
   
   -- Store original content
   M.original_content[bufnr] = old_content
+  
+  -- Track this file in our diff files list
+  local file_path = vim.api.nvim_buf_get_name(bufnr)
+  if file_path and file_path ~= '' then
+    M.diff_files[file_path] = bufnr
+  end
   
   -- Get the diff between old and new content
   local diff_data = M.compute_diff(old_content, new_content)
@@ -236,11 +243,17 @@ end
 function M.setup_inline_keymaps(bufnr)
   local opts = { buffer = bufnr, silent = true }
   
-  -- Navigation
+  -- Navigation between hunks
   vim.keymap.set('n', ']h', function() M.next_hunk(bufnr) end, 
     vim.tbl_extend('force', opts, { desc = 'Next Claude hunk' }))
   vim.keymap.set('n', '[h', function() M.prev_hunk(bufnr) end,
     vim.tbl_extend('force', opts, { desc = 'Previous Claude hunk' }))
+  
+  -- Navigation between files
+  vim.keymap.set('n', ']f', function() M.next_diff_file() end,
+    vim.tbl_extend('force', opts, { desc = 'Next file with Claude diff' }))
+  vim.keymap.set('n', '[f', function() M.prev_diff_file() end,
+    vim.tbl_extend('force', opts, { desc = 'Previous file with Claude diff' }))
   
   -- Accept/Reject
   vim.keymap.set('n', '<leader>ia', function() M.accept_current_hunk(bufnr) end,
@@ -253,6 +266,10 @@ function M.setup_inline_keymaps(bufnr)
     vim.tbl_extend('force', opts, { desc = 'Accept all Claude hunks' }))
   vim.keymap.set('n', '<leader>iR', function() M.reject_all_hunks(bufnr) end,
     vim.tbl_extend('force', opts, { desc = 'Reject all Claude hunks' }))
+  
+  -- List files with diffs
+  vim.keymap.set('n', '<leader>il', function() M.list_diff_files() end,
+    vim.tbl_extend('force', opts, { desc = 'List files with Claude diffs' }))
   
   -- Exit inline diff
   vim.keymap.set('n', '<leader>iq', function() M.close_inline_diff(bufnr) end,
@@ -572,14 +589,23 @@ function M.close_inline_diff(bufnr, keep_baseline)
   -- Remove buffer-local keymaps
   pcall(vim.keymap.del, 'n', ']h', { buffer = bufnr })
   pcall(vim.keymap.del, 'n', '[h', { buffer = bufnr })
+  pcall(vim.keymap.del, 'n', ']f', { buffer = bufnr })
+  pcall(vim.keymap.del, 'n', '[f', { buffer = bufnr })
   pcall(vim.keymap.del, 'n', '<leader>ia', { buffer = bufnr })
   pcall(vim.keymap.del, 'n', '<leader>ir', { buffer = bufnr })
   pcall(vim.keymap.del, 'n', '<leader>iA', { buffer = bufnr })
   pcall(vim.keymap.del, 'n', '<leader>iR', { buffer = bufnr })
+  pcall(vim.keymap.del, 'n', '<leader>il', { buffer = bufnr })
   pcall(vim.keymap.del, 'n', '<leader>iq', { buffer = bufnr })
   
   -- Clean up state
   M.active_diffs[bufnr] = nil
+  
+  -- Remove from diff files tracking
+  local file_path = vim.api.nvim_buf_get_name(bufnr)
+  if file_path and M.diff_files[file_path] then
+    M.diff_files[file_path] = nil
+  end
   
   -- Only clear baseline if not explicitly told to keep it
   if not keep_baseline then
@@ -672,6 +698,116 @@ function M.test_keymap()
     M.reject_current_hunk(bufnr)
   else
     vim.notify('No diff data for this buffer', vim.log.levels.ERROR)
+  end
+end
+
+-- Navigate to next file with diff
+function M.next_diff_file()
+  local current_file = vim.api.nvim_buf_get_name(0)
+  local files_with_diffs = {}
+  
+  -- Collect all files with active diffs
+  for file_path, bufnr in pairs(M.diff_files) do
+    if M.active_diffs[bufnr] then
+      table.insert(files_with_diffs, file_path)
+    end
+  end
+  
+  if #files_with_diffs == 0 then
+    vim.notify('No files with active diffs', vim.log.levels.INFO)
+    return
+  end
+  
+  -- Sort files for consistent navigation
+  table.sort(files_with_diffs)
+  
+  -- Find current file index
+  local current_idx = 0
+  for i, file_path in ipairs(files_with_diffs) do
+    if file_path == current_file then
+      current_idx = i
+      break
+    end
+  end
+  
+  -- Go to next file (wrap around)
+  local next_idx = current_idx + 1
+  if next_idx > #files_with_diffs then
+    next_idx = 1
+  end
+  
+  local next_file = files_with_diffs[next_idx]
+  vim.cmd('edit ' .. vim.fn.fnameescape(next_file))
+  vim.notify(string.format('Diff file %d/%d: %s', next_idx, #files_with_diffs, vim.fn.fnamemodify(next_file, ':t')), vim.log.levels.INFO)
+end
+
+-- Navigate to previous file with diff
+function M.prev_diff_file()
+  local current_file = vim.api.nvim_buf_get_name(0)
+  local files_with_diffs = {}
+  
+  -- Collect all files with active diffs
+  for file_path, bufnr in pairs(M.diff_files) do
+    if M.active_diffs[bufnr] then
+      table.insert(files_with_diffs, file_path)
+    end
+  end
+  
+  if #files_with_diffs == 0 then
+    vim.notify('No files with active diffs', vim.log.levels.INFO)
+    return
+  end
+  
+  -- Sort files for consistent navigation
+  table.sort(files_with_diffs)
+  
+  -- Find current file index
+  local current_idx = 0
+  for i, file_path in ipairs(files_with_diffs) do
+    if file_path == current_file then
+      current_idx = i
+      break
+    end
+  end
+  
+  -- Go to previous file (wrap around)
+  local prev_idx = current_idx - 1
+  if prev_idx < 1 then
+    prev_idx = #files_with_diffs
+  end
+  
+  local prev_file = files_with_diffs[prev_idx]
+  vim.cmd('edit ' .. vim.fn.fnameescape(prev_file))
+  vim.notify(string.format('Diff file %d/%d: %s', prev_idx, #files_with_diffs, vim.fn.fnamemodify(prev_file, ':t')), vim.log.levels.INFO)
+end
+
+-- List all files with active diffs
+function M.list_diff_files()
+  local files_with_diffs = {}
+  
+  for file_path, bufnr in pairs(M.diff_files) do
+    if M.active_diffs[bufnr] then
+      local diff_data = M.active_diffs[bufnr]
+      table.insert(files_with_diffs, {
+        path = file_path,
+        hunks = #diff_data.hunks,
+        name = vim.fn.fnamemodify(file_path, ':t')
+      })
+    end
+  end
+  
+  if #files_with_diffs == 0 then
+    vim.notify('No files with active diffs', vim.log.levels.INFO)
+    return
+  end
+  
+  -- Sort by filename
+  table.sort(files_with_diffs, function(a, b) return a.name < b.name end)
+  
+  -- Display list
+  vim.notify('Files with active diffs:', vim.log.levels.INFO)
+  for i, file_info in ipairs(files_with_diffs) do
+    vim.notify(string.format('  %d. %s (%d hunks)', i, file_info.name, file_info.hunks), vim.log.levels.INFO)
   end
 end
 
