@@ -74,6 +74,8 @@ function M.setup_keybindings()
   vim.keymap.set('n', '<leader>df', M.open_fugitive, { desc = 'Open Claude diff in fugitive' })
   vim.keymap.set('n', '<leader>dc', M.clear_review, { desc = 'Clear Claude review session' })
   vim.keymap.set('n', '<leader>dl', M.list_changes, { desc = 'List Claude changed files' })
+  vim.keymap.set('n', '<leader>da', M.accept_changes, { desc = 'Accept all Claude changes' })
+  vim.keymap.set('n', '<leader>dr', M.decline_changes, { desc = 'Decline all Claude changes' })
 end
 
 -- Open diffview for current review
