@@ -127,6 +127,15 @@ function M.apply_diff_visualization(bufnr)
     local new_line_num = hunk.new_start -- 1-indexed line number in new file
     local old_line_num = hunk.old_start -- 1-indexed line number in old file
     
+    -- First, detect if this hunk is a replacement (has both - and + lines)
+    local has_deletions = false
+    local has_additions = false
+    for _, diff_line in ipairs(hunk.lines) do
+      if diff_line:match('^%-') then has_deletions = true end
+      if diff_line:match('^%+') then has_additions = true end
+    end
+    local is_replacement = has_deletions and has_additions
+    
     for _, diff_line in ipairs(hunk.lines) do
       if diff_line:match('^%+') then
         -- This is an added line - it exists in the current buffer at new_line_num
@@ -135,8 +144,14 @@ function M.apply_diff_visualization(bufnr)
         -- Don't advance old_line_num for additions
       elseif diff_line:match('^%-') then
         -- This is a deleted line - show as virtual text above current position
+        -- For replacements, the deletion should appear above the addition
+        local del_line = new_line_num - 1
+        if is_replacement and #additions > 0 then
+          -- Place deletion above the first addition
+          del_line = additions[1]
+        end
         table.insert(deletions, {
-          line = new_line_num - 1, -- 0-indexed, show above current position
+          line = del_line, -- 0-indexed
           text = diff_line:sub(2),
         })
         old_line_num = old_line_num + 1
@@ -160,13 +175,17 @@ function M.apply_diff_visualization(bufnr)
       end
     end
     
-    -- Show pure deletions as virtual text above their position
+    -- Show deletions as virtual text above their position with full-width background
     for j, del in ipairs(deletions) do
       if del.line >= 0 and del.line <= #buf_lines then
-        -- Show deletion with a more subtle approach to avoid visual artifacts
+        -- Calculate full width for the deletion line
+        local text = '- ' .. del.text
+        local win_width = vim.api.nvim_win_get_width(0)
+        local padding = string.rep(' ', math.max(0, win_width - vim.fn.strdisplaywidth(text)))
+        
         vim.api.nvim_buf_set_extmark(bufnr, ns_id, del.line, 0, {
           virt_lines = {{
-            {'- ' .. del.text, 'DiffDelete'}
+            {text .. padding, 'DiffDelete'}
           }},
           virt_lines_above = true,
           id = 3000 + i * 100 + j
