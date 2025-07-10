@@ -93,113 +93,133 @@ function M.post_tool_use_hook()
   vim.fn.writefile({ debug_msg }, '/tmp/claude-post-hook-debug.log', 'a')
 
   vim.notify('Post-tool-use hook triggered', vim.log.levels.INFO)
+  
+  -- Debug: Write immediately
+  vim.fn.writefile({ 'Post-hook: Starting execution' }, '/tmp/claude-inline-debug.log', 'a')
 
-  -- Use vim.schedule to ensure we're in the main thread
-  vim.schedule(function()
-    local utils = require 'nvim-claude.utils'
+  -- Run directly without vim.schedule for testing
+  local utils = require 'nvim-claude.utils'
+  
+  vim.fn.writefile({ 'Post-hook: After require utils' }, '/tmp/claude-inline-debug.log', 'a')
 
-    -- Refresh all buffers to show Claude's changes
-    vim.cmd 'checktime'
+  -- Refresh all buffers to show Claude's changes
+  vim.cmd 'checktime'
+  
+  vim.fn.writefile({ 'Post-hook: After checktime' }, '/tmp/claude-inline-debug.log', 'a')
+  
+  -- Debug: Log current buffers
+  vim.fn.writefile({ string.format('Post-hook: Checking %d buffers', #vim.api.nvim_list_bufs()) }, '/tmp/claude-post-hook-debug.log', 'a')
 
-    -- Check if Claude made any changes
-    local git_root = utils.get_project_root()
-    if not git_root then
-      vim.notify('Not in a git repository', vim.log.levels.WARN)
-      return
+  -- Check if Claude made any changes
+  local git_root = utils.get_project_root()
+  if not git_root then
+    vim.notify('Not in a git repository', vim.log.levels.WARN)
+    return
+  end
+
+  local status_cmd = string.format('cd "%s" && git status --porcelain', git_root)
+  local status_result = utils.exec(status_cmd)
+
+  if not status_result or status_result == '' then
+    vim.notify('No changes detected from Claude', vim.log.levels.INFO)
+    return
+  end
+
+  -- Get list of modified files
+  local modified_files = {}
+  for line in status_result:gmatch '[^\n]+' do
+    local file = line:match '^.M (.+)$' or line:match '^M. (.+)$' or line:match '^.. (.+)$'
+    if file then
+      table.insert(modified_files, file)
     end
+  end
+  
+  -- Debug: Log modified files
+  vim.fn.writefile({ string.format('Post-hook: Found %d modified files: %s', #modified_files, vim.inspect(modified_files)) }, '/tmp/claude-post-hook-debug.log', 'a')
 
-    local status_cmd = string.format('cd "%s" && git status --porcelain', git_root)
-    local status_result = utils.exec(status_cmd)
+  -- Get the baseline commit reference first
+  local baseline_ref = utils.read_file '/tmp/claude-baseline-commit'
+  if baseline_ref then
+    baseline_ref = baseline_ref:gsub('%s+', '') -- trim whitespace
+  end
 
-    if not status_result or status_result == '' then
-      vim.notify('No changes detected from Claude', vim.log.levels.INFO)
-      return
-    end
+  -- Create a stash of Claude's changes (but keep them in working directory)
+  local timestamp = os.date '%Y-%m-%d %H:%M:%S'
+  local stash_msg = string.format('[claude-edit] %s', timestamp)
 
-    -- Get list of modified files
-    local modified_files = {}
-    for line in status_result:gmatch '[^\n]+' do
-      local file = line:match '^.M (.+)$' or line:match '^M. (.+)$' or line:match '^.. (.+)$'
-      if file then
-        table.insert(modified_files, file)
-      end
-    end
+  -- Use git stash create to create stash without removing changes
+  local stash_cmd = string.format('cd "%s" && git stash create -u', git_root)
+  local stash_hash, stash_err = utils.exec(stash_cmd)
 
-    -- Create a stash of Claude's changes (but keep them in working directory)
-    local timestamp = os.date '%Y-%m-%d %H:%M:%S'
-    local stash_msg = string.format('[claude-edit] %s', timestamp)
+  if not stash_err and stash_hash and stash_hash ~= '' then
+    -- Store the stash with a message
+    stash_hash = stash_hash:gsub('%s+', '') -- trim whitespace
+    local store_cmd = string.format('cd "%s" && git stash store -m "%s" %s', git_root, stash_msg, stash_hash)
+    utils.exec(store_cmd)
 
-    -- Use git stash create to create stash without removing changes
-    local stash_cmd = string.format('cd "%s" && git stash create -u', git_root)
-    local stash_hash, stash_err = utils.exec(stash_cmd)
+    -- Check if any modified files are currently open in buffers
+    local inline_diff = require 'nvim-claude.inline-diff'
+    local opened_inline = false
 
-    if not stash_err and stash_hash and stash_hash ~= '' then
-      -- Store the stash with a message
-      stash_hash = stash_hash:gsub('%s+', '') -- trim whitespace
-      local store_cmd = string.format('cd "%s" && git stash store -m "%s" %s', git_root, stash_msg, stash_hash)
-      utils.exec(store_cmd)
+    for _, file in ipairs(modified_files) do
+      local full_path = git_root .. '/' .. file
+      vim.fn.writefile({ string.format('Post-hook: Checking file %s', file) }, '/tmp/claude-inline-debug.log', 'a')
 
-      -- Get the baseline commit reference
-      local baseline_ref = utils.read_file '/tmp/claude-baseline-commit'
-      if baseline_ref then
-        baseline_ref = baseline_ref:gsub('%s+', '') -- trim whitespace
-      end
+      -- Find buffer with this file
+      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_is_loaded(buf) then
+          local buf_name = vim.api.nvim_buf_get_name(buf)
+          vim.fn.writefile({ string.format('Post-hook: Buffer %d has name %s', buf, buf_name) }, '/tmp/claude-inline-debug.log', 'a')
+          if buf_name == full_path or buf_name:match('/' .. file:gsub('([^%w])', '%%%1') .. '$') then
+            vim.fn.writefile({ string.format('Post-hook: Found matching buffer %d for %s', buf, file) }, '/tmp/claude-inline-debug.log', 'a')
+            -- Get the original content (from baseline)
+            local baseline_cmd = string.format('cd "%s" && git show %s:%s 2>/dev/null', git_root, baseline_ref or 'HEAD', file)
+            vim.fn.writefile({ string.format('Post-hook: Running baseline cmd: %s', baseline_cmd) }, '/tmp/claude-inline-debug.log', 'a')
+            local original_content, orig_err = utils.exec(baseline_cmd)
+            
+            vim.fn.writefile({ string.format('Post-hook: Baseline result - err: %s, content length: %d', tostring(orig_err), original_content and #original_content or 0) }, '/tmp/claude-inline-debug.log', 'a')
 
-      -- Check if any modified files are currently open in buffers
-      local inline_diff = require 'nvim-claude.inline-diff'
-      local opened_inline = false
+            if not orig_err and original_content then
+              -- Get current content
+              local current_lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+              local current_content = table.concat(current_lines, '\n')
 
-      for _, file in ipairs(modified_files) do
-        local full_path = git_root .. '/' .. file
+              -- Show inline diff
+              inline_diff.show_inline_diff(buf, original_content, current_content)
+              opened_inline = true
+              
+              vim.notify(string.format('Showing inline diff for %s in buffer %d', file, buf), vim.log.levels.INFO)
 
-        -- Find buffer with this file
-        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-          if vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_is_loaded(buf) then
-            local buf_name = vim.api.nvim_buf_get_name(buf)
-            if buf_name == full_path or buf_name:match('/' .. file:gsub('([^%w])', '%%%1') .. '$') then
-              -- Get the original content (from baseline)
-              local baseline_cmd = string.format('cd "%s" && git show %s:%s 2>/dev/null', git_root, baseline_ref or 'HEAD', file)
-              local original_content, orig_err = utils.exec(baseline_cmd)
-
-              if not orig_err and original_content then
-                -- Get current content
-                local current_lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
-                local current_content = table.concat(current_lines, '\n')
-
-                -- Show inline diff
-                inline_diff.show_inline_diff(buf, original_content, current_content)
-                opened_inline = true
-
-                -- Switch to that buffer if it's not the current one
-                if buf ~= vim.api.nvim_get_current_buf() then
-                  vim.api.nvim_set_current_buf(buf)
-                end
-
-                break -- Only show inline diff for first matching buffer
+              -- Switch to that buffer if it's not the current one
+              if buf ~= vim.api.nvim_get_current_buf() then
+                vim.notify('Switching to buffer with changes', vim.log.levels.INFO)
+                vim.api.nvim_set_current_buf(buf)
               end
+
+              break -- Only show inline diff for first matching buffer
             end
           end
         end
-
-        if opened_inline then
-          break
-        end
       end
 
-      -- If no inline diff was shown, fall back to regular diff review
-      if not opened_inline then
-        -- Trigger diff review - show Claude stashes against baseline
-        local ok, diff_review = pcall(require, 'nvim-claude.diff-review')
-        if ok then
-          diff_review.handle_claude_stashes(baseline_ref)
-        else
-          vim.notify('Diff review module not available: ' .. tostring(diff_review), vim.log.levels.ERROR)
-        end
+      if opened_inline then
+        break
       end
-    else
-      vim.notify('Failed to create stash of Claude changes', vim.log.levels.ERROR)
     end
-  end)
+
+    -- If no inline diff was shown, fall back to regular diff review
+    if not opened_inline then
+      -- Trigger diff review - show Claude stashes against baseline
+      local ok, diff_review = pcall(require, 'nvim-claude.diff-review')
+      if ok then
+        diff_review.handle_claude_stashes(baseline_ref)
+      else
+        vim.notify('Diff review module not available: ' .. tostring(diff_review), vim.log.levels.ERROR)
+      end
+    end
+  else
+    vim.notify('Failed to create stash of Claude changes', vim.log.levels.ERROR)
+  end
 end
 
 -- Test inline diff manually

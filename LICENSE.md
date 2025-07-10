@@ -35,3 +35,35 @@ TEST AFTER REBASE: This line should trigger the inline diff automatically!
 HOOK TEST: Testing with corrected settings.json!
 
 RESTART COMPLETE: Testing hooks after Neovim restart!
+
+MANUAL HOOK TEST: Testing with manual hook execution!
+
+DEBUG HOOK TEST: Testing if Claude Code calls the hook script!
+
+POST-HOOK DEBUG: Testing with enhanced debugging!
+
+FRESH NEOVIM: Testing inline diff after restart!
+
+DEBUG LOGGING: Testing with detailed debug logging!
+
+NOTIFICATION TEST: Testing with enhanced notifications after restart!
+
+CLEAR LOG TEST: Testing after clearing debug log!
+
+ESCAPE FIX: Testing with fixed escape sequence in settings.json!
+
+SCOPE FIX: Testing with fixed baseline_ref scope!
+
+INLINE DIFF TEST: Testing if inline diff finally works!
+
+SCRIPT APPROACH: Testing with the hook script instead of hardcoded server!
+
+HOOK EXECUTION TEST: Checking if Claude Code executes the hook script!
+
+SIMPLE HOOK TEST: Testing with a very simple hook script!
+
+VERBOSE HOOK TEST: Testing with detailed logging to debug hook execution!
+
+TOUCH HOOK TEST: Testing with simplest possible hook that just touches a file!
+
+PROPER HOOK TEST: Testing with a hook that follows Claude Code's expected format!
