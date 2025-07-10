@@ -104,6 +104,25 @@ function M.get_changed_files(stash_ref)
   return files
 end
 
+-- Get list of files changed since baseline
+function M.get_changed_files_since_baseline(baseline_ref)
+  local utils = require('nvim-claude.utils')
+  local cmd = string.format('git diff --name-only %s', baseline_ref)
+  local result = utils.exec(cmd)
+  
+  if not result or result == '' then
+    return {}
+  end
+  
+  local files = {}
+  for line in result:gmatch('[^\n]+') do
+    if line ~= '' then
+      table.insert(files, line)
+    end
+  end
+  return files
+end
+
 -- Set up keybindings for diff review
 function M.setup_keybindings()
   -- Review actions
