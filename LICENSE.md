@@ -29,3 +29,9 @@ AUTOMATIC HOOK TEST: This should trigger hooks automatically!
 RESTART TEST: This edit is after Neovim restart - hooks should work now!
 
 HOOKS FIXED: This edit should trigger the pre/post hooks and show inline diff!
+
+TEST AFTER REBASE: This line should trigger the inline diff automatically!
+
+HOOK TEST: Testing with corrected settings.json!
+
+RESTART COMPLETE: Testing hooks after Neovim restart!

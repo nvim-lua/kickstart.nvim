@@ -510,13 +510,14 @@ function M.cleanup_old_commits()
     end
 
     -- Keep only the last 5 Claude commits, remove the rest
-    if #commits > 5 then
-      for i = 6, #commits do
-        local reset_cmd = string.format('cd "%s" && git rebase --onto %s^ %s', git_root, commits[i], commits[i])
-        utils.exec(reset_cmd)
-      end
-      vim.notify('Cleaned up old Claude commits', vim.log.levels.DEBUG)
-    end
+    -- DISABLED: This was causing rebases that broke the workflow
+    -- if #commits > 5 then
+    --   for i = 6, #commits do
+    --     local reset_cmd = string.format('cd "%s" && git rebase --onto %s^ %s', git_root, commits[i], commits[i])
+    --     utils.exec(reset_cmd)
+    --   end
+    --   vim.notify('Cleaned up old Claude commits', vim.log.levels.DEBUG)
+    -- end
   end
 end
 
