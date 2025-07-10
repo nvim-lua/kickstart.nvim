@@ -1,8 +1,8 @@
 -- Diff review system for nvim-claude using diffview.nvim
 local M = {}
 
--- State tracking
-M.current_review = nil
+-- State tracking - make it persistent across hook calls
+M.current_review = M.current_review or nil
 
 function M.setup()
   -- Set up keybindings
