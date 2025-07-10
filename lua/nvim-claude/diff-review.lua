@@ -188,6 +188,26 @@ function M.open_diffview()
   end
 end
 
+-- Open cumulative diffview (always against baseline)
+function M.open_cumulative_diffview()
+  if not M.current_review then
+    vim.notify('No active review session', vim.log.levels.INFO)
+    return
+  end
+  
+  -- Check if diffview is available
+  local ok, diffview = pcall(require, 'diffview')
+  if not ok then
+    vim.notify('diffview.nvim not available', vim.log.levels.WARN)
+    return
+  end
+  
+  -- Open diffview comparing baseline with current working directory
+  local cmd = 'DiffviewOpen ' .. M.current_review.baseline_ref
+  vim.notify('Opening cumulative diffview: ' .. cmd, vim.log.levels.INFO)
+  vim.cmd(cmd)
+end
+
 -- Open fugitive diff (fallback)
 function M.open_fugitive()
   if not M.current_review then
