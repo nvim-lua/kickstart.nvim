@@ -210,4 +210,97 @@ function M.clear_review()
   end
 end
 
+-- Accept all Claude changes (update baseline)
+function M.accept_changes()
+  local utils = require('nvim-claude.utils')
+  
+  -- Get project root
+  local git_root = utils.get_project_root()
+  if not git_root then
+    vim.notify('Not in a git repository', vim.log.levels.ERROR)
+    return
+  end
+  
+  -- Create new baseline commit with current state
+  local timestamp = os.time()
+  local commit_msg = string.format('claude-baseline-%d', timestamp)
+  
+  -- Stage all changes
+  local add_cmd = string.format('cd "%s" && git add -A', git_root)
+  local add_result, add_err = utils.exec(add_cmd)
+  
+  if add_err then
+    vim.notify('Failed to stage changes: ' .. add_err, vim.log.levels.ERROR)
+    return
+  end
+  
+  -- Create new baseline commit
+  local commit_cmd = string.format('cd "%s" && git commit -m "%s" --allow-empty', git_root, commit_msg)
+  local commit_result, commit_err = utils.exec(commit_cmd)
+  
+  if commit_err and not commit_err:match('nothing to commit') then
+    vim.notify('Failed to create new baseline: ' .. commit_err, vim.log.levels.ERROR)
+    return
+  end
+  
+  -- Update baseline reference
+  local baseline_file = '/tmp/claude-baseline-commit'
+  utils.write_file(baseline_file, 'HEAD')
+  
+  -- Clear review session
+  M.current_review = nil
+  
+  -- Close diffview
+  pcall(function()
+    vim.cmd('DiffviewClose')
+  end)
+  
+  vim.notify('All Claude changes accepted! New baseline created.', vim.log.levels.INFO)
+end
+
+-- Decline all Claude changes (reset to baseline)
+function M.decline_changes()
+  local utils = require('nvim-claude.utils')
+  
+  -- Get baseline commit
+  local baseline_file = '/tmp/claude-baseline-commit'
+  local baseline_ref = utils.read_file(baseline_file)
+  
+  if not baseline_ref or baseline_ref == '' then
+    vim.notify('No baseline commit found', vim.log.levels.ERROR)
+    return
+  end
+  
+  baseline_ref = baseline_ref:gsub('%s+', '')
+  
+  -- Get project root
+  local git_root = utils.get_project_root()
+  if not git_root then
+    vim.notify('Not in a git repository', vim.log.levels.ERROR)
+    return
+  end
+  
+  -- Reset to baseline (hard reset)
+  local reset_cmd = string.format('cd "%s" && git reset --hard %s', git_root, baseline_ref)
+  local reset_result, reset_err = utils.exec(reset_cmd)
+  
+  if reset_err then
+    vim.notify('Failed to reset to baseline: ' .. reset_err, vim.log.levels.ERROR)
+    return
+  end
+  
+  -- Clear review session
+  M.current_review = nil
+  
+  -- Close diffview
+  pcall(function()
+    vim.cmd('DiffviewClose')
+  end)
+  
+  -- Refresh buffers
+  vim.cmd('checktime')
+  
+  vim.notify('All Claude changes declined! Reset to baseline.', vim.log.levels.INFO)
+end
+
 return M
