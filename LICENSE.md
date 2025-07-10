@@ -94,7 +94,7 @@ TEST EDIT #1: Testing if diffs appear consistently!
 
 TEST EDIT #2: Checking consistency of diff display!
 
-FINAL TEST: Back to original diff style without padding!
+FIXED DISPLAY: Deletions now positioned correctly above replacements!
 
 SANITY CHECK: First edit after Neovim restart - will the diff appear?
 
