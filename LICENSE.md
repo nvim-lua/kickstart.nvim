@@ -21,3 +21,11 @@ SOFTWARE.
 test line added by user
 
 TEST: This line should trigger inline diff automatically via hooks!
+
+MANUAL HOOK TEST: This line was added after you ran pre_tool_use_hook!
+
+AUTOMATIC HOOK TEST: This should trigger hooks automatically!
+
+RESTART TEST: This edit is after Neovim restart - hooks should work now!
+
+HOOKS FIXED: This edit should trigger the pre/post hooks and show inline diff!
