@@ -83,6 +83,9 @@ function M.open_diffview()
     return
   end
   
+  -- Debug logging
+  vim.notify('Review session exists: ' .. vim.inspect(M.current_review), vim.log.levels.DEBUG)
+  
   -- Check if diffview is available
   local ok, diffview = pcall(require, 'diffview')
   if not ok then
