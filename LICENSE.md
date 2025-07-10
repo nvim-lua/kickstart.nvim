@@ -18,14 +18,4 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Testing auto-installed hooks and cumulative diff!
-First edit after restart - should create baseline!
-Second edit - should show cumulative diff!
-Third edit - testing automatic hooks!
-
-First edit with new cumulative system!
-Second edit - hooks should work now!
-Testing with verbose logging!
-Testing basic hook execution!
-Testing hooks after JSON fix!
-First edit with working cumulative system!
+Testing dynamic hooks after restart!
