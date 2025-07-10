@@ -100,4 +100,3 @@ TEST EDIT #4: Fourth test - confirming it's not a race condition!
 
 SANITY CHECK: First edit after Neovim restart - will the diff appear?
 
-STARTUP BASELINE: Testing if the new startup baseline approach works!
