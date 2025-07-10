@@ -118,34 +118,45 @@ function M.apply_diff_visualization(bufnr)
   
   -- Apply highlights for each hunk
   for i, hunk in ipairs(diff_data.hunks) do
-    -- Track additions and deletions separately with proper line mapping
-    local current_new_line = hunk.new_start - 1 -- 0-indexed, tracks position in current buffer
-    local current_old_line = hunk.old_start - 1 -- 0-indexed, tracks position in old content
+    
+    -- Track which lines in the current buffer correspond to additions/deletions
+    local additions = {}
     local deletions = {}
+    
+    -- Start from the beginning of the hunk and track line numbers
+    local new_line_num = hunk.new_start -- 1-indexed line number in new file
+    local old_line_num = hunk.old_start -- 1-indexed line number in old file
     
     for _, diff_line in ipairs(hunk.lines) do
       if diff_line:match('^%+') then
-        -- This is an added line - highlight it in the current buffer
-        if current_new_line >= 0 and current_new_line < #buf_lines then
-          vim.api.nvim_buf_set_extmark(bufnr, ns_id, current_new_line, 0, {
-            line_hl_group = 'DiffAdd',
-            id = 4000 + i * 1000 + current_new_line
-          })
-        end
-        current_new_line = current_new_line + 1
-        -- Don't advance old_line for additions
+        -- This is an added line - it exists in the current buffer at new_line_num
+        table.insert(additions, new_line_num - 1) -- Convert to 0-indexed for extmarks
+        new_line_num = new_line_num + 1
+        -- Don't advance old_line_num for additions
       elseif diff_line:match('^%-') then
         -- This is a deleted line - show as virtual text above current position
         table.insert(deletions, {
-          line = current_new_line, -- Show deletion above current position
+          line = new_line_num - 1, -- 0-indexed, show above current position
           text = diff_line:sub(2),
         })
-        current_old_line = current_old_line + 1
-        -- Don't advance new_line for deletions
-      else
+        old_line_num = old_line_num + 1
+        -- Don't advance new_line_num for deletions
+      elseif diff_line:match('^%s') then
         -- Context line - advance both
-        current_new_line = current_new_line + 1
-        current_old_line = current_old_line + 1
+        new_line_num = new_line_num + 1
+        old_line_num = old_line_num + 1
+      end
+    end
+    
+    -- Apply highlighting for additions
+    for _, line_idx in ipairs(additions) do
+      if line_idx >= 0 and line_idx < #buf_lines then
+        vim.api.nvim_buf_set_extmark(bufnr, ns_id, line_idx, 0, {
+          line_hl_group = 'DiffAdd',
+          id = 4000 + i * 1000 + line_idx
+        })
+      else
+        vim.notify('Line ' .. line_idx .. ' out of range (buf has ' .. #buf_lines .. ' lines)', vim.log.levels.WARN)
       end
     end
     
@@ -167,8 +178,16 @@ function M.apply_diff_visualization(bufnr)
       end
     end
     
-    -- Add sign in gutter for hunk
-    local sign_line = hunk.new_start - 1
+    -- Add sign in gutter for hunk (use first addition or deletion line)
+    local sign_line = nil
+    if #additions > 0 then
+      sign_line = additions[1]
+    elseif #deletions > 0 then
+      sign_line = deletions[1].line
+    else
+      sign_line = hunk.new_start - 1
+    end
+    
     local sign_text = '>'
     local sign_hl = 'DiffAdd'
     
@@ -178,7 +197,7 @@ function M.apply_diff_visualization(bufnr)
       sign_hl = 'DiffChange'
     end
     
-    if sign_line >= 0 and sign_line < #buf_lines then
+    if sign_line and sign_line >= 0 and sign_line < #buf_lines then
       vim.api.nvim_buf_set_extmark(bufnr, ns_id, sign_line, 0, {
         sign_text = sign_text,
         sign_hl_group = sign_hl,
@@ -186,9 +205,9 @@ function M.apply_diff_visualization(bufnr)
       })
     end
     
-    -- Add subtle hunk info at end of first line
-    local info_line = hunk.new_start - 1
-    if info_line >= 0 and info_line < #buf_lines then
+    -- Add subtle hunk info at end of first changed line
+    local info_line = sign_line
+    if info_line and info_line >= 0 and info_line < #buf_lines then
       vim.api.nvim_buf_set_extmark(bufnr, ns_id, info_line, 0, {
         virt_text = {{' [Hunk ' .. i .. '/' .. #diff_data.hunks .. ']', 'Comment'}},
         virt_text_pos = 'eol',
@@ -233,8 +252,32 @@ function M.jump_to_hunk(bufnr, hunk_idx)
   local hunk = diff_data.hunks[hunk_idx]
   diff_data.current_hunk = hunk_idx
   
-  -- Move cursor to hunk start
-  vim.api.nvim_win_set_cursor(0, {hunk.old_start, 0})
+  -- Find the first actual changed line (addition or deletion) in this hunk
+  local jump_line = nil
+  local new_line_num = hunk.new_start -- 1-indexed line number in new file
+  
+  for _, diff_line in ipairs(hunk.lines) do
+    if diff_line:match('^%+') then
+      -- Found an addition - jump here
+      jump_line = new_line_num
+      break
+    elseif diff_line:match('^%-') then
+      -- Found a deletion - jump here
+      jump_line = new_line_num  
+      break
+    elseif diff_line:match('^%s') then
+      -- Context line - advance
+      new_line_num = new_line_num + 1
+    end
+  end
+  
+  -- Fallback to hunk start if no changes found
+  if not jump_line then
+    jump_line = hunk.new_start
+  end
+  
+  -- Move cursor to the actual changed line
+  vim.api.nvim_win_set_cursor(0, {jump_line, 0})
   
   -- Update status
   vim.notify(string.format('Hunk %d/%d', hunk_idx, #diff_data.hunks), vim.log.levels.INFO)
@@ -274,19 +317,31 @@ function M.accept_current_hunk(bufnr)
   local hunk = diff_data.hunks[diff_data.current_hunk]
   if not hunk then return end
   
-  -- Apply the hunk changes
-  M.apply_hunk_changes(bufnr, hunk)
+  -- Update the baseline to include this accepted change
+  M.update_baseline_after_accept(bufnr, hunk)
   
-  -- Mark as applied
+  -- Mark as applied (the changes are already in the buffer)
   diff_data.applied_hunks[diff_data.current_hunk] = true
   
-  -- Refresh visualization
-  M.apply_diff_visualization(bufnr)
+  -- Remove this hunk from the diff data since it's accepted
+  table.remove(diff_data.hunks, diff_data.current_hunk)
   
-  vim.notify(string.format('Accepted hunk %d/%d', diff_data.current_hunk, #diff_data.hunks), vim.log.levels.INFO)
+  -- Adjust current hunk index
+  if diff_data.current_hunk > #diff_data.hunks then
+    diff_data.current_hunk = math.max(1, #diff_data.hunks)
+  end
   
-  -- Move to next hunk
-  M.next_hunk(bufnr)
+  vim.notify(string.format('Accepted hunk - %d hunks remaining', #diff_data.hunks), vim.log.levels.INFO)
+  
+  if #diff_data.hunks == 0 then
+    -- No more hunks to review
+    vim.notify('All hunks processed! Closing inline diff.', vim.log.levels.INFO)
+    M.close_inline_diff(bufnr, true)  -- Keep baseline for future diffs
+  else
+    -- Refresh visualization and move to current hunk
+    M.apply_diff_visualization(bufnr)
+    M.jump_to_hunk(bufnr, diff_data.current_hunk)
+  end
 end
 
 -- Reject current hunk
@@ -300,10 +355,31 @@ function M.reject_current_hunk(bufnr)
   -- Revert the hunk by applying original content
   M.revert_hunk_changes(bufnr, hunk)
   
-  vim.notify(string.format('Rejected hunk %d/%d', diff_data.current_hunk, #diff_data.hunks), vim.log.levels.INFO)
+  -- Update baseline to the state after rejection
+  local current_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  local current_content = table.concat(current_lines, '\n')
+  M.original_content[bufnr] = current_content
+  vim.notify('Baseline updated after rejection', vim.log.levels.INFO)
   
-  -- Move to next hunk
-  M.next_hunk(bufnr)
+  -- Remove this hunk from the diff data since it's rejected
+  table.remove(diff_data.hunks, diff_data.current_hunk)
+  
+  -- Adjust current hunk index
+  if diff_data.current_hunk > #diff_data.hunks then
+    diff_data.current_hunk = math.max(1, #diff_data.hunks)
+  end
+  
+  vim.notify(string.format('Rejected hunk - %d hunks remaining', #diff_data.hunks), vim.log.levels.INFO)
+  
+  if #diff_data.hunks == 0 then
+    -- No more hunks to review
+    vim.notify('All hunks processed! Closing inline diff.', vim.log.levels.INFO)
+    M.close_inline_diff(bufnr, true)  -- Keep baseline after rejection too
+  else
+    -- Refresh visualization and move to current hunk
+    M.apply_diff_visualization(bufnr)
+    M.jump_to_hunk(bufnr, diff_data.current_hunk)
+  end
 end
 
 -- Revert hunk changes (restore original content)
@@ -418,22 +494,26 @@ function M.reject_all_hunks(bufnr)
 end
 
 -- Close inline diff mode
-function M.close_inline_diff(bufnr)
+function M.close_inline_diff(bufnr, keep_baseline)
   -- Clear highlights and virtual text
   vim.api.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
   
   -- Remove buffer-local keymaps
-  vim.keymap.del('n', ']h', { buffer = bufnr })
-  vim.keymap.del('n', '[h', { buffer = bufnr })
-  vim.keymap.del('n', '<leader>ia', { buffer = bufnr })
-  vim.keymap.del('n', '<leader>ir', { buffer = bufnr })
-  vim.keymap.del('n', '<leader>iA', { buffer = bufnr })
-  vim.keymap.del('n', '<leader>iR', { buffer = bufnr })
-  vim.keymap.del('n', '<leader>iq', { buffer = bufnr })
+  pcall(vim.keymap.del, 'n', ']h', { buffer = bufnr })
+  pcall(vim.keymap.del, 'n', '[h', { buffer = bufnr })
+  pcall(vim.keymap.del, 'n', '<leader>ia', { buffer = bufnr })
+  pcall(vim.keymap.del, 'n', '<leader>ir', { buffer = bufnr })
+  pcall(vim.keymap.del, 'n', '<leader>iA', { buffer = bufnr })
+  pcall(vim.keymap.del, 'n', '<leader>iR', { buffer = bufnr })
+  pcall(vim.keymap.del, 'n', '<leader>iq', { buffer = bufnr })
   
   -- Clean up state
   M.active_diffs[bufnr] = nil
-  M.original_content[bufnr] = nil
+  
+  -- Only clear baseline if not explicitly told to keep it
+  if not keep_baseline then
+    M.original_content[bufnr] = nil
+  end
   
   vim.notify('Inline diff closed', vim.log.levels.INFO)
 end
@@ -441,6 +521,22 @@ end
 -- Check if buffer has active inline diff
 function M.has_active_diff(bufnr)
   return M.active_diffs[bufnr] ~= nil
+end
+
+-- Update baseline content after accepting a hunk
+function M.update_baseline_after_accept(bufnr, hunk)
+  -- Get current content (which now includes the accepted change)
+  local current_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  local current_content = table.concat(current_lines, '\n')
+  
+  vim.notify('DEBUG: Updating baseline for buffer ' .. bufnr, vim.log.levels.INFO)
+  vim.notify('DEBUG: New baseline content length: ' .. #current_content, vim.log.levels.INFO)
+  
+  -- Update the stored original content to match current content
+  -- This way, future diffs will compare against this new baseline
+  M.original_content[bufnr] = current_content
+  
+  vim.notify('Baseline updated to include accepted changes', vim.log.levels.INFO)
 end
 
 -- Test keymap functionality

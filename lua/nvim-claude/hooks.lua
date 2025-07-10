@@ -227,16 +227,31 @@ function M.test_inline_diff()
   local relative_path = buf_name:gsub(git_root .. '/', '')
   vim.notify('Testing inline diff for: ' .. relative_path, vim.log.levels.INFO)
 
-  -- Get baseline content
-  local baseline_ref = utils.read_file '/tmp/claude-baseline-commit' or 'HEAD'
-  baseline_ref = baseline_ref:gsub('%s+', '')
+  -- Get baseline content - check for updated baseline first
+  local inline_diff = require 'nvim-claude.inline-diff'
+  local original_content = nil
 
-  local baseline_cmd = string.format('cd "%s" && git show %s:%s 2>/dev/null', git_root, baseline_ref, relative_path)
-  local original_content, orig_err = utils.exec(baseline_cmd)
+  -- Check if we have an updated baseline in memory
+  vim.notify('DEBUG: Checking for baseline in buffer ' .. bufnr, vim.log.levels.INFO)
+  vim.notify('DEBUG: Available baselines: ' .. vim.inspect(vim.tbl_keys(inline_diff.original_content)), vim.log.levels.INFO)
 
-  if orig_err then
-    vim.notify('Failed to get baseline content: ' .. orig_err, vim.log.levels.ERROR)
-    return
+  if inline_diff.original_content[bufnr] then
+    original_content = inline_diff.original_content[bufnr]
+    vim.notify('Using updated baseline from memory (length: ' .. #original_content .. ')', vim.log.levels.INFO)
+  else
+    -- Fall back to git baseline
+    local baseline_ref = utils.read_file '/tmp/claude-baseline-commit' or 'HEAD'
+    baseline_ref = baseline_ref:gsub('%s+', '')
+
+    local baseline_cmd = string.format('cd "%s" && git show %s:%s 2>/dev/null', git_root, baseline_ref, relative_path)
+    local git_err
+    original_content, git_err = utils.exec(baseline_cmd)
+
+    if git_err then
+      vim.notify('Failed to get baseline content: ' .. git_err, vim.log.levels.ERROR)
+      return
+    end
+    vim.notify('Using git baseline', vim.log.levels.INFO)
   end
 
   -- Get current content
@@ -244,7 +259,6 @@ function M.test_inline_diff()
   local current_content = table.concat(current_lines, '\n')
 
   -- Show inline diff
-  local inline_diff = require 'nvim-claude.inline-diff'
   inline_diff.show_inline_diff(bufnr, original_content, current_content)
 end
 
@@ -387,6 +401,19 @@ function M.setup_commands()
     desc = 'Test Claude keymap functionality',
   })
 
+  vim.api.nvim_create_user_command('ClaudeUpdateBaseline', function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local current_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+    local current_content = table.concat(current_lines, '\n')
+
+    local inline_diff = require 'nvim-claude.inline-diff'
+    inline_diff.original_content[bufnr] = current_content
+
+    vim.notify('Baseline updated to current buffer state', vim.log.levels.INFO)
+  end, {
+    desc = 'Update Claude baseline to current buffer state',
+  })
+
   vim.api.nvim_create_user_command('ClaudeTestDiff', function()
     local utils = require 'nvim-claude.utils'
 
@@ -494,4 +521,3 @@ function M.cleanup_old_commits()
 end
 
 return M
-
