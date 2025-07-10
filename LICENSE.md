@@ -94,7 +94,7 @@ TEST EDIT #1: Testing if diffs appear consistently!
 
 TEST EDIT #2: Checking consistency of diff display!
 
-FIXED DIFF TEST: Testing the improved deletion display!
+CLEAN DIFF TEST: No more extra red lines on replacements!
 
 SANITY CHECK: First edit after Neovim restart - will the diff appear?
 
