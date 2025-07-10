@@ -19,3 +19,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 Fresh restart - testing stash browsing with updated recovery logic!
+
+Now baseline exists - this should work properly!
+
+Testing with debug logs to see what's happening in the hooks.
+
+After reloading hooks module - this should create debug logs!

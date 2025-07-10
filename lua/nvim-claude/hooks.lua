@@ -17,6 +17,10 @@ end
 function M.pre_tool_use_hook()
   vim.notify('Pre-hook called', vim.log.levels.INFO)
   
+  -- Debug log
+  local debug_msg = string.format('Pre-hook executing at %s', os.date('%Y-%m-%d %H:%M:%S'))
+  vim.fn.writefile({debug_msg}, '/tmp/claude-pre-hook-debug.log', 'a')
+  
   local utils = require('nvim-claude.utils')
   
   -- Check if we're in a git repository
@@ -74,6 +78,10 @@ end
 -- Post-tool-use hook: Create stash of Claude's changes and trigger diff review
 function M.post_tool_use_hook()
   vim.notify('Post-hook called', vim.log.levels.INFO)
+  
+  -- Debug log
+  local debug_msg = string.format('Post-hook executing at %s', os.date('%Y-%m-%d %H:%M:%S'))
+  vim.fn.writefile({debug_msg}, '/tmp/claude-post-hook-debug.log', 'a')
   
   vim.notify('Post-tool-use hook triggered', vim.log.levels.INFO)
   
