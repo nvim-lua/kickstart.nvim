@@ -398,7 +398,10 @@ function M.reject_current_hunk(bufnr)
       git_root, relative_path, commit_msg, relative_path)
     local commit_result, commit_err = utils.exec(commit_cmd)
     
-    if not commit_err or commit_err:match('nothing to commit') then
+    vim.notify('Commit command: ' .. commit_cmd, vim.log.levels.DEBUG)
+    vim.notify('Commit result: ' .. (commit_result or 'nil'), vim.log.levels.DEBUG)
+    
+    if commit_result and (commit_result:match('1 file changed') or commit_result:match('create mode') or commit_result:match('nothing to commit')) then
       -- Get the new commit hash
       local hash_cmd = string.format('cd "%s" && git rev-parse HEAD', git_root)
       local commit_hash, hash_err = utils.exec(hash_cmd)
@@ -413,7 +416,18 @@ function M.reject_current_hunk(bufnr)
         local current_content = table.concat(current_lines, '\n')
         M.original_content[bufnr] = current_content
         
-        vim.notify('Baseline commit created after rejection: ' .. commit_hash:sub(1, 7), vim.log.levels.INFO)
+        if commit_result:match('nothing to commit') then
+          vim.notify('No changes to commit after rejection, baseline updated', vim.log.levels.INFO)
+        else
+          vim.notify('Baseline commit created after rejection: ' .. commit_hash:sub(1, 7), vim.log.levels.INFO)
+        end
+      else
+        vim.notify('Failed to get commit hash: ' .. (hash_err or 'unknown'), vim.log.levels.ERROR)
+      end
+    else
+      vim.notify('Failed to create baseline commit for rejection', vim.log.levels.ERROR)
+      if commit_err then
+        vim.notify('Error: ' .. commit_err, vim.log.levels.ERROR)
       end
     end
   end
@@ -616,8 +630,8 @@ function M.update_baseline_after_accept(bufnr, hunk)
   vim.notify('Commit command: ' .. commit_cmd, vim.log.levels.INFO)
   vim.notify('Commit result: ' .. (commit_result or 'nil'), vim.log.levels.INFO)
   
-  if commit_result and (commit_result:match('1 file changed') or commit_result:match('create mode')) then
-    -- Commit was successful
+  if commit_result and (commit_result:match('1 file changed') or commit_result:match('create mode') or commit_result:match('nothing to commit')) then
+    -- Commit was successful or there was nothing to commit (file already at desired state)
     local hash_cmd = string.format('cd "%s" && git rev-parse HEAD', git_root)
     local commit_hash, hash_err = utils.exec(hash_cmd)
     
@@ -631,7 +645,11 @@ function M.update_baseline_after_accept(bufnr, hunk)
       local current_content = table.concat(current_lines, '\n')
       M.original_content[bufnr] = current_content
       
-      vim.notify('Baseline commit created: ' .. commit_hash:sub(1, 7), vim.log.levels.INFO)
+      if commit_result:match('nothing to commit') then
+        vim.notify('No changes to commit, baseline updated to current state', vim.log.levels.INFO)
+      else
+        vim.notify('Baseline commit created: ' .. commit_hash:sub(1, 7), vim.log.levels.INFO)
+      end
     else
       vim.notify('Failed to get commit hash: ' .. (hash_err or 'unknown'), vim.log.levels.ERROR)
     end
