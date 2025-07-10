@@ -137,23 +137,20 @@ end
 -- Open diffview for current review
 function M.open_diffview()
   if not M.current_review then
-    -- Try to recover from last stash if no active session
+    -- Try to recover cumulative session from baseline
     local utils = require('nvim-claude.utils')
-    local stash_list = utils.exec('git stash list | head -1')
-    if stash_list and stash_list:match('%[claude%-edit%]') then
-      local stash_ref = stash_list:match('(stash@{%d+})')
-      if stash_ref then
-        local pre_edit_ref = utils.read_file('/tmp/claude-baseline-commit')
-        if pre_edit_ref then
-          pre_edit_ref = pre_edit_ref:gsub('%s+', '')
-        end
+    local baseline_ref = utils.read_file('/tmp/claude-baseline-commit')
+    if baseline_ref and baseline_ref ~= '' then
+      baseline_ref = baseline_ref:gsub('%s+', '')
+      local changed_files = M.get_changed_files_since_baseline(baseline_ref)
+      if changed_files and #changed_files > 0 then
         M.current_review = {
-          stash_ref = stash_ref,
-          pre_edit_ref = pre_edit_ref,
+          baseline_ref = baseline_ref,
           timestamp = os.time(),
-          changed_files = M.get_changed_files(stash_ref)
+          changed_files = changed_files,
+          is_cumulative = true
         }
-        vim.notify('Recovered review session from latest claude-edit stash', vim.log.levels.INFO)
+        vim.notify('Recovered cumulative review session from baseline', vim.log.levels.INFO)
       end
     end
     
@@ -163,8 +160,11 @@ function M.open_diffview()
     end
   end
   
-  -- Debug logging
-  vim.notify('Review session exists: ' .. vim.inspect(M.current_review), vim.log.levels.DEBUG)
+  -- Use cumulative diff if available
+  if M.current_review.is_cumulative then
+    M.open_cumulative_diffview()
+    return
+  end
   
   -- Check if diffview is available
   local ok, diffview = pcall(require, 'diffview')
