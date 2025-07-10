@@ -56,8 +56,8 @@ function M.compute_diff(old_text, new_text)
   utils.write_file(old_file, old_text)
   utils.write_file(new_file, new_text)
   
-  -- Generate unified diff
-  local cmd = string.format('diff -u "%s" "%s" || true', old_file, new_file)
+  -- Generate unified diff with minimal context to avoid grouping nearby changes
+  local cmd = string.format('diff -U1 "%s" "%s" || true', old_file, new_file)
   local diff_output = utils.exec(cmd)
   
   -- Parse diff into hunks
