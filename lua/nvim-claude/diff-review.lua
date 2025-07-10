@@ -79,8 +79,30 @@ end
 -- Open diffview for current review
 function M.open_diffview()
   if not M.current_review then
-    vim.notify('No active review session', vim.log.levels.INFO)
-    return
+    -- Try to recover from last stash if no active session
+    local utils = require('nvim-claude.utils')
+    local stash_list = utils.exec('git stash list | head -1')
+    if stash_list and stash_list:match('%[claude%-edit%]') then
+      local stash_ref = stash_list:match('(stash@{%d+})')
+      if stash_ref then
+        local pre_edit_ref = utils.read_file('/tmp/claude-pre-edit-commit')
+        if pre_edit_ref then
+          pre_edit_ref = pre_edit_ref:gsub('%s+', '')
+        end
+        M.current_review = {
+          stash_ref = stash_ref,
+          pre_edit_ref = pre_edit_ref,
+          timestamp = os.time(),
+          changed_files = M.get_changed_files(stash_ref)
+        }
+        vim.notify('Recovered review session from latest claude-edit stash', vim.log.levels.INFO)
+      end
+    end
+    
+    if not M.current_review then
+      vim.notify('No active review session', vim.log.levels.INFO)
+      return
+    end
   end
   
   -- Debug logging
