@@ -87,3 +87,5 @@ BASELINE FIX TEST: This should properly update baseline when accepted!
 DEBUG BASELINE: This edit includes debugging to see why baseline commits fail!
 
 AFTER RESTART: Testing baseline commit creation with debug output!
+
+BASELINE ISSUE: The pre-hook runs after edits, so baseline includes changes!
