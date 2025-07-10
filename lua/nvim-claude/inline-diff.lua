@@ -122,33 +122,50 @@ function M.apply_diff_visualization(bufnr)
     -- Track which lines in the current buffer correspond to additions/deletions
     local additions = {}
     local deletions = {}
+    local replacements = {} -- Track lines that are replacements (have both deletion and addition)
     
     -- Start from the beginning of the hunk and track line numbers
     local new_line_num = hunk.new_start -- 1-indexed line number in new file
     local old_line_num = hunk.old_start -- 1-indexed line number in old file
     
-    for _, diff_line in ipairs(hunk.lines) do
-      if diff_line:match('^%+') then
-        -- This is an added line - it exists in the current buffer at new_line_num
+    -- First pass: identify replacements by looking for adjacent -/+ pairs
+    local j = 1
+    while j <= #hunk.lines do
+      local line = hunk.lines[j]
+      if line:match('^%-') and j < #hunk.lines and hunk.lines[j + 1]:match('^%+') then
+        -- This is a replacement: deletion followed by addition
+        table.insert(replacements, {
+          old_text = line:sub(2),
+          new_text = hunk.lines[j + 1]:sub(2),
+          line = new_line_num - 1 -- 0-indexed line in buffer
+        })
+        j = j + 2 -- Skip both lines
+        new_line_num = new_line_num + 1
+        old_line_num = old_line_num + 1
+      elseif line:match('^%+') then
+        -- Pure addition
         table.insert(additions, new_line_num - 1) -- Convert to 0-indexed for extmarks
         new_line_num = new_line_num + 1
-        -- Don't advance old_line_num for additions
-      elseif diff_line:match('^%-') then
-        -- This is a deleted line - show as virtual text above current position
+        j = j + 1
+      elseif line:match('^%-') then
+        -- Pure deletion
         table.insert(deletions, {
           line = new_line_num - 1, -- 0-indexed, show above current position
-          text = diff_line:sub(2),
+          text = line:sub(2),
         })
         old_line_num = old_line_num + 1
-        -- Don't advance new_line_num for deletions
-      elseif diff_line:match('^%s') then
+        j = j + 1
+      elseif line:match('^%s') then
         -- Context line - advance both
         new_line_num = new_line_num + 1
         old_line_num = old_line_num + 1
+        j = j + 1
+      else
+        j = j + 1
       end
     end
     
-    -- Apply highlighting for additions
+    -- Apply highlighting for pure additions
     for _, line_idx in ipairs(additions) do
       if line_idx >= 0 and line_idx < #buf_lines then
         vim.api.nvim_buf_set_extmark(bufnr, ns_id, line_idx, 0, {
@@ -160,17 +177,31 @@ function M.apply_diff_visualization(bufnr)
       end
     end
     
-    -- Show deletions as virtual text above their position with full-width background
+    -- Apply highlighting for replacements (show old text inline with new text)
+    for j, repl in ipairs(replacements) do
+      if repl.line >= 0 and repl.line < #buf_lines then
+        -- Highlight the line as changed
+        vim.api.nvim_buf_set_extmark(bufnr, ns_id, repl.line, 0, {
+          line_hl_group = 'DiffChange',
+          id = 5000 + i * 100 + j
+        })
+        
+        -- Show the old text as virtual text at end of line
+        vim.api.nvim_buf_set_extmark(bufnr, ns_id, repl.line, 0, {
+          virt_text = {{' ← was: ' .. repl.old_text, 'DiffDelete'}},
+          virt_text_pos = 'eol',
+          id = 6000 + i * 100 + j
+        })
+      end
+    end
+    
+    -- Show pure deletions as virtual text above their position
     for j, del in ipairs(deletions) do
       if del.line >= 0 and del.line <= #buf_lines then
-        -- Calculate full width for the deletion line
-        local text = '- ' .. del.text
-        local win_width = vim.api.nvim_win_get_width(0)
-        local padding = string.rep(' ', math.max(0, win_width - vim.fn.strdisplaywidth(text)))
-        
+        -- Show deletion with a more subtle approach to avoid visual artifacts
         vim.api.nvim_buf_set_extmark(bufnr, ns_id, del.line, 0, {
           virt_lines = {{
-            {'- ' .. del.text .. padding, 'DiffDelete'}
+            {'- ' .. del.text, 'DiffDelete'}
           }},
           virt_lines_above = true,
           id = 3000 + i * 100 + j
@@ -178,10 +209,12 @@ function M.apply_diff_visualization(bufnr)
       end
     end
     
-    -- Add sign in gutter for hunk (use first addition or deletion line)
+    -- Add sign in gutter for hunk (use first addition, replacement, or deletion line)
     local sign_line = nil
     if #additions > 0 then
       sign_line = additions[1]
+    elseif #replacements > 0 then
+      sign_line = replacements[1].line
     elseif #deletions > 0 then
       sign_line = deletions[1].line
     else
@@ -191,10 +224,13 @@ function M.apply_diff_visualization(bufnr)
     local sign_text = '>'
     local sign_hl = 'DiffAdd'
     
-    -- If hunk has deletions, use different sign
-    if #deletions > 0 then
+    -- Choose appropriate sign based on hunk content
+    if #replacements > 0 then
       sign_text = '~'
       sign_hl = 'DiffChange'
+    elseif #deletions > 0 then
+      sign_text = '-'
+      sign_hl = 'DiffDelete'
     end
     
     if sign_line and sign_line >= 0 and sign_line < #buf_lines then
