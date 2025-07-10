@@ -247,7 +247,7 @@ function M.install_hooks()
     hooks = {
       PreToolUse = {
         {
-          matcher = ".*",  -- Match all tools
+          matcher = "Edit|Write|MultiEdit",  -- Only match file editing tools
           hooks = {
             {
               type = "command",
@@ -258,7 +258,7 @@ function M.install_hooks()
       },
       PostToolUse = {
         {
-          matcher = ".*",  -- Match all tools
+          matcher = "Edit|Write|MultiEdit",  -- Only match file editing tools
           hooks = {
             {
               type = "command", 
