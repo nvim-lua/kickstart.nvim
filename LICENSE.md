@@ -20,6 +20,8 @@ SOFTWARE.
 
 Testing auto-installed hooks and cumulative diff!
 First edit after restart - should create baseline!
+Second edit - should show cumulative diff!
+Third edit - testing automatic hooks!
 
 First edit with new cumulative system!
 Second edit - hooks should work now!
