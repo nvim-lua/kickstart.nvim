@@ -23,3 +23,7 @@ Testing dynamic hooks after restart!
 Dynamic hooks are now working properly!
 
 Testing cumulative changes - this should accumulate with previous edits.
+
+Now using stash-based tracking to exclude manual edits!
+
+Starting Claude stash history - this should be the first stash entry.

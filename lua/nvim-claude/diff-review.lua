@@ -48,41 +48,45 @@ function M.handle_claude_edit(stash_ref, pre_edit_ref)
   M.open_diffview()
 end
 
--- Handle cumulative diff (always show against baseline)
-function M.handle_cumulative_diff(baseline_ref)
+-- Handle Claude stashes (only show Claude changes)
+function M.handle_claude_stashes(baseline_ref)
   if not baseline_ref then
-    vim.notify('No baseline reference provided for cumulative diff', vim.log.levels.ERROR)
+    vim.notify('No baseline reference provided for Claude stashes', vim.log.levels.ERROR)
     return
   end
   
-  vim.notify('Showing cumulative diff against baseline: ' .. baseline_ref, vim.log.levels.INFO)
+  vim.notify('Showing Claude stashes against baseline: ' .. baseline_ref, vim.log.levels.INFO)
   
-  -- Get list of changed files since baseline
-  local changed_files = M.get_changed_files_since_baseline(baseline_ref)
-  if not changed_files or #changed_files == 0 then
-    vim.notify('No changes detected since baseline', vim.log.levels.INFO)
+  -- Get Claude stashes
+  local claude_stashes = M.get_claude_stashes()
+  if not claude_stashes or #claude_stashes == 0 then
+    vim.notify('No Claude stashes found', vim.log.levels.INFO)
     return
   end
   
-  -- Initialize review session for cumulative diff
+  -- Initialize review session for Claude stashes
   M.current_review = {
     baseline_ref = baseline_ref,
     timestamp = os.time(),
-    changed_files = changed_files,
-    is_cumulative = true
+    claude_stashes = claude_stashes,
+    current_stash_index = 0, -- Show cumulative view by default
+    is_stash_based = true
   }
   
   -- Notify user about changes
   vim.notify(string.format(
-    'Cumulative changes in %d file(s): %s',
-    #changed_files,
-    table.concat(changed_files, ', ')
+    'Found %d Claude stash(es). Use <leader>dd for cumulative view, <leader>dh to browse.',
+    #claude_stashes
   ), vim.log.levels.INFO)
   
-  vim.notify('Use <leader>dd to reopen diff, <leader>da to accept, <leader>dr to decline', vim.log.levels.INFO)
-  
-  -- Automatically open diffview
-  M.open_cumulative_diffview()
+  -- Automatically open cumulative stash view
+  M.open_cumulative_stash_view()
+end
+
+-- Handle cumulative diff (always show against baseline) - legacy support
+function M.handle_cumulative_diff(baseline_ref)
+  -- Redirect to new stash-based handler
+  M.handle_claude_stashes(baseline_ref)
 end
 
 -- Get list of files changed in the stash
@@ -123,6 +127,31 @@ function M.get_changed_files_since_baseline(baseline_ref)
   return files
 end
 
+-- Get Claude stashes (only stashes with [claude-edit] messages)
+function M.get_claude_stashes()
+  local utils = require('nvim-claude.utils')
+  local cmd = 'git stash list --grep="claude-edit"'
+  local result = utils.exec(cmd)
+  
+  if not result or result == '' then
+    return {}
+  end
+  
+  local stashes = {}
+  for line in result:gmatch('[^\n]+') do
+    if line ~= '' then
+      local stash_ref = line:match('^(stash@{%d+})')
+      if stash_ref then
+        table.insert(stashes, {
+          ref = stash_ref,
+          message = line:match(': (.+)$') or line
+        })
+      end
+    end
+  end
+  return stashes
+end
+
 -- Set up keybindings for diff review
 function M.setup_keybindings()
   -- Review actions
@@ -132,6 +161,11 @@ function M.setup_keybindings()
   vim.keymap.set('n', '<leader>dl', M.list_changes, { desc = 'List Claude changed files' })
   vim.keymap.set('n', '<leader>da', M.accept_changes, { desc = 'Accept all Claude changes' })
   vim.keymap.set('n', '<leader>dr', M.decline_changes, { desc = 'Decline all Claude changes' })
+  
+  -- Stash browsing
+  vim.keymap.set('n', '<leader>dh', M.browse_claude_stashes, { desc = 'Browse Claude stash history' })
+  vim.keymap.set('n', '<leader>dp', M.previous_stash, { desc = 'View previous Claude stash' })
+  vim.keymap.set('n', '<leader>dn', M.next_stash, { desc = 'View next Claude stash' })
 end
 
 -- Open diffview for current review
@@ -188,8 +222,8 @@ function M.open_diffview()
   end
 end
 
--- Open cumulative diffview (always against baseline)
-function M.open_cumulative_diffview()
+-- Open cumulative stash view (shows all Claude changes since baseline)
+function M.open_cumulative_stash_view()
   if not M.current_review then
     vim.notify('No active review session', vim.log.levels.INFO)
     return
@@ -202,10 +236,22 @@ function M.open_cumulative_diffview()
     return
   end
   
-  -- Open diffview comparing baseline with current working directory
-  local cmd = 'DiffviewOpen ' .. M.current_review.baseline_ref
-  vim.notify('Opening cumulative diffview: ' .. cmd, vim.log.levels.INFO)
-  vim.cmd(cmd)
+  if M.current_review.is_stash_based and M.current_review.claude_stashes then
+    -- Show cumulative diff of all Claude stashes against baseline
+    local cmd = 'DiffviewOpen ' .. M.current_review.baseline_ref
+    vim.notify('Opening cumulative Claude stash view: ' .. cmd, vim.log.levels.INFO)
+    vim.cmd(cmd)
+  else
+    -- Fallback to old behavior
+    local cmd = 'DiffviewOpen ' .. M.current_review.baseline_ref
+    vim.notify('Opening cumulative diffview: ' .. cmd, vim.log.levels.INFO)
+    vim.cmd(cmd)
+  end
+end
+
+-- Open cumulative diffview (always against baseline) - legacy support
+function M.open_cumulative_diffview()
+  M.open_cumulative_stash_view()
 end
 
 -- Open fugitive diff (fallback)
@@ -377,6 +423,148 @@ function M.decline_changes()
   vim.cmd('checktime')
   
   vim.notify('All Claude changes declined! Reset to baseline.', vim.log.levels.INFO)
+end
+
+-- Browse Claude stashes (show list)
+function M.browse_claude_stashes()
+  if not M.current_review or not M.current_review.is_stash_based then
+    vim.notify('No Claude stash session active', vim.log.levels.INFO)
+    return
+  end
+  
+  local stashes = M.current_review.claude_stashes
+  if not stashes or #stashes == 0 then
+    vim.notify('No Claude stashes found', vim.log.levels.INFO)
+    return
+  end
+  
+  -- Create a telescope picker if available, otherwise just notify
+  local ok, telescope = pcall(require, 'telescope.pickers')
+  if ok then
+    M.telescope_claude_stashes()
+  else
+    vim.notify('Claude stashes:', vim.log.levels.INFO)
+    for i, stash in ipairs(stashes) do
+      local marker = (i == M.current_review.current_stash_index) and ' [current]' or ''
+      vim.notify(string.format('  %d. %s%s', i, stash.message, marker), vim.log.levels.INFO)
+    end
+  end
+end
+
+-- View previous Claude stash
+function M.previous_stash()
+  if not M.current_review or not M.current_review.is_stash_based then
+    vim.notify('No Claude stash session active', vim.log.levels.INFO)
+    return
+  end
+  
+  local stashes = M.current_review.claude_stashes
+  if not stashes or #stashes == 0 then
+    vim.notify('No Claude stashes found', vim.log.levels.INFO)
+    return
+  end
+  
+  local current_index = M.current_review.current_stash_index or 0
+  if current_index <= 1 then
+    vim.notify('Already at first stash', vim.log.levels.INFO)
+    return
+  end
+  
+  M.current_review.current_stash_index = current_index - 1
+  M.view_specific_stash(M.current_review.current_stash_index)
+end
+
+-- View next Claude stash
+function M.next_stash()
+  if not M.current_review or not M.current_review.is_stash_based then
+    vim.notify('No Claude stash session active', vim.log.levels.INFO)
+    return
+  end
+  
+  local stashes = M.current_review.claude_stashes
+  if not stashes or #stashes == 0 then
+    vim.notify('No Claude stashes found', vim.log.levels.INFO)
+    return
+  end
+  
+  local current_index = M.current_review.current_stash_index or 0
+  if current_index >= #stashes then
+    vim.notify('Already at last stash', vim.log.levels.INFO)
+    return
+  end
+  
+  M.current_review.current_stash_index = current_index + 1
+  M.view_specific_stash(M.current_review.current_stash_index)
+end
+
+-- View a specific stash by index
+function M.view_specific_stash(index)
+  if not M.current_review or not M.current_review.is_stash_based then
+    vim.notify('No Claude stash session active', vim.log.levels.INFO)
+    return
+  end
+  
+  local stashes = M.current_review.claude_stashes
+  if not stashes or index < 1 or index > #stashes then
+    vim.notify('Invalid stash index', vim.log.levels.ERROR)
+    return
+  end
+  
+  local stash = stashes[index]
+  
+  -- Check if diffview is available
+  local ok, diffview = pcall(require, 'diffview')
+  if not ok then
+    vim.notify('diffview.nvim not available', vim.log.levels.WARN)
+    return
+  end
+  
+  -- Open diffview for this specific stash
+  local cmd = string.format('DiffviewOpen %s^..%s', stash.ref, stash.ref)
+  vim.notify(string.format('Opening stash %d: %s', index, stash.message), vim.log.levels.INFO)
+  vim.cmd(cmd)
+end
+
+-- Telescope picker for Claude stashes
+function M.telescope_claude_stashes()
+  local pickers = require('telescope.pickers')
+  local finders = require('telescope.finders')
+  local conf = require('telescope.config').values
+  
+  local stashes = M.current_review.claude_stashes
+  local stash_entries = {}
+  
+  for i, stash in ipairs(stashes) do
+    table.insert(stash_entries, {
+      value = i,
+      display = string.format('%d. %s', i, stash.message),
+      ordinal = stash.message,
+    })
+  end
+  
+  pickers.new({}, {
+    prompt_title = 'Claude Stash History',
+    finder = finders.new_table({
+      results = stash_entries,
+      entry_maker = function(entry)
+        return {
+          value = entry.value,
+          display = entry.display,
+          ordinal = entry.ordinal,
+        }
+      end,
+    }),
+    sorter = conf.generic_sorter({}),
+    attach_mappings = function(_, map)
+      map('i', '<CR>', function(prompt_bufnr)
+        local selection = require('telescope.actions.state').get_selected_entry()
+        require('telescope.actions').close(prompt_bufnr)
+        M.current_review.current_stash_index = selection.value
+        M.view_specific_stash(selection.value)
+      end)
+      return true
+    end,
+  }):find()
 end
 
 return M
