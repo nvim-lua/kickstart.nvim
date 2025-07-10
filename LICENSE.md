@@ -95,3 +95,5 @@ TEST EDIT #1: Testing if diffs appear consistently!
 TEST EDIT #2: Checking consistency of diff display!
 
 TEST EDIT #3: Third test - diffs should work every time!
+
+TEST EDIT #4: Fourth test - confirming it's not a race condition!
