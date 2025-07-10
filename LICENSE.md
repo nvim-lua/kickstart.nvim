@@ -18,13 +18,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-This line was added by Claude!
-Testing hooks - this should trigger pre and post hooks!
-Hooks are now properly installed!
-Testing hook debug logging!
-Another test edit to see the diff!
-Final test - hooks working perfectly!
-Testing cumulative diff system!
-Second edit - should show both changes!
-Third edit - testing cumulative system!
-Fourth edit - all changes should accumulate!
+Testing auto-installed hooks and cumulative diff!
+First edit after restart - should create baseline!
+
+First edit with new cumulative system!
+Second edit - hooks should work now!
+Testing with verbose logging!
+Testing basic hook execution!
+Testing hooks after JSON fix!
+First edit with working cumulative system!

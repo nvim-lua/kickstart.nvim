@@ -6,14 +6,16 @@ M.pre_edit_commit = nil
 
 function M.setup()
   vim.notify('Hooks module loaded', vim.log.levels.DEBUG)
+  
+  -- Auto-cleanup old Claude commits on startup
+  vim.defer_fn(function()
+    M.cleanup_old_commits()
+  end, 200)
 end
 
 -- Pre-tool-use hook: Create baseline commit only if one doesn't exist
 function M.pre_tool_use_hook()
-  -- Debug log to file
-  local log_file = io.open('/tmp/claude-hook-debug.log', 'a')
-  log_file:write(os.date() .. ' - Pre-hook called\n')
-  log_file:close()
+  vim.notify('Pre-hook called', vim.log.levels.INFO)
   
   local utils = require('nvim-claude.utils')
   
@@ -71,10 +73,7 @@ end
 
 -- Post-tool-use hook: Create stash of Claude's changes and trigger diff review
 function M.post_tool_use_hook()
-  -- Debug log to file
-  local log_file = io.open('/tmp/claude-hook-debug.log', 'a')
-  log_file:write(os.date() .. ' - Post-hook called\n')
-  log_file:close()
+  vim.notify('Post-hook called', vim.log.levels.INFO)
   
   vim.notify('Post-tool-use hook triggered', vim.log.levels.INFO)
   
@@ -310,6 +309,53 @@ function M.setup_commands()
   end, {
     desc = 'Uninstall Claude Code hooks for this project'
   })
+end
+
+-- Cleanup old Claude commits and temp files
+function M.cleanup_old_commits()
+  local utils = require('nvim-claude.utils')
+  
+  local git_root = utils.get_project_root()
+  if not git_root then
+    return
+  end
+  
+  -- Clean up old temp files
+  local temp_files = {
+    '/tmp/claude-pre-edit-commit',
+    '/tmp/claude-baseline-commit',
+    '/tmp/claude-last-snapshot',
+    '/tmp/claude-hook-test.log'
+  }
+  
+  for _, file in ipairs(temp_files) do
+    if vim.fn.filereadable(file) == 1 then
+      vim.fn.delete(file)
+    end
+  end
+  
+  -- Clean up old Claude commits (keep only the last 5)
+  local log_cmd = string.format('cd "%s" && git log --oneline --grep="claude-" --grep="claude-baseline" --grep="claude-pre-edit" --all --max-count=10', git_root)
+  local log_result = utils.exec(log_cmd)
+  
+  if log_result and log_result ~= '' then
+    local commits = {}
+    for line in log_result:gmatch('[^\n]+') do
+      local hash = line:match('^(%w+)')
+      if hash then
+        table.insert(commits, hash)
+      end
+    end
+    
+    -- Keep only the last 5 Claude commits, remove the rest
+    if #commits > 5 then
+      for i = 6, #commits do
+        local reset_cmd = string.format('cd "%s" && git rebase --onto %s^ %s', git_root, commits[i], commits[i])
+        utils.exec(reset_cmd)
+      end
+      vim.notify('Cleaned up old Claude commits', vim.log.levels.DEBUG)
+    end
+  end
 end
 
 return M

@@ -109,6 +109,10 @@ end
 function M.setup(user_config)
   M.config = merge_config(user_config)
   
+  -- Force reload modules to ensure latest code
+  package.loaded['nvim-claude.hooks'] = nil
+  package.loaded['nvim-claude.diff-review'] = nil
+  
   -- Load submodules
   M.tmux = require('nvim-claude.tmux')
   M.git = require('nvim-claude.git')
@@ -128,6 +132,14 @@ function M.setup(user_config)
   -- Set up commands
   M.commands.setup(M)
   M.hooks.setup_commands()
+  
+  -- Auto-install hooks if we're in a git repository
+  vim.defer_fn(function()
+    if M.utils.get_project_root() then
+      M.hooks.install_hooks()
+      vim.notify('Claude Code hooks auto-installed', vim.log.levels.INFO)
+    end
+  end, 100)
   
   -- Set up keymappings if enabled
   if M.config.mappings then
