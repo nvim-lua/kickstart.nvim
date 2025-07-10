@@ -58,6 +58,11 @@ end
 
 -- Post-tool-use hook: Create stash of Claude's changes and trigger diff review
 function M.post_tool_use_hook()
+  -- Debug log to file
+  local log_file = io.open('/tmp/claude-hook-debug.log', 'a')
+  log_file:write(os.date() .. ' - Post-hook called\n')
+  log_file:close()
+  
   vim.notify('Post-tool-use hook triggered', vim.log.levels.INFO)
   
   -- Use vim.schedule to ensure we're in the main thread
