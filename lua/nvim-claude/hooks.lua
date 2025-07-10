@@ -10,6 +10,11 @@ end
 
 -- Pre-tool-use hook: Create a commit snapshot of the current state
 function M.pre_tool_use_hook()
+  -- Debug log to file
+  local log_file = io.open('/tmp/claude-hook-debug.log', 'a')
+  log_file:write(os.date() .. ' - Pre-hook called\n')
+  log_file:close()
+  
   local utils = require('nvim-claude.utils')
   
   -- Check if we're in a git repository
