@@ -77,3 +77,7 @@ WORKING INLINE DIFF: This edit should trigger the inline diff automatically!
 FINAL TEST: With improved hook script - inline diff should appear now!
 
 AUTOMATIC INLINE DIFF: This should appear automatically without any prompts!
+
+NEW EDIT: This line is different from the baseline and should trigger inline diff!
+
+RESTART TEST: Testing if inline diff works after Neovim restart!
