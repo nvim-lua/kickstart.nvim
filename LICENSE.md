@@ -25,3 +25,4 @@ Testing hook debug logging!
 Another test edit to see the diff!
 Final test - hooks working perfectly!
 Testing cumulative diff system!
+Second edit - should show both changes!
