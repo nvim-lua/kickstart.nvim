@@ -180,15 +180,15 @@ function M.apply_diff_visualization(bufnr)
     -- Apply highlighting for replacements (show old text inline with new text)
     for j, repl in ipairs(replacements) do
       if repl.line >= 0 and repl.line < #buf_lines then
-        -- Highlight the line as changed
+        -- Highlight the line as an addition (since it shows the new text)
         vim.api.nvim_buf_set_extmark(bufnr, ns_id, repl.line, 0, {
-          line_hl_group = 'DiffChange',
+          line_hl_group = 'DiffAdd',
           id = 5000 + i * 100 + j
         })
         
         -- Show the old text as virtual text at end of line
         vim.api.nvim_buf_set_extmark(bufnr, ns_id, repl.line, 0, {
-          virt_text = {{' ← was: ' .. repl.old_text, 'DiffDelete'}},
+          virt_text = {{' ← was: ' .. repl.old_text, 'Comment'}},
           virt_text_pos = 'eol',
           id = 6000 + i * 100 + j
         })
