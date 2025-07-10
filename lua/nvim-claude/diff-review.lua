@@ -48,6 +48,43 @@ function M.handle_claude_edit(stash_ref, pre_edit_ref)
   M.open_diffview()
 end
 
+-- Handle cumulative diff (always show against baseline)
+function M.handle_cumulative_diff(baseline_ref)
+  if not baseline_ref then
+    vim.notify('No baseline reference provided for cumulative diff', vim.log.levels.ERROR)
+    return
+  end
+  
+  vim.notify('Showing cumulative diff against baseline: ' .. baseline_ref, vim.log.levels.INFO)
+  
+  -- Get list of changed files since baseline
+  local changed_files = M.get_changed_files_since_baseline(baseline_ref)
+  if not changed_files or #changed_files == 0 then
+    vim.notify('No changes detected since baseline', vim.log.levels.INFO)
+    return
+  end
+  
+  -- Initialize review session for cumulative diff
+  M.current_review = {
+    baseline_ref = baseline_ref,
+    timestamp = os.time(),
+    changed_files = changed_files,
+    is_cumulative = true
+  }
+  
+  -- Notify user about changes
+  vim.notify(string.format(
+    'Cumulative changes in %d file(s): %s',
+    #changed_files,
+    table.concat(changed_files, ', ')
+  ), vim.log.levels.INFO)
+  
+  vim.notify('Use <leader>dd to reopen diff, <leader>da to accept, <leader>dr to decline', vim.log.levels.INFO)
+  
+  -- Automatically open diffview
+  M.open_cumulative_diffview()
+end
+
 -- Get list of files changed in the stash
 function M.get_changed_files(stash_ref)
   local utils = require('nvim-claude.utils')
