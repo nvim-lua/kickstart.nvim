@@ -8,7 +8,7 @@ function M.setup()
   vim.notify('Hooks module loaded', vim.log.levels.DEBUG)
 end
 
--- Pre-tool-use hook: Create a commit snapshot of the current state
+-- Pre-tool-use hook: Create baseline commit only if one doesn't exist
 function M.pre_tool_use_hook()
   -- Debug log to file
   local log_file = io.open('/tmp/claude-hook-debug.log', 'a')
@@ -24,9 +24,25 @@ function M.pre_tool_use_hook()
     return
   end
   
-  -- Create timestamp for snapshot
+  -- Check if we already have a baseline commit
+  local baseline_file = '/tmp/claude-baseline-commit'
+  local existing_baseline = utils.read_file(baseline_file)
+  
+  if existing_baseline and existing_baseline ~= '' then
+    existing_baseline = existing_baseline:gsub('%s+', '')
+    -- Verify the baseline commit still exists
+    local check_cmd = string.format('cd "%s" && git rev-parse --verify %s', git_root, existing_baseline)
+    local check_result, check_err = utils.exec(check_cmd)
+    
+    if not check_err then
+      vim.notify('Using existing baseline commit: ' .. existing_baseline, vim.log.levels.INFO)
+      return
+    end
+  end
+  
+  -- Create new baseline commit
   local timestamp = os.time()
-  local commit_msg = string.format('claude-pre-edit-%d', timestamp)
+  local commit_msg = string.format('claude-baseline-%d', timestamp)
   
   -- Stage all current changes (including untracked files)
   local add_cmd = string.format('cd "%s" && git add -A', git_root)
@@ -42,18 +58,15 @@ function M.pre_tool_use_hook()
   local commit_result, commit_err = utils.exec(commit_cmd)
   
   if commit_err and not commit_err:match('nothing to commit') then
-    vim.notify('Failed to create snapshot commit: ' .. commit_err, vim.log.levels.ERROR)
+    vim.notify('Failed to create baseline commit: ' .. commit_err, vim.log.levels.ERROR)
     return
   end
   
-  -- Store the commit reference  
-  M.pre_edit_commit = 'HEAD'
+  -- Store the baseline commit reference
+  M.baseline_commit = 'HEAD'
+  utils.write_file(baseline_file, 'HEAD')
   
-  -- Also store in temp file for diff review to access
-  local temp_file = '/tmp/claude-pre-edit-commit'
-  utils.write_file(temp_file, 'HEAD')
-  
-  vim.notify('Pre-Claude snapshot created: ' .. commit_msg, vim.log.levels.INFO)
+  vim.notify('New baseline commit created: ' .. commit_msg, vim.log.levels.INFO)
 end
 
 -- Post-tool-use hook: Create stash of Claude's changes and trigger diff review
