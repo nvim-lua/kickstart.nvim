@@ -15,3 +15,4 @@ lazy-lock.json
 
 # Claude Code hooks
 .claude/
+.agent-work/

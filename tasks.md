@@ -200,8 +200,8 @@ Building a Claude Code integration for Neovim that works seamlessly with a tmux-
 #### 8.2 Quick Commands
 - [x] `:ClaudeKill [agent]` - Terminate agent
 - [x] `:ClaudeClean` - Clean up old agents
-- [ ] `:ClaudeSwitch [agent]` - Switch to agent tmux
-- [x] `:ClaudeAgents` - List all agents
+- [x] `:ClaudeAgents` - Interactive agent manager (switch, diff, kill)
+- [x] `:ClaudeDiffAgent` - Review agent changes with diffview
 - [x] `:ClaudeResetBaseline` - Reset inline diff baseline
 - [x] Test: Each command functions correctly
 
@@ -316,4 +316,36 @@ Building a Claude Code integration for Neovim that works seamlessly with a tmux-
 - Improve documentation with examples
 - Create demo videos showcasing inline diff system
 - Add support for partial hunk acceptance
-- TEST EDIT: Testing single file edit after accept all
+
+## Background Agent Features (v1.0 Complete)
+
+### Key Improvements
+1. **Hook Isolation**: Background agents always run without hooks (no inline diffs)
+2. **ClaudeSwitch**: Switch to agent's worktree to chat/give follow-ups (hooks remain disabled)
+3. **ClaudeDiffAgent**: Review agent changes using diffview.nvim
+4. **Progress Tracking**: Agents can update progress.txt for real-time status updates
+5. **Statusline Integration**: Shows active agent count and latest progress
+6. **Enhanced Agent Creation UI**: Interactive popup for mission description with fork options
+
+### Usage
+- `ClaudeBg` - Opens interactive UI for creating agents with:
+  - Multi-line mission description editor
+  - Fork options: current branch, main, stash, or any branch
+  - Shows what the agent will be based on
+- `ClaudeBg <task>` - Quick creation (backwards compatible)
+- `ClaudeSwitch [agent]` - Switch to agent's worktree to chat (no inline diffs)
+- `ClaudeDiffAgent [agent]` - Review agent changes with diffview
+- `ClaudeAgents` - List all agents with progress
+- Agents update progress: `echo 'status' > progress.txt`
+
+### Agent Creation Options
+- **Fork from current branch**: Default, uses your current branch state
+- **Fork from default branch**: Start fresh from your default branch (auto-detects main/master)
+- **Stash current changes**: Creates stash of current work, then applies to agent
+- **Fork from other branch**: Choose any branch to base agent on
+
+### Smart Branch Detection
+The plugin automatically detects your repository's default branch (main, master, etc.) instead of assuming "main", making it compatible with older repositories that use "master".
+
+### Design Philosophy
+Background agents are kept simple - they're always background agents with hooks disabled. This avoids complexity around state transitions and keeps the workflow predictable. Use regular `:ClaudeChat` in your main workspace for inline diff functionality.

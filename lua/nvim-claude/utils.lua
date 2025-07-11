@@ -57,7 +57,7 @@ end
 -- Check if file exists
 function M.file_exists(path)
   local stat = vim.loop.fs_stat(path)
-  return stat and stat.type == 'file'
+  return stat ~= nil
 end
 
 -- Generate timestamp string

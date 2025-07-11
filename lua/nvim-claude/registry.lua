@@ -20,16 +20,22 @@ end
 
 -- Load registry from disk
 function M.load()
+  vim.notify('registry.load() called', vim.log.levels.DEBUG)
   local content = utils.read_file(M.registry_path)
   if content then
+    vim.notify(string.format('registry.load: Read %d bytes from %s', #content, M.registry_path), vim.log.levels.DEBUG)
     local ok, data = pcall(vim.json.decode, content)
     if ok and type(data) == 'table' then
+      local agent_count = vim.tbl_count(data)
+      vim.notify(string.format('registry.load: Decoded %d agents from JSON', agent_count), vim.log.levels.DEBUG)
       M.agents = data
       M.validate_agents()
     else
+      vim.notify('registry.load: Failed to decode JSON, clearing agents', vim.log.levels.WARN)
       M.agents = {}
     end
   else
+    vim.notify('registry.load: No content read from file, clearing agents', vim.log.levels.WARN)
     M.agents = {}
   end
 end
@@ -47,14 +53,27 @@ function M.validate_agents()
   local valid_agents = {}
   local now = os.time()
   
+  
   for id, agent in pairs(M.agents) do
     -- Check if agent directory still exists
-    if utils.file_exists(agent.work_dir .. '/mission.log') then
+    local mission_log_path = agent.work_dir .. '/mission.log'
+    local mission_exists = utils.file_exists(mission_log_path)
+    
+    
+    if mission_exists then
       -- Check if tmux window still exists
       local window_exists = M.check_window_exists(agent.window_id)
       
       if window_exists then
         agent.status = 'active'
+        
+        -- Update progress from file for active agents
+        local progress_file = agent.work_dir .. '/progress.txt'
+        local progress_content = utils.read_file(progress_file)
+        if progress_content and progress_content ~= '' then
+          agent.progress = progress_content:gsub('\n$', '')  -- Remove trailing newline
+        end
+        
         valid_agents[id] = agent
       else
         -- Window closed, mark as completed
@@ -79,7 +98,7 @@ function M.check_window_exists(window_id)
 end
 
 -- Register a new agent
-function M.register(task, work_dir, window_id, window_name)
+function M.register(task, work_dir, window_id, window_name, fork_info)
   local id = utils.timestamp() .. '-' .. math.random(1000, 9999)
   local agent = {
     id = id,
@@ -90,6 +109,9 @@ function M.register(task, work_dir, window_id, window_name)
     start_time = os.time(),
     status = 'active',
     project_root = utils.get_project_root(),
+    progress = 'Starting...',  -- Add progress field
+    last_update = os.time(),
+    fork_info = fork_info,  -- Store branch/stash info
   }
   
   M.agents[id] = agent
@@ -105,12 +127,19 @@ end
 
 -- Get all agents for current project
 function M.get_project_agents()
+  -- Ensure registry is loaded
+  if not M.agents or vim.tbl_isempty(M.agents) then
+    M.load()
+  end
+  
   local project_root = utils.get_project_root()
   local project_agents = {}
   
   for id, agent in pairs(M.agents) do
     if agent.project_root == project_root then
-      project_agents[id] = agent
+      -- Include the registry ID with the agent
+      agent._registry_id = id
+      table.insert(project_agents, agent)
     end
   end
   
@@ -135,6 +164,16 @@ function M.update_status(id, status)
     if status == 'completed' or status == 'failed' then
       M.agents[id].end_time = os.time()
     end
+    M.agents[id].last_update = os.time()
+    M.save()
+  end
+end
+
+-- Update agent progress
+function M.update_progress(id, progress)
+  if M.agents[id] then
+    M.agents[id].progress = progress
+    M.agents[id].last_update = os.time()
     M.save()
   end
 end
@@ -187,12 +226,22 @@ function M.format_agent(agent)
     age_str = string.format('%dd', math.floor(age / 86400))
   end
   
+  local progress_str = ''
+  if agent.progress and agent.status == 'active' then
+    progress_str = string.format(' | %s', agent.progress)
+  end
+  
+  -- Clean up task to single line
+  local task_line = agent.task:match('[^\n]*') or agent.task
+  local task_preview = task_line:sub(1, 50) .. (task_line:len() > 50 and '...' or '')
+  
   return string.format(
-    '[%s] %s (%s) - %s',
+    '[%s] %s (%s) - %s%s',
     agent.status:upper(),
-    agent.task,
+    task_preview,
     age_str,
-    agent.window_name or 'unknown'
+    agent.window_name or 'unknown',
+    progress_str
   )
 end
 
