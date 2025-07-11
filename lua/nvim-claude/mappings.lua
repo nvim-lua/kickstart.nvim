@@ -60,6 +60,16 @@ function M.setup(config, commands)
         k = { 'Kill Agent' },
         x = { 'Clean Old Agents' },
         i = { 'List files with diffs' },
+      },
+      ['<leader>i'] = {
+        name = 'Inline Diffs',
+        a = { 'Accept current hunk' },
+        r = { 'Reject current hunk' },
+        A = { 'Accept all hunks in file' },
+        R = { 'Reject all hunks in file' },
+        AA = { 'Accept ALL diffs in ALL files' },
+        q = { 'Close inline diff' },
+        l = { 'List files with diffs' },
       }
     })
   end
@@ -87,6 +97,15 @@ function M.setup(config, commands)
     inline_diff.list_diff_files()
   end, {
     desc = 'List files with Claude diffs',
+    silent = true
+  })
+  
+  -- Global keymap to accept all diffs across all files
+  vim.keymap.set('n', '<leader>iAA', function()
+    local inline_diff = require('nvim-claude.inline-diff')
+    inline_diff.accept_all_files()
+  end, {
+    desc = 'Accept ALL Claude diffs in ALL files',
     silent = true
   })
 end

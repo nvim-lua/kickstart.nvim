@@ -1,6 +1,7 @@
 # kickstart.nvim
 
 > Enhanced with nvim-claude integration for AI-powered development
+> TEST EDIT #3: Multi-file testing
 
 ## Introduction
 

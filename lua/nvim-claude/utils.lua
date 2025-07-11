@@ -1,4 +1,5 @@
 -- Utility functions for nvim-claude
+-- TEST EDIT #2: Testing multi-file accept
 local M = {}
 
 -- Check if we're in a git repository

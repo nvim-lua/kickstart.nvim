@@ -24,17 +24,23 @@ function M.save_state(diff_data)
   -- }
   
   local hooks = require('nvim-claude.hooks')
+  local inline_diff = require('nvim-claude.inline-diff')
   
   local state = {
     version = 1,
     timestamp = os.time(),
     stash_ref = diff_data.stash_ref,
     claude_edited_files = hooks.claude_edited_files or {},
+    diff_files = {},  -- Add diff_files to persistence
     files = {}
   }
   
+  -- Save all diff files (both opened and unopened)
+  for file_path, bufnr in pairs(inline_diff.diff_files) do
+    state.diff_files[file_path] = bufnr
+  end
+  
   -- Collect state from all buffers with active diffs
-  local inline_diff = require('nvim-claude.inline-diff')
   for file_path, bufnr in pairs(inline_diff.diff_files) do
     if inline_diff.active_diffs[bufnr] then
       local diff = inline_diff.active_diffs[bufnr]
@@ -151,10 +157,45 @@ function M.restore_diffs()
   -- Store the stash reference for future operations
   M.current_stash_ref = state.stash_ref
   
+  if M.current_stash_ref then
+    vim.notify('Restored stash reference: ' .. M.current_stash_ref, vim.log.levels.DEBUG)
+  end
+  
   -- Restore Claude edited files tracking
   if state.claude_edited_files then
     local hooks = require('nvim-claude.hooks')
     hooks.claude_edited_files = state.claude_edited_files
+    vim.notify(string.format('Restored %d Claude edited files', vim.tbl_count(state.claude_edited_files)), vim.log.levels.DEBUG)
+  end
+  
+  -- Restore diff_files for unopened files
+  if state.diff_files then
+    for file_path, bufnr in pairs(state.diff_files) do
+      -- Only restore if not already restored as an active diff
+      if not inline_diff.diff_files[file_path] then
+        -- Use -1 to indicate unopened file
+        inline_diff.diff_files[file_path] = bufnr == -1 and -1 or -1
+      end
+    end
+    vim.notify(string.format('Restored %d diff files', vim.tbl_count(state.diff_files)), vim.log.levels.DEBUG)
+  end
+  
+  -- Also populate diff_files from claude_edited_files if needed
+  -- This ensures <leader>ci works even if diff_files wasn't properly saved
+  if state.claude_edited_files then
+    local utils = require('nvim-claude.utils')
+    local git_root = utils.get_project_root()
+    
+    if git_root then
+      for relative_path, _ in pairs(state.claude_edited_files) do
+        local full_path = git_root .. '/' .. relative_path
+        -- Only add if not already in diff_files
+        if not inline_diff.diff_files[full_path] then
+          inline_diff.diff_files[full_path] = -1  -- Mark as unopened
+          vim.notify('Added ' .. relative_path .. ' to diff_files from claude_edited_files', vim.log.levels.DEBUG)
+        end
+      end
+    end
   end
   
   return true

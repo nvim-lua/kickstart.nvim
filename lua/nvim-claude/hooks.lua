@@ -27,6 +27,9 @@ function M.update_stable_baseline()
     -- Update our stable baseline reference
     M.stable_baseline_ref = stash_hash
     persistence.current_stash_ref = stash_hash
+    
+    -- Save the updated state
+    persistence.save_state({ stash_ref = stash_hash })
   end
 end
 
@@ -138,13 +141,9 @@ function M.post_tool_use_hook()
       end
     end
 
-    -- If no inline diff was shown, fall back to regular diff review
+    -- If no inline diff was shown, just notify the user
     if not opened_inline then
-      -- Trigger diff review with stash reference
-      local ok, diff_review = pcall(require, 'nvim-claude.diff-review')
-      if ok then
-        diff_review.handle_claude_edit(stash_ref, nil)
-      end
+      vim.notify('Claude made changes. Open the modified files to see inline diffs.', vim.log.levels.INFO)
     end
   end
 end
@@ -288,6 +287,7 @@ function M.setup_persistence()
   -- Also restore the baseline reference from persistence if it exists
   if persistence.current_stash_ref then
     M.stable_baseline_ref = persistence.current_stash_ref
+    vim.notify('Restored baseline: ' .. M.stable_baseline_ref, vim.log.levels.DEBUG)
   end
   
   -- Don't create a startup baseline - only create baselines when Claude makes edits
@@ -543,6 +543,13 @@ function M.setup_commands()
     desc = 'Reset Claude baseline for cumulative diffs',
   })
   
+  vim.api.nvim_create_user_command('ClaudeAcceptAll', function()
+    local inline_diff = require 'nvim-claude.inline-diff'
+    inline_diff.accept_all_files()
+  end, {
+    desc = 'Accept all Claude diffs across all files',
+  })
+  
   vim.api.nvim_create_user_command('ClaudeTrackModified', function()
     -- Manually track all modified files as Claude-edited
     local utils = require 'nvim-claude.utils'
@@ -587,6 +594,115 @@ function M.setup_commands()
     end
   end, {
     desc = 'Track all modified files as Claude-edited (for debugging)',
+  })
+  
+  vim.api.nvim_create_user_command('ClaudeDebugTracking', function()
+    -- Debug command to show current tracking state
+    local inline_diff = require 'nvim-claude.inline-diff'
+    local persistence = require 'nvim-claude.inline-diff-persistence'
+    local utils = require 'nvim-claude.utils'
+    
+    vim.notify('=== Claude Tracking Debug ===', vim.log.levels.INFO)
+    vim.notify('Stable baseline: ' .. (M.stable_baseline_ref or 'none'), vim.log.levels.INFO)
+    vim.notify('Persistence stash ref: ' .. (persistence.current_stash_ref or 'none'), vim.log.levels.INFO)
+    vim.notify('Claude edited files: ' .. vim.inspect(M.claude_edited_files), vim.log.levels.INFO)
+    vim.notify('Diff files: ' .. vim.inspect(vim.tbl_keys(inline_diff.diff_files)), vim.log.levels.INFO)
+    vim.notify('Active diffs: ' .. vim.inspect(vim.tbl_keys(inline_diff.active_diffs)), vim.log.levels.INFO)
+    
+    -- Check current file
+    local current_file = vim.api.nvim_buf_get_name(0)
+    local git_root = utils.get_project_root()
+    if git_root then
+      local relative_path = current_file:gsub('^' .. vim.pesc(git_root) .. '/', '')
+      vim.notify('Current file relative path: ' .. relative_path, vim.log.levels.INFO)
+      vim.notify('Is tracked: ' .. tostring(M.claude_edited_files[relative_path] ~= nil), vim.log.levels.INFO)
+    end
+  end, {
+    desc = 'Debug Claude tracking state',
+  })
+  
+  vim.api.nvim_create_user_command('ClaudeRestoreState', function()
+    -- Manually restore the state
+    local persistence = require 'nvim-claude.inline-diff-persistence'
+    local restored = persistence.restore_diffs()
+    
+    if persistence.current_stash_ref then
+      M.stable_baseline_ref = persistence.current_stash_ref
+    end
+    
+    vim.notify('Manually restored state', vim.log.levels.INFO)
+  end, {
+    desc = 'Manually restore Claude diff state',
+  })
+  
+  vim.api.nvim_create_user_command('ClaudeCleanStaleTracking', function()
+    local utils = require 'nvim-claude.utils'
+    local persistence = require 'nvim-claude.inline-diff-persistence'
+    local git_root = utils.get_project_root()
+    
+    if not git_root or not M.stable_baseline_ref then
+      vim.notify('No git root or baseline found', vim.log.levels.ERROR)
+      return
+    end
+    
+    local cleaned_count = 0
+    local files_to_remove = {}
+    
+    -- Check each tracked file for actual differences
+    for file_path, _ in pairs(M.claude_edited_files) do
+      local diff_cmd = string.format('cd "%s" && git diff %s -- "%s" 2>/dev/null', git_root, M.stable_baseline_ref, file_path)
+      local diff_output = utils.exec(diff_cmd)
+      
+      if not diff_output or diff_output == '' then
+        -- No differences, remove from tracking
+        table.insert(files_to_remove, file_path)
+        cleaned_count = cleaned_count + 1
+      end
+    end
+    
+    -- Remove files with no differences
+    for _, file_path in ipairs(files_to_remove) do
+      M.claude_edited_files[file_path] = nil
+    end
+    
+    -- Save updated state if we have a persistence stash ref
+    if persistence.current_stash_ref then
+      persistence.save_state({ stash_ref = persistence.current_stash_ref })
+    end
+    
+    vim.notify(string.format('Cleaned %d stale tracked files', cleaned_count), vim.log.levels.INFO)
+  end, {
+    desc = 'Clean up stale Claude file tracking',
+  })
+
+  vim.api.nvim_create_user_command('ClaudeUntrackFile', function()
+    -- Remove current file from Claude tracking
+    local utils = require 'nvim-claude.utils'
+    local git_root = utils.get_project_root()
+    
+    if not git_root then
+      vim.notify('Not in a git repository', vim.log.levels.ERROR)
+      return
+    end
+    
+    local file_path = vim.api.nvim_buf_get_name(0)
+    local relative_path = file_path:gsub(git_root .. '/', '')
+    
+    if M.claude_edited_files[relative_path] then
+      M.claude_edited_files[relative_path] = nil
+      vim.notify('Removed ' .. relative_path .. ' from Claude tracking', vim.log.levels.INFO)
+      
+      -- Also close any active inline diff for this buffer
+      local inline_diff = require 'nvim-claude.inline-diff'
+      local bufnr = vim.api.nvim_get_current_buf()
+      if inline_diff.has_active_diff(bufnr) then
+        inline_diff.close_inline_diff(bufnr)
+      end
+    else
+      vim.notify(relative_path .. ' is not in Claude tracking', vim.log.levels.INFO)
+    end
+  end, {
+    desc = 'Remove current file from Claude edited files tracking',
   })
 end
 
