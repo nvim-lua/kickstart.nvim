@@ -121,6 +121,7 @@ function M.setup(user_config)
   M.registry = require('nvim-claude.registry')
   M.hooks = require('nvim-claude.hooks')
   M.diff_review = require('nvim-claude.diff-review')
+  M.settings_updater = require('nvim-claude.settings-updater')
   
   -- Initialize submodules with config
   M.tmux.setup(M.config.tmux)
@@ -128,6 +129,7 @@ function M.setup(user_config)
   M.registry.setup(M.config.agents)
   M.hooks.setup()
   M.diff_review.setup()
+  M.settings_updater.setup()
   
   -- Set up commands
   M.commands.setup(M)
@@ -137,7 +139,6 @@ function M.setup(user_config)
   vim.defer_fn(function()
     if M.utils.get_project_root() then
       M.hooks.install_hooks()
-      vim.notify('Claude Code hooks auto-installed', vim.log.levels.INFO)
     end
   end, 100)
   

@@ -3,6 +3,7 @@ local M = {}
 
 -- Track hook state
 M.pre_edit_commit = nil
+M.stable_baseline_ref = nil  -- The stable baseline to compare all changes against
 
 function M.setup()
   -- Setup persistence layer on startup
@@ -11,11 +12,22 @@ function M.setup()
   end, 500)
 end
 
--- Pre-tool-use hook: Now just validates existing baseline
+-- Pre-tool-use hook: Create baseline stash if we don't have one
 function M.pre_tool_use_hook()
-  -- Pre-hook no longer creates baselines
-  -- Baselines are created on startup or through accept/reject
-  return
+  local persistence = require 'nvim-claude.inline-diff-persistence'
+  
+  -- Only create a baseline if we don't have one yet
+  if not M.stable_baseline_ref then
+    -- Create baseline stash synchronously
+    local stash_ref = persistence.create_stash('nvim-claude: baseline ' .. os.date('%Y-%m-%d %H:%M:%S'))
+    if stash_ref then
+      M.stable_baseline_ref = stash_ref
+      persistence.current_stash_ref = stash_ref
+    end
+  end
+  
+  -- Return success to allow the tool to proceed
+  return true
 end
 
 -- Post-tool-use hook: Create stash of Claude's changes and trigger diff review
@@ -49,17 +61,28 @@ function M.post_tool_use_hook()
     end
   end
 
-  -- Get the stash reference from pre-hook
-  local stash_ref = persistence.current_stash_ref
-  if not stash_ref then
-    -- If no pre-hook stash, create one now
-    stash_ref = persistence.create_stash('nvim-claude: changes detected ' .. os.date('%Y-%m-%d %H:%M:%S'))
+  -- Use the stable baseline reference for comparison
+  local stash_ref = M.stable_baseline_ref or persistence.current_stash_ref
+  
+  -- Check for in-memory baselines first
+  local inline_diff = require 'nvim-claude.inline-diff'
+  local has_baselines = false
+  for _, content in pairs(inline_diff.original_content) do
+    if content then
+      has_baselines = true
+      break
+    end
+  end
+  
+  -- If no baseline exists at all, create one now (shouldn't happen normally)
+  if not stash_ref and not has_baselines then
+    stash_ref = persistence.create_stash('nvim-claude: baseline ' .. os.date('%Y-%m-%d %H:%M:%S'))
+    M.stable_baseline_ref = stash_ref
     persistence.current_stash_ref = stash_ref
   end
 
-  if stash_ref then
+  if stash_ref or has_baselines then
     -- Check if any modified files are currently open in buffers
-    local inline_diff = require 'nvim-claude.inline-diff'
     local opened_inline = false
 
     for _, file in ipairs(modified_files) do
@@ -70,15 +93,27 @@ function M.post_tool_use_hook()
         if vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_is_loaded(buf) then
           local buf_name = vim.api.nvim_buf_get_name(buf)
           if buf_name == full_path or buf_name:match('/' .. file:gsub('([^%w])', '%%%1') .. '$') then
-            -- Get the original content from stash
-            local stash_cmd = string.format('cd "%s" && git show %s:%s 2>/dev/null', git_root, stash_ref, file)
-            local original_content, orig_err = utils.exec(stash_cmd)
+            -- Get the original content - prefer in-memory baseline if available
+            local original_content = nil
+            
+            -- Check for in-memory baseline first
+            if inline_diff.original_content[buf] then
+              original_content = inline_diff.original_content[buf]
+            elseif stash_ref then
+              -- Fall back to stash baseline
+              local stash_cmd = string.format('cd "%s" && git show %s:%s 2>/dev/null', git_root, stash_ref, file)
+              original_content = utils.exec(stash_cmd)
+            end
 
-            if not orig_err and original_content then
+            if original_content then
               -- Get current content
               local current_lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
               local current_content = table.concat(current_lines, '\n')
 
+              -- Debug: Log content lengths
+              -- vim.notify(string.format('DEBUG: Baseline has %d chars, current has %d chars', 
+              --   #(original_content or ''), #current_content), vim.log.levels.WARN)
+              
               -- Show inline diff
               inline_diff.show_inline_diff(buf, original_content, current_content)
               opened_inline = true
@@ -187,7 +222,16 @@ function M.create_startup_baseline()
   persistence.setup_autocmds()
   
   -- Try to restore any saved diffs
-  persistence.restore_diffs()
+  local restored = persistence.restore_diffs()
+  
+  -- If no diffs were restored and we don't have a baseline, create one now
+  if not restored and not M.stable_baseline_ref then
+    local stash_ref = persistence.create_stash('nvim-claude: startup baseline ' .. os.date('%Y-%m-%d %H:%M:%S'))
+    if stash_ref then
+      M.stable_baseline_ref = stash_ref
+      persistence.current_stash_ref = stash_ref
+    end
+  end
 end
 
 -- Manual hook testing
@@ -337,6 +381,12 @@ function M.setup_commands()
   end, {
     desc = 'Test Claude keymap functionality',
   })
+  
+  vim.api.nvim_create_user_command('ClaudeDebugInlineDiff', function()
+    require('nvim-claude.inline-diff-debug').debug_inline_diff()
+  end, {
+    desc = 'Debug Claude inline diff state',
+  })
 
   vim.api.nvim_create_user_command('ClaudeUpdateBaseline', function()
     local bufnr = vim.api.nvim_get_current_buf()
@@ -411,6 +461,26 @@ function M.setup_commands()
     M.uninstall_hooks()
   end, {
     desc = 'Uninstall Claude Code hooks for this project',
+  })
+
+  vim.api.nvim_create_user_command('ClaudeResetBaseline', function()
+    -- Clear all baselines and force new baseline on next edit
+    local inline_diff = require 'nvim-claude.inline-diff'
+    local persistence = require 'nvim-claude.inline-diff-persistence'
+    
+    -- Clear in-memory baselines
+    inline_diff.original_content = {}
+    
+    -- Clear stable baseline reference
+    M.stable_baseline_ref = nil
+    persistence.current_stash_ref = nil
+    
+    -- Clear persistence state
+    persistence.clear_state()
+    
+    vim.notify('Baseline reset. Next edit will create a new baseline.', vim.log.levels.INFO)
+  end, {
+    desc = 'Reset Claude baseline for cumulative diffs',
   })
 end
 

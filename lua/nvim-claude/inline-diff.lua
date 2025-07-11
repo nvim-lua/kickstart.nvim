@@ -40,6 +40,9 @@ function M.show_inline_diff(bufnr, old_content, new_content)
     applied_hunks = {}
   }
   
+  -- Debug: Log target content length
+  -- vim.notify(string.format('DEBUG: Stored target content with %d chars', #new_content), vim.log.levels.WARN)
+  
   -- Apply visual indicators
   M.apply_diff_visualization(bufnr)
   
@@ -49,7 +52,7 @@ function M.show_inline_diff(bufnr, old_content, new_content)
   -- Jump to first hunk
   M.jump_to_hunk(bufnr, 1)
   
-  vim.notify('Inline diff active. Use [h/]h to navigate, <leader>ia/<leader>ir to accept/reject hunks', vim.log.levels.INFO)
+  -- Silent activation - no notification
 end
 
 -- Compute diff between two texts
@@ -63,8 +66,11 @@ function M.compute_diff(old_text, new_text)
   utils.write_file(old_file, old_text)
   utils.write_file(new_file, new_text)
   
-  -- Generate unified diff with minimal context to avoid grouping nearby changes
-  local cmd = string.format('diff -U1 "%s" "%s" || true', old_file, new_file)
+  -- Use git diff with histogram algorithm for better code diffs
+  local cmd = string.format(
+    'git diff --no-index --no-prefix --unified=1 --diff-algorithm=histogram "%s" "%s" 2>/dev/null || true',
+    old_file, new_file
+  )
   local diff_output = utils.exec(cmd)
   
   -- Parse diff into hunks
@@ -101,6 +107,9 @@ function M.parse_diff(diff_text)
     elseif in_hunk and (line:match('^[%+%-]') or line:match('^%s')) then
       -- Diff line
       table.insert(current_hunk.lines, line)
+    elseif line:match('^diff %-%-git') or line:match('^index ') or line:match('^%+%+%+ ') or line:match('^%-%-%-') then
+      -- Skip git diff headers
+      in_hunk = false
     end
   end
   
@@ -349,46 +358,51 @@ function M.accept_current_hunk(bufnr)
   local hunk = diff_data.hunks[diff_data.current_hunk]
   if not hunk then return end
   
-  -- Mark as applied (the changes are already in the buffer)
-  diff_data.applied_hunks[diff_data.current_hunk] = true
+  -- Mark this hunk as processed
+  vim.notify(string.format('Accepted hunk %d/%d', diff_data.current_hunk, #diff_data.hunks), vim.log.levels.INFO)
   
-  -- Update in-memory baseline to current state
-  local current_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-  local current_content = table.concat(current_lines, '\n')
-  M.original_content[bufnr] = current_content
+  -- For single hunk case
+  if #diff_data.hunks == 1 then
+    vim.notify('All changes accepted. Closing inline diff.', vim.log.levels.INFO)
+    M.close_inline_diff(bufnr, true)  -- Keep new baseline
+    return
+  end
   
-  -- Remove this hunk from the diff data since it's accepted
+  -- Multiple hunks: remove the accepted hunk and continue
   table.remove(diff_data.hunks, diff_data.current_hunk)
   
   -- Adjust current hunk index
   if diff_data.current_hunk > #diff_data.hunks then
-    diff_data.current_hunk = math.max(1, #diff_data.hunks)
+    diff_data.current_hunk = #diff_data.hunks
   end
   
-  vim.notify(string.format('Accepted hunk - %d hunks remaining', #diff_data.hunks), vim.log.levels.INFO)
-  
-  -- Save state for persistence
-  local persistence = require('nvim-claude.inline-diff-persistence')
-  persistence.save_state({ stash_ref = persistence.current_stash_ref })
-  
   if #diff_data.hunks == 0 then
-    -- No more hunks to review
-    vim.notify('All hunks processed! Closing inline diff.', vim.log.levels.INFO)
-    M.close_inline_diff(bufnr, true)  -- Keep baseline for future diffs
+    -- No more hunks
+    vim.notify('All changes accepted. Closing inline diff.', vim.log.levels.INFO)
+    M.close_inline_diff(bufnr, true)
   else
-    -- Refresh visualization and move to current hunk
+    -- Refresh visualization to show remaining hunks
     M.apply_diff_visualization(bufnr)
     M.jump_to_hunk(bufnr, diff_data.current_hunk)
+    vim.notify(string.format('%d hunks remaining', #diff_data.hunks), vim.log.levels.INFO)
   end
 end
 
 -- Reject current hunk
 function M.reject_current_hunk(bufnr)
   local diff_data = M.active_diffs[bufnr]
-  if not diff_data then return end
+  if not diff_data then 
+    vim.notify('No diff data for buffer', vim.log.levels.ERROR)
+    return 
+  end
   
   local hunk = diff_data.hunks[diff_data.current_hunk]
-  if not hunk then return end
+  if not hunk then 
+    vim.notify('No hunk at index ' .. tostring(diff_data.current_hunk), vim.log.levels.ERROR)
+    return 
+  end
+  
+  -- vim.notify(string.format('Rejecting hunk %d/%d', diff_data.current_hunk, #diff_data.hunks), vim.log.levels.INFO)
   
   -- Revert the hunk by applying original content
   M.revert_hunk_changes(bufnr, hunk)
@@ -400,33 +414,29 @@ function M.reject_current_hunk(bufnr)
     end
   end)
   
-  -- Update in-memory baseline to current state (with rejected changes)
+  -- Get current content after rejection
   local current_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
   local current_content = table.concat(current_lines, '\n')
-  M.original_content[bufnr] = current_content
   
-  -- Remove this hunk from the diff data since it's rejected
-  table.remove(diff_data.hunks, diff_data.current_hunk)
+  -- Recalculate diff between current state (with rejected hunk) and original baseline
+  local new_diff_data = M.compute_diff(M.original_content[bufnr], current_content)
   
-  -- Adjust current hunk index
-  if diff_data.current_hunk > #diff_data.hunks then
-    diff_data.current_hunk = math.max(1, #diff_data.hunks)
-  end
-  
-  vim.notify(string.format('Rejected hunk - %d hunks remaining', #diff_data.hunks), vim.log.levels.INFO)
-  
-  -- Save state for persistence
-  local persistence = require('nvim-claude.inline-diff-persistence')
-  persistence.save_state({ stash_ref = persistence.current_stash_ref })
-  
-  if #diff_data.hunks == 0 then
-    -- No more hunks to review
-    vim.notify('All hunks processed! Closing inline diff.', vim.log.levels.INFO)
-    M.close_inline_diff(bufnr, true)  -- Keep baseline after rejection too
+  if not new_diff_data or #new_diff_data.hunks == 0 then
+    -- No more changes from baseline - close the diff
+    vim.notify('All changes processed. Closing inline diff.', vim.log.levels.INFO)
+    M.close_inline_diff(bufnr, false)
   else
-    -- Refresh visualization and move to current hunk
+    -- Update diff data with remaining hunks
+    diff_data.hunks = new_diff_data.hunks
+    diff_data.current_hunk = 1
+    
+    -- The new_content should remain as Claude's original suggestion
+    -- so we can continue to accept remaining hunks if desired
+    
+    -- Refresh visualization and jump to first remaining hunk
     M.apply_diff_visualization(bufnr)
-    M.jump_to_hunk(bufnr, diff_data.current_hunk)
+    M.jump_to_hunk(bufnr, 1)
+    vim.notify(string.format('%d hunks remaining', #diff_data.hunks), vim.log.levels.INFO)
   end
 end
 
@@ -434,43 +444,117 @@ end
 function M.revert_hunk_changes(bufnr, hunk)
   -- Get current buffer lines
   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-  local original_content = M.original_content[bufnr]
   
-  if not original_content then
-    vim.notify('No original content available for rejection', vim.log.levels.ERROR)
-    return
+  -- Extract the expected content from the hunk
+  local expected_lines = {}
+  local original_lines = {}
+  
+  for _, diff_line in ipairs(hunk.lines) do
+    if diff_line:match('^%+') then
+      -- Lines that were added (these should be in current buffer)
+      table.insert(expected_lines, diff_line:sub(2))
+    elseif diff_line:match('^%-') then
+      -- Lines that were removed (these should be restored)
+      table.insert(original_lines, diff_line:sub(2))
+    elseif diff_line:match('^%s') then
+      -- Context lines (should be in both)
+      table.insert(expected_lines, diff_line:sub(2))
+      table.insert(original_lines, diff_line:sub(2))
+    end
   end
   
-  -- Split original content into lines
-  local original_lines = vim.split(original_content, '\n')
+  -- Find where this hunk actually is in the current buffer
+  -- We'll look for the best match by checking context lines too
+  local hunk_start = nil
+  local hunk_end = nil
+  local best_score = -1
+  local best_start = nil
   
-  -- Build new lines by reverting this hunk
-  local new_lines = {}
-  local buffer_line = 1
-  local applied = false
+  -- Include some context before and after for better matching
+  local context_before = {}
+  local context_after = {}
   
-  while buffer_line <= #lines do
-    if buffer_line >= hunk.new_start and buffer_line < hunk.new_start + hunk.new_count and not applied then
-      -- Revert this section by using original lines
-      local orig_start = hunk.old_start
-      local orig_end = hunk.old_start + hunk.old_count - 1
-      
-      for orig_line = orig_start, orig_end do
-        if orig_line <= #original_lines then
-          table.insert(new_lines, original_lines[orig_line])
+  -- Extract context from the diff
+  local in_changes = false
+  for i, diff_line in ipairs(hunk.lines) do
+    if diff_line:match('^[%+%-]') then
+      in_changes = true
+    elseif diff_line:match('^%s') and not in_changes then
+      -- Context before changes
+      table.insert(context_before, diff_line:sub(2))
+    elseif diff_line:match('^%s') and in_changes then
+      -- Context after changes
+      table.insert(context_after, diff_line:sub(2))
+    end
+  end
+  
+  -- Search for the hunk by matching content with context
+  for i = 1, #lines - #expected_lines + 1 do
+    local score = 0
+    local matches = true
+    
+    -- Check the main content
+    for j = 1, #expected_lines do
+      if lines[i + j - 1] == expected_lines[j] then
+        score = score + 1
+      else
+        matches = false
+      end
+    end
+    
+    if matches then
+      -- Bonus points for matching context before
+      local before_start = i - #context_before
+      if before_start > 0 then
+        for j = 1, #context_before do
+          if lines[before_start + j - 1] == context_before[j] then
+            score = score + 2  -- Context is worth more
+          end
         end
       end
       
-      -- Skip the modified lines in current buffer
-      buffer_line = hunk.new_start + hunk.new_count
-      applied = true
-    else
-      -- Copy unchanged line
-      if buffer_line <= #lines then
-        table.insert(new_lines, lines[buffer_line])
+      -- Bonus points for matching context after
+      local after_start = i + #expected_lines
+      if after_start + #context_after - 1 <= #lines then
+        for j = 1, #context_after do
+          if lines[after_start + j - 1] == context_after[j] then
+            score = score + 2  -- Context is worth more
+          end
+        end
       end
-      buffer_line = buffer_line + 1
+      
+      -- Keep the best match
+      if score > best_score then
+        best_score = score
+        best_start = i
+      end
     end
+  end
+  
+  if best_start then
+    hunk_start = best_start
+    hunk_end = best_start + #expected_lines - 1
+  else
+    vim.notify('Could not find hunk in current buffer - content may have changed', vim.log.levels.ERROR)
+    return
+  end
+  
+  -- Build new buffer content
+  local new_lines = {}
+  
+  -- Copy lines before the hunk
+  for i = 1, hunk_start - 1 do
+    table.insert(new_lines, lines[i])
+  end
+  
+  -- Insert the original lines
+  for _, line in ipairs(original_lines) do
+    table.insert(new_lines, line)
+  end
+  
+  -- Copy lines after the hunk
+  for i = hunk_end + 1, #lines do
+    table.insert(new_lines, lines[i])
   end
   
   -- Update buffer
@@ -581,11 +665,15 @@ function M.close_inline_diff(bufnr, keep_baseline)
     end
   end
   
-  -- If no more active diffs, clear persistence state
+  -- If no more active diffs, clear persistence state and reset baseline
   if not has_active_diffs then
     local persistence = require('nvim-claude.inline-diff-persistence')
     persistence.clear_state()
     persistence.current_stash_ref = nil
+    
+    -- Reset the stable baseline in hooks
+    local hooks = require('nvim-claude.hooks')
+    hooks.stable_baseline_ref = nil
   end
   
   vim.notify('Inline diff closed', vim.log.levels.INFO)

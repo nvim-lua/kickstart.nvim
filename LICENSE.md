@@ -1,19 +1,22 @@
-MIT License - SEPARATED HUNK #1
+DEBUG LOGGING: Check /tmp/claude-python-hook.log for debug output!
+MIT License - ACCEPT TEST 1: Try accepting this first hunk
 
 MULTI-EDIT TEST #1: Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-HUNK TEST #2: copies of the Software, and to permit persons to whom the Software is
+ACCEPT TEST 2: This should remain after accepting the first
 furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
-
+hi
 MULTI-EDIT TEST #2: THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-SEPARATED HUNK #2: IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-HUNK TEST #3: AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ACCEPT TEST 3: Third hunk should still be visible
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. [EDIT 2: Middle change] IN NO EVENT SHALL THE
+TEST 3: IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. [EDIT 2: Middle change] IN NO EVENT SHALL THE
+TEST 2: Middle section edit - AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
@@ -94,10 +97,18 @@ MULTI-EDIT TEST #3: Testing multiple hunks and navigation!
 
 TEST EDIT #2: Checking consistency of diff display!
 
-SEPARATED HUNK #4: Final test with better hunk separation!
+EDIT #2: Middle section replacement - this should be the second hunk!
 
 MULTI-EDIT TEST #4: Testing hunk navigation with ]h and [h!
 
-## PERSISTENCE TEST
-This tests our new stash-based persistence system that doesn't create git commits!
+## INLINE DIFF SYSTEM V2
+Our enhanced inline diff now uses git's histogram algorithm and proper stash-based baselines!
 
+## TESTING HOOKS WITHOUT NOTIFICATIONS
+The hooks now run silently without vim.notify interruptions!
+
+EDIT #3: Bottom addition - this is the third hunk for testing!
+
+EDIT 3: Final test line at the very bottom of the file!
+
+ACCEPT TEST 4: Fourth and final hunk for testing!

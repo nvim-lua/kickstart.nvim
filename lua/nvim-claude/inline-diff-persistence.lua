@@ -142,7 +142,7 @@ function M.restore_diffs()
   end
   
   if restored_count > 0 then
-    vim.notify(string.format('Restored inline diffs for %d file(s)', restored_count), vim.log.levels.INFO)
+    -- Silent restore - no notification
   end
   
   -- Store the stash reference for future operations
@@ -180,39 +180,31 @@ function M.check_pending_restore(bufnr)
     -- Remove from pending
     M.pending_restores[file_path] = nil
     
-    vim.notify('Restored inline diff for ' .. vim.fn.fnamemodify(file_path, ':~:.'), vim.log.levels.INFO)
+    -- Silent restore - no notification
   end
 end
 
 -- Create a stash of current changes (instead of baseline commit)
 function M.create_stash(message)
+  local utils = require('nvim-claude.utils')
   message = message or 'nvim-claude: pre-edit state'
   
-  -- Check if there are changes to stash
-  local status = utils.exec('git status --porcelain')
-  if not status or status == '' then
-    -- No changes, but we still need to track current state
-    -- Create an empty stash by making a tiny change
-    local temp_file = '.nvim-claude-temp'
-    utils.write_file(temp_file, 'temp')
-    utils.exec('git add ' .. temp_file)
-    utils.exec(string.format('git stash push -m "%s" -- %s', message, temp_file))
-    os.remove(temp_file)
-  else
-    -- Stash all current changes
-    local cmd = string.format('git stash push -m "%s" --include-untracked', message)
-    local result, err = utils.exec(cmd)
-    if err and not err:match('Saved working directory') then
-      vim.notify('Failed to create stash: ' .. err, vim.log.levels.ERROR)
-      return nil
-    end
-  end
+  -- Create a stash object without removing changes from working directory
+  local stash_cmd = 'git stash create'
+  local stash_hash, err = utils.exec(stash_cmd)
   
-  -- Get the stash reference
-  local stash_list = utils.exec('git stash list -n 1')
-  if stash_list then
-    local stash_ref = stash_list:match('^(stash@{%d+})')
-    return stash_ref
+  if not err and stash_hash and stash_hash ~= '' then
+    -- Store the stash with a message
+    stash_hash = stash_hash:gsub('%s+', '') -- trim whitespace
+    local store_cmd = string.format('git stash store -m "%s" %s', message, stash_hash)
+    utils.exec(store_cmd)
+    
+    -- Get the stash reference
+    local stash_list = utils.exec('git stash list -n 1')
+    if stash_list then
+      local stash_ref = stash_list:match('^(stash@{%d+})')
+      return stash_ref
+    end
   end
   
   return nil
