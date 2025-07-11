@@ -1,0 +1,3 @@
+[submodule "lua/nvim-claude"]
+	path = lua/nvim-claude
+	url = https://github.com/zolinthecow/nvim-claude.git
