@@ -73,6 +73,9 @@ function M.compute_diff(old_text, new_text)
   )
   local diff_output = utils.exec(cmd)
   
+  -- Debug: save raw diff
+  utils.write_file('/tmp/nvim-claude-raw-diff.txt', diff_output)
+  
   -- Parse diff into hunks
   local hunks = M.parse_diff(diff_output)
   
@@ -258,12 +261,6 @@ function M.setup_inline_keymaps(bufnr)
   vim.keymap.set('n', '[h', function() M.prev_hunk(bufnr) end,
     vim.tbl_extend('force', opts, { desc = 'Previous Claude hunk' }))
   
-  -- Navigation between files
-  vim.keymap.set('n', ']f', function() M.next_diff_file() end,
-    vim.tbl_extend('force', opts, { desc = 'Next file with Claude diff' }))
-  vim.keymap.set('n', '[f', function() M.prev_diff_file() end,
-    vim.tbl_extend('force', opts, { desc = 'Previous file with Claude diff' }))
-  
   -- Accept/Reject
   vim.keymap.set('n', '<leader>ia', function() M.accept_current_hunk(bufnr) end,
     vim.tbl_extend('force', opts, { desc = 'Accept Claude hunk' }))
@@ -317,8 +314,11 @@ function M.jump_to_hunk(bufnr, hunk_idx)
     jump_line = hunk.new_start
   end
   
-  -- Move cursor to the actual changed line
-  vim.api.nvim_win_set_cursor(0, {jump_line, 0})
+  -- Move cursor to the actual changed line (only if we have a valid window)
+  local win = vim.api.nvim_get_current_win()
+  if vim.api.nvim_win_is_valid(win) and vim.api.nvim_win_get_buf(win) == bufnr then
+    vim.api.nvim_win_set_cursor(win, {jump_line, 0})
+  end
   
   -- Update status
   vim.notify(string.format('Hunk %d/%d', hunk_idx, #diff_data.hunks), vim.log.levels.INFO)
@@ -350,41 +350,218 @@ function M.prev_hunk(bufnr)
   M.jump_to_hunk(bufnr, prev_idx)
 end
 
+-- Generate a patch for a single hunk
+function M.generate_hunk_patch(hunk, file_path)
+  local patch_lines = {
+    string.format("--- a/%s", file_path),
+    string.format("+++ b/%s", file_path),
+    hunk.header
+  }
+  
+  -- Add the hunk lines
+  for _, line in ipairs(hunk.lines) do
+    table.insert(patch_lines, line)
+  end
+  
+  -- Ensure patch ends with newline
+  table.insert(patch_lines, "")
+  
+  return table.concat(patch_lines, '\n')
+end
+
+-- Apply a hunk to the baseline using git patches
+function M.apply_hunk_to_baseline(bufnr, hunk_idx, action)
+  local utils = require('nvim-claude.utils')
+  local hooks = require('nvim-claude.hooks')
+  local diff_data = M.active_diffs[bufnr]
+  local hunk = diff_data.hunks[hunk_idx]
+  
+  -- Get file paths
+  local git_root = utils.get_project_root()
+  local file_path = vim.api.nvim_buf_get_name(bufnr)
+  local relative_path = file_path:gsub(git_root .. '/', '')
+  
+  -- Get current baseline
+  local persistence = require('nvim-claude.inline-diff-persistence')
+  local stash_ref = hooks.stable_baseline_ref or persistence.current_stash_ref
+  
+  -- If still no baseline, try to get the most recent nvim-claude baseline from stash list
+  if not stash_ref then
+    local stash_list = utils.exec('git stash list | grep "nvim-claude: baseline" | head -1')
+    if stash_list and stash_list ~= '' then
+      stash_ref = stash_list:match('^(stash@{%d+})')
+      if stash_ref then
+        -- Update both references
+        hooks.stable_baseline_ref = stash_ref
+        persistence.current_stash_ref = stash_ref
+        vim.notify('Using baseline: ' .. stash_ref, vim.log.levels.INFO)
+      end
+    end
+  end
+  
+  if not stash_ref then
+    vim.notify('No baseline stash found', vim.log.levels.ERROR)
+    return false
+  end
+  
+  -- Create temp directory
+  local temp_dir = vim.fn.tempname()
+  vim.fn.mkdir(temp_dir, 'p')
+  
+  -- Extract just the file we need from the stash
+  local extract_cmd = string.format('cd "%s" && git show %s:%s > "%s/%s"', 
+    git_root, stash_ref, relative_path, temp_dir, relative_path)
+  
+  -- Create directory structure in temp
+  local file_dir = vim.fn.fnamemodify(temp_dir .. '/' .. relative_path, ':h')
+  vim.fn.mkdir(file_dir, 'p')
+  
+  local _, extract_err = utils.exec(extract_cmd)
+  if extract_err then
+    vim.notify('Failed to extract file from baseline: ' .. extract_err, vim.log.levels.ERROR)
+    vim.fn.delete(temp_dir, 'rf')
+    return false
+  end
+  
+  -- For accept: apply the hunk as-is
+  -- For reject: apply the hunk in reverse
+  local patch = M.generate_hunk_patch(hunk, relative_path)
+  local patch_file = temp_dir .. '/hunk.patch'
+  utils.write_file(patch_file, patch)
+  
+  -- Debug: save patch content for inspection
+  local debug_file = '/tmp/nvim-claude-debug-patch.txt'
+  utils.write_file(debug_file, patch)
+  vim.notify('Patch saved to: ' .. debug_file, vim.log.levels.INFO)
+  
+  -- Apply the patch
+  local apply_flags = action == 'reject' and '--reverse' or ''
+  local apply_cmd = string.format('cd "%s" && git apply --verbose %s "%s" 2>&1', 
+    temp_dir, apply_flags, patch_file)
+  
+  local result, apply_err = utils.exec(apply_cmd)
+  if apply_err or (result and result:match('error:')) then
+    vim.notify('Failed to apply patch: ' .. (apply_err or result), vim.log.levels.ERROR)
+    vim.fn.delete(temp_dir, 'rf')
+    return false
+  end
+  
+  -- Now we need to create a new stash with this modified file
+  -- First, checkout the baseline into a temp git repo
+  local work_dir = vim.fn.tempname()
+  vim.fn.mkdir(work_dir, 'p')
+  
+  -- Create a work tree from the stash
+  local worktree_cmd = string.format('cd "%s" && git worktree add --detach "%s" %s 2>&1', 
+    git_root, work_dir, stash_ref)
+  local _, worktree_err = utils.exec(worktree_cmd)
+  
+  if worktree_err then
+    vim.notify('Failed to create worktree: ' .. worktree_err, vim.log.levels.ERROR)
+    vim.fn.delete(temp_dir, 'rf')
+    vim.fn.delete(work_dir, 'rf')
+    return false
+  end
+  
+  -- Copy the patched file to the worktree
+  local copy_cmd = string.format('cp "%s/%s" "%s/%s"', temp_dir, relative_path, work_dir, relative_path)
+  utils.exec(copy_cmd)
+  
+  -- Stage and create a new stash
+  local stage_cmd = string.format('cd "%s" && git add "%s"', work_dir, relative_path)
+  utils.exec(stage_cmd)
+  
+  -- Create a new stash
+  local stash_cmd = string.format('cd "%s" && git stash create', work_dir)
+  local new_stash, stash_err = utils.exec(stash_cmd)
+  
+  if stash_err or not new_stash or new_stash == '' then
+    vim.notify('Failed to create new stash', vim.log.levels.ERROR)
+  else
+    new_stash = new_stash:gsub('%s+', '')
+    
+    -- Store the new stash
+    local store_cmd = string.format('cd "%s" && git stash store -m "nvim-claude-baseline-hunk-%s" %s', 
+      git_root, action, new_stash)
+    utils.exec(store_cmd)
+    
+    -- Update the baseline reference
+    hooks.stable_baseline_ref = new_stash
+    persistence.current_stash_ref = new_stash
+    vim.notify('Updated baseline to: ' .. new_stash, vim.log.levels.INFO)
+  end
+  
+  -- Clean up worktree
+  local cleanup_cmd = string.format('cd "%s" && git worktree remove --force "%s"', git_root, work_dir)
+  utils.exec(cleanup_cmd)
+  
+  -- Clean up temp files
+  vim.fn.delete(temp_dir, 'rf')
+  vim.fn.delete(work_dir, 'rf')
+  
+  return true
+end
+
 -- Accept current hunk
 function M.accept_current_hunk(bufnr)
   local diff_data = M.active_diffs[bufnr]
   if not diff_data then return end
   
-  local hunk = diff_data.hunks[diff_data.current_hunk]
+  local hunk_idx = diff_data.current_hunk
+  local hunk = diff_data.hunks[hunk_idx]
   if not hunk then return end
   
-  -- Mark this hunk as processed
-  vim.notify(string.format('Accepted hunk %d/%d', diff_data.current_hunk, #diff_data.hunks), vim.log.levels.INFO)
+  vim.notify(string.format('Accepting hunk %d/%d', hunk_idx, #diff_data.hunks), vim.log.levels.INFO)
   
-  -- For single hunk case
-  if #diff_data.hunks == 1 then
-    vim.notify('All changes accepted. Closing inline diff.', vim.log.levels.INFO)
-    M.close_inline_diff(bufnr, true)  -- Keep new baseline
+  -- Debug: Show current baseline
+  local hooks = require('nvim-claude.hooks')
+  local persistence = require('nvim-claude.inline-diff-persistence')
+  vim.notify('Current baseline: ' .. (hooks.stable_baseline_ref or persistence.current_stash_ref or 'none'), vim.log.levels.INFO)
+  
+  -- Accept = keep current state, update baseline
+  M.apply_hunk_to_baseline(bufnr, hunk_idx, 'accept')
+  
+  -- Recalculate diff against new baseline
+  local utils = require('nvim-claude.utils')
+  local hooks = require('nvim-claude.hooks')
+  local git_root = utils.get_project_root()
+  local file_path = vim.api.nvim_buf_get_name(bufnr)
+  local relative_path = file_path:gsub(git_root .. '/', '')
+  
+  -- Get the new baseline content
+  local persistence = require('nvim-claude.inline-diff-persistence')
+  local stash_ref = hooks.stable_baseline_ref or persistence.current_stash_ref
+  if not stash_ref then
+    vim.notify('No baseline found for recalculation', vim.log.levels.ERROR)
     return
   end
   
-  -- Multiple hunks: remove the accepted hunk and continue
-  table.remove(diff_data.hunks, diff_data.current_hunk)
+  local baseline_cmd = string.format('cd "%s" && git show %s:%s 2>/dev/null', git_root, stash_ref, relative_path)
+  local new_baseline = utils.exec(baseline_cmd)
   
-  -- Adjust current hunk index
-  if diff_data.current_hunk > #diff_data.hunks then
-    diff_data.current_hunk = #diff_data.hunks
-  end
-  
-  if #diff_data.hunks == 0 then
-    -- No more hunks
-    vim.notify('All changes accepted. Closing inline diff.', vim.log.levels.INFO)
-    M.close_inline_diff(bufnr, true)
-  else
-    -- Refresh visualization to show remaining hunks
-    M.apply_diff_visualization(bufnr)
-    M.jump_to_hunk(bufnr, diff_data.current_hunk)
-    vim.notify(string.format('%d hunks remaining', #diff_data.hunks), vim.log.levels.INFO)
+  if new_baseline then
+    M.original_content[bufnr] = new_baseline
+    
+    -- Get current content
+    local current_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+    local current_content = table.concat(current_lines, '\n')
+    
+    -- Recalculate diff
+    local new_diff_data = M.compute_diff(new_baseline, current_content)
+    
+    if not new_diff_data or #new_diff_data.hunks == 0 then
+      vim.notify('All changes accepted. Closing inline diff.', vim.log.levels.INFO)
+      M.close_inline_diff(bufnr, true)
+    else
+      -- Update diff data
+      diff_data.hunks = new_diff_data.hunks
+      diff_data.current_hunk = 1
+      
+      -- Refresh visualization
+      M.apply_diff_visualization(bufnr)
+      M.jump_to_hunk(bufnr, 1)
+      vim.notify(string.format('%d hunks remaining', #new_diff_data.hunks), vim.log.levels.INFO)
+    end
   end
 end
 
@@ -396,47 +573,84 @@ function M.reject_current_hunk(bufnr)
     return 
   end
   
-  local hunk = diff_data.hunks[diff_data.current_hunk]
+  local hunk_idx = diff_data.current_hunk
+  local hunk = diff_data.hunks[hunk_idx]
   if not hunk then 
-    vim.notify('No hunk at index ' .. tostring(diff_data.current_hunk), vim.log.levels.ERROR)
+    vim.notify('No hunk at index ' .. tostring(hunk_idx), vim.log.levels.ERROR)
     return 
   end
   
-  -- vim.notify(string.format('Rejecting hunk %d/%d', diff_data.current_hunk, #diff_data.hunks), vim.log.levels.INFO)
+  vim.notify(string.format('Rejecting hunk %d/%d', hunk_idx, #diff_data.hunks), vim.log.levels.INFO)
   
-  -- Revert the hunk by applying original content
-  M.revert_hunk_changes(bufnr, hunk)
+  -- For reject, apply the patch in reverse to the current file
+  -- The baseline stays unchanged
+  local utils = require('nvim-claude.utils')
+  local git_root = utils.get_project_root()
+  local file_path = vim.api.nvim_buf_get_name(bufnr)
+  local relative_path = file_path:gsub(git_root .. '/', '')
   
-  -- Save the buffer to ensure changes are on disk
+  -- Generate patch for this hunk
+  local patch = M.generate_hunk_patch(hunk, relative_path)
+  local patch_file = vim.fn.tempname() .. '.patch'
+  utils.write_file(patch_file, patch)
+  
+  -- Debug: Show hunk details
+  vim.notify(string.format('Hunk %d: old_start=%d, new_start=%d, lines=%d', 
+    hunk_idx, hunk.old_start, hunk.new_start, #hunk.lines), vim.log.levels.INFO)
+  
+  -- Debug: save patch for inspection
+  local debug_file = '/tmp/nvim-claude-reject-patch.txt'
+  utils.write_file(debug_file, patch)
+  
+  -- Apply reverse patch to the working directory
+  local apply_cmd = string.format('cd "%s" && git apply --reverse --verbose "%s" 2>&1', git_root, patch_file)
+  local result, err = utils.exec(apply_cmd)
+  
+  if err or (result and result:match('error:')) then
+    vim.notify('Failed to reject hunk: ' .. (err or result), vim.log.levels.ERROR)
+    vim.notify('Patch saved to: ' .. debug_file, vim.log.levels.INFO)
+    vim.fn.delete(patch_file)
+    return
+  end
+  
+  vim.fn.delete(patch_file)
+  
+  -- Reload the buffer
   vim.api.nvim_buf_call(bufnr, function()
-    if vim.bo.modified then
-      vim.cmd('write')
-    end
+    vim.cmd('checktime')
   end)
   
-  -- Get current content after rejection
-  local current_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-  local current_content = table.concat(current_lines, '\n')
+  -- Recalculate diff against unchanged baseline
+  local hooks = require('nvim-claude.hooks')
   
-  -- Recalculate diff between current state (with rejected hunk) and original baseline
-  local new_diff_data = M.compute_diff(M.original_content[bufnr], current_content)
+  -- Get the new baseline content
+  local stash_ref = hooks.stable_baseline_ref
+  local baseline_cmd = string.format('cd "%s" && git show %s:%s 2>/dev/null', git_root, stash_ref, relative_path)
+  local new_baseline = utils.exec(baseline_cmd)
   
-  if not new_diff_data or #new_diff_data.hunks == 0 then
-    -- No more changes from baseline - close the diff
-    vim.notify('All changes processed. Closing inline diff.', vim.log.levels.INFO)
-    M.close_inline_diff(bufnr, false)
-  else
-    -- Update diff data with remaining hunks
-    diff_data.hunks = new_diff_data.hunks
-    diff_data.current_hunk = 1
+  if new_baseline then
+    M.original_content[bufnr] = new_baseline
     
-    -- The new_content should remain as Claude's original suggestion
-    -- so we can continue to accept remaining hunks if desired
+    -- Get current content
+    local current_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+    local current_content = table.concat(current_lines, '\n')
     
-    -- Refresh visualization and jump to first remaining hunk
-    M.apply_diff_visualization(bufnr)
-    M.jump_to_hunk(bufnr, 1)
-    vim.notify(string.format('%d hunks remaining', #diff_data.hunks), vim.log.levels.INFO)
+    -- Recalculate diff
+    local new_diff_data = M.compute_diff(new_baseline, current_content)
+    
+    if not new_diff_data or #new_diff_data.hunks == 0 then
+      vim.notify('All changes processed. Closing inline diff.', vim.log.levels.INFO)
+      M.close_inline_diff(bufnr, false)
+    else
+      -- Update diff data
+      diff_data.hunks = new_diff_data.hunks
+      diff_data.current_hunk = 1
+      
+      -- Refresh visualization
+      M.apply_diff_visualization(bufnr)
+      M.jump_to_hunk(bufnr, 1)
+      vim.notify(string.format('%d hunks remaining', #new_diff_data.hunks), vim.log.levels.INFO)
+    end
   end
 end
 
@@ -633,8 +847,6 @@ function M.close_inline_diff(bufnr, keep_baseline)
   -- Remove buffer-local keymaps
   pcall(vim.keymap.del, 'n', ']h', { buffer = bufnr })
   pcall(vim.keymap.del, 'n', '[h', { buffer = bufnr })
-  pcall(vim.keymap.del, 'n', ']f', { buffer = bufnr })
-  pcall(vim.keymap.del, 'n', '[f', { buffer = bufnr })
   pcall(vim.keymap.del, 'n', '<leader>ia', { buffer = bufnr })
   pcall(vim.keymap.del, 'n', '<leader>ir', { buffer = bufnr })
   pcall(vim.keymap.del, 'n', '<leader>iA', { buffer = bufnr })
@@ -651,10 +863,8 @@ function M.close_inline_diff(bufnr, keep_baseline)
     M.diff_files[file_path] = nil
   end
   
-  -- Only clear baseline if not explicitly told to keep it
-  if not keep_baseline then
-    M.original_content[bufnr] = nil
-  end
+  -- Clear the in-memory baseline
+  M.original_content[bufnr] = nil
   
   -- Check if all diffs are closed
   local has_active_diffs = false
@@ -674,6 +884,7 @@ function M.close_inline_diff(bufnr, keep_baseline)
     -- Reset the stable baseline in hooks
     local hooks = require('nvim-claude.hooks')
     hooks.stable_baseline_ref = nil
+    hooks.claude_edited_files = {}
   end
   
   vim.notify('Inline diff closed', vim.log.levels.INFO)
@@ -709,10 +920,15 @@ end
 function M.next_diff_file()
   local current_file = vim.api.nvim_buf_get_name(0)
   local files_with_diffs = {}
+  local hooks = require('nvim-claude.hooks')
   
-  -- Collect all files with active diffs
+  -- Collect all files with diffs (both opened and unopened)
+  local utils = require('nvim-claude.utils')
+  local git_root = utils.get_project_root()
+  
   for file_path, bufnr in pairs(M.diff_files) do
-    if M.active_diffs[bufnr] then
+    local git_relative = file_path:gsub('^' .. vim.pesc(git_root) .. '/', '')
+    if hooks.claude_edited_files[git_relative] then
       table.insert(files_with_diffs, file_path)
     end
   end
@@ -749,10 +965,15 @@ end
 function M.prev_diff_file()
   local current_file = vim.api.nvim_buf_get_name(0)
   local files_with_diffs = {}
+  local hooks = require('nvim-claude.hooks')
   
-  -- Collect all files with active diffs
+  -- Collect all files with diffs (both opened and unopened)
+  local utils = require('nvim-claude.utils')
+  local git_root = utils.get_project_root()
+  
   for file_path, bufnr in pairs(M.diff_files) do
-    if M.active_diffs[bufnr] then
+    local git_relative = file_path:gsub('^' .. vim.pesc(git_root) .. '/', '')
+    if hooks.claude_edited_files[git_relative] then
       table.insert(files_with_diffs, file_path)
     end
   end
@@ -788,15 +1009,27 @@ end
 -- List all files with active diffs
 function M.list_diff_files()
   local files_with_diffs = {}
+  local hooks = require('nvim-claude.hooks')
   
   for file_path, bufnr in pairs(M.diff_files) do
-    if M.active_diffs[bufnr] then
-      local diff_data = M.active_diffs[bufnr]
-      table.insert(files_with_diffs, {
-        path = file_path,
-        hunks = #diff_data.hunks,
-        name = vim.fn.fnamemodify(file_path, ':t')
-      })
+    -- Check if we have active diffs for this buffer, or if it's a tracked file not yet opened
+    if (bufnr > 0 and M.active_diffs[bufnr]) or bufnr == -1 then
+      local diff_data = bufnr > 0 and M.active_diffs[bufnr] or nil
+      local relative_path = vim.fn.fnamemodify(file_path, ':~:.')
+      
+      -- Check if this file is still tracked as Claude-edited
+      local utils = require('nvim-claude.utils')
+      local git_root = utils.get_project_root()
+      local git_relative = file_path:gsub('^' .. vim.pesc(git_root) .. '/', '')
+      if hooks.claude_edited_files[git_relative] then
+        table.insert(files_with_diffs, {
+          path = file_path,
+          hunks = diff_data and #diff_data.hunks or '?',
+          name = vim.fn.fnamemodify(file_path, ':t'),
+          relative_path = relative_path,
+          current_hunk = diff_data and diff_data.current_hunk or 1
+        })
+      end
     end
   end
   
@@ -808,11 +1041,35 @@ function M.list_diff_files()
   -- Sort by filename
   table.sort(files_with_diffs, function(a, b) return a.name < b.name end)
   
-  -- Display list
-  vim.notify('Files with active diffs:', vim.log.levels.INFO)
+  -- Create items for vim.ui.select
+  local items = {}
+  local display_items = {}
+  
   for i, file_info in ipairs(files_with_diffs) do
-    vim.notify(string.format('  %d. %s (%d hunks)', i, file_info.name, file_info.hunks), vim.log.levels.INFO)
+    table.insert(items, file_info)
+    local hunk_info = type(file_info.hunks) == 'number' 
+      and string.format('%d hunks, on hunk %d', file_info.hunks, file_info.current_hunk)
+      or 'not opened yet'
+    table.insert(display_items, string.format('%s (%s)', 
+      file_info.relative_path, hunk_info))
   end
+  
+  -- Use vim.ui.select for a telescope-like experience
+  vim.ui.select(display_items, {
+    prompt = 'Select file with Claude edits:',
+    format_item = function(item) return item end,
+  }, function(choice, idx)
+    if choice and idx then
+      local selected_file = items[idx]
+      vim.cmd('edit ' .. vim.fn.fnameescape(selected_file.path))
+      
+      -- Jump to the current hunk in the selected file
+      local bufnr = M.diff_files[selected_file.path]
+      if bufnr and M.active_diffs[bufnr] then
+        M.jump_to_hunk(bufnr, M.active_diffs[bufnr].current_hunk)
+      end
+    end
+  end)
 end
 
 return M

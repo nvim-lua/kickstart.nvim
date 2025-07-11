@@ -23,10 +23,13 @@ function M.save_state(diff_data)
   --   }
   -- }
   
+  local hooks = require('nvim-claude.hooks')
+  
   local state = {
     version = 1,
     timestamp = os.time(),
     stash_ref = diff_data.stash_ref,
+    claude_edited_files = hooks.claude_edited_files or {},
     files = {}
   }
   
@@ -148,6 +151,12 @@ function M.restore_diffs()
   -- Store the stash reference for future operations
   M.current_stash_ref = state.stash_ref
   
+  -- Restore Claude edited files tracking
+  if state.claude_edited_files then
+    local hooks = require('nvim-claude.hooks')
+    hooks.claude_edited_files = state.claude_edited_files
+  end
+  
   return true
 end
 
@@ -230,6 +239,12 @@ function M.setup_autocmds()
       
       if has_active_diffs and M.current_stash_ref then
         M.save_state({ stash_ref = M.current_stash_ref })
+      else
+        -- Save just the Claude edited files tracking even if no active diffs
+        local hooks = require('nvim-claude.hooks')
+        if hooks.claude_edited_files and next(hooks.claude_edited_files) then
+          M.save_state({ stash_ref = M.current_stash_ref or '' })
+        end
       end
     end
   })

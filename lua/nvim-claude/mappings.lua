@@ -59,9 +59,36 @@ function M.setup(config, commands)
         l = { 'List Agents' },
         k = { 'Kill Agent' },
         x = { 'Clean Old Agents' },
+        i = { 'List files with diffs' },
       }
     })
   end
+  
+  -- Global keymaps for navigating between files with Claude diffs
+  vim.keymap.set('n', ']f', function()
+    local inline_diff = require('nvim-claude.inline-diff')
+    inline_diff.next_diff_file()
+  end, {
+    desc = 'Next file with Claude diff',
+    silent = true
+  })
+  
+  vim.keymap.set('n', '[f', function()
+    local inline_diff = require('nvim-claude.inline-diff')
+    inline_diff.prev_diff_file()
+  end, {
+    desc = 'Previous file with Claude diff',
+    silent = true
+  })
+  
+  -- Global keymap for listing files with diffs
+  vim.keymap.set('n', prefix .. 'i', function()
+    local inline_diff = require('nvim-claude.inline-diff')
+    inline_diff.list_diff_files()
+  end, {
+    desc = 'List files with Claude diffs',
+    silent = true
+  })
 end
 
 return M 

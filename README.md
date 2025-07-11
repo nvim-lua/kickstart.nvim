@@ -1,5 +1,6 @@
 # kickstart.nvim
 
+> Enhanced with nvim-claude integration for AI-powered development
 
 ## Introduction
 
@@ -228,3 +229,4 @@ sudo pacman -S --noconfirm --needed gcc make git ripgrep fd unzip neovim
 ```
 </details>
 
+# Test manual edit
