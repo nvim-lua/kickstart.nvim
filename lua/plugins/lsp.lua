@@ -107,6 +107,9 @@ return {
           end,
         },
       }
+
+      -- Setup Gleam LSP separately (not managed by Mason)
+      require('lspconfig').gleam.setup({})
     end,
   },
 }
