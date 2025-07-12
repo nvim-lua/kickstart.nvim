@@ -19,6 +19,7 @@ Plug 'tpope/vim-commentary'
 set NERDTree
 
 nnoremap <leader><space> :action GotoFile<CR>
+nnoremap <leader>gc :action TextSearchAction<CR>
 nnoremap <leader>e :action ActivateProjectToolWindow<CR>
 
 nnoremap <leader>cr :action RenameElement<CR>
