@@ -49,6 +49,8 @@ return { -- Autoformat
       sql = { 'sqlfmt' },
       zig = { 'zig-fmt' },
       fish = { 'fish_indent' },
+      yaml = { 'yamlfmt' },
+      yml = { 'yamlfmt' },
     },
   },
 }
