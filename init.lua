@@ -285,6 +285,21 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = 'Toggle File Explorer (nvim-tree)' })
     end,
   },
+  -- NOTE: FQ dropbar
+  {
+    'Bekaboo/dropbar.nvim',
+    -- optional, but required for fuzzy finder support
+    dependencies = {
+      'nvim-telescope/telescope-fzf-native.nvim',
+      build = 'make'
+    },
+    config = function()
+      local dropbar_api = require('dropbar.api')
+      vim.keymap.set('n', '<Leader>;', dropbar_api.pick, { desc = 'Pick symbols in winbar' })
+      vim.keymap.set('n', '[;', dropbar_api.goto_context_start, { desc = 'Go to start of current context' })
+      vim.keymap.set('n', '];', dropbar_api.select_next_context, { desc = 'Select next context' })
+    end
+  },
   -- --NOTE: Kanso Theme - FQ
   -- {
   --   'webhooked/kanso.nvim',
@@ -739,7 +754,7 @@ require('lazy').setup({
             python = {
               pythonPath = '/Users/fq/.pyenv/versions/3.13.1/envs/rca/bin/python3',
               analysis = {
-                extraPaths = {'/Users/fq/.pyenv/versions/3.13.1/envs/rca/lib/python3.13/site-packages'},
+                extraPaths = { '/Users/fq/.pyenv/versions/3.13.1/envs/rca/lib/python3.13/site-packages' },
                 autoSearchPaths = true,
                 useLibraryCodeForTypes = true,
                 diagnosticMode = 'workspace',
@@ -1090,7 +1105,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
