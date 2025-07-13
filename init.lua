@@ -906,14 +906,15 @@ require('lazy').setup({
         providers = {
           lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
           buffer = {
-            score_offset = -1,
-            filter = function(buffer)
-              -- Filetypes for which buffer completions are enabled; add filetypes to extend
+            -- Make buffer compeletions appear at the end.
+            score_offset = -100,
+            enabled = function()
+              -- Filetypes for which buffer completions are enabled; add filetypes to extend:
               local enabled_filetypes = {
                 'markdown',
                 'text',
               }
-              local filetype = vim.bo[buffer].filetype
+              local filetype = vim.bo.filetype
               return vim.tbl_contains(enabled_filetypes, filetype)
             end,
           },
