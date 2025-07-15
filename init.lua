@@ -1234,11 +1234,11 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -1278,5 +1278,5 @@ vim.keymap.set('n', 'K', ':m .-2<CR>==', { desc = 'Move line up', silent = true 
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { desc = 'Move selection up', silent = true })
 
 -- Move current line or selected lines down with `L`
-vim.keymap.set('n', 'L', ':m .+1<CR>==', { desc = 'Move line down', silent = true })
-vim.keymap.set('v', 'L', ":m '>+1<CR>gv=gv", { desc = 'Move selection down', silent = true })
+vim.keymap.set('n', 'J', ':m .+1<CR>==', { desc = 'Move line down', silent = true })
+vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", { desc = 'Move selection down', silent = true })
