@@ -413,8 +413,8 @@ require('lazy').setup({
       delay = 0,
       plugins = {
         spelling = {
-          enabled = true
-        }
+          enabled = true,
+        },
       },
       icons = {
         -- set icon mappings to true if you have a Nerd Font
@@ -553,6 +553,9 @@ require('lazy').setup({
           },
         },
         extensions = {
+          file_browser = {
+            theme = 'ivy',
+          },
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
           },
@@ -619,7 +622,7 @@ require('lazy').setup({
     'neovim/nvim-lspconfig',
     opts = {
       servers = {
-        eslint = {},
+        -- eslint = {},
       },
     },
     dependencies = {
