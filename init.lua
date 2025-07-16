@@ -164,9 +164,6 @@ vim.o.scrolloff = 10
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
--- Enable undo/redo changes even after closing and reopening a file
-vim.o.undofile = true
-
 -- Disable line wrapping
 vim.o.wrap = false
 
