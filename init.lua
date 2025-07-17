@@ -99,10 +99,10 @@ vim.g.have_nerd_font = true
 --  For more options, you can see `:help option-list`
 
 -- Make line numbers default
-vim.o.number = true
+vim.o.number = false
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
-vim.o.relativenumber = true
+vim.o.relativenumber = false
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -379,7 +379,7 @@ require('lazy').setup({
         desc = 'Debug: Start/Continue',
       },
       {
-        '<F1>',
+        '<F10>',
         function()
           require('dap').step_into()
         end,
@@ -465,10 +465,41 @@ require('lazy').setup({
           -- Update this to ensure that you have the debuggers for the langs you want
           'delve',
           'python',
+          'netcoredbg',
+        },
+      }
+      -- ─────────────── ADD HERE ───────────────────
+      -- local dap   = require 'dap'
+      local dapui = require 'dapui'
+
+      local dap = require 'dap'
+
+      dap.adapters.coreclr = {
+        type = 'executable',
+        command = vim.fn.stdpath 'data' .. '/mason/packages/netcoredbg/netcoredbg',
+        args = { '--interpreter=vscode' },
+      }
+
+      -- make sure this path is correct for *your* project name & TF:
+      local project_folder = vim.fn.getcwd()
+      local dll_path = project_folder .. '/bin/Debug/net8.0/MyWebApp.dll'
+
+      dap.configurations.cs = {
+        {
+          type = 'coreclr',
+          name = 'Launch WebApp DLL',
+          request = 'launch',
+          program = dll_path,
+          cwd = project_folder,
+          stopAtEntry = false,
+          env = {
+            ASPNETCORE_ENVIRONMENT = 'Development',
+            ASPNETCORE_URLS = 'http://localhost:5064',
+          },
         },
       }
 
-      -- Dap UI setup
+      dap.listeners.after.event_initialized['dapui_config'] = dapui.open
       -- For more information, see |:help nvim-dap-ui|
       dapui.setup {
         -- Set icons to characters that are more likely to work in every terminal.
@@ -491,20 +522,20 @@ require('lazy').setup({
       }
 
       -- Change breakpoint icons
-      -- vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
-      -- vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
-      -- local breakpoint_icons = vim.g.have_nerd_font
-      --     and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
-      --   or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
-      -- for type, icon in pairs(breakpoint_icons) do
-      --   local tp = 'Dap' .. type
-      --   local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
-      --   vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
-      -- end
+      vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
+      vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
+      local breakpoint_icons = vim.g.have_nerd_font
+          and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
+        or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
+      for type, icon in pairs(breakpoint_icons) do
+        local tp = 'Dap' .. type
+        local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
+        vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
+      end
 
       dap.listeners.after.event_initialized['dapui_config'] = dapui.open
-      -- dap.listeners.before.event_terminated['dapui_config'] = dapui.close
-      -- dap.listeners.before.event_exited['dapui_config'] = dapui.close
+      dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+      dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
       -- Install golang specific config
       require('dap-go').setup {
@@ -516,6 +547,47 @@ require('lazy').setup({
       }
 
       require('dap-python').setup '/usr/local/bin/python3.12'
+      table.insert(require('dap').configurations.python, {
+        type = 'python',
+        request = 'launch',
+        name = 'base',
+        program = '/Users/quandoan/Desktop/odoo-18.0/odoo-bin',
+        pythonPath = '/usr/local/bin/python3.12',
+        args = {
+          '-c',
+          'debian/odoo-base.conf',
+          '-d',
+          'base-1',
+          '--xmlrpc-port',
+          '9999',
+        },
+        justMyCode = false,
+        env = {
+          PYTHONPATH = '/Users/quandoan/Desktop/odoo-18.0',
+        },
+      })
+
+      table.insert(require('dap').configurations.python, {
+        type = 'python',
+        request = 'launch',
+        name = 'Tayoong',
+        program = '/Users/quandoan/Desktop/odoo-18.0/odoo-bin',
+        pythonPath = '/usr/local/bin/python3.12',
+        args = {
+          '-c',
+          'debian/odoo-tayoong.conf',
+          '-u',
+          'a1_einvoice_to_gov',
+          '-d',
+          'tayoong-test',
+          '--xmlrpc-port',
+          '8069',
+        },
+        justMyCode = false,
+        env = {
+          PYTHONPATH = '/Users/quandoan/Desktop/odoo-18.0',
+        },
+      })
 
       table.insert(require('dap').configurations.python, {
         type = 'python',
@@ -1198,6 +1270,9 @@ require('lazy').setup({
       end
     end,
   },
+  {
+    'mluders/comfy-line-numbers.nvim',
+  },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
@@ -1280,3 +1355,4 @@ vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { desc = 'Move selection up', silen
 -- Move current line or selected lines down with `L`
 vim.keymap.set('n', 'J', ':m .+1<CR>==', { desc = 'Move line down', silent = true })
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", { desc = 'Move selection down', silent = true })
+require('comfy-line-numbers').setup()
