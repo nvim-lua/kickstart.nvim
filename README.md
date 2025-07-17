@@ -1,12 +1,13 @@
 # n-ide.nvim
 
-Thats my config for nvim to use as a IDE, its forked from kickstart.nvim, suit yourself to use as you like, but I strongly recommend you to use kickstart.nvim repository to build your own config, its very easy to start and understand. 
+This is my Neovim configuration for using it as an IDE. It’s forked from kickstart.nvim. Feel free to use it however you like, but I strongly recommend checking out the kickstart.nvim repository to build your own setup, it’s very easy to get started and understand.
 
 ## Installation
 
 ### Install Neovim
 
-This was build to use in a arch distro, I dont have any intention to port this to another OS, if you have a different enviroment, again I highly recommend you to see the kickstart.nvim repositoty, they have support for Window, maybe Mac and other Linux distros. (Probably this will work in any popular modern distro, just check the requirements below)
+This was built to be used on an Arch-based distro. I have no intention of porting it to other operating systems. If you are using a different environment, I highly recommend checking out the kickstart.nvim repository — they support Windows, macOS, and other Linux distributions.
+(It will probably work on any popular modern distro as long as you meet the requirements listed below.)
 
 ### Install External Dependencies
 
