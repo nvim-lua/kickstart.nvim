@@ -13,6 +13,7 @@ vim.g.have_nerd_font = true
 --  Indent options.
 vim.o.sts = 2
 vim.o.ts = 2
+vim.o.sw = 0
 -- Make line numbers default
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
