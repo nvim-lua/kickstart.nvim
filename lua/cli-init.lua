@@ -70,6 +70,9 @@ vim.opt.listchars = { tab = '| ', trail = '·', nbsp = '␣' }
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
 
+-- Disable wrap
+vim.opt.wrap = false
+
 -- Show which line your cursor is on
 vim.opt.cursorline = true
 
@@ -80,13 +83,14 @@ vim.opt.scrolloff = 10
 vim.opt.conceallevel = 2
 
 -- Set TAB details -> to 2 spaces
--- NOTE: differnt types of code have tab spacing set in
+-- NOTE: different types of code have tab spacing set in
 --  the language syntax file. If it's standard I won't get up
 --  in arms about it...
--- vim.opt.tabstop = 2
--- vim.opt.shiftwidth = 2
--- vim.opt.expandtab = true
--- vim.bo.softtabstop = 2
+--  or will I?
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.expandtab = true
+vim.bo.softtabstop = 2
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -253,7 +257,7 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+      -- { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -335,7 +339,6 @@ require('lazy').setup({
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
-
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
@@ -465,7 +468,7 @@ require('lazy').setup({
 
       -- See full Code Diagnostic Text
       --  Useful for if they float off screen
-      vim.keymap.set('n', '<leader>dd', '<cmd>lua vim.diagnostic.open_float() <CR>', { desc = 'Focuses Code Diagnostics' })
+      vim.keymap.set('n', '<leader>gh', '<cmd>lua vim.diagnostic.open_float() <CR>', { desc = 'Focuses Code Diagnostics' })
 
       -- LSP servers and clients are able to communicate to each other what features they support.
       --  By default, Neovim doesn't support everything that is in the LSP specification.
@@ -553,46 +556,6 @@ require('lazy').setup({
         },
       }
     end,
-  },
-
-  { -- Autoformat
-    'stevearc/conform.nvim',
-    event = { 'BufWritePre' },
-    cmd = { 'ConformInfo' },
-    keys = {
-      {
-        '<leader>f',
-        function()
-          require('conform').format { async = true, lsp_fallback = true }
-        end,
-        mode = '',
-        desc = '[F]ormat buffer',
-      },
-    },
-    opts = {
-      notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
-        return {
-          timeout_ms = 500,
-          lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
-        }
-      end,
-      stop_after_first = true,
-      formatters_by_ft = {
-        lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
-        -- You can use a sub-list to tell conform to run *until* a formatter
-        -- is found.
-        javascript = { 'prettierd' },
-        typescript = { 'prettierd' },
-      },
-    },
   },
 
   { -- Autocompletion
@@ -710,6 +673,7 @@ require('lazy').setup({
       }
     end,
   },
+  -- DAP = debug adapter protocol
   -- { --nvim-dap--
   --   'mfussenegger/nvim-dap',
   --   config = function()
@@ -944,26 +908,6 @@ require('lazy').setup({
     end,
   },
   {
-    'nvim-tree/nvim-tree.lua',
-    config = function()
-      require('nvim-tree').setup {
-        sort = {
-          sorter = 'case_sensitive',
-        },
-        view = {
-          width = 30,
-        },
-        renderer = {
-          group_empty = true,
-        },
-        filters = {
-          dotfiles = true,
-        },
-      }
-      vim.keymap.set('n', '<leader>0', ':NvimTreeToggle<CR>', { silent = true })
-    end,
-  },
-  {
     'tiagovla/scope.nvim',
   },
   -- PLUGIN: tabs-tab-management with Tabby
@@ -993,7 +937,17 @@ require('lazy').setup({
       }
     end,
 
-    vim.keymap.set('n', '<space>fb', '<cmd>Telescope file_browser<CR>', { noremap = true }),
+    -- Telescope keymaps
+    vim.keymap.set('n', '<space>ob', '<cmd>Telescope file_browser<CR>', 
+      { 
+        desc = "[O]pen File [B]rowser",
+        noremap = true
+      }),
+    vim.keymap.set('n', '<space>ol', '<cmd>Telescope file_browser path=%:p:h<CR>', 
+      { 
+        desc = "[O]pen [L]ocal File Browser",
+        noremap = true 
+      }),
   },
   -- PLUGIN: auto-close
   -- Handles auto closing brackets when the opening one is typed
@@ -1006,35 +960,6 @@ require('lazy').setup({
         },
       }
     end,
-  },
-  -- PLUGIN: obsidian
-  {
-    'epwalsh/obsidian.nvim',
-    version = '*',
-    lazy = true,
-    ft = 'markdown',
-    -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
-    -- event = {
-    --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
-    --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/*.md"
-    --   -- refer to `:h file-pattern` for more examples
-    --   "BufReadPre path/to/my-vault/*.md",
-    --   "BufNewFile path/to/my-vault/*.md",
-    -- },
-    dependencies = {
-      -- Required.
-      'nvim-lua/plenary.nvim',
-
-      -- see below for full list of optional dependencies 👇
-    },
-    opts = {
-      workspaces = {
-        {
-          name = 'personal',
-          path = '~/Documents/alecaerdron',
-        },
-      },
-    },
   },
   {
     'rmagatti/auto-session',
@@ -1055,12 +980,7 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'plugins.gitsigns', -- adds gitsigns recommend keymaps
   --
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
