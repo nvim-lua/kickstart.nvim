@@ -360,14 +360,15 @@ require('lazy').setup({
 
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
-    -- To disable the default Telescope plugin and replace it with
-    -- another picker (like snacks), set enabled to false and
-    -- Enable your replacement picker by requiring it explicitly (e.g., 'kickstart.plugins.snacks')
-    -- By default, Telescope is included and acts as your picker for everything.
+   -- By default, Telescope is included and acts as your picker for everything.
 
-    -- Note: When you customize your config for yourself,
-    -- it’s best to remove the Telescope plugin config entirely
-    -- instead of just disabling it here, to keep your config clean.
+   -- If you would like to switch to a different picker (like snacks, or fzf-lua)
+   -- you can disable the Telescope plugin by setting enabled to false and enable
+   -- your replacement picker by requiring it explicitly (e.g. 'custom.plugins.snacks')
+
+   -- Note: If you customize your config for yourself,
+   -- it’s best to remove the Telescope plugin config entirely
+   -- instead of just disabling it here, to keep your config clean.
     enabled = true,
     event = 'VimEnter',
     dependencies = {
