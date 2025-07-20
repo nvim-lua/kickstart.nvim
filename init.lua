@@ -168,7 +168,7 @@ vim.o.confirm = true
 vim.o.wrap = false
 
 -- Highlight max chars per line
--- vim.o.colorcolumn = '100'
+-- vim.o.colorcolumn = '120'
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -260,16 +260,6 @@ vim.api.nvim_create_autocmd('BufWritePre', {
     if vim.fn.isdirectory(dir) == 0 then vim.fn.mkdir(dir, 'p') end
   end,
 })
-
--- disable automatic comment on newline
--- vim.api.nvim_create_autocmd('FileType', {
---   desc = 'Disable automatic comment on newline',
---   group = vim.api.nvim_create_augroup('kickstart-disable-auto-comment', { clear = true }),
---   pattern = '*',
---   callback = function()
---     vim.opt_local.formatoptions:remove { 'c', 'r', 'o' }
---   end,
--- })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
