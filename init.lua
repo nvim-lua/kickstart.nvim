@@ -893,7 +893,36 @@ require('lazy').setup({
       vim.cmd.colorscheme 'tokyonight-night'
     end,
   },
-  { 'rose-pine/neovim', name = 'rose-pine' },
+  {
+    'rose-pine/neovim',
+    config = function()
+      require('rose-pine').setup {
+        variant = 'auto', -- auto, main, moon, or dawn
+        dark_variant = 'main', -- main, moon, or dawn
+        dim_inactive_windows = false,
+        extend_background_behind_borders = true,
+
+        enable = {
+          terminal = true,
+          legacy_highlights = true,
+          migrations = true,
+        },
+
+        styles = {
+          bold = true,
+          italic = true,
+          transparency = false,
+        },
+
+        highlight_groups = {
+          Comment = { fg = 'foam' },
+          -- StatusLine = { fg = "love", bg = "love", blend = 15 },
+          -- VertSplit = { fg = "muted", bg = "muted" },
+          -- Visual = { fg = "base", bg = "text", inherit = false },
+        },
+      }
+    end,
+  },
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
