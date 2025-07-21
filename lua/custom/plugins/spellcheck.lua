@@ -10,7 +10,6 @@ return {
         diagnostic.severity = vim.diagnostic.severity['HINT']
       end,
       config = {
-        config_file_preferred_name = 'config.json',
         cspell_config_dirs = { '~/.config/cspell/' },
         on_add_to_json = function(payload)
           os.execute(
