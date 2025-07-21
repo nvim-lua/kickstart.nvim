@@ -11,4 +11,3 @@ return {
     require('codamheader').setup(opts)
   end,
 }
-
