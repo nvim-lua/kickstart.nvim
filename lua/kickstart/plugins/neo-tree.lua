@@ -45,7 +45,7 @@ return {
           ['<C-cr>'] = {
             'open',
             config = {
-              open_command = 'tabnew', -- Альтернативный вариант параметра
+              open_command = 'tabnew',
             },
           },
           ['oa'] = 'avante_add_files',
