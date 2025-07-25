@@ -18,8 +18,6 @@ return {
         require 'neotest-jest' {
           jestCommand = 'npm t --',
           jest_test_discovery = false,
-          -- jestConfigFile = 'custom.jest.config.ts',
-          -- env = { CI = true },
           cwd = function(path)
             return vim.fn.getcwd()
           end,
