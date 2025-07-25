@@ -4,4 +4,4 @@ test.sh
 nvim
 
 spell/
-lazy-lock.json
+# lazy-lock.json
