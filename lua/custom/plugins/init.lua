@@ -5,21 +5,6 @@
 -- Bootstrap lazy.nvim
 return {
   {
-    -- If you want neo-tree's file operations to work with LSP (updating imports, etc.), you can use a plugin like
-    -- https://github.com/antosha417/nvim-lsp-file-operations:
-    -- {
-    --   "antosha417/nvim-lsp-file-operations",
-    --   dependencies = {
-    --     "nvim-lua/plenary.nvim",
-    --     "nvim-neo-tree/neo-tree.nvim",
-    --   },
-    --   config = function()
-    --     require("lsp-file-operations").setup()
-    --   end,
-    -- },
-
-    -- Add this in the plugins table
-
     {
       'ray-x/go.nvim',
       dependencies = {
