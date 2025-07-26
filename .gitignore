@@ -6,5 +6,6 @@ nvim
 spell/
 
 # Project status tracking (local only)
+CLAUDE.md
 STATUS.md
 VIDINTEL.md

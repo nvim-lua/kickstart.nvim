@@ -665,7 +665,19 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        clangd = require('custom.plugins.lsp.clangd').get_server_config(),
+        clangd = {
+          cmd = {
+            'clangd',
+            '--background-index',
+            '--clang-tidy',
+            '--header-insertion=never',
+            '--query-driver=' .. vim.fn.exepath('clang++'),
+            '--resource-dir=' .. vim.fn.systemlist({ 'clang++', '--print-resource-dir' })[1],
+          },
+          filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
+          root_dir = require('lspconfig.util').root_pattern('.git'),
+          single_file_support = true,
+        },
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},

@@ -5,12 +5,25 @@ return {
   {
     'neovim/nvim-lspconfig',
     -- only load when editing these filetypes (optional)
-    ft = { 'python', 'lua', 'nix', 'rust', 'go' },
+    ft = { 'python', 'lua', 'nix', 'rust', 'go', 'c', 'cpp' },
     opts = function()
       local lspconfig = require 'lspconfig'
       local capabilities = require('blink.cmp').get_lsp_capabilities()
 
       local servers = {
+        clangd = {
+          cmd = {
+            'clangd',
+            '--background-index',
+            '--clang-tidy',
+            '--header-insertion=never',
+            '--query-driver=' .. vim.fn.exepath('clang++'),
+            '--resource-dir=' .. vim.fn.systemlist({ 'clang++', '--print-resource-dir' })[1],
+          },
+          filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
+          root_dir = require('lspconfig.util').root_pattern('.git'),
+          single_file_support = true,
+        },
         pyright = {
           settings = {
             python = {
@@ -32,20 +45,6 @@ return {
           filetypes = { 'cmake' },
           root_dir = require('lspconfig.util').root_pattern('CMakeLists.txt', '.git'),
         },
-        clangd = (function()
-          local cmd = { 'clangd', '--background-index' }
-          return {
-            cmd = cmd,
-            filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
-            root_dir = lspconfig.util.root_pattern('compile_commands.json', '.git'),
-            single_file_support = true,
-            -- on_attach = function(client, bufnr)
-            --   local util = require(custom.plugins.lsp.clangd_helper)
-            --   util.notify_compile_commands(bufnr)
-            --   util.start_compile_commands_watcher(client, bufnr)
-            -- end,
-          }
-        end)(),
       }
 
       for name, config in pairs(servers) do

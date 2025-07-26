@@ -18,4 +18,3 @@ vim.o.softtabstop = 2
 -- etc... Review the options section of your old init.lua and add any *changed* values here.
 -- The kickstart defaults are generally sensible, so you might not need many overrides.
 
--- print 'Custom options loaded!' -- Optional: Add print statement for debugging

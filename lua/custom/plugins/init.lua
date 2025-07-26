@@ -3,14 +3,6 @@
 --
 -- See the kickstart.nvim README for more information
 return {
-  {
-    'nvim-tree/nvim-web-devicons',
-    lazy = false,
-    priority = 1000,
-    config = function()
-      require('nvim-web-devicons').setup()
-    end,
-  },
   -- { import = 'custom.plugins.completion' },
   -- { import = 'custom.plugins.debug' },
   -- { import = 'custom.plugins.formatting' },
