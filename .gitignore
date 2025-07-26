@@ -4,3 +4,6 @@ test.sh
 nvim
 
 spell/
+
+# Project status tracking (local only)
+STATUS.md
