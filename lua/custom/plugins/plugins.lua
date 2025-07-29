@@ -1,6 +1,9 @@
 return {
   -- Other plugins in here
   {
+    'nvim-tree/nvim-web-devicons',
+  },
+  {
     'stevearc/oil.nvim',
     opts = {},
     dependencies = { 'nvim-tree/nvim-web-devicons' }, -- optional icons
@@ -49,5 +52,37 @@ return {
         },
       }
     end,
+  },
+  {
+    'nvim-tree/nvim-tree.lua',
+    version = '*', -- recommended
+    lazy = false,
+    dependencies = {
+      'nvim-tree/nvim-web-devicons', -- optional, for file icons
+    },
+    opts = {
+      view = {
+        side = 'left',
+        width = 30,
+        float = { enable = false },
+      },
+      sync_root_with_cwd = true,
+      respect_buf_cwd = true,
+      update_focused_file = { enable = true, update_root = true },
+      renderer = {
+        group_empty = true,
+        indent_width = 2,
+      },
+      actions = { open_file = { resize_window = true } },
+    },
+    init = function()
+      vim.g.loaded_netrw = 1
+      vim.g.loaded_netrwPlugin = 1
+    end,
+    -- Other nvim-tree options can go here
+    -- For example, to automatically close on file selection:
+    -- auto_close = true,
+    -- To show hidden files:
+    -- hide_dotfiles = false,
   },
 }

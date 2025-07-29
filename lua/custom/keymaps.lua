@@ -35,3 +35,6 @@ end)
 vim.keymap.set('n', '<leader>4', function()
   harpoon:list():select(4)
 end)
+
+-- In your keybindings configuration (e.g., lua/config/keymaps.lua or init.lua)
+vim.keymap.set('n', '<leader>w', '<cmd>NvimTreeToggle<CR>', { desc = 'Toggle NvimTree' })
