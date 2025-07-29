@@ -106,6 +106,10 @@ vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 -- Additional map for neotree
 vim.keymap.set('n', '<leader>te', '<cmd>Neotree reveal<CR>')
 
+vim.o.expandtab = true
+vim.o.tabstop = 4
+vim.o.shiftwidth = 4
+
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
@@ -775,13 +779,10 @@ require('lazy').setup({
     opts = {
       notify_on_error = false,
       format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
-        if disable_filetypes[vim.bo[bufnr].filetype] then
-          return nil
-        else
+        -- Emable "format_on_save lsp_fallback" for languages that have
+        -- have a well standardized coding style. You can add additional here
+        local enable_filetypes = { 'lua' }
+        if enable_filetypes[vim.bo[bufnr].filetype] then
           return {
             timeout_ms = 500,
             lsp_format = 'fallback',
@@ -909,8 +910,11 @@ require('lazy').setup({
     config = function()
       ---@diagnostic disable-next-line: missing-fields
       require('tokyonight').setup {
+        transparent = true, -- Transparent background
         styles = {
           comments = { italic = false }, -- Disable italics in comments
+          sidebars = "transparent",
+          floats = "transparent",
         },
       }
 
