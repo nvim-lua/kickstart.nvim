@@ -3,6 +3,7 @@
 --
 -- See the kickstart.nvim README for more information
 return {
+  { import = 'custom.plugins.avante' },
   -- { import = 'custom.plugins.completion' },
   { import = 'custom.plugins.debug' },
   { import = 'custom.plugins.formatting' },
