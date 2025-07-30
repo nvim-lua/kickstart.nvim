@@ -38,3 +38,8 @@ end)
 
 -- In your keybindings configuration (e.g., lua/config/keymaps.lua or init.lua)
 vim.keymap.set('n', '<leader>w', '<cmd>NvimTreeToggle<CR>', { desc = 'Toggle NvimTree' })
+
+-- Insert Kubernetes Deployment template below the cursor
+vim.keymap.set('n', '<leader>kd', function()
+  vim.cmd 'read ~/.config/nvim/lua/custom/templates/k8s-deployment.yaml'
+end, { desc = 'Insert K8s Deployment template' })
