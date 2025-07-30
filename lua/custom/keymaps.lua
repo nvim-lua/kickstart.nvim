@@ -38,3 +38,12 @@ end)
 
 -- In your keybindings configuration (e.g., lua/config/keymaps.lua or init.lua)
 vim.keymap.set('n', '<leader>w', '<cmd>NvimTreeToggle<CR>', { desc = 'Toggle NvimTree' })
+
+vim.keymap.set({ 'n', 't' }, '<leader>rr', function()
+  local chan = vim.b.terminal_job_id
+  if not chan then
+    vim.notify('Not in a terminal buffer', vim.log.levels.ERROR)
+    return
+  end
+  vim.api.nvim_chan_send(chan, 'source venv/bin/activate\n')
+end, { desc = 'Activating VENV virtual environment (if it exists LOL)' })
