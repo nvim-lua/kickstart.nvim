@@ -578,8 +578,8 @@ require('lazy').setup({
           'debian/odoo-tayoong.conf',
           '-u',
           'a1_einvoice_to_gov',
-          '-d',
-          'tayoong-test',
+          -- '-d',
+          -- 'tayoong-test',
           '--xmlrpc-port',
           '8069',
         },
@@ -592,15 +592,17 @@ require('lazy').setup({
       table.insert(require('dap').configurations.python, {
         type = 'python',
         request = 'launch',
-        name = 'E-invoice',
         program = '/Users/quandoan/Desktop/odoo-18.0/odoo-bin',
+        name = 'E-invoice',
         pythonPath = '/usr/local/bin/python3.12',
         args = {
           '-c',
           'debian/odoo-e-invoice.conf',
           '-u',
-          'a1_einvoice_to_gov',
+          'a1_einvoice_to_gov,tayoong_issue_consolidate_invoice,issue_consolidate_invoice',
 
+          -- '-d',
+          -- 'e-invoice-3',
           '--xmlrpc-port',
           '8099',
         },
@@ -624,6 +626,22 @@ require('lazy').setup({
         desc = 'Open LazyGit',
       },
     },
+  },
+  {
+    'akinsho/toggleterm.nvim',
+    version = '*',
+    config = function()
+      require('toggleterm').setup {
+        open_mapping = [[<C-t>]], -- Bind Ctrl + T
+        direction = 'float', -- or "horizontal" | "vertical" | "tab"
+        size = 20,
+        start_in_insert = true,
+        shade_terminals = true,
+      }
+
+      -- Optional: Ensure <C-t> works in both normal and terminal mode
+      vim.keymap.set({ 'n', 't' }, '<C-t>', '<cmd>ToggleTerm<CR>', { noremap = true, silent = true })
+    end,
   },
   {
     'mluders/comfy-line-numbers.nvim',
