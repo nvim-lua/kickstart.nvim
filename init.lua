@@ -762,6 +762,11 @@ require('lazy').setup({
             },
           },
         },
+        sourcekit = {
+          cmd = { 'sourcekit-lsp' },
+          filetypes = { 'swift' },
+          settings = {},
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -802,6 +807,8 @@ require('lazy').setup({
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
+      -- Remove sourcekit from ensure_installed since it's locally available
+      ensure_installed = vim.tbl_filter(function(name) return name ~= 'sourcekit' end, ensure_installed)
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
         'pyright', -- Python LSP server
@@ -822,6 +829,11 @@ require('lazy').setup({
           end,
         },
       }
+
+      -- Setup SourceKit-LSP separately since it's not managed by Mason
+      local sourcekit_config = servers.sourcekit or {}
+      sourcekit_config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, sourcekit_config.capabilities or {})
+      require('lspconfig').sourcekit.setup(sourcekit_config)
     end,
   },
 
