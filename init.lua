@@ -18,6 +18,9 @@ vim.o.number = true
 --  Experiment for yourself to see if you like it!
 vim.o.relativenumber = true
 
+vim.o.wrap = true
+vim.o.linebreak = true
+
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
 
@@ -121,9 +124,11 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 
 -- [[ Additional Remaps ]]
 vim.keymap.set('n', '<leader>pv', '<cmd>:Ex<CR>')
-vim.keymap.set('n', '<leader>x', '<cmd>:so<CR>')
 vim.keymap.set('n', '<leader>fc', '<cmd>:fc<CR>')
-vim.keymap.set('n', '<leader>cr', '<cmd>:%s/\r//g')
+vim.keymap.set('n', '<leader>cr', '<cmd>:%s/\r//g<CR>')
+vim.keymap.set('n', '<leader>xx', function()
+  require('trouble').toggle()
+end, { desc = 'Toggle Trouble' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -464,7 +469,9 @@ require('lazy').setup({
           map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
 
           -- Find references for the word under your cursor.
-          map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+          map('grr', function()
+            require('trouble').toggle 'lsp_references'
+          end, '[G]oto [R]eferences (Trouble)')
 
           -- Jump to the implementation of the word under your cursor.
           --  Useful when your language has ways of declaring types without an actual implementation.
@@ -594,7 +601,6 @@ require('lazy').setup({
         gopls = {},
         pyright = {},
         -- rust_analyzer = {},
-        elixir_ls = {},
         lexical = {},
         ruff = {},
         sqls = {},
@@ -900,11 +906,15 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.copilot',
+  require 'kickstart.plugins.harpoon',
+  require 'kickstart.plugins.fugitive',
+  require 'kickstart.plugins.trouble',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
