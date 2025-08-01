@@ -763,9 +763,13 @@ require('lazy').setup({
           },
         },
         sourcekit = {
-          cmd = { 'sourcekit-lsp' },
-          filetypes = { 'swift' },
-          settings = {},
+          capabilities = {
+            workspace = {
+              didChangeWatchedFiles = {
+                dynamicRegistration = true,
+              },
+            },
+          },
         },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -806,9 +810,12 @@ require('lazy').setup({
       --
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
-      local ensure_installed = vim.tbl_keys(servers or {})
-      -- Remove sourcekit from ensure_installed since it's locally available
-      ensure_installed = vim.tbl_filter(function(name) return name ~= 'sourcekit' end, ensure_installed)
+      -- Filter out servers that aren't available through Mason
+      local mason_servers = vim.tbl_filter(function(server_name)
+        return server_name ~= 'sourcekit' -- sourcekit-lsp comes with Xcode, not Mason
+      end, vim.tbl_keys(servers or {}))
+      
+      local ensure_installed = mason_servers
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
         'pyright', -- Python LSP server
@@ -830,10 +837,13 @@ require('lazy').setup({
         },
       }
 
-      -- Setup SourceKit-LSP separately since it's not managed by Mason
-      local sourcekit_config = servers.sourcekit or {}
-      sourcekit_config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, sourcekit_config.capabilities or {})
-      require('lspconfig').sourcekit.setup(sourcekit_config)
+      -- Setup LSP servers that aren't managed by Mason
+      local non_mason_servers = { 'sourcekit' }
+      for _, server_name in ipairs(non_mason_servers) do
+        local server = servers[server_name] or {}
+        server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+        require('lspconfig')[server_name].setup(server)
+      end
     end,
   },
 
