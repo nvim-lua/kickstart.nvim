@@ -1,5 +1,6 @@
 return {
   vim.keymap.set('n', '<leader>bd', ':bdelete!<CR>', { desc = '[B]uffer [D]elete' }),
+  vim.keymap.set('n', '<leader>bc', ':close<CR>', { desc = '[B]uffer [C]lose' }),
 
   -- Open Neotree
   vim.keymap.set('n', '<leader>nt', ':Neotree<CR>', { desc = '[N]eo[T]ree' }),
