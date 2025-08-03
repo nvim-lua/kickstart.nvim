@@ -226,7 +226,19 @@ local function DockerFileTypeDetectionAutoCommand()
   })
 end
 
-DockerFileTypeDetectionAutoCommand()
+local function AddDockerFilesToFiletype()
+  vim.filetype.add {
+    filename = {
+      ['docker-compose.yml'] = 'yaml.docker-compose',
+      ['docker-compose.yaml'] = 'yaml.docker-compose',
+      ['compose.yml'] = 'yaml.docker-compose',
+      ['compose.yaml'] = 'yaml.docker-compose',
+    },
+  }
+end
+
+-- DockerFileTypeDetectionAutoCommand()
+AddDockerFilesToFiletype()
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info

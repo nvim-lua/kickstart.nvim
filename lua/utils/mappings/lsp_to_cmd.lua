@@ -1,0 +1,1 @@
+-- TODO: move lsp_config_name -> executable mapping here instead of being part of languages.lua file
