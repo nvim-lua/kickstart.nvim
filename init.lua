@@ -84,6 +84,39 @@ I hope you enjoy your Neovim journey,
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
 
+-- Disabling NetRW
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+-- Revealing NeoTree as nvim starts.
+vim.api.nvim_create_autocmd('VimEnter', {
+  pattern = '*',
+  group = vim.api.nvim_create_augroup('NeotreeOnOpen', { clear = true }),
+  once = true,
+  callback = function(_)
+    if vim.fn.argc() >= 1 then
+      vim.cmd 'Neotree reveal'
+    end
+  end,
+})
+
+-- Auto command to toggle absolute and relative numbering.
+-- Create an augroup to manage the autocmds
+local number_toggle_group = vim.api.nvim_create_augroup('NumberToggle', { clear = true })
+
+-- Autocmd for InsertEnter to disable relative numbers
+vim.api.nvim_create_autocmd('InsertEnter', {
+  pattern = '*',
+  command = 'set norelativenumber',
+  group = number_toggle_group,
+})
+
+-- Autocmd for InsertLeave to enable relative numbers
+vim.api.nvim_create_autocmd('InsertLeave', {
+  pattern = '*',
+  command = 'set relativenumber',
+  group = number_toggle_group,
+})
+
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -672,7 +705,7 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        -- gopls = {},
+        gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -722,6 +755,7 @@ require('lazy').setup({
       require('mason-lspconfig').setup {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
         automatic_installation = false,
+        automatic_enable = false,
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
@@ -944,7 +978,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'yaml', 'go' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -977,8 +1011,26 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.nvim-ufo',
+  'numToStr/Comment.nvim',
+  {
+    'github/copilot.vim',
+    version = '1.52.0',
+  },
+  {
+    'crusj/bookmarks.nvim',
+    keys = {
+      { '<tab><tab>', mode = { 'n' } },
+    },
+    branch = 'main',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require('bookmarks').setup()
+      require('telescope').load_extension 'bookmarks'
+    end,
+  },
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
