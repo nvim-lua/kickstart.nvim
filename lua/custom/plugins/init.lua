@@ -5,38 +5,46 @@
 -- Bootstrap lazy.nvim
 return {
   {
-    {
-      'ray-x/go.nvim',
-      dependencies = {
-        'ray-x/guihua.lua', -- required UI library
-        'nvim-treesitter/nvim-treesitter',
-        'neovim/nvim-lspconfig',
-      },
-      ft = { 'go', 'gomod' },
-      config = function()
-        require('go').setup {
-          lsp_cfg = true, -- auto-setup gopls
-          lsp_on_attach = function(client, bufnr)
-            -- Auto format on save
-            if client.server_capabilities.documentFormattingProvider then
-              vim.api.nvim_create_autocmd('BufWritePre', {
-                group = vim.api.nvim_create_augroup('GoFormat', { clear = true }),
-                buffer = bufnr,
-                callback = function()
-                  vim.lsp.buf.format { async = false }
-                end,
-              })
-            end
-          end,
-        }
-      end,
+    'nvim-neo-tree/neo-tree.nvim',
+    branch = 'v3.x',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'MunifTanjim/nui.nvim',
+      'nvim-tree/nvim-web-devicons', -- optional, but recommended
     },
-    {
-      'windwp/nvim-autopairs',
-      event = 'InsertEnter',
-      config = true,
-      -- use opts = {} for passing setup options
-      -- this is equivalent to setup({}) function
+    lazy = false, -- neo-tree will lazily load itself
+  },
+  {
+    'ray-x/go.nvim',
+    dependencies = {
+      'ray-x/guihua.lua', -- required UI library
+      'nvim-treesitter/nvim-treesitter',
+      'neovim/nvim-lspconfig',
     },
+    ft = { 'go', 'gomod' },
+    config = function()
+      require('go').setup {
+        lsp_cfg = true, -- auto-setup gopls
+        lsp_on_attach = function(client, bufnr)
+          -- Auto format on save
+          if client.server_capabilities.documentFormattingProvider then
+            vim.api.nvim_create_autocmd('BufWritePre', {
+              group = vim.api.nvim_create_augroup('GoFormat', { clear = true }),
+              buffer = bufnr,
+              callback = function()
+                vim.lsp.buf.format { async = false }
+              end,
+            })
+          end
+        end,
+      }
+    end,
+  },
+  {
+    'windwp/nvim-autopairs',
+    event = 'InsertEnter',
+    config = true,
+    -- use opts = {} for passing setup options
+    -- this is equivalent to setup({}) function
   },
 }
