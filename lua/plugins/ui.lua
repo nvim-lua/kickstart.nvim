@@ -46,6 +46,7 @@ return {
         { '<leader>W', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>n', group = '[N]ew' },
 
         -- General keybinds
         { '<leader>w', desc = 'Save File' },
@@ -104,6 +105,10 @@ return {
         -- Git toggles
         { '<leader>tb', desc = 'Toggle git show blame line' },
         { '<leader>tD', desc = 'Toggle git show deleted' },
+
+        -- New file/directory keybinds
+        { '<leader>nf', desc = 'New File' },
+        { '<leader>nd', desc = 'New Directory' },
 
         -- Function keys
         { '<F1>', desc = 'Debug: Step Into' },
