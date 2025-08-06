@@ -50,5 +50,4 @@ vim.keymap.set('v', '<A-k>', ":m '<-2<CR>gv=gv", { desc = 'Move selection up' })
 vim.keymap.set('n', '<C-,>', 'gcc', { desc = 'Comment line', remap = true })
 vim.keymap.set('v', '<C-,>', 'gc', { desc = 'Comment selection', remap = true })
 
--- Copy to clipboard with Ctrl+C
 vim.keymap.set('v', '<C-c>', '"+y', { desc = 'Copy to clipboard' })

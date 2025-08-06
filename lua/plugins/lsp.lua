@@ -21,6 +21,13 @@ return {
       'hrsh7th/cmp-nvim-lsp',
     },
     config = function()
+      -- Set default position encoding to prevent warnings
+      local original_make_position_params = vim.lsp.util.make_position_params
+      vim.lsp.util.make_position_params = function(win, offset_encoding)
+        offset_encoding = offset_encoding or 'utf-16'
+        return original_make_position_params(win, offset_encoding)
+      end
+      
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
@@ -29,7 +36,7 @@ return {
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
 
-          map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+          map('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
           map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
           map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
           map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
@@ -71,8 +78,16 @@ return {
         end,
       })
 
+      -- Set global position encoding preference
+      vim.lsp.protocol.PositionEncodingKind = vim.lsp.protocol.PositionEncodingKind or {}
+      vim.lsp.protocol.PositionEncodingKind.UTF16 = 'utf-16'
+      
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+      
+      -- Set position encoding to utf-16 (widely supported) to avoid warnings
+      capabilities.general = capabilities.general or {}
+      capabilities.general.positionEncodings = { 'utf-16' }
 
       local servers = {
         omnisharp = {
@@ -110,6 +125,7 @@ return {
 
       -- Setup Gleam LSP separately (not managed by Mason)
       require('lspconfig').gleam.setup({})
+      
     end,
   },
 }

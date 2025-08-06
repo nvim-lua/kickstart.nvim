@@ -178,6 +178,17 @@ return {
         hi('@tag', c.class, '', '')
         hi('@tag.attribute', c.property, '', '')
         hi('@tag.delimiter', c.operator, '', '')
+        
+        -- JSX/HTML specific highlights
+        hi('@tag.javascript', c.class, '', '')
+        hi('@tag.tsx', c.class, '', '')
+        hi('@tag.jsx', c.class, '', '')
+        hi('@tag.builtin.javascript', c.keyword, '', '')
+        hi('@tag.builtin.tsx', c.keyword, '', '')
+        hi('@tag.builtin.jsx', c.keyword, '', '')
+        hi('@constructor.javascript', c.class, '', '')
+        hi('@constructor.tsx', c.class, '', '')
+        hi('@constructor.jsx', c.class, '', '')
 
         -- LSP
         hi('@lsp.type.class', c.class, '', '')
