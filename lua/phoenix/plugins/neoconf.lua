@@ -1,0 +1,3 @@
+return {
+  "folke/neoconf.nvim"
+}
