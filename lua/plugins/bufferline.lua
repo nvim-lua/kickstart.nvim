@@ -9,26 +9,31 @@ return {
 
     require('bufferline').setup {
       options = {
-        mode = 'buffers', -- set to "tabs" to only show tabpages instead
-        themable = true, -- allows highlight groups to be overriden i.e. sets highlights as default
-        numbers = 'none', -- | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
-        close_command = 'Bdelete! %d', -- can be a string | function, see "Mouse actions"
+        mode = 'buffers',                    -- 'buffers', -- set to "tabs" to only show tabpages instead
+
+        themable = true,                     -- allows highlight groups to be overriden i.e. sets highlights as default
+        numbers = 'none',                    -- | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
+        close_command = 'Bdelete! %d',       -- can be a string | function, see "Mouse actions"
         right_mouse_command = 'Bdelete! %d', -- can be a string | function, see "Mouse actions"
-        left_mouse_command = 'buffer %d', -- can be a string | function, see "Mouse actions"
-        middle_mouse_command = nil, -- can be a string | function, see "Mouse actions"
+        left_mouse_command = 'buffer %d',    -- can be a string | function, see "Mouse actions"
+        middle_mouse_command = nil,          -- can be a string | function, see "Mouse actions"
         -- buffer_close_icon = '󰅖',
         buffer_close_icon = '✗',
         -- buffer_close_icon = '✕',
-        close_icon = '',
+        close_icon = '',
         path_components = 1, -- Show only the file name without the directory
         modified_icon = '●',
-        left_trunc_marker = '',
-        right_trunc_marker = '',
+        left_trunc_marker = '',
+        right_trunc_marker = '',
         max_name_length = 30,
         max_prefix_length = 30, -- prefix used when a buffer is de-duplicated
         tab_size = 21,
-        diagnostics = false,
+        diagnostics = "nvim_lsp",
         diagnostics_update_in_insert = false,
+        diagnostics_indicator = function(count, level, diagnostics_dict, context)
+          local icon = level:match("error") and "󰅚 " or "󰀪 "
+          return " " .. icon .. count
+        end,
         color_icons = true,
         show_buffer_icons = true,
         show_buffer_close_icons = true,
@@ -61,6 +66,51 @@ return {
         -- background = {},
         -- indicator_selected = {},
         -- fill = {},
+        --
+
+        -- Error highlighting (pink theme)
+        error = {
+          fg = '#ff69b4', -- Hot pink
+          bg = '#2d2d2d',
+        },
+        error_selected = {
+          fg = '#ff1493', -- Deep pink for active tab
+          bg = '#3d3d3d',
+          bold = true,
+        },
+        error_visible = {
+          fg = '#ff69b4',
+          bg = '#2d2d2d',
+        },
+
+        -- Warning highlighting (optional)
+        warning = {
+          fg = '#ffb86c',
+          bg = '#2d2d2d',
+        },
+        warning_selected = {
+          fg = '#ff8c00',
+          bg = '#3d3d3d',
+          bold = true,
+        },
+
+        -- Normal tab highlighting
+        tab = {
+          fg = '#6272a4',
+          bg = '#282a36',
+        },
+        tab_selected = {
+          fg = '#f8f8f2',
+          bg = '#44475a',
+          bold = true,
+        },
+
+        -- Background
+        fill = {
+          bg = '#282a36',
+        },
+
+
       },
     }
 

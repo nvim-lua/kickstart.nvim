@@ -16,7 +16,6 @@ function M.get()
     { 'gI', vim.lsp.buf.implementation, desc = 'Go to Implementation' },
     { 'gy', vim.lsp.buf.type_definition, desc = 'Go to Type Definition' },
     { 'gD', vim.lsp.buf.declaration, desc = 'Go to Declaration' },
-    { 'K', vim.lsp.buf.hover, desc = 'Hover' },
     { 'gK', vim.lsp.buf.signature_help, desc = 'Signature Help' },
     { '<C-k>', vim.lsp.buf.signature_help, mode = 'i', desc = 'Signature Help' },
     { '<leader>ca', vim.lsp.buf.code_action, desc = 'Code Action', mode = { 'n', 'v' } },

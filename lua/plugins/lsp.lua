@@ -28,7 +28,6 @@ return {
       end,
     },
   },
-
   config = function()
     vim.api.nvim_create_autocmd('LspAttach', {
       group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
@@ -36,10 +35,8 @@ return {
         local map = function(keys, func, desc)
           vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
         end
-
         local telescope_ok, telescope = pcall(require, 'telescope.builtin')
         if not telescope_ok then return end
-
         map('gd', telescope.lsp_definitions, 'Go to Definition')
         map('gr', telescope.lsp_references, 'Go to References')
         map('gI', telescope.lsp_implementations, 'Go to Implementation')
@@ -49,16 +46,12 @@ return {
         map('<leader>rn', vim.lsp.buf.rename, 'Rename')
         map('<leader>ca', vim.lsp.buf.code_action, 'Code Action')
         map('gD', vim.lsp.buf.declaration, 'Go to Declaration')
-
-        map('<S-K>', function()
+        map('K', function()
           local lspsaga_hover_ok, lspsaga_hover = pcall(require, 'lspsaga.hover')
           if lspsaga_hover_ok then
             lspsaga_hover:render_hover_doc()
-          else
-            vim.lsp.buf.hover()
           end
         end, 'Show Hover')
-
         local client = vim.lsp.get_client_by_id(event.data.client_id)
         if client and client.server_capabilities.documentHighlightProvider then
           vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
@@ -91,9 +84,16 @@ return {
         },
         filetypes = { 'go', 'templ' },
       },
-      -- tsserver = { settings = { completions = { completeFunctionCalls = true }, }, filetypes = { 'typescript', 'typescriptreact', 'typescript.tsx', 'javascript' }, root_dir = require('lspconfig.util').root_pattern('package.json', 'tsconfig.json', '.git'), },
+      astro = {
+        filetypes = { "astro" },
+        init_options = {
+          typescript = {
+            tsdk = vim.fn.stdpath("data") .. "/mason/packages/typescript-language-server/node_modules/typescript/lib",
+          },
+        },
+      },
       eslint = {},
-      html = { filetypes = { 'html', 'twig', 'hbs' } }, -- Removed 'templ' from here
+      html = { filetypes = { 'html', 'twig', 'hbs' } },
       templ = {
         cmd = { vim.fn.stdpath("data") .. "/mason/bin/templ", "lsp" },
         filetypes = { "templ" },
@@ -133,37 +133,41 @@ return {
       cssls = {},
     }
 
-    -- Enable LSP Features
     require('mason').setup()
-    local ensure_installed = vim.tbl_keys(servers)
-    vim.list_extend(ensure_installed, { 'templ', 'typescript-language-server' })
-    require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+
+    local capabilities = vim.tbl_deep_extend(
+      'force',
+      {},
+      vim.lsp.protocol.make_client_capabilities(),
+      require('cmp_nvim_lsp').default_capabilities()
+    )
 
     require('mason-lspconfig').setup {
-      handlers = {
-        function(server_name)
-          local server = servers[server_name] or {}
-          server.capabilities = vim.tbl_deep_extend(
-            'force',
-            {},
-            vim.lsp.protocol.make_client_capabilities(),
-            require('cmp_nvim_lsp').default_capabilities(),
-            server.capabilities or {}
-          )
-          require('lspconfig')[server_name].setup(server)
-        end,
-      },
+      ensure_installed = vim.tbl_keys(servers),
     }
+
+    -- Setup servers manually
+    for name, config in pairs(servers) do
+      config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, config.capabilities or {})
+      require('lspconfig')[name].setup(config)
+    end
+
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      pattern = "*.astro",
+      callback = function()
+        vim.lsp.buf.format({ async = false })
+      end,
+    })
 
     -- Auto-format and organize imports on save for Go
     vim.api.nvim_create_autocmd("BufWritePre", {
       pattern = "*.go",
       callback = function()
-        vim.lsp.buf.format({ async = false }) -- Format
+        vim.lsp.buf.format({ async = false })
         vim.lsp.buf.code_action({
           context = { only = { "source.organizeImports" } },
           apply = true,
-        }) -- Organize imports
+        })
       end,
     })
   end,

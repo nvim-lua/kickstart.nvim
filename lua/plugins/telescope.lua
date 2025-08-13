@@ -26,11 +26,14 @@ return {
 
     require('telescope').setup {
       defaults = {
+        winblend = 0,
         mappings = {
           i = {
             ['<C-k>'] = actions.move_selection_previous, -- move to prev result
             ['<C-j>'] = actions.move_selection_next, -- move to next result
             ['<C-l>'] = actions.select_default, -- open file
+            -- Enable paste from system clipboard
+            ['<C-r>'] = actions.paste_register,
           },
           n = {
             ['q'] = actions.close,
