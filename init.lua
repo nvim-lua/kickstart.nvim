@@ -60,6 +60,7 @@ require('lazy').setup({
   require 'plugins.treesitter',
   require 'plugins.vim-tmux-navigator',
   require 'plugins.zellij',
+
 }, {
   ui = {
     -- If you have a Nerd Font, set icons to an empty table which will use the

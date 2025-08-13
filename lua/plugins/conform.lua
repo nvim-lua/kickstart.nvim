@@ -4,7 +4,11 @@ return {
     config = function()
       require("conform").setup({
         formatters_by_ft = {
-          templ = { "templ", "prettier" }, -- Use templ first, then Prettier for embedded content
+          -- Disable formatters for .templ files
+          templ = {},
+
+          -- Add your other filetype configs here as needed
+          -- e.g., go = { "gofmt" },
         },
         format_on_save = {
           timeout_ms = 500,
@@ -12,6 +16,6 @@ return {
         },
       })
     end,
-    event = { "BufReadPre", "BufNewFile" }, -- Load only when opening a file
+    event = { "BufReadPre", "BufNewFile" },
   }
 }

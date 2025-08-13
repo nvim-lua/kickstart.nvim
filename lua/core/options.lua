@@ -24,7 +24,7 @@ vim.o.shiftwidth = 4                                 -- the number of spaces ins
 vim.o.tabstop = 2                                    -- insert n spaces for a tab
 vim.o.softtabstop = 4                                -- Number of spaces that a tab counts for while performing editing operations
 vim.o.expandtab = true                               -- convert tabs to spaces
-vim.o.cursorline = true -- highlight the current line
+vim.o.cursorline = true                              -- highlight the current line
 vim.o.splitbelow = true                              -- force all horizontal splits to go below current window
 vim.o.splitright = true                              -- force all vertical splits to go to the right of current window
 vim.o.swapfile = false                               -- creates a swapfile
@@ -60,4 +60,12 @@ vim.opt.foldlevel = 99 -- Keep folds open by default
 
 
 
-
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "templ",
+  callback = function()
+    vim.bo.tabstop = 2
+    vim.bo.shiftwidth = 2
+    vim.bo.softtabstop = 2
+    vim.bo.expandtab = true
+  end,
+})

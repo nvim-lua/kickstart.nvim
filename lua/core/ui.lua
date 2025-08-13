@@ -32,7 +32,6 @@ return {
     event = 'VimEnter',
     opts = function(_, opts)
       local logo = [[
-
               ████████            ████████
                 ██                ██    ██
                 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒██▒▒▒▒  ████
@@ -46,14 +45,14 @@ return {
 ████          ████  ██      ████          ████
   ████      ████              ████      ████
     ██████████                  ██████████
-
       ]]
-
       logo = string.rep('\n', 8) .. logo .. '\n\n'
 
-      -- 🔥 Ensure `opts.config` is a table before modifying
       opts.config = opts.config or {}
       opts.config.header = vim.split(logo, '\n')
+
+      -- ✅ Disable project module to avoid error
+      opts.config.project = { enable = false }
     end,
   },
 }

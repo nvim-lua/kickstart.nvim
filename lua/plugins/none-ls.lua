@@ -19,6 +19,7 @@ return {
         'eslint_d', -- ts/js linter
         'shfmt',
         'ruff',
+        'goimports'
       },
       -- auto-install configured formatters & linters (with null-ls)
       automatic_installation = true,
