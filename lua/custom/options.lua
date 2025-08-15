@@ -18,3 +18,44 @@ vim.o.softtabstop = 2
 -- etc... Review the options section of your old init.lua and add any *changed* values here.
 -- The kickstart defaults are generally sensible, so you might not need many overrides.
 
+-- Function to check if running in a shared tmux session
+local function is_shared_tmux_session()
+  if not vim.env.TMUX then
+    return false
+  end
+  
+  local handle = io.popen('tmux list-sessions -F "#{session_name}:#{session_attached}" 2>/dev/null')
+  if not handle then
+    return false
+  end
+  
+  local current_session = vim.fn.system('tmux display-message -p "#S"'):gsub('\n', '')
+  local output = handle:read('*a')
+  handle:close()
+  
+  for line in output:gmatch('[^\r\n]+') do
+    local session_name, attached_count = line:match('([^:]+):(%d+)')
+    if session_name == current_session and tonumber(attached_count) > 1 then
+      return true
+    end
+  end
+  
+  return false
+end
+
+-- Warn before quitting if in a shared tmux session
+vim.api.nvim_create_autocmd('VimLeavePre', {
+  callback = function()
+    if is_shared_tmux_session() then
+      local choice = vim.fn.confirm(
+        'You are in a shared tmux session. Other users may be affected.\nDo you really want to quit?',
+        '&Yes\n&No',
+        2
+      )
+      if choice ~= 1 then
+        vim.cmd('cquit!')
+      end
+    end
+  end,
+})
+
