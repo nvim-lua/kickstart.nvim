@@ -7,6 +7,7 @@ return {
   -- { import = 'custom.plugins.completion' },
   { import = 'custom.plugins.debug' },
   { import = 'custom.plugins.formatting' },
+  { import = 'custom.plugins.git' },
   { import = 'custom.plugins.lsp' },
   { import = 'custom.plugins.nvim-tmux-navigator' },
   { import = 'custom.plugins.telescope' },

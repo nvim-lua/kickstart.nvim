@@ -1,0 +1,1 @@
+/nix/store/sxkaavdlrf0762h3k07j2jm9b7d3656n-home-manager-files/.config/git/templates/.github/ISSUE_TEMPLATE/feature_request.md
