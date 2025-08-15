@@ -1,1 +1,8 @@
-/nix/store/sxkaavdlrf0762h3k07j2jm9b7d3656n-home-manager-files/.config/git/templates/.github/pull_request_template.md
+***************************************************************************
+**NOTE**
+Please verify that the `base repository` above has the intended destination!
+Github by default opens Pull Requests against the parent of a forked repository.
+If this is your personal fork and you didn't intend to open a PR for contribution
+to the original project then adjust the `base repository` accordingly.
+**************************************************************************
+
