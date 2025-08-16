@@ -1,174 +1,69 @@
+-- lua/plugins/lsp.lua
 return {
-  'neovim/nvim-lspconfig',
-  dependencies = {
-    'williamboman/mason.nvim',
-    'williamboman/mason-lspconfig.nvim',
-    'WhoIsSethDaniel/mason-tool-installer.nvim',
-    {
-      'j-hui/fidget.nvim',
-      tag = 'v1.4.0',
-      opts = {
-        progress = {
-          display = { done_icon = '✓' },
-        },
-        notification = {
-          window = { winblend = 0 },
-        },
-      },
-    },
-    {
-      'glepnir/lspsaga.nvim',
-      event = 'LspAttach',
-      config = function()
-        require('lspsaga').setup {
-          ui = { border = 'rounded', title = true },
-          hover = { max_width = 0.6 },
-          rename = { in_select = false },
-        }
-      end,
-    },
-  },
-  config = function()
-    vim.api.nvim_create_autocmd('LspAttach', {
-      group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
-      callback = function(event)
-        local map = function(keys, func, desc)
-          vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
-        end
-        local telescope_ok, telescope = pcall(require, 'telescope.builtin')
-        if not telescope_ok then return end
-        map('gd', telescope.lsp_definitions, 'Go to Definition')
-        map('gr', telescope.lsp_references, 'Go to References')
-        map('gI', telescope.lsp_implementations, 'Go to Implementation')
-        map('<leader>D', telescope.lsp_type_definitions, 'Type Definition')
-        map('<leader>ds', telescope.lsp_document_symbols, 'Document Symbols')
-        map('<leader>ws', telescope.lsp_dynamic_workspace_symbols, 'Workspace Symbols')
-        map('<leader>rn', vim.lsp.buf.rename, 'Rename')
-        map('<leader>ca', vim.lsp.buf.code_action, 'Code Action')
-        map('gD', vim.lsp.buf.declaration, 'Go to Declaration')
-        map('K', function()
-          local lspsaga_hover_ok, lspsaga_hover = pcall(require, 'lspsaga.hover')
-          if lspsaga_hover_ok then
-            lspsaga_hover:render_hover_doc()
+  {
+    "neovim/nvim-lspconfig",
+    config = function()
+      local lspconfig = require("lspconfig")
+      local util = require("lspconfig.util")
+
+      -- Ensure *.templ is recognized as 'templ'
+      vim.filetype.add({
+        extension = { templ = "templ" },
+      })
+
+      -- Example setup for Go, TS, etc.
+      lspconfig.gopls.setup({})
+
+      -- TypeScript (make sure you don't also set this up elsewhere to avoid duplicates)
+      lspconfig.ts_ls.setup({})
+
+      -- ✅ Templ LSP: auto-start when in a repo with go.mod or .git
+      lspconfig.templ.setup({
+        cmd = { "templ", "lsp" }, -- or absolute path if needed
+        filetypes = { "templ" },
+        root_dir = util.root_pattern("go.mod", ".git"),
+        single_file_support = true,
+      })
+
+      -- Safe hover helper
+      local function has_hover(bufnr)
+        for _, c in pairs(vim.lsp.get_active_clients({ bufnr = bufnr })) do
+          if c.server_capabilities and c.server_capabilities.hoverProvider then
+            return true
           end
-        end, 'Show Hover')
-        local client = vim.lsp.get_client_by_id(event.data.client_id)
-        if client and client.server_capabilities.documentHighlightProvider then
-          vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-            buffer = event.buf,
-            callback = vim.lsp.buf.document_highlight,
-          })
-          vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-            buffer = event.buf,
-            callback = vim.lsp.buf.clear_references,
-          })
         end
-      end,
-    })
+        return false
+      end
 
-    -- LSP Server Configurations
-    local servers = {
-      gopls = {
-        settings = {
-          gopls = {
-            experimentalPostfixCompletions = true,
-            gofumpt = true,
-            staticcheck = true,
-            analyses = { unusedparams = true },
-            directoryFilters = { '-node_modules' },
-            templ = {
-              format = false, -- DISABLED for debugging
-              lint = true,
-            },
-          },
-        },
-        filetypes = { 'go', 'templ' },
-      },
-      astro = {
-        filetypes = { "astro" },
-        init_options = {
-          typescript = {
-            tsdk = vim.fn.stdpath("data") .. "/mason/packages/typescript-language-server/node_modules/typescript/lib",
-          },
-        },
-      },
-      eslint = {},
-      html = { filetypes = { 'html', 'twig', 'hbs' } },
-      -- templ = { -- DISABLED for debugging
-      --   cmd = { vim.fn.stdpath("data") .. "/mason/bin/templ", "lsp" },
-      --   filetypes = { "templ" },
-      --   root_dir = require("lspconfig").util.root_pattern("go.mod", ".git"),
-      -- },
-      lua_ls = {
-        settings = {
-          Lua = {
-            runtime = { version = 'LuaJIT' },
-            workspace = {
-              checkThirdParty = false,
-              library = {
-                '${3rd}/luv/library',
-                unpack(vim.api.nvim_get_runtime_file('', true)),
-              },
-            },
-            completion = { callSnippet = 'Replace' },
-            telemetry = { enable = false },
-            diagnostics = { disable = { 'missing-fields' } },
-          },
-        },
-      },
-      dockerls = {},
-      docker_compose_language_service = {},
-      rust_analyzer = {
-        ['rust-analyzer'] = {
-          cargo = { features = 'all' },
-          checkOnSave = true,
-          check = { command = 'clippy' },
-        },
-      },
-      tailwindcss = {},
-      jsonls = {},
-      yamlls = {},
-      bashls = {},
-      graphql = {},
-      cssls = {},
-    }
+      -- Keymaps
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(args)
+          local bufnr = args.buf
+          local function buf_map(mode, lhs, rhs, desc)
+            vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
+          end
 
-    require('mason').setup()
+          -- SAFE Hover
+          buf_map("n", "K", function()
+            if not has_hover(bufnr) then
+              return
+            end
+            local ok, saga_hover = pcall(require, "lspsaga.hover")
+            if ok and saga_hover and saga_hover.render_hover_doc then
+              pcall(function() saga_hover:render_hover_doc() end)
+            else
+              pcall(vim.lsp.buf.hover)
+            end
+          end, "LSP: Hover (safe)")
 
-    local capabilities = vim.tbl_deep_extend(
-      'force',
-      {},
-      vim.lsp.protocol.make_client_capabilities(),
-      require('cmp_nvim_lsp').default_capabilities()
-    )
-
-    require('mason-lspconfig').setup {
-      ensure_installed = vim.tbl_keys(servers),
-    }
-
-    -- Setup servers manually
-    for name, config in pairs(servers) do
-      config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, config.capabilities or {})
-      require('lspconfig')[name].setup(config)
-    end
-
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      pattern = "*.astro",
-      callback = function()
-        vim.lsp.buf.format({ async = false })
-      end,
-    })
-
-    -- Auto-format and organize imports on save for Go
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      pattern = "*.go",
-      callback = function()
-        vim.lsp.buf.format({ async = false })
-        vim.lsp.buf.code_action({
-          context = { only = { "source.organizeImports" } },
-          apply = true,
-        })
-      end,
-    })
-  end,
+          -- Usual LSP keymaps
+          buf_map("n", "gd", vim.lsp.buf.definition, "Goto Definition")
+          buf_map("n", "gr", vim.lsp.buf.references, "Goto References")
+          buf_map("n", "gi", vim.lsp.buf.implementation, "Goto Implementation")
+          buf_map("n", "<leader>rn", vim.lsp.buf.rename, "Rename Symbol")
+        end,
+      })
+    end,
+  },
 }
+
