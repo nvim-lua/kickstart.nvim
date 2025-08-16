@@ -27,7 +27,7 @@ return {
 
     local sources = {
       diagnostics.checkmake,
-      formatting.prettier.with { filetypes = { 'html', 'json', 'yaml', 'markdown' } },
+      formatting.prettier.with { filetypes = { 'html', 'json', 'yaml', 'markdown' } }, -- removed 'templ' for debugging
       formatting.stylua,
       formatting.shfmt.with { args = { '-i', '4' } },
       require('none-ls.formatting.ruff').with { extra_args = { '--extend-select', 'I' } },
@@ -41,6 +41,12 @@ return {
       -- you can reuse a shared lspconfig on_attach callback here
       on_attach = function(client, bufnr)
         if client.supports_method 'textDocument/formatting' then
+          -- Skip formatting for .templ files during debugging
+          local filetype = vim.api.nvim_buf_get_option(bufnr, 'filetype')
+          if filetype == 'templ' then
+            return
+          end
+          
           vim.api.nvim_clear_autocmds { group = augroup, buffer = bufnr }
           vim.api.nvim_create_autocmd('BufWritePre', {
             group = augroup,

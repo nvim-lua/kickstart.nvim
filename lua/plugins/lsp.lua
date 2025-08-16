@@ -77,7 +77,7 @@ return {
             analyses = { unusedparams = true },
             directoryFilters = { '-node_modules' },
             templ = {
-              format = true,
+              format = false, -- DISABLED for debugging
               lint = true,
             },
           },
@@ -94,11 +94,11 @@ return {
       },
       eslint = {},
       html = { filetypes = { 'html', 'twig', 'hbs' } },
-      templ = {
-        cmd = { vim.fn.stdpath("data") .. "/mason/bin/templ", "lsp" },
-        filetypes = { "templ" },
-        root_dir = require("lspconfig").util.root_pattern("go.mod", ".git"),
-      },
+      -- templ = { -- DISABLED for debugging
+      --   cmd = { vim.fn.stdpath("data") .. "/mason/bin/templ", "lsp" },
+      --   filetypes = { "templ" },
+      --   root_dir = require("lspconfig").util.root_pattern("go.mod", ".git"),
+      -- },
       lua_ls = {
         settings = {
           Lua = {
