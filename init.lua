@@ -316,7 +316,8 @@ require('lazy').setup({
   require 'kickstart.plugins.lsp',
   { -- Autoformat
     'stevearc/conform.nvim',
-    lazy = false,
+    event = { 'BufWritePre' },
+    cmd = { 'ConformInfo' },
     keys = {
       {
         '<leader>f',
@@ -334,10 +335,14 @@ require('lazy').setup({
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
         local disable_filetypes = { c = true, cpp = true }
-        return {
-          timeout_ms = 500,
-          lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
-        }
+        if disable_filetypes[vim.bo[bufnr].filetype] then
+          return nil
+        else
+          return {
+            timeout_ms = 500,
+            lsp_format = 'fallback',
+          }
+        end
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
@@ -368,7 +373,10 @@ require('lazy').setup({
     },
   },
 
-  require 'kickstart.plugins.autocomplete',
+  -- autocomplete/autocompletion engines
+  -- require 'kickstart.plugins.autocomplete.blink-cmp',
+  require 'kickstart.plugins.autocomplete.nvim-cmp',
+
   -- THEMES
   -- require 'kickstart.plugins.themes.tokyonight',
   require 'kickstart.plugins.themes.catppuccin',
