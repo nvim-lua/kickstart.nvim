@@ -76,8 +76,6 @@ vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
-
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
@@ -565,6 +563,9 @@ require('lazy').setup({
           },
         },
         gopls = {},
+        dart = {
+          force = true,
+        },
         -- solargraph = {},
         -- ruby_lsp = {},
         sqlls = {},
@@ -959,3 +960,49 @@ vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+--
+
+-- Enable exrc, which will load a local .nvim.lua if it exists in the pwd
+vim.opt.exrc = true
+
+-- Quickfix
+vim.keymap.set('n', '<leader>qn', ':cnext<CR>', { desc = 'Next quickfix item' })
+vim.keymap.set('n', '<leader>qp', ':cprev<CR>', { desc = 'Previous quickfix item' })
+
+-- Git diff base tracking
+vim.keymap.set('n', '<leader>qgc', function()
+  vim.g.last_git_diff_mode = ''
+  vim.cmd 'Git difftool'
+end, { desc = '[Q]uickfix [G]itdiff [C]reate' })
+
+vim.keymap.set('n', '<leader>qgh', function()
+  vim.g.last_git_diff_mode = 'HEAD~1'
+  vim.cmd 'Git difftool HEAD~1'
+end, { desc = '[Q]uickfix [G]itdiff [H]EAD~1' })
+
+-- Smart quickfix Gitdiff next/prev
+vim.keymap.set('n', '<leader>qgv', function()
+  local buffers = vim.api.nvim_list_bufs()
+  local deleted_count = 0
+
+  for _, buf in ipairs(buffers) do
+    if vim.api.nvim_buf_is_loaded(buf) then
+      local name = vim.api.nvim_buf_get_name(buf)
+      if name:match '^fugitive://' then
+        vim.api.nvim_buf_delete(buf, { force = true })
+        deleted_count = deleted_count + 1
+      end
+    end
+  end
+
+  if deleted_count > 0 then
+    vim.notify('Closed ' .. deleted_count .. ' Gdiffsplit buffer(s)', vim.log.levels.INFO)
+  else
+    vim.notify('Opening new GDiffsplit', vim.log.levels.INFO)
+  end
+
+  vim.cmd('Gdiffsplit ' .. vim.g.last_git_diff_mode)
+end, { desc = '[Q]uickfix [G]itdiff [V]iew (context-aware)' })
+
+-- Quickfix with diagnostics
+vim.keymap.set('n', '<leader>qd', vim.diagnostic.setloclist, { desc = 'Open [Q]uickfix [D]iagnostic list' })
