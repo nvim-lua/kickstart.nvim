@@ -256,7 +256,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
     --    :Lazy update
     --
     -- NOTE: This will load all lua files in `lua/plugins/`
-    require('lazy').setup('plugins', {
+    require('lazy').setup({ import = 'plugins' }, {
       ui = {
         -- If you are using a Nerd Font: set icons to an empty table which will use the
         -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
@@ -271,7 +271,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
           runtime = '💻',
           require = '🌙',
           source = '📄',
-          start = '🚀',
+          start = '�',
           task = '📌',
           lazy = '💤 ',
         },
