@@ -122,10 +122,6 @@ return {
     build = ':call mkdp#util#install()',
   },
   {
-    'OXY2DEV/markview.nvim',
-    lazy = false,
-  },
-  {
     'stevearc/oil.nvim',
     ---@module 'oil'
     ---@type oil.SetupOpts
