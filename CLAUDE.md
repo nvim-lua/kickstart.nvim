@@ -63,6 +63,16 @@ Key principles:
 - Always use worktrees for feature development
 - Complete cleanup after merge
 
+## Development Practices
+
+Claude Code instances should follow the development practices documented at: `../development-practices.yaml`
+
+This includes:
+- Task management with TodoWrite
+- Tool usage patterns and batching
+- Debugging approaches and common bug patterns
+- Code quality standards and communication guidelines
+
 ## Development Workflow
 
 1. Configuration changes are made in `lua/custom/` files
