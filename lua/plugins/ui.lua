@@ -4,17 +4,47 @@ return {
     { -- Colorscheme (Tokyonight)
         'folke/tokyonight.nvim',
         priority = 1000,
-        init = function()
+        opts = {
+            style = "night",       -- "storm" | "night" | "moon" | "day"
+            transparent = true,    -- enable transparent background
+            styles = {
+                sidebars = "transparent", -- sidebar-like windows
+                floats = "transparent",   -- floating windows
+            },
+        },
+        config = function(_, opts)
+        require("tokyonight").setup(opts)
         vim.cmd.colorscheme 'tokyonight-night'
         vim.cmd.hi 'Comment gui=none'
-        --[[
-        vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-        vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-        vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
-        vim.api.nvim_set_hl(0, "LineNr", { bg = "none" })
-        vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })]]
-        end,
+
+        -- Toggle transparency function
+        function Toggle_transparent()
+        local normal = vim.api.nvim_get_hl(0, { name = "Normal" })
+        if normal.bg == nil then
+            require("tokyonight").setup({ transparent = false })
+            vim.cmd.colorscheme("tokyonight-night")
+            vim.cmd.hi("Comment gui=none")
+            else
+                require("tokyonight").setup({ transparent = true })
+                vim.cmd.colorscheme("tokyonight-night")
+                vim.cmd.hi("Comment gui=none")
+                end
+                end
+
+                -- Keymap: <leader>ut = toggle transparency
+                vim.keymap.set("n", "<leader>ut", Toggle_transparent, { desc = "[U]I [T]ransparency toggle" })
+
+                --[[
+                -- Manual highlights if you want to force extra groups transparent
+                vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+                vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+                vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
+                vim.api.nvim_set_hl(0, "LineNr", { bg = "none" })
+                vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
+                ]]
+                end,
     },
+
 
     { -- Evil Lualine (statusline)
         'nvim-lualine/lualine.nvim',

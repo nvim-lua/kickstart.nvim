@@ -1,89 +1,86 @@
--- plugins/editing.lua
+-- [plugins/tools.lua]
 
 return {
-    -- Detect tabstop and shiftwidth automatically
-    'tpope/vim-sleuth',
-
-    { -- Auto pairs for brackets, quotes, etc.
-        'windwp/nvim-autopairs',
-        event = 'InsertEnter',
-        dependencies = { 'hrsh7th/nvim-cmp' },
+    { -- Fuzzy Finder (files, lsp, etc)
+        'nvim-telescope/telescope.nvim',
+        event = 'VimEnter',
+        branch = '0.1.x',
+        dependencies = {
+            'nvim-lua/plenary.nvim', -- Required
+            { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make', cond = function() return vim.fn.executable 'make' == 1 end }, -- Suggested: native sorter
+            { 'nvim-telescope/telescope-ui-select.nvim' }, -- Optional: better UI
+            { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font }, -- Optional: icons
+        },
         config = function()
-        require('nvim-autopairs').setup {}
-        -- If you want to automatically add `(` after selecting a function or method
-        local cmp_autopairs = require 'nvim-autopairs.completion.cmp'
-        local cmp = require 'cmp'
-        cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
-        end,
-    },
-
-    { -- Adds indentation guides to all lines
-        'lukas-reineke/indent-blankline.nvim',
-        main = 'ibl',
-        opts = {},
-    },
-
-    { -- Collection of small, useful plugins
-        'echasnovski/mini.nvim',
-        config = function()
-        -- Better text-objects, built-in
-        require('mini.ai').setup { n_lines = 500 }
-        -- Add/delete/replace surroundings (brackets, quotes, etc.)
-        require('mini.surround').setup()
-        end,
-    },
-
-    { -- Useful plugin to show you pending keybinds.
-        'folke/which-key.nvim',
-        event = 'VimEnter', -- Sets the loading event to 'VimEnter'
-        opts = {
-            icons = {
-                -- set icon mappings to true if you have a Nerd Font
-                mappings = vim.g.have_nerd_font,
-                -- If you are using a Nerd Font: set icons.keys to an empty table which will use the
-                -- default which-key.nvim defined Nerd Font icons, otherwise define a string table
-                keys = vim.g.have_nerd_font and {} or {
-                    Up = '<Up> ',
-                    Down = '<Down> ',
-                    Left = '<Left> ',
-                    Right = '<Right> ',
-                    C = '<C-…> ',
-                    M = '<M-…> ',
-                    D = '<D-…> ',
-                    S = '<S-…> ',
-                    CR = '<CR> ',
-                    Esc = '<Esc> ',
-                    ScrollWheelDown = '<ScrollWheelDown> ',
-                    ScrollWheelUp = '<ScrollWheelUp> ',
-                    NL = '<NL> ',
-                    BS = '<BS> ',
-                    Space = '<Space> ',
-                    Tab = '<Tab> ',
-                    F1 = '<F1>',
-                    F2 = '<F2>',
-                    F3 = '<F3>',
-                    F4 = '<F4>',
-                    F5 = '<F5>',
-                    F6 = '<F6>',
-                    F7 = '<F7>',
-                    F8 = '<F8>',
-                    F9 = '<F9>',
-                    F10 = '<F10>',
-                    F11 = '<F11>',
-                    F12 = '<F12>',
+        require('telescope').setup {
+            defaults = {
+                mappings = {
+                    i = {
+                        ['<C-j>'] = "move_selection_next",
+                        ['<C-k>'] = "move_selection_previous",
+                    },
                 },
             },
-
-            -- Document existing key chains
-            spec = {
-                { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
-                { '<leader>d', group = '[D]ocument' },
-                { '<leader>r', group = '[R]ename' },
-                { '<leader>s', group = '[S]earch' },
-                { '<leader>w', group = '[W]orkspace' },
-                { '<leader>t', group = '[T]oggle' },
-                { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+            extensions = {
+                ['ui-select'] = {
+                    require('telescope.themes').get_dropdown(),
+                },
             },
+        }
+        -- Load extensions if installed
+        pcall(require('telescope').load_extension, 'fzf')
+        pcall(require('telescope').load_extension, 'ui-select')
+
+        local builtin = require 'telescope.builtin'
+        vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
+        vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
+        vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+        vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
+        vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
+        vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+        vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+        vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
+        vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+        vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+        end,
+    },
+
+    { -- Treesitter for better syntax highlighting
+        'nvim-treesitter/nvim-treesitter',
+        build = ':TSUpdate',
+        main = 'nvim-treesitter.configs',
+        opts = {
+            ensure_installed = {
+                'bash', 'c', 'diff', 'html', 'lua', 'luadoc',
+                'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc'
+            },
+            auto_install = true,
+            highlight = { enable = true, additional_vim_regex_highlighting = { 'ruby' } },
+            indent = { enable = true, disable = { 'ruby' } },
+        },
+    },
+
+    { -- Debugging (DAP)
+        'mfussenegger/nvim-dap',
+        dependencies = {
+            'williamboman/mason.nvim',
+            'rcarriga/nvim-dap-ui',
+        },
+        config = function()
+        local dap = require 'dap'
+        local dapui = require 'dapui'
+        dapui.setup()
+        dap.listeners.after.event_initialized['dapui_config'] = function() dapui.open() end
+        dap.listeners.before.event_terminated['dapui_config'] = function() dapui.close() end
+        dap.listeners.before.event_exited['dapui_config'] = function() dapui.close() end
+        end,
+        keys = {
+            { '<leader>db', function() require('dap').toggle_breakpoint() end, desc = 'DAP: Toggle Breakpoint' },
+            { '<leader>dc', function() require('dap').continue() end, desc = 'DAP: Continue' },
+            { '<leader>di', function() require('dap').step_into() end, desc = 'DAP: Step Into' },
+            { '<leader>do', function() require('dap').step_over() end, desc = 'DAP: Step Over' },
+            { '<leader>dO', function() require('dap').step_out() end, desc = 'DAP: Step Out' },
+            { '<leader>dr', function() require('dap').repl.open() end, desc = 'DAP: Open REPL' },
         },
     },
 }
