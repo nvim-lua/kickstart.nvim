@@ -53,6 +53,16 @@ The clangd configuration in `lua/custom/plugins/lsp/clangd_helper.lua` automatic
 - `<space>sg` - Live grep search
 - `<space>f` - Format current buffer
 
+## Git Workflow
+
+This project follows the standardized git workflow documented at: `../git-workflow.yaml`
+
+Key principles:
+- Never work directly on main branch
+- Issue-driven development with `gh issue create`
+- Always use worktrees for feature development
+- Complete cleanup after merge
+
 ## Development Workflow
 
 1. Configuration changes are made in `lua/custom/` files
