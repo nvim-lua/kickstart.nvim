@@ -1,0 +1,128 @@
+name: Lead Notifications
+
+on:
+  issues:
+    types: [opened, closed, reopened, assigned, unassigned]
+  pull_request:
+    types: [opened, closed, reopened, review_requested, ready_for_review, merged]
+  pull_request_review:
+    types: [submitted]
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  push:
+    branches: [main]
+
+jobs:
+  notify-lead:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-actions[bot]'  # Don't notify about bot actions
+    
+    steps:
+      - name: Generate Summary
+        id: summary
+        run: |
+          # Determine event description
+          case "${{ github.event_name }}" in
+            "issues")
+              DESCRIPTION="Issue #${{ github.event.issue.number }}: ${{ github.event.action }}"
+              URL="${{ github.event.issue.html_url }}"
+              ;;
+            "pull_request")
+              DESCRIPTION="PR #${{ github.event.pull_request.number }}: ${{ github.event.action }}"
+              URL="${{ github.event.pull_request.html_url }}"
+              ;;
+            "pull_request_review")
+              DESCRIPTION="Review on PR #${{ github.event.pull_request.number }}"
+              URL="${{ github.event.review.html_url }}"
+              ;;
+            "issue_comment")
+              DESCRIPTION="Comment on #${{ github.event.issue.number }}"
+              URL="${{ github.event.comment.html_url }}"
+              ;;
+            "pull_request_review_comment")
+              DESCRIPTION="Review comment on PR #${{ github.event.pull_request.number }}"
+              URL="${{ github.event.comment.html_url }}"
+              ;;
+            "push")
+              DESCRIPTION="Push to main by ${{ github.actor }}"
+              URL="${{ github.event.compare }}"
+              ;;
+            *)
+              DESCRIPTION="${{ github.event_name }} by ${{ github.actor }}"
+              URL="${{ github.server_url }}/${{ github.repository }}"
+              ;;
+          esac
+          
+          echo "description=$DESCRIPTION" >> $GITHUB_OUTPUT
+          echo "url=$URL" >> $GITHUB_OUTPUT
+      
+      - name: Create Desktop Notification (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          osascript -e 'display notification "${{ steps.summary.outputs.description }}" with title "[${{ github.repository }}]" sound name "Glass"'
+      
+      - name: Log Activity
+        run: |
+          echo "📢 Repository Activity:"
+          echo "Repository: ${{ github.repository }}"
+          echo "Event: ${{ github.event_name }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Description: ${{ steps.summary.outputs.description }}"
+          echo "URL: ${{ steps.summary.outputs.url }}"
+          echo "Time: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+      
+      # Optional: Post to Slack
+      # - name: Slack Notification
+      #   if: github.event_name == 'pull_request' && github.event.action == 'opened'
+      #   uses: slackapi/slack-github-action@v1
+      #   with:
+      #     payload: |
+      #       {
+      #         "text": "New PR in ${{ github.repository }}",
+      #         "blocks": [{
+      #           "type": "section",
+      #           "text": {
+      #             "type": "mrkdwn",
+      #             "text": "🔔 *${{ steps.summary.outputs.description }}*\n<${{ steps.summary.outputs.url }}|View on GitHub>"
+      #           }
+      #         }]
+      #       }
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  rebase-reminder:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+    
+    steps:
+      - name: Create Rebase Reminder Issue
+        run: |
+          gh issue create \
+            --repo ${{ github.repository }} \
+            --title "⚠️ Rebase Reminder: PR #${{ github.event.pull_request.number }} merged" \
+            --body "PR #${{ github.event.pull_request.number }} was merged to main. 
+
+Active worktrees should be rebased to avoid conflicts:
+
+\`\`\`bash
+# Update main
+cd ~/dev/projects/$(basename ${{ github.repository }})
+git fetch origin main
+git pull origin main
+
+# For each active worktree
+cd ~/dev/worktrees/$(basename ${{ github.repository }})/<worktree-name>
+git rebase origin/main
+git push --force-with-lease
+\`\`\`
+
+**Merged PR**: ${{ github.event.pull_request.title }}
+**Merged by**: ${{ github.event.pull_request.merged_by.login }}
+**Link**: ${{ github.event.pull_request.html_url }}
+
+This issue can be closed once all active worktrees have been rebased." \
+            --label "rebase-reminder,automated"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

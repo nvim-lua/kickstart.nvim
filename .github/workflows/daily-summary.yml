@@ -1,0 +1,59 @@
+name: Daily Activity Summary
+
+on:
+  schedule:
+    - cron: '0 9 * * *'  # 9 AM daily
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  generate-summary:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: read
+    
+    steps:
+      - name: Generate Activity Summary
+        id: summary
+        run: |
+          echo "# 📊 Daily Activity Summary" > summary.md
+          echo "**Date**: $(date -u +"%Y-%m-%d")" >> summary.md
+          echo "**Repository**: ${{ github.repository }}" >> summary.md
+          echo "" >> summary.md
+          
+          # Get open PRs
+          echo "## 🔄 Open Pull Requests" >> summary.md
+          gh pr list --repo ${{ github.repository }} --state open --limit 10 --json number,title,author,createdAt \
+            --jq '.[] | "- PR #\(.number): \(.title) by @\(.author.login)"' >> summary.md || echo "- None" >> summary.md
+          echo "" >> summary.md
+          
+          # Get open issues
+          echo "## 📝 Open Issues" >> summary.md
+          gh issue list --repo ${{ github.repository }} --state open --limit 10 --json number,title,author,createdAt \
+            --jq '.[] | "- Issue #\(.number): \(.title) by @\(.author.login)"' >> summary.md || echo "- None" >> summary.md
+          echo "" >> summary.md
+          
+          # Recent merges (last 24 hours)
+          echo "## ✅ Recently Merged (24h)" >> summary.md
+          gh pr list --repo ${{ github.repository }} --state merged --limit 5 --json number,title,mergedAt \
+            --jq '.[] | select(.mergedAt > (now - 86400 | strftime("%Y-%m-%dT%H:%M:%SZ"))) | "- PR #\(.number): \(.title)"' >> summary.md || echo "- None" >> summary.md
+          
+          cat summary.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Create Summary Issue
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: |
+          # Close previous daily summaries
+          gh issue list --repo ${{ github.repository }} --label "daily-summary" --state open --json number \
+            --jq '.[].number' | xargs -I {} gh issue close {} --repo ${{ github.repository }} || true
+          
+          # Create new summary
+          gh issue create \
+            --repo ${{ github.repository }} \
+            --title "📊 Daily Summary: $(date -u +"%Y-%m-%d")" \
+            --body-file summary.md \
+            --label "daily-summary,automated"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

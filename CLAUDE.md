@@ -1,12 +1,16 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code when working with Neovim configuration.
 
-## Neovim Configuration Structure
+## Project Leadership
+You are the lead Claude for the **nvim** project. You have authority to self-assign and work on issues in this repository.
 
-This is a Neovim configuration forked from https://github.com/nvim-lua/kickstart.nvim and structured to minimize merge conflicts when updating from upstream. All custom modifications are isolated in the `lua/custom/` directory, allowing the main `init.lua` and kickstart files to be updated with minimal conflicts.
+## Project Overview
+A modular Neovim configuration forked from [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim), structured to minimize merge conflicts when updating from upstream. All custom modifications are isolated in the `lua/custom/` directory, allowing the main `init.lua` to stay in sync with kickstart while maintaining our customizations.
 
-The configuration is organized in a modular structure:
+**Key Design Principle**: Never modify kickstart files directly - all customizations go in `lua/custom/` to ensure clean merges from upstream.
+
+## Architecture
 
 - **`init.lua`**: Main configuration file that loads all settings, keymaps, and plugins
 - **`lua/custom/`**: Custom configuration modules
@@ -18,9 +22,18 @@ The configuration is organized in a modular structure:
       - **`lsp.lua`**: LSP server configurations (Python, Nix, Rust, Go, C/C++)
       - **`clangd_helper.lua`**: Advanced clangd setup with compile_commands.json detection and file watching
 
-## LSP Configuration
+### Key Components
+- **`init.lua`**: Main configuration file that loads all settings, keymaps, and plugins
+- **`lua/custom/`**: Custom configuration modules
+  - **`options.lua`**: Custom vim options (indentation, Nerd Font settings)
+  - **`keymaps.lua`**: Custom key mappings
+  - **`plugins/`**: Plugin configurations
+    - **`init.lua`**: Plugin imports and basic plugin setup
+    - **`lsp/`**: LSP-specific configurations
+      - **`lsp.lua`**: LSP server configurations (Python, Nix, Rust, Go, C/C++)
+      - **`clangd_helper.lua`**: Advanced clangd setup with compile_commands.json detection
 
-The LSP setup includes:
+### LSP Servers Configured:
 - **clangd**: C/C++ with automatic compile_commands.json detection and file watching
 - **pyright**: Python language server with basic type checking
 - **nixd**: Nix language server  
@@ -28,54 +41,89 @@ The LSP setup includes:
 - **texlab**: LaTeX support
 - **cmake**: CMake language server
 
-The clangd configuration in `lua/custom/plugins/lsp/clangd_helper.lua` automatically:
-- Searches for compile_commands.json files using `fd`
-- Watches for changes and restarts clangd when compile_commands.json is updated
-- Provides a `:ReloadClangd` command for manual restart
+## Development Commands
 
-## Key Features
+### Plugin Management
+- `:Lazy` - Open plugin manager UI
+- `:Lazy reload` - Reload plugin configurations
+- `:checkhealth` - Verify all dependencies and configuration
 
-- Uses **lazy.nvim** for plugin management
-- **Blink.cmp** for autocompletion with LSP integration
-- **Telescope** for fuzzy finding
-- **Treesitter** for syntax highlighting
-- **Which-key** for keymap help
-- **Mini.nvim** modules for text objects, surround, and statusline
-- **TokyoNight** colorscheme
-
-## Common Commands
-
-- `:Lazy` - Manage plugins (install, update, etc.)
-- `:checkhealth` - Check Neovim configuration health
-- `:ReloadClangd` - Manually restart clangd LSP server
+### Search & Navigation
+- `<space>sf` - Find files (Telescope)
+- `<space>sg` - Live grep search (Telescope)
 - `<space>sh` - Search help documentation
-- `<space>sf` - Find files
-- `<space>sg` - Live grep search
+- `<space>sk` - Search keymaps
+- `<space>/` - Fuzzy search in current buffer
+
+### Git Operations (via vim-fugitive)
+- `<leader>gs` - Git status
+- `<leader>gd` - Git diff
+- `<leader>gc` - Git commit
+- `<leader>gb` - Git blame
+- `<leader>gl` - Git log
+- `<leader>gp` - Git push
+- `<leader>gf` - Git fetch
+
+### LSP Operations
 - `<space>f` - Format current buffer
+- `<leader>lr` - Reload all LSP servers
+- `:ReloadClangd` - Manually restart clangd
+- `grn` - Rename symbol
+- `gra` - Code action
+- `grr` - Find references
+- `grd` - Go to definition
 
-## Git Workflow
+## Project-Specific Conventions
+- Configuration changes are made in `lua/custom/` files
+- Plugin configurations go in `lua/custom/plugins/`
+- LSP servers are expected to be installed system-wide (via Nix/Home Manager)
+- The configuration uses lazy loading for most plugins to optimize startup time
 
-This project follows the standardized git workflow documented at: `../git-workflow.yaml`
+## External Dependencies
 
-Key principles:
-- Never work directly on main branch
-- Issue-driven development with `gh issue create`
-- Always use worktrees for feature development
-- Complete cleanup after merge
+### System Requirements
+- **git**, **make**, **unzip**, **gcc** - Basic build tools
+- **ripgrep** - Fast text search (required for Telescope grep)
+- **fd** - Fast file finder (required for Telescope file search)
+- **Clipboard tool** - xclip/xsel on Linux, pbcopy on macOS
+- **Nerd Font** - Optional but recommended for icons (currently enabled)
 
-## Development Practices
+### Neovim Plugins
+- **lazy.nvim** - Plugin management
+- **Blink.cmp** - Autocompletion with LSP integration
+- **Telescope** - Fuzzy finding
+- **Treesitter** - Syntax highlighting
+- **Which-key** - Keymap help
+- **Mini.nvim** - Text objects, surround, and statusline
+- **TokyoNight** - Colorscheme
+- **vim-fugitive** - Git integration (`:Git` commands)
+- **gitsigns.nvim** - Git gutter and hunk operations
+- **nvim-tmux-navigator** - Seamless tmux/nvim navigation
+- **GitHub Copilot** - AI code suggestions (being replaced with zbirenbaum/copilot.lua)
 
-Claude Code instances should follow the development practices documented at: `../development-practices.yaml`
+### LSP Servers (via Nix/Home Manager)
+- **clangd** - C/C++
+- **pyright** - Python type checking
+- **ruff** - Python linting
+- **nixd** - Nix language
+- **texlab** - LaTeX
+- **cmake-language-server** - CMake
 
-This includes:
-- Task management with TodoWrite
-- Tool usage patterns and batching
-- Debugging approaches and common bug patterns
-- Code quality standards and communication guidelines
+## Common Tasks
+- **Add new plugin**: Create file in `lua/custom/plugins/`, add import to `lua/custom/plugins/init.lua`
+- **Update LSP config**: Edit `lua/custom/plugins/lsp/lsp.lua`
+- **Change keybindings**: Edit `lua/custom/keymaps.lua`
+- **Update from upstream kickstart**: 
+  ```bash
+  git fetch kickstart
+  git merge kickstart/master
+  # Conflicts should only be in init.lua, not in lua/custom/
+  ```
+- **Disable a plugin temporarily**: Rename to `.disabled` (e.g., `avante.lua.disabled`)
+- **Test plugin changes**: `:Lazy reload` or restart Neovim
+- **Check health**: `:checkhealth` to verify all dependencies
 
-## Development Workflow
-
-1. Configuration changes are made in `lua/custom/` files
-2. Plugin configurations go in `lua/custom/plugins/`
-3. LSP servers are expected to be installed system-wide (via Nix/Home Manager based on comments)
-4. The configuration uses lazy loading for most plugins to optimize startup time
+## References
+- Team standards: `../CLAUDE.md`
+- Git workflow: `../git-workflow.yaml`
+- Development practices: `../development-practices.yaml`
