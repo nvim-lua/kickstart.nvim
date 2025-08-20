@@ -5,10 +5,33 @@ return {
   {
     'neovim/nvim-lspconfig',
     -- only load when editing these filetypes (optional)
-    ft = { 'python', 'lua', 'nix', 'rust', 'go', 'c', 'cpp' },
+    ft = {
+      'c',
+      'cpp',
+      'objc',
+      'objcpp',
+      'cuda',
+      'cmake',
+      --
+      'go',
+      'nix',
+      'python',
+      'rust',
+      'tex',
+    },
     opts = function()
       local lspconfig = require 'lspconfig'
-      local capabilities = require('blink.cmp').get_lsp_capabilities()
+      local capabilities = {}
+      pcall(function()
+        capabilities = require('blink.cmp').get_lsp_capabilities()
+      end)
+      local util = require 'lspconfig.util'
+
+      local query_driver = table.concat({
+        '/nix/store/*/bin/clang*',
+        '/opt/homebrew/opt/llvm/bin/clang*',
+        '/usr/bin/clang*',
+      }, ';')
 
       local servers = {
         clangd = {
@@ -17,13 +40,22 @@ return {
             '--background-index',
             '--clang-tidy',
             '--header-insertion=never',
-            '--query-driver=' .. vim.fn.exepath('clang++'),
-            '--resource-dir=' .. vim.fn.systemlist({ 'clang++', '--print-resource-dir' })[1],
+            '--query-driver=' .. query_driver,
+            '--compile-commands-dir=build',
+            '--resource-dir=' .. (function()
+              local ok, result = pcall(vim.fn.systemlist, { 'clang++', '--print-resource-dir' })
+              if ok and result and result[1] then
+                return result[1]
+              else
+                return '/usr/lib/clang/19/include' -- fallback
+              end
+            end)(),
           },
           filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
-          root_dir = require('lspconfig.util').root_pattern('.git'),
+          root_dir = util.root_pattern('CMakeLists.txt', '.git'),
           single_file_support = true,
         },
+
         pyright = {
           settings = {
             python = {
@@ -37,13 +69,16 @@ return {
           },
           positionEncoding = 'utf-8',
         },
-        nixd = {},
         ruff = {},
+
+        nixd = {},
+
         texlab = {},
+
         cmake = {
           cmd = { 'cmake-language-server' },
           filetypes = { 'cmake' },
-          root_dir = require('lspconfig.util').root_pattern('CMakeLists.txt', '.git'),
+          root_dir = util.root_pattern('CMakeLists.txt', '.git'),
         },
       }
 

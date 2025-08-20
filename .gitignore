@@ -1,14 +1,24 @@
-tags
-test.sh
-.luarc.json
-nvim
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
-spell/
+# Neovim runtime files
+.cache/
+.local/
+*.tmp
+*.swp
+*.swo
+*~
 
-# Project status tracking (local only)
-CLAUDE.md
-STATUS.md
-VIDINTEL.md
-KEYBIND_ANALYSIS.md
-
+# Plugin artifacts
 lazy-lock.json
+.luarc.json
+
+# Development artifacts
+*.disabled
+todo.md
