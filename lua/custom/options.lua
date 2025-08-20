@@ -53,7 +53,7 @@ vim.api.nvim_create_autocmd('VimLeavePre', {
         2
       )
       if choice ~= 1 then
-        vim.cmd('cquit!')
+        return
       end
     end
   end,
