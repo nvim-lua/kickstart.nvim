@@ -43,6 +43,14 @@ A modular Neovim configuration forked from [kickstart.nvim](https://github.com/n
 
 ## Development Commands
 
+### Testing Configuration Changes
+- **`nvdev`** - Launch Neovim with isolated test configuration
+  - Completely separate from regular nvim (uses `NVIM_APPNAME="nvim-custom"`)
+  - All data/cache/state redirected to project directory
+  - Logs saved to `.local/state/nvim-launch.log`
+  - **Use this to verify any configuration changes before committing**
+  - Example: `nvdev` to test, `nvdev somefile.lua` to test with a specific file
+
 ### Plugin Management
 - `:Lazy` - Open plugin manager UI
 - `:Lazy reload` - Reload plugin configurations
@@ -113,6 +121,7 @@ A modular Neovim configuration forked from [kickstart.nvim](https://github.com/n
 - **Add new plugin**: Create file in `lua/custom/plugins/`, add import to `lua/custom/plugins/init.lua`
 - **Update LSP config**: Edit `lua/custom/plugins/lsp/lsp.lua`
 - **Change keybindings**: Edit `lua/custom/keymaps.lua`
+- **Visual/UI changes**: After Claude tests with `nvdev`, dlond will verify GUI elements (colors, themes, visual plugins)
 - **Update from upstream kickstart**: 
   ```bash
   git fetch kickstart
