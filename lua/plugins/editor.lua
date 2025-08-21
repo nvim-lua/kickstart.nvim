@@ -1,6 +1,9 @@
 -- [plugins/editing.lua]
 
 return {
+
+
+
     { -- Autoformat
         'stevearc/conform.nvim',
         event = { 'BufWritePre' },
@@ -102,4 +105,42 @@ return {
             },
         },
     },
+
+    { -- Trouble.nvim: pretty diagnostics & quickfix
+        'folke/trouble.nvim',
+        dependencies = { 'nvim-tree/nvim-web-devicons' },
+        opts = {},
+        cmd = "Trouble",
+        keys = {
+            { "<leader>xx", "<cmd>Trouble diagnostics toggle<CR>", desc = "Diagnostics (Trouble)" },
+            { "<leader>xq", "<cmd>Trouble qflist toggle<CR>", desc = "Quickfix (Trouble)" },
+        },
+    },
+
+    { -- Testing framework
+        'vim-test/vim-test',
+        config = function()
+        vim.keymap.set("n", "<leader>tn", ":TestNearest<CR>", { desc = "Run nearest test" })
+        vim.keymap.set("n", "<leader>tf", ":TestFile<CR>", { desc = "Run file tests" })
+        vim.keymap.set("n", "<leader>tl", ":TestLast<CR>", { desc = "Run last test" })
+        vim.keymap.set("n", "<leader>ts", ":TestSuite<CR>", { desc = "Run test suite" })
+        end,
+    },
+
+    { -- Todo-comments: highlight and search TODO/FIX
+        'folke/todo-comments.nvim',
+        dependencies = { 'nvim-lua/plenary.nvim' },
+        opts = {},
+        event = "VimEnter",
+        config = function()
+        require("todo-comments").setup()
+        vim.keymap.set("n", "<leader>st", "<cmd>TodoTelescope<CR>", { desc = "Search TODOs" })
+        end,
+    },
+
+    { -- Commenting
+        'tpope/vim-commentary',
+        -- usage: `gcc` (line), `gc` (visual selection)
+    },
+
 }

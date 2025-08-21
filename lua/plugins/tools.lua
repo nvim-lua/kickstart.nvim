@@ -1,6 +1,7 @@
 -- [plugins/tools.lua]
 
 return {
+
     { -- Fuzzy Finder (files, lsp, etc)
         'nvim-telescope/telescope.nvim',
         event = 'VimEnter',
@@ -45,6 +46,15 @@ return {
         end,
     },
 
+    { -- Telescope frecency (smart recent files)
+        'nvim-telescope/telescope-frecency.nvim',
+        dependencies = { 'nvim-lua/plenary.nvim' },
+        config = function()
+        require("telescope").load_extension("frecency")
+        vim.keymap.set("n", "<leader>fr", "<cmd>Telescope frecency<CR>", { desc = "[F]ile [R]ecency" })
+        end,
+    },
+
     { -- Treesitter for better syntax highlighting
         'nvim-treesitter/nvim-treesitter',
         build = ':TSUpdate',
@@ -58,6 +68,44 @@ return {
             highlight = { enable = true, additional_vim_regex_highlighting = { 'ruby' } },
             indent = { enable = true, disable = { 'ruby' } },
         },
+    },
+
+    { -- Oil.nvim: directory navigation as buffers
+        'stevearc/oil.nvim',
+        opts = {},
+        config = function(_, opts)
+        require("oil").setup(opts)
+        vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory with oil" })
+        end,
+    },
+
+    { -- Harpoon: quick file navigation
+        'ThePrimeagen/harpoon',
+        branch = 'harpoon2',
+        dependencies = { 'nvim-lua/plenary.nvim' },
+        config = function()
+        local harpoon = require("harpoon")
+        harpoon:setup()
+
+        vim.keymap.set("n", "<leader>ha", function() harpoon:list():add() end, { desc = "Harpoon add file" })
+        vim.keymap.set("n", "<leader>hh", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "Harpoon menu" })
+        vim.keymap.set("n", "<leader>h1", function() harpoon:list():select(1) end, { desc = "Harpoon to file 1" })
+        vim.keymap.set("n", "<leader>h2", function() harpoon:list():select(2) end, { desc = "Harpoon to file 2" })
+        vim.keymap.set("n", "<leader>h3", function() harpoon:list():select(3) end, { desc = "Harpoon to file 3" })
+        vim.keymap.set("n", "<leader>h4", function() harpoon:list():select(4) end, { desc = "Harpoon to file 4" })
+        end,
+    },
+
+    { -- Snacks.nvim: utilities (scratch, terminal, etc.)
+        'folke/snacks.nvim',
+        config = function()
+        require("snacks").setup({
+            terminal = { win = { style = "float" } },
+            scratch = true,
+        })
+        vim.keymap.set("n", "<leader>tt", function() require("snacks.terminal").toggle() end, { desc = "Toggle terminal" })
+        vim.keymap.set("n", "<leader>ss", function() require("snacks.scratch").open() end, { desc = "Open scratch buffer" })
+        end,
     },
 
     { -- Debugging (DAP)
