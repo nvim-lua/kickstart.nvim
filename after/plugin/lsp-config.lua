@@ -38,7 +38,8 @@ local function on_attach(bufnr)
 
   -- Set up keymaps with clear descriptions
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { desc = 'Lsp: Goto Declaration', buffer = bufnr, remap = false })
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = 'Lsp: Hover Documentation', buffer = bufnr, remap = false })
+  vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
+  -- vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = 'Lsp: Hover Documentation', buffer = bufnr, remap = false })
   vim.keymap.set('n', '<leader>vws', vim.lsp.buf.workspace_symbol, { desc = 'Lsp: Workspace Symbols', buffer = bufnr, remap = false })
   vim.keymap.set('n', '<leader>vd', vim.diagnostic.open_float, { desc = 'Lsp: View Line Diagnostic', buffer = bufnr, remap = false })
   vim.keymap.set('n', '[d', vim.diagnostic.goto_next, { desc = 'Lsp: Next Diagnostic', buffer = bufnr, remap = false })
@@ -46,8 +47,8 @@ local function on_attach(bufnr)
   vim.keymap.set('n', '<leader>dd', vim.diagnostic.setloclist, { desc = 'Lsp: List Diagnostics', buffer = bufnr, remap = false })
   vim.keymap.set('n', '<leader>do', vim.diagnostic.open_float, { desc = 'Lsp: Open Diagnostic Float', buffer = bufnr, remap = false })
   vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'Lsp: Code Action', buffer = bufnr, remap = false })
-  vim.keymap.set('n', 'gd', require('telescope.builtin').lsp_definitions, { desc = 'Lsp: Goto Definition', buffer = bufnr, remap = false })
-  vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, { desc = 'Lsp: Goto References', buffer = bufnr, remap = false })
+  vim.keymap.set('n', 'gd', tele.lsp_definitions, { desc = 'Lsp: Goto Definition', buffer = bufnr, remap = false })
+  vim.keymap.set('n', 'gr', tele.lsp_references, { desc = 'Lsp: Goto References', buffer = bufnr, remap = false })
   vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { desc = 'Lsp: Rename Symbol', buffer = bufnr, remap = false })
 
   vim.keymap.set('n', '<leader>lf', function()
@@ -64,7 +65,7 @@ local function on_attach(bufnr)
 
   vim.keymap.set('n', '<leader>fs', tele.lsp_document_symbols, { desc = 'Lsp: Document Symbols (Current File)', buffer = bufnr, remap = false })
   vim.keymap.set('n', '<leader>fS', tele.lsp_dynamic_workspace_symbols, { desc = 'Lsp: Workspace Symbols (Dynamic)', buffer = bufnr, remap = false })
-  vim.keymap.set('n', '<leader>ft', tele.lsp_type_definitions, { desc = 'Lsp: Goto Type Definition', buffer = bufnr, remap = false })
+  vim.keymap.set('n', '<leader>ft', tele.lsp_type_definitions, { desc = 'Lsp: Goio Type Definition', buffer = bufnr, remap = false })
   vim.keymap.set('n', '<leader>fi', tele.lsp_implementations, { desc = 'Lsp: Goto Implementations', buffer = bufnr, remap = false })
 end
 
