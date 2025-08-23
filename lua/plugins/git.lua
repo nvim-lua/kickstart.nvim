@@ -55,12 +55,12 @@ return {
         cmd = { "Git", "G" }, -- lazy load only on :Git commands
     },
 
-    { -- Lazygit UI (optional)
-        "kdheepak/lazygit.nvim",
-        cmd = "LazyGit",
-        dependencies = { "nvim-lua/plenary.nvim" },
-        keys = {
-            { "<leader>lg", "<cmd>LazyGit<CR>", desc = "Open LazyGit" },
-        },
-    },
+--     { -- Lazygit UI (optional)
+--         "kdheepak/lazygit.nvim",
+--         cmd = "LazyGit",
+--         dependencies = { "nvim-lua/plenary.nvim" },
+--         keys = {
+--             { "<leader>lg", "<cmd>LazyGit<CR>", desc = "Open LazyGit" },
+--         },
+--     },
 }

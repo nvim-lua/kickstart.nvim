@@ -52,7 +52,7 @@ return {
         },
     },
 
-    -- -- Autocompletion: `nvim-cmp` and its dependencies
+    -- Autocompletion: `nvim-cmp` and its dependencies
     -- This is the core of the autocompletion system.
     {
         'hrsh7th/nvim-cmp',
@@ -69,6 +69,11 @@ return {
                     end
                     return 'make install_jsregexp'
                 end)(),
+                -- ++ ADDED DEPENDENCY ++
+                dependencies = {
+                    -- This plugin provides a collection of useful snippets.
+                    'rafamadriz/friendly-snippets',
+                },
             },
             -- `cmp_luasnip` connects the snippet engine to the autocompletion.
             'saadparwaiz1/cmp_luasnip',
@@ -84,6 +89,10 @@ return {
         local cmp = require 'cmp'
         local luasnip = require 'luasnip'
         luasnip.config.setup {}
+
+        -- ++ ADDED SNIPPET LOADING ++
+        -- This line tells luasnip to load snippets from plugins like friendly-snippets.
+        require("luasnip.loaders.from_vscode").lazy_load()
 
         -- Set up the `nvim-cmp` plugin.
         cmp.setup {
@@ -161,11 +170,11 @@ return {
         end,
     },
 
-    { -- Adds indentation guides to all lines
-        'lukas-reineke/indent-blankline.nvim',
-        main = 'ibl',
-        opts = {},
-    },
+--     { -- Adds indentation guides to all lines
+--         'lukas-reineke/indent-blankline.nvim',
+--         main = 'ibl',
+--         opts = {},
+--     },
 
     -- Detect tabstop and shiftwidth automatically
     'tpope/vim-sleuth',

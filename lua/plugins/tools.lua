@@ -147,23 +147,73 @@ return {
         end,
     },
 
-    { -- Snacks.nvim: utilities (scratch, terminal, etc.)
+    {
         "folke/snacks.nvim",
-        event = "VeryLazy",
+        priority = 1000,
+        lazy = false,
         opts = {
-            terminal = { win = { style = "float" } },
-            scratch = { enabled = true }, -- ✅ must be a table
+            -- Core utilities
+            bigfile = { enabled = true }, -- handle large files gracefully
+            quickfile = { enabled = true }, -- speed up startup with file args
+            scope = { enabled = true }, -- treesitter/indent-based scope detection
+            util = { enabled = true }, -- core utility functions
+
+            -- UI / Experience
+            dashboard = { enabled = true }, -- Will be configured in config function
+            explorer = { enabled = true }, -- Snacks explorer (you still keep neo-tree)
+            indent = { enabled = true }, -- replaces indent-blankline.nvim
+            input = { enabled = true }, -- nicer vim.ui.input
+            picker = { enabled = true }, -- universal picker (you still keep telescope)
+            notifier = { enabled = true }, -- pretty notifications
+            scroll = { enabled = true }, -- smooth scrolling
+            statuscolumn = { enabled = true }, -- sign/number column
+            words = { enabled = true }, -- highlight LSP references / word navigation
+
+            -- Productivity
+            terminal = { win = { style = "float" } }, -- floating terminal
+            scratch = { enabled = true }, -- persistent scratch buffers
+            zen = { enabled = true }, -- zen mode (distraction free)
+            git = { enabled = true }, -- git helpers
+            gitbrowse = { enabled = true }, -- open in GitHub/GitLab/Bitbucket
+            lazygit = { enabled = true }, -- replaces kdheepak/lazygit.nvim
+            rename = { enabled = true }, -- LSP-aware file rename
         },
         config = function(_, opts)
+        -- Load dashboard config and merge it
+        local dashboard_config = require("dashboard")
+        -- FIX: Access the .config table from the required module
+        opts.dashboard = dashboard_config.config
+
         local snacks = require("snacks")
         snacks.setup(opts)
 
-        -- Keymaps
-        vim.keymap.set("n", "<leader>tt", function() snacks.terminal.toggle() end, { desc = "Toggle terminal" })
-        vim.keymap.set("n", "<leader>sc", function() snacks.scratch.open() end, { desc = "Open [s]cratch buffer" })
+        -- === Keymaps ===
+        -- Dashboard
+        vim.keymap.set("n", "<leader>db", function() snacks.dashboard.open() end, { desc = "Open [D]ash[B]oard" })
+
+        -- Explorer (in addition to neo-tree)
+        vim.keymap.set("n", "<leader>xx", function() snacks.explorer.open() end, { desc = "Open Snacks E[x]plorer" })
+
+        -- Terminal
+        vim.keymap.set("n", "<leader>tt", function() snacks.terminal.toggle() end, { desc = "Toggle [T]erminal" })
+
+        -- Scratch Buffer
+        vim.keymap.set("n", "<leader>sc", function() snacks.scratch.open() end, { desc = "Open [S]cratch buffer" })
+
+        -- Zen Mode
+        vim.keymap.set("n", "<leader>zn", function() snacks.zen.toggle() end, { desc = "Toggle [Z]en mode" })
+
+        -- LazyGit
+        vim.keymap.set("n", "<leader>gg", function() snacks.lazygit.open() end, { desc = "Open [G]it: LazyGit" })
+
+        -- Git Browse (open repo/commit/branch in browser)
+        vim.keymap.set("n", "<leader>gb", function() snacks.gitbrowse.open() end, { desc = "[G]it [B]rowse in browser" })
+
+        -- Word navigation (LSP references / matches)
+        vim.keymap.set("n", "<leader>ww", function() snacks.words.jump_next() end, { desc = "Jump to next [W]ord reference" })
+        vim.keymap.set("n", "<leader>wW", function() snacks.words.jump_prev() end, { desc = "Jump to prev [W]ord reference" })
         end,
     },
-
 
     { -- Debugging (DAP)
         'mfussenegger/nvim-dap',
