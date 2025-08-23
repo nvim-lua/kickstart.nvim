@@ -70,6 +70,57 @@ return {
         },
     },
 
+    -- neo-tree.lua
+    'nvim-neo-tree/neo-tree.nvim',
+    branch = 'v3.x',
+    dependencies = {
+        'nvim-lua/plenary.nvim',
+        'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
+        'MunifTanjim/nui.nvim',
+    },
+    cmd = 'Neotree',
+    keys = {
+        {
+            '<leader>e',
+            function()
+            require('neo-tree.command').execute { toggle = true, dir = vim.loop.cwd() }
+            end,
+            desc = 'Explorer NeoTree (Current Dir)',
+        },
+        {
+            '<leader>E',
+            function()
+            require('neo-tree.command').execute { toggle = true, dir = vim.fn.stdpath 'config' }
+            end,
+            desc = 'Explorer NeoTree (Config Dir)',
+        },
+    },
+    opts = {
+        close_if_last_window = true, -- Close Neo-tree if it is the last window left
+        popup_border_style = 'rounded',
+        filesystem = {
+            filtered_items = {
+                visible = true,
+                hide_dotfiles = false,
+                hide_gitignored = true,
+            },
+            follow_current_file = {
+                enabled = true, -- This will find and focus the file in the tree when you open a buffer.
+            },
+            hijack_netrw_behavior = 'open_current', -- Or 'disabled' if you prefer to keep netrw for directories.
+        },
+        window = {
+            mappings = {
+                ['<space>'] = 'none', -- Disable space for opening folders, allowing for custom mappings
+                ['l'] = 'open',
+                ['h'] = 'close_node',
+                ['S'] = 'open_split',
+                ['s'] = 'open_vsplit',
+            },
+        },
+    },
+
+
     { -- Oil.nvim: directory navigation as buffers
         'stevearc/oil.nvim',
         opts = {},
@@ -97,16 +148,22 @@ return {
     },
 
     { -- Snacks.nvim: utilities (scratch, terminal, etc.)
-        'folke/snacks.nvim',
-        config = function()
-        require("snacks").setup({
+        "folke/snacks.nvim",
+        event = "VeryLazy",
+        opts = {
             terminal = { win = { style = "float" } },
-            scratch = true,
-        })
-        vim.keymap.set("n", "<leader>tt", function() require("snacks.terminal").toggle() end, { desc = "Toggle terminal" })
-        vim.keymap.set("n", "<leader>ss", function() require("snacks.scratch").open() end, { desc = "Open scratch buffer" })
+            scratch = { enabled = true }, -- ✅ must be a table
+        },
+        config = function(_, opts)
+        local snacks = require("snacks")
+        snacks.setup(opts)
+
+        -- Keymaps
+        vim.keymap.set("n", "<leader>tt", function() snacks.terminal.toggle() end, { desc = "Toggle terminal" })
+        vim.keymap.set("n", "<leader>sc", function() snacks.scratch.open() end, { desc = "Open [s]cratch buffer" })
         end,
     },
+
 
     { -- Debugging (DAP)
         'mfussenegger/nvim-dap',
