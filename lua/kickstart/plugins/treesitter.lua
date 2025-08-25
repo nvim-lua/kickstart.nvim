@@ -15,6 +15,15 @@ return { -- Highlight, edit, and navigate code
     -- indent = { enable = true, disable = { 'ruby' } },
   },
   config = function(_, opts)
+    -- fold method to be function / treesitter
+    -- vim.o.foldmethod = 'expr'
+    -- Default to treesitter folding
+    -- vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+    -- vim.o.foldenable = false
+    vim.opt.foldnestmax = 4
+    vim.opt.foldlevel = 99
+    vim.opt.foldlevelstart = 1
+
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
 
     -- Prefer git instead of curl in order to improve connectivity in some environments
