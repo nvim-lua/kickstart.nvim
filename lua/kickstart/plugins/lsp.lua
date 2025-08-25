@@ -210,13 +210,13 @@ return {
       --  By default, Neovim doesn't support everything that is in the LSP specification.
       --  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
       --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
-      local capabilities = require('blink.cmp').get_lsp_capabilities()
+      -- local capabilities = require('blink.cmp').get_lsp_capabilities()
       -- LSP servers and clients are able to communicate to each other what features they support.
       --  By default, Neovim doesn't support everything that is in the LSP specification.
       --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
       --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
-      -- local capabilities = vim.lsp.protocol.make_client_capabilities()
-      -- capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
       -- Ensure the servers and tools above are installed
       --  To check the current status of installed tools and/or manually install
@@ -245,11 +245,16 @@ return {
       require('utils.mason').install(missing_lsps)
 
       -- configure nvim lsp via lspconfig package for our list of lsps
-      local lspconfig = require 'lspconfig'
+      -- local lspconfig = require 'lspconfig'
       for server, config in pairs(lsps) do
+        -- tbl_deep_extend with force -> on conflict use value from right
         config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, config.capabilities or {})
-        -- config.on_attach = on_attach -- we don't need this because of the events
-        lspconfig[server].setup(config)
+
+        -- the require(lspconfig)[server].setup({...}) notation is deprecated in nvim-lspconfig
+        -- Thus we use the new notation for setting up LSPs
+        -- Part below is equivalent to require('lspconfig')[server].setup(config)
+        vim.lsp.config(server, config)
+        vim.lsp.enable(server)
       end
     end,
   },
