@@ -1,35 +1,29 @@
 -- lua/dashboard.lua
-
--- FIX: Require snacks at the top to make it available in this file's scope
-local snacks = require("snacks")
+local snacks = require("plugins.tools")
 local M = {}
 
 M.config = {
     enabled = true,
     width = 60,
-    row = nil, -- dashboard position. nil for center
-    col = nil, -- dashboard position. nil for center
-    pane_gap = 4, -- empty columns between vertical panes
+    row = nil,
+    col = nil,
+    pane_gap = 4,
     autokeys = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
 
     preset = {
         pick = nil,
         keys = {
-            -- FIX: Changed actions from strings to functions and used the correct 'snacks' variable
-            { icon = " ", key = "f", desc = "Find File", action = function() snacks.dashboard.pick("files") end },
-            { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
-            { icon = " ", key = "g", desc = "Find Text", action = function() snacks.dashboard.pick("live_grep") end },
-            { icon = " ", key = "r", desc = "Recent Files", action = function() snacks.dashboard.pick("oldfiles") end },
-            {
-                icon = " ",
-                key = "c",
-                desc = "Config",
-                action = function() snacks.dashboard.pick("files", { cwd = vim.fn.stdpath("config") }) end,
-            },
-            { icon = " ", key = "s", desc = "Restore Session", section = "session" },
+            { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
+            { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+            { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
+            { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
+            { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
+            { icon = " ", key = "s", desc = "Restore Session", section = "session" },
             { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
-            { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+            { icon = " ", key = "q", desc = "Quit", action = ":qa" },
         },
+
+        -- Keep NEOVIM header at top center
         header = [[
             ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
             ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
@@ -40,120 +34,129 @@ M.config = {
     },
 
     formats = {
-        -- FIX: The M.icon function was not defined.
-        -- This now returns the default icon to prevent errors.
-        -- For custom icons, you would need to implement this, for example using nvim-web-devicons:
-        -- return require("nvim-web-devicons").get_icon(item.file, item.icon)
         icon = function(item)
-        if item.file and (item.icon == "file" or item.icon == "directory") then
-            -- Placeholder to avoid error. Implement your icon logic here.
-            local ok, devicons = pcall(require, "nvim-web-devicons")
-            if ok then
-                local icon, hl = devicons.get_icon(item.file, nil, { default = true })
-                return { icon, width = 2, hl = hl }
-                end
-                end
-                return { item.icon, width = 2, hl = "icon" }
-                end,
-                footer = { "%s", align = "center" },
-                header = { "%s", align = "center" },
-                file = function(item, ctx)
-                local fname = vim.fn.fnamemodify(item.file, ":~")
-                fname = ctx.width and #fname > ctx.width and vim.fn.pathshorten(fname) or fname
-                if #fname > ctx.width then
-                    local dir = vim.fn.fnamemodify(fname, ":h")
-                    local file = vim.fn.fnamemodify(fname, ":t")
-                    if dir and file then
-                        file = file:sub(-(ctx.width - #dir - 2))
-                        fname = dir .. "/…" .. file
-                        end
-                        end
-                        local dir, file = fname:match("^(.*)/(.+)$")
-                        return dir and { { dir .. "/", hl = "dir" }, { file, hl = "file" } } or { { fname, hl = "file" } }
-                        end,
+        local ok, devicons = pcall(require, "nvim-web-devicons")
+        if ok and item.file and (item.icon == "file" or item.icon == "directory") then
+            local icon, hl = devicons.get_icon(item.file, nil, { default = true })
+            return { icon, width = 2, hl = hl }
+            end
+            return { item.icon, width = 2, hl = "icon" }
+            end,
+            footer = { "%s", align = "center" },
+            header = { "%s", align = "center" },
+            file = function(item, ctx)
+            local fname = vim.fn.fnamemodify(item.file, ":~")
+            fname = ctx.width and #fname > ctx.width and vim.fn.pathshorten(fname) or fname
+            if #fname > ctx.width then
+                local dir = vim.fn.fnamemodify(fname, ":h")
+                local file = vim.fn.fnamemodify(fname, ":t")
+                if dir and file then
+                    file = file:sub(-(ctx.width - #dir - 2))
+                    fname = dir .. "/…" .. file
+                    end
+                    end
+                    local dir, file = fname:match("^(.*)/(.+)$")
+                    return dir and { { dir .. "/", hl = "dir" }, { file, hl = "file" } }
+                    or { { fname, hl = "file" } }
+                    end,
     },
 
-    -- Replace your old 'sections' table with this one
     sections = {
-        -- Header (spans all columns)
         { section = "header" },
-        { section = "startup", padding = { 0, 0, 1, 0 } }, -- Adds a small gap below the header
+        { section = "keys", gap = 1, padding = 1 },
 
-        -----------------------------------
-        -- PANE 1: Left Column
-        -----------------------------------
-
-        -- Pokemon sprite at the top-left
+        -- Browse Repo section (single instance)
         {
-            pane = 1, -- MOVED from pane 3
-            section = "terminal",
-            cmd = "pokemon-colorscripts -r --no-title; sleep .1",
-            random = 10,
-            height = 15, -- Adjust height as needed
-            padding = 2,
-            indent = 4,
-        },
-
-        -- File commands below the sprite
-        {
-            pane = 1, -- MOVED to pane 1
-            section = "keys",
-            gap = 1,
-            padding = { 2, 3 }, -- top/bottom, left/right
-        },
-
-        -----------------------------------
-        -- PANE 2: Right Column
-        -----------------------------------
-
-        -- "Browse Repo" button at the top-right
-        {
-            pane = 2, -- Stays in pane 2
+            pane = 2,
             icon = " ",
             desc = "Browse Repo",
-            padding = { 1, 0 },
+            padding = 1,
             key = "b",
-            action = function() require("snacks").gitbrowse() end,
+            enabled = function()
+            return require("snacks").git.get_root() ~= nil
+            end,
+            action = function()
+            local ok, err = pcall(function()
+            require("snacks").gitbrowse()
+            end)
+            if not ok then
+                vim.notify("Not in a git repository or gitbrowse failed: " .. tostring(err), vim.log.levels.WARN)
+                end
+                end,
         },
 
-        -- All GitHub sections (Notifications, Issues, PRs)
+        -- Git/GitHub terminal sections (single function)
         function()
-        local in_git = require("snacks").git.get_root() ~= nil
+        local git_root = require("snacks").git.get_root()
+        local in_git = git_root ~= nil
+        local has_gh = vim.fn.executable("gh") == 1
+
         local cmds = {
             {
                 title = "Notifications",
-                cmd = "gh notify -s -a -n5",
-                action = function() vim.ui.open("https://github.com/notifications") end,
-                key = "n",
-                height = 5,
+                icon = " ",
+                cmd = has_gh and "gh notify -s -a -n5" or "echo 'gh CLI not available'",
+                action = function()
+                if has_gh then
+                    vim.ui.open("https://github.com/notifications")
+                    else
+                        vim.notify("GitHub CLI not installed", vim.log.levels.WARN)
+                        end
+                        end,
+                        key = "n",
+                        height = 5,
             },
             {
                 title = "Open Issues",
-                cmd = "gh issue list -L 5",
+                icon = " ",
+                cmd = has_gh and "gh issue list -L 3" or "echo 'gh CLI not available'",
                 key = "i",
-                action = function() vim.fn.jobstart("gh issue list --web", { detach = true }) end,
-                height = 7,
+                action = function()
+                if has_gh then
+                    vim.fn.jobstart("gh issue list --web", { detach = true })
+                    else
+                        vim.notify("GitHub CLI not installed", vim.log.levels.WARN)
+                        end
+                        end,
+                        height = 8,
             },
             {
                 title = "Open PRs",
-                cmd = "gh pr list -L 5",
+                icon = " ",
+                cmd = has_gh and "gh pr list -L 2" or "echo 'gh CLI not available'",
                 key = "p",
-                action = function() vim.fn.jobstart("gh pr list --web", { detach = true }) end,
-                height = 7,
+                action = function()
+                if has_gh then
+                    vim.fn.jobstart("gh pr list --web", { detach = true })
+                    else
+                        vim.notify("GitHub CLI not installed", vim.log.levels.WARN)
+                        end
+                        end,
+                        height = 6,
+            },
+            {
+                title = "Git Status",
+                icon = " ",
+                cmd = "git status --porcelain=v1 2>/dev/null | head -5",
+                key = "g",
+                height = 6,
             },
         }
+
         return vim.tbl_map(function(cmd)
         return vim.tbl_extend("force", {
-            pane = 2, -- IMPORTANT: Ensures all these are in the right column
+            pane = 2,
             section = "terminal",
             enabled = in_git,
             padding = 1,
-            ttl = 5 * 60, -- Refresh every 5 minutes
+            ttl = 5 * 60,
             indent = 3,
         }, cmd)
         end, cmds)
         end,
-    },
+
+        { section = "startup" },
+    }
 }
 
 return M
