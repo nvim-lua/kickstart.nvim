@@ -3,7 +3,9 @@
 --
 -- See the kickstart.nvim README for more information
 -- Bootstrap lazy.nvim
+
 return {
+  { 'folke/snacks.nvim', opts = { image = { enabled = true } } },
   {
     'nvim-neo-tree/neo-tree.nvim',
     branch = 'v3.x',
@@ -12,8 +14,19 @@ return {
       'MunifTanjim/nui.nvim',
       'nvim-tree/nvim-web-devicons', -- optional, but recommended
     },
+    opts = {
+      window = {
+        mappings = {
+          ['P'] = { -- toggle preview window
+            'toggle_preview',
+            config = { use_float = true, use_snacks_image = true, use_image_nvim = true },
+          },
+        },
+      },
+    },
     lazy = false, -- neo-tree will lazily load itself
   },
+
   {
     'ray-x/go.nvim',
     dependencies = {
@@ -40,11 +53,57 @@ return {
       }
     end,
   },
+
   {
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
     config = true,
-    -- use opts = {} for passing setup options
-    -- this is equivalent to setup({}) function
+  },
+
+  -- ⬇️ Your gitsigns with blame-on-cursor
+  {
+    'lewis6991/gitsigns.nvim',
+    event = { 'BufReadPre', 'BufNewFile' },
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local util = require 'gitsigns.util'
+      require('gitsigns').setup {
+        watch_gitdir = { interval = 1000, follow_files = true },
+        numhl = true,
+        linehl = false,
+        word_diff = false,
+        attach_to_untracked = true,
+
+        current_line_blame = true,
+        current_line_blame_opts = {
+          virt_text = true,
+          virt_text_pos = 'right_align', -- 'eol' | 'overlay' | 'right_align'
+          delay = 500,
+          ignore_whitespace = false,
+          virt_text_priority = 100,
+          use_focus = true,
+        },
+        current_line_blame_formatter = function(_, info)
+          return {
+            { '|| ', '@lsp.type.variable' },
+            { info.author, '@lsp.type.comment' },
+            { ' • ', '@lsp.type.variable' },
+            { util.expand_format('<author_time:%R>', info), '@lsp.type.operator' },
+            { ' • ', '@lsp.type.variable' },
+            { info.summary or '', '@lsp.type.string' }, -- commit message
+          }
+        end,
+
+        update_debounce = 200,
+        max_file_length = 40000,
+        preview_config = {
+          border = 'rounded',
+          style = 'minimal',
+          relative = 'cursor',
+          row = 0,
+          col = 1,
+        },
+      }
+    end,
   },
 }
