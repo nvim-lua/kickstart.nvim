@@ -928,6 +928,9 @@ require('lazy').setup({
     'rebelot/kanagawa.nvim',
     priority = 1000,
     config = function()
+      require('kanagawa').setup {
+        compile = true,
+      }
       vim.cmd.colorscheme 'kanagawa'
     end,
   },
