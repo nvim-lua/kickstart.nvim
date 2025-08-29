@@ -921,7 +921,14 @@ require('lazy').setup({
     'EdenEast/nightfox.nvim',
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'nightfox'
+      -- vim.cmd.colorscheme 'nightfox'
+    end,
+  },
+  {
+    'rebelot/kanagawa.nvim',
+    priority = 1000,
+    config = function()
+      vim.cmd.colorscheme 'kanagawa'
     end,
   },
 
