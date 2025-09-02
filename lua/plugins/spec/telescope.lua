@@ -17,5 +17,7 @@ return {
   },
   config = function()
     require('plugins.config.telescope').setup()
+    -- Setup compile_commands.json picker for C/C++ projects
+    require('plugins.config.compile-commands-picker').setup()
   end,
 }

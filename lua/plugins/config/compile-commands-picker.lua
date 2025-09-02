@@ -90,7 +90,14 @@ CompileFlags:
     local clients = vim.lsp.get_active_clients({ name = 'clangd' })
     if #clients > 0 then
       vim.notify('Restarting clangd...', vim.log.levels.INFO)
-      vim.cmd('LspRestart clangd')
+      -- Stop and start clangd to pick up new config
+      for _, client in ipairs(clients) do
+        client.stop()
+      end
+      vim.defer_fn(function()
+        vim.cmd('LspStart clangd')
+        vim.notify('Clangd restarted with new configuration', vim.log.levels.INFO)
+      end, 100)
     end
   else
     vim.notify('Failed to create .clangd file', vim.log.levels.ERROR)
