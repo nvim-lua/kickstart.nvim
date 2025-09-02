@@ -45,8 +45,8 @@ function M.pick_compile_commands()
   local conf = require('telescope.config').values
   local actions = require('telescope.actions')
   local action_state = require('telescope.actions.state')
-  local previewers = require('telescope.previewers')
   
+  -- Use Telescope's built-in file picker configuration
   pickers.new({}, {
     prompt_title = 'Select compile_commands.json',
     finder = finders.new_table {
@@ -56,13 +56,14 @@ function M.pick_compile_commands()
           value = entry,
           display = entry.display,
           ordinal = entry.display,
-          filename = entry.path,  -- Use filename for previewer
+          filename = entry.path,
           path = entry.path,
+          cwd = vim.fn.getcwd(),
         }
       end,
     },
-    sorter = conf.generic_sorter{},
-    previewer = previewers.vim_buffer_cat.new{},  -- Use vim_buffer_cat previewer
+    sorter = conf.file_sorter{},
+    previewer = conf.file_previewer{},
     attach_mappings = function(prompt_bufnr, map)
       actions.select_default:replace(function()
         actions.close(prompt_bufnr)
