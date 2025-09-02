@@ -55,10 +55,12 @@ function M.pick_compile_commands()
           value = entry,
           display = entry.display,
           ordinal = entry.display,
+          path = entry.path,  -- Add path for previewer
         }
       end,
     },
     sorter = conf.generic_sorter{},
+    previewer = conf.file_previewer{},  -- Add file previewer
     attach_mappings = function(prompt_bufnr, map)
       actions.select_default:replace(function()
         actions.close(prompt_bufnr)
