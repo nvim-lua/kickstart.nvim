@@ -28,27 +28,31 @@ function M.get_servers()
     clangd = {
       cmd = {
         'clangd',
+        '--query-driver=' .. get_clangd_query_driver(),
         '--background-index',
         '--clang-tidy',
-        '--header-insertion=never',
-        '--query-driver=' .. get_clangd_query_driver(),
-        -- Remove hardcoded build dir - clangd will search for compile_commands.json
-        -- in the current directory and all parent directories by default
-        '--resource-dir=' .. get_clang_resource_dir(),
-        -- Help clangd find system headers
+        '--enable-config',
         '--fallback-style=llvm',
+        '--function-arg-placeholders',
+        '--header-insertion-decorators',
+        '--header-insertion=iwyu',
       },
       filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
-      -- First check for compile_commands.json in build/, then at root, then other markers
-      root_dir = function(fname)
-        -- Look for compile_commands.json in build/ first
-        local build_dir = util.root_pattern('build/compile_commands.json')(fname)
-        if build_dir then
-          return build_dir
-        end
-        -- Then look for it at project root or other markers
-        return util.root_pattern('compile_commands.json', 'compile_flags.txt', '.clangd', 'CMakeLists.txt', '.git')(fname)
-      end,
+      -- Look for project markers - clangd will find compile_commands.json itself
+      root_dir = util.root_pattern(
+        -- First check for any compile_commands.json anywhere
+        'compile_commands.json',
+        -- Then check common build directories
+        'build/compile_commands.json',
+        'Debug/compile_commands.json',
+        'Release/compile_commands.json',
+        -- Project markers
+        '.clangd',
+        'compile_flags.txt',
+        'CMakeLists.txt',
+        'Makefile',
+        '.git'
+      ),
       single_file_support = true,
     },
 
@@ -66,23 +70,23 @@ function M.get_servers()
       },
       positionEncoding = 'utf-8',
     },
-    
+
     -- Python Linter/Formatter
     ruff = {},
-    
+
     -- Nix Language Server
     nixd = {},
-    
+
     -- LaTeX Language Server
     texlab = {},
-    
+
     -- CMake Language Server
     cmake = {
       cmd = { 'cmake-language-server' },
       filetypes = { 'cmake' },
       root_dir = util.root_pattern('CMakeLists.txt', '.git'),
     },
-    
+
     -- Add more servers here as needed
     -- Example:
     -- rust_analyzer = {
@@ -98,3 +102,4 @@ function M.get_servers()
 end
 
 return M
+
