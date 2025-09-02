@@ -250,8 +250,12 @@ rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
-
+  {
+    'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+    config = function ()
+     require('guess-indent').setup {}
+    end
+  },
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -307,7 +311,7 @@ require('lazy').setup({
     opts = {
       -- delay between pressing a key and opening which-key (milliseconds)
       -- this setting is independent of vim.o.timeoutlen
-      delay = 0,
+      delay = 500,
       icons = {
         -- set icon mappings to true if you have a Nerd Font
         mappings = vim.g.have_nerd_font,
