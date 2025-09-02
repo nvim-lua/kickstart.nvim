@@ -32,11 +32,23 @@ function M.get_servers()
         '--clang-tidy',
         '--header-insertion=never',
         '--query-driver=' .. get_clangd_query_driver(),
-        '--compile-commands-dir=build',
+        -- Remove hardcoded build dir - clangd will search for compile_commands.json
+        -- in the current directory and all parent directories by default
         '--resource-dir=' .. get_clang_resource_dir(),
+        -- Help clangd find system headers
+        '--fallback-style=llvm',
       },
       filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
-      root_dir = util.root_pattern('CMakeLists.txt', '.git'),
+      -- First check for compile_commands.json in build/, then at root, then other markers
+      root_dir = function(fname)
+        -- Look for compile_commands.json in build/ first
+        local build_dir = util.root_pattern('build/compile_commands.json')(fname)
+        if build_dir then
+          return build_dir
+        end
+        -- Then look for it at project root or other markers
+        return util.root_pattern('compile_commands.json', 'compile_flags.txt', '.clangd', 'CMakeLists.txt', '.git')(fname)
+      end,
       single_file_support = true,
     },
 
