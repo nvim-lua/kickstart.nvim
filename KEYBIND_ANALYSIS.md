@@ -3,7 +3,7 @@
 ## Current Active Keybindings (Modular Config)
 
 ### Leader Key
-- **Leader**: `<Space>`
+- **Leader**: `<Space>` (Fixed: was missing from config!)
 
 ### Core Navigation & Editing
 - `<Esc>` - Clear search highlights (in normal mode)
@@ -169,6 +169,16 @@ Automatically highlights other occurrences of word under cursor - no keybindings
 Navigation between occurrences:
 - `<Alt-n>` or `]]` - Next occurrence (if configured)
 - `<Alt-p>` or `[[` - Previous occurrence (if configured)
+
+### Visual Feedback
+- **Yank Highlighting** - Text flashes when yanked/copied (automatic)
+- **Cursor Line** - Current line is highlighted
+- **Search Highlighting** - Search results are highlighted (clear with `<Esc>`)
+
+### System Integration
+- **Clipboard** - System clipboard integration enabled (yank/paste works with OS)
+- **Mouse** - Full mouse support in all modes
+- **Undo** - Persistent undo history across sessions
 
 ### Which-Key Groups
 Groups that organize keybindings:
