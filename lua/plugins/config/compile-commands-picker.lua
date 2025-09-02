@@ -39,48 +39,35 @@ function M.pick_compile_commands()
     return
   end
   
-  -- Multiple files found, show picker
-  local pickers = require('telescope.pickers')
-  local finders = require('telescope.finders')
-  local conf = require('telescope.config').values
+  -- Use Telescope's built-in find_files with custom settings
+  local builtin = require('telescope.builtin')
   local actions = require('telescope.actions')
   local action_state = require('telescope.actions.state')
   
-  -- Create a simple path array for the finder
-  local paths = {}
-  local path_to_info = {}
-  for _, file in ipairs(files) do
-    table.insert(paths, file.path)
-    path_to_info[file.path] = file
-  end
-  
-  pickers.new({}, {
+  builtin.find_files({
     prompt_title = 'Select compile_commands.json',
-    finder = finders.new_table {
-      results = paths,  -- Pass simple path strings
-      entry_maker = function(path)
-        local info = path_to_info[path]
-        return {
-          value = info,
-          display = info.display,
-          ordinal = info.display,
-          path = path,  -- This is what the previewer needs
-        }
-      end,
-    },
-    sorter = conf.generic_sorter{},
-    previewer = conf.file_previewer{},
+    cwd = vim.fn.getcwd(),
+    find_command = { 'find', '.', '-name', 'compile_commands.json', '-type', 'f' },
     attach_mappings = function(prompt_bufnr, map)
       actions.select_default:replace(function()
         actions.close(prompt_bufnr)
         local selection = action_state.get_selected_entry()
         if selection then
-          M.set_compile_commands(selection.value)
+          -- Convert the selection to our file_info format
+          local path = selection[1]
+          local relative = path:gsub('^%./', '')
+          local file_info = {
+            path = vim.fn.getcwd() .. '/' .. relative,
+            display = relative,
+            dir = vim.fn.fnamemodify(path, ':h'),
+            relative_dir = vim.fn.fnamemodify(relative, ':h'),
+          }
+          M.set_compile_commands(file_info)
         end
       end)
       return true
     end,
-  }):find()
+  })
 end
 
 function M.set_compile_commands(file_info)
