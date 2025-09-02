@@ -79,6 +79,10 @@ function M.setup()
   vim.keymap.set('n', '<leader>sn', function()
     builtin.find_files { cwd = vim.fn.stdpath 'config' }
   end, { desc = '[S]earch [N]eovim files' })
+  
+  -- C/C++ compile_commands.json picker
+  vim.keymap.set('n', '<leader>sc', '<cmd>CompileCommandsPicker<cr>', 
+    { desc = '[S]earch [C]ompile commands.json' })
 end
 
 return M

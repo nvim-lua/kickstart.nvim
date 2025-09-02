@@ -9,7 +9,7 @@ local function get_clangd_query_driver()
     '/nix/store/*/bin/clang*',
     '/opt/homebrew/opt/llvm/bin/clang*',
     '/usr/bin/clang*',
-  }, ';')
+  }, ':')
 end
 
 -- Get clang resource directory

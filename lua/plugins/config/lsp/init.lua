@@ -21,6 +21,9 @@ function M.setup()
   
   -- Setup LSP keymaps
   require('plugins.config.lsp.keymaps').setup()
+  
+  -- Setup compile_commands.json picker for C/C++ projects
+  require('plugins.config.compile-commands-picker').setup()
 end
 
 return M
