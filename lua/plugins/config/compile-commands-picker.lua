@@ -87,7 +87,7 @@ CompileFlags:
     vim.notify('Created .clangd pointing to: ' .. file_info.relative_dir, vim.log.levels.INFO)
     
     -- Restart LSP if clangd is running
-    local clients = vim.lsp.get_active_clients({ name = 'clangd' })
+    local clients = vim.lsp.get_clients({ name = 'clangd' })
     if #clients > 0 then
       vim.notify('Restarting clangd...', vim.log.levels.INFO)
       -- Stop and start clangd to pick up new config
