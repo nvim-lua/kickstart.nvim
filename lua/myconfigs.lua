@@ -43,6 +43,8 @@ vim.keymap.set('n', '<leader>w', '<cmd>:w<CR>', { noremap = true, desc = 'Save f
 
 vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, { noremap = true, desc = 'Signature Help' })
 vim.keymap.set('n', '<leader>ff', vim.lsp.buf.format, { noremap = true, desc = 'LSP format' })
+vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { noremap = true, desc = 'Rename' })
+vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { noremap = true, desc = 'Code Action' })
 
 vim.api.nvim_set_keymap('n', '<leader>yr', ":let @+=expand('%:.%:t')<CR>", { noremap = true, silent = true, desc = 'Copy Relative Path' })
 vim.api.nvim_set_keymap('n', '<leader>ya', ":let @+=expand('%:P%:t')<CR>", { noremap = true, silent = true, desc = 'Copy Absolute Path' })

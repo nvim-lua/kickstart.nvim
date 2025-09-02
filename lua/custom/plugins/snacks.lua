@@ -99,7 +99,7 @@ return {
       desc = 'Find Config File',
     },
     {
-      '<leader>ff',
+      '<leader>fF',
       function()
         Snacks.picker.files()
       end,
