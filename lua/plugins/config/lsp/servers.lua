@@ -6,12 +6,13 @@ local util = require 'lspconfig.util'
 function M.get_servers()
   return {
     -- C/C++ Language Server
-    -- The clangd from dev-shells is already wrapped with --query-driver and --enable-config
     clangd = {
       cmd = {
         'clangd',
+        '--query-driver=/nix/store/*/bin/clang*',
         '--background-index',
         '--clang-tidy',
+        '--enable-config',
         '--fallback-style=llvm',
         '--function-arg-placeholders',
         '--header-insertion-decorators',
