@@ -3,35 +3,15 @@ local M = {}
 
 local util = require 'lspconfig.util'
 
--- Query driver for clangd to find compilers in various locations
-local function get_clangd_query_driver()
-  return table.concat({
-    '/nix/store/*/bin/clang*',
-    '/opt/homebrew/opt/llvm/bin/clang*',
-    '/usr/bin/clang*',
-  }, ':')
-end
-
--- Get clang resource directory
-local function get_clang_resource_dir()
-  local ok, result = pcall(vim.fn.systemlist, { 'clang++', '--print-resource-dir' })
-  if ok and result and result[1] then
-    return result[1]
-  else
-    return '/usr/lib/clang/19/include' -- fallback
-  end
-end
-
 function M.get_servers()
   return {
     -- C/C++ Language Server
+    -- The clangd from dev-shells is already wrapped with --query-driver and --enable-config
     clangd = {
       cmd = {
         'clangd',
-        '--query-driver=' .. get_clangd_query_driver(),
         '--background-index',
         '--clang-tidy',
-        '--enable-config',
         '--fallback-style=llvm',
         '--function-arg-placeholders',
         '--header-insertion-decorators',

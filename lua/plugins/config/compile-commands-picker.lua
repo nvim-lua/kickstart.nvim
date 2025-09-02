@@ -48,7 +48,6 @@ function M.pick_compile_commands()
     prompt_title = 'Select compile_commands.json',
     cwd = vim.fn.getcwd(),
     find_command = { 'find', '.', '-name', 'compile_commands.json', '-type', 'f' },
-    previewer = require('telescope.config').values.file_previewer,
     attach_mappings = function(prompt_bufnr, map)
       actions.select_default:replace(function()
         actions.close(prompt_bufnr)
