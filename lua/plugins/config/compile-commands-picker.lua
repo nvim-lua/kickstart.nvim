@@ -46,23 +46,29 @@ function M.pick_compile_commands()
   local actions = require('telescope.actions')
   local action_state = require('telescope.actions.state')
   
-  -- Use Telescope's built-in file picker configuration
+  -- Create a simple path array for the finder
+  local paths = {}
+  local path_to_info = {}
+  for _, file in ipairs(files) do
+    table.insert(paths, file.path)
+    path_to_info[file.path] = file
+  end
+  
   pickers.new({}, {
     prompt_title = 'Select compile_commands.json',
     finder = finders.new_table {
-      results = files,
-      entry_maker = function(entry)
+      results = paths,  -- Pass simple path strings
+      entry_maker = function(path)
+        local info = path_to_info[path]
         return {
-          value = entry,
-          display = entry.display,
-          ordinal = entry.display,
-          filename = entry.path,
-          path = entry.path,
-          cwd = vim.fn.getcwd(),
+          value = info,
+          display = info.display,
+          ordinal = info.display,
+          path = path,  -- This is what the previewer needs
         }
       end,
     },
-    sorter = conf.file_sorter{},
+    sorter = conf.generic_sorter{},
     previewer = conf.file_previewer{},
     attach_mappings = function(prompt_bufnr, map)
       actions.select_default:replace(function()
