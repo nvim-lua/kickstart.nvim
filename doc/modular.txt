@@ -1,0 +1,222 @@
+*modular.txt*    Modular Neovim Configuration
+
+==============================================================================
+CONTENTS                                                      *modular-contents*
+
+    1. Introduction ................................ |modular-intro|
+    2. Quick Start ................................. |modular-quickstart|
+    3. Architecture ................................ |modular-architecture|
+    4. Keybindings ................................. |modular-keybindings|
+    5. Commands .................................... |modular-commands|
+    6. Customization ............................... |modular-customization|
+    7. Troubleshooting ............................. |modular-troubleshooting|
+
+==============================================================================
+1. INTRODUCTION                                                  *modular-intro*
+
+This is a modular Neovim configuration built for performance and
+maintainability. Originally based on kickstart.nvim but restructured with
+clean separation of concerns.
+
+Key features:
+  • Modular plugin architecture
+  • Full LSP support (C/C++, Python, Nix, LaTeX)
+  • Intelligent completion with Blink.cmp
+  • Git integration (Fugitive + Gitsigns)
+  • Debug support (DAP)
+  • Tmux integration
+
+==============================================================================
+2. QUICK START                                            *modular-quickstart*
+
+Prerequisites: >
+    - Neovim >= 0.10
+    - Git, Make, C compiler
+    - ripgrep, fd
+    - Language servers (via Nix/package manager)
+
+Installation: >bash
+    # Backup existing config
+    mv ~/.config/nvim ~/.config/nvim.backup
+    
+    # Clone this config
+    git clone <repo> ~/.config/nvim
+    
+    # Start Neovim
+    nvim
+
+Health check: >vim
+    :checkhealth core
+
+==============================================================================
+3. ARCHITECTURE                                         *modular-architecture*
+
+Directory Structure: >
+    nvim/
+    ├── init.lua                 # Bootstrap
+    ├── lua/
+    │   ├── core/               # Core settings
+    │   │   ├── bootstrap.lua   # Lazy.nvim
+    │   │   ├── options.lua     # Vim options
+    │   │   ├── keymaps.lua     # Core keymaps
+    │   │   └── health.lua      # Health checks
+    │   └── plugins/
+    │       ├── spec/           # Plugin specs
+    │       └── config/         # Plugin configs
+
+Loading Order:
+  1. Bootstrap lazy.nvim
+  2. Load core options and keymaps
+  3. Load plugins via lazy.nvim
+  4. Plugin configurations execute
+
+==============================================================================
+4. KEYBINDINGS                                          *modular-keybindings*
+
+Leader key: <Space>
+
+------------------------------------------------------------------------------
+NAVIGATION                                          *modular-keys-navigation*
+
+    <C-h>              Navigate left (window/tmux)
+    <C-j>              Navigate down
+    <C-k>              Navigate up
+    <C-l>              Navigate right
+    <Esc>              Clear search highlights
+
+------------------------------------------------------------------------------
+SEARCH                                                  *modular-keys-search*
+
+    <leader>sf         Search [F]iles
+    <leader>sg         Search by [G]rep
+    <leader>sh         Search [H]elp
+    <leader>sk         Search [K]eymaps
+    <leader>sw         Search current [W]ord
+    <leader>sd         Search [D]iagnostics
+    <leader>/          Fuzzy search in buffer
+    <leader><leader>   Find buffers
+
+------------------------------------------------------------------------------
+LSP                                                        *modular-keys-lsp*
+
+    gd                 Goto Definition
+    gr                 Goto References
+    gI                 Goto Implementation
+    K                  Hover documentation
+    <leader>rn         Rename symbol
+    <leader>ca         Code action
+    <space>f           Format buffer
+    <leader>lr         Reload LSP servers
+
+------------------------------------------------------------------------------
+GIT                                                        *modular-keys-git*
+
+    <leader>gs         Git status
+    <leader>gd         Git diff
+    <leader>gc         Git commit
+    <leader>gb         Git blame
+    
+    ]c                 Next git change
+    [c                 Previous git change
+    <leader>hs         Stage hunk
+    <leader>hr         Reset hunk
+
+------------------------------------------------------------------------------
+DEBUG                                                    *modular-keys-debug*
+
+    <F5>               Start/Continue
+    <F10>              Step over
+    <F11>              Step into
+    <F12>              Step out
+    <F7>               Toggle UI
+    <leader>db         Toggle breakpoint
+
+------------------------------------------------------------------------------
+COMPLETION                                          *modular-keys-completion*
+
+    <C-Space>          Trigger completion
+    <C-y>              Accept
+    <C-e>              Cancel
+    <Tab>              Next snippet placeholder
+
+==============================================================================
+5. COMMANDS                                              *modular-commands*
+
+Custom Commands:
+    :ReloadLSP         Restart all LSP servers
+    :checkhealth core  Run configuration health check
+
+Plugin Commands:
+    :Lazy              Plugin manager UI
+    :Lazy sync         Update plugins
+    :Git               Fugitive git status
+    :Telescope         Open telescope
+
+==============================================================================
+6. CUSTOMIZATION                                     *modular-customization*
+
+------------------------------------------------------------------------------
+ADDING PLUGINS                                      *modular-adding-plugins*
+
+Create a new spec file: >lua
+    -- lua/plugins/spec/myplugin.lua
+    return {
+      'author/plugin-name',
+      event = 'VeryLazy',
+      opts = {
+        -- options here
+      }
+    }
+
+Then import it: >lua
+    -- lua/plugins/spec/init.lua
+    return {
+      { import = 'plugins.spec.myplugin' },
+      -- other imports...
+    }
+
+------------------------------------------------------------------------------
+CONFIGURING LSP                                        *modular-config-lsp*
+
+Edit `lua/plugins/config/lsp/init.lua`: >lua
+    local servers = {
+      myserver = {
+        settings = {
+          -- server settings
+        }
+      }
+    }
+
+------------------------------------------------------------------------------
+CUSTOM KEYMAPS                                       *modular-custom-keymaps*
+
+Add to `lua/core/keymaps.lua`: >lua
+    vim.keymap.set('n', '<leader>xx', function()
+      -- your function
+    end, { desc = 'My custom action' })
+
+==============================================================================
+7. TROUBLESHOOTING                                  *modular-troubleshooting*
+
+Common Issues:
+
+LSP not working: >vim
+    :checkhealth core    " Check if servers installed
+    :LspInfo            " Check active servers
+    :ReloadLSP          " Restart servers
+
+Plugins not loading: >vim
+    :Lazy sync          " Update plugins
+    :messages           " Check for errors
+
+Telescope issues:
+  • Ensure ripgrep and fd are installed
+  • Check you're not in git-ignored directory
+
+For more help:
+  • Run `:checkhealth core`
+  • Check `:messages` for errors
+  • See README.md for detailed documentation
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:
