@@ -80,7 +80,7 @@ require('lazy').setup {
   -- Then, because we use the `opts` key (recommended), the configuration runs
   -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
 
-  { -- Useful plugin to show you pending keybinds.
+  {                     -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
@@ -130,6 +130,7 @@ require('lazy').setup {
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
         { '<leader>p', group = '[P]roject' },
+        { '<leader>l', group = 'VimTex' },
       },
     },
   },
@@ -162,7 +163,7 @@ require('lazy').setup {
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+      { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
     },
     config = function()
       -- [[ Configure Telescope ]]
@@ -241,7 +242,7 @@ require('lazy').setup {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',       opts = {} },
 
       -- Allows extra capabilities provided by blink.cmp
       'saghen/blink.cmp',
@@ -463,7 +464,7 @@ require('lazy').setup {
     --- @type blink.cmp.Config
     opts = {
       keymap = {
-        preset = 'default',
+        preset = 'enter',
       },
 
       appearance = {
@@ -489,7 +490,7 @@ require('lazy').setup {
     },
   },
 
-  { -- You can easily change to a different colorscheme.
+  {                  -- You can easily change to a different colorscheme.
     'folke/tokyonight.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
