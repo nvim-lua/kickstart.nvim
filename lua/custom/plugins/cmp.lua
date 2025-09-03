@@ -65,7 +65,7 @@ return {
         auto_show_delay_ms = 500,
       },
       accept = { auto_brackets = { enabled = true } },
-      list = { selection = { preselect = false, auto_insert = false } },
+      list = { selection = { preselect = false, auto_insert = true } },
       -- Display a preview of the selected item on the current line
       ghost_text = { enabled = true },
     },
