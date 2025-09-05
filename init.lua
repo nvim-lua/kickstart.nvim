@@ -859,7 +859,8 @@ require('lazy').setup({
         -- <c-k>: Toggle signature help
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
-        preset = 'default',
+
+        preset = 'enter',
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -870,13 +871,43 @@ require('lazy').setup({
         -- Adjusts spacing to ensure icons are aligned
         nerd_font_variant = 'mono',
       },
-
       completion = {
-        -- By default, you may press `<c-space>` to show the documentation.
-        -- Optionally, set `auto_show = true` to show the documentation after a delay.
-        documentation = { auto_show = false, auto_show_delay_ms = 500 },
+        trigger = {
+          show_on_insert_on_trigger_character = true,
+        },
+        ghost_text = {
+          enabled = true,
+        },
+        menu = {
+          border = 'single',
+          draw = {
+            treesitter = { 'lsp' },
+            padding = { 0, 1 }, -- padding only on right side
+            components = {
+              kind_icon = {
+                text = function(ctx)
+                  local kind_icon, _, _ = require('mini.icons').get('lsp', ctx.kind)
+                  return kind_icon
+                end,
+                -- (optional) use highlights from mini.icons
+                highlight = function(ctx)
+                  local _, hl, _ = require('mini.icons').get('lsp', ctx.kind)
+                  return hl
+                end,
+              },
+              kind = {
+                -- (optional) use highlights from mini.icons
+                highlight = function(ctx)
+                  local _, hl, _ = require('mini.icons').get('lsp', ctx.kind)
+                  return hl
+                end,
+              },
+            },
+          },
+        },
+        documentation = { auto_show = true, auto_show_delay_ms = 100, window = { border = 'single' } },
       },
-
+      signature = { window = { border = 'single' } },
       sources = {
         default = { 'lsp', 'path', 'snippets', 'lazydev' },
         providers = {
@@ -893,7 +924,15 @@ require('lazy').setup({
       -- the rust implementation via `'prefer_rust_with_warning'`
       --
       -- See :h blink-cmp-config-fuzzy for more information
-      fuzzy = { implementation = 'lua' },
+      fuzzy = {
+        sorts = {
+          'exact',
+          -- defaults
+          'score',
+          'sort_text',
+        },
+        implementation = 'rust',
+      },
 
       -- Shows a signature help window while you type arguments for a function
       signature = { enabled = true },
@@ -1048,7 +1087,6 @@ require('lazy').setup({
     'stevearc/oil.nvim',
     opts = {},
     -- Optional dependencies
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function() -- this is the function that runs, after loading
       require('oil').setup {
         view_options = {
@@ -1058,6 +1096,8 @@ require('lazy').setup({
 
       vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
     end,
+    dependencies = { { 'echasnovski/mini.icons', opts = {} } },
+    lazy = false,
   },
   {
     'kristijanhusak/vim-dadbod-ui',
