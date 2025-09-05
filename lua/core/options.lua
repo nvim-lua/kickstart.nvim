@@ -4,6 +4,9 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- Load Nix-controlled settings if available
+pcall(require, 'nix-settings')
+
 -- Place custom vim options here
 
 -- Set based on your font installation
