@@ -5,13 +5,15 @@ function M.setup()
   local lspconfig = require 'lspconfig'
 
   -- Get capabilities from blink.cmp if available
-  local capabilities = {}
-  pcall(function()
-    capabilities = require('blink.cmp').get_lsp_capabilities()
-  end)
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+  local ok, blink_cmp = pcall(require, 'blink.cmp')
+  if ok then
+    capabilities = blink_cmp.get_lsp_capabilities(capabilities)
+  end
   --
   -- Set global position encoding preference
-  capabilities.positionEncodings = { 'utf-8', 'utf-16' }
+  capabilities.general.positionEncodings = { 'utf-16' }
 
   -- Load server configurations
   local servers = require('plugins.config.lsp.servers').get_servers()
