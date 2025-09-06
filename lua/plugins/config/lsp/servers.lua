@@ -6,15 +6,15 @@ local util = require 'lspconfig.util'
 -- Get clang-wrapper resource-root for Nix environments
 local function get_clang_resource_dir()
   -- Try to find clang-wrapper's resource-root
-  local handle = io.popen('ls -d /nix/store/*clang-wrapper*/resource-root 2>/dev/null | head -1')
+  local handle = io.popen 'ls -d /nix/store/*clang-wrapper*/resource-root 2>/dev/null | head -1'
   if handle then
-    local resource_root = handle:read('*l')
+    local resource_root = handle:read '*l'
     handle:close()
     if resource_root and resource_root ~= '' then
       return resource_root
     end
   end
-  return nil  -- Let clangd use its default
+  return nil -- Let clangd use its default
 end
 
 function M.get_servers()
@@ -30,7 +30,7 @@ function M.get_servers()
     '--header-insertion-decorators',
     '--header-insertion=iwyu',
   }
-  
+
   -- Add resource-dir if in Nix environment
   local resource_dir = get_clang_resource_dir()
   if resource_dir then
@@ -72,7 +72,6 @@ function M.get_servers()
           },
         },
       },
-      positionEncoding = 'utf-8',
     },
 
     -- Python Linter/Formatter
@@ -106,4 +105,3 @@ function M.get_servers()
 end
 
 return M
-
