@@ -11,7 +11,7 @@ function M.setup()
   end)
   --
   -- Set global position encoding preference
-  capabilities.offsetEncoding = { 'utf-8', 'utf-16' }
+  capabilities.positionEncoding = { 'utf-8', 'utf-16' }
 
   -- Load server configurations
   local servers = require('plugins.config.lsp.servers').get_servers()
@@ -27,4 +27,3 @@ function M.setup()
 end
 
 return M
-
