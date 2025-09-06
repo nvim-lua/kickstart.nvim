@@ -61,14 +61,23 @@ function M.get_servers()
     },
 
     -- Python Language Server
-    pyright = {
+    basedpyright = {
       settings = {
-        python = {
+        basedpyright = {
           analysis = {
             autoSearchPaths = true,
             diagnosticMode = 'openFilesOnly',
+            typeCheckingMode = 'standard',
             useLibraryCodeForTypes = true,
-            typeCheckingMode = 'basic',
+
+            diagnosticSeverityOverrides = {
+              reportOptionalCall = 'none',
+              reportOptionalSubscript = 'none',
+              reportAttributeAccessIssue = 'none',
+              reportUnknownMemberType = 'warning',
+              reportUnknownVariableType = 'warning',
+              reportUnknownAssignmentType = 'warning',
+            },
           },
         },
       },
