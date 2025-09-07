@@ -22,6 +22,11 @@ return {
             args = { "fmt", "-stdin-filepath", "$FILENAME", "-stdout" },
             stdin = true,
           },
+          goimports = {
+            command = "goimports",
+            args = {},
+            stdin = true,
+          },
         },
         formatters_by_ft = {
           templ      = { "templ_fmt" }, -- ✅ only templ fmt for .templ
@@ -35,7 +40,7 @@ return {
           html       = { "prettier" },
           css        = { "prettier" },
           lua        = { "stylua" },
-          go         = { "gofmt" },
+          go         = { "goimports", "gofmt" },
         },
         format_on_save = function(bufnr)
           if vim.bo[bufnr].filetype == "templ" then

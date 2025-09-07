@@ -32,6 +32,7 @@ return {
       formatting.shfmt.with { args = { '-i', '4' } },
       require('none-ls.formatting.ruff').with { extra_args = { '--extend-select', 'I' } },
       require 'none-ls.formatting.ruff_format',
+      formatting.goimports, -- Add goimports for Go files
     }
 
     local augroup = vim.api.nvim_create_augroup('LspFormatting', {})
