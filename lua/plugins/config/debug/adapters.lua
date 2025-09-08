@@ -65,22 +65,12 @@ function M.setup_python(dap)
   }
 end
 
--- C/C++/Rust debugger configuration (using codelldb)
+-- C/C++/Rust debugger configuration (using lldb-dap)
 function M.setup_cpp(dap)
-  -- CodeLLDB adapter
-  dap.adapters.codelldb = {
-    type = 'server',
-    port = '${port}',
-    executable = {
-      command = 'codelldb',
-      args = { '--port', '${port}' },
-    },
-  }
-  
-  -- Alternative: Use lldb-vscode if codelldb is not available
+  -- LLDB-DAP adapter (modern LLDB with DAP support)
   dap.adapters.lldb = {
     type = 'executable',
-    command = '/usr/bin/lldb-vscode', -- Adjust path as needed
+    command = 'lldb-dap', -- Will use lldb-dap from PATH (Nix environment)
     name = 'lldb',
   }
   
@@ -88,7 +78,7 @@ function M.setup_cpp(dap)
   dap.configurations.cpp = {
     {
       name = 'Launch',
-      type = 'codelldb',
+      type = 'lldb',
       request = 'launch',
       program = function()
         return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
@@ -100,7 +90,7 @@ function M.setup_cpp(dap)
     },
     {
       name = 'Launch with arguments',
-      type = 'codelldb',
+      type = 'lldb',
       request = 'launch',
       program = function()
         return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
@@ -115,7 +105,7 @@ function M.setup_cpp(dap)
     },
     {
       name = 'Attach to process',
-      type = 'codelldb',
+      type = 'lldb',
       request = 'attach',
       pid = require('dap.utils').pick_process,
       args = {},
