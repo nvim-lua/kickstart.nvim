@@ -1,9 +1,9 @@
 return {
   filetypes = {
-    'javascript',
-    'javascriptreact',
-    'typescript',
-    'typescriptreact',
+    -- 'javascript',
+    -- 'javascriptreact',
+    -- 'typescript',
+    -- 'typescriptreact',
     'vue',
   },
   init_options = {
