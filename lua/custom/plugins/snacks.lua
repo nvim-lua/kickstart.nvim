@@ -41,7 +41,8 @@ return {
   keys = {
     -- Top Pickers & Explorer
     {
-      '<C-p>',
+      -- '<C-p>',
+      '<leader><space>',
       function()
         Snacks.picker.smart()
       end,
@@ -112,7 +113,8 @@ return {
       desc = 'Find Files',
     },
     {
-      '<leader><space>',
+      -- '<leader><space>',
+      '<C-p>',
       function()
         Snacks.picker.files()
       end,
