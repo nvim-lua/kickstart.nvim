@@ -3,27 +3,16 @@ return {
   'nvimtools/none-ls.nvim',
   dependencies = {
     'nvimtools/none-ls-extras.nvim',
-    'jayp0521/mason-null-ls.nvim', -- ensure dependencies are installed
+    'gbprod/none-ls-shellcheck.nvim',
   },
   config = function()
     local null_ls = require 'null-ls'
     local formatting = null_ls.builtins.formatting   -- to setup formatters
     local diagnostics = null_ls.builtins.diagnostics -- to setup linters
 
-    -- list of formatters & linters for mason to install
-    require('mason-null-ls').setup {
-      ensure_installed = {
-        'checkmake',
-        'prettier', -- ts/js formatter
-        'stylua',   -- lua formatter
-        'eslint_d', -- ts/js linter
-        'shfmt',
-        'ruff',
-        'goimports'
-      },
-      -- auto-install configured formatters & linters (with null-ls)
-      automatic_installation = true,
-    }
+
+    -- Note: Use Mason to manually install tools:
+    -- :MasonInstall checkmake prettier stylua eslint_d shfmt ruff goimports
 
     local sources = {
       diagnostics.checkmake,
@@ -37,7 +26,7 @@ return {
 
     local augroup = vim.api.nvim_create_augroup('LspFormatting', {})
     null_ls.setup {
-      -- debug = true, -- Enable debug mode. Inspect logs with :NullLsLog.
+      debug = false, -- Disable debug mode to reduce log spam
       sources = sources,
       -- you can reuse a shared lspconfig on_attach callback here
       on_attach = function(client, bufnr)

@@ -17,6 +17,16 @@ return {
           return util.root_pattern("go.work", "go.mod", ".git")(fname)
             or util.path.dirname(fname)
         end,
+        handlers = {
+          -- Suppress signature help errors that are common with incomplete Go code
+          ["textDocument/signatureHelp"] = function(err, result, ctx, config)
+            if err and string.find(err.message, "cannot get type") then
+              -- Silently ignore "cannot get type" errors for signature help
+              return nil
+            end
+            return vim.lsp.handlers["textDocument/signatureHelp"](err, result, ctx, config)
+          end,
+        },
         settings = {
           gopls = {
             gofumpt = true,
@@ -54,6 +64,8 @@ return {
             -- Performance optimizations for large repositories
             memoryMode = "DegradeClosed",
             symbolMatcher = "FastFuzzy",
+            -- Reduce signature help noise
+            ["ui.completion.experimentalPostfixCompletions"] = false,
           },
         },
       })
