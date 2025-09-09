@@ -1039,5 +1039,10 @@ require('lazy').setup({
   },
 })
 
--- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
+-- set up folds for treesitter
+vim.o.foldmethod = "expr"
+vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+
+-- keep folds open by default
+vim.o.foldlevel = 99
+vim.o.foldenable = true
