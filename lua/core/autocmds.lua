@@ -29,20 +29,20 @@ local function is_shared_session()
   return false
 end
 
+-- Create an autocommand group for shared session warning
+local shared_session_group = vim.api.nvim_create_augroup("SharedSessionWarning", { clear = true })
+
+
 -- Override quit commands for shared sessions
 vim.api.nvim_create_autocmd('VimLeavePre', {
-  group = augroup 'shared_session_warning',
+  group = shared_session_group,
   callback = function()
     if is_shared_session() then
-      vim.ui.input({
-        prompt = '⚠️ Are you sure you want to close a shared session? ',
-      }, function(input)
-        if not input or input:lower() ~= 'y' then
-          -- Cancel the quit
-          vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, false, true), 'n', false)
-          error 'Quit cancelled'
-        end
-      end)
+      local response = vim.fn.input("⚠️  Closing shared nvim session! Confirm with y/Y: ")
+      if response:lower() ~= "y" then
+        -- Cancel the quit by throwing an error
+        error("Quit cancelled")
+      end
     end
   end,
 })
