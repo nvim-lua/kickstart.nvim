@@ -732,6 +732,7 @@ require('lazy').setup({
         'ansiblels', -- ansible
         'stylua', -- Used to format Lua code
         'dockerls', -- dockerfile
+        'pylsp', -- dockerfile
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -1037,8 +1038,11 @@ require('lazy').setup({
 
 -- ansible auto set lenguage
 vim.cmd 'autocmd BufRead,BufNewFile *.yml set filetype=yaml.ansible'
+
 -- fix colors in tmux
 vim.o.termguicolors = true
+
+-- color scheme
 vim.cmd 'colorscheme vim'
 
 -- my custom keys
@@ -1053,9 +1057,20 @@ end, { desc = 'Page Down' })
 -- Map Ctrl+S to save the current file in insert mode and normal mode
 vim.api.nvim_set_keymap('i', '<C-s>', '<Esc>:w<CR>a', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-s>', '<Esc>:w<CR>', { noremap = true, silent = true })
+
+-- Enable folding
+vim.opt.foldenable = true
+
+-- Fold based on indentation
+vim.opt.foldmethod = 'indent'
+
+-- Open most folds by default
+vim.opt.foldlevel = 99
+
 --vim.fn.expand('%')
 vim.api.nvim_set_keymap('n', '<F1>', ":lua vim.cmd('!ansible-vault decrypt ' .. vim.fn.expand('%'))<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<F2>', ":lua vim.cmd('!ansible-vault encrypt ' .. vim.fn.expand('%'))<CR>", { noremap = true, silent = true })
+
 -- open new tab with lead & mt
 vim.keymap.set('n', '<leader>mt', function()
   local content = vim.api.nvim_buf_get_lines(0, 0, -1, false) -- Get current buffer content
@@ -1063,10 +1078,24 @@ vim.keymap.set('n', '<leader>mt', function()
   vim.api.nvim_buf_set_lines(0, 0, -1, false, content) -- Set new buffer content
 end, { noremap = true, silent = true })
 
+-- docker settings --
 require('lspconfig').docker_compose_language_service.setup {
   cmd = { 'docker-compose-langserver', '--stdio' },
   filetypes = { 'yaml.docker-compose' },
   root_dir = function(fname)
     return require('lspconfig.util').find_git_ancestor(fname) or vim.loop.cwd()
   end,
+}
+
+require('lspconfig').pylsp.setup {
+  settings = {
+    pylsp = {
+      plugins = {
+        pycodestyle = {
+          ignore = { 'W391' },
+          maxLineLength = 100,
+        },
+      },
+    },
+  },
 }
