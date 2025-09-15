@@ -897,12 +897,13 @@ require('lazy').setup({
   --     vim.cmd.colorscheme 'tokyonight-night'
   --   end,
   -- },
-  -- lazy
   {
-    'askfiy/visual_studio_code',
-    priority = 100,
+    'rockyzhang24/arctic.nvim',
+    branch = 'v2',
+    dependencies = { 'rktjmp/lush.nvim' },
+    priority = 1000,
     config = function()
-      vim.cmd [[colorscheme visual_studio_code]]
+      vim.cmd.colorscheme 'arctic'
     end,
   },
   -- Highlight todo, notes, etc in comments
