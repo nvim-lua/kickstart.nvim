@@ -59,7 +59,7 @@ fork to your machine using one of the commands below, depending on your OS.
 
 > [!NOTE]
 > Your fork's URL will be something like this:
-> `https://github.com/<your_github_username>/kickstart.nvim.git`
+> `https://github.com/<your_github_username>/kickstart.nvim.jenson`
 
 You likely want to remove `lazy-lock.json` from your fork's `.gitignore` file
 too - it's ignored in the kickstart repo to make maintenance easier, but it's
@@ -74,7 +74,7 @@ too - it's ignored in the kickstart repo to make maintenance easier, but it's
 <details><summary> Linux and Mac </summary>
 
 ```sh
-git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+git clone https://github.com/jensonjohnathon/kickstart.nvim.jenson "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
 ```
 
 </details>
@@ -84,13 +84,13 @@ git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HO
 If you're using `cmd.exe`:
 
 ```
-git clone https://github.com/nvim-lua/kickstart.nvim.git "%localappdata%\nvim"
+git clone https://github.com/jensonjohnathon/kickstart.nvim.jenson "%localappdata%\nvim"
 ```
 
 If you're using `powershell.exe`
 
 ```
-git clone https://github.com/nvim-lua/kickstart.nvim.git "${env:LOCALAPPDATA}\nvim"
+git clone https://github.com/jensonjohnathon/kickstart.nvim.jenson "${env:LOCALAPPDATA}\nvim"
 ```
 
 </details>
@@ -147,8 +147,8 @@ examples of adding popularly requested plugins.
     same functionality is available here:
     * [kickstart-modular.nvim](https://github.com/dam9000/kickstart-modular.nvim)
   * Discussions on this topic can be found here:
-    * [Restructure the configuration](https://github.com/nvim-lua/kickstart.nvim/issues/218)
-    * [Reorganize init.lua into a multi-file setup](https://github.com/nvim-lua/kickstart.nvim/pull/473)
+    * [Restructure the configuration](https://github.com/jensonjohnathon/kickstart.nvim/issues/218)
+    * [Reorganize init.lua into a multi-file setup](https://github.com/jensonjohnathon/kickstart.nvim/pull/473)
 
 ### Install Recipes
 
