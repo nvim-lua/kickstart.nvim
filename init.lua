@@ -244,6 +244,18 @@ rtp:prepend(lazypath)
 --  To update plugins you can run
 --    :Lazy update
 --
+-- Yes, we're just executing a bunch of Vimscript, but this is the officially
+-- endorsed method; see https://github.com/L3MON4D3/LuaSnip#keymaps
+vim.cmd [[
+" Use Tab to expand and jump through snippets
+imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>' 
+smap <silent><expr> <Tab> luasnip#jumpable(1) ? '<Plug>luasnip-jump-next' : '<Tab>'
+
+" Use Shift-Tab to jump backwards through snippets
+imap <silent><expr> <S-Tab> luasnip#jumpable(-1) ? '<Plug>luasnip-jump-prev' : '<S-Tab>'
+smap <silent><expr> <S-Tab> luasnip#jumpable(-1) ? '<Plug>luasnip-jump-prev' : '<S-Tab>'
+]]
+
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
@@ -266,6 +278,32 @@ require('lazy').setup({
   --            })
   --        end,
   --    }
+  -- LuaSnip (Snippet Engine)
+  {
+    'L3MON4D3/LuaSnip',
+    version = 'v2.*', -- stabile Version
+    build = 'make install_jsregexp', -- optional, für advanced regex
+    config = function()
+      local luasnip = require 'luasnip'
+      -- Lade VSCode-kompatible Snippets, falls du welche hast
+      require('luasnip.loaders.from_vscode').lazy_load()
+      require('luasnip.loaders.from_lua').load { paths = '~/.config/nvim/LuaSnip/' }
+
+      -- einfache Keymaps
+      vim.keymap.set({ 'i' }, '<C-k>', function()
+        luasnip.expand()
+      end, { silent = true })
+      vim.keymap.set({ 'i', 's' }, '<C-l>', function()
+        luasnip.jump(1)
+      end, { silent = true })
+      vim.keymap.set({ 'i', 's' }, '<C-h>', function()
+        luasnip.jump(-1)
+      end, { silent = true })
+    end,
+  },
+
+  -- Optionale Snippet-Sammlung
+  { 'rafamadriz/friendly-snippets' },
   --
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`.
