@@ -269,6 +269,10 @@ imap <silent><expr> <S-Tab> luasnip#jumpable(-1) ? '<Plug>luasnip-jump-prev' : '
 smap <silent><expr> <S-Tab> luasnip#jumpable(-1) ? '<Plug>luasnip-jump-prev' : '<S-Tab>'
 ]]
 
+vim.cmd [[
+  filetype plugin indent on
+]]
+
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
@@ -291,6 +295,16 @@ require('lazy').setup({
   --            })
   --        end,
   --    }
+  {
+    'lervag/vimtex',
+    ft = { 'tex', 'plaintex', 'latex' }, -- lazy-load nur bei TeX
+    init = function()
+      -- Viewer (WSL/Ubuntu mit WSLg): z.B. zathura
+      vim.g.vimtex_view_method = 'zathura' -- Alternativen: "sioyek", "skim"(mac), "sumatrapdf"(win), "general"
+      vim.g.vimtex_quickfix_mode = 0 -- Quickfix nur bei echten Fehlern, nicht bei Warnungen
+      -- optional: lokaler Leader in TeX-Buffern
+    end,
+  },
   -- LuaSnip (Snippet Engine)
   {
     'L3MON4D3/LuaSnip',
@@ -1003,9 +1017,12 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
+    init = function()
+      require('nvim-treesitter.install').prefer_git = false
+    end,
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'go' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'go', 'latex' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
