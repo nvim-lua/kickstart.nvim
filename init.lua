@@ -1058,6 +1058,7 @@ end, { desc = 'Page Down' })
 vim.api.nvim_set_keymap('i', '<C-s>', '<Esc>:w<CR>a', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-s>', '<Esc>:w<CR>', { noremap = true, silent = true })
 
+vim.api.nvim_set_keymap('n', 'gd', 'grd>', { noremap = false, silent = true })
 -- Enable folding
 vim.opt.foldenable = true
 
