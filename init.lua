@@ -37,6 +37,7 @@ require('lazy').setup({
   require(themes[env_var_nvim_theme]),
   require 'core.ui',
 
+  require 'plugins.aaa', -- Mason setup
   require 'plugins.aerial',
   require 'plugins.flash',
   require 'plugins.autocompletion',
