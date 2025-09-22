@@ -1320,6 +1320,46 @@ require('lazy').setup({
       vim.g.wiki_root = '~/Documents/Developer/'
     end,
   },
+  -- Lazy
+  {
+    'piersolenski/import.nvim',
+    dependencies = {
+      -- One of the following pickers is required:
+      'nvim-telescope/telescope.nvim',
+      -- 'folke/snacks.nvim',
+      -- 'ibhagwan/fzf-lua',
+    },
+    opts = {
+      picker = 'telescope',
+    },
+    keys = {
+      {
+        '<leader>i',
+        function()
+          require('import').pick()
+        end,
+        desc = 'Import',
+      },
+    },
+  },
+  {
+    'dimtion/guttermarks.nvim',
+    event = 'VeryLazy',
+  },
+  {
+    'retran/meow.yarn.nvim',
+    dependencies = { 'MunifTanjim/nui.nvim' },
+    config = function()
+      require('meow.yarn').setup {
+        -- Your custom configuration goes here
+      }
+
+      vim.keymap.set('n', '<leader>yS', '<Cmd>MeowYarn type super<CR>', { desc = 'Yarn: Super Types' })
+      vim.keymap.set('n', '<leader>ys', '<Cmd>MeowYarn type sub<CR>', { desc = 'Yarn: Sub Types' })
+      vim.keymap.set('n', '<leader>yC', '<Cmd>MeowYarn call callers<CR>', { desc = 'Yarn: Callers' })
+      vim.keymap.set('n', '<leader>yc', '<Cmd>MeowYarn call callees<CR>', { desc = 'Yarn: Callees' })
+    end,
+  },
   {
     'NickvanDyke/opencode.nvim',
     dependencies = {
@@ -1407,82 +1447,81 @@ require('lazy').setup({
         desc = 'Explain code near cursor',
       },
     },
-
-    {
-      'dmtrKovalenko/fff.nvim',
-      build = 'cargo build --release',
-      -- or if you are using nixos
-      -- build = "nix run .#release",
-      opts = { -- (optional)
-        debug = {
-          enabled = true, -- we expect your collaboration at least during the beta
-          show_scores = true, -- to help us optimize the scoring system, feel free to share your scores!
-        },
-      },
-      -- No need to lazy-load with lazy.nvim.
-      -- This plugin initializes itself lazily.
-      lazy = false,
-      keys = {
-        {
-          'ff', -- try it if you didn't it is a banger keybinding for a picker
-          function()
-            require('fff').find_files()
-          end,
-          desc = 'FFFind files',
-        },
-      },
-    },
-    {
-      'oribarilan/lensline.nvim',
-      tag = '1.1.0', -- or: branch = 'release/1.x' for latest non-breaking updates
-      event = 'LspAttach',
-      config = function()
-        require('lensline').setup {
-          providers = { -- Array format: order determines display sequence
-            {
-              name = 'references',
-              enabled = true, -- enable references provider
-              quiet_lsp = true, -- suppress noisy LSP log messages (e.g., Pyright reference spam)
-            },
-            {
-              name = 'last_author',
-              enabled = true, -- enabled by default with caching optimization
-              cache_max_files = 50, -- maximum number of files to cache blame data for (default: 50)
-            },
-            -- built-in providers that are diabled by default:
-            {
-              name = 'diagnostics',
-              enabled = false, -- disabled by default - enable explicitly to use
-              min_level = 'WARN', -- only show WARN and ERROR by default (HINT, INFO, WARN, ERROR)
-            },
-            {
-              name = 'complexity',
-              enabled = true, -- disabled by default - enable explicitly to use
-              min_level = 'L', -- only show L (Large) and XL (Extra Large) complexity by default
-            },
-          },
-          style = {
-            separator = ' • ', -- separator between all lens attributes
-            highlight = 'Comment', -- highlight group for lens text
-            prefix = '┃ ', -- prefix before lens content
-            placement = 'above', -- "above" | "inline" - where to render lenses (consider prefix = "" for inline)
-            use_nerdfont = true, -- enable nerd font icons in built-in providers
-          },
-          render = 'all', -- "all" | "focused" (only active window's focused function)
-          limits = {
-            exclude = {
-              -- see config.lua for extensive list of default patterns
-            },
-            exclude_gitignored = true, -- respect .gitignore by not processing ignored files
-            max_lines = 1000, -- process only first N lines of large files
-            max_lenses = 70, -- skip rendering if too many lenses generated
-          },
-          debounce_ms = 500, -- unified debounce delay for all providers
-          focused_debounce_ms = 150, -- debounce delay for focus tracking in focused mode
-          debug_mode = false, -- enable debug output for development, see CONTRIBUTE.md
-        }
-      end,
-    },
+    -- {
+    --   'dmtrKovalenko/fff.nvim',
+    --   build = 'cargo build --release',
+    --   -- or if you are using nixos
+    --   -- build = "nix run .#release",
+    --   opts = { -- (optional)
+    --     debug = {
+    --       enabled = true, -- we expect your collaboration at least during the beta
+    --       show_scores = true, -- to help us optimize the scoring system, feel free to share your scores!
+    --     },
+    --   },
+    --   -- No need to lazy-load with lazy.nvim.
+    --   -- This plugin initializes itself lazily.
+    --   lazy = false,
+    --   keys = {
+    --     {
+    --       'ff', -- try it if you didn't it is a banger keybinding for a picker
+    --       function()
+    --         require('fff').find_files()
+    --       end,
+    --       desc = 'FFFind files',
+    --     },
+    --   },
+    -- },
+    -- {
+    --   'oribarilan/lensline.nvim',
+    --   tag = 'release/1.1', -- or: branch = 'release/1.x' for latest non-breaking updates
+    --   event = 'LspAttach',
+    --   config = function()
+    --     require('lensline').setup {
+    --       providers = { -- Array format: order determines display sequence
+    --         {
+    --           name = 'references',
+    --           enabled = true, -- enable references provider
+    --           quiet_lsp = true, -- suppress noisy LSP log messages (e.g., Pyright reference spam)
+    --         },
+    --         {
+    --           name = 'last_author',
+    --           enabled = true, -- enabled by default with caching optimization
+    --           cache_max_files = 50, -- maximum number of files to cache blame data for (default: 50)
+    --         },
+    --         -- built-in providers that are diabled by default:
+    --         {
+    --           name = 'diagnostics',
+    --           enabled = false, -- disabled by default - enable explicitly to use
+    --           min_level = 'WARN', -- only show WARN and ERROR by default (HINT, INFO, WARN, ERROR)
+    --         },
+    --         {
+    --           name = 'complexity',
+    --           enabled = true, -- disabled by default - enable explicitly to use
+    --           min_level = 'L', -- only show L (Large) and XL (Extra Large) complexity by default
+    --         },
+    --       },
+    --       style = {
+    --         separator = ' • ', -- separator between all lens attributes
+    --         highlight = 'Comment', -- highlight group for lens text
+    --         prefix = '┃ ', -- prefix before lens content
+    --         placement = 'above', -- "above" | "inline" - where to render lenses (consider prefix = "" for inline)
+    --         use_nerdfont = true, -- enable nerd font icons in built-in providers
+    --       },
+    --       render = 'all', -- "all" | "focused" (only active window's focused function)
+    --       limits = {
+    --         exclude = {
+    --           -- see config.lua for extensive list of default patterns
+    --         },
+    --         exclude_gitignored = true, -- respect .gitignore by not processing ignored files
+    --         max_lines = 1000, -- process only first N lines of large files
+    --         max_lenses = 70, -- skip rendering if too many lenses generated
+    --       },
+    --       debounce_ms = 500, -- unified debounce delay for all providers
+    --       focused_debounce_ms = 150, -- debounce delay for focus tracking in focused mode
+    --       debug_mode = false, -- enable debug output for development, see CONTRIBUTE.md
+    --     }
+    --   end,
+    -- },
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
