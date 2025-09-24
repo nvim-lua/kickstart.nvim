@@ -101,11 +101,7 @@ vim.g.have_nerd_font = false
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
-<<<<<<< HEAD
 vim.opt.relativenumber = true
-=======
--- vim.o.relativenumber = true
->>>>>>> 3338d3920620861f8313a2745fd5d2be39f39534
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -209,6 +205,7 @@ vim.keymap.set('i', '<Esc>', function()
   end
   return '<Esc>'
 end, { expr = true, silent = true })
+
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
