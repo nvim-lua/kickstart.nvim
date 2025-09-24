@@ -50,7 +50,6 @@ Kickstart Guide:
       - :
       - Tutor
       - <enter key>
-
     (If you already know the Neovim basics, you can skip this step.)
 
   Once you've completed that, you can continue working through **AND READING** the rest
@@ -102,7 +101,7 @@ vim.g.have_nerd_font = false
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -155,6 +154,52 @@ vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
+
+local mode_disabled = false
+local filetype_disabled = false
+
+local function check_eof_scrolloff()
+  if mode_disabled or filetype_disabled then
+    return
+  end
+
+  local win_height = vim.api.nvim_win_get_height(0)
+  local win_view = vim.fn.winsaveview()
+  local scrolloff = math.min(vim.o.scrolloff, math.floor(win_height / 2))
+  local scrolloff_line_count = win_height - (vim.fn.line 'w$' - win_view.topline + 1)
+  local distance_to_last_line = vim.fn.line '$' - win_view.lnum
+
+  if distance_to_last_line < scrolloff and scrolloff_line_count + distance_to_last_line < scrolloff then
+    win_view.topline = win_view.topline + scrolloff - (scrolloff_line_count + distance_to_last_line)
+    vim.fn.winrestview(win_view)
+  end
+end
+
+vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+  pattern = '*',
+  callback = check_eof_scrolloff,
+})
+
+-- Grayson - Set the width of a tab
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.softtabstop = 4
+
+-- Grayson - Auto indent settings
+vim.opt.expandtab = false
+vim.opt.smarttab = true
+vim.opt.autoindent = true
+vim.opt.smartindent = true
+vim.opt.cindent = true
+
+-- Escape insert mode *and* dismiss Copilot suggestions
+vim.keymap.set('i', '<Esc>', function()
+  local ok, suggestion = pcall(require, 'copilot.suggestion')
+  if ok and suggestion and suggestion.is_visible() then
+    suggestion.dismiss()
+  end
+  return '<Esc>'
+end, { expr = true, silent = true })
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
@@ -247,6 +292,61 @@ require('lazy').setup({
   --
   -- Use `opts = {}` to automatically pass options to a plugin's `setup()` function, forcing the plugin to be loaded.
   --
+  -- Colorizer
+  {
+    'norcalli/nvim-colorizer.lua',
+    config = function()
+      require('colorizer').setup({
+        '*', -- Highlight all filetypes
+        css = { rgb_fn = true },
+        html = { names = true },
+      }, {
+        mode = 'background',
+      })
+    end,
+  },
+
+  -- GitHub Copilot
+  {
+    'zbirenbaum/copilot.lua',
+    cmd = 'Copilot',
+    event = 'InsertEnter',
+    config = function()
+      require('copilot').setup {
+        suggestion = {
+          enabled = true,
+          auto_trigger = true,
+          debounce = 75,
+          keymap = {
+            accept = '<Tab>',
+            next = '<C-j>',
+            prev = '<C-k>',
+            dismiss = '<C-c>',
+          },
+        },
+        panel = {
+          enabled = true,
+          auto_refresh = false,
+          keymap = {
+            jump_prev = '[[',
+            jump_next = ']]',
+            accept = '<CR>',
+            refresh = 'gr',
+            open = '<M-CR>',
+          },
+        },
+        filetypes = {
+          markdown = true,
+          help = false,
+          gitcommit = true,
+          gitrebase = true,
+          ['*'] = true, -- enable for all filetypes
+        },
+        copilot_node_command = 'node', -- Ensure correct Node.js path
+        server_opts_overrides = {},
+      }
+    end,
+  },
 
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
   -- If you prefer to call `setup` explicitly, use:
@@ -434,6 +534,9 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
+      -- Open file explorer
+      vim.keymap.set('n', '<leader>e', ':Ex<CR>', { desc = '[E]xplorer' })
+
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
@@ -472,6 +575,7 @@ require('lazy').setup({
       },
     },
   },
+
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
@@ -668,10 +772,50 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      local function on_attach(client, bufnr)
+        if client.name == 'sqls' then
+          client.server_capabilities.documentFormattingProvider = false
+          client.server_capabilities.documentRangeFormattingProvider = false
+        end
+      end
+
       local servers = {
         -- clangd = {},
-        -- gopls = {},
-        -- pyright = {},
+        gopls = {},
+        pyright = {},
+        jsonls = {
+          settings = {
+            json = {
+              validate = { enable = true },
+            },
+          },
+        },
+        sqls = {
+          on_attach = on_attach,
+          settings = {
+            sqls = {
+              connections = {
+                {
+                  driver = 'postgres',
+                  dataSourceName = 'postgres:postgres@localhost:5432/gator',
+                  schemaSearchPath = { 'public' },
+                },
+              },
+            },
+          },
+        },
+        clangd = {},
+        html = {},
+        cssls = {},
+        ts_ls = {
+          filetypes = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
+        },
+        jdtls = {},
+        eslint = {
+          settings = {
+            format = { enable = true },
+          },
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -961,7 +1105,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'java' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {

@@ -2,4 +2,21 @@
 --  I promise not to create any merge conflicts in this directory :)
 --
 -- See the kickstart.nvim README for more information
-return {}
+print 'plugins.lua is being loaded'
+
+return {
+
+  -- Colorizer
+  {
+    'norcalli/nvim-colorizer.lua',
+    config = function()
+      require('colorizer').setup({
+        '*', -- Highlight all filetypes
+        css = { rgb_fn = true },
+        html = { names = false },
+      }, {
+        mode = 'foreground',
+      })
+    end,
+  },
+}
