@@ -48,6 +48,8 @@ return {
             '--hidden', -- Busca en archivos ocultos
             '--glob',
             '!.git/', -- Excluye .git pero no .gitlab
+            '--glob',
+            '!package-lock.json',
           },
         },
         -- show hidden files, does it respect config for whatever command is using?

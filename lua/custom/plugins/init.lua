@@ -34,4 +34,5 @@ vim.o.expandtab = true
 local set = vim.opt_local
 set.shiftwidth = 2
 vim.o.shiftwidth = 2
+vim.keymap.set('n', '<leader>yb', '<cmd>let @+ = expand("%")<CR>', { desc = 'yank to plus register current relative path' })
 return {}
