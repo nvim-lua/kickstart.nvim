@@ -36,9 +36,6 @@ vim.keymap.set('n', '<CR>', 'o<ESC>', { noremap = true, desc = 'ESC' })
 vim.keymap.set('n', 'L', '<cmd>bn<CR>', { noremap = true, desc = 'buffer next' })
 vim.keymap.set('n', 'H', '<cmd>bp<CR>', { noremap = true, desc = 'buffer previous' })
 
-vim.keymap.set('n', ',n', '<cmd>Neotree toggle<CR>', { noremap = true, desc = 'Tree Toggle' })
-vim.keymap.set('n', ',N', '<cmd>Neotree reveal left<CR>', { noremap = true, desc = 'Follow File Toggle' })
-
 vim.keymap.set('n', '<leader>w', '<cmd>:w<CR>', { noremap = true, desc = 'Save file' })
 
 vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, { noremap = true, desc = 'Signature Help' })
