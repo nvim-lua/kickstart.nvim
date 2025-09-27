@@ -679,7 +679,7 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         clangd = {},
-        -- gopls = {},
+        --gopls = {},
         pyright = {},
         rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -888,31 +888,71 @@ require('lazy').setup({
       signature = { enabled = true },
     },
   },
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
-    transparent = true,
+  -- { -- You can easily change to a different colorscheme.
+  --   -- Change the name of the colorscheme plugin below, and then
+  --   -- change the command in the config to whatever the name of that colorscheme is.
+  --   --
+  --   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
+  --   'folke/tokyonight.nvim',
+  --   priority = 1000, -- Make sure to load this before all the other start plugins.
+  --   transparent = true,
+  --   config = function()
+  --     ---@diagnostic disable-next-line: missing-fields
+  --     require('tokyonight').setup {
+  --       styles = {
+  --         comments = { italic = false }, -- Disable italics in comments
+  --         keywords = { italic = false },
+  --         sidebars = 'dark', -- style for sidebars, see below
+  --         floats = 'dark', -- style for floating windows
+  --       },
+  --     }
+
+  --     -- Load the colorscheme here.
+  --     -- Like many other themes, this one has different styles, and you could load
+  --     -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+  --     vim.cmd.colorscheme 'tokyonight-storm'
+  --     vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
+  --     vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
+  --   end,
+  -- },
+  -- Using Lazy
+  -- {
+  --   "ellisonleao/gruvbox.nvim",
+  --   priority = 1000, -- make sure to load this before all the other start plugins
+  --   config = function()
+  --     require('gruvbox').setup {
+  --       style = 'dark'
+  --     }
+  --     -- Enable theme
+  --     require('gruvbox').load()
+  --   end
+  -- },
+  -- Or with configuration
+  {
+    'projekt0n/github-nvim-theme',
+    name = 'github-theme',
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = false }, -- Disable italics in comments
-          keywords = { italic = false },
-          sidebars = 'dark', -- style for sidebars, see below
-          floats = 'dark', -- style for floating windows
+      require('github-theme').setup {
+        options = {
+          styles = {
+            --comments = 'italic',
+            --keywords = 'italic',
+            --types = 'italic',
+          },
+        },
+        specs = {
+          github_dark = {
+            syntax = {},
+          },
+        },
+        prettier = {
+          bg1 = '#151b23',
         },
       }
 
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-storm'
-      vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
-      vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
+      vim.cmd 'colorscheme github_dark'
     end,
   },
 
@@ -961,7 +1001,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -992,7 +1032,7 @@ require('lazy').setup({
   --
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
