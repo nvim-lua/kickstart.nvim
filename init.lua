@@ -290,7 +290,7 @@ require('lazy').setup({
   require 'plugins.conform',
 
   require 'plugins.cmp',
-  require 'plugins.vscode',
+  require 'plugins.colorscheme',
   require 'plugins.lsp',
   require 'plugins.nvim-surround',
   require 'plugins.todo-comments',
