@@ -120,20 +120,19 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- Keybinds to make split navigation easier.
---  Use Alt+<neio> to switch between windows
+--  As I use a colemack keyboard, is easier to me to move focus using the arrow keys
+--  Also Ctrl+neio is aready what I use for moving around so it would be more ackward Cmd+Ctrl+something....
 --  See `:help wincmd` for a list of all window commands
---  TODO: this is not working because I use colemack and Ctrl + neio is already being used by my alacritty config. I need to configure it soon.
---  help i cant do this anymore
-vim.keymap.set('n', '<D-o>', '<M-w><M-o>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<D-i>', '<M-w><M-i>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<D-n>', '<M-w><M-n>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<D-e>', '<M-w><M-e>', { desc = 'Move focus to the upper window' })
+vim.keymap.set('n', '<C-Left>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+vim.keymap.set('n', '<C-Down>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+vim.keymap.set('n', '<C-Up>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set('n', '<C-Right>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 
--- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
--- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
--- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
--- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
--- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
+-- Terminal keymaps to make it easyer to open a terminal in the directory that I am working
+-- (thanks alacritty for not having tabs *ironically*)
+vim.keymap.set('n', '<leader>tt', ':!alacritty --working-directory=%:p:h &<CR><CR>', { desc = 'Open external terminal in current file directory' })
+vim.keymap.set('n', '<leader>t.', ':lcd %:p:h | terminal<CR>', { desc = 'Open integrated terminal in current file directory' })
+vim.keymap.set('n', '<leader>ts', ':vsplit | lcd %:p:h | terminal<CR>', { desc = 'Open terminal split in current file directory' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -213,7 +212,7 @@ require('lazy').setup({
   -- Then, because we useOkay. What you're doing there is jumping. You just... you just jumped. But nevermind. Say 'Apple'. 'Aaaapple. the `opts` key (recommended), the configuration runs
   -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
 
-  {                     -- Useful plugin to show you pending keybinds.
+  { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
@@ -294,7 +293,7 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
+      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -402,7 +401,7 @@ require('lazy').setup({
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
-      { 'j-hui/fidget.nvim',    opts = {} },
+      { 'j-hui/fidget.nvim', opts = {} },
 
       -- Allows extra capabilities provided by blink.cmp
       'saghen/blink.cmp',
