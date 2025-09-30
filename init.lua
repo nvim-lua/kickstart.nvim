@@ -99,6 +99,9 @@ vim.g.loaded_netrwPlugin = 1
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
+--
+vim.o.shiftwidth = 2
+vim.o.tabstop = 2
 
 -- Make line numbers default
 vim.o.number = true
@@ -140,6 +143,8 @@ vim.o.timeoutlen = 300
 -- Configure how new splits should be opened
 vim.o.splitright = true
 vim.o.splitbelow = true
+
+vim.o.guicursor = 'n-v-c:block,i:ver25'
 
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
