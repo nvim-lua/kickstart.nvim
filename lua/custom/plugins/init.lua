@@ -2,4 +2,10 @@
 --  I promise not to create any merge conflicts in this directory :)
 --
 -- See the kickstart.nvim README for more information
-return {}
+return {
+  require 'custom.plugins.comment',
+  require 'custom.plugins.tabs',
+  require 'custom.plugins.copilot',
+  require 'custom.plugins.masonconfig',
+  require 'custom.plugins.neo-tree-config',
+}
