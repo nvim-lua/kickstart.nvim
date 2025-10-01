@@ -100,9 +100,13 @@ vim.g.have_nerd_font = false
 
 -- Make line numbers default
 -- vim.opt.number = true
--- You can also add relative line numbers, to help with jumping.
+-- You can also add reeative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
 vim.opt.relativenumber = true
+
+-- Ensure line numbers are always visible
+vim.opt.numberwidth = 4 -- Width of number column
+vim.opt.signcolumn = 'yes' -- Always show sign column
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -144,8 +148,8 @@ vim.opt.splitbelow = true
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
-vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.list = false  -- Disable showing whitespace characters
+-- vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
@@ -155,6 +159,65 @@ vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
+
+-- Configure fillchars to show empty lines
+vim.opt.fillchars = {
+  eob = ' ', -- End of buffer character (empty line indicator)
+  fold = ' ', -- Fold indicator
+  foldopen = '▼', -- Fold open indicator
+  foldclose = '▶', -- Fold close indicator
+  foldsep = '│', -- Fold separator
+  diff = '╱', -- Diff indicator
+  msgsep = ' ', -- Message separator
+  vert = '│', -- Vertical split character
+  horiz = '─', -- Horizontal split character
+  horizup = '┴', -- Horizontal up split character
+  horizdown = '┬', -- Horizontal down split character
+}
+
+-- Show empty lines at the end of buffer
+vim.opt.display = 'lastline'
+
+-- Enable virtual text for better empty line visibility
+vim.opt.virtualedit = 'onemore'
+
+-- Indent configuration
+vim.opt.tabstop = 2        -- Number of spaces a tab counts for
+vim.opt.shiftwidth = 2      -- Number of spaces to use for each step of (auto)indent
+vim.opt.softtabstop = 2    -- Number of spaces that a tab counts for while performing editing operations
+vim.opt.expandtab = true    -- Use spaces instead of tabs
+vim.opt.smartindent = true  -- Smart autoindenting when starting a new line
+vim.opt.autoindent = true   -- Copy indent from current line when starting a new line
+
+-- Filetype-specific indent settings
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'python', 'yaml', 'yml' },
+  callback = function()
+    vim.opt_local.tabstop = 2
+    vim.opt_local.shiftwidth = 2
+    vim.opt_local.softtabstop = 2
+  end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'go', 'rust' },
+  callback = function()
+    vim.opt_local.tabstop = 4
+    vim.opt_local.shiftwidth = 4
+    vim.opt_local.softtabstop = 4
+    vim.opt_local.expandtab = false  -- Use tabs for Go and Rust
+  end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'kotlin', 'java', 'javascript', 'typescript', 'lua' },
+  callback = function()
+    vim.opt_local.tabstop = 2
+    vim.opt_local.shiftwidth = 2
+    vim.opt_local.softtabstop = 2
+    vim.opt_local.expandtab = true
+  end,
+})
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -218,6 +281,9 @@ vim.opt.rtp:prepend(lazypath)
 -- Load LSP configurations
 require 'config.lspconfig'
 require 'config.diagnostic'
+
+-- Load filetype configurations
+require 'config.filetypes'
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
@@ -285,6 +351,8 @@ require('lazy').setup({
 
   -- LSP Plugins
   require 'plugins.lazydev',
+  -- nvim bar plugin
+  require 'plugins.lualine',
  
   require 'plugins.java',
   require 'plugins.conform',

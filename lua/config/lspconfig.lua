@@ -1,25 +1,34 @@
--- LSP configuration for Kotlin
+-- LSP configuration for Kotlin and Java with Maven support
 -- This file contains LSP server configurations that are loaded on startup
+  
+return function()
+  -- Kotlin LSP configuration (Official Kotlin LSP)
+  vim.lsp.config('kotlin_language_server', {
+    filetypes = { 'kotlin' },
+    root_markers = {
+      'pom.xml',
+      'build.gradle',
+      'build.gradle.kts',
+      'settings.gradle',
+      'settings.gradle.kts'
+    },
+    single_file_support = true,
+  })
+  vim.lsp.enable('kotlin_language_server')
 
--- Enable Kotlin LSP
-vim.lsp.config('kotlin_lsp', {
-  filetypes = { 'kotlin' },
-  root_markers = {
-    'settings.gradle',
-    'settings.gradle.kts',
-    'pom.xml',
-  },
-})
+  vim.lsp.set_log_level("debug")
 
-vim.lsp.config('jdtls', {
-  filetypes = { 'java' },
-  root_markers = {
-    'pom.xml',
-    'build.gradle',
-    'build.gradle.kts',
-  },
-})
-
-vim.lsp.enable('kotlin_lsp')
-
-vim.diagnostic.enable()
+  -- Java LSP configuration
+  vim.lsp.config('jdtls', {
+    filetypes = { 'java' },
+    root_markers = {
+      'pom.xml',
+      'build.gradle',
+      'build.gradle.kts',
+      '.git'
+    },
+    single_file_support = true,
+       
+  })
+  vim.lsp.enable('jdtls')
+end
