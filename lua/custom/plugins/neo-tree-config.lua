@@ -24,9 +24,7 @@ return {
       end, { desc = 'Focus NeoTree' })
 
       -- Setup neo-tree
-      require('neo-tree').setup {
-        -- Add any neo-tree options here if needed
-      }
+      require('neo-tree').setup {}
     end,
   },
 }
