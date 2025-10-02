@@ -24,7 +24,13 @@ return {
       end, { desc = 'Focus NeoTree' })
 
       -- Setup neo-tree
-      require('neo-tree').setup {}
+      require('neo-tree').setup {
+        filesystem = {
+          follow_current_file = {
+            enabled = true,
+          },
+        },
+      }
     end,
   },
 }

@@ -7,4 +7,5 @@ return {
   require 'custom.plugins.tabs',
   require 'custom.plugins.copilot',
   require 'custom.plugins.neo-tree-config',
+  require 'custom.plugins.sleuth',
 }
