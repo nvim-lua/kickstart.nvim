@@ -115,7 +115,7 @@ vim.opt.showmode = false
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 vim.schedule(function()
-  vim.opt.clipboard = 'unnamedplus'
+  vim.opt.clipboard = 'unnamed'
 end)
 
 -- Enable break indent
@@ -456,8 +456,8 @@ require('lazy').setup({
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
-      { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
-      'williamboman/mason-lspconfig.nvim',
+      { 'mason-org/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
+      'mason-org/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
@@ -553,7 +553,7 @@ require('lazy').setup({
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
-          if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+          if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
@@ -616,8 +616,27 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        pyright = {},
-        -- rust_analyzer = {},
+        -- pyright = {},
+        -- pylsp = {},
+        --ty = {},
+        --ruff = {},
+        zuban = {},
+        r_language_server = {},
+        rust_analyzer = {
+          ['rust_analyzer'] = {
+            settings = {
+              diagnostic = { enable = false },
+              checkOnSave = { enable = false },
+            },
+          },
+        },
+        bacon = {},
+        ['bacon-ls'] = {
+          init_options = {
+            updateOnSave = true,
+            updateOnSaveWaitMillis = 1000,
+          },
+        },
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -667,6 +686,7 @@ require('lazy').setup({
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+
             require('lspconfig')[server_name].setup(server)
           end,
         },
@@ -968,3 +988,15 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+--
+
+-- Gopass
+vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+  pattern = '/private/**/gopass**',
+  callback = function()
+    vim.opt_local.swapfile = false
+    vim.opt_local.backup = false
+    vim.opt_local.undofile = false
+    vim.opt_local.shadafile = ''
+  end,
+})
