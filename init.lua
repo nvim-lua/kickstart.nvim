@@ -397,6 +397,20 @@ require('lazy').setup({
     end,
   },
   {
+    'folke/flash.nvim',
+    event = 'VeryLazy',
+    ---@type Flash.Config
+    opts = {},
+  -- stylua: ignore
+  keys = {
+    { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+    { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+    { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+    { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+    { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+  },
+  },
+  {
     'ThePrimeagen/harpoon',
     branch = 'harpoon2',
     dependencies = { 'nvim-lua/plenary.nvim', 'nvim-telescope/telescope.nvim' },
@@ -729,12 +743,12 @@ require('lazy').setup({
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<leader>f',
+        '<leader>m',
         function()
           require('conform').format { async = true, lsp_format = 'fallback' }
         end,
         mode = '',
-        desc = '[F]ormat buffer',
+        desc = 'For[m]at buffer',
       },
     },
     opts = {
@@ -861,27 +875,44 @@ require('lazy').setup({
     },
   },
   {
+    --    'sainnhe/gruvbox-material',
+    --    lazy = false,
+    --    priority = 1000,
+    --    config = function()
+    --      vim.o.background = 'dark'
+    --      vim.g.gruvbox_material_enable_italic = true
+    --      vim.g.gruvbox_material_background = 'hard'
+    --      vim.cmd.colorscheme 'gruvbox-material'
+    --    end,
     'catppuccin/nvim',
     name = 'catppuccin',
     priority = 1000,
     config = function()
       require('catppuccin').setup {
         flavour = 'mocha',
+        transparent_background = true,
       }
       vim.cmd 'colorscheme catppuccin'
     end,
-    --  'rebelot/kanagawa.nvim',
-    --  priority = 1000, -- Make sure to load this before all the other start plugins.
-    --  name = 'kanagawa-dragon',
-    --  config = function()
-    --    ---@diagnostic disable-next-line: missing-fields
-    --    require('kanagawa').setup {
-    --      commentStyle = { italic = true },
-    --      -- statementStyle = { bold = false },
-    --      theme = 'dragon',
-    --    }
-    --    vim.cmd 'colorscheme kanagawa-dragon'
-    --  end,
+    -- 'rebelot/kanagawa.nvim',
+    -- priority = 1000, -- Make sure to load this before all the other start plugins.
+    -- name = 'kanagawa-dragon',
+    -- config = function()
+    --   ---@diagnostic disable-next-line: missing-fields
+    --   require('kanagawa').setup {
+    --     commentStyle = { italic = true },
+    --     -- statementStyle = { bold = false },
+    --     theme = 'dragon',
+    --   }
+    --   vim.cmd 'colorscheme kanagawa-dragon'
+    -- end,
+    --'zenbones-theme/zenbones.nvim',
+    --dependencies = 'rktjmp/lush.nvim',
+    --lazy = false,
+    --priority = 1000,
+    --config = function()
+    --  vim.cmd 'colorscheme zenbones'
+    --end,
     -- 'vague2k/vague.nvim',
     -- priority = 1000,
     -- name = 'vague',
@@ -960,45 +991,61 @@ require('lazy').setup({
     lazy = false,
   },
   {
-    'mikavilpas/yazi.nvim',
-    event = 'VeryLazy',
-    dependencies = {
-      'folke/snacks.nvim',
-    },
-    keys = {
-      -- 👇 in this section, choose your own keymappings!
-      {
-        '<leader>-',
-        mode = { 'n', 'v' },
-        '<cmd>Yazi<cr>',
-        desc = 'Open yazi at the current file',
-      },
-      {
-        -- Open in the current working directory
-        '<leader>cw',
-        '<cmd>Yazi cwd<cr>',
-        desc = "Open the file manager in nvim's working directory",
-      },
-      {
-        '<c-up>',
-        '<cmd>Yazi toggle<cr>',
-        desc = 'Resume the last yazi session',
-      },
-    },
-    opts = {
-      -- if you want to open yazi instead of netrw, see below for more info
-      open_for_directories = false,
-      keymaps = {
-        show_help = '~',
-      },
-    },
-    -- 👇 if you use `open_for_directories=true`, this is recommended
-    init = function()
-      -- More details: https://github.com/mikavilpas/yazi.nvim/issues/802
-      -- vim.g.loaded_netrw = 1
-      vim.g.loaded_netrwPlugin = 1
+    'stevearc/oil.nvim',
+    ---@module 'oil'
+    ---@type oil.SetupOpts
+    opts = {},
+    -- Optional dependencies
+    dependencies = { { 'echasnovski/mini.icons', opts = {} } },
+    -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
+    -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
+    lazy = false,
+    config = function()
+      require('oil').setup {
+        vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' }),
+      }
     end,
   },
+  --{
+  --  'mikavilpas/yazi.nvim',
+  --  event = 'VeryLazy',
+  --  dependencies = {
+  --    'folke/snacks.nvim',
+  --  },
+  --  keys = {
+  --    -- 👇 in this section, choose your own keymappings!
+  --    {
+  --      '<leader>-',
+  --      mode = { 'n', 'v' },
+  --      '<cmd>Yazi<cr>',
+  --      desc = 'Open yazi at the current file',
+  --    },
+  --    {
+  --      -- Open in the current working directory
+  --      '<leader>cw',
+  --      '<cmd>Yazi cwd<cr>',
+  --      desc = "Open the file manager in nvim's working directory",
+  --    },
+  --    {
+  --      '<c-up>',
+  --      '<cmd>Yazi toggle<cr>',
+  --      desc = 'Resume the last yazi session',
+  --    },
+  --  },
+  --  opts = {
+  --    -- if you want to open yazi instead of netrw, see below for more info
+  --    open_for_directories = false,
+  --    keymaps = {
+  --      show_help = '~',
+  --    },
+  --  },
+  --  -- 👇 if you use `open_for_directories=true`, this is recommended
+  --  init = function()
+  --    -- More details: https://github.com/mikavilpas/yazi.nvim/issues/802
+  --    -- vim.g.loaded_netrw = 1
+  --    vim.g.loaded_netrwPlugin = 1
+  --  end,
+  --},
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
