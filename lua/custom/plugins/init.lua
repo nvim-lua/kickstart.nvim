@@ -10,48 +10,10 @@ vim.opt.wrap = false
 vim.keymap.set('n', '<C-k>', '15k', { desc = 'Scroll up and center' })
 vim.keymap.set('n', '<C-j>', '15j', { desc = 'Scroll down and center' })
 vim.keymap.set('n', '<C-c>', 'ggVGy', { desc = 'Copy file' })
-vim.keymap.set('n', '<leader>e', ':Explore<CR>', { desc = 'Open explorer' })
+vim.keymap.set('n', '<leader>e', ':Neotree<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<leader>e', ':Explore<CR>', { desc = 'Open explorer' })
 
 return {
-  {
-    'catppuccin/nvim',
-    name = 'catppuccin',
-    priority = 1000,
-    config = function()
-      require('catppuccin').setup {
-        flavour = 'mocha',
-        integrations = {
-          telescope = true,
-          treesitter = true,
-          cmp = true,
-          gitsigns = true,
-        },
-        custom_highlights = function(colors)
-          return {
-            LineNr = { fg = colors.mauve },
-            CursorLineNr = { fg = colors.lavender, bold = true },
-            Visual = { bg = colors.surface1 },
-            TelescopeSelection = { bg = colors.surface1 },
-          }
-        end,
-      }
-      vim.cmd.colorscheme 'catppuccin'
-    end,
-  },
-
-  {
-    -- Set lualine as statusline
-    'nvim-lualine/lualine.nvim',
-    -- See `:help lualine.txt`
-    opts = {
-      options = {
-        icons_enabled = false,
-        component_separators = '|',
-        section_separators = '',
-      },
-    },
-  },
-
   {
     'NeogitOrg/neogit',
     dependencies = {
@@ -62,14 +24,9 @@ return {
     },
     config = function()
       local neogit = require 'neogit'
-
       vim.keymap.set('n', '<leader>gg', neogit.open, { desc = 'Open Neogit' })
-
       neogit.setup {}
     end,
   },
-
-  {
-    'mfussenegger/nvim-jdtls',
-  },
 }
+
