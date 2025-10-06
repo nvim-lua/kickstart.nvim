@@ -28,7 +28,7 @@ vim.opt.rtp:prepend(lazypath)
 --    as they will be available in your neovim runtime.
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
-  {import = "plugins"},
+  { import = "plugins" },
   -- Git related plugins
   "tpope/vim-fugitive",
   'tpope/vim-rhubarb',
@@ -48,7 +48,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
+      { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -90,33 +90,33 @@ require('lazy').setup({
 
         -- don't override the built-in and fugitive keymaps
         local gs = package.loaded.gitsigns
-        vim.keymap.set({'n', 'v'}, ']c', function()
+        vim.keymap.set({ 'n', 'v' }, ']c', function()
           if vim.wo.diff then return ']c' end
           vim.schedule(function() gs.next_hunk() end)
           return '<Ignore>'
-        end, {expr=true, buffer = bufnr, desc = "Jump to next hunk"})
-        vim.keymap.set({'n', 'v'}, '[c', function()
+        end, { expr = true, buffer = bufnr, desc = "Jump to next hunk" })
+        vim.keymap.set({ 'n', 'v' }, '[c', function()
           if vim.wo.diff then return '[c' end
           vim.schedule(function() gs.prev_hunk() end)
           return '<Ignore>'
-        end, {expr=true, buffer = bufnr, desc = "Jump to previous hunk"})
+        end, { expr = true, buffer = bufnr, desc = "Jump to previous hunk" })
       end,
     },
   },
 
-  -- { 
+  -- {
   --   "nyoom-engineering/oxocarbon.nvim",
   --   config = function()
   --     vim.cmd([[colorscheme oxocarbon]])
   --   end,
-  --   -- Add in any other configuration; 
-  --   --   event = foo, 
+  --   -- Add in any other configuration;
+  --   --   event = foo,
   --   --   config = bar
   --   --   end,
   -- },
   {
     "folke/tokyonight.nvim",
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    lazy = false,    -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
       -- load the colorscheme here
@@ -134,7 +134,7 @@ require('lazy').setup({
         component_separators = '|',
         section_separators = '',
         'filename',
-        path=1,
+        path = 1,
       },
     },
   },
@@ -144,7 +144,7 @@ require('lazy').setup({
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
-    main="ibl",
+    main = "ibl",
     opts = {},
   },
 
@@ -172,7 +172,7 @@ require('lazy').setup({
       },
     },
     defaults = {
-      vimgrep_arguments = { 'rg',},
+      vimgrep_arguments = { 'rg', },
     },
   },
 
@@ -278,7 +278,7 @@ require('telescope').setup {
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
 
--- Enable telescope ui select 
+-- Enable telescope ui select
 require("telescope").load_extension("ui-select")
 
 -- See `:help telescope.builtin`
@@ -293,23 +293,25 @@ vim.keymap.set('n', '<leader>/', function()
 end, { desc = '[/] Fuzzily search in current buffer' })
 
 vim.keymap.set('n', '<C-p>', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader-sg>', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<C-g>', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
-vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]resume' })
-vim.keymap.set('n', '<leader>sb', require('telescope.builtin').buffers, { desc = '[S]earch [B]uffers' })
+vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[f]ind [f]iles' })
+vim.keymap.set('n', '<leader>fF', function() require('telescope.builtin').find_files({ hidden = true }) end, { desc = '[f]ind [F]iles (hidden)' })
+vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, { desc = '[f]ind [H]elp' })
+-- vim.keymap.set('n', '<leader>fg', require('telescope.builtin').grep_string, { desc = '[f]ind  [g]rep' })
+vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, { desc = '[f]ind by [G]rep' })
+vim.keymap.set('n', '<leader>fd', require('telescope.builtin').diagnostics, { desc = '[f]ind [D]iagnostics' })
+vim.keymap.set('n', '<leader>fr', require('telescope.builtin').resume, { desc = '[f]ind [R]resume' })
+vim.keymap.set('n', '<leader>fb', require('telescope.builtin').buffers, { desc = '[f]ind [B]uffers' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'ruby'},
+  ensure_installed = 
+    { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
-  modules={},
+  modules = {},
   sync_install = false,
   ignore_install = {},
   parser_install_dir = nil,
@@ -427,6 +429,22 @@ local servers = {
   -- pyright = {},
   -- rust_analyzer = {},
   tsserver = {},
+  volar = {
+    filetypes = { 'vue', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
+    init_options = {
+      vue = {
+        hybridMode = false,
+      },
+      typescript = {
+        -- Global install of typescript
+        --tsdk = '~/.nvm/versions/node/v20.11.1/lib/node_modules/typescript',
+        -- Current project version and what I will likely use
+        tsdk = vim.fn.getcwd() .. "node_modules/typescript/lib",
+
+      },
+    },
+  },
+    
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
   lua_ls = {
@@ -475,7 +493,7 @@ cmp.setup {
       luasnip.lsp_expand(args.body)
     end,
   },
-  revision=1,
+  revision = 1,
   mapping = cmp.mapping.preset.insert {
     ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-p>'] = cmp.mapping.select_prev_item(),
