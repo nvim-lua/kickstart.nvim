@@ -4,6 +4,7 @@
 -- See the kickstart.nvim README for more information
 
 vim.opt.number = true
+
 vim.opt.relativenumber = true
 vim.opt.wrap = false
 
@@ -28,5 +29,10 @@ return {
       neogit.setup {}
     end,
   },
+  {
+    'github/copilot.vim',
+    cmd = 'Copilot', -- Load Copilot only when the 'Copilot' command is invoked
+    event = 'InsertEnter', -- Load Copilot when entering insert mode
+    config = true, -- Automatically run the default setup
+  },
 }
-
