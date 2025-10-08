@@ -1,7 +1,6 @@
 vim.g.mapleader = ' '
-vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
 vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
--- vim.keymap.set("n", "<leader>pv", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+vim.keymap.set('n', '<leader>pv', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
 
 -- Window splits
 vim.keymap.set('n', '|', '<cmd>vsplit<CR>', { desc = 'Split window vertically' })
@@ -54,3 +53,7 @@ vim.keymap.set('n', '<leader>sf', ':source $HOME/.config/nvim/init.lua <CR>', { 
 vim.keymap.set('n', '<leader><leader>', function()
   vim.cmd 'so'
 end)
+
+-- Jump to beginning/end of method
+vim.keymap.set('n', '[m', '[m', { desc = 'Jump to beginning of method' })
+vim.keymap.set('n', ']m', ']m', { desc = 'Jump to end of method' })

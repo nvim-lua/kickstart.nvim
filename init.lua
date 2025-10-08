@@ -436,6 +436,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>fr', builtin.resume, { desc = '[F]ind [R]esume' })
       vim.keymap.set('n', '<leader>f.', builtin.oldfiles, { desc = '[F]ind Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      -- vim.api.nvim_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', { noremap = true, silent = true })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -534,7 +535,12 @@ require('lazy').setup({
             mode = mode or 'n'
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
-
+          vim.api.nvim_create_autocmd({ 'LspAttach' }, {
+            callback = function()
+              -- Map 'gd' to go to definition using Telescope's LSP definitions picker
+              vim.keymap.set('n', 'gd', require('telescope.builtin').lsp_definitions, { buffer = 0, desc = 'Go to definition' })
+            end,
+          })
           -- Rename the variable under your cursor.
           --  Most Language Servers support renaming across files, etc.
           map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
@@ -681,19 +687,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        ts_ls = {
-          init_options = {
-            plugins = {
-              {
-                name = '@vue/typescript-plugin',
-                location = '',
-                languages = { 'vue' },
-              },
-            },
-          },
-          filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
-        },
-
+        ts_ls = {},
         --
 
         lua_ls = {
@@ -745,8 +739,8 @@ require('lazy').setup({
           end,
         },
       }
-      local vue_language_server_path = vim.fn.expand '$MASON/packages' .. '/vue-language-server' .. '/node_modules/@vue/language-server'
 
+      local vue_language_server_path = vim.fn.expand '$MASON/packages' .. '/vue-language-server' .. '/node_modules/@vue/language-server'
       local vue_plugin = {
         name = '@vue/typescript-plugin',
         location = vue_language_server_path,
@@ -825,7 +819,7 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
+        local disable_filetypes = { c = true, cpp = true, vue = true }
         if disable_filetypes[vim.bo[bufnr].filetype] then
           return nil
         else
@@ -920,6 +914,11 @@ require('lazy').setup({
         -- By default, you may press `<c-space>` to show the documentation.
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
         documentation = { auto_show = false, auto_show_delay_ms = 500 },
+        menu = {
+          border = 'rounded',
+          -- Show completion menu at cursor position
+          direction_priority = { 's', 'n' },
+        },
       },
 
       sources = {
