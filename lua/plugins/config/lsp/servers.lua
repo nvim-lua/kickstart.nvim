@@ -67,16 +67,21 @@ function M.get_servers()
           analysis = {
             autoSearchPaths = true,
             diagnosticMode = 'openFilesOnly',
-            typeCheckingMode = 'standard',
+            typeCheckingMode = 'basic',
             useLibraryCodeForTypes = true,
 
             diagnosticSeverityOverrides = {
               reportOptionalCall = 'none',
               reportOptionalSubscript = 'none',
+              reportOptionalMemberAccess = 'none',
+              reportOptionalIterable = 'none',
               reportAttributeAccessIssue = 'none',
-              reportUnknownMemberType = 'warning',
-              reportUnknownVariableType = 'warning',
-              reportUnknownAssignmentType = 'warning',
+              reportUnknownMemberType = 'none',
+              reportUnknownVariableType = 'none',
+              reportUnknownArgumentType = 'none',
+              reportUnknownParameterType = 'none',
+              reportUnknownAssignmentType = 'none',
+              reportMissingTypeStubs = 'none',
             },
           },
         },
@@ -98,6 +103,41 @@ function M.get_servers()
       filetypes = { 'cmake' },
       root_dir = util.root_pattern('CMakeLists.txt', '.git'),
     },
+
+    -- Lua Language Server
+    lua_ls = {
+      settings = {
+        Lua = {
+          runtime = { version = 'LuaJIT' },
+          diagnostics = {
+            globals = { 'vim' },
+          },
+          workspace = {
+            library = vim.api.nvim_get_runtime_file('', true),
+            checkThirdParty = false,
+          },
+          telemetry = { enable = false },
+        },
+      },
+    },
+
+    -- Bash Language Server
+    bashls = {},
+
+    -- YAML Language Server
+    yamlls = {},
+
+    -- JSON Language Server
+    jsonls = {},
+
+    -- Markdown Language Server
+    marksman = {},
+
+    -- TOML Language Server
+    taplo = {},
+
+    -- SQL Language Server
+    sqls = {},
 
     -- Add more servers here as needed
     -- Example:

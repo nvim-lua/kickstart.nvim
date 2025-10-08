@@ -1,0 +1,14 @@
+{
+  "session_name": "nvim",
+  "tmux_options": "-f /Users/dlond/.config/tmux/tmux.conf",
+  "windows": [
+    {
+      "window_name": "editor",
+      "layout": "even-vertical",
+      "panes": [
+        { "shell_command": ["nvim ."] },
+        { "shell_command": [] }
+      ]
+    }
+  ]
+}
