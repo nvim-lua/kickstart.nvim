@@ -39,15 +39,16 @@ return {
       },
     },
   },
-  {
-    'Exafunction/windsurf.nvim',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'hrsh7th/nvim-cmp',
-    },
-    config = function()
-      require('codeium').setup {}
-      vim.keymap.set('n', '<leader>tc', ':Codeium Toggle<CR>', { desc = 'Toggle Codeium' })
-    end,
-  },
+  -- Codium:
+  -- {
+  --   'Exafunction/windsurf.nvim',
+  --   dependencies = {
+  --     'nvim-lua/plenary.nvim',
+  --     'hrsh7th/nvim-cmp',
+  --   },
+  --   config = function()
+  --     require('codeium').setup {}
+  --     vim.keymap.set('n', '<leader>tc', ':Codeium Toggle<CR>', { desc = 'Toggle Codeium' })
+  --   end,
+  -- },
 }

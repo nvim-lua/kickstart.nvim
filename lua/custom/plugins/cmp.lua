@@ -12,6 +12,7 @@ return {
         require('luasnip.loaders.from_vscode').lazy_load { paths = vim.fn.stdpath 'config' .. '/mysnippets/' }
       end,
     },
+    -- { 'Kaiser-Yang/blink-cmp-avante' },
   },
 
   -- use a release tag to download pre-built binaries
@@ -76,9 +77,23 @@ return {
     -- Default list of enabled providers defined so that you can extend it
     -- elsewhere in your config, without redefining it, due to `opts_extend`
     sources = {
-      default = { 'lsp', 'path', 'snippets', 'buffer', 'codeium' },
+      default = {
+        'lsp',
+        'path',
+        'snippets',
+        'buffer',
+        -- 'codeium',
+        -- 'avante',
+      },
       providers = {
-        codeium = { name = 'Codeium', module = 'codeium.blink', async = true },
+        -- codeium = { name = 'Codeium', module = 'codeium.blink', async = true },
+        -- avante = {
+        --   module = 'blink-cmp-avante',
+        --   name = 'Avante',
+        --   opts = {
+        --     -- options for blink-cmp-avante
+        --   },
+        -- },
       },
     },
 
