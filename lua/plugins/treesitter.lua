@@ -1,4 +1,4 @@
--- Highlight, edit, and navigate code
+
 return {
   'nvim-treesitter/nvim-treesitter',
   build = ':TSUpdate',
@@ -98,7 +98,6 @@ return {
         },
       },
     }
-
     -- Register additional file extensions
     vim.filetype.add { extension = { tf = 'terraform' } }
     vim.filetype.add { extension = { tfvars = 'terraform' } }

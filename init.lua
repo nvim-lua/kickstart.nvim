@@ -1,108 +1,92 @@
+-- ~/.config/nvim/init.lua
 require 'core.options'  -- Load general options
 require 'core.keymaps'  -- Load general keymaps
 require 'core.snippets' -- Custom code snippets
 
--- Install package manager
-local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
+-- Install package manager (lazy.nvim)
+local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system {
-    'git',
-    'clone',
-    '--filter=blob:none',
+  vim.fn.system({
+    'git', 'clone', '--filter=blob:none',
     'https://github.com/folke/lazy.nvim.git',
-    '--branch=stable', -- latest stable release
-    lazypath,
-  }
+    '--branch=stable', lazypath,
+  })
 end
 vim.opt.rtp:prepend(lazypath)
+
+-- Filetypes
 vim.filetype.add({
-  extension = {
-    templ = "templ",
-  }
+  extension = { templ = 'templ' },
 })
 
--- Import color theme based on environment variable NVIM_THEME
+-- Theme selection (robust against unknown NVIM_THEME)
 local default_color_scheme = 'quantum'
-local env_var_nvim_theme = os.getenv 'NVIM_THEME' or default_color_scheme
-
--- Define a table of theme modules
+local env_var_nvim_theme = os.getenv('NVIM_THEME') or default_color_scheme
 local themes = {
   quantum = 'plugins.themes.quantum',
-  nord = 'plugins.themes.nord',
+  nord    = 'plugins.themes.nord',
   onedark = 'plugins.themes.onedark',
 }
+local theme_module = themes[env_var_nvim_theme] or themes[default_color_scheme]
 
--- Setup plugins
+-- Plugins
 require('lazy').setup({
-  require(themes[env_var_nvim_theme]),
+  require(theme_module),
   require 'core.ui',
 
-  require 'plugins.aaa', -- Mason setup
-  require 'plugins.aerial',
-  require 'plugins.flash',
-  require 'plugins.autocompletion',
-  require 'plugins.bufferline',
-  require 'plugins.comment',
-  require 'plugins.conform',
-  require 'plugins.database',
-  require 'plugins.debug',
-  require 'plugins.gitsigns',
-  require 'plugins.harpoon',
-  require 'plugins.lazygit',
-  require 'plugins.lsp',
+  -- Load mason early so tools are ready for LSP configs
+  require 'plugins.mason',
+
+  -- Core dev UX
+  require 'plugins.treesitter',
+  require 'plugins.telescope',
   require 'plugins.lualine',
-  require 'plugins.none-ls',
+  require 'plugins.bufferline',
   require 'plugins.indent-blankline',
   require 'plugins.neo-tree',
-  require 'plugins.misc',
-  require 'plugins.snack',
-  require 'plugins.telescope',
   require 'plugins.toggleterm',
-  require 'plugins.treesitter',
   require 'plugins.vim-tmux-navigator',
   require 'plugins.zellij',
+  require 'plugins.flash',
+  require 'plugins.comment',
+  require 'plugins.harpoon',
+  require 'plugins.gitsigns',
+  require 'plugins.lazygit',
+  require 'plugins.aerial',
+  require 'plugins.misc',
 
+  -- LSP & companions
+  require 'plugins.autocompletion',
+  require 'plugins.lsp',
+  require 'plugins.none-ls',     -- none-ls/null-ls sources & setup
+  require 'plugins.autoformat',  -- your autoformat-on-save/idle logic
+
+  -- Optional: pick one formatter stack. If you keep Conform,
+  -- ensure it doesn't also format Go on save to avoid double-format.
+  require 'plugins.conform',
+
+  -- Debugging / DB (as you had)
+  require 'plugins.debug',
+  require 'plugins.database',
 }, {
   ui = {
-    -- If you have a Nerd Font, set icons to an empty table which will use the
-    -- default lazy.nvim defined Nerd Font icons otherwise define a unicode icons table
     icons = vim.g.have_nerd_font and {} or {
-      cmd = '⌘',
-      config = '🛠',
-      event = '📅',
-      ft = '📂',
-      init = '⚙',
-      keys = '🗝',
-      plugin = '🔌',
-      runtime = '💻',
-      require = '🌙',
-      source = '📄',
-      start = '🚀',
-      task = '📌',
-      lazy = '💤 ',
+      cmd = '⌘', config = '🛠', event = '📅', ft = '📂', init = '⚙',
+      keys = '🗝', plugin = '🔌', runtime = '💻', require = '🌙',
+      source = '📄', start = '🚀', task = '📌', lazy = '💤 ',
     },
   },
 })
 
--- Function to check if a file exists
+-- (Optional) tiny helper if you ever want to source a session file
 local function file_exists(file)
   local f = io.open(file, 'r')
-  if f then
-    f:close()
-    return true
-  else
-    return false
-  end
+  if f then f:close(); return true end
+  return false
 end
 
--- Path to the session file
-local session_file = '.session.vim'
+-- local session_file = '.session.vim'
+-- if file_exists(session_file) then vim.cmd('source ' .. session_file) end
 
--- Check if the session file exists in the current directory
--- if file_exists(session_file) then
---   -- Source the session file
---   vim.cmd('source ' .. session_file)
--- end
-
--- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+

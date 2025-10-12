@@ -1,52 +1,38 @@
--- Format on save and linters
+-- lua/plugins/none-ls.lua
 return {
-  'nvimtools/none-ls.nvim',
+  "nvimtools/none-ls.nvim",
+  event = { "BufReadPre", "BufNewFile" }, -- load early so it can attach
   dependencies = {
-    'nvimtools/none-ls-extras.nvim',
-    'gbprod/none-ls-shellcheck.nvim',
+    "williamboman/mason.nvim",
+    "jay-babu/mason-null-ls.nvim",
+    "nvimtools/none-ls-extras.nvim", -- optional
   },
   config = function()
-    local null_ls = require 'null-ls'
-    local formatting = null_ls.builtins.formatting   -- to setup formatters
-    local diagnostics = null_ls.builtins.diagnostics -- to setup linters
+    local null_ls = require("null-ls")
 
+    null_ls.setup({
+      sources = {
+        -- Go
+        null_ls.builtins.formatting.gofumpt,
+        null_ls.builtins.formatting.golines,               -- optional
+        null_ls.builtins.diagnostics.golangci_lint,        -- if installed
 
-    -- Note: Use Mason to manually install tools:
-    -- :MasonInstall checkmake prettier stylua eslint_d shfmt ruff goimports
+        -- Web (keep only what you use)
+        null_ls.builtins.formatting.prettierd,
+        null_ls.builtins.diagnostics.eslint_d,
+      },
+    })
 
-    local sources = {
-      diagnostics.checkmake,
-      formatting.prettier.with { filetypes = { 'html', 'json', 'yaml', 'markdown' } }, -- removed 'templ' for debugging
-      formatting.stylua,
-      formatting.shfmt.with { args = { '-i', '4' } },
-      require('none-ls.formatting.ruff').with { extra_args = { '--extend-select', 'I' } },
-      require 'none-ls.formatting.ruff_format',
-      formatting.goimports, -- Add goimports for Go files
-    }
+    require("mason-null-ls").setup({
+      ensure_installed = { "gofumpt", "golines", "golangci-lint", "prettierd", "eslint_d" },
+      automatic_installation = true,
+    })
 
-    local augroup = vim.api.nvim_create_augroup('LspFormatting', {})
-    null_ls.setup {
-      debug = false, -- Disable debug mode to reduce log spam
-      sources = sources,
-      -- you can reuse a shared lspconfig on_attach callback here
-      on_attach = function(client, bufnr)
-        if client.supports_method 'textDocument/formatting' then
-          -- Skip formatting for .templ files during debugging
-          local filetype = vim.api.nvim_buf_get_option(bufnr, 'filetype')
-          if filetype == 'templ' then
-            return
-          end
-          
-          vim.api.nvim_clear_autocmds { group = augroup, buffer = bufnr }
-          vim.api.nvim_create_autocmd('BufWritePre', {
-            group = augroup,
-            buffer = bufnr,
-            callback = function()
-              vim.lsp.buf.format { async = false }
-            end,
-          })
-        end
-      end,
-    }
+    -- (optional) format on save for Go
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      pattern = "*.go",
+      callback = function() vim.lsp.buf.format({ async = false }) end,
+    })
   end,
 }
+
