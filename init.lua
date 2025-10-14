@@ -154,7 +154,7 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
+vim.opt.scrolloff = 28
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
@@ -167,6 +167,9 @@ vim.opt.confirm = true
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+
+-- Save file
+vim.keymap.set('n', '<leader>w', '<cmd>w<CR>', { desc = 'Save file' })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
@@ -291,14 +294,14 @@ require('lazy').setup({
     -- optional, but required for fuzzy finder support
     dependencies = {
       'nvim-telescope/telescope-fzf-native.nvim',
-      build = 'make'
+      build = 'make',
     },
     config = function()
-      local dropbar_api = require('dropbar.api')
+      local dropbar_api = require 'dropbar.api'
       vim.keymap.set('n', '<Leader>;', dropbar_api.pick, { desc = 'Pick symbols in winbar' })
       vim.keymap.set('n', '[;', dropbar_api.goto_context_start, { desc = 'Go to start of current context' })
       vim.keymap.set('n', '];', dropbar_api.select_next_context, { desc = 'Select next context' })
-    end
+    end,
   },
   -- --NOTE: Kanso Theme - FQ
   -- {
@@ -582,6 +585,18 @@ require('lazy').setup({
       -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
       -- and elegantly composed help section, `:help lsp-vs-treesitter`
 
+      -- LSP Hover and Signature Help Border (set before LspAttach)
+      vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
+        border = 'rounded',
+      })
+      vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+        border = 'rounded',
+      })
+
+      -- Lighten LSP popup background
+      vim.api.nvim_set_hl(0, 'NormalFloat', { bg = '#15171c' })
+      vim.api.nvim_set_hl(0, 'FloatBorder', { bg = '#15171c', fg = '#6a6a6a' })
+
       --  This function gets run when an LSP attaches to a particular buffer.
       --    That is to say, every time a new file is opened that is associated with
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
@@ -635,6 +650,25 @@ require('lazy').setup({
           --  Useful when you're not sure what type a variable is and you want to see
           --  the definition of its *type*, not where it was *defined*.
           map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
+
+          -- Follow file:// links in LSP hover popup
+          vim.keymap.set('n', 'gx', function()
+            local line = vim.api.nvim_get_current_line()
+            local url = line:match('file://([^)]+)')
+            if url then
+              local file = url:match('([^#]+)')
+              local lnum = url:match('#L(%d+)')
+              if file then
+                vim.cmd('edit ' .. vim.fn.fnameescape(file))
+                if lnum then
+                  vim.cmd('normal! ' .. lnum .. 'Gzz')
+                end
+              end
+            else
+              -- Fallback to default gx behavior
+              vim.ui.open(vim.fn.expand('<cfile>'))
+            end
+          end, { buffer = event.buf, desc = 'LSP: Open file:// link' })
 
           -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
           ---@param client vim.lsp.Client
@@ -748,6 +782,12 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
+        zls = {
+          cmd = { 'zls' },
+          settings = {
+            zig_exe_path = '/Users/fq/.zvm/bin/zig',
+          },
+        },
         pyright = {
           cmd = { 'pyright-langserver', '--stdio' },
           settings = {
@@ -812,9 +852,9 @@ require('lazy').setup({
       -- for you, so that they are available from within Neovim.
       -- Filter out servers that aren't available through Mason
       local mason_servers = vim.tbl_filter(function(server_name)
-        return server_name ~= 'sourcekit' -- sourcekit-lsp comes with Xcode, not Mason
+        return server_name ~= 'sourcekit' and server_name ~= 'zls' -- sourcekit-lsp comes with Xcode, zls using custom version
       end, vim.tbl_keys(servers or {}))
-      
+
       local ensure_installed = mason_servers
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
@@ -832,17 +872,23 @@ require('lazy').setup({
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
+
+            -- Use new vim.lsp.config API for Neovim 0.11+
+            vim.lsp.config(server_name, server)
+            vim.lsp.enable(server_name)
           end,
         },
       }
 
       -- Setup LSP servers that aren't managed by Mason
-      local non_mason_servers = { 'sourcekit' }
+      local non_mason_servers = { 'sourcekit', 'zls' }
       for _, server_name in ipairs(non_mason_servers) do
         local server = servers[server_name] or {}
         server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-        require('lspconfig')[server_name].setup(server)
+
+        -- Use new vim.lsp.config API for Neovim 0.11+
+        vim.lsp.config(server_name, server)
+        vim.lsp.enable(server_name)
       end
     end,
   },
@@ -1133,6 +1179,7 @@ require('lazy').setup({
   -- Or use telescope!
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
   -- you can continue same window with `<space>sr` which resumes last telescope search
+
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
