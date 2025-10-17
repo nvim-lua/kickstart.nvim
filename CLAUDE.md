@@ -21,16 +21,23 @@ The configuration is organized into three main directories:
 │   │   ├── keymaps.lua          # Global key mappings
 │   │   └── autocommands.lua     # Autocommands (highlight on yank, etc.)
 │   ├── plugins/                  # Plugin specifications (auto-loaded by lazy.nvim)
-│   │   ├── colorscheme.lua      # Color scheme (kanso.nvim + alternatives)
-│   │   ├── treesitter.lua       # Syntax highlighting & parsing
-│   │   ├── lsp.lua              # LSP configuration & Mason
-│   │   ├── completion.lua       # blink.cmp & LuaSnip
-│   │   ├── telescope.lua        # Fuzzy finder
-│   │   ├── navigation.lua       # Harpoon, Flash, Oil, tmux-navigator
-│   │   ├── formatting.lua       # conform.nvim
-│   │   ├── ui.lua               # which-key, lualine
-│   │   ├── utils.lua            # vim-sleuth, gitsigns, autopairs, snacks
+│   │   ├── autopairs.lua        # Auto-close brackets and quotes
 │   │   ├── claude-code.lua      # Claude Code integration
+│   │   ├── colorscheme.lua      # Color scheme (kanso.nvim + alternatives)
+│   │   ├── completion.lua       # blink.cmp & LuaSnip
+│   │   ├── flash.lua            # Rapid cursor movement
+│   │   ├── formatting.lua       # conform.nvim for code formatting
+│   │   ├── gitsigns.lua         # Git signs and operations
+│   │   ├── harpoon.lua          # File bookmarking
+│   │   ├── lsp.lua              # LSP configuration & Mason
+│   │   ├── lualine.lua          # Status line
+│   │   ├── oil.lua              # File browser
+│   │   ├── snacks.lua           # Utility plugin
+│   │   ├── telescope.lua        # Fuzzy finder
+│   │   ├── treesitter.lua       # Syntax highlighting & parsing
+│   │   ├── vim-sleuth.lua       # Auto-detect indentation
+│   │   ├── vim-tmux-navigator.lua  # Tmux/Vim navigation
+│   │   ├── which-key.lua        # Keybinding hints
 │   │   └── optional/            # Optional plugins (not loaded by default)
 │   │       ├── README.md        # Instructions for enabling optional plugins
 │   │       ├── debug.lua        # DAP debugger for Go
@@ -46,34 +53,26 @@ The configuration is organized into three main directories:
 - **Auto-Loading**: All files in `lua/plugins/*.lua` are automatically loaded
 - **Custom Plugins**: Add your own in `lua/custom/plugins/init.lua` or create new files there
 
-### Key Plugin Categories
+### Key Plugins
 
-1. **LSP Configuration** (`lua/plugins/lsp.lua`)
-   - Mason for LSP installation
-   - Configured servers: `pyright`, `zls`, `rust_analyzer`, `ts_ls`, `lua_ls`
-   - LSP capabilities enhanced by blink.cmp
-   - Autocommands for LSP attach events setup keymaps and highlighting
+Each plugin is in its own file for easy management:
 
-2. **Completion** (`lua/plugins/completion.lua`)
-   - blink.cmp for autocompletion
-   - LuaSnip for snippet expansion
-   - Default keymap preset uses `<c-y>` to accept
-
-3. **Telescope** (`lua/plugins/telescope.lua`)
-   - Fuzzy finder with vertical layout
-   - Extensions: fzf, ui-select
-   - Leader-based keymaps for searching files, grep, diagnostics, etc.
-
-4. **Navigation & Movement** (`lua/plugins/navigation.lua`)
-   - Harpoon2 for file bookmarking
-   - Flash.nvim for rapid cursor movement
-   - Oil.nvim for file browsing
-   - vim-tmux-navigator for seamless tmux/vim navigation
-
-5. **Formatting** (`lua/plugins/formatting.lua`)
-   - conform.nvim handles formatting
-   - Format on save enabled (except for C/C++)
-   - Configured formatters: stylua (Lua), prettier (JS/TS/CSS/HTML/JSON)
+- **lsp.lua** - LSP configuration with Mason, servers: `pyright`, `zls`, `rust_analyzer`, `ts_ls`, `lua_ls`
+- **completion.lua** - blink.cmp autocompletion with LuaSnip snippets
+- **telescope.lua** - Fuzzy finder with vertical layout, fzf and ui-select extensions
+- **harpoon.lua** - Quick file bookmarking and navigation
+- **flash.lua** - Rapid cursor movement with `s`, `S`, `r`, `R` keys
+- **oil.lua** - File browser with `-` key binding
+- **vim-tmux-navigator.lua** - Seamless tmux/vim split navigation
+- **formatting.lua** - conform.nvim with format-on-save (stylua, prettier)
+- **gitsigns.lua** - Git signs in gutter with staging/diffing keymaps
+- **which-key.lua** - Keybinding hints popup
+- **lualine.lua** - Status line with base16 theme
+- **treesitter.lua** - Syntax highlighting for multiple languages
+- **autopairs.lua** - Auto-close brackets and quotes
+- **vim-sleuth.lua** - Auto-detect indentation
+- **snacks.lua** - Utility plugin collection
+- **colorscheme.lua** - Multiple color schemes (kanso active)
 
 ## Common Commands
 
@@ -205,9 +204,9 @@ Currently using kanso.nvim. Several commented-out alternatives available (gruvbo
 
 ### Plugin Organization Philosophy
 
-- **Separation by Function**: Each file in `lua/plugins/` represents a logical category
-- **Easy Discovery**: Find all plugins of a type in one file
-- **Modular**: Add/remove entire categories by managing single files
+- **One Plugin Per File**: Each plugin has its own dedicated file in `lua/plugins/` (except colorscheme.lua which contains theme options)
+- **Easy Discovery**: Plugin files are named after the plugin they configure
+- **Modular**: Add/remove individual plugins by managing single files
 - **Custom Additions**: Use `lua/custom/plugins/` for your personal plugins without modifying core structure
 
 ### Optional Plugins
