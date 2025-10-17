@@ -91,27 +91,6 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
--- TIP: Disable arrow keys in normal mode
-vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
-vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
-vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
-vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
-
-vim.keymap.set('i', '<left>', '<cmd>echo "Use h to move!!"<CR>')
-vim.keymap.set('i', '<right>', '<cmd>echo "Use l to move!!"<CR>')
-vim.keymap.set('i', '<up>', '<cmd>echo "Use k to move!!"<CR>')
-vim.keymap.set('i', '<down>', '<cmd>echo "Use j to move!!"<CR>')
-
-vim.keymap.set('v', '<left>', '<cmd>echo "Use h to move!!"<CR>')
-vim.keymap.set('v', '<right>', '<cmd>echo "Use l to move!!"<CR>')
-vim.keymap.set('v', '<up>', '<cmd>echo "Use k to move!!"<CR>')
-vim.keymap.set('v', '<down>', '<cmd>echo "Use j to move!!"<CR>')
-
-vim.keymap.set('c', '<left>', '<cmd>echo "Use h to move!!"<CR>')
-vim.keymap.set('c', '<right>', '<cmd>echo "Use l to move!!"<CR>')
-vim.keymap.set('c', '<up>', '<cmd>echo "Use k to move!!"<CR>')
-vim.keymap.set('c', '<down>', '<cmd>echo "Use j to move!!"<CR>')
-
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
 --
@@ -130,9 +109,6 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
--- Highlight when yanking (copying) text
---  Try it with `yap` in normal mode
---  See `:help vim.highlight.on_yank()`
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
@@ -238,52 +214,37 @@ require('lazy').setup({
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
+      theme = 'helix',
       -- delay between pressing a key and opening which-key (milliseconds)
       -- this setting is independent of vim.opt.timeoutlen
       delay = 0,
-      icons = {
-        mappings = false,
-        keys = {
-          Up = '<Up> ',
-          Down = '<Down> ',
-          Left = '<Left> ',
-          Right = '<Right> ',
-          C = '<C-…> ',
-          M = '<M-…> ',
-          D = '<D-…> ',
-          S = '<S-…> ',
-          CR = '<CR> ',
-          Esc = '<Esc> ',
-          ScrollWheelDown = '<ScrollWheelDown> ',
-          ScrollWheelUp = '<ScrollWheelUp> ',
-          NL = '<NL> ',
-          BS = '<BS> ',
-          Space = '<Space> ',
-          Tab = '<Tab> ',
-          F1 = '<F1>',
-          F2 = '<F2>',
-          F3 = '<F3>',
-          F4 = '<F4>',
-          F5 = '<F5>',
-          F6 = '<F6>',
-          F7 = '<F7>',
-          F8 = '<F8>',
-          F9 = '<F9>',
-          F10 = '<F10>',
-          F11 = '<F11>',
-          F12 = '<F12>',
-        },
-      },
-
-      -- Document existing key chains
-      spec = {
-        { '<leader>s', group = '[S]earch' },
-        { '<leader>t', group = '[T]oggle' },
-        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
-      },
     },
   },
-
+  {
+    'greggh/claude-code.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim', -- Required for git operations
+    },
+    config = function()
+      require('claude-code').setup {
+        window = {
+          position = 'float',
+        },
+        keymaps = {
+          toggle = {
+            normal = '<leader>c', -- Normal mode keymap for toggling Claude Code, false to disable
+            terminal = 'false', -- Terminal mode keymap for toggling Claude Code, false to disable
+            -- variants = {
+            --   continue = "<leader>cC", -- Normal mode keymap for Claude Code with continue flag
+            --  verbose = "<leader>cV",  -- Normal mode keymap for Claude Code with verbose flag
+            --},
+          },
+          window_navigation = true, -- Enable window navigation keymaps (<C-h/j/k/l>)
+          scrolling = true, -- Enable scrolling keymaps (<C-f/b>) for page up/down
+        },
+      }
+    end,
+  },
   -- NOTE: Plugins can specify dependencies.
   --
   -- The dependencies are proper plugin specifications as well - anything
@@ -884,16 +845,25 @@ require('lazy').setup({
     --      vim.g.gruvbox_material_background = 'hard'
     --      vim.cmd.colorscheme 'gruvbox-material'
     --    end,
-    'catppuccin/nvim',
-    name = 'catppuccin',
+    'webhooked/kanso.nvim',
+    lazy = false,
     priority = 1000,
     config = function()
-      require('catppuccin').setup {
-        flavour = 'mocha',
-        transparent_background = true,
+      require('kanso').setup {
+        transparent = false,
       }
-      vim.cmd 'colorscheme catppuccin'
+      vim.cmd 'colorscheme kanso'
     end,
+    -- 'catppuccin/nvim',
+    --  name = 'catppuccin',
+    -- priority = 1000,
+    --  config = function()
+    --    require('catppuccin').setup {
+    --      flavour = 'mocha',
+    --      transparent_background = true,
+    --   }
+    --   vim.cmd 'colorscheme catppuccin'
+    -- end,
     -- 'rebelot/kanagawa.nvim',
     -- priority = 1000, -- Make sure to load this before all the other start plugins.
     -- name = 'kanagawa-dragon',
@@ -907,12 +877,12 @@ require('lazy').setup({
     --   vim.cmd 'colorscheme kanagawa-dragon'
     -- end,
     --'zenbones-theme/zenbones.nvim',
-    --dependencies = 'rktjmp/lush.nvim',
-    --lazy = false,
-    --priority = 1000,
-    --config = function()
-    --  vim.cmd 'colorscheme zenbones'
-    --end,
+    --  dependencies = 'rktjmp/lush.nvim',
+    -- lazy = false,
+    -- priority = 1000,
+    -- config = function()
+    --   vim.cmd 'colorscheme zenbones'
+    -- end,
     -- 'vague2k/vague.nvim',
     -- priority = 1000,
     -- name = 'vague',
@@ -1006,72 +976,60 @@ require('lazy').setup({
       }
     end,
   },
-  --{
-  --  'mikavilpas/yazi.nvim',
-  --  event = 'VeryLazy',
-  --  dependencies = {
-  --    'folke/snacks.nvim',
-  --  },
-  --  keys = {
-  --    -- 👇 in this section, choose your own keymappings!
-  --    {
-  --      '<leader>-',
-  --      mode = { 'n', 'v' },
-  --      '<cmd>Yazi<cr>',
-  --      desc = 'Open yazi at the current file',
-  --    },
-  --    {
-  --      -- Open in the current working directory
-  --      '<leader>cw',
-  --      '<cmd>Yazi cwd<cr>',
-  --      desc = "Open the file manager in nvim's working directory",
-  --    },
-  --    {
-  --      '<c-up>',
-  --      '<cmd>Yazi toggle<cr>',
-  --      desc = 'Resume the last yazi session',
-  --    },
-  --  },
-  --  opts = {
-  --    -- if you want to open yazi instead of netrw, see below for more info
-  --    open_for_directories = false,
-  --    keymaps = {
-  --      show_help = '~',
-  --    },
-  --  },
-  --  -- 👇 if you use `open_for_directories=true`, this is recommended
-  --  init = function()
-  --    -- More details: https://github.com/mikavilpas/yazi.nvim/issues/802
-  --    -- vim.g.loaded_netrw = 1
-  --    vim.g.loaded_netrwPlugin = 1
-  --  end,
-  --},
-  -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
-  -- init.lua. If you want these files, they are in the repository, so you can just download them and
-  -- place them in the correct locations.
-
-  -- NOTE: Next step on your Neovim journey: Add/Configure additional plugins for Kickstart
-  --
-  --  Here are some example plugins that I've included in the Kickstart repository.
-  --  Uncomment any of the lines below to enable them (you will need to restart nvim).
-  --
-  -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
-
-  -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
-  --    This is the easiest way to modularize your config.
-  --
-  --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
-  --
-  -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
-  -- Or use telescope!
-  -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
-  -- you can continue same window with `<space>sr` which resumes last telescope search
+  -- {
+  --   'zbirenbaum/copilot.lua',
+  --   requires = {
+  --     'copilotlsp-nvim/copilot-lsp',
+  --     init = function()
+  --       vim.g.copilot_nes_debounce = 500
+  --     end,
+  --   },
+  --   cmd = 'Copilot',
+  --   event = 'InsertEnter',
+  --   config = function()
+  --     require('copilot').setup {
+  --       filetypes = {
+  --         javascript = true,
+  --         typescript = true,
+  --         python = true,
+  --         ['*'] = false, -- disable for all other filetypes and ignore default `filetypes`
+  --       },
+  --       suggestion = { enabled = false },
+  --       panel = { enabled = false },
+  --       nes = {
+  --         enabled = true, -- requires copilot-lsp as a dependency
+  --         auto_trigger = false,
+  --         keymap = {
+  --           accept_and_goto = '<tab>',
+  --           accept = false,
+  --           dismiss = '<Esc>',
+  --         },
+  --       },
+  --     }
+  --   end,
+  -- },
+  -- {
+  --   'copilotlsp-nvim/copilot-lsp',
+  --   init = function()
+  --     vim.g.copilot_nes_debounce = 500
+  --     vim.lsp.enable 'copilot_ls'
+  --     vim.keymap.set('n', '<tab>', function()
+  --       local bufnr = vim.api.nvim_get_current_buf()
+  --       local state = vim.b[bufnr].nes_state
+  --       if state then
+  --         -- Try to jump to the start of the suggestion edit.
+  --         -- If already at the start, then apply the pending suggestion and jump to the end of the edit.
+  --         local _ = require('copilot-lsp.nes').walk_cursor_start_edit()
+  --           or (require('copilot-lsp.nes').apply_pending_nes() and require('copilot-lsp.nes').walk_cursor_end_edit())
+  --         return nil
+  --       else
+  --         -- Resolving the terminal's inability to distinguish between `TAB` and `<C-i>` in normal mode
+  --         return '<C-i>'
+  --       end
+  --     end, { desc = 'Accept Copilot NES suggestion', expr = true })
+  --   end,
+  -- },
+  -- { 'giuxtaposition/blink-cmp-copilot' },
 }, {
   ui = {
     icons = {
