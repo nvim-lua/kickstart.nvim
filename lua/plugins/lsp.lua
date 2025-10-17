@@ -259,7 +259,9 @@ return {
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
+
+            -- Use the new vim.lsp.config API for Neovim 0.11+
+            vim.lsp.config(server_name, server)
           end,
         },
       }
