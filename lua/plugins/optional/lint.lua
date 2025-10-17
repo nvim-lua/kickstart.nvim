@@ -1,5 +1,8 @@
-return {
+-- Linting with nvim-lint
+-- To enable: move this file to lua/plugins/ or import it in init.lua
+-- See `:help lint` for more information
 
+return {
   { -- Linting
     'mfussenegger/nvim-lint',
     event = { 'BufReadPre', 'BufNewFile' },

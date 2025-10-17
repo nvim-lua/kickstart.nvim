@@ -1,10 +1,11 @@
 -- debug.lua
 --
--- Shows how to use the DAP plugin to debug your code.
+-- DAP (Debug Adapter Protocol) plugin for debugging your code.
+-- To enable: move this file to lua/plugins/ or import it in init.lua
 --
 -- Primarily focused on configuring the debugger for Go, but can
--- be extended to other languages as well. That's why it's called
--- kickstart.nvim and not kitchen-sink.nvim ;)
+-- be extended to other languages as well.
+-- See `:help dap` for more information
 
 return {
   -- NOTE: Yes, you can install new plugins here!
