@@ -57,7 +57,6 @@ return {
             local TERM_FLOAT = 1
             local TERM_HORIZONTAL = 2
             local TERM_VERTICAL = 3
-            local TERM_LAZYGIT = 10
 
             local function toggle_float()
                 toggleterm.toggle(TERM_FLOAT, nil, nil, 'float')
@@ -71,22 +70,6 @@ return {
                 toggleterm.toggle(TERM_VERTICAL, nil, nil, 'vertical')
             end
 
-            local lazygit = nil
-            if vim.fn.executable('lazygit') == 1 then
-                local Terminal = require('toggleterm.terminal').Terminal
-                lazygit = Terminal:new {
-                    cmd = 'lazygit',
-                    count = TERM_LAZYGIT,
-                    direction = 'float',
-                    hidden = true,
-                    float_opts = {
-                        border = 'curved',
-                    },
-                }
-            else
-                vim.notify('lazygit not found in PATH. Install it to use <leader>tg', vim.log.levels.WARN)
-            end
-
             local map = vim.keymap.set
 
             map({ 'n', 'i', 't' }, '<C-`>', toggle_float, { desc = 'Toggle floating terminal' })
@@ -94,13 +77,6 @@ return {
             map('n', '<leader>th', toggle_horizontal, { desc = '[T]erminal horizontal' })
             map('n', '<leader>tv', toggle_vertical, { desc = '[T]erminal vertical' })
             map('n', '<leader>tt', '<cmd>TermSelect<CR>', { desc = '[T]erminal picker' })
-            map('n', '<leader>tg', function()
-                if lazygit then
-                    lazygit:toggle()
-                else
-                    vim.notify('lazygit is not available', vim.log.levels.WARN)
-                end
-            end, { desc = '[T]erminal lazygit' })
             map('n', '<leader>ts', function()
                 vim.cmd.ToggleTermSendCurrentLine(TERM_FLOAT)
             end, { desc = '[T]erminal [s]end line' })

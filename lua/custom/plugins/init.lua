@@ -5,5 +5,6 @@
 local plugins = {}
 
 vim.list_extend(plugins, require('custom.plugins.toggleterm'))
+vim.list_extend(plugins, require('custom.plugins.lazygit'))
 
 return plugins
