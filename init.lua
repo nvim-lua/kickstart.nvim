@@ -106,6 +106,19 @@ vim.o.splitbelow = true
 vim.o.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
+vim.opt.spelllang = { 'en_us', 'de_ch' }
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'markdown', 'gitcommit', 'text', 'rst', 'tex' },
+  callback = function()
+    vim.opt_local.spell = true
+  end,
+})
+
+-- curl -fLo ~/.config/nvim/spell/de.utf-8.spl https://ftp.nluug.nl/pub/vim/runtime/spell/de.utf-8.spl
+-- curl -fLo ~/.config/nvim/spell/de.utf-8.sug https://ftp.nluug.nl/pub/vim/runtime/spell/de.utf-8.sug
+-- curl -fLo ~/.config/nvim/spell/en.utf-8.spl https://ftp.nluug.nl/pub/vim/runtime/spell/en.utf-8.spl
+-- curl -fLo ~/.config/nvim/spell/en.utf-8.sug https://ftp.nluug.nl/pub/vim/runtime/spell/en.utf-8.sug
+
 -- Preview substitutions live, as you type!
 vim.o.inccommand = 'split'
 
@@ -725,7 +738,9 @@ require('lazy').setup({
                   '.github/workflows/*.yml',
                   '.github/workflows/*.yaml',
                 },
-                ['https://json.schemastore.org/gitlab-ci.json'] = {
+                ['https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json'] = {
+                  'cicd/**/*.yml',
+                  'cicd/**/*.yaml',
                   '.gitlab-ci.yml',
                   '.gitlab-ci.yaml',
                 },
