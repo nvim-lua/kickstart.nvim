@@ -23,7 +23,8 @@ If you are experiencing issues, please make sure you have the latest versions.
 
 External Requirements:
 - Basic utils: `git`, `make`, `unzip`, C Compiler (`gcc`)
-- [ripgrep](https://github.com/BurntSushi/ripgrep#installation)
+- [ripgrep](https://github.com/BurntSushi/ripgrep#installation),
+  [fd-find](https://github.com/sharkdp/fd#installation)
 - Clipboard tool (xclip/xsel/win32yank or other depending on the platform)
 - A [Nerd Font](https://www.nerdfonts.com/): optional, provides various icons
   - if you have it set `vim.g.have_nerd_font` in `init.lua` to true
@@ -33,13 +34,13 @@ External Requirements:
   - If you want to write Golang, you will need `go`
   - etc.
 
-> **NOTE**
+> [!NOTE]
 > See [Install Recipes](#Install-Recipes) for additional Windows and Linux specific notes
 > and quick install snippets
 
 ### Install Kickstart
 
-> **NOTE**
+> [!NOTE]
 > [Backup](#FAQ) your previous configuration (if any exists)
 
 Neovim's configurations are located under the following paths, depending on your OS:
@@ -56,7 +57,7 @@ Neovim's configurations are located under the following paths, depending on your
 so that you have your own copy that you can modify, then install by cloning the
 fork to your machine using one of the commands below, depending on your OS.
 
-> **NOTE**
+> [!NOTE]
 > Your fork's URL will be something like this:
 > `https://github.com/<your_github_username>/kickstart.nvim.git`
 
@@ -65,7 +66,8 @@ too - it's ignored in the kickstart repo to make maintenance easier, but it's
 [recommended to track it in version control](https://lazy.folke.io/usage/lockfile).
 
 #### Clone kickstart.nvim
-> **NOTE**
+
+> [!NOTE]
 > If following the recommended step above (i.e., forking the repo), replace
 > `nvim-lua` with `<your_github_username>` in the commands below
 
