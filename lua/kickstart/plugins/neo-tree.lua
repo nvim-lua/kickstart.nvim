@@ -16,10 +16,12 @@ return {
   opts = {
     filesystem = {
       window = {
+        position = 'float',
         mappings = {
           ['\\'] = 'close_window',
         },
       },
     },
+    popup_border_syle = 'rounded',
   },
 }

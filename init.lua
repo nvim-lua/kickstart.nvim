@@ -418,7 +418,7 @@ require('lazy').setup({
       -- language (such as `gopls`, `lua_ls`, `rust_analyzer`, etc.). These Language Servers
       -- (sometimes called LSP servers, but that's kind of like ATM Machine) are standalone
       -- processes that communicate with some "client" - in this case, Neovim!
-      --
+      --"
       -- LSP provides Neovim with features like:
       --  - Go to definition
       --  - Find references
