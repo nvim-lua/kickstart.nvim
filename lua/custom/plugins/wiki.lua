@@ -24,6 +24,7 @@ return {
         path = '~/personal-wiki/',
         syntax = 'markdown',
         ext = '.md',
+        index = 'mocs/main-moc',
         -- Custom Markdown to HTML converter
         --   custom_wiki2html = "~/.vim/autoload/vimwiki/convert.py",
         -- Auto update diary index
