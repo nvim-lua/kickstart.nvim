@@ -18,7 +18,7 @@ vim.api.nvim_create_autocmd("FileType", {
             settings = {
                 python = {
                     analysis = {
-                        openFilesOnly = false,
+                        openFilesOnly = true,
                     },
                 },
             },
