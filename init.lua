@@ -785,7 +785,7 @@ require('lazy').setup({
         zls = {
           cmd = { 'zls' },
           settings = {
-            zig_exe_path = '/Users/fq/.zvm/bin/zig',
+            zig_exe_path = vim.fn.expand('~/.zvm/bin/zig'),
           },
         },
         pyright = {
