@@ -16,7 +16,7 @@ return {
         -- Custom Markdown to HTML converter
         --   custom_wiki2html = "~/.vim/autoload/vimwiki/convert.py",
         -- Auto update diary index
-        index = 'MOCs/Main MOC',
+        index = 'MOCs/main-moc',
         auto_diary_index = 1,
         links_space_char = '-', -- Replace spaces with hyphens in links
       },
