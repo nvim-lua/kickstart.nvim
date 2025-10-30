@@ -44,19 +44,32 @@ require('lazy').setup({
       }
     end,
   },
-  {
-    "neovim/nvim-lspconfig",
-    config = function()
-        -- Configure the Pyright language server for Python
-        vim.lsp.config('pyright', {
-            cmd = { "pyright-langserver", "--stdio" },
-            filetypes = { "python" },
-        })
+--   {
+--     "neovim/nvim-lspconfig",
+--     config = function()
+--         -- Configure the Pyright language server for Python
+--         vim.lsp.config('pyright', {
+--             cmd = { "pyright-langserver", "--stdio" },
+--             filetypes = { "python" },
+--         })
         
-        -- Enable the LSP server for Python files
-        vim.lsp.enable('pyright')
-    end,
-  }
+--         -- Enable the LSP server for Python files
+--         vim.lsp.enable('pyright')
+--     end,
+--   }
+  {
+        -- handle LSP server installation and management
+        -- let's be lazy for now.
+        "mason-org/mason.nvim",
+        dependencies = {
+            "mason-org/mason-lspconfig.nvim",
+            "neovim/nvim-lspconfig",
+        },
+        config = function()
+            require("mason").setup()
+            require("mason-lspconfig").setup()
+        end
+  },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
