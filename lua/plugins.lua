@@ -20,14 +20,12 @@ require('lazy').setup({
     end
   },
 
-  
- 
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     config = function()
       require('nvim-treesitter.configs').setup {
-        ensure_installed = { 'c', 'lua', 'vim', 'vimdoc', 'query' },
+        ensure_installed = { 'c', 'lua', 'vim', 'vimdoc', 'query', 'python' },
         -- Autoinstall languages that are not installed
         auto_install = true,
         highlight = {
@@ -45,7 +43,20 @@ require('lazy').setup({
         },
       }
     end,
-  },
+    },
+    {
+        -- handle LSP server installation and management
+        -- let's be lazy for now.
+        "mason-org/mason.nvim",
+        dependencies = {
+            "mason-org/mason-lspconfig.nvim",
+            "neovim/nvim-lspconfig",
+        },
+        config = function()
+            require("mason").setup()
+            require("mason-lspconfig").setup()
+        end
+    }
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the

@@ -1,5 +1,7 @@
 -- [[ Basic Keymaps ]]
 
+vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Exit insert mode' })
+
 -- Clear highlights on search when pressing <C-c> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<C-c>', '<cmd>nohlsearch<CR>')
