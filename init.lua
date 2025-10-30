@@ -93,6 +93,22 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = false
 
+-- [[ Setup Node.js PATH for plugins like Copilot ]]
+-- Add fnm's Node.js to PATH so Neovim can find it
+-- This is required for GitHub Copilot and other Node.js based plugins
+-- Uses fnm's alias resolution to always point to the default/latest version
+local home = vim.env.HOME
+local fnm_node_path = home .. '/.local/share/fnm/aliases/default/bin'
+-- Fallback: also add the fnm multishell path if it exists
+local fnm_multishell = home .. '/.local/state/fnm_multishells'
+if vim.fn.isdirectory(fnm_node_path) == 1 then
+  vim.env.PATH = fnm_node_path .. ':' .. vim.env.PATH
+elseif vim.fn.isdirectory(fnm_multishell) == 1 then
+  -- If multishell is being used, fnm will handle it via shell integration
+  -- We just need to ensure the PATH includes typical fnm locations
+  vim.env.PATH = home .. '/.local/share/fnm:' .. vim.env.PATH
+end
+
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
@@ -102,7 +118,7 @@ vim.g.have_nerd_font = false
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -661,33 +677,19 @@ require('lazy').setup({
       --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
       local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-      -- Enable the following language servers
-      --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
+      -- Enable language servers that apply to all profiles (general editing)
+      -- Language-specific servers (Flutter, Python, Svelte, etc.) are configured
+      -- in their respective profile files in lua/custom/plugins/
       --
-      --  Add any additional override configuration in the following tables. Available keys are:
+      -- Add any additional override configuration in the following tables. Available keys are:
       --  - cmd (table): Override the default command used to start the server
       --  - filetypes (table): Override the default list of associated filetypes for the server
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
-        -- gopls = {},
-        -- pyright = {},
-        -- rust_analyzer = {},
-        -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-        --
-        -- Some languages (like typescript) have entire language plugins that can be useful:
-        --    https://github.com/pmizio/typescript-tools.nvim
-        --
-        -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
-        --
-
+        -- Lua LSP for Neovim configuration editing
         lua_ls = {
-          -- cmd = { ... },
-          -- filetypes = { ... },
-          -- capabilities = {},
           settings = {
             Lua = {
               completion = {
@@ -698,6 +700,11 @@ require('lazy').setup({
             },
           },
         },
+        
+        -- Add other general-purpose LSP servers here that should always be available
+        -- (e.g., JSON, YAML, TOML, etc.)
+        -- jsonls = {},
+        -- yamlls = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -768,11 +775,9 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        -- Language-specific formatters (Python, Svelte, etc.) are configured
+        -- in their respective profile files in lua/custom/plugins/
+        -- This keeps formatting rules scoped to their language contexts
       },
     },
   },
@@ -944,7 +949,27 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      -- Base parsers that are always installed
+      -- Language-specific parsers (dart, python, svelte, etc.) are installed
+      -- by their respective language profile files in lua/custom/plugins/
+      ensure_installed = {
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc',
+        -- Core web languages (used by multiple profiles)
+        'javascript',
+        'typescript',
+        'css',
+        'json',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -977,14 +1002,14 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
