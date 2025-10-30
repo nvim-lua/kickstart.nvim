@@ -215,6 +215,11 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- Quit keymaps - easier ways to close Neovim (using capital Q to avoid conflict with diagnostic quickfix)
+vim.keymap.set('n', '<leader>Qa', '<cmd>qa<CR>', { desc = '[Q]uit [A]ll windows' })
+vim.keymap.set('n', '<leader>Qq', '<cmd>qa!<CR>', { desc = '[Q]uit all without saving (force)' })
+vim.keymap.set('n', '<leader>Qw', '<cmd>wqa<CR>', { desc = '[Q]uit all and [W]rite (save)' })
+
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
@@ -232,6 +237,28 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
     vim.hl.on_yank()
+  end,
+})
+
+-- Ensure focus starts in the editor, not file tree
+vim.api.nvim_create_autocmd('VimEnter', {
+  desc = 'Focus editor window on startup, not Neo-tree',
+  group = vim.api.nvim_create_augroup('kickstart-focus-editor', { clear = true }),
+  callback = function()
+    -- Wait a bit for plugins to load, then focus first non-special buffer
+    vim.defer_fn(function()
+      -- Find the first normal buffer window
+      for _, win in ipairs(vim.api.nvim_list_wins()) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        local buftype = vim.api.nvim_buf_get_option(buf, 'buftype')
+        local filetype = vim.api.nvim_buf_get_option(buf, 'filetype')
+        -- Skip special buffers like neo-tree, terminal, etc.
+        if buftype == '' and filetype ~= 'neo-tree' then
+          vim.api.nvim_set_current_win(win)
+          break
+        end
+      end
+    end, 50) -- 50ms delay to let plugins initialize
   end,
 })
 
