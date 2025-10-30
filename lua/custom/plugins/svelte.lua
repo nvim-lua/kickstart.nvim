@@ -38,47 +38,62 @@ return {
       -- Get shared LSP capabilities from blink.cmp
       local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-      -- Setup Svelte LSP server
-      require('lspconfig').svelte.setup {
-        capabilities = capabilities,
-        settings = {
-          svelte = {
-            plugin = {
-              html = { completions = { enable = true, emmet = true } },
-              svelte = { completions = { enable = true } },
-              css = { completions = { enable = true } },
-              typescript = { diagnostics = { enable = true } },
+      -- Setup Svelte LSP server using new vim.lsp.config API (Neovim 0.11+)
+      local svelte_config = require('lspconfig.configs').svelte
+      if svelte_config then
+        vim.lsp.config('svelte', {
+          cmd = svelte_config.default_config.cmd,
+          filetypes = svelte_config.default_config.filetypes,
+          root_markers = svelte_config.default_config.root_dir,
+          capabilities = capabilities,
+          settings = {
+            svelte = {
+              plugin = {
+                html = { completions = { enable = true, emmet = true } },
+                svelte = { completions = { enable = true } },
+                css = { completions = { enable = true } },
+                typescript = { diagnostics = { enable = true } },
+              },
             },
           },
-        },
-      }
+        })
+      end
 
-      -- Optional: Setup TypeScript LSP for .ts/.js files in Svelte projects
-      require('lspconfig').ts_ls.setup {
-        capabilities = capabilities,
-        -- Configure to work well with Svelte
-        filetypes = {
-          'javascript',
-          'javascriptreact',
-          'typescript',
-          'typescriptreact',
-        },
-      }
+      -- Setup TypeScript LSP for .ts/.js files in Svelte projects
+      local tsserver_config = require('lspconfig.configs').ts_ls
+      if tsserver_config then
+        vim.lsp.config('ts_ls', {
+          cmd = tsserver_config.default_config.cmd,
+          filetypes = {
+            'javascript',
+            'javascriptreact',
+            'typescript',
+            'typescriptreact',
+          },
+          root_markers = tsserver_config.default_config.root_dir,
+          capabilities = capabilities,
+        })
+      end
 
-      -- Optional: Setup Tailwind CSS LSP if you're using Tailwind
-      require('lspconfig').tailwindcss.setup {
-        capabilities = capabilities,
-        filetypes = {
-          'svelte',
-          'html',
-          'css',
-          'scss',
-          'javascript',
-          'javascriptreact',
-          'typescript',
-          'typescriptreact',
-        },
-      }
+      -- Setup Tailwind CSS LSP if you're using Tailwind
+      local tailwind_config = require('lspconfig.configs').tailwindcss
+      if tailwind_config then
+        vim.lsp.config('tailwindcss', {
+          cmd = tailwind_config.default_config.cmd,
+          filetypes = {
+            'svelte',
+            'html',
+            'css',
+            'scss',
+            'javascript',
+            'javascriptreact',
+            'typescript',
+            'typescriptreact',
+          },
+          root_markers = tailwind_config.default_config.root_dir,
+          capabilities = capabilities,
+        })
+      end
 
       -- Install web development tools via Mason
       require('mason-tool-installer').setup {

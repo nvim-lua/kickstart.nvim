@@ -35,26 +35,32 @@ return {
       -- Get shared LSP capabilities from blink.cmp
       local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-      -- Setup pyright LSP server
-      require('lspconfig').pyright.setup {
-        capabilities = capabilities,
-        settings = {
-          python = {
-            analysis = {
-              -- Type checking mode: "off", "basic", or "strict"
-              typeCheckingMode = 'basic',
-              -- Auto-import completions
-              autoImportCompletions = true,
-              -- Automatically search for stubs
-              autoSearchPaths = true,
-              -- Use library code for types
-              useLibraryCodeForTypes = true,
-              -- Diagnostic mode: "openFilesOnly" or "workspace"
-              diagnosticMode = 'openFilesOnly',
+      -- Setup pyright LSP server using new vim.lsp.config API (Neovim 0.11+)
+      local pyright_config = require('lspconfig.configs').pyright
+      if pyright_config then
+        vim.lsp.config('pyright', {
+          cmd = pyright_config.default_config.cmd,
+          filetypes = pyright_config.default_config.filetypes,
+          root_markers = pyright_config.default_config.root_dir,
+          capabilities = capabilities,
+          settings = {
+            python = {
+              analysis = {
+                -- Type checking mode: "off", "basic", or "strict"
+                typeCheckingMode = 'basic',
+                -- Auto-import completions
+                autoImportCompletions = true,
+                -- Automatically search for stubs
+                autoSearchPaths = true,
+                -- Use library code for types
+                useLibraryCodeForTypes = true,
+                -- Diagnostic mode: "openFilesOnly" or "workspace"
+                diagnosticMode = 'openFilesOnly',
+              },
             },
           },
-        },
-      }
+        })
+      end
 
       -- Install Python tools via Mason
       require('mason-tool-installer').setup {

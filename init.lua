@@ -736,7 +736,19 @@ require('lazy').setup({
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
+            
+            -- Use new vim.lsp.config API for Neovim 0.11+
+            local lspconfig_servers = require('lspconfig.configs')
+            local config = lspconfig_servers[server_name]
+            if config then
+              vim.lsp.config(server_name, {
+                cmd = server.cmd or config.default_config.cmd,
+                filetypes = server.filetypes or config.default_config.filetypes,
+                root_markers = config.default_config.root_dir,
+                capabilities = server.capabilities,
+                settings = server.settings,
+              })
+            end
           end,
         },
       }
