@@ -114,6 +114,20 @@ end
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
+-- CUSTOM: Close floating windows with Escape from anywhere
+vim.keymap.set('n', '<Esc>', function()
+  -- Try to close any floating windows
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local config = vim.api.nvim_win_get_config(win)
+    if config.relative ~= '' then
+      vim.api.nvim_win_close(win, false)
+      return -- Found and closed a floating window
+    end
+  end
+  -- No floating window found, do normal escape behavior
+  vim.cmd('nohlsearch')
+end, { silent = true, desc = 'Close floating window or clear highlight' })
+
 -- Make line numbers default
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
@@ -185,9 +199,8 @@ vim.o.confirm = true
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
--- Clear highlights on search when pressing <Esc> in normal mode
---  See `:help hlsearch`
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+-- NOTE: <Esc> mapping is set earlier in the config to close floating windows
+-- (See line ~118 for the custom close-float-with-esc implementation)
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
@@ -584,6 +597,7 @@ require('lazy').setup({
 
           -- Show hover information (errors, documentation, type info)
           -- This is like hovering in VS Code - shows error messages, docs, etc.
+          -- Press <Esc> to close the hover window (global keymap)
           map('K', vim.lsp.buf.hover, 'Hover Documentation')
 
           -- Execute a code action, usually your cursor needs to be on top of an error
