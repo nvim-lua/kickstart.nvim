@@ -17,6 +17,19 @@
 
 return {
   -- ========================================================================
+  -- NVIM-DAP - Debug Adapter Protocol for Flutter debugging
+  -- ========================================================================
+  -- Load DAP when opening Dart files to enable breakpoint debugging
+  {
+    'mfussenegger/nvim-dap',
+    ft = 'dart',
+    dependencies = {
+      'rcarriga/nvim-dap-ui',
+      'nvim-neotest/nvim-nio',
+    },
+  },
+
+  -- ========================================================================
   -- FLUTTER TOOLS - Complete Flutter development environment
   -- ========================================================================
   -- Provides Flutter-specific features like hot reload, device management,
@@ -30,6 +43,16 @@ return {
   --   <leader>fe - Flutter Emulators (launch emulator)
   --   <leader>fo - Flutter Outline (toggle outline/widget tree)
   --   <leader>fc - Flutter Copy Profile URL (for DevTools)
+  --
+  -- Debug keymaps:
+  --   <F5> - Start/Continue debugging
+  --   <F10> - Step over
+  --   <F11> - Step into
+  --   <F12> - Step out
+  --   <leader>db - Toggle breakpoint
+  --   <leader>dB - Set conditional breakpoint
+  --   <leader>dc - Continue
+  --   <leader>dt - Terminate debugging
   -- ========================================================================
   {
     'nvim-flutter/flutter-tools.nvim',
@@ -37,6 +60,9 @@ return {
     dependencies = {
       'nvim-lua/plenary.nvim',
       'stevearc/dressing.nvim', -- Optional: better UI for Flutter commands
+      'mfussenegger/nvim-dap',
+      'rcarriga/nvim-dap-ui',
+      'nvim-neotest/nvim-nio',
     },
     config = function()
       -- Get shared LSP capabilities from blink.cmp
@@ -87,9 +113,39 @@ return {
 
         debugger = {
           enabled = true, -- Enable Flutter debugger integration
-          run_via_dap = false, -- Use Flutter tools debugger (not DAP)
+          run_via_dap = true, -- Use DAP for debugging
+          -- Flutter tools will automatically register DAP configurations
+          -- No need to manually configure launch.json
         },
       }
+
+      -- ========================================================================
+      -- DAP UI SETUP - Beautiful debugging interface
+      -- ========================================================================
+      local dap, dapui = require 'dap', require 'dapui'
+
+      -- Configure DAP UI
+      dapui.setup {
+        icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
+        controls = {
+          icons = {
+            pause = '⏸',
+            play = '▶',
+            step_into = '⏎',
+            step_over = '⏭',
+            step_out = '⏮',
+            step_back = 'b',
+            run_last = '▶▶',
+            terminate = '⏹',
+            disconnect = '⏏',
+          },
+        },
+      }
+
+      -- Automatically open/close DAP UI
+      dap.listeners.after.event_initialized['dapui_config'] = dapui.open
+      dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+      dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
       -- ========================================================================
       -- FLUTTER-SPECIFIC KEYMAPS
@@ -121,9 +177,51 @@ return {
           )
           vim.keymap.set('n', '<leader>fl', '<cmd>FlutterLspRestart<cr>', vim.tbl_extend('force', opts, { desc = '[F]lutter [L]SP Restart' }))
 
-          -- Register Flutter group with which-key
+          -- ========================================================================
+          -- DEBUG KEYMAPS - Available only in Dart files
+          -- ========================================================================
+          -- Function key shortcuts (standard debugging)
+          vim.keymap.set('n', '<F5>', function()
+            require('dap').continue()
+          end, vim.tbl_extend('force', opts, { desc = 'Debug: Start/Continue' }))
+
+          vim.keymap.set('n', '<F10>', function()
+            require('dap').step_over()
+          end, vim.tbl_extend('force', opts, { desc = 'Debug: Step Over' }))
+
+          vim.keymap.set('n', '<F11>', function()
+            require('dap').step_into()
+          end, vim.tbl_extend('force', opts, { desc = 'Debug: Step Into' }))
+
+          vim.keymap.set('n', '<F12>', function()
+            require('dap').step_out()
+          end, vim.tbl_extend('force', opts, { desc = 'Debug: Step Out' }))
+
+          -- Leader-based debug commands
+          vim.keymap.set('n', '<leader>db', function()
+            require('dap').toggle_breakpoint()
+          end, vim.tbl_extend('force', opts, { desc = '[D]ebug: Toggle [B]reakpoint' }))
+
+          vim.keymap.set('n', '<leader>dB', function()
+            require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+          end, vim.tbl_extend('force', opts, { desc = '[D]ebug: Set Conditional [B]reakpoint' }))
+
+          vim.keymap.set('n', '<leader>dc', function()
+            require('dap').continue()
+          end, vim.tbl_extend('force', opts, { desc = '[D]ebug: [C]ontinue' }))
+
+          vim.keymap.set('n', '<leader>dt', function()
+            require('dap').terminate()
+          end, vim.tbl_extend('force', opts, { desc = '[D]ebug: [T]erminate' }))
+
+          vim.keymap.set('n', '<leader>du', function()
+            require('dapui').toggle()
+          end, vim.tbl_extend('force', opts, { desc = '[D]ebug: Toggle [U]I' }))
+
+          -- Register groups with which-key
           require('which-key').add {
             { '<leader>f', group = '[F]lutter', mode = 'n' },
+            { '<leader>d', group = '[D]ebug', mode = 'n' },
           }
         end,
       })
