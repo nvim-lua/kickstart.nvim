@@ -108,7 +108,9 @@ return {
 
         dev_log = {
           enabled = true,
+          notify_errors = false, -- Don't show error notifications for log buffer issues
           open_cmd = 'tabedit', -- Open logs in a new tab
+          focus_on_open = false, -- Don't auto-focus the log window
         },
 
         debugger = {
@@ -140,12 +142,60 @@ return {
             disconnect = '⏏',
           },
         },
+        -- Fix layout to prevent resizing issues with Neo-tree
+        layouts = {
+          {
+            elements = {
+              { id = 'scopes', size = 0.25 },
+              { id = 'breakpoints', size = 0.25 },
+              { id = 'stacks', size = 0.25 },
+              { id = 'watches', size = 0.25 },
+            },
+            size = 40, -- Fixed width instead of percentage
+            position = 'right', -- Changed to right to avoid conflict with Neo-tree on left
+          },
+          {
+            elements = {
+              { id = 'repl', size = 0.5 },
+              { id = 'console', size = 0.5 },
+            },
+            size = 10, -- Fixed height
+            position = 'bottom',
+          },
+        },
       }
 
       -- Automatically open/close DAP UI
+      -- Don't close Neo-tree, they can coexist now (DAP on right, Neo-tree on left)
       dap.listeners.after.event_initialized['dapui_config'] = dapui.open
       dap.listeners.before.event_terminated['dapui_config'] = dapui.close
       dap.listeners.before.event_exited['dapui_config'] = dapui.close
+
+      -- Fix for Flutter Tools log buffer becoming non-modifiable
+      -- This catches all buffer types that might be used for Flutter logs
+      vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
+        pattern = '*',
+        callback = function(args)
+          local bufname = vim.api.nvim_buf_get_name(args.buf)
+          -- Check if this is a Flutter log buffer
+          if bufname:match('__FLUTTER_DEV_LOG__') or vim.bo[args.buf].filetype == 'log' then
+            vim.bo[args.buf].modifiable = true
+            vim.bo[args.buf].readonly = false
+            vim.bo[args.buf].buftype = '' -- Make it a normal buffer
+          end
+        end,
+      })
+
+      -- Also fix it whenever Flutter tries to write to the log
+      vim.api.nvim_create_autocmd('BufModifiedSet', {
+        pattern = '*',
+        callback = function(args)
+          local bufname = vim.api.nvim_buf_get_name(args.buf)
+          if bufname:match('__FLUTTER_DEV_LOG__') then
+            vim.bo[args.buf].modifiable = true
+          end
+        end,
+      })
 
       -- ========================================================================
       -- FLUTTER-SPECIFIC KEYMAPS
