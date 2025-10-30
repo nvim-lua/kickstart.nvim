@@ -71,6 +71,11 @@ return {
       require('flutter-tools').setup {
         -- Flutter SDK path (usually auto-detected, but you can specify if needed)
         -- flutter_path = '/path/to/flutter/bin/flutter',
+        
+        -- Uncomment to set a default device (get ID from `flutter devices`)
+        -- device = {
+        --   id = 'chrome', -- or 'macos', 'emulator-5554', etc.
+        -- },
 
         lsp = {
           capabilities = capabilities,
@@ -208,10 +213,14 @@ return {
         callback = function()
           local opts = { buffer = true, silent = true }
 
-          -- Flutter run/quit (instant, prompts for device)
+          -- Flutter run/quit
+          -- WORKFLOW: 
+          --   1. First time: <leader>fd to select device
+          --   2. Then: <leader>fr to run (uses selected device)
+          --   3. Subsequent runs: <leader>fr uses same device
           vim.keymap.set('n', '<leader>fr', '<cmd>FlutterRun<cr>', vim.tbl_extend('force', opts, { desc = '[F]lutter [R]un' }))
-          vim.keymap.set('n', '<leader>fq', '<cmd>FlutterQuit<cr>', vim.tbl_extend('force', opts, { desc = '[F]lutter [Q]uit' }))
           vim.keymap.set('n', '<leader>fR', '<cmd>FlutterRestart<cr>', vim.tbl_extend('force', opts, { desc = '[F]lutter Hot [R]estart' }))
+          vim.keymap.set('n', '<leader>fq', '<cmd>FlutterQuit<cr>', vim.tbl_extend('force', opts, { desc = '[F]lutter [Q]uit' }))
 
           -- Code Actions (Cmd+. equivalent) - wrap, remove, extract widgets, etc.
           vim.keymap.set('n', '<leader>.', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = 'Code Actions (Cmd+.)' }))
@@ -221,7 +230,8 @@ return {
           vim.keymap.set('v', 'gra', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = '[G]oto Code [A]ction' }))
 
           -- Device management
-          vim.keymap.set('n', '<leader>fd', '<cmd>FlutterDevices<cr>', vim.tbl_extend('force', opts, { desc = '[F]lutter [D]evices' }))
+          -- Use <leader>fd to see/select devices FIRST, then <leader>fr will use that device
+          vim.keymap.set('n', '<leader>fd', '<cmd>FlutterDevices<cr>', vim.tbl_extend('force', opts, { desc = '[F]lutter [D]evices (select)' }))
           vim.keymap.set('n', '<leader>fe', '<cmd>FlutterEmulators<cr>', vim.tbl_extend('force', opts, { desc = '[F]lutter [E]mulators' }))
 
           -- Dev tools
