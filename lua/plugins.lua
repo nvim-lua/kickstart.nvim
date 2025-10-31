@@ -1,7 +1,7 @@
--- [[ Install `lazy.nvim` plugin manager ]]
+-- Install lazy
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
+    local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
   local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
   if vim.v.shell_error ~= 0 then
     error('Error cloning lazy.nvim:\n' .. out)
@@ -11,83 +11,106 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
-
   {
     'rebelot/kanagawa.nvim',
     priority = 1000,
     config = function()
       vim.cmd.colorscheme "kanagawa-wave"
-    end
-  },
-
-  { -- Highlight, edit, and navigate code
-    'nvim-treesitter/nvim-treesitter',
-    build = ':TSUpdate',
-    config = function()
-      require('nvim-treesitter.configs').setup {
-        ensure_installed = { 'c', 'lua', 'vim', 'vimdoc', 'query', 'python' },
-        -- Autoinstall languages that are not installed
-        auto_install = true,
-        highlight = {
-          enable = true
-        },
-        indent = { enable = true, disable = { 'ruby' } },
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = 'gnn',
-            node_incremental = 'grn',
-            scope_incremental = 'grc',
-            node_decremental = 'grm',
-          },
-        },
-      }
     end,
   },
---   {
---     "neovim/nvim-lspconfig",
---     config = function()
---         -- Configure the Pyright language server for Python
---         vim.lsp.config('pyright', {
---             cmd = { "pyright-langserver", "--stdio" },
---             filetypes = { "python" },
---         })
-        
---         -- Enable the LSP server for Python files
---         vim.lsp.enable('pyright')
---     end,
+  {
+    'nvim-treesitter/nvim-treesitter',
+    build = ':TSUpdate',
+    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
+    opts = {
+      ensure_installed = { 'c', 'lua', 'vim', 'vimdoc', 'query', 'python' },
+      -- Autoinstall languages that are not installed
+      auto_install = true,
+      highlight = {
+        enable = true
+      },
+      indent = { enable = true, disable = { 'ruby' } },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = 'gnn',
+          node_incremental = 'grn',
+          scope_incremental = 'grc',
+          node_decremental = 'grm',
+          },
+        },
+      },
+    },
+--   { -- Leave it here in case we want to configure LSP directly
+--   "neovim/nvim-lspconfig",
+--   config = function()
+--     -- Configure the Pyright language server for Python
+--     vim.lsp.config('pyright', {
+--       cmd = { "pyright-langserver", "--stdio" },
+--       filetypes = { "python" },
+--     })
+--     -- Enable the LSP server for Python files
+--     vim.lsp.enable('pyright')
+--   end,
 --   }
   {
-        -- handle LSP server installation and management
-        -- let's be lazy for now.
-        "mason-org/mason.nvim",
-        dependencies = {
-            "mason-org/mason-lspconfig.nvim",
-            "neovim/nvim-lspconfig",
-        },
-        config = function()
-            require("mason").setup()
-            require("mason-lspconfig").setup()
-        end
+    -- handle LSP server installation and management
+    -- let's be lazy for now.
+    "mason-org/mason.nvim",
+    dependencies = {
+      "mason-org/mason-lspconfig.nvim",
+      "neovim/nvim-lspconfig",
+      },
+    config = function()
+      require("mason").setup()
+      require("mason-lspconfig").setup()
+    end,
   },
-}, {
-  ui = {
+  { -- Auto completion engine
+    'saghen/blink.cmp',
+    dependencies = { 'rafamadriz/friendly-snippets' },
+    version = '1.*',
+    opts = {
+      keymap = { preset = 'super-tab' },
+      appearance = {
+        nerd_font_variant = 'mono'
+      },
+      completion = { documentation = { auto_show = false } },
+      sources = {
+        default = { 'lsp', 'path', 'snippets', 'buffer' },
+      },
+      fuzzy = { implementation = "prefer_rust_with_warning" }
+      },
+    opts_extend = { "sources.default" },
+  },
+  { -- Let lsp recognize vim functions
+    "folke/lazydev.nvim",
+    ft = "lua", -- only load on lua files
+    opts = {
+      library = {
+        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+      },
+    },
+  },
+},
+  {
+    ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
     icons = vim.g.have_nerd_font and {} or {
-      cmd = '⌘',
-      config = '🛠',
-      event = '📅',
-      ft = '📂',
-      init = '⚙',
-      keys = '🗝',
-      plugin = '🔌',
-      runtime = '💻',
-      require = '🌙',
-      source = '📄',
-      start = '🚀',
-      task = '📌',
-      lazy = '💤 ',
+    cmd = '⌘',
+    config = '🛠',
+    event = '📅',
+    ft = '📂',
+    init = '⚙',
+    keys = '🗝',
+    plugin = '🔌',
+    runtime = '💻',
+    require = '🌙',
+    source = '📄',
+    start = '🚀',
+    task = '📌',
+    lazy = '💤 ',
     },
   },
 })
