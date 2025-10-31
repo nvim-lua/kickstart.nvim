@@ -92,6 +92,24 @@ return {
 
         lsp = {
           capabilities = capabilities,
+          
+          -- Suppress didChange errors during snippet expansion
+          on_attach = function(client, bufnr)
+            -- Reduce didChange notification frequency to prevent errors with snippets
+            client.server_capabilities.textDocumentSync = vim.tbl_deep_extend('force', client.server_capabilities.textDocumentSync or {}, {
+              change = 2, -- 2 = Incremental (less prone to errors than full sync)
+            })
+            
+            -- Filter out didChange error notifications (they're harmless during snippet expansion)
+            local notify = vim.notify
+            vim.notify = function(msg, level, opts)
+              if type(msg) == 'string' and msg:match('textDocument/didChange') then
+                return -- Suppress this specific error
+              end
+              notify(msg, level, opts)
+            end
+          end,
+          
           -- Color preview for dart variables (Colors.red, Color(0xFF...), etc.)
           -- This shows the actual Material Design colors inline!
           color = {
