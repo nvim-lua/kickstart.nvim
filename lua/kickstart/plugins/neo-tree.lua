@@ -27,6 +27,18 @@ return {
       },
     },
     
+    -- Global window mappings (apply to all Neo-tree windows)
+    window = {
+      mappings = {
+        -- Disable <Space> for toggle_node to allow <leader> (Space) to work
+        ['<space>'] = 'none',
+        -- Use <CR> (Enter) to toggle nodes instead (already default, but making it explicit)
+        ['<cr>'] = 'toggle_node',
+        -- Use 'za' (vim fold toggle) as alternative for toggle node
+        ['za'] = 'toggle_node',
+      },
+    },
+    
     filesystem = {
       -- Follow the current file in the tree
       follow_current_file = {
