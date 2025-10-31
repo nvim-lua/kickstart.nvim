@@ -229,9 +229,15 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Quit keymaps - easier ways to close Neovim (using capital Q to avoid conflict with diagnostic quickfix)
-vim.keymap.set('n', '<leader>Qa', '<cmd>qa<CR>', { desc = '[Q]uit [A]ll windows' })
+-- Session management is automatic via auto-session plugin (saves on exit, restores on startup)
+vim.keymap.set('n', '<leader>Qa', '<cmd>qa<CR>', { desc = '[Q]uit [A]ll' })
+
 vim.keymap.set('n', '<leader>Qq', '<cmd>qa!<CR>', { desc = '[Q]uit all without saving (force)' })
-vim.keymap.set('n', '<leader>Qw', '<cmd>wqa<CR>', { desc = '[Q]uit all and [W]rite (save)' })
+
+vim.keymap.set('n', '<leader>Qw', function()
+  vim.cmd 'wa' -- Write all buffers
+  vim.cmd 'qa'
+end, { desc = '[Q]uit all and [W]rite files' })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -400,7 +406,9 @@ require('lazy').setup({
 
       -- Document existing key chains
       spec = {
-        { '<leader>s', group = '[S]earch' },
+        { '<leader>Q', group = '[Q]uit' }, -- Added Q first so it appears at top
+        { '<leader>s', group = '[s]earch' }, -- Search commands
+        { '<leader>S', group = '[S]ession' }, -- Session management (capital S)
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
@@ -462,12 +470,18 @@ require('lazy').setup({
       require('telescope').setup {
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
-        --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
+        defaults = {
+          mappings = {
+            i = {
+              -- Use Ctrl+j/k to navigate results in insert mode
+              ['<C-j>'] = require('telescope.actions').move_selection_next,
+              ['<C-k>'] = require('telescope.actions').move_selection_previous,
+              -- Optional: Use Ctrl+d/u for scrolling preview
+              ['<C-d>'] = require('telescope.actions').preview_scrolling_down,
+              ['<C-u>'] = require('telescope.actions').preview_scrolling_up,
+            },
+          },
+        },
         -- pickers = {}
         extensions = {
           ['ui-select'] = {

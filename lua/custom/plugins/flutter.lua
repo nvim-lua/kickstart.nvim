@@ -69,9 +69,22 @@ return {
       local capabilities = require('blink.cmp').get_lsp_capabilities()
 
       require('flutter-tools').setup {
+        -- UI configuration
+        ui = {
+          border = 'rounded', -- border type for floating windows
+          notification_style = 'native', -- 'native' or 'plugin' (native uses vim.notify)
+        },
+
         -- Flutter SDK path (usually auto-detected, but you can specify if needed)
         -- flutter_path = '/path/to/flutter/bin/flutter',
-        
+        -- flutter_lookup_cmd = nil, -- example: "dirname $(which flutter)" or "asdf where flutter"
+
+        -- FVM support - takes priority over path, uses <workspace>/.fvm/flutter_sdk if enabled
+        fvm = false,
+
+        -- Root patterns to find the root of your flutter project
+        root_patterns = { '.git', 'pubspec.yaml' },
+
         -- Uncomment to set a default device (get ID from `flutter devices`)
         -- device = {
         --   id = 'chrome', -- or 'macos', 'emulator-5554', etc.
@@ -79,6 +92,16 @@ return {
 
         lsp = {
           capabilities = capabilities,
+          -- Color preview for dart variables (Colors.red, Color(0xFF...), etc.)
+          -- This shows the actual Material Design colors inline!
+          color = {
+            enabled = true, -- whether or not to highlight color variables at all, only supported on flutter >= 2.10
+            background = true, -- highlight the background
+            background_color = nil, -- required, when background is transparent (i.e. background_color = { r = 19, g = 17, b = 24},)
+            foreground = false, -- highlight the foreground
+            virtual_text = true, -- show the highlight using virtual text
+            virtual_text_str = '■', -- the virtual text character to highlight
+          },
           -- Settings passed to the Dart LSP
           settings = {
             -- Show TODOs in the problems pane
@@ -87,8 +110,9 @@ return {
             completeFunctionCalls = true,
             -- Enable/disable specific lints
             -- analysisExcludedFolders = {},
-            renameFilesWithClasses = 'prompt',
+            renameFilesWithClasses = 'prompt', -- "always" or "prompt"
             enableSnippets = true,
+            updateImportsOnRename = true, -- Whether to update imports and other directives when files are renamed
           },
         },
 
@@ -118,9 +142,26 @@ return {
           focus_on_open = false, -- Don't auto-focus the log window
         },
 
+        dev_tools = {
+          autostart = false, -- autostart devtools server if not detected
+          auto_open_browser = false, -- Automatically opens devtools in the browser
+        },
+
+        outline = {
+          open_cmd = '30vnew', -- command to use to open the outline buffer
+          auto_open = false, -- if true this will open the outline automatically when it is first populated
+        },
+
         debugger = {
           enabled = true, -- Enable Flutter debugger integration
           run_via_dap = true, -- Use DAP for debugging
+          -- if empty dap will not stop on any exceptions, otherwise it will stop on those specified
+          -- see |:help dap.set_exception_breakpoints()| for more info
+          exception_breakpoints = {},
+          -- Whether to call toString() on objects in debug views like hovers and the variables list.
+          -- Invoking toString() has a performance cost and may introduce side-effects,
+          -- although users may expected this functionality. null is treated like false.
+          evaluate_to_string_in_debug_views = true,
           -- Flutter tools will automatically register DAP configurations
           -- No need to manually configure launch.json
         },
@@ -176,28 +217,31 @@ return {
       dap.listeners.before.event_terminated['dapui_config'] = dapui.close
       dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
-      -- Fix for Flutter Tools log buffer becoming non-modifiable
-      -- This catches all buffer types that might be used for Flutter logs
+      -- Fix for Flutter Tools log buffer - make it non-saveable
+      -- This prevents Vim from asking to save changes to the log file on exit
       vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
         pattern = '*',
         callback = function(args)
           local bufname = vim.api.nvim_buf_get_name(args.buf)
           -- Check if this is a Flutter log buffer
           if bufname:match('__FLUTTER_DEV_LOG__') or vim.bo[args.buf].filetype == 'log' then
-            vim.bo[args.buf].modifiable = true
-            vim.bo[args.buf].readonly = false
-            vim.bo[args.buf].buftype = '' -- Make it a normal buffer
+            vim.bo[args.buf].modifiable = true -- Allow Flutter to write to it
+            vim.bo[args.buf].modified = false -- Mark as unmodified
+            vim.bo[args.buf].buftype = 'nofile' -- Don't associate with a file (prevents save prompt)
+            vim.bo[args.buf].swapfile = false -- Don't create swap file
           end
         end,
       })
 
-      -- Also fix it whenever Flutter tries to write to the log
+      -- Keep log buffer marked as unmodified whenever it changes
+      -- This prevents the "save changes?" prompt on exit
       vim.api.nvim_create_autocmd('BufModifiedSet', {
         pattern = '*',
         callback = function(args)
           local bufname = vim.api.nvim_buf_get_name(args.buf)
           if bufname:match('__FLUTTER_DEV_LOG__') then
             vim.bo[args.buf].modifiable = true
+            vim.bo[args.buf].modified = false -- Keep it marked as unmodified
           end
         end,
       })
