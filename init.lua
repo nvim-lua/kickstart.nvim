@@ -1175,6 +1175,31 @@ vim.api.nvim_create_autocmd('FileType', {
       '.git' 
     })
     
+    -- Find Python interpreter (prioritize virtual environments)
+    local function find_python()
+      if not root_dir then
+        return nil
+      end
+      
+      -- Check common venv locations relative to project root
+      local venv_paths = {
+        root_dir .. '/.venv/bin/python',
+        root_dir .. '/venv/bin/python',
+        root_dir .. '/.env/bin/python',
+        root_dir .. '/env/bin/python',
+      }
+      
+      for _, path in ipairs(venv_paths) do
+        if vim.fn.executable(path) == 1 then
+          return path
+        end
+      end
+      
+      return nil
+    end
+    
+    local python_path = find_python()
+    
     vim.lsp.start({
       name = 'pyright',
       cmd = { vim.fn.stdpath('data') .. '/mason/bin/pyright-langserver', '--stdio' },
@@ -1182,6 +1207,7 @@ vim.api.nvim_create_autocmd('FileType', {
       capabilities = capabilities,
       settings = {
         python = {
+          pythonPath = python_path,  -- Tell pyright which Python to use
           analysis = {
             typeCheckingMode = 'basic',
             autoImportCompletions = true,
@@ -1194,6 +1220,15 @@ vim.api.nvim_create_autocmd('FileType', {
     })
   end,
 })
+
+-- Command to restart Python LSP (useful when switching projects/venvs)
+vim.api.nvim_create_user_command('PythonRestart', function()
+  local clients = vim.lsp.get_clients({ name = 'pyright' })
+  for _, client in ipairs(clients) do
+    vim.lsp.stop_client(client.id, true)
+  end
+  vim.notify('Pyright stopped. It will restart on next edit.', vim.log.levels.INFO)
+end, { desc = 'Restart Python LSP (pyright)' })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
