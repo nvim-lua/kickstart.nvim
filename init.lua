@@ -230,14 +230,14 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 
 -- Quit keymaps - easier ways to close Neovim (using capital Q to avoid conflict with diagnostic quickfix)
 -- Session management is automatic via auto-session plugin (saves on exit, restores on startup)
-vim.keymap.set('n', '<leader>Qa', '<cmd>qa<CR>', { desc = '[Q]uit [A]ll' })
+vim.keymap.set('n', '<leader>Q', '<cmd>qa<CR>', { desc = '[Q]uit [A]ll' })
 
-vim.keymap.set('n', '<leader>Qq', '<cmd>qa!<CR>', { desc = '[Q]uit all without saving (force)' })
+-- vim.keymap.set('n', '<leader>Qq', '<cmd>qa!<CR>', { desc = '[Q]uit all without saving (force)' })
 
-vim.keymap.set('n', '<leader>Qw', function()
-  vim.cmd 'wa' -- Write all buffers
-  vim.cmd 'qa'
-end, { desc = '[Q]uit all and [W]rite files' })
+-- vim.keymap.set('n', '<leader>Qw', function()
+--   vim.cmd 'wa' -- Write all buffers
+--   vim.cmd 'qa'
+-- end, { desc = '[Q]uit all and [W]rite files' })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
