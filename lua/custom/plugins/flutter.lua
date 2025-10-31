@@ -247,6 +247,43 @@ return {
       })
 
       -- ========================================================================
+      -- ENABLE TREESITTER FOLDING FOR DART FILES
+      -- ========================================================================
+      -- Set fold method to use Treesitter for Flutter widgets
+      -- Using multiple autocmds to ensure it sticks (some plugins override it)
+      local fold_augroup = vim.api.nvim_create_augroup('DartFolding', { clear = true })
+      
+      vim.api.nvim_create_autocmd({ 'BufRead', 'BufEnter', 'BufWinEnter' }, {
+        group = fold_augroup,
+        pattern = '*.dart',
+        callback = function()
+          vim.opt_local.foldmethod = 'expr'
+          vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
+          vim.opt_local.foldlevel = 99          -- High level = everything unfolded
+          vim.opt_local.foldlevelstart = 99     -- Start with everything unfolded
+          
+          -- Hide fold column (no extra column, folds still work!)
+          vim.opt_local.foldcolumn = '0'
+          
+          -- Minimal fold display (VS Code style - just shows first line)
+          vim.opt_local.foldtext = ''
+        end,
+      })
+      
+      -- Also set after LSP attaches (flutter-tools might reset it)
+      vim.api.nvim_create_autocmd('LspAttach', {
+        group = fold_augroup,
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if client and client.name == 'dartls' then
+            vim.opt_local.foldmethod = 'expr'
+            vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
+            vim.opt_local.foldlevel = 99        -- Everything unfolded
+          end
+        end,
+      })
+
+      -- ========================================================================
       -- FLUTTER-SPECIFIC KEYMAPS
       -- ========================================================================
       -- These keymaps are only available when editing Dart files
@@ -256,6 +293,16 @@ return {
         pattern = 'dart',
         callback = function()
           local opts = { buffer = true, silent = true }
+
+          -- ========================================================================
+          -- ENABLE TREESITTER FOLDING FOR DART FILES
+          -- ========================================================================
+          -- Set fold method to use Treesitter for Flutter widgets
+          vim.opt_local.foldmethod = 'expr'
+          vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
+          vim.opt_local.foldenable = false -- Start with folds open
+          vim.opt_local.foldlevel = 99
+          vim.opt_local.foldlevelstart = 99
 
           -- Flutter run/quit
           -- WORKFLOW: 
@@ -336,6 +383,20 @@ return {
           }
         end,
       })
+    end,
+  },
+
+  -- ========================================================================
+  -- DART TREESITTER - Ensure dart parser is installed for proper folding
+  -- ========================================================================
+  {
+    'nvim-treesitter/nvim-treesitter',
+    ft = 'dart',
+    opts = function(_, opts)
+      -- Ensure Dart parser is installed
+      opts.ensure_installed = opts.ensure_installed or {}
+      vim.list_extend(opts.ensure_installed, { 'dart' })
+      return opts
     end,
   },
 }

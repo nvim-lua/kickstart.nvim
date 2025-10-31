@@ -196,6 +196,31 @@ vim.o.scrolloff = 10
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
+-- ========================================================================
+-- FOLDING CONFIGURATION - For Flutter widgets and code blocks
+-- ========================================================================
+-- Enable folding based on Treesitter (for Flutter widgets, functions, etc.)
+vim.o.foldmethod = 'expr'
+vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
+-- Start with all folds open (don't fold on file open)
+vim.o.foldenable = false
+-- Set fold level (higher = more unfolded by default)
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
+-- Customize fold text to show more context
+vim.o.foldtext = ''
+-- Hide fold column globally (saves space, folds still work with za/zc/zo)
+vim.o.foldcolumn = '0' -- Set to '1' if you want the fold column back
+
+-- Folding keymaps:
+--   za - Toggle fold under cursor
+--   zc - Close fold under cursor
+--   zo - Open fold under cursor
+--   zM - Close all folds
+--   zR - Open all folds
+--   zj - Move to next fold
+--   zk - Move to previous fold
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -995,6 +1020,13 @@ require('lazy').setup({
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
 
+      -- Autopairs - automatically close brackets, quotes, etc.
+      --
+      -- When you type { it automatically adds }
+      -- When you type " it automatically adds the closing "
+      -- Press <CR> between brackets to add proper indentation
+      require('mini.pairs').setup()
+
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
@@ -1051,6 +1083,10 @@ require('lazy').setup({
         additional_vim_regex_highlighting = { 'ruby' },
       },
       indent = { enable = true, disable = { 'ruby' } },
+      -- Enable folding based on Treesitter
+      fold = {
+        enable = true,
+      },
     },
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
