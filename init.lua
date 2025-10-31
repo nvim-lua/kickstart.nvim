@@ -811,7 +811,7 @@ require('lazy').setup({
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
-        ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
+        ensure_installed = {},
         automatic_installation = false,
         handlers = {
           function(server_name)
@@ -822,16 +822,20 @@ require('lazy').setup({
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             
             -- Use new vim.lsp.config API for Neovim 0.11+
-            local lspconfig_servers = require('lspconfig.configs')
-            local config = lspconfig_servers[server_name]
-            if config then
+            -- Load the server config from lspconfig
+            local ok, lspconfig_server = pcall(require, 'lspconfig.server_configurations.' .. server_name)
+            if ok and lspconfig_server.default_config then
+              local config = lspconfig_server.default_config
               vim.lsp.config(server_name, {
-                cmd = server.cmd or config.default_config.cmd,
-                filetypes = server.filetypes or config.default_config.filetypes,
-                root_markers = config.default_config.root_dir,
+                cmd = server.cmd or config.cmd,
+                filetypes = server.filetypes or config.filetypes,
+                root_markers = config.root_dir,
                 capabilities = server.capabilities,
                 settings = server.settings,
               })
+              
+              -- Enable the LSP for the configured filetypes
+              vim.lsp.enable(server_name)
             end
           end,
         },
@@ -1142,6 +1146,53 @@ require('lazy').setup({
       lazy = '💤 ',
     },
   },
+})
+
+-- ========================================================================
+-- LANGUAGE-SPECIFIC LSP SETUP (for lazy-loaded profiles)
+-- ========================================================================
+-- Python LSP - starts when opening .py files
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'python',
+  once = false,
+  callback = function(args)
+    -- Check if pyright is already attached
+    local clients = vim.lsp.get_clients({ bufnr = args.buf, name = 'pyright' })
+    if #clients > 0 then
+      return
+    end
+    
+    -- Get capabilities from blink.cmp
+    local capabilities = require('blink.cmp').get_lsp_capabilities()
+    
+    local root_dir = vim.fs.root(args.buf, { 
+      'pyproject.toml', 
+      'setup.py', 
+      'setup.cfg', 
+      'requirements.txt', 
+      'Pipfile', 
+      'pyrightconfig.json', 
+      '.git' 
+    })
+    
+    vim.lsp.start({
+      name = 'pyright',
+      cmd = { vim.fn.stdpath('data') .. '/mason/bin/pyright-langserver', '--stdio' },
+      root_dir = root_dir or vim.fn.getcwd(),
+      capabilities = capabilities,
+      settings = {
+        python = {
+          analysis = {
+            typeCheckingMode = 'basic',
+            autoImportCompletions = true,
+            autoSearchPaths = true,
+            useLibraryCodeForTypes = true,
+            diagnosticMode = 'openFilesOnly',
+          },
+        },
+      },
+    })
+  end,
 })
 
 -- The line beneath this is called `modeline`. See `:help modeline`

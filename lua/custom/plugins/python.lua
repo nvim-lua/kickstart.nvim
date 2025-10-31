@@ -20,57 +20,49 @@
 
 return {
   -- ========================================================================
-  -- PYTHON LSP - Language Server Protocol for Python
-  -- ========================================================================
-  -- Provides intelligent code completion, go-to-definition, type checking,
-  -- and more for Python files using pyright (fast, feature-rich LSP)
+  -- MASON TOOL INSTALLER - Install Python tools on-demand
   -- ========================================================================
   {
-    'neovim/nvim-lspconfig',
-    ft = 'python', -- Only load when opening Python files
-    dependencies = {
-      'WhoIsSethDaniel/mason-tool-installer.nvim', -- For installing pyright
-    },
+    'WhoIsSethDaniel/mason-tool-installer.nvim',
+    ft = 'python',
+    dependencies = { 'williamboman/mason.nvim' },
     config = function()
-      -- Get shared LSP capabilities from blink.cmp
-      local capabilities = require('blink.cmp').get_lsp_capabilities()
+      -- Wait for Mason registry to be ready
+      local function install_tools()
+        local registry_ok, registry = pcall(require, 'mason-registry')
+        if not registry_ok then
+          vim.notify('Mason registry not ready, retrying...', vim.log.levels.WARN)
+          vim.defer_fn(install_tools, 100)
+          return
+        end
 
-      -- Setup pyright LSP server using new vim.lsp.config API (Neovim 0.11+)
-      local pyright_config = require('lspconfig.configs').pyright
-      if pyright_config then
-        vim.lsp.config('pyright', {
-          cmd = pyright_config.default_config.cmd,
-          filetypes = pyright_config.default_config.filetypes,
-          root_markers = pyright_config.default_config.root_dir,
-          capabilities = capabilities,
-          settings = {
-            python = {
-              analysis = {
-                -- Type checking mode: "off", "basic", or "strict"
-                typeCheckingMode = 'basic',
-                -- Auto-import completions
-                autoImportCompletions = true,
-                -- Automatically search for stubs
-                autoSearchPaths = true,
-                -- Use library code for types
-                useLibraryCodeForTypes = true,
-                -- Diagnostic mode: "openFilesOnly" or "workspace"
-                diagnosticMode = 'openFilesOnly',
-              },
-            },
-          },
-        })
+        -- Refresh registry and install tools
+        registry.refresh(function()
+          local tools = { 'pyright', 'ruff' }
+          for _, tool in ipairs(tools) do
+            local ok, package = pcall(registry.get_package, tool)
+            if ok and not package:is_installed() then
+              vim.notify('Installing ' .. tool .. '...', vim.log.levels.INFO)
+              package:install()
+            end
+          end
+        end)
       end
 
-      -- Install Python tools via Mason
-      require('mason-tool-installer').setup {
-        ensure_installed = {
-          'pyright', -- LSP server for type checking and completions
-          'ruff', -- Fast formatter, linter, and import organizer (replaces black, isort, flake8)
-        },
-      }
+      -- Start installation after a short delay
+      vim.defer_fn(install_tools, 200)
     end,
   },
+
+  -- ========================================================================
+  -- PYTHON LSP - Language Server Protocol for Python
+  -- ========================================================================
+  -- Note: Pyright LSP setup is in init.lua (after lazy.setup) because
+  -- nvim-lspconfig is already loaded there, and we can't re-trigger its
+  -- config function with ft='python'. The autocmd in init.lua will start
+  -- pyright when you open a .py file.
+  -- ========================================================================
+
 
   -- ========================================================================
   -- PYTHON FORMATTERS - Auto-format Python code
