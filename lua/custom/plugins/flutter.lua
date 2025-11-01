@@ -101,13 +101,20 @@ return {
             })
             
             -- Filter out didChange error notifications (they're harmless during snippet expansion)
-            local notify = vim.notify
-            vim.notify = function(msg, level, opts)
-              if type(msg) == 'string' and msg:match('textDocument/didChange') then
-                return -- Suppress this specific error
-              end
-              notify(msg, level, opts)
-            end
+            -- We'll use an autocmd to do this after noice.nvim is loaded
+            vim.api.nvim_create_autocmd('User', {
+              pattern = 'VeryLazy',
+              once = true,
+              callback = function()
+                local notify = vim.notify
+                vim.notify = function(msg, level, opts)
+                  if type(msg) == 'string' and msg:match('textDocument/didChange') then
+                    return -- Suppress this specific error
+                  end
+                  notify(msg, level, opts)
+                end
+              end,
+            })
           end,
           
           -- Color preview for dart variables (Colors.red, Color(0xFF...), etc.)
@@ -190,7 +197,7 @@ return {
       -- ========================================================================
       local dap, dapui = require 'dap', require 'dapui'
 
-      -- Configure DAP UI
+      -- Configure DAP UI to open in tabs for better half-width screen support
       dapui.setup {
         icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
         controls = {
@@ -206,7 +213,8 @@ return {
             disconnect = '⏏',
           },
         },
-        -- Fix layout to prevent resizing issues with Neo-tree
+        -- Open each element in a new tab instead of side panels
+        -- This prevents layout issues on small/half-width screens
         layouts = {
           {
             elements = {
@@ -215,25 +223,66 @@ return {
               { id = 'stacks', size = 0.25 },
               { id = 'watches', size = 0.25 },
             },
-            size = 40, -- Fixed width instead of percentage
-            position = 'right', -- Changed to right to avoid conflict with Neo-tree on left
+            size = 40,
+            position = 'right',
           },
           {
             elements = {
               { id = 'repl', size = 0.5 },
               { id = 'console', size = 0.5 },
             },
-            size = 10, -- Fixed height
+            size = 10,
             position = 'bottom',
           },
         },
+        -- Override element window commands to open in tabs
+        element_mappings = {},
+        windows = { indent = 1 },
       }
 
-      -- Automatically open/close DAP UI
-      -- Don't close Neo-tree, they can coexist now (DAP on right, Neo-tree on left)
-      dap.listeners.after.event_initialized['dapui_config'] = dapui.open
-      dap.listeners.before.event_terminated['dapui_config'] = dapui.close
-      dap.listeners.before.event_exited['dapui_config'] = dapui.close
+      -- Custom function to open DAP UI elements in tabs
+      local function open_dapui_in_tabs()
+        -- Save current tab to return to it
+        local current_tab = vim.fn.tabpagenr()
+        
+        -- Create new tab with a named buffer for debug views
+        vim.cmd 'tabnew'
+        local debug_buf = vim.api.nvim_create_buf(false, true)
+        vim.api.nvim_buf_set_name(debug_buf, 'Flutter Debug')
+        vim.api.nvim_set_current_buf(debug_buf)
+        
+        -- Open DAP UI in this tab
+        dapui.open()
+        
+        -- Return to original tab so user continues coding there
+        vim.cmd('tabnext ' .. current_tab)
+      end
+
+      -- Custom function to close DAP UI tabs
+      local function close_dapui_tabs()
+        dapui.close()
+        
+        -- Find and close the Flutter Debug tab
+        local current_tab = vim.fn.tabpagenr()
+        for i = 1, vim.fn.tabpagenr '$' do
+          vim.cmd('tabnext ' .. i)
+          local bufname = vim.api.nvim_buf_get_name(0)
+          if bufname:match('Flutter Debug') then
+            vim.cmd 'tabclose'
+            break
+          end
+        end
+        
+        -- Return to original tab
+        if vim.fn.tabpagenr '$' >= current_tab then
+          vim.cmd('tabnext ' .. current_tab)
+        end
+      end
+
+      -- Automatically open/close DAP UI in tabs
+      dap.listeners.after.event_initialized['dapui_config'] = open_dapui_in_tabs
+      dap.listeners.before.event_terminated['dapui_config'] = close_dapui_tabs
+      dap.listeners.before.event_exited['dapui_config'] = close_dapui_tabs
 
       -- Fix for Flutter Tools log buffer - make it non-saveable
       -- This prevents Vim from asking to save changes to the log file on exit

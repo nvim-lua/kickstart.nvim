@@ -432,9 +432,11 @@ require('lazy').setup({
       -- Document existing key chains
       spec = {
         { '<leader>Q', group = '[Q]uit' }, -- Added Q first so it appears at top
+        { '<leader>c', group = '[c]ode' }, -- Code actions, LSP commands
         { '<leader>s', group = '[s]earch' }, -- Search commands
         { '<leader>S', group = '[S]ession' }, -- Session management (capital S)
         { '<leader>t', group = '[T]oggle' },
+        { '<leader>x', group = 'diagnostics/quickfi[x]' }, -- Trouble/diagnostics (Telescope has <leader>sd)
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
     },
@@ -613,6 +615,26 @@ require('lazy').setup({
       -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
       -- and elegantly composed help section, `:help lsp-vs-treesitter`
 
+      -- ========================================================================
+      -- LSP UI Enhancements - Better hover, signature help, and borders
+      -- ========================================================================
+      -- Customize LSP handlers for better visual appearance (LazyVim-style)
+      
+      -- Rounded borders for hover windows
+      vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
+        border = 'rounded',
+        max_width = 80,
+      })
+
+      -- Rounded borders for signature help
+      vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+        border = 'rounded',
+        max_width = 80,
+      })
+
+      -- NOTE: Diagnostic config is set later in the file (around line 760)
+      -- with comprehensive settings including virtual_text, signs, etc.
+
       --  This function gets run when an LSP attaches to a particular buffer.
       --    That is to say, every time a new file is opened that is associated with
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
@@ -726,33 +748,50 @@ require('lazy').setup({
         end,
       })
 
-      -- Diagnostic Config
+      -- Diagnostic Config - Enhanced for better visibility (LazyVim-style)
       -- See :help vim.diagnostic.Opts
       vim.diagnostic.config {
+        -- Sort diagnostics by severity (errors first)
         severity_sort = true,
-        float = { border = 'rounded', source = 'if_many' },
-        underline = { severity = vim.diagnostic.severity.ERROR },
-        signs = vim.g.have_nerd_font and {
+        
+        -- Underline errors and warnings
+        underline = {
+          severity = { min = vim.diagnostic.severity.WARN },
+        },
+        
+        -- Show signs in the gutter
+        signs = {
           text = {
-            [vim.diagnostic.severity.ERROR] = '󰅚 ',
-            [vim.diagnostic.severity.WARN] = '󰀪 ',
-            [vim.diagnostic.severity.INFO] = '󰋽 ',
-            [vim.diagnostic.severity.HINT] = '󰌶 ',
+            [vim.diagnostic.severity.ERROR] = '󰅚',
+            [vim.diagnostic.severity.WARN] = '󰀪',
+            [vim.diagnostic.severity.INFO] = '󰋽',
+            [vim.diagnostic.severity.HINT] = '󰌶',
           },
-        } or {},
+        },
+        
+        -- Virtual text configuration (inline error messages at end of line)
+        -- This shows the actual diagnostic message text to the right of each line
         virtual_text = {
-          source = 'if_many',
-          spacing = 2,
+          spacing = 4,
+          source = 'if_many', -- Show source if multiple sources
+          prefix = '■', -- Prefix before the message
           format = function(diagnostic)
-            local diagnostic_message = {
-              [vim.diagnostic.severity.ERROR] = diagnostic.message,
-              [vim.diagnostic.severity.WARN] = diagnostic.message,
-              [vim.diagnostic.severity.INFO] = diagnostic.message,
-              [vim.diagnostic.severity.HINT] = diagnostic.message,
-            }
-            return diagnostic_message[diagnostic.severity]
+            -- Show the full diagnostic message inline
+            return diagnostic.message
           end,
         },
+        
+        -- Floating window configuration (when hovering over error)
+        float = {
+          border = 'rounded',
+          source = 'always',  -- Always show source
+          header = '',
+          prefix = '',
+          focusable = true,
+        },
+        
+        -- Update diagnostics in insert mode
+        update_in_insert = false,
       }
 
       -- LSP servers and clients are able to communicate to each other what features they support.
@@ -1229,6 +1268,25 @@ vim.api.nvim_create_user_command('PythonRestart', function()
   end
   vim.notify('Pyright stopped. It will restart on next edit.', vim.log.levels.INFO)
 end, { desc = 'Restart Python LSP (pyright)' })
+
+-- Ensure virtual text diagnostics are enabled after all plugins load
+-- This needs to be set after plugins that might override diagnostic config
+vim.api.nvim_create_autocmd('User', {
+  pattern = 'VeryLazy',
+  once = true,
+  callback = function()
+    vim.diagnostic.config({
+      virtual_text = {
+        spacing = 4,
+        source = 'if_many',
+        prefix = '■',
+        format = function(diagnostic)
+          return diagnostic.message
+        end,
+      },
+    })
+  end,
+})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
