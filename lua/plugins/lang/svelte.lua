@@ -180,4 +180,48 @@ return {
       })
     end,
   },
+
+  -- ========================================================================
+  -- SVELTE-SPECIFIC KEYMAPS
+  -- ========================================================================
+  -- Additional Svelte-specific settings and keymaps
+  -- ========================================================================
+  {
+    'nvim-lspconfig',
+    ft = 'svelte',
+    config = function()
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'svelte',
+        callback = function(event)
+          local bufnr = event.buf
+
+          -- Register which-key group for Svelte
+          require('which-key').add {
+            { '<leader>v', group = ' svelte', buffer = bufnr },
+          }
+
+          -- Format with Prettier
+          vim.keymap.set('n', '<leader>vf', function()
+            require('conform').format { formatters = { 'prettier' } }
+          end, { buffer = bufnr, desc = 'Format with prettier' })
+
+          -- Restart Svelte LSP
+          vim.keymap.set('n', '<leader>vl', function()
+            vim.cmd 'LspRestart svelte'
+          end, { buffer = bufnr, desc = 'Restart LSP' })
+
+          -- Restart TypeScript LSP (often needed in Svelte projects)
+          vim.keymap.set('n', '<leader>vt', function()
+            vim.cmd 'LspRestart ts_ls'
+          end, { buffer = bufnr, desc = 'Restart TypeScript LSP' })
+
+          -- Open component in split
+          vim.keymap.set('n', '<leader>vo', function()
+            local word = vim.fn.expand '<cfile>'
+            vim.cmd('split ' .. word)
+          end, { buffer = bufnr, desc = 'Open component in split' })
+        end,
+      })
+    end,
+  },
 }

@@ -36,13 +36,18 @@ return {
   -- widget inspector, and integrates the Dart LSP server.
   --
   -- Flutter-specific keymaps (available in .dart files):
-  --   <leader>fr - Flutter Run (start app)
-  --   <leader>fq - Flutter Quit (stop app)
-  --   <leader>fR - Flutter Hot Restart
-  --   <leader>fd - Flutter Devices (show connected devices)
-  --   <leader>fe - Flutter Emulators (launch emulator)
-  --   <leader>fo - Flutter Outline (toggle outline/widget tree)
-  --   <leader>fc - Flutter Copy Profile URL (for DevTools)
+  --   <Space>fr - Flutter Run (start app)
+  --   <Space>fq - Flutter Quit (stop app)
+  --   <Space>fR - Flutter Hot Restart
+  --   <Space>fh - Flutter Hot Reload
+  --   <Space>fd - Flutter Devices (show connected devices)
+  --   <Space>fe - Flutter Emulators (launch emulator)
+  --   <Space>fo - Flutter Outline (toggle outline/widget tree)
+  --   <Space>ft - Flutter DevTools (start DevTools server)
+  --   <Space>fa - Flutter Attach (attach to running app)
+  --   <Space>fD - Flutter Detach (detach from running app)
+  --   <Space>fL - Flutter Log Toggle (show/hide logs)
+  --   <Space>fc - Flutter Copy Profiler URL (for DevTools)
   --
   -- Debug keymaps:
   --   <F5> - Start/Continue debugging
@@ -141,7 +146,7 @@ return {
           },
         },
 
-        -- Flutter-specific settings
+  -- Flutter-specific settings
         decorations = {
           statusline = {
             -- Set to true to show Flutter app info in statusline
@@ -358,7 +363,7 @@ return {
       -- ========================================================================
       vim.api.nvim_create_autocmd('FileType', {
         pattern = 'dart',
-        callback = function(event)
+        callback = function()
           local opts = { buffer = true, silent = true }
 
           -- ========================================================================
@@ -376,35 +381,88 @@ return {
           --   1. First time: <leader>fd to select device
           --   2. Then: <leader>fr to run (uses selected device)
           --   3. Subsequent runs: <leader>fr uses same device
-          vim.keymap.set('n', '<leader>fr', '<cmd>FlutterRun<cr>', vim.tbl_extend('force', opts, { desc = '[F]lutter [R]un' }))
-          vim.keymap.set('n', '<leader>fR', '<cmd>FlutterRestart<cr>', vim.tbl_extend('force', opts, { desc = '[F]lutter Hot [R]estart' }))
-          vim.keymap.set('n', '<leader>fq', '<cmd>FlutterQuit<cr>', vim.tbl_extend('force', opts, { desc = '[F]lutter [Q]uit' }))
+          vim.keymap.set('n', '<leader>fr', '<cmd>FlutterRun<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Run app' }))
+          vim.keymap.set('n', '<leader>fR', '<cmd>FlutterRestart<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Hot restart' }))
+          vim.keymap.set('n', '<leader>fh', '<cmd>FlutterReload<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Hot reload' }))
+          vim.keymap.set('n', '<leader>fq', '<cmd>FlutterQuit<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Quit app' }))
 
           -- Code Actions (Cmd+. equivalent) - wrap, remove, extract widgets, etc.
-          vim.keymap.set('n', '<leader>.', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = 'Code Actions (Cmd+.)' }))
-          vim.keymap.set('v', '<leader>.', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = 'Code Actions (Cmd+.)' }))
+          vim.keymap.set('n', '<leader>.', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = 'Flutter: Code actions (Cmd+.)' }))
+          vim.keymap.set('v', '<leader>.', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = 'Flutter: Code actions (Cmd+.)' }))
           -- Alternative: use the default LSP keymap
           vim.keymap.set('n', 'gra', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = '[G]oto Code [A]ction' }))
           vim.keymap.set('v', 'gra', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = '[G]oto Code [A]ction' }))
 
           -- Device management
           -- Use <leader>fd to see/select devices FIRST, then <leader>fr will use that device
-          vim.keymap.set('n', '<leader>fd', '<cmd>FlutterDevices<cr>', vim.tbl_extend('force', opts, { desc = '[F]lutter [D]evices (select)' }))
-          vim.keymap.set('n', '<leader>fe', '<cmd>FlutterEmulators<cr>', vim.tbl_extend('force', opts, { desc = '[F]lutter [E]mulators' }))
+          vim.keymap.set('n', '<leader>fd', '<cmd>FlutterDevices<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Select device' }))
+          vim.keymap.set('n', '<leader>fe', '<cmd>FlutterEmulators<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Launch emulator' }))
 
-          -- Dev tools
-          vim.keymap.set('n', '<leader>fo', '<cmd>FlutterOutlineToggle<cr>', vim.tbl_extend('force', opts, { desc = '[F]lutter [O]utline Toggle' }))
+          -- Dev tools and debugging
+          vim.keymap.set('n', '<leader>fo', '<cmd>FlutterOutlineToggle<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Toggle outline' }))
+          vim.keymap.set('n', '<leader>ft', '<cmd>FlutterDevTools<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Start DevTools' }))
           vim.keymap.set(
             'n',
             '<leader>fc',
             '<cmd>FlutterCopyProfilerUrl<cr>',
-            vim.tbl_extend('force', opts, { desc = '[F]lutter [C]opy Profiler URL' })
+            vim.tbl_extend('force', opts, { desc = 'Flutter: Copy profiler URL' })
           )
-          vim.keymap.set('n', '<leader>fl', '<cmd>FlutterLspRestart<cr>', vim.tbl_extend('force', opts, { desc = '[F]lutter [L]SP Restart' }))
+          
+          -- Attach/Detach
+          vim.keymap.set('n', '<leader>fa', '<cmd>FlutterAttach<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Attach to app' }))
+          vim.keymap.set('n', '<leader>fD', '<cmd>FlutterDetach<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Detach from app' }))
+          
+          -- Logs
+          vim.keymap.set('n', '<leader>fL', '<cmd>FlutterLogToggle<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Toggle logs' }))
+          
+          -- LSP
+          vim.keymap.set('n', '<leader>fl', '<cmd>FlutterLspRestart<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Restart LSP' }))
 
-          -- Register which-key group for Flutter
+          -- ========================================================================
+          -- DEBUG KEYMAPS - Available only in Dart files
+          -- ========================================================================
+          -- Function key shortcuts (standard debugging)
+          vim.keymap.set('n', '<F5>', function()
+            require('dap').continue()
+          end, vim.tbl_extend('force', opts, { desc = 'Debug: Start/Continue' }))
+
+          vim.keymap.set('n', '<F10>', function()
+            require('dap').step_over()
+          end, vim.tbl_extend('force', opts, { desc = 'Debug: Step Over' }))
+
+          vim.keymap.set('n', '<F11>', function()
+            require('dap').step_into()
+          end, vim.tbl_extend('force', opts, { desc = 'Debug: Step Into' }))
+
+          vim.keymap.set('n', '<F12>', function()
+            require('dap').step_out()
+          end, vim.tbl_extend('force', opts, { desc = 'Debug: Step Out' }))
+
+          -- Leader-based debug commands
+          vim.keymap.set('n', '<leader>db', function()
+            require('dap').toggle_breakpoint()
+          end, vim.tbl_extend('force', opts, { desc = '[D]ebug: Toggle [B]reakpoint' }))
+
+          vim.keymap.set('n', '<leader>dB', function()
+            require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+          end, vim.tbl_extend('force', opts, { desc = '[D]ebug: Set Conditional [B]reakpoint' }))
+
+          vim.keymap.set('n', '<leader>dc', function()
+            require('dap').continue()
+          end, vim.tbl_extend('force', opts, { desc = '[D]ebug: [C]ontinue' }))
+
+          vim.keymap.set('n', '<leader>dt', function()
+            require('dap').terminate()
+          end, vim.tbl_extend('force', opts, { desc = '[D]ebug: [T]erminate' }))
+
+          vim.keymap.set('n', '<leader>du', function()
+            require('dapui').toggle()
+          end, vim.tbl_extend('force', opts, { desc = '[D]ebug: Toggle [U]I' }))
+
+          -- Register groups with which-key
           require('which-key').add {
-            { '<leader>f', group = ' flutter', mode = 'n', buffer = event.buf },
+            { '<leader>f', group = '[F]lutter', mode = 'n' },
+            { '<leader>d', group = '[D]ebug', mode = 'n' },
           }
         end,
       })

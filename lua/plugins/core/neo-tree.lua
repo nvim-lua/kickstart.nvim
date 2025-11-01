@@ -53,9 +53,50 @@ return {
         width = 30,
         mappings = {
           ['\\'] = 'close_window',
-          -- Make <leader>sf work the same in Neo-tree as in editor
+          
+          -- Consistent with Telescope: <C-x> = split, <C-v> = vsplit, <C-t> = tabnew
+          ['<C-x>'] = 'split_with_window_picker',
+          ['<C-v>'] = 'vsplit_with_window_picker',
+          ['<C-t>'] = 'open_tabnew',
+          
+          -- Open file (consistent with Telescope <CR>)
+          ['<CR>'] = 'open',
+          ['o'] = 'open',
+          
+          -- Navigation
+          ['<C-j>'] = 'next_source', -- Match Telescope down navigation
+          ['<C-k>'] = 'prev_source', -- Match Telescope up navigation
+          
+          -- Preview (like Telescope)
+          ['P'] = { 'toggle_preview', config = { use_float = true } },
+          
+          -- Telescope integration from Neo-tree
           ['<leader>sf'] = 'telescope_find',
           ['<leader>sg'] = 'telescope_grep',
+          
+          -- Refresh
+          ['R'] = 'refresh',
+          
+          -- Toggle hidden files
+          ['H'] = 'toggle_hidden',
+          
+          -- Navigation
+          ['-'] = 'navigate_up',
+          ['.'] = 'set_root',
+          
+          -- File operations
+          ['a'] = 'add',
+          ['A'] = 'add_directory',
+          ['d'] = 'delete',
+          ['r'] = 'rename',
+          ['y'] = 'copy_to_clipboard',
+          ['x'] = 'cut_to_clipboard',
+          ['p'] = 'paste_from_clipboard',
+          ['c'] = 'copy', -- Copy (takes a path as input)
+          ['m'] = 'move', -- Move (takes a path as input)
+          
+          -- Help
+          ['?'] = 'show_help',
         },
       },
     },

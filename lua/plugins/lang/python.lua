@@ -173,4 +173,54 @@ return {
       return opts
     end,
   },
+
+  -- Python keymaps (loaded only for Python files)
+  {
+    'nvim-lspconfig',
+    ft = 'python',
+    config = function()
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'python',
+        callback = function(event)
+          local bufnr = event.buf
+
+          -- Register which-key group for Python
+          require('which-key').add {
+            { '<leader>p', group = ' python', buffer = bufnr },
+          }
+
+          -- Run current file
+          vim.keymap.set('n', '<leader>pr', function()
+            vim.cmd('!python3 %')
+          end, { buffer = bufnr, desc = 'Run file' })
+
+          -- Run with arguments
+          vim.keymap.set('n', '<leader>pR', function()
+            local args = vim.fn.input 'Arguments: '
+            vim.cmd('!python3 % ' .. args)
+          end, { buffer = bufnr, desc = 'Run with args' })
+
+          -- Select virtual environment
+          vim.keymap.set('n', '<leader>pe', function()
+            vim.cmd 'PythonSelectVenv'
+          end, { buffer = bufnr, desc = 'Select venv' })
+
+          -- Restart Python LSP
+          vim.keymap.set('n', '<leader>pl', function()
+            vim.cmd 'PythonRestart'
+          end, { buffer = bufnr, desc = 'Restart LSP' })
+
+          -- Import organization (via Ruff)
+          vim.keymap.set('n', '<leader>pi', function()
+            require('conform').format { formatters = { 'ruff_organize_imports' } }
+          end, { buffer = bufnr, desc = 'Organize imports' })
+
+          -- Format with Ruff
+          vim.keymap.set('n', '<leader>pf', function()
+            require('conform').format { formatters = { 'ruff_format' } }
+          end, { buffer = bufnr, desc = 'Format code' })
+        end,
+      })
+    end,
+  },
 }

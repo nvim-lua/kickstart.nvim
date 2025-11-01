@@ -8,7 +8,7 @@ and reorganized into a modular structure.
 For help:
   - Run `:Tutor` to learn Neovim basics
   - Run `:help` to access built-in documentation
-  - Press `<space>sh` to search help with Telescope
+  - Press `<Space>sh` to search help with Telescope
   - Run `:checkhealth` to diagnose issues
   - See ORGANIZATION.md for structure details
 

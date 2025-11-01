@@ -56,3 +56,37 @@ vim.keymap.set('n', '<leader>Q', '<cmd>qa<CR>', { desc = '[Q]uit [A]ll' })
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
+
+-- ========================================================================
+-- BUFFER OPERATIONS (<leader>b)
+-- ========================================================================
+vim.keymap.set('n', '<leader>bd', '<cmd>bd<CR>', { desc = 'Delete buffer' })
+vim.keymap.set('n', '<leader>bD', '<cmd>bd!<CR>', { desc = 'Delete buffer (force)' })
+vim.keymap.set('n', '<leader>bn', '<cmd>bnext<CR>', { desc = 'Next buffer' })
+vim.keymap.set('n', '<leader>bp', '<cmd>bprevious<CR>', { desc = 'Previous buffer' })
+vim.keymap.set('n', '<leader>bo', '<cmd>%bd|e#|bd#<CR>', { desc = 'Delete other buffers' })
+
+-- ========================================================================
+-- WINDOW OPERATIONS (<leader>w)
+-- ========================================================================
+vim.keymap.set('n', '<leader>ww', '<C-w>w', { desc = 'Other window' })
+vim.keymap.set('n', '<leader>wd', '<C-w>c', { desc = 'Delete window' })
+vim.keymap.set('n', '<leader>ws', '<C-w>s', { desc = 'Split window below' })
+vim.keymap.set('n', '<leader>wv', '<C-w>v', { desc = 'Split window right' })
+vim.keymap.set('n', '<leader>wm', '<C-w>_<C-w>|', { desc = 'Maximize window' })
+vim.keymap.set('n', '<leader>w=', '<C-w>=', { desc = 'Balance windows' })
+vim.keymap.set('n', '<leader>wh', '<C-w>h', { desc = 'Go to left window' })
+vim.keymap.set('n', '<leader>wj', '<C-w>j', { desc = 'Go to lower window' })
+vim.keymap.set('n', '<leader>wk', '<C-w>k', { desc = 'Go to upper window' })
+vim.keymap.set('n', '<leader>wl', '<C-w>l', { desc = 'Go to right window' })
+
+-- ========================================================================
+-- UI OPERATIONS (<leader>u)
+-- ========================================================================
+vim.keymap.set('n', '<leader>ul', '<cmd>Lazy<CR>', { desc = 'Open Lazy' })
+vim.keymap.set('n', '<leader>um', '<cmd>Mason<CR>', { desc = 'Open Mason' })
+vim.keymap.set('n', '<leader>ui', vim.show_pos, { desc = 'Inspect position' })
+vim.keymap.set('n', '<leader>uI', '<cmd>InspectTree<CR>', { desc = 'Inspect tree' })
+vim.keymap.set('n', '<leader>un', function()
+  require('noice').cmd 'dismiss'
+end, { desc = 'Dismiss notifications' })

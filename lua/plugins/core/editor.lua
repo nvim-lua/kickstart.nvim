@@ -33,10 +33,64 @@ return {
         defaults = {
           mappings = {
             i = {
+              -- Navigation (consistent with Neo-tree)
+              ['<C-j>'] = require('telescope.actions').move_selection_next,
+              ['<C-k>'] = require('telescope.actions').move_selection_previous,
+              
+              -- Preview scrolling
+              ['<C-d>'] = require('telescope.actions').preview_scrolling_down,
+              ['<C-u>'] = require('telescope.actions').preview_scrolling_up,
+              
+              -- Open actions (consistent with Neo-tree)
+              ['<CR>'] = require('telescope.actions').select_default, -- Open in current window
+              ['<C-x>'] = require('telescope.actions').select_horizontal, -- Open in horizontal split
+              ['<C-v>'] = require('telescope.actions').select_vertical, -- Open in vertical split
+              ['<C-t>'] = require('telescope.actions').select_tab, -- Open in new tab
+              
+              -- Close
+              ['<C-c>'] = require('telescope.actions').close,
+              ['<Esc>'] = require('telescope.actions').close,
+              
+              -- Cycle history
+              ['<C-n>'] = require('telescope.actions').cycle_history_next,
+              ['<C-p>'] = require('telescope.actions').cycle_history_prev,
+              
+              -- Selection
+              ['<Tab>'] = require('telescope.actions').toggle_selection + require('telescope.actions').move_selection_worse,
+              ['<S-Tab>'] = require('telescope.actions').toggle_selection + require('telescope.actions').move_selection_better,
+              
+              -- Send to quickfix
+              ['<C-q>'] = require('telescope.actions').send_to_qflist + require('telescope.actions').open_qflist,
+              ['<M-q>'] = require('telescope.actions').send_selected_to_qflist + require('telescope.actions').open_qflist,
+            },
+            n = {
+              -- Same mappings in normal mode
               ['<C-j>'] = require('telescope.actions').move_selection_next,
               ['<C-k>'] = require('telescope.actions').move_selection_previous,
               ['<C-d>'] = require('telescope.actions').preview_scrolling_down,
               ['<C-u>'] = require('telescope.actions').preview_scrolling_up,
+              
+              ['<CR>'] = require('telescope.actions').select_default,
+              ['<C-x>'] = require('telescope.actions').select_horizontal,
+              ['<C-v>'] = require('telescope.actions').select_vertical,
+              ['<C-t>'] = require('telescope.actions').select_tab,
+              
+              ['q'] = require('telescope.actions').close,
+              ['<Esc>'] = require('telescope.actions').close,
+              
+              ['<Tab>'] = require('telescope.actions').toggle_selection + require('telescope.actions').move_selection_worse,
+              ['<S-Tab>'] = require('telescope.actions').toggle_selection + require('telescope.actions').move_selection_better,
+              
+              ['<C-q>'] = require('telescope.actions').send_to_qflist + require('telescope.actions').open_qflist,
+              ['<M-q>'] = require('telescope.actions').send_selected_to_qflist + require('telescope.actions').open_qflist,
+              
+              -- Vim-like navigation
+              ['j'] = require('telescope.actions').move_selection_next,
+              ['k'] = require('telescope.actions').move_selection_previous,
+              ['gg'] = require('telescope.actions').move_to_top,
+              ['G'] = require('telescope.actions').move_to_bottom,
+              
+              ['?'] = require('telescope.actions').which_key, -- Show help
             },
           },
         },
@@ -88,6 +142,24 @@ return {
     event = 'VimEnter',
     opts = {
       delay = 0,
+      -- Floating window configuration (bottom right)
+      win = {
+        width = { min = 30, max = 60 },  -- Width range for the popup
+        height = { min = 4, max = 0.9 }, -- Max 90% of screen height - fits all items
+        col = 0.99,                       -- Position close to right edge
+        row = 0.95,                       -- Position close to bottom
+        border = 'rounded',               -- Border style
+        padding = { 1, 2 },               -- Padding inside window
+        title = true,                     -- Show title
+        title_pos = 'center',             -- Center the title
+        wo = {
+          winblend = 0,                   -- No transparency (0-100)
+        },
+      },
+      layout = {
+        width = { min = 30 },             -- Minimum column width
+        spacing = 3,                      -- Spacing between columns
+      },
       icons = {
         mappings = vim.g.have_nerd_font,
         keys = vim.g.have_nerd_font and {} or {
@@ -122,13 +194,28 @@ return {
         },
       },
       spec = {
-        { '<leader>Q', group = '[Q]uit' },
-        { '<leader>c', group = '[c]ode' },
-        { '<leader>s', group = '[s]earch' },
-        { '<leader>S', group = '[S]ession' },
-        { '<leader>t', group = '[T]oggle' },
-        { '<leader>x', group = 'diagnostics/quickfi[x]' },
-        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        -- Core groups with icons
+        { '<leader>b', group = '󰊄 buffer', icon = '󰊄' },
+        { '<leader>c', group = ' code', icon = '' },
+        { '<leader>d', group = ' debug', icon = '' },
+        { '<leader>f', group = ' flutter', icon = '' }, -- Only visible in Dart files
+        { '<leader>g', group = ' git', icon = '' },
+        { '<leader>p', group = ' python', icon = '' }, -- Only visible in Python files
+        { '<leader>r', group = '󱘗 rust', icon = '󱘗' }, -- Only visible in Rust files
+        { '<leader>s', group = ' search', icon = '' },
+        { '<leader>S', group = '󱂬 session', icon = '󱂬' },
+        { '<leader>t', group = '󰔡 toggle', icon = '󰔡' },
+        { '<leader>u', group = ' ui', icon = '' },
+        { '<leader>v', group = ' svelte', icon = '' }, -- Only visible in Svelte files
+        { '<leader>w', group = ' window', icon = '' },
+        { '<leader>x', group = '󱖫 diagnostics', icon = '󱖫' },
+        
+        -- Special groups
+        { '<leader>q', desc = '󰁨 Quickfix diagnostics' },
+        { '<leader>Q', desc = '󰗼 Quit all' },
+        
+        -- Git hunks (normal and visual mode)
+        { '<leader>h', group = ' git hunk', mode = { 'n', 'v' }, icon = '' },
       },
     },
   },
