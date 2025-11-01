@@ -107,6 +107,76 @@ return {
   },
 
   -- ========================================================================
+  -- SMOOTH SCROLLING & ANIMATIONS - mini.animate
+  -- ========================================================================
+  -- Provides smooth scrolling and cursor animations for a better visual experience.
+  --
+  -- Features:
+  --   - Smooth scrolling (when using Ctrl+D, Ctrl+U, etc.)
+  --   - Cursor path animation when jumping
+  --   - Window resize animations
+  --   - Window open/close animations
+  --
+  -- All animations are non-blocking and can be customized or disabled independently.
+  -- ========================================================================
+  {
+    'echasnovski/mini.animate',
+    event = 'VeryLazy', -- Load after UI is ready
+    opts = function()
+      -- Don't use animate when scrolling with the mouse
+      local mouse_scrolled = false
+      for _, scroll in ipairs({ 'Up', 'Down' }) do
+        local key = '<ScrollWheel' .. scroll .. '>'
+        vim.keymap.set({ '', 'i' }, key, function()
+          mouse_scrolled = true
+          return key
+        end, { expr = true })
+      end
+
+      local animate = require('mini.animate')
+      return {
+        -- Cursor path animation - shows path when cursor jumps
+        cursor = {
+          enable = true,
+          timing = animate.gen_timing.linear({ duration = 100, unit = 'total' }),
+        },
+        
+        -- Smooth scrolling
+        scroll = {
+          enable = true,
+          timing = animate.gen_timing.linear({ duration = 150, unit = 'total' }),
+          subscroll = animate.gen_subscroll.equal({
+            predicate = function(total_scroll)
+              if mouse_scrolled then
+                mouse_scrolled = false
+                return false
+              end
+              return total_scroll > 1
+            end,
+          }),
+        },
+
+        -- Window resize animation
+        resize = {
+          enable = true,
+          timing = animate.gen_timing.linear({ duration = 50, unit = 'total' }),
+        },
+
+        -- Window open/close animation
+        open = {
+          enable = false, -- Disabled by default as it can be distracting
+          timing = animate.gen_timing.linear({ duration = 150, unit = 'total' }),
+        },
+        
+        close = {
+          enable = false, -- Disabled by default
+          timing = animate.gen_timing.linear({ duration = 150, unit = 'total' }),
+        },
+      }
+    end,
+  },
+
+  -- ========================================================================
   -- ADDITIONAL COMMON PLUGINS
   -- ========================================================================
   -- You can add more common plugins here that should be available across
