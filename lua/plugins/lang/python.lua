@@ -57,11 +57,84 @@ return {
   -- ========================================================================
   -- PYTHON LSP - Language Server Protocol for Python
   -- ========================================================================
-  -- Note: Pyright LSP setup is in init.lua (after lazy.setup) because
-  -- nvim-lspconfig is already loaded there, and we can't re-trigger its
-  -- config function with ft='python'. The autocmd in init.lua will start
-  -- pyright when you open a .py file.
+  -- Pyright LSP is started via autocmd when opening .py files
+  -- This approach works because we set it up after LSP infrastructure loads
   -- ========================================================================
+  {
+    'neovim/nvim-lspconfig',
+    ft = 'python',
+    config = function()
+      -- Python LSP - starts when opening .py files
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'python',
+        once = false,
+        callback = function(args)
+          -- Check if pyright is already attached
+          local clients = vim.lsp.get_clients { bufnr = args.buf, name = 'pyright' }
+          if #clients > 0 then
+            return
+          end
+
+          -- Get capabilities from blink.cmp
+          local capabilities = require('blink.cmp').get_lsp_capabilities()
+
+          local root_dir = vim.fs.root(args.buf, {
+            'pyproject.toml',
+            'setup.py',
+            'setup.cfg',
+            'requirements.txt',
+            'Pipfile',
+            'pyrightconfig.json',
+            '.git',
+          })
+
+          -- Find Python interpreter (prioritize virtual environments)
+          local function find_python()
+            if not root_dir then
+              return nil
+            end
+
+            -- Check common venv locations relative to project root
+            local venv_paths = {
+              root_dir .. '/.venv/bin/python',
+              root_dir .. '/venv/bin/python',
+              root_dir .. '/.env/bin/python',
+              root_dir .. '/env/bin/python',
+            }
+
+            for _, path in ipairs(venv_paths) do
+              if vim.fn.executable(path) == 1 then
+                return path
+              end
+            end
+
+            return nil
+          end
+
+          local python_path = find_python()
+
+          vim.lsp.start {
+            name = 'pyright',
+            cmd = { vim.fn.stdpath 'data' .. '/mason/bin/pyright-langserver', '--stdio' },
+            root_dir = root_dir or vim.fn.getcwd(),
+            capabilities = capabilities,
+            settings = {
+              python = {
+                pythonPath = python_path,
+                analysis = {
+                  typeCheckingMode = 'basic',
+                  autoImportCompletions = true,
+                  autoSearchPaths = true,
+                  useLibraryCodeForTypes = true,
+                  diagnosticMode = 'openFilesOnly',
+                },
+              },
+            },
+          }
+        end,
+      })
+    end,
+  },
 
 
   -- ========================================================================
