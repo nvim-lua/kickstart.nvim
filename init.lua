@@ -98,6 +98,13 @@ vim.g.have_nerd_font = false
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- optionally enable 24-bit colour
+vim.opt.termguicolors = true
+
 -- Make line numbers default
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
@@ -169,9 +176,9 @@ vim.o.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.o.scrolloff = 10
 
--- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
--- instead raise a dialog asking if you wish to save the current file(s)
--- See `:help 'confirm'`
+-- vs cresbezvat na bcrengvba gung jbhyq snvy qhr gb hafnirq punatrf va gur ohssre (yvxr `:d`),
+-- vafgrnq envfr n qvnybt nfxvat vs lbh jvfu gb fnir gur pheerag svyr(f)
+-- Frr `:uryc 'pbasvez'`
 vim.o.confirm = true
 
 -- [[ Basic Keymaps ]]
@@ -183,7 +190,7 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
-
+vim.keymap.set('n', '<C-n>', ':Neotree<CR>', { desc = 'Toggles Neotree' })
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -216,6 +223,16 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
+vim.lsp.config('*', {
+  capabilities = {
+    workspace = {
+      didChangeWatchedFiles = {
+        dynamicRegistration = true,
+      },
+    },
+  },
+})
+
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
 --  See `:help vim.hl.on_yank()`
@@ -238,6 +255,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   end
 end
 
+
 ---@type vim.Option
 local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
@@ -256,7 +274,50 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
-
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require('lualine').setup {
+        options = {
+          theme = 'tomorrow_night',
+        },
+      }
+    end,
+  },
+  {
+    "mason-org/mason-lspconfig.nvim",
+    opts = {},
+    dependencies = {
+        { "mason-org/mason.nvim", opts = {} },
+        "neovim/nvim-lspconfig",
+    },
+  },
+  {
+    'lopi-py/luau-lsp.nvim',
+    opts = {
+      ...,
+    },
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+  },
+  --[[{
+    'nvim-tree/nvim-tree.lua',
+    version = '*',
+    lazy = false,
+    dependencies = {
+      'nvim-tree/nvim-web-devicons',
+    },
+    config = function()
+      require('nvim-tree').setup {
+        view = {
+          width = 25,
+        },
+      }
+    end,
+  },]]
+  --
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -525,7 +586,6 @@ require('lazy').setup({
       --
       -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
       -- and elegantly composed help section, `:help lsp-vs-treesitter`
-
       --  This function gets run when an LSP attaches to a particular buffer.
       --    That is to say, every time a new file is opened that is associated with
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
@@ -981,11 +1041,11 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -1019,6 +1079,69 @@ require('lazy').setup({
     },
   },
 })
+
+vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter' }, {
+  pattern = { 'NvimTree*' },
+  callback = function()
+    vim.opt.guicursor = '' -- Hide the cursor
+  end,
+})
+
+vim.api.nvim_create_autocmd({ 'WinLeave', 'BufWinLeave' }, {
+  pattern = { 'NvimTree*' },
+  callback = function()
+    -- Restore your desired cursor settings for other windows/buffers
+    -- Example: Restore default block cursor for normal mode
+    vim.opt.guicursor = 'n-v-c:block,i-ci-r:ver25,sm:block'
+  end,
+})
+
+vim.lsp.config('luau-lsp', {
+  settings = {
+    ['luau-lsp'] = {
+      completion = {
+        imports = {
+          enabled = true, -- enable auto imports
+        },
+      },
+    },
+  },
+})
+
+require('mason-lspconfig').setup {
+  automatic_enable = {
+    exclude = { 'luau_lsp' },
+  },
+  platform = {
+    type = 'roblox',
+  },
+  types = {
+    roblox_security_level = 'PluginSecurity',
+  },
+  sourcemap = {
+    enabled = true,
+    autogenerate = true, -- automatic generation when the server is initialized
+    rojo_project_file = 'default.project.json',
+    sourcemap_file = 'sourcemap.json',
+  },
+}
+
+require('luau-lsp').setup {
+  plugin = {
+    enabled = true,
+    port = 3667,
+  },
+  fflags = {
+    enable_new_solver = true, -- enables the fflags required for luau's new type solver
+    sync = true, -- sync currently enabled fflags with roblox's published fflags
+    override = { -- override fflags passed to luau
+      LuauTableTypeMaximumStringifierLength = '100',
+    },
+  },
+}
+
+
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
