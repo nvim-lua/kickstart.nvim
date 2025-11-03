@@ -171,6 +171,9 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Save file
 vim.keymap.set('n', '<leader>w', '<cmd>w<CR>', { desc = 'Save file' })
 
+-- Duplicate line (without affecting yank register)
+vim.keymap.set('n', '<leader>d', ':t.<CR>', { desc = 'Duplicate line' })
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
@@ -231,6 +234,41 @@ map('n', '<D-k>', ':m .-2<CR>==', { desc = 'Move line up (Cmd)' })
 map('v', '<D-j>', ":m '>+1<CR>gv=gv", { desc = 'Move selection down (Cmd)' })
 map('v', '<D-k>', ":m '<-2<CR>gv=gv", { desc = 'Move selection up (Cmd)' })
 
+-- Jump to last terminal buffer and enter insert mode
+map('n', '<leader>tt', function()
+  local term_bufs = vim.tbl_filter(function(buf)
+    return vim.bo[buf].buftype == 'terminal'
+  end, vim.api.nvim_list_bufs())
+
+  if #term_bufs > 0 then
+    vim.cmd('buffer ' .. term_bufs[#term_bufs])
+    vim.cmd('startinsert')
+  end
+end, { desc = 'Jump to last terminal buffer' })
+
+-- Zig debug print variable
+map('n', '<leader>pf', function()
+  -- Get the word under cursor
+  local word = vim.fn.expand('<cword>')
+
+  -- Get current line number
+  local line = vim.fn.line('.')
+
+  -- Get current indentation
+  local indent = vim.fn.indent(line)
+  local indent_str = string.rep(' ', indent)
+
+  -- Create the debug print line
+  local debug_line = indent_str .. 'std.debug.print("' .. word .. ': {}\\n", .{' .. word .. '});'
+
+  -- Insert line below and position cursor
+  vim.fn.append(line, debug_line)
+
+  -- Move cursor to the inserted line, at the position after the opening quote
+  vim.fn.cursor(line + 1, indent + 19 + #word)
+  vim.cmd('startinsert')
+end, { desc = 'Zig debug print variable' })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -244,6 +282,9 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
+
+-- Make indent guides match comment color
+vim.api.nvim_set_hl(0, 'IblIndent', { fg = '#161a1f' }) -- RGB 22, 26, 31
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -271,44 +312,6 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  --NOTE: nvim-tree - FQ
-  {
-    'nvim-tree/nvim-tree.lua',
-    dependencies = {
-      'nvim-tree/nvim-web-devicons', -- optional, for file icons
-    },
-    version = '*',
-    lazy = false,
-    config = function()
-      require('nvim-tree').setup {
-        sync_root_with_cwd = true,
-        respect_buf_cwd = true,
-      }
-      -- Optional: Keybinding to toggle nvim-tree
-      vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = 'Toggle File Explorer (nvim-tree)' })
-    end,
-  },
-  -- NOTE: FQ dropbar
-  {
-    'Bekaboo/dropbar.nvim',
-    -- optional, but required for fuzzy finder support
-    dependencies = {
-      'nvim-telescope/telescope-fzf-native.nvim',
-      build = 'make',
-    },
-    config = function()
-      local dropbar_api = require 'dropbar.api'
-      vim.keymap.set('n', '<Leader>;', dropbar_api.pick, { desc = 'Pick symbols in winbar' })
-      vim.keymap.set('n', '[;', dropbar_api.goto_context_start, { desc = 'Go to start of current context' })
-      vim.keymap.set('n', '];', dropbar_api.select_next_context, { desc = 'Select next context' })
-    end,
-  },
-  -- --NOTE: Kanso Theme - FQ
-  -- {
-  --   'webhooked/kanso.nvim',
-  --   lazy = false,
-  --   priority = 1000,
-  -- },
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
