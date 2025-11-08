@@ -534,7 +534,7 @@ vim.api.nvim_create_autocmd('VimLeavePre', {
     for _, vault in ipairs(Config.vaults) do
       os.execute(('rm -rf %q'):format(vault.path .. Config.temp_dir_suffix))
     end
-    Obsidian.close(true)
+    -- Obsidian.close(true)
   end,
 })
 
