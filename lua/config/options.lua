@@ -1,9 +1,5 @@
--- Set <space> as the leader key
--- See `:help mapleader`
---  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-
 -- Make line numbers default
 vim.opt.number = true
 
@@ -56,3 +52,5 @@ vim.opt.updatetime = 300
 vim.opt.expandtab = true
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
+
+vim.opt.virtualedit = "block"

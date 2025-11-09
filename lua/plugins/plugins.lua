@@ -1,16 +1,5 @@
--- Install lazy
-local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-    local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
-  local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
-  if vim.v.shell_error ~= 0 then
-    error('Error cloning lazy.nvim:\n' .. out)
-  end
-end
+return {
 
-vim.opt.rtp:prepend(lazypath)
-
-require('lazy').setup({
   {
     'rebelot/kanagawa.nvim',
     priority = 1000,
@@ -18,6 +7,7 @@ require('lazy').setup({
       vim.cmd.colorscheme "kanagawa-wave"
     end,
   },
+
   {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
@@ -53,6 +43,7 @@ require('lazy').setup({
 --     vim.lsp.enable('pyright')
 --   end,
 --   }
+
   {
     -- handle LSP server installation and management
     -- let's be lazy for now.
@@ -66,6 +57,7 @@ require('lazy').setup({
       require("mason-lspconfig").setup()
     end,
   },
+
   { -- Auto completion engine
     'saghen/blink.cmp',
     dependencies = { 'rafamadriz/friendly-snippets' },
@@ -83,6 +75,7 @@ require('lazy').setup({
       },
     opts_extend = { "sources.default" },
   },
+
   { -- Let lsp recognize vim functions
     "folke/lazydev.nvim",
     ft = "lua", -- only load on lua files
@@ -92,26 +85,12 @@ require('lazy').setup({
       },
     },
   },
-},
-  {
-    ui = {
-    -- If you are using a Nerd Font: set icons to an empty table which will use the
-    -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
-    icons = vim.g.have_nerd_font and {} or {
-    cmd = '⌘',
-    config = '🛠',
-    event = '📅',
-    ft = '📂',
-    init = '⚙',
-    keys = '🗝',
-    plugin = '🔌',
-    runtime = '💻',
-    require = '🌙',
-    source = '📄',
-    start = '🚀',
-    task = '📌',
-    lazy = '💤 ',
-    },
-  },
-})
 
+  {
+    'nvim-telescope/telescope.nvim', tag = '0.1.8',
+     dependencies = { 'nvim-lua/plenary.nvim' },
+     config = function()
+       require('telescope').setup({})
+     end,
+    }
+}
