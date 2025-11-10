@@ -284,7 +284,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 -- Make indent guides match comment color
-vim.api.nvim_set_hl(0, 'IblIndent', { fg = '#161a1f' }) -- RGB 22, 26, 31
+vim.api.nvim_set_hl(0, 'BlinkIndent', { fg = '#2a2f36' }) -- RGB 42, 47, 54 (lighter than before)
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -1166,7 +1166,7 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
