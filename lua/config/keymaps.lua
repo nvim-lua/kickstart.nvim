@@ -4,7 +4,7 @@ map('i', 'jk', '<Esc>', { desc = 'Exit insert mode' })
 -- Clear highlights on search when pressing <C-c> in normal mode
 --  See `:help hlsearch`
 map('n', '<C-c>', '<cmd>nohlsearch<CR>')
-map('n', '<leader><z>', function()
+map('n', '<leader>z', function()
   print("hey")
 end, { desc = "Print hey" })
 -- Keybinds to make split navigation easier.
