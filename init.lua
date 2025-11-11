@@ -738,6 +738,15 @@ require('lazy').setup({
         end,
       })
 
+      -- Override diagnostic handler to prevent URI errors
+      local default_diagnostic_handler = vim.lsp.handlers['textDocument/publishDiagnostics']
+      vim.lsp.handlers['textDocument/publishDiagnostics'] = function(err, result, ctx, config)
+        -- Filter out diagnostics with invalid URIs
+        if result and result.uri and type(result.uri) == 'string' and result.uri ~= '' then
+          return default_diagnostic_handler(err, result, ctx, config)
+        end
+      end
+
       -- Diagnostic Config
       -- See :help vim.diagnostic.Opts
       vim.diagnostic.config {
