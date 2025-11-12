@@ -20,7 +20,7 @@ return {
       terminal_mappings = true,
       persist_size = true,
       persist_mode = true,
-      direction = 'float',
+      direction = 'horizontal',
       close_on_exit = true,
       clear_env = false,
       shell = 'zsh',

@@ -171,6 +171,14 @@ require('lazy').setup({
     'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
     config = function()
       require('guess-indent').setup {}
+
+      -- Customize indentation settings for C++ files
+      vim.cmd [[
+        augroup cpp_indentation
+          autocmd!
+          autocmd FileType cpp setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
+        augroup END
+      ]]
     end,
   },
   -- NOTE: Plugins can also be added by using a table,
