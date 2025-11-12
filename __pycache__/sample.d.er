@@ -1,0 +1,23 @@
+##[pylyzer] succeed c:\users\foo50\appdata\local\nvim\sample.py 1762887677 757
+
+
+
+.json: global::Dict!({{"d"}: {4}, {"b"}: {2}, {"c"}: {3}, {"a"}: {1}})
+
+.sample_func: () -> NoneType
+
+
+
+
+.json: global::Dict!({{"d"}: {4}, {"b"}: {2}, {"c"}: {3}, {"a"}: {1}})
+
+
+
+
+
+.json: global::Dict!({{"d"}: {4}, {"b"}: {2}, {"c"}: {3}, {"a"}: {1}})
+
+
+
+
+
