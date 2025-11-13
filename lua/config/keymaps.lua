@@ -16,4 +16,7 @@ map('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 map('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 map('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- open Oil
 map("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" } )
+-- Change current dir
+map("n", "<leader>cc", "<cmd>cd %:p:h<CR>", { desc = "Change current dir to a current buffer" })
