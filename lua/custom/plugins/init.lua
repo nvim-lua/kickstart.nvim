@@ -6,6 +6,8 @@ return {
   require 'custom.plugins.comment',
   require 'custom.plugins.tabs',
   require 'custom.plugins.copilot',
+  require 'custom.plugins.copilot-chat',
   require 'custom.plugins.neo-tree-config',
   require 'custom.plugins.sleuth',
+  require 'custom.plugins.theme',
 }
