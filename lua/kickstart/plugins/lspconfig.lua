@@ -28,11 +28,6 @@ return {
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
-          -- NOTE: Remember that Lua is a real programming language, and as such it is possible
-          -- to define small helper and utility functions so you don't have to repeat yourself.
-          --
-          -- In this case, we create a function that lets us more easily define mappings specific
-          -- for LSP related items. It sets the mode, buffer and description for us each time.
           local map = function(keys, func, desc, mode)
             mode = mode or 'n'
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
@@ -58,8 +53,6 @@ return {
           --  To jump back, press <C-t>.
           map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
-          -- WARN: This is not Goto Definition, this is Goto Declaration.
-          --  For example, in C this would take you to the header.
           map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
           -- Fuzzy find all the symbols in your current document.
@@ -162,6 +155,12 @@ return {
 
       local servers = {
         pyright = {
+          on_init = function(client)
+            local venv_path = vim.fn.getcwd() .. '/.venv'
+            if vim.fn.isdirectory(venv_path) == 1 then
+              client.config.settings.python.pythonPath = venv_path .. '/bin/python'
+            end
+          end,
           settings = {
             python = {
               analysis = {
