@@ -1,8 +1,3 @@
-
-print("hello, world, ")
-
-print("hello, world, ")
-print("hello sir")
 json = {
     'a' : 1,
     "b" : 2, 
@@ -16,7 +11,7 @@ def sample_func():
 
 print("hello, worldworld")
 print("hello, world, ")
-
+print()
 print("hello, world, ")
 print("hello, world, ")
 json = {
@@ -28,6 +23,7 @@ json = {
 print("file name sample.py")
 if True:
     print("hello, world")
+
 
 ####################################################
 
