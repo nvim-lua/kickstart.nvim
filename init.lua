@@ -206,6 +206,7 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 
 vim.keymap.set('n', '<C-e>', ':Explore<CR>', { desc = 'Open file manager' })
 
+-- Support for russian keyboard layout in normal mode <https://neovim.io/doc/user/russian.html>
 vim.o.langmap =
   'ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz'
 
