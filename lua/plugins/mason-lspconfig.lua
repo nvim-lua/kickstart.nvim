@@ -1,0 +1,54 @@
+
+-- lua/plugins/mason-lspconfig.lua
+return {
+  -- "williamboman/mason-lspconfig.nvim",
+  -- dependencies = {
+  --   "williamboman/mason.nvim",
+  --   "neovim/nvim-lspconfig",
+  -- },
+  -- config = function()
+  --   local mason_lspconfig = require("mason-lspconfig")
+  --   local lspconfig = require("lspconfig")
+  --
+  --   mason_lspconfig.setup({
+  --     ensure_installed = {
+  --       "gopls",
+  --       "vtsls",       -- use vtsls
+  --       "astro",
+  --       "templ",
+  --       "lua_ls",
+  --       "jsonls",
+  --       "tailwindcss",
+  --     },
+  --     automatic_installation = true,
+  --   })
+  --
+  --   mason_lspconfig.setup_handlers({
+  --     -- Default handler for most servers
+  --     function(server_name)
+  --       -- 🚫 don’t start ts_ls at all
+  --       if server_name == "ts_ls" then
+  --         return
+  --       end
+  --       lspconfig[server_name].setup({})
+  --     end,
+  --
+  --     -- Optional: vtsls-specific config
+  --     ["vtsls"] = function()
+  --       lspconfig.vtsls.setup({
+  --         settings = {
+  --           vtsls = {
+  --             autoUseWorkspaceTsdk = true,
+  --           },
+  --           typescript = {
+  --             tsserver = {
+  --               maxTsServerMemory = 4096,
+  --             },
+  --           },
+  --         },
+  --       })
+  --     end,
+  --   })
+  -- end,
+}
+

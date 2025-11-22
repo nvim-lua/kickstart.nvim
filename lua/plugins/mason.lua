@@ -13,7 +13,7 @@ return {
     lazy = false,
     dependencies = { "williamboman/mason.nvim" },
     opts = {
-      ensure_installed = { "gopls", "ts_ls", "templ", "astro" },
+      ensure_installed = { "gopls",  "templ", "astro" },
       automatic_installation = true,
       automatic_setup = false, -- IMPORTANT: don't auto-setup servers
     },
