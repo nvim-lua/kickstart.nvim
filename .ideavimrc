@@ -21,6 +21,7 @@ set NERDTree
 nnoremap <leader><space> :action GotoFile<CR>
 nnoremap <leader>gc :action TextSearchAction<CR>
 nnoremap <leader>e :action ActivateProjectToolWindow<CR>
+nnoremap <leader>cd :action ShowErrorDescription<CR>
 
 nnoremap <leader>cr :action RenameElement<CR>
 nnoremap <leader>bd :action CloseContent<CR>

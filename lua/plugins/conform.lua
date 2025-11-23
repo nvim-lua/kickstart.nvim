@@ -51,6 +51,7 @@ return { -- Autoformat
       fish = { 'fish_indent' },
       yaml = { 'yamlfmt' },
       yml = { 'yamlfmt' },
+      nix = { 'nixfmt' },
     },
   },
 }
