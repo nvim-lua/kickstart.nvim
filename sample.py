@@ -1,24 +1,29 @@
 json = {
-    'a' : 1,
-    "b" : 2, 
-    "c" : 3,
-    "d" : 4,
+    'a': 1,
+    "b": 2,
+    "c": 3,
+    "d": 4,
 }
 print("file name sample.py")
-def sample_func():
+
+
+def sample_fun():
     print(123)
+    print()
+
+
 ####################################################
 
-print("hello, worldworld")
+
 print("hello, world, ")
 print()
 print("hello, world, ")
 print("hello, world, ")
 json = {
-    "a" : 1,
-    "b" : 2,  
-    "c" : 3,
-    "d" : 4,
+    "a": 1,
+    "b": 2,
+    "c": 3,
+    "d": 4,
 }
 print("file name sample.py")
 if True:
@@ -29,10 +34,10 @@ if True:
 
 ####################################################
 json = {
-    "a" : 1,
-    "b" : 2,
-    "c" : 3,
-    "d" : 4,
+    "a": 1,
+    "b": 2,
+    "c": 3,
+    "d": 4,
 }
 print("file name sample.py")
 if True:

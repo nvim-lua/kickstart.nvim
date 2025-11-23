@@ -1,7 +1,12 @@
 return {
-  'nvim-telescope/telescope.nvim', tag = '0.1.8',
+  'nvim-telescope/telescope.nvim',
+	tag = '0.1.8',
   dependencies = {
+
 		{ 'nvim-lua/plenary.nvim' },
+
+    { 'nvim-telescope/telescope-ui-select.nvim' },
+
     {
       'nvim-telescope/telescope-fzf-native.nvim',
       -- `build` is used to run some command when the plugin is installed/updated.
@@ -12,10 +17,21 @@ return {
         return vim.fn.executable 'make' == 1
       end,
     },
-    { 'nvim-telescope/telescope-ui-select.nvim' },
+
 	},
   config = function()
-    require('telescope').setup({})
+    require('telescope').setup({
+			extensions = {
+        ['ui-select'] = {
+          require('telescope.themes').get_dropdown(),
+        },
+      },
+		})
+
+    -- pcall is like try in python
+		pcall(require('telescope').load_extension, 'fzf')
+		pcall(require('telescope').load_extension, 'ui-select')
+
 		local keymap = vim.keymap.set
     local builtin = require 'telescope.builtin'
     keymap('n', '<leader>fh', builtin.help_tags, { desc = '[F]ind [H]elp' })
