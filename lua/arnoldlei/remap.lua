@@ -7,10 +7,10 @@ vim.keymap.set('n', '|', '<cmd>vsplit<CR>', { desc = 'Split window vertically' }
 vim.keymap.set('n', '_', '<cmd>split<CR>', { desc = 'Split window horizontally' })
 
 -- Window navigation
-vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Move to left window' })
-vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move to window below' })
-vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move to window above' })
-vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to right window' })
+-- vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Move to left window' })
+-- vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move to window below' })
+-- vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move to window above' })
+-- vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to right window' })
 
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
@@ -50,10 +50,17 @@ vim.keymap.set('n', '<leader>mr', '<cmd>CellularAutomaton make_it_rain<CR>')
 
 vim.keymap.set('n', '<leader>sf', ':source $HOME/.config/nvim/init.lua <CR>', { desc = 'Source Neovim config' })
 
-vim.keymap.set('n', '<leader><leader>', function()
-  vim.cmd 'so'
-end)
-
 -- Jump to beginning/end of method
 vim.keymap.set('n', '[m', '[m', { desc = 'Jump to beginning of method' })
 vim.keymap.set('n', ']m', ']m', { desc = 'Jump to end of method' })
+
+-- Diagnostic navigation with float
+vim.keymap.set('n', '[d', function()
+  vim.diagnostic.goto_prev()
+  vim.diagnostic.open_float()
+end, { desc = 'Go to previous diagnostic' })
+
+vim.keymap.set('n', ']d', function()
+  vim.diagnostic.goto_next()
+  vim.diagnostic.open_float()
+end, { desc = 'Go to next diagnostic' })

@@ -18,19 +18,19 @@ return {
       harpoon.ui:toggle_quick_menu(harpoon:list())
     end, { desc = 'Harpoon: Toggle quick menu' })
 
-    vim.keymap.set('n', '<leader>h1', function()
+    vim.keymap.set('n', '<C-j>', function()
       harpoon:list():select(1)
     end, { desc = 'Harpoon: Go to file 1' })
 
-    vim.keymap.set('n', '<leader>h2', function()
+    vim.keymap.set('n', '<C-k>', function()
       harpoon:list():select(2)
     end, { desc = 'Harpoon: Go to file 2' })
 
-    vim.keymap.set('n', '<leader>h3', function()
+    vim.keymap.set('n', '<C-l>', function()
       harpoon:list():select(3)
     end, { desc = 'Harpoon: Go to file 3' })
 
-    vim.keymap.set('n', '<leader>h4', function()
+    vim.keymap.set('n', '<C-h>', function()
       harpoon:list():select(4)
     end, { desc = 'Harpoon: Go to file 4' })
 
