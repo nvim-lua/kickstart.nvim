@@ -1,5 +1,3 @@
-local keymap = vim.keymap.set
-
 return {
 
   {
@@ -57,6 +55,7 @@ return {
 
 	{
     "echasnovski/mini.nvim",
+    event = 'VimEnter', -- Loads the plugin when nvim finishes starting up.
     config = function()
       -- Better Around/Inside textobjects
       require("mini.ai").setup { n_lines = 500 }
@@ -70,13 +69,4 @@ return {
     end,
   },
 
-  {
-    "stevearc/oil.nvim",
-    event = 'VimEnter', -- Loads the plugin when nvim finishes starting up.
-    lazy = false,
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		config = function ()
-			require("oil").setup({})
-		end
-  },
 }
