@@ -33,7 +33,6 @@ local theme_module = themes[env_var_nvim_theme] or themes[default_color_scheme]
 require('lazy').setup({
   require(theme_module),
   require 'core.ui',
-
   -- Load mason early so tools are ready for LSP configs
   require 'plugins.mason',
 
@@ -54,6 +53,7 @@ require('lazy').setup({
   require 'plugins.lazygit',
   require 'plugins.aerial',
   require 'plugins.misc',
+  require 'plugins.snack',
 
   -- LSP & companions
   require 'plugins.autocompletion',
@@ -68,6 +68,9 @@ require('lazy').setup({
   -- Debugging / DB (as you had)
   require 'plugins.debug',
   require 'plugins.database',
+
+  require 'plugins.lsp-keymaps',
+  require 'plugins.spectre',
 }, {
   ui = {
     icons = vim.g.have_nerd_font and {} or {

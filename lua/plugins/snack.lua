@@ -20,9 +20,9 @@ return {
       image = {
         enabled = true,       -- force enable even if terminal isn't fully supported
         backend = "magick",   -- fallback backend for images
-        diagnostics = true,   -- keep this on so you can see setup issues
+        diagnostics = false,   -- keep this on so you can see setup issues
         auto_preview = false, -- if you don’t want inline previews on hover
-        view = "image",       -- can be "image", "ascii", or "none"
+        view = "ascii",       -- can be "image", "ascii", or "none"
         max_height = 30,      -- in rows
         max_width = 50,       -- in columns
         use_dither = false,   -- optional: enable dithered rendering
