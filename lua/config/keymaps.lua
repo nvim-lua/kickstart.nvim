@@ -27,3 +27,9 @@ map("n", "<leader>ot", function()
 end)
 
 map("t", "<Esc>", "<C-\\><C-n>", { desc = "Escape to Normal mode in terminal" })
+
+map("v", "<leader>p", '"_dP', { desc = "Replace and paste with blackhole register" })
+
+map("n", "<C-u>", "<C-u>zz", { desc = "Page up and center" })
+
+map("n", "<C-d>", "<C-d>zz", { desc = "Page down and center" })
