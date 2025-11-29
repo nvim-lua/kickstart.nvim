@@ -7,6 +7,8 @@ return {
 
     { 'nvim-telescope/telescope-ui-select.nvim' },
 
+		{ "nvim-telescope/telescope-file-browser.nvim" },
+
     {
       'nvim-telescope/telescope-fzf-native.nvim',
       -- `build` is used to run some command when the plugin is installed/updated.
@@ -31,9 +33,11 @@ return {
     -- pcall is like try in python
 		pcall(require('telescope').load_extension, 'fzf')
 		pcall(require('telescope').load_extension, 'ui-select')
+		pcall(require('telescope').load_extension, 'file_browser')
 
 		local keymap = vim.keymap.set
     local builtin = require 'telescope.builtin'
+    keymap("n", "<leader>fb", ":Telescope file_browser<CR>")
     keymap('n', '<leader>fh', builtin.help_tags, { desc = '[F]ind [H]elp' })
     keymap('n', '<leader>fk', builtin.keymaps, { desc = '[F]ind [K]eymaps' })
     keymap('n', '<leader>ff', builtin.find_files, { desc = '[F]ind [F]iles' })
