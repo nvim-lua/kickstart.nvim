@@ -19,9 +19,6 @@ map("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" } )
 -- Change current dir
 map("n", "<leader>cc", "<cmd>cd %:p:h<CR>", { desc = "Change current dir to a current buffer" })
 
-map("n", "<leader>ot", function()
-end)
-
 map("t", "<Esc>", "<C-\\><C-n>", { desc = "Escape to Normal mode in terminal" })
 
 map("v", "<leader>p", '"_dP', { desc = "Replace and paste with blackhole register" })
