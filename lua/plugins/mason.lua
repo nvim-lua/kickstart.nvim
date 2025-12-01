@@ -1,4 +1,3 @@
-
 -- lua/plugins/mason.lua
 return {
   {
@@ -13,9 +12,9 @@ return {
     lazy = false,
     dependencies = { "williamboman/mason.nvim" },
     opts = {
-      ensure_installed = { "gopls", "ts_ls", "templ", "astro" },
+      ensure_installed = { "gopls", "templ",  "vtsls" }, -- 👈 add this
       automatic_installation = true,
-      automatic_setup = false, -- IMPORTANT: don't auto-setup servers
+      automatic_setup = false,
     },
   },
 }

@@ -71,37 +71,37 @@ return {
         },
       })
 
-      -- ==============================
-      -- TypeScript / JavaScript (ts_ls OR tsserver fallback)
-      -- ==============================
-      local ts_server = lspconfig.ts_ls or lspconfig.tsserver
-      if ts_server then
-        ts_server.setup({})
-      end
-
-      -- ==============================
-      -- Astro (guard if missing)
-      -- ==============================
-      if lspconfig.astro then
-        local function get_typescript_lib()
-          local mason_ts = vim.fs.normalize(
-            "~/.local/share/nvim/mason/packages/typescript-language-server/node_modules/typescript/lib"
-          )
-          if vim.fn.isdirectory(mason_ts) == 1 then return mason_ts end
-
-          local global_ts = (vim.fn.system("npm root -g"):gsub("\n", "")) .. "/typescript/lib"
-          if vim.fn.isdirectory(global_ts) == 1 then return global_ts end
-
-          return vim.fs.normalize(
-            "~/.local/share/nvim/mason/packages/astro-language-server/node_modules/typescript/lib"
-          )
-        end
-
-        lspconfig.astro.setup({
-          init_options = { typescript = { tsdk = get_typescript_lib() } },
-        })
-      end
-
+      -- -- ==============================
+      -- -- TypeScript / JavaScript (ts_ls OR tsserver fallback)
+      -- -- ==============================
+      -- local ts_server = lspconfig.ts_ls or lspconfig.tsserver
+      -- if ts_server then
+      --   ts_server.setup({})
+      -- end
+      --
+      -- -- ==============================
+      -- -- Astro (guard if missing)
+      -- -- ==============================
+      -- if lspconfig.astro then
+      --   local function get_typescript_lib()
+      --     local mason_ts = vim.fs.normalize(
+      --       "~/.local/share/nvim/mason/packages/typescript-language-server/node_modules/typescript/lib"
+      --     )
+      --     if vim.fn.isdirectory(mason_ts) == 1 then return mason_ts end
+      --
+      --     local global_ts = (vim.fn.system("npm root -g"):gsub("\n", "")) .. "/typescript/lib"
+      --     if vim.fn.isdirectory(global_ts) == 1 then return global_ts end
+      --
+      --     return vim.fs.normalize(
+      --       "~/.local/share/nvim/mason/packages/astro-language-server/node_modules/typescript/lib"
+      --     )
+      --   end
+      --
+      --   lspconfig.astro.setup({
+      --     init_options = { typescript = { tsdk = get_typescript_lib() } },
+      --   })
+      -- end
+      --
       -- ==============================
       -- templ (register config if missing)
       -- ==============================

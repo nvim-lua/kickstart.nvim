@@ -53,6 +53,7 @@ return {
 
       -- ✅ Disable project module to avoid error
       opts.config.project = { enable = false }
+      pcall(vim.keymap.del, "n", "g")
     end,
   },
 }
