@@ -121,18 +121,6 @@ require('lazy').setup({
           BS = '<BS> ',
           Space = '<Space> ',
           Tab = '<Tab> ',
-          F1 = '<F1>',
-          F2 = '<F2>',
-          F3 = '<F3>',
-          F4 = '<F4>',
-          F5 = '<F5>',
-          F6 = '<F6>',
-          F7 = '<F7>',
-          F8 = '<F8>',
-          F9 = '<F9>',
-          F10 = '<F10>',
-          F11 = '<F11>',
-          F12 = '<F12>',
         },
       },
 
@@ -197,6 +185,12 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>w=', '<C-w>=', { desc = '[W]indow Equalize' })
       vim.keymap.set('n', '<leader>e', ':Neotree toggle<CR>', { desc = 'Toggle Neotree' })
 
+      -- Комментирование строки на <Probel> + /
+      vim.keymap.set('n', '<leader>/', 'gcc', { remap = true, desc = 'Toggle comment line' })
+
+      -- Комментирование выделения на <Probel> + /
+      vim.keymap.set('v', '<leader>/', 'gc', { remap = true, desc = 'Toggle comment selection' })
+
       vim.keymap.set('n', '<leader>/', function()
         builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
           winblend = 10,
@@ -254,15 +248,41 @@ require('lazy').setup({
 
           map('gri', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
 
-          map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+          map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
-          map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+          map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
           map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
 
           map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
 
           map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
+
+          -- -- Переменная для хранения ID окна (чтобы знать, что закрывать)
+          -- local diagnostic_float = nil
+          --
+          -- -- 1. Логика кнопки gl (Открыть/Закрыть)
+          -- map('gl', function()
+          --   if diagnostic_float and vim.api.nvim_win_is_valid(diagnostic_float) then
+          --     -- Если открыто — закрываем
+          --     vim.api.nvim_win_close(diagnostic_float, true)
+          --     diagnostic_float = nil
+          --   else
+          --     -- Если закрыто — открываем и запоминаем ID
+          --     diagnostic_float = vim.diagnostic.open_float(nil, { focusable = false })
+          --   end
+          -- end, 'Toggle [L]ine Diagnostic')
+
+          -- 2. Автоматическая чистка при переключении файла
+          vim.api.nvim_create_autocmd('BufLeave', {
+            buffer = event.buf, -- Работает только для этого буфера
+            callback = function()
+              if diagnostic_float and vim.api.nvim_win_is_valid(diagnostic_float) then
+                vim.api.nvim_win_close(diagnostic_float, true)
+                diagnostic_float = nil
+              end
+            end,
+          })
 
           ---@param client vim.lsp.Client
           ---@param method vim.lsp.protocol.Method
@@ -297,11 +317,11 @@ require('lazy').setup({
               callback = vim.lsp.buf.clear_references,
             })
 
-            vim.api.nvim_create_autocmd('CursorHold', {
-              callback = function()
-                vim.diagnostic.open_float(nil, { focusable = false })
-              end,
-            })
+            -- vim.api.nvim_create_autocmd('CursorHold', {
+            --   callback = function()
+            --     vim.diagnostic.open_float(nil, { focusable = false })
+            --   end,
+            -- })
 
             vim.api.nvim_create_autocmd('LspDetach', {
               group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
@@ -313,6 +333,10 @@ require('lazy').setup({
           end
 
           if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
+            -- 1. Явно выключаем подсказки при старте
+            vim.lsp.inlay_hint.enable(false, { bufnr = event.buf })
+
+            -- 2. Оставляем твой переключатель (Toggle)
             map('<leader>th', function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
             end, '[T]oggle Inlay [H]ints')
@@ -409,6 +433,10 @@ require('lazy').setup({
         end
       end,
       formatters_by_ft = {
+        javascript = { 'prettier', stop_after_first = true },
+        typescript = { 'prettier', stop_after_first = true },
+        javascriptreact = { 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettier', stop_after_first = true },
         lua = { 'stylua' },
       },
     },
@@ -439,6 +467,11 @@ require('lazy').setup({
     opts = {
       keymap = {
         preset = 'default',
+        -- Tab принимает выбранную подсказку
+        ['<Tab>'] = { 'accept', 'fallback' },
+
+        -- Enter работает как обычно (новая строка), даже если меню открыто
+        ['<CR>'] = { 'fallback' },
       },
 
       appearance = {
