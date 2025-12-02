@@ -351,6 +351,31 @@ require('lazy').setup({
     },
   },
   {
+    'RRethy/vim-illuminate',
+    event = 'VeryLazy',
+    config = function()
+      require('illuminate').configure {
+        delay = 120,
+        providers = { 'lsp', 'treesitter', 'regex' },
+        -- keep other defaults
+      }
+
+      local function set_illuminate_hl()
+        vim.api.nvim_set_hl(0, 'IlluminatedWordText', { underline = true, bg = 'NONE' })
+        vim.api.nvim_set_hl(0, 'IlluminatedWordRead', { underline = true, bg = 'NONE' })
+        vim.api.nvim_set_hl(0, 'IlluminatedWordWrite', { underline = true, bg = 'NONE' })
+      end
+
+      -- set now
+      set_illuminate_hl()
+
+      -- and reset whenever colorscheme changes
+      vim.api.nvim_create_autocmd('ColorScheme', {
+        callback = set_illuminate_hl,
+      })
+    end,
+  },
+  {
     -- NOTE: Yes, you can install new plugins here!
     'mfussenegger/nvim-dap',
     -- NOTE: And you can specify dependencies as well
@@ -546,7 +571,6 @@ require('lazy').setup({
         },
       }
 
-      require('dap-python').setup '/usr/local/bin/python3.12'
       table.insert(require('dap').configurations.python, {
         type = 'python',
         request = 'launch',
@@ -566,7 +590,23 @@ require('lazy').setup({
           PYTHONPATH = '/Users/quandoan/Desktop/odoo-18.0',
         },
       })
-
+      table.insert(require('dap').configurations.python, {
+        type = 'python',
+        request = 'launch',
+        name = 'odoo19 base',
+        program = '/Users/quandoan/Desktop/odoo19/odoo-bin',
+        pythonPath = '/Users/quandoan/Desktop/odoo19/.venv1/bin/python',
+        args = {
+          '-c',
+          'debian/odoo.conf',
+          '-u',
+          'a1_purchase_custom',
+        },
+        justMyCode = false,
+        env = {
+          PYTHONPATH = '/Users/quandoan/Desktop/odoo19',
+        },
+      })
       table.insert(require('dap').configurations.python, {
         type = 'python',
         request = 'launch',
