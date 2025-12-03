@@ -1043,20 +1043,20 @@ require('presence').setup {
 }
 require('colorizer').setup()
 
-local lspconfig = require 'lspconfig'
+-- local lspconfig = require 'lspconfig'
 
 -- lspconfig['pyright'].setup {
 --   trace = 'verbose',
 -- }
 
-require('lspconfig').texlab.setup {}
+-- require('lspconfig').texlab.setup {}
 
-lspconfig['denols'].setup {
-  trace = 'verbose',
-  settings = {
-    lint = false,
-  },
-}
+-- lspconfig['denols'].setup {
+--   trace = 'verbose',
+--   settings = {
+--     lint = false,
+--   },
+-- }
 
 vim.g.markdown_fenced_languages = {
   'ts=typescript',
