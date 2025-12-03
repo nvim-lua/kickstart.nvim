@@ -34,7 +34,7 @@ local function toggle(bufname, open_window_func)
 
 	if bufnr ~= -1 then
 		-- Remove buffer from memory
-		vim.api.nvim_buf_delete(bufnr, { force = false })
+		vim.api.nvim_buf_delete(bufnr, { force = true })
 		-- get window number where a buffer attaches to
 		local wins = vim.fn.win_findbuf(bufnr)
 			for _, win in ipairs(wins) do
