@@ -37,7 +37,6 @@ return {
     keymap('n', '<leader>fh', builtin.help_tags, { desc = '[F]ind [H]elp' })
     keymap('n', '<leader>fk', builtin.keymaps, { desc = '[F]ind [K]eymaps' })
     keymap('n', '<leader>ff', builtin.find_files, { desc = '[F]ind [F]iles' })
-    keymap('n', '<leader>fa', builtin.find_files, {  desc = '[F]ind [A]ll Files' })
     keymap('n', '<leader>fs', builtin.builtin, { desc = '[F]ind Telescope' })
     keymap('n', '<leader>fw', builtin.grep_string, { desc = '[F]ind current [W]ord' })
     keymap('n', '<leader>fg', builtin.live_grep, { desc = '[F]ind by [G]rep' })
@@ -45,6 +44,11 @@ return {
     keymap('n', '<leader>fr', builtin.resume, { desc = '[F]ind [R]esume' })
     keymap('n', '<leader>f.', builtin.oldfiles, { desc = '[F]ind Recent Files ("." for repeat)' })
     keymap('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+    keymap('n', '<leader>/', builtin.current_buffer_fuzzy_find, { desc = '[/] Fuzzily search in curreng buffer' })
+
+    keymap('n', '<leader>fa', function()
+      builtin.find_files { hidden = true }
+		end, { desc = '[F]ind [A]ll Files' })
 
 		keymap('n', '<leader>fn', function()
 			builtin.find_files { cwd = vim.fn.stdpath 'config' }
