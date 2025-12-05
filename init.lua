@@ -809,6 +809,8 @@ require('lazy').setup({
         javascript = { 'prettier' },
         typescript = { 'prettier' },
         typescriptreact = { 'prettier' },
+        markdown = { 'markdownlint' },
+        yaml = { 'prettier' },
       },
     },
   },

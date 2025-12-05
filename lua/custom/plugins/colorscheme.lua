@@ -5,11 +5,12 @@ return {
   config = function()
     vim.o.background = 'dark' -- or 'light'
     vim.cmd.colorscheme 'solarized'
-    vim.keymap.set('n', '<leader>Scl', function()
-      vim.o.background = 'light'
-    end, { desc = '[S]et the [c]olorscheme background [l]ight' })
-    vim.keymap.set('n', '<leader>Scd', function()
-      vim.o.background = 'dark'
-    end, { desc = '[S]et the [c]olorscheme background [d]ark' })
+    vim.keymap.set('n', '<leader>tc', function()
+      if vim.o.background == 'light' then
+        vim.o.background = 'dark'
+      else
+        vim.o.background = 'light'
+      end
+    end, { desc = '[T]oggle the [c]olorscheme background' })
   end,
 }
