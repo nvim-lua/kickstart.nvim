@@ -760,11 +760,17 @@ require('lazy').setup({
         json = { 'prettierd' },
         css = { 'prettierd' },
         yaml = { 'prettierd' },
+        sh = { 'shfmt' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
+      },
+      formatters = {
+        shfmt = {
+          prepend_args = { '-i', '2', '-ci', '-bn' },
+        },
       },
     },
   },
