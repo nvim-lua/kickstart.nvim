@@ -48,8 +48,40 @@ vim.opt.scrolloff = 10
 vim.opt.confirm = true
 
 -- NOTE: My personal key bining
-vim.keymap.set('n', '<leader>l', "yoconsole.log('<Esc>pa', <Esc>pa);<Esc>", { desc = 'log selected value' })
 vim.keymap.set('v', '<leader>l', "yoconsole.log('<Esc>pa', <Esc>pa);<Esc>", { desc = 'log selected value' })
+vim.keymap.set('n', '<leader>e', ':e.<CR>', { desc = 'Open file three' })
+
+-- Function to comment out line(s)
+local function comment_line()
+  local count = vim.v.count + 1
+  local start_line = vim.fn.line '.' -- Get current line number
+
+  -- Check only the first line to determine action
+  local first_line = vim.fn.getline(start_line)
+  local is_commented = first_line:match '^%s*//'
+
+  for i = 0, count - 1 do
+    local line_num = start_line + i
+    local line = vim.fn.getline(line_num)
+    local new_line
+
+    if is_commented then
+      -- Uncomment: remove leading whitespace, //, and optional space after //
+      new_line = line:gsub('^%s*//%s?', '')
+    else
+      -- Comment: add // at the very beginning of the line
+      new_line = '// ' .. line
+    end
+
+    vim.fn.setline(line_num, new_line)
+  end
+
+  -- Move cursor down by count lines
+  vim.cmd('normal! ' .. count .. 'j')
+end
+
+vim.keymap.set('n', '<leader>c', comment_line, { desc = 'Toggle line comment(s)' })
+
 -- NOTE: My personal key bining END
 
 -- Clear highlights on search when pressing <Esc> in normal mode
@@ -581,11 +613,10 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettier' },
+        typescript = { 'prettier' },
+        tsx = { 'prettier' },
+        typescriptreact = { 'prettier' },
       },
     },
   },
