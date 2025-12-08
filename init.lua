@@ -70,6 +70,7 @@ require('lazy').setup({
   require 'plugins.database',
 
   require 'plugins.lsp-keymaps',
+  require 'plugins.trouble',
   require 'plugins.spectre',
 }, {
   ui = {
