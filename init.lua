@@ -670,6 +670,7 @@ require('lazy').setup({
         lua_ls = {
           settings = {
             Lua = {
+              diagnostics = { globals = { 'vim' } },
               runtime = { version = 'LuaJIT' },
               workspace = {
                 checkThirdParty = false,
@@ -1665,3 +1666,10 @@ vim.api.nvim_set_keymap('n', 'Y', 'yy', { noremap = true, silent = true })
 -- Open Neo-tree automatically on startup
 vim.cmd('Neotree show')
 vim.api.nvim_set_keymap('i', '{', '{}<Left>', { noremap = true, silent = true })
+
+vim.keymap.set("n", "<C-S-q>", "<cmd>wq<cr>")
+
+-- Quick splits
+vim.keymap.set('n', '<leader>sv', '<cmd>vsplit<CR>', { desc = 'Vertical split' })
+vim.keymap.set('n', '<leader>sh', '<cmd>split<CR>',  { desc = 'Horizontal split' })
+
