@@ -525,7 +525,7 @@ require('lazy').setup({
       require('telescope').load_extension 'fzf'
       require('telescope').load_extension 'luasnip'
       require('telescope').load_extension 'live_grep_args'
-      require('telescope').load_extension 'coauthors'
+      -- require('telescope').load_extension 'coauthors'
     end,
   },
 
