@@ -540,6 +540,7 @@ require('lazy').setup({
       --
       -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
       -- and elegantly composed help section, `:help lsp-vs-treesitter`
+      local lspconfig = require 'lspconfig'
 
       --  This function gets run when an LSP attaches to a particular buffer.
       --    That is to say, every time a new file is opened that is associated with
@@ -693,6 +694,71 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      local on_attach = function(_, bufnr)
+        local map = function(keys, func, desc, mode)
+          mode = mode or 'n'
+          vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+        end
+        opts.buffer = bufnr
+
+        -- opts.desc = 'Show line diagnostics'
+        -- vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, opts)
+        --
+        -- opts.desc = 'Show documentation for what is under cursor'
+        -- vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+        --
+        -- opts.desc = 'Show LSP definition'
+        -- vim.keymap.set('n', 'gd', '<cmd>Telescope lsp_definitions trim_text=true<cr>', opts)
+
+        -- Rename the variable under your cursor.
+        --  Most Language Servers support renaming across files, etc.
+        map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
+
+        -- Execute a code action, usually your cursor needs to be on top of an error
+        -- or a suggestion from your LSP for this to activate.
+        map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
+
+        -- Find references for the word under your cursor.
+        map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+
+        -- Jump to the implementation of the word under your cursor.
+        --  Useful when your language has ways of declaring types without an actual implementation.
+        map('gri', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+
+        -- Jump to the definition of the word under your cursor.
+        --  This is where a variable was first declared, or where a function is defined, etc.
+        --  To jump back, press <C-t>.
+        map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+
+        -- WARN: This is not Goto Definition, this is Goto Declaration.
+        --  For example, in C this would take you to the header.
+        map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+
+        -- Fuzzy find all the symbols in your current document.
+        --  Symbols are things like variables, functions, types, etc.
+        map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
+
+        -- Fuzzy find all the symbols in your current workspace.
+        --  Similar to document symbols, except searches over your entire project.
+        map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
+
+        -- Jump to the type of the word under your cursor.
+        --  Useful when you're not sure what type a variable is and you want to see
+        --  the definition of its *type*, not where it was *defined*.
+        map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
+      end
+
+      local lspconfig = vim.lsp.config
+      lspconfig('sourcekit', {
+        capabilities = capabilities,
+        on_attach = on_attach,
+        root_dir = function(_, callback)
+          callback(require('lspconfig.util').root_pattern 'Package.swift'(vim.fn.getcwd()) or require('lspconfig.util').find_git_ancestor(vim.fn.getcwd()))
+        end,
+        cmd = { vim.trim(vim.fn.system 'xcrun -f sourcekit-lsp') },
+      })
+
+      vim.lsp.enable 'sourcekit'
       local servers = {
         clangd = {},
         gopls = {},
@@ -705,8 +771,6 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         ts_ls = {},
-        --
-
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -1361,6 +1425,92 @@ require('lazy').setup({
     end,
   },
   {
+    'folke/flash.nvim',
+    event = 'VeryLazy',
+    ---@type Flash.Config
+    opts = {},
+    keys = {
+      {
+        's',
+        mode = { 'n', 'x', 'o' },
+        function()
+          require('flash').jump()
+        end,
+        desc = 'Flash',
+      },
+      {
+        'S',
+        mode = { 'n', 'x', 'o' },
+        function()
+          require('flash').treesitter()
+        end,
+        desc = 'Flash Treesitter',
+      },
+      {
+        'r',
+        mode = 'o',
+        function()
+          require('flash').remote()
+        end,
+        desc = 'Remote Flash',
+      },
+      {
+        'R',
+        mode = { 'o', 'x' },
+        function()
+          require('flash').treesitter_search()
+        end,
+        desc = 'Treesitter Search',
+      },
+      {
+        '<c-s>',
+        mode = { 'c' },
+        function()
+          require('flash').toggle()
+        end,
+        desc = 'Toggle Flash Search',
+      },
+    },
+  },
+  {
+    'wojciech-kulik/xcodebuild.nvim',
+    dependencies = {
+      'MunifTanjim/nui.nvim',
+      'nvim-treesitter/nvim-treesitter', -- (optional) for Quick tests support (required Swift parser)
+    },
+    config = function()
+      require('xcodebuild').setup {
+        -- put some options here or leave it empty to use default settings
+      }
+      vim.keymap.set('n', '<leader>X', '<cmd>XcodebuildPicker<cr>', { desc = 'Show Xcodebuild Actions' })
+      vim.keymap.set('n', '<leader>xf', '<cmd>XcodebuildProjectManager<cr>', { desc = 'Show Project Manager Actions' })
+
+      vim.keymap.set('n', '<leader>xb', '<cmd>XcodebuildBuild<cr>', { desc = 'Build Project' })
+      vim.keymap.set('n', '<leader>xB', '<cmd>XcodebuildBuildForTesting<cr>', { desc = 'Build For Testing' })
+      vim.keymap.set('n', '<leader>xr', '<cmd>XcodebuildBuildRun<cr>', { desc = 'Build & Run Project' })
+
+      vim.keymap.set('n', '<leader>xt', '<cmd>XcodebuildTest<cr>', { desc = 'Run Tests' })
+      vim.keymap.set('v', '<leader>xt', '<cmd>XcodebuildTestSelected<cr>', { desc = 'Run Selected Tests' })
+      vim.keymap.set('n', '<leader>xT', '<cmd>XcodebuildTestClass<cr>', { desc = 'Run Current Test Class' })
+      vim.keymap.set('n', '<leader>x.', '<cmd>XcodebuildTestRepeat<cr>', { desc = 'Repeat Last Test Run' })
+
+      vim.keymap.set('n', '<leader>xl', '<cmd>XcodebuildToggleLogs<cr>', { desc = 'Toggle Xcodebuild Logs' })
+      vim.keymap.set('n', '<leader>xc', '<cmd>XcodebuildToggleCodeCoverage<cr>', { desc = 'Toggle Code Coverage' })
+      vim.keymap.set('n', '<leader>xC', '<cmd>XcodebuildShowCodeCoverageReport<cr>', { desc = 'Show Code Coverage Report' })
+      vim.keymap.set('n', '<leader>xe', '<cmd>XcodebuildTestExplorerToggle<cr>', { desc = 'Toggle Test Explorer' })
+      vim.keymap.set('n', '<leader>xs', '<cmd>XcodebuildFailingSnapshots<cr>', { desc = 'Show Failing Snapshots' })
+
+      vim.keymap.set('n', '<leader>xp', '<cmd>XcodebuildPreviewGenerateAndShow<cr>', { desc = 'Generate Preview' })
+      vim.keymap.set('n', '<leader>x<cr>', '<cmd>XcodebuildPreviewToggle<cr>', { desc = 'Toggle Preview' })
+
+      vim.keymap.set('n', '<leader>xd', '<cmd>XcodebuildSelectDevice<cr>', { desc = 'Select Device' })
+      vim.keymap.set('n', '<leader>xq', '<cmd>Telescope quickfix<cr>', { desc = 'Show QuickFix List' })
+
+      vim.keymap.set('n', '<leader>xx', '<cmd>XcodebuildQuickfixLine<cr>', { desc = 'Quickfix Line' })
+      vim.keymap.set('n', '<leader>xa', '<cmd>XcodebuildCodeActions<cr>', { desc = 'Show Code Actions' })
+    end,
+  },
+  {
     'NickvanDyke/opencode.nvim',
     dependencies = {
       -- Recommended for better prompt input, and required to use opencode.nvim's embedded terminal — otherwise optional
@@ -1370,83 +1520,103 @@ require('lazy').setup({
     opts = {
       -- Your configuration, if any — see lua/opencode/config.lua
     },
-    keys = {
-      -- Recommended keymaps
-      {
-        '<leader>oA',
-        function()
-          require('opencode').ask()
-        end,
-        desc = 'Ask opencode',
-      },
-      {
-        '<leader>oa',
-        function()
-          require('opencode').ask '@cursor: '
-        end,
-        desc = 'Ask opencode about this',
-        mode = 'n',
-      },
-      {
-        '<leader>oa',
-        function()
-          require('opencode').ask '@selection: '
-        end,
-        desc = 'Ask opencode about selection',
-        mode = 'v',
-      },
-      {
-        '<leader>ot',
-        function()
-          require('opencode').toggle()
-        end,
-        desc = 'Toggle embedded opencode',
-      },
-      {
-        '<leader>on',
-        function()
-          require('opencode').command 'session_new'
-        end,
-        desc = 'New session',
-      },
-      {
-        '<leader>oy',
-        function()
-          require('opencode').command 'messages_copy'
-        end,
-        desc = 'Copy last message',
-      },
-      {
-        '<S-C-u>',
-        function()
-          require('opencode').command 'messages_half_page_up'
-        end,
-        desc = 'Scroll messages up',
-      },
-      {
-        '<S-C-d>',
-        function()
-          require('opencode').command 'messages_half_page_down'
-        end,
-        desc = 'Scroll messages down',
-      },
-      {
-        '<leader>op',
-        function()
-          require('opencode').select_prompt()
-        end,
-        desc = 'Select prompt',
-        mode = { 'n', 'v' },
-      },
-      -- Example: keymap for custom prompt
-      {
-        '<leader>oe',
-        function()
-          require('opencode').prompt 'Explain @cursor and its context'
-        end,
-        desc = 'Explain code near cursor',
-      },
-    },
+    config = function()
+      vim.keymap.set({ 'n', 'x' }, '<leader>oa', function()
+        require('opencode').ask('@this: ', { submit = true })
+      end, { desc = 'Ask opencode' })
+      vim.keymap.set({ 'n', 'x' }, '<leader>os', function()
+        require('opencode').select()
+      end, { desc = 'Execute opencode action…' })
+      vim.keymap.set({ 'n', 'x' }, 'ga', function()
+        require('opencode').prompt '@this'
+      end, { desc = 'Add to opencode' })
+      vim.keymap.set({ 'n', 't' }, '<leader>ot', function()
+        require('opencode').toggle()
+      end, { desc = 'Toggle opencode' })
+      vim.keymap.set('n', '<S-C-u>', function()
+        require('opencode').command 'session.half.page.up'
+      end, { desc = 'opencode half page up' })
+      vim.keymap.set('n', '<S-C-d>', function()
+        require('opencode').command 'session.half.page.down'
+      end, { desc = 'opencode half page down' })
+    end,
+    -- keys = {
+    --   -- Recommended keymaps
+    --   {
+    --     '<leader>oA',
+    --     function()
+    --       require('opencode').ask()
+    --     end,
+    --     desc = 'Ask opencode',
+    --   },
+    --   -- {
+    --   --   '<leader>oa',
+    --   --   function()
+    --   --     require('opencode').ask('@this: ', { submit = true })
+    --   --   end,
+    --   --   desc = 'Ask opencode about this',
+    --   --   mode = 'n',
+    --   -- },
+    --   -- {
+    --   --   '<leader>oa',
+    --   --   function()
+    --   --     require('opencode').ask '@selection: '
+    --   --   end,
+    --   --   desc = 'Ask opencode about selection',
+    --   --   mode = 'v',
+    --   -- },
+    --   {
+    --     '<leader>ot',
+    --     function()
+    --       require('opencode').toggle()
+    --     end,
+    --     desc = 'Toggle embedded opencode',
+    --   },
+    --   {
+    --     '<leader>on',
+    --     function()
+    --       require('opencode').command 'session_new'
+    --     end,
+    --     desc = 'New session',
+    --   },
+    --   {
+    --     '<leader>oy',
+    --     function()
+    --       require('opencode').command 'messages_copy'
+    --     end,
+    --     desc = 'Copy last message',
+    --   },
+    --   {
+    --     '<S-C-u>',
+    --     function()
+    --       require('opencode').command 'messages_half_page_up'
+    --     end,
+    --     desc = 'Scroll messages up',
+    --   },
+    --   {
+    --     '<S-C-d>',
+    --     function()
+    --       require('opencode').command 'messages_half_page_down'
+    --     end,
+    --     desc = 'Scroll messages down',
+    --   },
+    --   {
+    --     '<leader>op',
+    --     function()
+    --       require('opencode').select_prompt()
+    --     end,
+    --     desc = 'Select prompt',
+    --     mode = { 'n', 'v' },
+    --   },
+    --   -- Example: keymap for custom prompt
+    --   {
+    --     '<leader>oe',
+    --     function()
+    --       require('opencode').prompt 'Explain @cursor and its context'
+    --     end,
+    --     desc = 'Explain code near cursor',
+    --   },
+    -- },
     -- {
     --   'dmtrKovalenko/fff.nvim',
     --   build = 'cargo build --release',

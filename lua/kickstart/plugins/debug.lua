@@ -23,63 +23,105 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+
+    'wojciech-kulik/xcodebuild.nvim',
   },
   keys = {
     -- Basic debugging keymaps, feel free to change to your liking!
     {
-      '<F5>',
+      '<leader>ee',
       function()
-        require('dap').continue()
+        require('xcodebuild.integrations.dap').build_and_debug()
       end,
-      desc = 'Debug: Start/Continue',
+      desc = 'Build & Debug',
     },
     {
-      '<F1>',
+      '<leader>dr',
       function()
-        require('dap').step_into()
+        require('xcodebuild.integrations.dap').debug_without_build()
       end,
-      desc = 'Debug: Step Into',
+      desc = 'Debug Without Building',
     },
     {
-      '<F2>',
+      '<leader>dt',
       function()
-        require('dap').step_over()
+        require('xcodebuild.integrations.dap').debug_tests()
       end,
-      desc = 'Debug: Step Over',
+      desc = 'Debug Tests',
     },
     {
-      '<F3>',
+      '<leader>dT',
       function()
-        require('dap').step_out()
+        require('xcodebuild.integrations.dap').debug_class_tests()
       end,
-      desc = 'Debug: Step Out',
+      desc = 'Debug Class Tests',
     },
     {
       '<leader>b',
       function()
-        require('dap').toggle_breakpoint()
+        require('xcodebuild.integrations.dap').toggle_breakpoint()
       end,
-      desc = 'Debug: Toggle Breakpoint',
+      desc = 'Toggle Breakpoint',
     },
     {
       '<leader>B',
       function()
-        require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+        require('xcodebuild.integrations.dap').toggle_message_breakpoint()
       end,
-      desc = 'Debug: Set Breakpoint',
+      desc = 'Toggle Message Breakpoint',
     },
-    -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
     {
-      '<F7>',
+      '<leader>dx',
       function()
-        require('dapui').toggle()
+        require('xcodebuild.integrations.dap').terminate_session()
       end,
-      desc = 'Debug: See last session result.',
+      desc = 'Terminate Debugger',
     },
   },
   config = function()
     local dap = require 'dap'
     local dapui = require 'dapui'
+
+    local xcodebuild = require 'xcodebuild.integrations.dap'
+
+    xcodebuild.setup()
+
+    local function setupListeners()
+      local dap = require 'dap'
+      local areSet = false
+
+      dap.listeners.after['event_initialized']['me'] = function()
+        if not areSet then
+          areSet = true
+          vim.keymap.set('n', '<leader>dc', dap.continue, { desc = 'Continue', noremap = true })
+          vim.keymap.set('n', '<leader>dC', dap.run_to_cursor, { desc = 'Run To Cursor' })
+          vim.keymap.set('n', '<leader>ds', dap.step_over, { desc = 'Step Over' })
+          vim.keymap.set('n', '<leader>di', dap.step_into, { desc = 'Step Into' })
+          vim.keymap.set('n', '<leader>do', dap.step_out, { desc = 'Step Out' })
+          vim.keymap.set({ 'n', 'v' }, '<Leader>dh', require('dap.ui.widgets').hover, { desc = 'Hover' })
+          vim.keymap.set({ 'n', 'v' }, '<Leader>de', require('dapui').eval, { desc = 'Eval' })
+        end
+      end
+
+      dap.listeners.after['event_terminated']['me'] = function()
+        if areSet then
+          areSet = false
+          vim.keymap.del('n', '<leader>dc')
+          vim.keymap.del('n', '<leader>dC')
+          vim.keymap.del('n', '<leader>ds')
+          vim.keymap.del('n', '<leader>di')
+          vim.keymap.del('n', '<leader>do')
+          vim.keymap.del({ 'n', 'v' }, '<Leader>dh')
+          vim.keymap.del({ 'n', 'v' }, '<Leader>de')
+        end
+      end
+    end
+    setupListeners()
+    require('dap').defaults.fallback.switchbuf = 'usetab,uselast'
+    vim.keymap.set('n', '<leader>dx', function()
+      xcodebuild.terminate_session()
+      require('dap').listeners.after['event_terminated']['me']()
+    end, { desc = 'Terminate debugger' })
 
     require('mason-nvim-dap').setup {
       -- Makes a best effort to setup the various debuggers with
