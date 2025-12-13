@@ -87,11 +87,11 @@ P.S. You can delete this when you're done too. It's your config now! :)
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+vim.g.mapleader = '`'
+vim.g.maplocalleader = '`'
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -150,7 +150,7 @@ vim.o.splitbelow = true
 --   See `:help lua-options`
 --   and `:help lua-options-guide`
 vim.o.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { tab = '  ', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
 vim.o.inccommand = 'split'
@@ -166,8 +166,45 @@ vim.o.scrolloff = 10
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
+-- Tab settings
+vim.o.tabstop = 2 -- Number of spaces a tab counts for
+vim.o.shiftwidth = 2 -- Number of spaces for auto-indent
+vim.o.expandtab = true -- Convert tabs to spaces
+vim.o.softtabstop = 2 -- Number of spaces for <Tab> key
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
+
+-- Command+C/V/X for copy/paste/cut (Mac style)
+vim.keymap.set('v', '<D-c>', '"+y', { desc = 'Copy to clipboard' })
+vim.keymap.set('n', '<D-v>', '"+p', { desc = 'Paste from clipboard' })
+vim.keymap.set('i', '<D-v>', '<C-r>+', { desc = 'Paste from clipboard' })
+vim.keymap.set('v', '<D-x>', '"+d', { desc = 'Cut to clipboard' })
+
+-- Toggle GitHub Copilot with F16
+local copilot_enabled = true
+vim.keymap.set('n', '<F16>', function()
+  if copilot_enabled then
+    vim.cmd 'Copilot disable'
+    copilot_enabled = false
+    print 'Copilot disabled'
+  else
+    vim.cmd 'Copilot enable'
+    copilot_enabled = true
+    print 'Copilot enabled'
+  end
+end, { desc = 'Toggle GitHub Copilot' })
+vim.keymap.set('i', '<F16>', function()
+  if copilot_enabled then
+    vim.cmd 'Copilot disable'
+    copilot_enabled = false
+    print 'Copilot disabled'
+  else
+    vim.cmd 'Copilot enable'
+    copilot_enabled = true
+    print 'Copilot enabled'
+  end
+end, { desc = 'Toggle GitHub Copilot' })
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
@@ -247,7 +284,15 @@ rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+  {
+    'NMAC427/guess-indent.nvim',
+    opts = {},
+  }, -- Detect tabstop and shiftwidth automatically
+
+  -- GitHub Copilot
+  {
+    'github/copilot.vim',
+  },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -281,6 +326,12 @@ require('lazy').setup({
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
+      current_line_blame = true,
+      current_line_blame_opts = {
+        virt_text = false,
+        delay = 500,
+      },
+      current_line_blame_formatter = '<author>, <author_time:%R>',
     },
   },
 
@@ -426,39 +477,75 @@ require('lazy').setup({
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
-      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-      vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
-      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
+      -- Helper to launch Telescope from a non-Neo-tree window
+      local function smart_telescope_launch(func)
+        return function(...)
+          if vim.bo.filetype == 'neo-tree' then
+            local neotree_win = vim.api.nvim_get_current_win()
+            local wins = vim.api.nvim_list_wins()
+            local target_win = nil
+            for _, win in ipairs(wins) do
+              local config = vim.api.nvim_win_get_config(win)
+              if config.relative == '' then
+                local buf = vim.api.nvim_win_get_buf(win)
+                local ft = vim.api.nvim_get_option_value('filetype', { buf = buf })
+                if ft ~= 'neo-tree' then
+                  target_win = win
+                  break
+                end
+              end
+            end
+
+            if target_win then
+              vim.api.nvim_win_set_width(neotree_win, 30)
+              vim.api.nvim_set_current_win(target_win)
+            else
+              vim.cmd 'vsplit'
+              vim.api.nvim_win_set_width(neotree_win, 30)
+            end
+          end
+          if type(func) == 'function' then
+            func(...)
+          end
+        end
+      end
+
+      vim.keymap.set('n', '<leader>sh', smart_telescope_launch(builtin.help_tags), { desc = '[S]earch [H]elp' })
+      vim.keymap.set('n', '<leader>sk', smart_telescope_launch(builtin.keymaps), { desc = '[S]earch [K]eymaps' })
+      vim.keymap.set('n', '<leader>sf', smart_telescope_launch(builtin.find_files), { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<D-p>', smart_telescope_launch(builtin.find_files), { desc = 'Search Files' })
+      vim.keymap.set('n', '<leader>ss', smart_telescope_launch(builtin.builtin), { desc = '[S]earch [S]elect Telescope' })
+      vim.keymap.set('n', '<leader>sw', smart_telescope_launch(builtin.grep_string), { desc = '[S]earch current [W]ord' })
+      vim.keymap.set('n', '<leader>sg', smart_telescope_launch(builtin.live_grep), { desc = '[S]earch by [G]rep' })
+      vim.keymap.set('n', '<leader>sd', smart_telescope_launch(builtin.diagnostics), { desc = '[S]earch [D]iagnostics' })
+      vim.keymap.set('n', '<leader>sr', smart_telescope_launch(builtin.resume), { desc = '[S]earch [R]esume' })
+      vim.keymap.set('n', '<leader>s.', smart_telescope_launch(builtin.oldfiles), { desc = '[S]earch Recent Files ("." for repeat)' })
+      vim.keymap.set('n', '<leader><leader>', smart_telescope_launch(builtin.buffers), { desc = '[ ] Find existing buffers' })
+      -- search files using command shift f
+      vim.keymap.set('n', '<D-S-f>', smart_telescope_launch(builtin.live_grep), { desc = 'Search by [G]rep' })
       -- Slightly advanced example of overriding default behavior and theme
-      vim.keymap.set('n', '<leader>/', function()
+      vim.keymap.set('n', '<leader>/', smart_telescope_launch(function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
         builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
           winblend = 10,
           previewer = false,
         })
-      end, { desc = '[/] Fuzzily search in current buffer' })
+      end), { desc = '[/] Fuzzily search in current buffer' })
 
       -- It's also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
-      vim.keymap.set('n', '<leader>s/', function()
+      vim.keymap.set('n', '<leader>s/', smart_telescope_launch(function()
         builtin.live_grep {
           grep_open_files = true,
           prompt_title = 'Live Grep in Open Files',
         }
-      end, { desc = '[S]earch [/] in Open Files' })
+      end), { desc = '[S]earch [/] in Open Files' })
 
       -- Shortcut for searching your Neovim configuration files
-      vim.keymap.set('n', '<leader>sn', function()
+      vim.keymap.set('n', '<leader>sn', smart_telescope_launch(function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
-      end, { desc = '[S]earch [N]eovim files' })
+      end), { desc = '[S]earch [N]eovim files' })
     end,
   },
 
@@ -672,7 +759,7 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        -- gopls = {},
+        gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -716,6 +803,8 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'prettier', -- Used to format JSON, JavaScript, etc.
+        'goimports', -- Used to format Go code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -768,6 +857,9 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        json = { 'prettier' },
+        jsonc = { 'prettier' },
+        go = { 'goimports' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -835,7 +927,8 @@ require('lazy').setup({
         -- <c-k>: Toggle signature help
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
-        preset = 'default',
+        preset = 'enter',
+        ['<Tab>'] = { 'select_and_accept', 'fallback' },
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -876,25 +969,15 @@ require('lazy').setup({
     },
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
+  -- Using Lazy
+  {
+    'navarasu/onedark.nvim',
+    priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = false }, -- Disable italics in comments
-        },
+      require('onedark').setup {
+        style = 'darker',
       }
-
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      require('onedark').load()
     end,
   },
 
@@ -919,24 +1002,40 @@ require('lazy').setup({
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
 
-      -- Simple and easy statusline.
-      --  You could remove this setup call if you don't like it,
-      --  and try some other statusline plugin
-      local statusline = require 'mini.statusline'
-      -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
-
-      -- You can configure sections in the statusline by overriding their
-      -- default behavior. For example, here we set the section for
-      -- cursor location to LINE:COLUMN
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return '%2l:%-2v'
-      end
-
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
+  },
+
+  -- Statusline with git blame
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {
+      options = {
+        icons_enabled = vim.g.have_nerd_font,
+        theme = 'auto',
+        component_separators = '|',
+        section_separators = '',
+      },
+      sections = {
+        lualine_c = {
+          'filename',
+          {
+            function()
+              local blame = vim.b.gitsigns_blame_line
+              if blame then
+                return blame
+              end
+              return ''
+            end,
+            cond = function()
+              return vim.b.gitsigns_blame_line ~= nil
+            end,
+          },
+        },
+      },
+    },
   },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
@@ -944,7 +1043,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'json', 'jsonc', 'jinja' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -976,8 +1075,8 @@ require('lazy').setup({
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
