@@ -208,17 +208,29 @@ return {
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
+        biome = {},
         clangd = {},
         helm_ls = {},
-        jsonls = {
-          init_options = {
-            provideFormatter = true,
-          },
-        },
+        -- this is extracted from vscode i cant find a way to deactivete the format on save
+        -- jsonls = {
+        --   capabilities = {
+        --     init_options = {
+        --       provideFormatter = false,
+        --     },
+        --   },
+        -- },
         cssls = {},
         eslint = {},
         bashls = {},
-        vtsls = {},
+        -- deno = {},
+        vtsls = {
+          javascript = {
+            preferences = {
+              importModuleSpecifier = 'relative',
+              jsxAttributeCompletionStyle = 'auto',
+            },
+          },
+        },
         nginx_language_server = {},
         gitlab_ci_ls = {},
         lua_ls = {
@@ -235,6 +247,7 @@ return {
             },
           },
         },
+        dockerls = {},
       }
 
       -- Ensure the servers and tools above are installed
