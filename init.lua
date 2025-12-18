@@ -686,17 +686,6 @@ require('lazy').setup({
           filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
         },
         -- gopls = {},
-        pyright = {
-          settings = {
-            python = {
-              analysis = {
-                autoSearchPaths = true,
-                diagnosticMode = 'workspace',
-                useLibraryCodeForTypes = true,
-              },
-            },
-          },
-        },
         rust_analyzer = {
           settings = {
             ['rust-analyzer'] = {
@@ -1294,6 +1283,8 @@ require('lazy').setup({
     },
   },
 })
+
+vim.lsp.enable('ty')
 
 vim.keymap.set('n', '<leader>uc', function()
   local start = vim.fn.line '.'
