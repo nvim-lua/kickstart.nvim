@@ -1,6 +1,17 @@
 return {
   {
     'milanglacier/minuet-ai.nvim',
+
+    cond = function()
+      if vim.fn.executable 'ollama' ~= 1 then
+        vim.schedule(function()
+          vim.notify('minuet-ai.nvim disabled: ollama not found', vim.log.levels.INFO)
+        end)
+        return false
+      end
+      return true
+    end,
+
     config = function()
       require('minuet').setup {
         virtualtext = {
