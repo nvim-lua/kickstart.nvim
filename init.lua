@@ -1,4 +1,4 @@
---[[
+﻿--[[
 
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
@@ -478,6 +478,7 @@ require('lazy').setup({
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
+    version = 'v2.*',
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
@@ -680,9 +681,15 @@ require('lazy').setup({
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
         --
-        -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
-        --
+        -- But for many setups, the LSP (`tsserver`) will work just fine
+        -- tsserver = {},
+
+        tsserver = {},
+        eslint = {},
+        html = {},
+        cssls = {},
+        jsonls = {},
+        tailwindcss = {},
 
         lua_ls = {
           -- cmd = { ... },
@@ -713,9 +720,17 @@ require('lazy').setup({
       --
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
+      local mason_map = {
+        tsserver = 'typescript-language-server',
+      }
+
       local ensure_installed = vim.tbl_keys(servers or {})
+      ensure_installed = vim.tbl_map(function(server)
+        return mason_map[server] or server
+      end, ensure_installed)
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'prettier', -- Web formatter
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -768,6 +783,18 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        javascript = { 'prettier' },
+        javascriptreact = { 'prettier' },
+        typescript = { 'prettier' },
+        typescriptreact = { 'prettier' },
+        json = { 'prettier' },
+        jsonc = { 'prettier' },
+        yaml = { 'prettier' },
+        markdown = { 'prettier' },
+        html = { 'prettier' },
+        css = { 'prettier' },
+        scss = { 'prettier' },
+        less = { 'prettier' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -894,12 +921,105 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'tokyonight-storm'
     end,
   },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+
+  { -- Yazi file manager integration
+    'mikavilpas/yazi.nvim',
+    version = '*',
+    dependencies = {
+      { 'nvim-lua/plenary.nvim', lazy = true },
+    },
+    keys = {
+      {
+        '-',
+        '<cmd>Yazi<cr>',
+        desc = 'Open Yazi',
+        mode = 'n',
+      },
+    },
+    opts = {
+      open_for_directories = false,
+      floating_window_scaling_factor = 0.9,
+    },
+  },
+
+  { -- Auto pairs for brackets/quotes
+    'windwp/nvim-autopairs',
+    event = 'InsertEnter',
+    opts = {},
+  },
+
+  { -- Colorize CSS/Hex colors
+    'NvChad/nvim-colorizer.lua',
+    event = 'BufReadPre',
+    opts = {
+      filetypes = { 'css', 'scss', 'less', 'html', 'tsx', 'jsx' },
+      user_default_options = {
+        tailwind = true,
+      },
+    },
+  },
+
+  { -- Tailwind class helpers
+    'luckasRanarison/tailwind-tools.nvim',
+    name = 'tailwind-tools',
+    event = 'BufReadPre',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+      'neovim/nvim-lspconfig',
+    },
+    opts = {
+      document_color = {
+        enabled = true,
+      },
+    },
+  },
+
+  { -- VSCode-like indent guides
+    'lukas-reineke/indent-blankline.nvim',
+    main = 'ibl',
+    event = 'BufReadPre',
+    opts = {
+      indent = { char = '│' },
+      scope = { enabled = true },
+    },
+  },
+
+  { -- Minimal statusline
+    'nvim-lualine/lualine.nvim',
+    event = 'VimEnter',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {
+      options = {
+        theme = 'tokyonight',
+        globalstatus = true,
+        section_separators = '',
+        component_separators = '',
+      },
+      sections = {
+        lualine_a = { 'mode' },
+        lualine_b = { 'branch' },
+        lualine_c = { { 'filename', path = 1 } },
+        lualine_x = { 'diagnostics' },
+        lualine_y = { 'filetype' },
+        lualine_z = { 'location' },
+      },
+    },
+  },
+
+  { -- Sticky context like VSCode breadcrumbs
+    'nvim-treesitter/nvim-treesitter-context',
+    event = 'BufReadPre',
+    opts = {
+      max_lines = 3,
+      trim_scope = 'outer',
+    },
+  },
 
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
@@ -919,21 +1039,6 @@ require('lazy').setup({
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
 
-      -- Simple and easy statusline.
-      --  You could remove this setup call if you don't like it,
-      --  and try some other statusline plugin
-      local statusline = require 'mini.statusline'
-      -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
-
-      -- You can configure sections in the statusline by overriding their
-      -- default behavior. For example, here we set the section for
-      -- cursor location to LINE:COLUMN
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return '%2l:%-2v'
-      end
-
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
@@ -944,7 +1049,28 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = {
+        'bash',
+        'c',
+        'css',
+        'diff',
+        'dockerfile',
+        'html',
+        'javascript',
+        'json',
+        'jsonc',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'toml',
+        'tsx',
+        'typescript',
+        'vim',
+        'vimdoc',
+        'yaml',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
