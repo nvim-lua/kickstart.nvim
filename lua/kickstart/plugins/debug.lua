@@ -135,6 +135,28 @@ return {
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
     dapui.setup {
+      layouts = {
+        {
+          -- The Sidebar (Left)
+          elements = {
+            { id = 'scopes', size = 0.25 },
+            { id = 'breakpoints', size = 0.25 },
+            { id = 'stacks', size = 0.25 },
+            { id = 'watches', size = 0.25 },
+          },
+          position = 'left',
+          size = 40,
+        },
+        {
+          -- The Bottom Tray
+          -- REMOVED "console" from here
+          elements = {
+            { id = 'repl', size = 1.0 },
+          },
+          position = 'bottom',
+          size = 10,
+        },
+      },
       -- Set icons to characters that are more likely to work in every terminal.
       --    Feel free to remove or use ones that you like more! :)
       --    Don't feel like these are good choices.
@@ -161,7 +183,7 @@ return {
     dap.defaults.fallback.exception_breakpoints = { 'Notice', 'Warning', 'Error', 'Exception' }
 
     -- Install golang specific config
-    require('dap-go').setup{
+    require('dap-go').setup {
       delve = {
         detached = vim.fn.has 'win32' == 0,
       },

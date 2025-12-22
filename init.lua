@@ -115,24 +115,6 @@ require('lazy').setup({
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
-  { -- Adds git related signs to the gutter, as well as utilities for managing changes
-    'lewis6991/gitsigns.nvim',
-    opts = {
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
-    },
-  },
-
-  {
-    -- Autocompletion
-    'hrsh7th/nvim-cmp',
-    dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
-  },
 
   -- Useful plugin to show you pending keybinds.
   {
@@ -276,6 +258,18 @@ require('lazy').setup({
         --   },
         -- },
         -- pickers = {}
+        pickers = {
+          live_grep = {
+            file_ignore_patterns = { 'node_modules', '.git', '.venv' },
+            additional_args = function(_)
+              return { '--hidden' }
+            end,
+          },
+          find_files = {
+            file_ignore_patterns = { 'node_modules', '.git', '.venv' },
+            hidden = true,
+          },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -539,6 +533,8 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      local mason_packages = vim.fn.stdpath 'data' .. '/mason/packages'
+      local volar_path = mason_packages .. '/vue-language-server/node_modules/@vue/language-server'
       local servers = {
         clangd = {
           cmd = {
@@ -562,7 +558,39 @@ require('lazy').setup({
             '--log=error',
           },
         },
-        gopls = {},
+        gopls = {
+          settings = {
+            gopls = {
+              gofumpt = true, -- A stricter gofmt
+              codelenses = {
+                gc_details = false,
+                generate = true,
+                regenerate_cgo = true,
+                run_govulncheck = true,
+                test = true,
+                tidy = true,
+                upgrade_dependency = true,
+                vendor = true,
+              },
+              hints = {
+                assignVariableTypes = true,
+                compositeLiteralFields = true,
+                compositeLiteralTypes = true,
+                constantValues = true,
+                functionTypeParameters = true,
+                parameterNames = true,
+                rangeVariableTypes = true,
+              },
+              analyses = {
+                unusedparams = true,
+                shadow = true,
+              },
+              completeUnimported = true,
+              staticcheck = true,
+              usePlaceholders = true,
+            },
+          },
+        },
         dart = {
           force = true,
         },
@@ -575,13 +603,11 @@ require('lazy').setup({
         dockerls = {},
         -- gradle_ls = {},
         pyright = {},
-        ts_ls = {},
         html = {},
         jsonls = {},
         -- jdtls = {},
         -- rust_analyzer = {},
         marksman = {},
-        -- volar = {},
         yamlls = {},
         lua_ls = {
           settings = {
@@ -596,6 +622,30 @@ require('lazy').setup({
         },
         tailwindcss = {},
       }
+
+      local vue_language_server_path = vim.fn.expand '$MASON/packages' .. '/vue-language-server' .. '/node_modules/@vue/language-server'
+      local tsserver_filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' }
+      local vue_plugin = {
+        name = '@vue/typescript-plugin',
+        location = vue_language_server_path,
+        languages = { 'vue' },
+        configNamespace = 'typescript',
+      }
+      local vtsls_config = {
+        settings = {
+          vtsls = {
+            tsserver = {
+              globalPlugins = {
+                vue_plugin,
+              },
+            },
+          },
+        },
+        filetypes = tsserver_filetypes,
+      }
+
+      vim.lsp.config('vtsls', vtsls_config)
+      vim.lsp.enable { 'vtsls' }
 
       -- Ensure the servers and tools above are installed
       --
@@ -907,7 +957,6 @@ require('lazy').setup({
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  require 'kickstart.plugins.autoformat',
   require 'kickstart.plugins.debug',
 
   -- NOTE: The import below automatically adds your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -1006,3 +1055,28 @@ end, { desc = '[Q]uickfix [G]itdiff [V]iew (context-aware)' })
 
 -- Quickfix with diagnostics
 vim.keymap.set('n', '<leader>qd', vim.diagnostic.setloclist, { desc = 'Open [Q]uickfix [D]iagnostic list' })
+
+-- Create an autocommand to clear ANSI color codes from the DAP REPL
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'dap-repl',
+  callback = function()
+    -- Set an autocommand to clean the buffer whenever it's updated
+    vim.api.nvim_create_autocmd('TextChanged', {
+      buffer = vim.api.nvim_get_current_buf(),
+      callback = function()
+        local buf = vim.api.nvim_get_current_buf()
+        local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+        local cleaned_lines = {}
+
+        for _, line in ipairs(lines) do
+          -- Regex to find and remove ANSI escape sequences
+          local cleaned = line:gsub('\27%[[0-9;]*m', '')
+          table.insert(cleaned_lines, cleaned)
+        end
+
+        -- Only update if changes were actually made to avoid infinite loops
+        vim.api.nvim_buf_set_lines(buf, 0, -1, false, cleaned_lines)
+      end,
+    })
+  end,
+})
