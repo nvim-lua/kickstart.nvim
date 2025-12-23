@@ -43,17 +43,17 @@ end, { desc = 'Copy filename' })
 
 require('guess-indent').setup {}
 
-local lspconfig = require 'lspconfig'
-lspconfig.ruby_lsp.setup {
-  init_options = {
-    formatter = 'standard',
-    linters = { 'standard' },
-    addonSettings = {
-      ['Ruby LSP Rails}'] = {
-        enablePendingMigrtationsPrompt = false,
-      },
-    },
-  },
-}
+-- local lspconfig = require 'lspconfig'
+-- lspconfig.ruby_lsp.setup {
+--   init_options = {
+--     formatter = 'standard',
+--     linters = { 'standard' },
+--     addonSettings = {
+--       ['Ruby LSP Rails}'] = {
+--         enablePendingMigrtationsPrompt = false,
+--       },
+--     },
+--   },
+-- }
 
 return {}
