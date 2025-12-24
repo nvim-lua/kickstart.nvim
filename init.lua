@@ -43,8 +43,23 @@ require('lazy').setup({
   'voldikss/vim-floaterm',
   'tpope/vim-fugitive', -- Git wrapper for vim
   'rhysd/conflict-marker.vim', -- weapon to fight against merge conflicts
+  { 'kylechui/nvim-surround', config = true },
   { 'numToStr/Comment.nvim', opts = {} },
   'rhysd/git-messenger.vim', -- Shows commit message under cursor
+  {
+    'jackMort/ChatGPT.nvim',
+    event = 'VeryLazy',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'MunifTanjim/nui.nvim',
+      'nvim-telescope/telescope.nvim',
+    },
+    config = function()
+      require('chatgpt').setup {
+        api_key_cmd = 'echo $OPENAI_API_KEY',
+      }
+    end,
+  },
   {
     'lewis6991/gitsigns.nvim', -- Similar to fugitive, but adds additiona functionality
     event = 'VeryLazy',
@@ -74,7 +89,12 @@ require('lazy').setup({
       'nvim-telescope/telescope.nvim',
     },
   },
-
+  {
+    'windwp/nvim-autopairs',
+    config = function()
+      require('nvim-autopairs').setup {}
+    end,
+  },
   -- INFO: Enhance Editor Experience
   {
     'iamcco/markdown-preview.nvim', -- Markdown previewer
@@ -124,14 +144,44 @@ require('lazy').setup({
   },
   'mg979/vim-visual-multi', -- Enable multicursor
   {
-      "nvim-neo-tree/neo-tree.nvim",
-      branch = "v3.x",
-      dependencies = {
-        "nvim-lua/plenary.nvim",
-        "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-        "MunifTanjim/nui.nvim",
-        -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
-      }
+    'nvim-neo-tree/neo-tree.nvim',
+    branch = 'v3.x',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-tree/nvim-web-devicons',
+      'MunifTanjim/nui.nvim',
+    },
+    opts = {
+      filesystem = {
+        filtered_items = {
+          visible = false, -- fully hide
+          hide_dotfiles = true,
+          hide_gitignored = true,
+
+          hide_by_name = {
+            '.git',
+            '.elc',
+          },
+
+          hide_by_pattern = {
+            '*.uid', -- ✅ correct
+            'node_modules',
+          },
+        },
+      },
+    },
+  },
+  {
+    'akinsho/bufferline.nvim',
+    version = '*',
+    dependencies = 'nvim-tree/nvim-web-devicons',
+    opts = {
+      options = {
+        diagnostics = 'nvim_lsp',
+        show_buffer_close_icons = false,
+        show_close_icon = false,
+      },
+    },
   },
   'nvim-tree/nvim-web-devicons', -- Add fancy icons
   -- {
@@ -167,22 +217,22 @@ require('lazy').setup({
     ---@type Flash.Config
     opts = {},
     keys = {
-      {
-        's',
-        mode = { 'n', 'x', 'o' },
-        function()
-          require('flash').jump()
-        end,
-        desc = 'Flash',
-      },
-      {
-        'S',
-        mode = { 'n', 'x', 'o' },
-        function()
-          require('flash').treesitter()
-        end,
-        desc = 'Flash Treesitter',
-      },
+      -- {
+      --   's',
+      --   mode = { 'n', 'x', 'o' },
+      --   function()
+      --     require('flash').jump()
+      --   end,
+      --   desc = 'Flash',
+      -- },
+      -- {
+      --   'S',
+      --   mode = { 'n', 'x', 'o' },
+      --   function()
+      --     require('flash').treesitter()
+      --   end,
+      --   desc = 'Flash Treesitter',
+      -- },
       {
         'r',
         mode = 'o',
@@ -247,7 +297,7 @@ require('lazy').setup({
       require('lualine').setup {
         options = {
           icons_enabled = true,
-          theme = 'onedark',
+          theme = 'gruvbox-material',
           component_separators = '|',
           section_separators = '',
           ignore_focus = {
@@ -481,6 +531,7 @@ require('lazy').setup({
       'nvim-telescope/telescope-live-grep-args.nvim', -- Enable passing arguments to ripgrep
     },
     config = function()
+      local actions = require 'telescope.actions'
       require('telescope').setup {
         defaults = {
           prompt_prefix = '🔍 ',
@@ -496,6 +547,18 @@ require('lazy').setup({
           },
           path_display = {
             truncate = 3,
+          },
+          mappings = {
+            i = {
+              ['<C-t>'] = actions.select_tab, -- open in new tab
+              ['<C-v>'] = actions.select_vertical, -- open in vsplit
+              ['<C-x>'] = actions.select_horizontal, -- open in split
+            },
+            n = {
+              ['<C-t>'] = actions.select_tab,
+              ['<C-v>'] = actions.select_vertical,
+              ['<C-x>'] = actions.select_horizontal,
+            },
           },
         },
         pickers = {
@@ -670,7 +733,6 @@ require('lazy').setup({
         lua_ls = {
           settings = {
             Lua = {
-              diagnostics = { globals = { 'vim' } },
               runtime = { version = 'LuaJIT' },
               workspace = {
                 checkThirdParty = false,
@@ -682,9 +744,17 @@ require('lazy').setup({
               completion = {
                 callSnippet = 'Replace',
               },
+              diagnostics = {
+                -- Get the language server to recognize the `vim` global
+                globals = {
+                  'vim',
+                  'require',
+                },
+              },
             },
           },
         },
+        rust_analyzer = {},
       }
 
       -- PERF:
@@ -966,9 +1036,9 @@ require('lazy').setup({
         end
         require('conform').format { async = true, lsp_fallback = true, range = range }
       end, { range = true })
-      vim.keymap.set('', '<leader>f', function()
+      vim.keymap.set('', '<leader>fa', function()
         require('conform').format { async = true, lsp_fallback = true }
-      end)
+      end, { desc = '[F]ormat [a]ll' })
     end,
   },
   {
@@ -1028,6 +1098,8 @@ require('lazy').setup({
             'vimdoc',
             'xml',
             'yaml',
+            'rust', -- add this if you want it for Rust
+            -- add any others: 'javascript', 'typescript', etc
           },
 
           -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
@@ -1043,10 +1115,10 @@ require('lazy').setup({
           incremental_selection = {
             enable = true,
             keymaps = {
-              init_selection = '<c-space>',
-              node_incremental = '<c-space>',
-              scope_incremental = '<c-s>',
-              node_decremental = '<c-backspace>',
+              init_selection = '<M-space>',
+              node_incremental = '<M-space>',
+              -- scope_incremental = '<C-s>',
+              node_decremental = '<M-backspace>',
             },
           },
           textobjects = {
@@ -1334,8 +1406,8 @@ vim.opt.cursorline = true
 vim.opt.colorcolumn = '100'
 
 -- Prefer spaces of 2 over tabs
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 
 -- Render trailing spaces
@@ -1664,12 +1736,54 @@ vim.api.nvim_create_autocmd('FileType', {
 -- Remap copy line
 vim.api.nvim_set_keymap('n', 'Y', 'yy', { noremap = true, silent = true })
 -- Open Neo-tree automatically on startup
-vim.cmd('Neotree show')
+-- vim.cmd 'Neotree show'
 vim.api.nvim_set_keymap('i', '{', '{}<Left>', { noremap = true, silent = true })
 
-vim.keymap.set("n", "<C-S-q>", "<cmd>wq<cr>")
+vim.keymap.set('n', '<C-w>', '<cmd>wqa<cr>')
 
 -- Quick splits
 vim.keymap.set('n', '<leader>sv', '<cmd>vsplit<CR>', { desc = 'Vertical split' })
-vim.keymap.set('n', '<leader>sh', '<cmd>split<CR>',  { desc = 'Horizontal split' })
+vim.keymap.set('n', '<leader>sh', '<cmd>split<CR>', { desc = 'Horizontal split' })
 
+local ai_enabled = true
+
+-- AI toggle
+local ai_enabled = true
+vim.keymap.set('n', '<leader>at', function()
+  ai_enabled = not ai_enabled
+  print(ai_enabled and 'AI enabled' or 'AI disabled')
+end, { desc = 'Toggle AI' })
+
+-- Safe wrapper
+local function ai_safe(cmd)
+  return function()
+    if not ai_enabled then
+      print 'AI is disabled'
+      return
+    end
+    vim.cmd(cmd)
+  end
+end
+
+-- Keymaps using safe wrapper
+vim.keymap.set('n', '<leader>ai', ai_safe 'ChatGPT', { desc = 'Open ChatGPT UI' })
+vim.keymap.set('v', '<leader>ac', ai_safe 'ChatGPTEditWithInstruction', { desc = 'AI edit code' })
+vim.keymap.set('v', '<leader>ae', ai_safe 'ChatGPTExplain', { desc = 'Explain code' })
+
+-- creates a new tab
+vim.keymap.set('n', '<leader>tn', ':tabnew<CR>', { desc = 'New tab' })
+-- closes a tab
+vim.keymap.set('n', '<leader>tc', ':tabclose<CR>', { desc = 'Close tab' })
+
+-- kills floaterms
+vim.keymap.set('n', '<leader>fk', ':FloatermKill!<CR>', { desc = 'Kill all floaterms' })
+
+vim.keymap.set('x', 'S', '<Plug>(nvim-surround-visual)', { remap = true })
+
+-- delete by word with ctrl backspace
+vim.keymap.set('i', '<C-BS>', '<C-w>', { noremap = true })
+vim.keymap.set('c', '<C-BS>', '<C-w>', { noremap = true })
+
+-- switch buffers quicker with shift+tab
+vim.keymap.set('n', '<Tab>', '<cmd>BufferLineCycleNext<CR>')
+vim.keymap.set('n', '<S-Tab>', '<cmd>BufferLineCyclePrev<CR>')
