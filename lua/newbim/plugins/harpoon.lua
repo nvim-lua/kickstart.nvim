@@ -41,7 +41,7 @@ return {
       harpoon:list():select(3)
     end, { desc = 'Harpoon to file 3' })
 
-    vim.keymap.set('n', '<C-u>', function()
+    vim.keymap.set('n', '<C-g>', function()
       harpoon:list():select(4)
     end, { desc = 'Harpoon to file 4' })
 
@@ -56,27 +56,27 @@ return {
 
     -- Optional: Telescope integration
     -- If you have telescope installed, you can add this for a better UI
-    local conf = require('telescope.config').values
-    local function toggle_telescope(harpoon_files)
-      local file_paths = {}
-      for _, item in ipairs(harpoon_files.items) do
-        table.insert(file_paths, item.value)
-      end
-
-      require('telescope.pickers')
-        .new({}, {
-          prompt_title = 'Harpoon',
-          finder = require('telescope.finders').new_table {
-            results = file_paths,
-          },
-          previewer = conf.file_previewer {},
-          sorter = conf.generic_sorter {},
-        })
-        :find()
-    end
-
-    vim.keymap.set('n', '<C-e>', function()
-      toggle_telescope(harpoon:list())
-    end, { desc = 'Open harpoon window' })
+    -- local conf = require('telescope.config').values
+    -- local function toggle_telescope(harpoon_files)
+    --   local file_paths = {}
+    --   for _, item in ipairs(harpoon_files.items) do
+    --     table.insert(file_paths, item.value)
+    --   end
+    --
+    --   require('telescope.pickers')
+    --     .new({}, {
+    --       prompt_title = 'Harpoon',
+    --       finder = require('telescope.finders').new_table {
+    --         results = file_paths,
+    --       },
+    --       previewer = conf.file_previewer {},
+    --       sorter = conf.generic_sorter {},
+    --     })
+    --     :find()
+    -- end
+    --
+    -- vim.keymap.set('n', '<C-e>', function()
+    --   toggle_telescope(harpoon:list())
+    -- end, { desc = 'Open harpoon window' })
   end,
 }

@@ -28,7 +28,6 @@ require('lazy').setup({
   require 'newbim/plugins/mini',
   require 'newbim/plugins/comment',
   require 'newbim/plugins/markdown',
-  require 'newbim/plugins/copilot',
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
