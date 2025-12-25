@@ -1,0 +1,9 @@
+ 2. Press [v](v) and move the cursor to the fifth item below. Notice that the
+    text is highlighted.
+
+ 3. Press the `:`{normal} character. At the bottom of the screen
+
+        `:'<,'>`{vim}
+
+    will appear.
+

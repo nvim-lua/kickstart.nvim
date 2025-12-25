@@ -1,0 +1,10 @@
+Create two arrays
+
+FOR LOOP
+Fill First with the first 10 numbers
+
+FOR LOOP
+fill second with the first 10 evens
+
+FOR LOOP
+print both out
