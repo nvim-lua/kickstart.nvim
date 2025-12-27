@@ -878,8 +878,14 @@ require('lazy').setup({
       },
 
       sources = {
-        default = { 'lsp', 'path', 'snippets', 'lazydev' },
+        default = { 'lsp', 'path', 'snippets', 'lazydev', 'copilot' },
         providers = {
+          copilot = {
+            name = 'copilot',
+            module = 'blink-cmp-copilot',
+            score_offset = 100,
+            async = true,
+          },
           lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
         },
       },
