@@ -166,6 +166,9 @@ vim.o.scrolloff = 10
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
+-- Removes ANSI formatting characters (like `\033[31m`) printed by shell escape commands (like `:!ls`)
+vim.env.TERM = 'dumb'
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
