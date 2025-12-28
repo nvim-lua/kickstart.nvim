@@ -1,0 +1,5 @@
+
+    where TEST is a filename that does not exist yet. Verify that you see
+
+        `:'<,'>w TEST`{vim}
+
