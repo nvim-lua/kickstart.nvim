@@ -683,7 +683,20 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
-
+        pylsp = {
+          settings = {
+            pylsp = {
+              plugins = {
+                pycodestyle = { ignore = { 'W391' }, maxLineLength = 100 },
+              },
+            },
+          },
+        },
+        docker_compose_language_service = {
+          filetypes = { 'yaml.docker-compose' },
+          -- Note: 'cmd' and 'root_dir' are usually handled automatically by the native config,
+          -- but you can keep them if you need overrides.
+        },
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -746,7 +759,9 @@ require('lazy').setup({
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
+            -- require('lspconfig')[server_name].setup(server)
+            vim.lsp.config(server_name, server)
+            vim.lsp.enable(server_name)
           end,
         },
       }
@@ -1078,25 +1093,3 @@ vim.keymap.set('n', '<leader>mt', function()
   vim.cmd 'tabnew' -- Open a new tab
   vim.api.nvim_buf_set_lines(0, 0, -1, false, content) -- Set new buffer content
 end, { noremap = true, silent = true })
-
--- docker settings --
-require('lspconfig').docker_compose_language_service.setup {
-  cmd = { 'docker-compose-langserver', '--stdio' },
-  filetypes = { 'yaml.docker-compose' },
-  root_dir = function(fname)
-    return require('lspconfig.util').find_git_ancestor(fname) or vim.loop.cwd()
-  end,
-}
-
-require('lspconfig').pylsp.setup {
-  settings = {
-    pylsp = {
-      plugins = {
-        pycodestyle = {
-          ignore = { 'W391' },
-          maxLineLength = 100,
-        },
-      },
-    },
-  },
-}
