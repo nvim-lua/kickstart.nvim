@@ -7,11 +7,10 @@ return {
         auto_update = true,
         neovim_image_text = '(•̀⤙•́)',
         main_image = 'file', -- ("neovim" or "file")
-        debounce_timeout = 10,
+        debounce_timeout = 5,
         enable_line_number = true,
         buttons = true,
         show_time = true,
-
         editing_text = 'Editing %s',
         file_explorer_text = 'Browsing %s',
         git_commit_text = 'Committing changes',
