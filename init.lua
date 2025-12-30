@@ -1,4 +1,4 @@
---[[
+--[[ini
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
 =====================================================================
@@ -285,15 +285,6 @@ require('lazy').setup({
         end
       end
 
-      local ros_distro = vim.fn.expand '$ROS_DISTRO'
-
-      local function get_ros_distro()
-        if ros_distro and ros_distro ~= '$ROS_DISTRO' then
-          return '󰭆 ' .. ros_distro
-        else
-          return ''
-        end
-      end
       require('lualine').setup {
         options = {
           icons_enabled = true,
@@ -314,7 +305,7 @@ require('lazy').setup({
           lualine_a = { 'mode' },
           lualine_b = { 'branch', 'diff', 'diagnostics' },
           lualine_c = { 'filename' },
-          lualine_x = { { get_venv }, { get_ros_distro }, 'fileformat', 'filetype' },
+          lualine_x = { { get_venv }, 'fileformat', 'filetype' },
           lualine_y = { 'progress' },
           lualine_z = { 'location' },
         },
@@ -403,6 +394,32 @@ require('lazy').setup({
         scope = { enabled = false },
       }
     end,
+  },
+  {
+    'WhoIsSethDaniel/mason-tool-installer.nvim',
+    dependencies = { 'williamboman/mason.nvim' },
+    opts = {
+      ensure_installed = {
+        'clangd',
+        'clang-format',
+        'codelldb',
+        'cpplint',
+        'cpptools',
+        'csharpier',
+        'csharp-language-server',
+        'lua-language-server',
+        'netcoredbg',
+        'omnisharp',
+        'omnisharp-mono',
+        'prettier',
+        'ruff',
+        'rust-analyzer',
+        'sonarlint-language-server',
+        'stylua',
+      },
+      auto_update = false,
+      run_on_start = true,
+    },
   },
   {
     'akinsho/toggleterm.nvim', -- Improve handling neovim terminals
@@ -1115,10 +1132,10 @@ require('lazy').setup({
           incremental_selection = {
             enable = true,
             keymaps = {
-              init_selection = '<M-space>',
-              node_incremental = '<M-space>',
-              -- scope_incremental = '<C-s>',
-              node_decremental = '<M-backspace>',
+              init_selection = '<C-space>',
+              --node_incremental = '',
+              scope_incremental = '<C-space>',
+              node_decremental = '<C-\\>',
             },
           },
           textobjects = {
@@ -1212,7 +1229,6 @@ require('lazy').setup({
         },
       }
       -- PERF:
-      -- ===================================================
       -- Configurations
       -- ====================================================
       dap.configurations.cpp = {
@@ -1234,18 +1250,6 @@ require('lazy').setup({
           request = 'attach',
           pid = require('dap.utils').pick_process,
           args = {},
-        },
-        {
-          name = 'C++: ROS Node',
-          type = 'codelldb',
-          request = 'launch',
-          -- Might need to consider using vim.ui.input
-          program = function()
-            local pkgName = vim.fn.input('ROS Package: ', '')
-            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/install/' .. pkgName .. '/lib/' .. pkgName .. '/', 'file')
-          end,
-          cwd = '${workspaceFolder}',
-          stopOnEntry = false,
         },
       }
       -- PERF:
@@ -1285,13 +1289,6 @@ require('lazy').setup({
       }
       require('nvim-dap-virtual-text').setup()
       require('dap-python').setup()
-      table.insert(require('dap').configurations.python, {
-        type = 'python',
-        request = 'launch',
-        name = 'Python: ROS2 lauch test',
-        program = '/opt/ros/humble/bin/launch_test',
-        args = { '${file}' },
-      })
 
       require('dap-python').test_runner = 'pytest'
 
@@ -1343,21 +1340,6 @@ require('lazy').setup({
         dapui.close()
       end
     end,
-  },
-
-  -- NOTE: Here you can add additional plugins that can enhance your Neovim Journey
-  { -- ROS2 related plugin
-    'ErickKramer/nvim-ros2',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'nvim-telescope/telescope.nvim',
-      'nvim-treesitter/nvim-treesitter',
-    },
-    opts = {
-      autocmds = true,
-      telescope = true,
-      treesitter = true,
-    },
   },
 }, {})
 
@@ -1568,15 +1550,6 @@ vim.keymap.set(
   { silent = true, noremap = true, desc = 'Trouble diagnostics for current document' }
 )
 
--- ====================================================
--- Uncrustify
--- ====================================================
-vim.api.nvim_create_user_command(
-  'Uncrustify',
-  -- ":!uncrustify -c /home/ekramer/evobot_ecosystem/humble_ws/ament_code_style.cfg --replace %:p -q --no-backup", {}
-  ':!ament_uncrustify --reformat %:p',
-  {}
-)
 
 -- ====================================================
 -- Debugging -> dap
@@ -1629,47 +1602,12 @@ vim.keymap.set('n', '<leader>cp', ':cprevious<CR>', { desc = 'Previous quickfix 
 vim.keymap.set('n', '<leader>mp', ':MarkdownPreview<CR>', { desc = '[M]arkdown [P]review' })
 
 -- ====================================================
--- nvim-ros2
--- ====================================================
-vim.keymap.set('n', '<leader>li', ':Telescope ros2 interfaces<CR>', { desc = '[ROS 2]: List interfaces' })
-vim.keymap.set('n', '<leader>ln', ':Telescope ros2 nodes<CR>', { desc = '[ROS 2]: List nodes' })
-vim.keymap.set('n', '<leader>la', ':Telescope ros2 actions<CR>', { desc = '[ROS 2]: List actions' })
-vim.keymap.set('n', '<leader>lt', ':Telescope ros2 topics<CR>', { desc = '[ROS 2]: List topics' })
-vim.keymap.set('n', '<leader>ls', ':Telescope ros2 services<CR>', { desc = '[ROS 2]: List services' })
-
--- ====================================================
 -- git_coauthors
 -- ====================================================
 vim.keymap.set('n', '<leader>ga', ':Telescope coauthors<CR>', { desc = '[G]it co-[A]uthors' })
 
 -- NOTE: Custon User Commads
 
--- ====================================================
--- ROS 2 related commands
--- ====================================================
-vim.api.nvim_command [[
-  command! ColconBuild :! CC=clang CXX=clang++ colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-]]
-vim.api.nvim_command [[
-  command! -nargs=1 ColconBuildSingle :! CC=clang CXX=clang++ colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --packages-up-to <args>
-]]
-vim.api.nvim_command [[
-  command! ColconBuildDebug :! CC=clang CXX=clang++ colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug
-]]
-vim.api.nvim_command [[
-  command! -nargs=1 ColconBuildDebugSingle :! CC=clang CXX=clang++ colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug --packages-up-to <args>
-]]
-
--- Test
-vim.api.nvim_command [[
-  command! ColconTest :! colcon test
-]]
-vim.api.nvim_command [[
-  command! -nargs=1 ColconTestSingle :! colcon test --packages-select <args>
-]]
-vim.api.nvim_command [[
-  command! ColconTestResult :! colcon test-result --all
-]]
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
@@ -1787,3 +1725,9 @@ vim.keymap.set('c', '<C-BS>', '<C-w>', { noremap = true })
 -- switch buffers quicker with shift+tab
 vim.keymap.set('n', '<Tab>', '<cmd>BufferLineCycleNext<CR>')
 vim.keymap.set('n', '<S-Tab>', '<cmd>BufferLineCyclePrev<CR>')
+
+vim.keymap.set("n", "<leader>is", ":TSNodeIncremental<CR>", { silent = true })
+vim.keymap.set("x", "<leader>is", ":TSNodeIncremental<CR>", { silent = true })
+vim.keymap.set("x", "<leader>ic", ":TSScopeIncremental<CR>", { silent = true })
+vim.keymap.set("x", "<leader>id", ":TSNodeDecremental<CR>", { silent = true })
+
