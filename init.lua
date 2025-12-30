@@ -199,6 +199,31 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- My key-mappings
+
+vim.opt.guicursor = 'i:hor10'
+
+local opt = vim.opt
+
+-- tabs and indentation
+opt.expandtab = true
+opt.tabstop = 2
+opt.shiftwidth = 2
+
+-- search settings
+opt.ignorecase = true -- disable case sensitive search by default
+opt.smartcase = true -- if mixed case is included in the search, turns on case sensitive match
+
+opt.cursorline = true
+
+opt.termguicolors = true
+opt.background = 'dark'
+opt.signcolumn = 'yes'
+
+vim.o.completeopt = 'menuone,noinsert,noselect'
+
+-- My key-mappings END
+
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
@@ -941,7 +966,7 @@ require('lazy').setup({
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
+    main = 'nvim-treesitter', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
       ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
