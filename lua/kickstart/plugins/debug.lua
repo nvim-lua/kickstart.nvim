@@ -190,13 +190,20 @@ return {
     }
 
     -- Install javascript specific config
-    require('dap-vscode-js').setup {
-      debugger_path = vim.fn.stdpath 'data' .. '/mason/packages/js-debug-adapter',
-      debugger_cmd = { 'js-debug-adapter' },
-      adapters = { 'pwa-node', 'pwa-chrome', 'pwa-msedge', 'node-terminal', 'pwa-extensionHost' },
-    }
+    if not dap.adapters['pwa-node'] then
+      require('dap').adapters['pwa-node'] = {
+        type = 'server',
+        host = 'localhost',
+        port = '${port}',
+        executable = {
+          command = 'js-debug-adapter', -- This command comes from Mason
+          args = { '${port}' }, -- formatting the port here prevents EADDRINUSE
+        },
+      }
+    end
+    dap.adapters['pwa-chrome'] = dap.adapters['pwa-node']
 
-    for _, jsLang in ipairs { 'typescript', 'javascript' } do
+    for _, jsLang in ipairs { 'typescript', 'javascript', 'vue' } do
       require('dap').configurations[jsLang] = {
         {
           type = 'pwa-node',
@@ -228,49 +235,12 @@ return {
           internalConsoleOptions = 'neverOpen',
         },
         {
-          name = 'Debug Main Process (Electron)',
-          type = 'pwa-node',
+          type = 'pwa-chrome',
           request = 'launch',
-          program = '${workspaceFolder}/node_modules/.bin/electron',
-          args = {
-            '${workspaceFolder}/dist/index.js',
-          },
-          outFiles = {
-            '${workspaceFolder}/dist/*.js',
-          },
-          resolveSourceMapLocations = {
-            '${workspaceFolder}/dist/**/*.js',
-            '${workspaceFolder}/dist/*.js',
-          },
-          rootPath = '${workspaceFolder}',
-          cwd = '${workspaceFolder}',
-          sourceMaps = true,
-          skipFiles = { '<node_internals>/**' },
-          protocol = 'inspector',
-          console = 'integratedTerminal',
-        },
-        {
-          name = 'Compile & Debug Main Process (Electron)',
-          type = custom_adapter,
-          request = 'launch',
-          preLaunchTask = 'npm run build-ts',
-          program = '${workspaceFolder}/node_modules/.bin/electron',
-          args = {
-            '${workspaceFolder}/dist/index.js',
-          },
-          outFiles = {
-            '${workspaceFolder}/dist/*.js',
-          },
-          resolveSourceMapLocations = {
-            '${workspaceFolder}/dist/**/*.js',
-            '${workspaceFolder}/dist/*.js',
-          },
-          rootPath = '${workspaceFolder}',
-          cwd = '${workspaceFolder}',
-          sourceMaps = true,
-          skipFiles = { '<node_internals>/**' },
-          protocol = 'inspector',
-          console = 'integratedTerminal',
+          name = 'Start Chrome with "localhost"',
+          url = 'http://localhost:5173',
+          webRoot = '${workspaceFolder}',
+          userDataDir = '${workspaceFolder}/.nvim/debug-profile',
         },
       }
     end
