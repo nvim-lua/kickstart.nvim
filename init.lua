@@ -37,6 +37,23 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     lazy = false,
     build = ':TSUpdate',
+    opts = {
+      ensure_installed = {
+        'lua',
+        'rust',
+        'python',
+        'javascript',
+        'typescript',
+        'c',
+        'c_sharp',
+        'cpp',
+        'bash',
+        'json',
+        'yaml',
+        'toml',
+      },
+      highlight = { enable = true },
+    },
   },
 
   {
@@ -220,9 +237,15 @@ require('lazy').setup({
     dependencies = 'nvim-tree/nvim-web-devicons',
     opts = {
       options = {
+        mode = 'buffers', -- tabs or buffers
         diagnostics = 'nvim_lsp',
         show_buffer_close_icons = false,
         show_close_icon = false,
+        hover = {
+            enabled = true,
+            delay = 200,
+            reveal = {'close'}
+        },
       },
     },
   },
@@ -934,7 +957,7 @@ local smear = require 'smear_cursor'
 local smear_profiles = {
   silver_blade = {
     -- General
-    cursor_color = "#ffe6b2",
+    cursor_color = '#ffe6b2',
     smear_between_buffers = true,
     smear_between_neighbor_lines = true,
     min_horizontal_distance_smear = 0,
@@ -1116,7 +1139,6 @@ local smear_profiles = {
     particle_switch_octant_braille = 0.3,
     particles_over_text = false,
   },
-
 }
 
 local smear_profile_order = {
@@ -1208,19 +1230,23 @@ local function set_indent(ts)
   vim.opt_local.softtabstop = ts
 end
 
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "lua", "javascript", "typescript", "tsx", "json", "yaml", "toml", "html", "css", "rust", "c", "cpp" },
-  callback = function() set_indent(2) end,
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'lua', 'javascript', 'typescript', 'tsx', 'json', 'yaml', 'toml', 'html', 'css', 'rust', 'c', 'cpp' },
+  callback = function()
+    set_indent(2)
+  end,
 })
 
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "python", "sh", "bash", "zsh", "go" },
-  callback = function() set_indent(4) end,
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'python', 'sh', 'bash', 'zsh', 'go' },
+  callback = function()
+    set_indent(4)
+  end,
 })
 
 -- Makefiles must use real tabs
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "make" },
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'make' },
   callback = function()
     vim.opt_local.expandtab = false
     vim.opt_local.tabstop = 8
@@ -1402,9 +1428,6 @@ vim.keymap.set({ 'i', 'c' }, '<C-BS>', '<C-w>', { noremap = true, desc = 'Delete
 vim.keymap.set('n', '<Tab>', '<cmd>BufferLineCycleNext<CR>', { desc = 'Go to next tab' })
 vim.keymap.set('n', '<S-Tab>', '<cmd>BufferLineCyclePrev<CR>', { desc = 'Go backwards a tab' })
 
--- install treesitter parsers
-require('nvim-treesitter').install { 'c', 'rust' }
-
 vim.keymap.set('n', '<leader>tc', ':tabclose<CR>', { desc = 'Close current tab' })
 vim.keymap.set('n', '<leader>fk', ':FloatermKill!<CR>', { desc = 'Kill all floaterm terminals' })
 vim.keymap.set('x', 'S', '<Plug>(nvim-surround-visual)', { remap = true }, { desc = 'Surround selected text' })
@@ -1453,3 +1476,5 @@ vim.api.nvim_set_keymap('i', '<C-H>', '<C-W>', { noremap = true })
 -- git coauthors
 vim.keymap.set('n', '<leader>ga', ':Telescope coauthors<CR>')
 
+-- install treesitter parsers
+require('nvim-treesitter').install { 'c', 'rust', 'gdscript', 'c#' }
