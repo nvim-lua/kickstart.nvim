@@ -1,5 +1,7 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+-- for chatgpt
+_G.chatgpt_model = 'gpt-5.1-codex-mini'
 
 -- =========================
 -- Lazy.nvim bootstrap
@@ -21,7 +23,6 @@ vim.opt.rtp:prepend(lazypath)
 -- PLUGINS
 -- =========================
 require('lazy').setup({
-  -- Git
   'voldikss/vim-floaterm',
 
   'tpope/vim-fugitive',
@@ -31,6 +32,28 @@ require('lazy').setup({
   { 'kylechui/nvim-surround', config = true },
 
   { 'numToStr/Comment.nvim', opts = {} },
+
+  {
+    'nvim-treesitter/nvim-treesitter',
+    lazy = false,
+    build = ':TSUpdate',
+  },
+
+  {
+    'MeanderingProgrammer/treesitter-modules.nvim',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    opts = {
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = '<A-Space>', -- Alt+Space
+          node_incremental = '<A-Space>', -- Alt+Space (expand)
+          node_decremental = '<A-BS>', -- Alt+Backspace (shrink)
+          scope_incremental = '<A-S-Space>', -- Alt+Shift+Space (scope expand)
+        },
+      },
+    },
+  },
 
   'rhysd/git-messenger.vim',
   {
@@ -43,7 +66,29 @@ require('lazy').setup({
     },
     config = function()
       require('chatgpt').setup {
-        api_key_cmd = 'echo $OPENAI_API_KEY',
+        openai_params = {
+          -- NOTE: model can be a function returning the model name
+          -- this is useful if you want to change the model on the fly
+          -- using commands
+          -- Example:
+          -- model = function()
+          --     if some_condition() then
+          --         return "gpt-5"
+          --     else
+          --         return "gpt-5-mini"
+          --     end
+          -- end,
+          model = function()
+            return _G.chatgpt_model
+          end,
+          frequency_penalty = 0,
+          presence_penalty = 0,
+          max_tokens = 4095,
+          temperature = 0.2,
+          top_p = 0.1,
+          n = 1,
+          api_key_cmd = 'echo $OPENAI_API_KEY',
+        },
       }
     end,
   },
@@ -112,15 +157,28 @@ require('lazy').setup({
 
   {
     'sphamba/smear-cursor.nvim',
-  opts = {                                -- Default  Range
-    stiffness = 0.6,                      -- 0.6      [0, 1]
-    trailing_stiffness = 0.4,             -- 0.45     [0, 1]
-    stiffness_insert_mode = 0.7,          -- 0.5      [0, 1]
-    trailing_stiffness_insert_mode = 0.7, -- 0.5      [0, 1]
-    damping = 0.8,                       -- 0.85     [0, 1]
-    damping_insert_mode = 0.8,           -- 0.9      [0, 1]
-    distance_stop_animating = 0.1,        -- 0.1      > 0
-  },
+    opts = {
+      time_interval = 3,
+      cursor_color = '#ff4000',
+      particles_enabled = true,
+      stiffness = 0.5,
+      trailing_stiffness = 0.2,
+      trailing_exponent = 5,
+      damping = 0.6,
+      gradient_exponent = 0,
+      gamma = 1,
+      never_draw_over_target = true,
+      hide_target_hack = true,
+      particle_spread = 1,
+      particles_per_second = 500,
+      particles_per_length = 50,
+      particle_max_lifetime = 800,
+      particle_max_initial_velocity = 20,
+      particle_velocity_from_cursor = 0.5,
+      particle_damping = 0.15,
+      particle_gravity = -50,
+      min_distance_emit_particles = 0,
+    },
   },
 
   {
@@ -417,7 +475,7 @@ require('lazy').setup({
   -- Telescope
   {
     'nvim-telescope/telescope.nvim',
-    branch = '0.1.x',
+    branch = 'master',
     dependencies = {
       'nvim-lua/plenary.nvim',
       {
@@ -868,6 +926,247 @@ require('lazy').setup({
   },
 }, {})
 
+-- =========================================
+-- ============ START SMEAR PROFILE ========
+-- =========================================
+local smear = require 'smear_cursor'
+
+local smear_profiles = {
+  silver_blade = {
+    -- General
+    cursor_color = "#ffe6b2",
+    smear_between_buffers = true,
+    smear_between_neighbor_lines = true,
+    min_horizontal_distance_smear = 0,
+    min_vertical_distance_smear = 0,
+    smear_horizontally = true,
+    smear_vertically = true,
+    smear_diagonally = true,
+    smear_to_cmd = true,
+    scroll_buffer_space = true,
+
+    legacy_computing_symbols_support = false,
+    legacy_computing_symbols_support_vertical_bars = false,
+    use_diagonal_blocks = true,
+
+    vertical_bar_cursor = false,
+    smear_insert_mode = true,
+    vertical_bar_cursor_insert_mode = true,
+    smear_replace_mode = false,
+    smear_terminal_mode = false,
+    horizontal_bar_cursor_replace_mode = true,
+
+    never_draw_over_target = false,
+    hide_target_hack = false,
+
+    max_kept_windows = 50,
+    windows_zindex = 300,
+    filetypes_disabled = {},
+
+    -- High FPS (smooth)
+    time_interval = 7,
+    delay_disable = nil,
+    delay_event_to_smear = 1,
+    delay_after_key = 6,
+
+    -- Physics: fast head, laggy tail, smooth decay
+    stiffness = 0.95,
+    trailing_stiffness = 0.33,
+    anticipation = 0.06,
+    damping = 0.90,
+    trailing_exponent = 5.5,
+    distance_stop_animating = 0.06,
+
+    -- Insert mode: match feel
+    stiffness_insert_mode = 0.95,
+    trailing_stiffness_insert_mode = 0.7,
+    damping_insert_mode = 0.92,
+    trailing_exponent_insert_mode = 5.5,
+    distance_stop_animating_vertical_bar = 0.25,
+
+    -- Diagonal + shading tuned for “pretty”
+    max_slope_horizontal = (1 / 3) / 1.7,
+    min_slope_vertical = 2 * 1.7,
+    max_angle_difference_diagonal = math.pi / 18,
+    max_offset_diagonal = 0.18,
+    min_shade_no_diagonal = 0.22,
+    min_shade_no_diagonal_vertical_bar = 0.55,
+
+    -- Rich blending (costly but nice)
+    color_levels = 24,
+    gamma = 2.2,
+    gradient_exponent = 2.8,
+    max_shade_no_matrix = 0.78,
+    matrix_pixel_threshold = 0.72,
+    matrix_pixel_threshold_vertical_bar = 0.28,
+    matrix_pixel_min_factor = 0.55,
+    volume_reduction_exponent = 0.22,
+    minimum_volume_factor = 0.78,
+
+    -- Longer trail
+    max_length = 34,
+    max_length_insert_mode = 2,
+
+    -- Particles off
+    particles_enabled = false,
+    particle_max_num = 100,
+    particle_spread = 0.5,
+    particles_per_second = 200,
+    particles_per_length = 1.0,
+    particle_max_lifetime = 300,
+    particle_lifetime_distribution_exponent = 5,
+    particle_max_initial_velocity = 10,
+    particle_velocity_from_cursor = 0.2,
+    particle_random_velocity = 100,
+    particle_damping = 0.2,
+    particle_gravity = 20,
+    min_distance_emit_particles = 1.5,
+    particle_switch_octant_braille = 0.3,
+    particles_over_text = false,
+  },
+  -- 1) Frost Mist
+  eco_smear = {
+    -- General (keep core behavior)
+    smear_between_buffers = true,
+    smear_between_neighbor_lines = true,
+    min_horizontal_distance_smear = 1, -- reduces tiny smears
+    min_vertical_distance_smear = 1,
+    smear_horizontally = true,
+    smear_vertically = true,
+    smear_diagonally = false, -- big CPU win
+    smear_to_cmd = true,
+    scroll_buffer_space = false, -- cheaper on scroll
+
+    legacy_computing_symbols_support = false,
+    legacy_computing_symbols_support_vertical_bars = false,
+    use_diagonal_blocks = true,
+
+    vertical_bar_cursor = false,
+    smear_insert_mode = true,
+    vertical_bar_cursor_insert_mode = true,
+    smear_replace_mode = false,
+    smear_terminal_mode = false,
+    horizontal_bar_cursor_replace_mode = true,
+
+    never_draw_over_target = false,
+    hide_target_hack = false,
+
+    max_kept_windows = 20, -- fewer render windows kept
+    windows_zindex = 300,
+    filetypes_disabled = {},
+
+    -- Lower FPS (much cheaper)
+    time_interval = 14,
+    delay_disable = nil,
+    delay_event_to_smear = 2,
+    delay_after_key = 10,
+
+    -- Physics: still fast head, shorter/cheaper tail
+    stiffness = 0.90,
+    trailing_stiffness = 0.28,
+    anticipation = 0.04,
+    damping = 0.88,
+    trailing_exponent = 3.0,
+    distance_stop_animating = 0.12,
+
+    -- Insert mode: keep it tight
+    stiffness_insert_mode = 0.90,
+    trailing_stiffness_insert_mode = 0.28,
+    damping_insert_mode = 0.90,
+    trailing_exponent_insert_mode = 3.0,
+    distance_stop_animating_vertical_bar = 0.30,
+
+    -- Simpler shading (cheaper)
+    max_slope_horizontal = (1 / 3) / 1.6,
+    min_slope_vertical = 2 * 1.6,
+    max_angle_difference_diagonal = math.pi / 16,
+    max_offset_diagonal = 0.2,
+    min_shade_no_diagonal = 0.30,
+    min_shade_no_diagonal_vertical_bar = 0.60,
+
+    -- Reduced blending cost
+    color_levels = 16,
+    gamma = 2.2,
+    gradient_exponent = 1.3,
+    max_shade_no_matrix = 0.80,
+    matrix_pixel_threshold = 0.80,
+    matrix_pixel_threshold_vertical_bar = 0.35,
+    matrix_pixel_min_factor = 0.65,
+    volume_reduction_exponent = 0.35,
+    minimum_volume_factor = 0.82,
+
+    -- Shorter trail
+    max_length = 18,
+    max_length_insert_mode = 1,
+
+    -- Particles off
+    particles_enabled = false,
+    particle_max_num = 100,
+    particle_spread = 0.5,
+    particles_per_second = 200,
+    particles_per_length = 1.0,
+    particle_max_lifetime = 300,
+    particle_lifetime_distribution_exponent = 5,
+    particle_max_initial_velocity = 10,
+    particle_velocity_from_cursor = 0.2,
+    particle_random_velocity = 100,
+    particle_damping = 0.2,
+    particle_gravity = 20,
+    min_distance_emit_particles = 1.5,
+    particle_switch_octant_braille = 0.3,
+    particles_over_text = false,
+  },
+
+}
+
+local smear_profile_order = {
+  'silver_blade',
+  'eco_smear',
+}
+
+local current_idx = 1
+
+local function apply_smear_profile(name)
+  local p = smear_profiles[name]
+  if not p then
+    vim.notify('Unknown smear profile: ' .. tostring(name), vim.log.levels.ERROR)
+    return
+  end
+  smear.setup(vim.deepcopy(p))
+  vim.g.smear_cursor_profile = name
+  vim.notify('smear-cursor → ' .. name)
+end
+
+-- Commands
+vim.api.nvim_create_user_command('SmearProfile', function(opts)
+  apply_smear_profile(opts.args)
+end, {
+  nargs = 1,
+  complete = function()
+    return smear_profile_order
+  end,
+})
+
+vim.api.nvim_create_user_command('SmearProfileNext', function()
+  current_idx = (current_idx % #smear_profile_order) + 1
+  apply_smear_profile(smear_profile_order[current_idx])
+end, {})
+
+vim.api.nvim_create_user_command('SmearProfilePrev', function()
+  current_idx = ((current_idx - 2) % #smear_profile_order) + 1
+  apply_smear_profile(smear_profile_order[current_idx])
+end, {})
+
+-- Keybindings (edit if you want)
+vim.keymap.set('n', '<leader>pn', '<cmd>SmearProfileNext<CR>', { desc = 'Smear profile: next' })
+vim.keymap.set('n', '<leader>pp', '<cmd>SmearProfilePrev<CR>', { desc = 'Smear profile: prev' })
+
+-- Apply a default on startup (pick one)
+apply_smear_profile 'silver_blade'
+-- =========================================
+-- ============ END SMEAR PROFILE ==========
+-- =========================================
+
 -- =========================
 -- Editor settings
 -- =========================
@@ -899,6 +1198,40 @@ vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = tr
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 vim.opt.termguicolors = true
 
+-- ============================
+-- ====== TABSTOP START =======
+-- ============================
+local function set_indent(ts)
+  vim.opt_local.expandtab = true
+  vim.opt_local.tabstop = ts
+  vim.opt_local.shiftwidth = ts
+  vim.opt_local.softtabstop = ts
+end
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "lua", "javascript", "typescript", "tsx", "json", "yaml", "toml", "html", "css", "rust", "c", "cpp" },
+  callback = function() set_indent(2) end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "python", "sh", "bash", "zsh", "go" },
+  callback = function() set_indent(4) end,
+})
+
+-- Makefiles must use real tabs
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "make" },
+  callback = function()
+    vim.opt_local.expandtab = false
+    vim.opt_local.tabstop = 8
+    vim.opt_local.shiftwidth = 8
+    vim.opt_local.softtabstop = 0
+  end,
+})
+-- ============================
+-- ====== TABSTOP END =========
+-- ============================
+
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
@@ -927,127 +1260,170 @@ vim.api.nvim_create_autocmd({ 'BufLeave', 'InsertEnter', 'FocusLost' }, {
 -- =========================
 -- Keymaps (treesitter keymaps removed)
 -- =========================
-vim.keymap.set('n', '<C-d>', '<C-d>zz')
-vim.keymap.set('n', '<C-u>', '<C-u>zz')
-vim.keymap.set('n', 'n', 'nzzzv')
-vim.keymap.set('n', 'N', 'Nzzzv')
-vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
-vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 
-vim.keymap.set('n', '<C-h>', '<C-W>h')
-vim.keymap.set('n', '<C-j>', '<C-W>j')
-vim.keymap.set('n', '<C-k>', '<C-W>k')
-vim.keymap.set('n', '<C-l>', '<C-W>l')
+-- scrolling / search centering
+vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Scroll down and center cursor' })
+vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Scroll up and center cursor' })
+vim.keymap.set('n', 'n', 'nzzzv', { desc = 'Next search result and center' })
+vim.keymap.set('n', 'N', 'Nzzzv', { desc = 'Previous search result and center' })
 
-vim.keymap.set('x', '<leader>p', [["_dP]])
-vim.keymap.set('n', '<leader>ya', ':%y+<CR>')
+-- move selected lines
+vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", { desc = 'Move selection down' })
+vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { desc = 'Move selection up' })
 
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
-vim.keymap.set('n', '<leader>dd', vim.diagnostic.disable)
-vim.keymap.set('n', '<leader>de', vim.diagnostic.enable)
+-- window navigation
+vim.keymap.set('n', '<C-h>', '<C-W>h', { desc = 'Go to left window' })
+vim.keymap.set('n', '<C-j>', '<C-W>j', { desc = 'Go to lower window' })
+vim.keymap.set('n', '<C-k>', '<C-W>k', { desc = 'Go to upper window' })
+vim.keymap.set('n', '<C-l>', '<C-W>l', { desc = 'Go to right window' })
 
-vim.keymap.set('n', '<leader>cw', ':cd %:p:h<CR>:pwd<CR>')
-vim.keymap.set('n', '<C-I>', '<C-I>', { noremap = true })
-vim.keymap.set('n', '<C-s>', ':write<CR>')
-vim.keymap.set('n', '<leader>cd', ':ToggleAutoComplete<CR>')
-vim.keymap.set('n', '<leader>ce', ':ToggleAutoComplete<CR>')
+-- clipboard / yank
+vim.keymap.set('x', '<leader>p', [["_dP]], { desc = 'Paste without overwriting register' })
+vim.keymap.set('n', '<leader>ya', ':%y+<CR>', { desc = 'Yank entire buffer to clipboard' })
 
--- Telescope keymaps
-vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles)
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers)
+-- diagnostics
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Previous diagnostic' })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Next diagnostic' })
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic under cursor' })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Diagnostics to loclist' })
+vim.keymap.set('n', '<leader>dd', vim.diagnostic.disable, { desc = 'Disable diagnostics' })
+vim.keymap.set('n', '<leader>de', vim.diagnostic.enable, { desc = 'Enable diagnostics' })
+
+-- misc
+vim.keymap.set('n', '<leader>cw', ':cd %:p:h<CR>:pwd<CR>', { desc = 'cd to current file directory' })
+vim.keymap.set('n', '<C-I>', '<C-I>', { noremap = true, desc = 'Jump forward in jumplist' })
+vim.keymap.set('n', '<C-s>', ':write<CR>', { desc = 'Save file' })
+vim.keymap.set('n', '<leader>cd', ':ToggleAutoComplete<CR>', { desc = 'Toggle autocomplete' })
+vim.keymap.set('n', '<leader>ce', ':ToggleAutoComplete<CR>', { desc = 'Toggle autocomplete (alias)' })
+
+-- Telescope
+vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = 'Find recently opened files' })
+vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = 'List open buffers' })
 vim.keymap.set('n', '<leader>/', function()
   require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
     previewer = false,
     sorting_strategy = 'ascending',
   })
-end)
+end, { desc = 'Fuzzy search in current buffer' })
 
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files)
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags)
-vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string)
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep)
-vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics)
-vim.keymap.set('n', '<leader>sp', require('telescope.builtin').spell_suggest)
-vim.keymap.set('n', '<leader>sk', require('telescope.builtin').keymaps)
-vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files)
-vim.keymap.set('n', '<leader>sc', require('telescope.builtin').git_commits)
-vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume)
+vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = 'Find files' })
+vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = 'Search help tags' })
+vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = 'Search word under cursor' })
+vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = 'Live grep' })
+vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = 'Search diagnostics' })
+vim.keymap.set('n', '<leader>sp', require('telescope.builtin').spell_suggest, { desc = 'Spell suggestions' })
+vim.keymap.set('n', '<leader>sk', require('telescope.builtin').keymaps, { desc = 'Search keymaps' })
+vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Find git files' })
+vim.keymap.set('n', '<leader>sc', require('telescope.builtin').git_commits, { desc = 'Search git commits' })
+vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 'Resume last Telescope picker' })
+
 vim.keymap.set('n', '<leader>s/', function()
   require('telescope.builtin').live_grep {
     grep_open_files = true,
     prompt_title = 'Live Grep in Open Files',
   }
-end)
+end, { desc = 'Live grep in open files' })
+
 vim.keymap.set('n', '<leader>sn', function()
   require('telescope.builtin').find_files { cwd = vim.fn.stdpath 'config' }
-end)
+end, { desc = 'Search Neovim config files' })
 
-vim.keymap.set('n', '<leader>ru', ':w<CR>:!%:p')
-vim.keymap.set('n', '<leader>me', ':!chmod +x %:p<CR>')
-vim.keymap.set('n', '<leader>P', require('spectre').open)
+-- run / permissions
+vim.keymap.set('n', '<leader>ru', ':w<CR>:!%:p', { desc = 'Save and run current file' })
+vim.keymap.set('n', '<leader>me', ':!chmod +x %:p<CR>', { desc = 'Make file executable' })
+vim.keymap.set('n', '<leader>P', require('spectre').open, { desc = 'Open Spectre search/replace' })
 
-vim.keymap.set('n', '<leader>xx', '<cmd>TroubleToggle<cr>', { silent = true, noremap = true })
-vim.keymap.set('n', '<leader>xw', '<cmd>TroubleToggle workspace_diagnostics<cr>', { silent = true, noremap = true })
-vim.keymap.set('n', '<leader>xd', '<cmd>TroubleToggle document_diagnostics<cr>', { silent = true, noremap = true })
+-- Trouble
+vim.keymap.set('n', '<leader>xx', '<cmd>TroubleToggle<cr>', { silent = true, noremap = true, desc = 'Toggle Trouble' })
+vim.keymap.set('n', '<leader>xw', '<cmd>TroubleToggle workspace_diagnostics<cr>', { silent = true, noremap = true, desc = 'Workspace diagnostics (Trouble)' })
+vim.keymap.set('n', '<leader>xd', '<cmd>TroubleToggle document_diagnostics<cr>', { silent = true, noremap = true, desc = 'Document diagnostics (Trouble)' })
 
--- DAP keymaps
-vim.keymap.set('n', '<F2>', ":lua require('dapui').toggle()<CR>")
-vim.keymap.set('n', '<leader>dc', ":lua require('dap').continue()<CR>")
-vim.keymap.set('n', '<leader>do', ":lua require('dap').step_over()<CR>")
-vim.keymap.set('n', '<leader>di', ":lua require('dap').step_into()<CR>")
+-- DAP
+vim.keymap.set('n', '<F2>', ":lua require('dapui').toggle()<CR>", { desc = 'Toggle DAP UI' })
+vim.keymap.set('n', '<leader>dc', ":lua require('dap').continue()<CR>", { desc = 'DAP continue' })
+vim.keymap.set('n', '<leader>do', ":lua require('dap').step_over()<CR>", { desc = 'DAP step over' })
+vim.keymap.set('n', '<leader>di', ":lua require('dap').step_into()<CR>", { desc = 'DAP step into' })
 vim.keymap.set('n', '<leader>dk', function()
   require('dap.ui.widgets').hover()
-end)
+end, { desc = 'DAP hover value' })
 vim.keymap.set('n', '<leader>d?', function()
   local widgets = require 'dap.ui.widgets'
   widgets.centered_float(widgets.scopes)
-end)
-vim.keymap.set('n', '<leader>du', ":lua require('dap').step_out()<CR>")
-vim.keymap.set('n', '<leader>dl', ":lua require('dapui').float_element()<CR>", { silent = true, noremap = true })
-vim.keymap.set('n', '<leader>dt', ":lua require('dap').toggle_breakpoint()<CR>", { silent = true, noremap = true })
-vim.keymap.set('n', '<leader>dm', ":lua require('dap-python').test_method()<CR>", { silent = true, noremap = true })
-vim.keymap.set('n', '<leader>df', ":lua require('dap-python').test_class()<CR>", { silent = true, noremap = true })
+end, { desc = 'DAP scopes' })
+vim.keymap.set('n', '<leader>du', ":lua require('dap').step_out()<CR>", { desc = 'DAP step out' })
+vim.keymap.set('n', '<leader>dl', ":lua require('dapui').float_element()<CR>", { silent = true, noremap = true, desc = 'DAP floating window' })
+vim.keymap.set('n', '<leader>dt', ":lua require('dap').toggle_breakpoint()<CR>", { silent = true, noremap = true, desc = 'Toggle breakpoint' })
+vim.keymap.set('n', '<leader>dm', ":lua require('dap-python').test_method()<CR>", { silent = true, noremap = true, desc = 'DAP test method' })
+vim.keymap.set('n', '<leader>df', ":lua require('dap-python').test_class()<CR>", { silent = true, noremap = true, desc = 'DAP test class' })
 
 -- barbar
-vim.keymap.set('n', '<A-,>', '<cmd>BufferPrevious<cr>', { silent = true, noremap = true })
-vim.keymap.set('n', '<A-.>', '<cmd>BufferNext<cr>', { silent = true, noremap = true })
-vim.keymap.set('n', '<A-c>', '<cmd>BufferClose<cr>', { silent = true, noremap = true })
+vim.keymap.set('n', '<A-,>', '<cmd>BufferPrevious<cr>', { silent = true, noremap = true, desc = 'Previous buffer' })
+vim.keymap.set('n', '<A-.>', '<cmd>BufferNext<cr>', { silent = true, noremap = true, desc = 'Next buffer' })
+vim.keymap.set('n', '<A-c>', '<cmd>BufferClose<cr>', { silent = true, noremap = true, desc = 'Close buffer' })
+
 local opts = { noremap = true, silent = true }
-vim.keymap.set('n', '<A-1>', '<Cmd>BufferGoto 1<CR>', opts)
-vim.keymap.set('n', '<A-2>', '<Cmd>BufferGoto 2<CR>', opts)
-vim.keymap.set('n', '<A-3>', '<Cmd>BufferGoto 3<CR>', opts)
-vim.keymap.set('n', '<A-4>', '<Cmd>BufferGoto 4<CR>', opts)
-vim.keymap.set('n', '<A-5>', '<Cmd>BufferGoto 5<CR>', opts)
-vim.keymap.set('n', '<A-6>', '<Cmd>BufferGoto 6<CR>', opts)
-vim.keymap.set('n', '<A-7>', '<Cmd>BufferGoto 7<CR>', opts)
-vim.keymap.set('n', '<A-8>', '<Cmd>BufferGoto 8<CR>', opts)
-vim.keymap.set('n', '<A-9>', '<Cmd>BufferGoto 9<CR>', opts)
-vim.keymap.set('n', '<A-0>', '<Cmd>BufferLast<CR>', opts)
+vim.keymap.set('n', '<A-1>', '<Cmd>BufferLineGoToBuffer 1<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 1' }))
+vim.keymap.set('n', '<A-2>', '<Cmd>BufferLineGoToBuffer 2<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 2' }))
+vim.keymap.set('n', '<A-3>', '<Cmd>BufferLineGoToBuffer 3<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 3' }))
+vim.keymap.set('n', '<A-4>', '<Cmd>BufferLineGoToBuffer 4<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 4' }))
+vim.keymap.set('n', '<A-5>', '<Cmd>BufferLineGoToBuffer 5<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 5' }))
+vim.keymap.set('n', '<A-6>', '<Cmd>BufferLineGoToBuffer 6<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 6' }))
+vim.keymap.set('n', '<A-7>', '<Cmd>BufferLineGoToBuffer 7<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 7' }))
+vim.keymap.set('n', '<A-8>', '<Cmd>BufferLineGoToBuffer 8<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 8' }))
+vim.keymap.set('n', '<A-9>', '<Cmd>BufferLineGoToBuffer 9<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 9' }))
+vim.keymap.set('n', '<A-0>', '<Cmd>BufferLast<CR>', vim.tbl_extend('force', opts, { desc = 'Go to last buffer' }))
 
 -- quickfix
-vim.keymap.set('n', '<leader>cn', ':cnext<CR>')
-vim.keymap.set('n', '<leader>cp', ':cprevious<CR>')
+vim.keymap.set('n', '<leader>cn', ':cnext<CR>', { desc = 'Next quickfix item' })
+vim.keymap.set('n', '<leader>cp', ':cprevious<CR>', { desc = 'Previous quickfix item' })
 
 -- markdown
-vim.keymap.set('n', '<leader>mp', ':MarkdownPreview<CR>')
+vim.keymap.set('n', '<leader>mp', ':MarkdownPreview<CR>', { desc = 'Markdown preview' })
 
--- git coauthors
-vim.keymap.set('n', '<leader>ga', ':Telescope coauthors<CR>')
+-- git
+vim.keymap.set('n', '<leader>ga', ':Telescope coauthors<CR>', { desc = 'Select git co-authors' })
 
--- Comment.nvim keymaps
-vim.api.nvim_set_keymap('n', '<C-_>', '<cmd>lua require("Comment.api").toggle.linewise.current()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('v', '<C-_>', '<ESC><cmd>lua require("Comment.api").toggle.linewise(vim.fn.visualmode())<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('i', '<C-H>', '<C-W>', { noremap = true })
+-- AI model switching
+vim.keymap.set('n', '<leader>an', function()
+  _G.chatgpt_model = 'gpt-5-nano'
+  print 'ChatGPT → gpt-5-nano'
+end, { desc = 'ChatGPT model: gpt-5-nano' })
 
--- Floaterm
-vim.api.nvim_set_keymap('n', '<C-t>', ':FloatermToggle<CR>', { noremap = true })
-vim.api.nvim_set_keymap('i', '<C-t>', ':FloatermToggle<CR>', { noremap = true })
-vim.api.nvim_set_keymap('t', '<C-t>', '<C-\\><C-n>:FloatermToggle<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>ac', function()
+  _G.chatgpt_model = 'gpt-5.1-codex-mini'
+  print 'ChatGPT → gpt-5.1-codex-mini'
+end, { desc = 'ChatGPT model: gpt-5.1-codex-mini' })
 
--- Neo-tree toggle
+vim.keymap.set('n', '<leader>ai', '<Cmd>ChatGPT<CR>', { desc = 'Open ChatGPT prompt' })
+
+-- delete backwards
+vim.keymap.set({ 'i', 'c' }, '<C-BS>', '<C-w>', { noremap = true, desc = 'Delete previous word' })
+
+vim.keymap.set('n', '<Tab>', '<cmd>BufferLineCycleNext<CR>', { desc = 'Go to next tab' })
+vim.keymap.set('n', '<S-Tab>', '<cmd>BufferLineCyclePrev<CR>', { desc = 'Go backwards a tab' })
+
+-- install treesitter parsers
+require('nvim-treesitter').install { 'c', 'rust' }
+
+vim.keymap.set('n', '<leader>tc', ':tabclose<CR>', { desc = 'Close current tab' })
+vim.keymap.set('n', '<leader>fk', ':FloatermKill!<CR>', { desc = 'Kill all floaterm terminals' })
+vim.keymap.set('x', 'S', '<Plug>(nvim-surround-visual)', { remap = true }, { desc = 'Surround selected text' })
+
+-- yank binding
+vim.api.nvim_set_keymap('n', 'Y', 'yy', { noremap = true, silent = true })
+
+-- exit and save
+vim.keymap.set('n', '<C-w>', '<cmd>wqa<cr>')
+
+-- split views
+vim.keymap.set('n', '<leader>sv', '<cmd>vsplit<CR>')
+vim.keymap.set('n', '<leader>sh', '<cmd>split<CR>')
+
+-- signature help
+vim.api.nvim_set_keymap('i', '<C-S-Space>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-S-Space>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', { noremap = true, silent = true })
+
+-- toggle neotree
 local function toggle_neotree()
   local manager = require 'neo-tree.sources.manager'
   local renderer = require 'neo-tree.ui.renderer'
@@ -1062,65 +1438,18 @@ end
 _G.toggle_neotree = toggle_neotree
 vim.api.nvim_set_keymap('n', '<C-n>', ':lua toggle_neotree()<CR>', { noremap = true, silent = true })
 
-vim.api.nvim_set_keymap('i', '<C-S-Space>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<C-S-Space>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', { noremap = true, silent = true })
+-- Floaterm
+vim.api.nvim_set_keymap('n', '<C-t>', ':FloatermToggle<CR>', { noremap = true })
+vim.api.nvim_set_keymap('i', '<C-t>', ':FloatermToggle<CR>', { noremap = true })
+vim.api.nvim_set_keymap('t', '<C-t>', '<C-\\><C-n>:FloatermToggle<CR>', { noremap = true, silent = true })
 
-vim.api.nvim_create_augroup('EnsureTextWindowFocus', { clear = true })
-vim.api.nvim_create_autocmd('VimEnter', {
-  group = 'EnsureTextWindowFocus',
-  callback = function()
-    vim.defer_fn(function()
-      vim.cmd 'wincmd p'
-    end, 100)
-  end,
-})
+-- Comment.nvim keymaps
+vim.api.nvim_set_keymap('n', '<C-/>', '<cmd>lua require("Comment.api").toggle.linewise.current()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-S-/>', '<cmd>lua require("Comment.api").toggle.blockwise.current()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<C-/>', '<ESC><cmd>lua require("Comment.api").toggle.linewise(vim.fn.visualmode())<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<C-S-/>', '<ESC><cmd>lua require("Comment.api").toggle.blockwise(vim.fn.visualmode())<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<C-H>', '<C-W>', { noremap = true })
 
-vim.api.nvim_create_augroup('CppIndent', { clear = true })
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'cpp', 'c', 'cc', 'h', 'hpp' },
-  group = 'CppIndent',
-  callback = function()
-    vim.opt_local.tabstop = 2
-    vim.opt_local.shiftwidth = 2
-    vim.opt_local.expandtab = true
-  end,
-})
+-- git coauthors
+vim.keymap.set('n', '<leader>ga', ':Telescope coauthors<CR>')
 
-vim.api.nvim_set_keymap('n', 'Y', 'yy', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('i', '{', '{}<Left>', { noremap = true, silent = true })
-vim.keymap.set('n', '<C-w>', '<cmd>wqa<cr>')
-
-vim.keymap.set('n', '<leader>sv', '<cmd>vsplit<CR>')
-vim.keymap.set('n', '<leader>sh', '<cmd>split<CR>')
-
--- AI wrapper
-local ai_enabled = true
-vim.keymap.set('n', '<leader>at', function()
-  ai_enabled = not ai_enabled
-  print(ai_enabled and 'AI enabled' or 'AI disabled')
-end)
-
-local function ai_safe(cmd)
-  return function()
-    if not ai_enabled then
-      print 'AI is disabled'
-      return
-    end
-    vim.cmd(cmd)
-  end
-end
-
-vim.keymap.set('n', '<leader>ai', ai_safe 'ChatGPT')
-vim.keymap.set('v', '<leader>ac', ai_safe 'ChatGPTEditWithInstruction')
-vim.keymap.set('v', '<leader>ae', ai_safe 'ChatGPTExplain')
-
-vim.keymap.set('n', '<leader>tn', ':tabnew<CR>')
-vim.keymap.set('n', '<leader>tc', ':tabclose<CR>')
-vim.keymap.set('n', '<leader>fk', ':FloatermKill!<CR>')
-
-vim.keymap.set('x', 'S', '<Plug>(nvim-surround-visual)', { remap = true })
-vim.keymap.set('i', '<C-BS>', '<C-w>', { noremap = true })
-vim.keymap.set('c', '<C-BS>', '<C-w>', { noremap = true })
-
-vim.keymap.set('n', '<Tab>', '<cmd>BufferLineCycleNext<CR>')
-vim.keymap.set('n', '<S-Tab>', '<cmd>BufferLineCyclePrev<CR>')
