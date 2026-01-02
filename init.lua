@@ -1,7 +1,8 @@
-vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
--- for chatgpt
-_G.chatgpt_model = 'gpt-5.1-codex-mini'
+vim.g.mapleader = ' '
+
+-- install deps if need to
+require("bootstrap.pacman")
 
 -- =========================
 -- Lazy.nvim bootstrap
@@ -73,42 +74,6 @@ require('lazy').setup({
   },
 
   'rhysd/git-messenger.vim',
-  {
-    'jackMort/ChatGPT.nvim',
-    event = 'VeryLazy',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'MunifTanjim/nui.nvim',
-      'nvim-telescope/telescope.nvim',
-    },
-    config = function()
-      require('chatgpt').setup {
-        openai_params = {
-          -- NOTE: model can be a function returning the model name
-          -- this is useful if you want to change the model on the fly
-          -- using commands
-          -- Example:
-          -- model = function()
-          --     if some_condition() then
-          --         return "gpt-5"
-          --     else
-          --         return "gpt-5-mini"
-          --     end
-          -- end,
-          model = function()
-            return _G.chatgpt_model
-          end,
-          frequency_penalty = 0,
-          presence_penalty = 0,
-          max_tokens = 4095,
-          temperature = 0.2,
-          top_p = 0.1,
-          n = 1,
-          api_key_cmd = 'echo $OPENAI_API_KEY',
-        },
-      }
-    end,
-  },
 
   {
     'lewis6991/gitsigns.nvim',
@@ -218,7 +183,24 @@ require('lazy').setup({
       'MunifTanjim/nui.nvim',
     },
     opts = {
+      enable_preview = true,
+
       filesystem = {
+        -- open images (and anything else) externally
+        commands = {
+          system_open = function(state)
+            local node = state.tree:get_node()
+            local path = node:get_id() -- absolute path
+            vim.fn.jobstart({ 'imv', path }, { detach = true })
+          end,
+        },
+        window = {
+          mappings = {
+            ['P'] = 'toggle_preview',
+            ['O'] = 'system_open', -- press O to open with external viewer
+          },
+        },
+
         filtered_items = {
           visible = false,
           hide_dotfiles = true,
@@ -230,25 +212,33 @@ require('lazy').setup({
     },
   },
 
-  -- Buffers/tabs
+  -- LAZY PLUGIN SPEC (replace bufferline with barbar)
   {
-    'akinsho/bufferline.nvim',
-    version = '*',
-    dependencies = 'nvim-tree/nvim-web-devicons',
+    'romgrk/barbar.nvim',
+    dependencies = {
+      'nvim-tree/nvim-web-devicons',
+      'lewis6991/gitsigns.nvim', -- optional, for git status icons
+    },
+    init = function()
+      vim.g.barbar_auto_setup = false
+    end,
     opts = {
-      options = {
-        mode = 'buffers', -- tabs or buffers
-        diagnostics = 'nvim_lsp',
-        show_buffer_close_icons = false,
-        show_close_icon = false,
-        hover = {
-            enabled = true,
-            delay = 200,
-            reveal = {'close'}
-        },
+      animation = true,
+      auto_hide = false,
+      tabpages = false, -- show buffers, not Vim tabpages
+      clickable = true,
+      icons = {
+        preset = 'slanted',
+        button = '󰅖',
+      },
+
+      -- Treat neo-tree as a sidebar so it doesn't become a "tab" and layout stays sane
+      sidebar_filetypes = {
+        ['neo-tree'] = { event = 'BufWipeout' },
       },
     },
   },
+
   'nvim-tree/nvim-web-devicons',
 
   {
@@ -334,16 +324,6 @@ require('lazy').setup({
   },
 
   { 'nvim-pack/nvim-spectre', opts = {} },
-
-  {
-    'romgrk/barbar.nvim',
-    event = 'BufEnter',
-    dependencies = 'nvim-tree/nvim-web-devicons',
-    init = function()
-      vim.g.barbar_auto_setup = false
-    end,
-    lazy = true,
-  },
 
   {
     'lukas-reineke/indent-blankline.nvim',
@@ -605,7 +585,7 @@ require('lazy').setup({
           map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
           map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
           map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-          map('K', vim.lsp.buf.hover, 'Hover Documentation')
+          map('T', vim.lsp.buf.hover, 'Hover Documentation')
           map('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
           local client = vim.lsp.get_client_by_id(event.data.client_id)
@@ -866,6 +846,202 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'Kurama622/llm.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim', 'MunifTanjim/nui.nvim' },
+    cmd = { 'LLMSessionToggle', 'LLMSelectedTextHandler', 'LLMAppHandler' },
+    config = function()
+      require('llm').setup {
+        -- GitHub Models (Azure inference)
+        url = 'https://api.openai.com/v1/chat/completions',
+        api_type = 'openai',
+
+        -- Set this to what you want to use (must support /chat/completions)
+        model = _G.chatgpt_model or 'gpt-5-nano',
+
+        -- Sensible coding defaults
+        --max_tokens = 4095,
+        --temperature = 0.2,
+        --top_p = 0.1,
+
+        -- Keep it code-focused
+        prompt = 'You are a helpful programming assistant. Be concise, show code when needed, and prefer practical fixes.',
+        -- Visual selection -> context prompt
+        selected_text_handler = {
+          prompt = function(selection)
+            return string.format(
+              'You are a helpful programming assistant.\n\n' .. 'Context (selected text):\n' .. '```text\n%s\n```\n\n' .. 'Task:\n',
+              selection
+            )
+          end,
+        },
+
+        -- Optional cosmetics (minimal)
+        spinner = {
+          text = { '⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏' },
+          hl = 'Title',
+        },
+        prefix = {
+          user = { text = 'You: ', hl = 'Title' },
+          assistant = { text = 'AI:  ', hl = 'Added' },
+        },
+
+        -- Persist chat history
+        save_session = true,
+        max_history = 30,
+        max_history_name_length = 40,
+
+        -- Keymaps inside the session UI
+        keys = {
+          -- Input window
+          ['Input:Submit'] = { mode = 'i', key = '<cr>' }, -- Enter sends (your issue)
+          ['Input:Cancel'] = { mode = { 'n', 'i' }, key = '<C-c>' },
+          ['Input:Resend'] = { mode = { 'n', 'i' }, key = '<C-r>' },
+
+          -- History (only if save_session=true)
+          ['Input:HistoryNext'] = { mode = { 'n', 'i' }, key = '<C-j>' },
+          ['Input:HistoryPrev'] = { mode = { 'n', 'i' }, key = '<C-k>' },
+
+          -- Output window ("split" style)
+          ['Output:Ask'] = { mode = 'n', key = 'i' },
+          ['Output:Cancel'] = { mode = 'n', key = '<C-c>' },
+          ['Output:Resend'] = { mode = 'n', key = '<C-r>' },
+
+          -- Session window ("float" style)
+          ['Session:Toggle'] = { mode = 'n', key = '<leader>ai' }, -- your chosen toggle
+          ['Session:Close'] = { mode = 'n', key = { '<esc>', 'Q' } },
+        },
+
+        -- Optional diff display used by some tools/handlers
+        display = {
+          diff = {
+            layout = 'vertical',
+            opts = {
+              'internal',
+              'filler',
+              'closeoff',
+              'algorithm:patience',
+              'followwrap',
+              'linematch:120',
+            },
+            provider = 'mini_diff',
+            disable_diagnostic = true,
+          },
+        },
+
+        callbacks = {
+          on_response = function(resp)
+            local usage = resp and resp.usage
+            if usage then
+              vim.notify(
+                string.format(
+                  'LLM tokens — prompt: %d, completion: %d, total: %d',
+                  usage.prompt_tokens or 0,
+                  usage.completion_tokens or 0,
+                  usage.total_tokens or 0
+                ),
+                vim.log.levels.INFO
+              )
+            end
+          end,
+        },
+
+        -- If you later add tools:
+        app_handler = {
+          -- Visual-select text -> run this -> output in a floating result window.
+          AskWithContext = {
+            handler = 'attach_to_chat_handler',
+            prompt = [[
+              Answer the user’s question (likely code related) using the context very briefly and concisely: 
+            ]],
+            opts = {
+              -- this is the key part: append the visual selection after the prompt
+              apply_visual_selection = true, -- described in docs for flexi_handler :contentReference[oaicite:2]{index=2}
+              is_codeblock = true,
+              enter_input = true,
+              enter_flexible_window = false,
+              --exit_on_move = true,
+            },
+          },
+          CodeExplain = {
+            handler = 'flexi_handler',
+            prompt = 'Explain the following code very briefly, please only return the explanation',
+            opts = {
+              enter_flexible_window = true,
+            },
+          },
+        },
+      }
+    end,
+    keys = {
+      { '<leader>ai', '<cmd>LLMSessionToggle<cr>', mode = 'n', silent = true, desc = 'LLM: toggle session' },
+      { '<leader>as', '<cmd>LLMSelectedTextHandler<cr>', mode = 'x', silent = true, desc = 'LLM: send selection' },
+      -- If you add tools:
+      { '<leader>ax', '<cmd>LLMAppHandler CodeExplain<cr>', mode = 'x', silent = true, desc = 'LLM tool: Explain' },
+      { '<leader>ai', '<cmd>LLMAppHandler AskWithContext<cr>', mode = 'x', silent = true, desc = 'LLM tool: Ask with context' },
+    },
+  },
+
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    dependencies = {
+      {
+        'nvim-treesitter/nvim-treesitter',
+        branch = 'main',
+        config = function()
+          vim.api.nvim_create_autocmd('FileType', {
+            pattern = { 'llm', 'markdown' },
+            callback = function()
+              vim.treesitter.start(0, 'markdown')
+            end,
+          })
+        end,
+      },
+      'nvim-mini/mini.icons',
+    }, -- if you use standalone mini plugins
+    ft = { 'markdown', 'llm' },
+
+    config = function()
+      require('render-markdown').setup {
+        restart_highlighter = true,
+        heading = {
+          enabled = true,
+          sign = false,
+          position = 'overlay', -- inline | overlay
+          icons = { '󰎤 ', '󰎧 ', '󰎪 ', '󰎭 ', '󰎱 ', '󰎳 ' },
+          signs = { '󰫎 ' },
+          width = 'block',
+          left_margin = 0,
+          left_pad = 0,
+          right_pad = 0,
+          min_width = 0,
+          border = false,
+          border_virtual = false,
+          border_prefix = false,
+          above = '▄',
+          below = '▀',
+          backgrounds = {},
+          foregrounds = {
+            'RenderMarkdownH1',
+            'RenderMarkdownH2',
+            'RenderMarkdownH3',
+            'RenderMarkdownH4',
+            'RenderMarkdownH5',
+            'RenderMarkdownH6',
+          },
+        },
+        dash = {
+          enabled = true,
+          icon = '─',
+          width = 0.5,
+          left_margin = 0.5,
+          highlight = 'RenderMarkdownDash',
+        },
+        code = { style = 'normal' },
+      }
+    end,
+  },
+
   -- DAP
   {
     'mfussenegger/nvim-dap',
@@ -1050,6 +1226,7 @@ local smear_profiles = {
   -- 1) Frost Mist
   eco_smear = {
     -- General (keep core behavior)
+    cursor_color = '#ffe6b2',
     smear_between_buffers = true,
     smear_between_neighbor_lines = true,
     min_horizontal_distance_smear = 1, -- reduces tiny smears
@@ -1141,6 +1318,7 @@ local smear_profiles = {
   },
 }
 
+-- smear settings
 local smear_profile_order = {
   'silver_blade',
   'eco_smear',
@@ -1168,6 +1346,8 @@ end, {
     return smear_profile_order
   end,
 })
+-- Apply a default on startup (pick one)
+apply_smear_profile 'silver_blade'
 
 vim.api.nvim_create_user_command('SmearProfileNext', function()
   current_idx = (current_idx % #smear_profile_order) + 1
@@ -1183,8 +1363,6 @@ end, {})
 vim.keymap.set('n', '<leader>pn', '<cmd>SmearProfileNext<CR>', { desc = 'Smear profile: next' })
 vim.keymap.set('n', '<leader>pp', '<cmd>SmearProfilePrev<CR>', { desc = 'Smear profile: prev' })
 
--- Apply a default on startup (pick one)
-apply_smear_profile 'silver_blade'
 -- =========================================
 -- ============ END SMEAR PROFILE ==========
 -- =========================================
@@ -1231,14 +1409,14 @@ local function set_indent(ts)
 end
 
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'lua', 'javascript', 'typescript', 'tsx', 'json', 'yaml', 'toml', 'html', 'css', 'rust', 'c', 'cpp' },
+  pattern = { 'lua', 'javascript', 'typescript', 'tsx', 'json', 'yaml', 'toml', 'html', 'css' },
   callback = function()
     set_indent(2)
   end,
 })
 
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'python', 'sh', 'bash', 'zsh', 'go' },
+  pattern = { 'python', 'sh', 'bash', 'zsh', 'go', 'rust', 'cpp', 'c' },
   callback = function()
     set_indent(4)
   end,
@@ -1365,7 +1543,7 @@ vim.keymap.set('n', '<leader>xw', '<cmd>TroubleToggle workspace_diagnostics<cr>'
 vim.keymap.set('n', '<leader>xd', '<cmd>TroubleToggle document_diagnostics<cr>', { silent = true, noremap = true, desc = 'Document diagnostics (Trouble)' })
 
 -- DAP
-vim.keymap.set('n', '<F2>', ":lua require('dapui').toggle()<CR>", { desc = 'Toggle DAP UI' })
+vim.keymap.set('n', '<leader>dap', ":lua require('dapui').toggle()<CR>", { desc = 'Toggle DAP UI' })
 vim.keymap.set('n', '<leader>dc', ":lua require('dap').continue()<CR>", { desc = 'DAP continue' })
 vim.keymap.set('n', '<leader>do', ":lua require('dap').step_over()<CR>", { desc = 'DAP step over' })
 vim.keymap.set('n', '<leader>di', ":lua require('dap').step_into()<CR>", { desc = 'DAP step into' })
@@ -1382,22 +1560,33 @@ vim.keymap.set('n', '<leader>dt', ":lua require('dap').toggle_breakpoint()<CR>",
 vim.keymap.set('n', '<leader>dm', ":lua require('dap-python').test_method()<CR>", { silent = true, noremap = true, desc = 'DAP test method' })
 vim.keymap.set('n', '<leader>df', ":lua require('dap-python').test_class()<CR>", { silent = true, noremap = true, desc = 'DAP test class' })
 
--- barbar
-vim.keymap.set('n', '<A-,>', '<cmd>BufferPrevious<cr>', { silent = true, noremap = true, desc = 'Previous buffer' })
-vim.keymap.set('n', '<A-.>', '<cmd>BufferNext<cr>', { silent = true, noremap = true, desc = 'Next buffer' })
-vim.keymap.set('n', '<A-c>', '<cmd>BufferClose<cr>', { silent = true, noremap = true, desc = 'Close buffer' })
+-- bufferline
 
 local opts = { noremap = true, silent = true }
-vim.keymap.set('n', '<A-1>', '<Cmd>BufferLineGoToBuffer 1<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 1' }))
-vim.keymap.set('n', '<A-2>', '<Cmd>BufferLineGoToBuffer 2<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 2' }))
-vim.keymap.set('n', '<A-3>', '<Cmd>BufferLineGoToBuffer 3<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 3' }))
-vim.keymap.set('n', '<A-4>', '<Cmd>BufferLineGoToBuffer 4<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 4' }))
-vim.keymap.set('n', '<A-5>', '<Cmd>BufferLineGoToBuffer 5<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 5' }))
-vim.keymap.set('n', '<A-6>', '<Cmd>BufferLineGoToBuffer 6<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 6' }))
-vim.keymap.set('n', '<A-7>', '<Cmd>BufferLineGoToBuffer 7<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 7' }))
-vim.keymap.set('n', '<A-8>', '<Cmd>BufferLineGoToBuffer 8<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 8' }))
-vim.keymap.set('n', '<A-9>', '<Cmd>BufferLineGoToBuffer 9<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 9' }))
+
+-- KEYMAPS (Barbar)
+local opts = { noremap = true, silent = true }
+
+vim.keymap.set('n', '<A-1>', '<Cmd>BufferGoto 1<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 1' }))
+vim.keymap.set('n', '<A-2>', '<Cmd>BufferGoto 2<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 2' }))
+vim.keymap.set('n', '<A-3>', '<Cmd>BufferGoto 3<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 3' }))
+vim.keymap.set('n', '<A-4>', '<Cmd>BufferGoto 4<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 4' }))
+vim.keymap.set('n', '<A-5>', '<Cmd>BufferGoto 5<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 5' }))
+vim.keymap.set('n', '<A-6>', '<Cmd>BufferGoto 6<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 6' }))
+vim.keymap.set('n', '<A-7>', '<Cmd>BufferGoto 7<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 7' }))
+vim.keymap.set('n', '<A-8>', '<Cmd>BufferGoto 8<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 8' }))
+vim.keymap.set('n', '<A-9>', '<Cmd>BufferGoto 9<CR>', vim.tbl_extend('force', opts, { desc = 'Go to buffer 9' }))
 vim.keymap.set('n', '<A-0>', '<Cmd>BufferLast<CR>', vim.tbl_extend('force', opts, { desc = 'Go to last buffer' }))
+-- Close current buffer (Barbar)
+vim.keymap.set('n', '<A-w>', '<Cmd>BufferClose<CR>', vim.tbl_extend('force', opts, { desc = 'Close buffer' }))
+
+-- Close current window/split
+vim.keymap.set('n', '<A-q>', '<Cmd>close<CR>', vim.tbl_extend('force', opts, { desc = 'Close window' }))
+
+vim.keymap.set('n', '<Tab>', '<Cmd>BufferNext<CR>', { desc = 'Go to next buffer' })
+vim.keymap.set('n', '<S-Tab>', '<Cmd>BufferPrevious<CR>', { desc = 'Go to previous buffer' })
+
+-- barbar colors
 
 -- quickfix
 vim.keymap.set('n', '<leader>cn', ':cnext<CR>', { desc = 'Next quickfix item' })
@@ -1409,24 +1598,8 @@ vim.keymap.set('n', '<leader>mp', ':MarkdownPreview<CR>', { desc = 'Markdown pre
 -- git
 vim.keymap.set('n', '<leader>ga', ':Telescope coauthors<CR>', { desc = 'Select git co-authors' })
 
--- AI model switching
-vim.keymap.set('n', '<leader>an', function()
-  _G.chatgpt_model = 'gpt-5-nano'
-  print 'ChatGPT → gpt-5-nano'
-end, { desc = 'ChatGPT model: gpt-5-nano' })
-
-vim.keymap.set('n', '<leader>ac', function()
-  _G.chatgpt_model = 'gpt-5.1-codex-mini'
-  print 'ChatGPT → gpt-5.1-codex-mini'
-end, { desc = 'ChatGPT model: gpt-5.1-codex-mini' })
-
-vim.keymap.set('n', '<leader>ai', '<Cmd>ChatGPT<CR>', { desc = 'Open ChatGPT prompt' })
-
 -- delete backwards
 vim.keymap.set({ 'i', 'c' }, '<C-BS>', '<C-w>', { noremap = true, desc = 'Delete previous word' })
-
-vim.keymap.set('n', '<Tab>', '<cmd>BufferLineCycleNext<CR>', { desc = 'Go to next tab' })
-vim.keymap.set('n', '<S-Tab>', '<cmd>BufferLineCyclePrev<CR>', { desc = 'Go backwards a tab' })
 
 vim.keymap.set('n', '<leader>tc', ':tabclose<CR>', { desc = 'Close current tab' })
 vim.keymap.set('n', '<leader>fk', ':FloatermKill!<CR>', { desc = 'Kill all floaterm terminals' })
@@ -1462,9 +1635,9 @@ _G.toggle_neotree = toggle_neotree
 vim.api.nvim_set_keymap('n', '<C-n>', ':lua toggle_neotree()<CR>', { noremap = true, silent = true })
 
 -- Floaterm
-vim.api.nvim_set_keymap('n', '<C-t>', ':FloatermToggle<CR>', { noremap = true })
-vim.api.nvim_set_keymap('i', '<C-t>', ':FloatermToggle<CR>', { noremap = true })
-vim.api.nvim_set_keymap('t', '<C-t>', '<C-\\><C-n>:FloatermToggle<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-`>', ':FloatermToggle<CR>', { noremap = true })
+vim.api.nvim_set_keymap('i', '<C-`>', ':FloatermToggle<CR>', { noremap = true })
+vim.api.nvim_set_keymap('t', '<C-`>', '<C-\\><C-n>:FloatermToggle<CR>', { noremap = true, silent = true })
 
 -- Comment.nvim keymaps
 vim.api.nvim_set_keymap('n', '<C-/>', '<cmd>lua require("Comment.api").toggle.linewise.current()<CR>', { noremap = true, silent = true })
@@ -1478,3 +1651,7 @@ vim.keymap.set('n', '<leader>ga', ':Telescope coauthors<CR>')
 
 -- install treesitter parsers
 require('nvim-treesitter').install { 'c', 'rust', 'gdscript', 'c#' }
+
+-- LSP basics
+vim.keymap.set('n', '<F2>', vim.lsp.buf.rename, { silent = true, desc = 'LSP: Rename' })
+vim.keymap.set('n', '<F12>', vim.lsp.buf.references, { silent = true, desc = 'LSP: References' })
