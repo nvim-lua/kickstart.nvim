@@ -34,12 +34,11 @@ return {
       harpoon:list():select(4)
     end, { desc = 'Harpoon: Go to file 4' })
 
-    -- Navigate to previous & next buffers in the list
-    vim.keymap.set('n', '<C-S-P>', function()
+    vim.keymap.set('n', '<leader>hp', function()
       harpoon:list():prev()
     end, { desc = 'Harpoon: Previous buffer' })
 
-    vim.keymap.set('n', '<C-S-N>', function()
+    vim.keymap.set('n', '<leader>hn', function()
       harpoon:list():next()
     end, { desc = 'Harpoon: Next buffer' })
   end,

@@ -419,15 +419,38 @@ require('lazy').setup({
         pickers = {
           find_files = {
             hidden = true,
+            -- Include .env.local files even if they're gitignored
+            find_command = {
+              'rg', '--files', '--hidden', '--no-ignore-vcs',
+              '--glob', '!.git/*',
+              '--glob', '!node_modules/*',
+              '--glob', '!.next/*',
+              '--glob', '!dist/*',
+              '--glob', '!build/*',
+            },
           },
           live_grep = {
             additional_args = function()
-              return { '--hidden' }
+              return {
+                '--hidden', '--no-ignore-vcs',
+                '--glob', '!.git/*',
+                '--glob', '!node_modules/*',
+                '--glob', '!.next/*',
+                '--glob', '!dist/*',
+                '--glob', '!build/*',
+              }
             end,
           },
           grep_string = {
             additional_args = function()
-              return { '--hidden' }
+              return {
+                '--hidden', '--no-ignore-vcs',
+                '--glob', '!.git/*',
+                '--glob', '!node_modules/*',
+                '--glob', '!.next/*',
+                '--glob', '!dist/*',
+                '--glob', '!build/*',
+              }
             end,
           },
         },
@@ -1032,10 +1055,13 @@ require('lazy').setup({
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects',
+    },
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'vue', 'javascript', 'typescript', 'css' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -1046,6 +1072,44 @@ require('lazy').setup({
         additional_vim_regex_highlighting = { 'ruby' },
       },
       indent = { enable = true, disable = { 'ruby' } },
+      textobjects = {
+        select = {
+          enable = true,
+          lookahead = true, -- Automatically jump forward to textobj
+          keymaps = {
+            ['af'] = '@function.outer',
+            ['if'] = '@function.inner',
+            ['ac'] = '@class.outer',
+            ['ic'] = '@class.inner',
+            ['aa'] = '@parameter.outer',
+            ['ia'] = '@parameter.inner',
+          },
+        },
+        move = {
+          enable = true,
+          set_jumps = true, -- Add to jumplist
+          goto_next_start = {
+            [']m'] = '@function.outer',
+            [']c'] = '@class.outer',
+            [']a'] = '@parameter.inner',
+          },
+          goto_next_end = {
+            [']M'] = '@function.outer',
+            [']C'] = '@class.outer',
+            [']A'] = '@parameter.inner',
+          },
+          goto_previous_start = {
+            ['[m'] = '@function.outer',
+            ['[c'] = '@class.outer',
+            ['[a'] = '@parameter.inner',
+          },
+          goto_previous_end = {
+            ['[M'] = '@function.outer',
+            ['[C'] = '@class.outer',
+            ['[A'] = '@parameter.inner',
+          },
+        },
+      },
     },
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
