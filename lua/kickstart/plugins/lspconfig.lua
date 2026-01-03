@@ -154,23 +154,7 @@ return {
       local capabilities = require('blink.cmp').get_lsp_capabilities()
 
       local servers = {
-        pyright = {
-          on_init = function(client)
-            local venv_path = vim.fn.getcwd() .. '/.venv'
-            if vim.fn.isdirectory(venv_path) == 1 then
-              client.config.settings.python.pythonPath = venv_path .. '/bin/python'
-            end
-          end,
-          settings = {
-            python = {
-              analysis = {
-                typeCheckingMode = 'basic',
-                autoSearchPaths = true,
-                useLibraryCodeForTypes = true,
-              },
-            },
-          },
-        },
+        ty = {},
         ruff = {},
         docker_compose_language_service = {},
         lua_ls = {
