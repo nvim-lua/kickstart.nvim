@@ -27,7 +27,7 @@ return {
   -- neo-tree external opener
   "imv",
 
-  -- treesitter
-  "tree-sitter-cli",
+  -- -- treesitter
+  -- "tree-sitter-cli",
 }
 
