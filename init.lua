@@ -2,7 +2,7 @@ vim.g.maplocalleader = ' '
 vim.g.mapleader = ' '
 
 -- install deps if need to
-require("bootstrap.pacman")
+require 'bootstrap.pacman'
 
 -- =========================
 -- Lazy.nvim bootstrap
@@ -35,6 +35,61 @@ require('lazy').setup({
   { 'numToStr/Comment.nvim', opts = {} },
 
   {
+    'karb94/neoscroll.nvim',
+    opts = {},
+    config = function()
+      local neoscroll = require 'neoscroll'
+
+      neoscroll.setup {
+        -- remove <C-u>/<C-d> from defaults so your custom maps win
+        mappings = {
+          '<C-b>',
+          '<C-f>',
+          '<C-y>',
+          '<C-e>',
+          'zt',
+          'zz',
+          'zb',
+        },
+        hide_cursor = true, -- Hide cursor while scrolling
+        stop_eof = true, -- Stop at <EOF> when scrolling downwards
+        respect_scrolloff = true, -- Stop scrolling when the cursor reaches the scrolloff margin of the file
+        cursor_scrolls_alone = true, -- The cursor will keep on scrolling even if the window cannot scroll further
+        duration_multiplier = 0.3, -- Global duration multiplier
+        easing = 'quadratic', -- Default easing function
+        pre_hook = function(info)
+          if info == 'center' then
+            vim.cmd 'normal! M'
+          end
+        end,
+        post_hook = nil,
+      }
+      local function near_file_edge()
+        local line = vim.api.nvim_win_get_cursor(0)[1]
+        local last = vim.api.nvim_buf_line_count(0)
+        local so = vim.wo.scrolloff
+        return line <= so + 1 or line >= last - so
+      end
+
+      local modes = { 'n', 'v', 'x' }
+
+      vim.keymap.set(modes, '<C-d>', function()
+        neoscroll.ctrl_d { duration = 300 }
+        if not near_file_edge() then
+          vim.cmd 'normal! M'
+        end
+      end)
+
+      vim.keymap.set(modes, '<C-u>', function()
+        neoscroll.ctrl_u { duration = 300 }
+        if not near_file_edge() then
+          vim.cmd 'normal! M'
+        end
+      end)
+    end,
+  },
+
+  {
     'nvim-treesitter/nvim-treesitter',
     lazy = false,
     build = ':TSUpdate',
@@ -53,7 +108,9 @@ require('lazy').setup({
         'yaml',
         'toml',
       },
-      highlight = { enable = true },
+      highlight = {
+        enable = true,
+      },
     },
   },
 
@@ -126,17 +183,6 @@ require('lazy').setup({
     end,
   },
 
-  -- Colors
-  {
-    'folke/tokyonight.nvim',
-    lazy = false,
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'gruvbox-material'
-      vim.cmd.hi 'Comment gui=none'
-    end,
-  },
-
   {
     'sphamba/smear-cursor.nvim',
     opts = {
@@ -191,7 +237,7 @@ require('lazy').setup({
           system_open = function(state)
             local node = state.tree:get_node()
             local path = node:get_id() -- absolute path
-            vim.fn.jobstart({ 'imv', path }, { detach = true })
+            vim.fn.jobstart({ 'xdg-open', path }, { detach = true })
           end,
         },
         window = {
@@ -794,6 +840,7 @@ require('lazy').setup({
             return { 'isort', 'black' }
           end,
           yaml = { 'prettier' },
+          rust = { 'rustfmt' },
           ['*'] = { 'injected' },
         },
         ignore_errors = true,
@@ -1465,11 +1512,11 @@ vim.api.nvim_create_autocmd({ 'BufLeave', 'InsertEnter', 'FocusLost' }, {
 -- Keymaps (treesitter keymaps removed)
 -- =========================
 
--- scrolling / search centering
-vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Scroll down and center cursor' })
-vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Scroll up and center cursor' })
-vim.keymap.set('n', 'n', 'nzzzv', { desc = 'Next search result and center' })
-vim.keymap.set('n', 'N', 'Nzzzv', { desc = 'Previous search result and center' })
+-- scrolling / search centering, disabled for neoscroll
+-- vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Scroll down and center cursor' })
+-- vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Scroll up and center cursor' })
+-- vim.keymap.set('n', 'n', 'nzzzv', { desc = 'Next search result and center' })
+-- vim.keymap.set('n', 'N', 'Nzzzv', { desc = 'Previous search result and center' })
 
 -- move selected lines
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", { desc = 'Move selection down' })
@@ -1497,6 +1544,7 @@ vim.keymap.set('n', '<leader>de', vim.diagnostic.enable, { desc = 'Enable diagno
 vim.keymap.set('n', '<leader>cw', ':cd %:p:h<CR>:pwd<CR>', { desc = 'cd to current file directory' })
 vim.keymap.set('n', '<C-I>', '<C-I>', { noremap = true, desc = 'Jump forward in jumplist' })
 vim.keymap.set('n', '<C-s>', ':write<CR>', { desc = 'Save file' })
+vim.keymap.set('i', '<C-s>', ':write<CR>', { desc = 'Save file' })
 vim.keymap.set('n', '<leader>cd', ':ToggleAutoComplete<CR>', { desc = 'Toggle autocomplete' })
 vim.keymap.set('n', '<leader>ce', ':ToggleAutoComplete<CR>', { desc = 'Toggle autocomplete (alias)' })
 
@@ -1615,10 +1663,6 @@ vim.keymap.set('n', '<C-w>', '<cmd>wqa<cr>')
 vim.keymap.set('n', '<leader>sv', '<cmd>vsplit<CR>')
 vim.keymap.set('n', '<leader>sh', '<cmd>split<CR>')
 
--- signature help
-vim.api.nvim_set_keymap('i', '<C-S-Space>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<C-S-Space>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', { noremap = true, silent = true })
-
 -- toggle neotree
 local function toggle_neotree()
   local manager = require 'neo-tree.sources.manager'
@@ -1650,8 +1694,21 @@ vim.api.nvim_set_keymap('i', '<C-H>', '<C-W>', { noremap = true })
 vim.keymap.set('n', '<leader>ga', ':Telescope coauthors<CR>')
 
 -- install treesitter parsers
-require('nvim-treesitter').install { 'c', 'rust', 'gdscript', 'c#' }
+require('nvim-treesitter').install { 'c', 'rust', 'gdscript', 'c_sharp' }
 
--- LSP basics
+-- ======== LSP settings ===========
+-- signature help
+vim.api.nvim_set_keymap('i', '<C-S-Space>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-S-Space>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<C-S-Space>', '<cmd>lua vim.lsp.buf.hover()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-S-Space>', '<cmd>lua vim.lsp.buf.hover()<CR>', { noremap = true, silent = true })
+-- code actions (normal + insert)
+vim.keymap.set({ 'n', 'i' }, '<C-.>', vim.lsp.buf.code_action, { silent = true, desc = 'Code Action' })
+-- rename bindings
 vim.keymap.set('n', '<F2>', vim.lsp.buf.rename, { silent = true, desc = 'LSP: Rename' })
-vim.keymap.set('n', '<F12>', vim.lsp.buf.references, { silent = true, desc = 'LSP: References' })
+vim.keymap.set('n', '<F12>', vim.lsp.buf.definition, { silent = true, desc = 'LSP: Go To Defintion' })
+
+-- put after colorscheme load
+vim.api.nvim_set_hl(0, '@lsp.type.typeAlias', { link = 'Type' })
+vim.api.nvim_set_hl(0, '@lsp.type.type', { link = 'Type' })
+vim.api.nvim_set_hl(0, '@lsp.type.struct', { link = 'Type' })
