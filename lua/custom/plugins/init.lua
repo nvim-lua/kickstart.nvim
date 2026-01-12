@@ -63,5 +63,11 @@ return {
       harpoon:extend(harpoon_extensions.builtins.highlight_current_file())
     end,
   },
+
+  -- Breadcrumbs
+  {
+    "SmiteshP/nvim-navic",
+    dependencies = 'neovim/nvim-lspconfig',
+  },
 }
 -- vim: ts=2 sts=2 sw=2 et
