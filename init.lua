@@ -957,7 +957,58 @@ require('lazy').setup({
       --  and try some other statusline plugin
       local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
+      statusline.setup {
+        use_icons = vim.g.have_nerd_font,
+
+        content = {
+          active = function()
+            local mode, mode_hl = MiniStatusline.section_mode({ trunc_width = 120 })
+            local git           = MiniStatusline.section_git({ trunc_width = 40 })
+            local diff          = MiniStatusline.section_diff({ trunc_width = 75 })
+            local diagnostics   = MiniStatusline.section_diagnostics({ trunc_width = 75 })
+            local location      = MiniStatusline.section_location({ trunc_width = 75 })
+            local file_info     = MiniStatusline.section_fileinfo({ trunc_width = 999 }) -- always truncated
+            local search        = MiniStatusline.section_searchcount({ trunc_width = 75 })
+
+            -- local function get_indent()
+            --   local indent = 0
+            --
+            --   -- line numbers
+            --   if vim.wo.number or vim.wo.relativenumber then
+            --     local numberwidth = vim.wo.numberwidth
+            --     if numberwidth == 0 then
+            --       -- auto width: digits in max line number
+            --       local max_lnum = vim.api.nvim_buf_line_count(0)
+            --       indent = indent + tostring(max_lnum):len()
+            --     else
+            --       indent = indent + numberwidth
+            --     end
+            --   end
+            --
+            --   return string.rep(' ', indent)
+            -- end
+
+            -- local indent = get_indent()
+
+            return MiniStatusline.combine_groups {
+              -- { hl = 'MiniStatuslineInactive', strings = { indent } },
+              { hl = mode_hl,                  strings = { mode } },
+              { hl = 'MiniStatuslineDevinfo',  strings = { git, diff } },
+              '%<',
+              { hl = 'MiniStatuslineFilename', strings = { diagnostics } },
+              '%=',
+              { hl = 'MiniStatuslineDevinfo',  strings = { file_info } },
+              { hl = mode_hl,                  strings = { search, location } },
+            }
+          end,
+
+          inactive = function()
+            return MiniStatusline.combine_groups {
+              { hl = 'MiniStatuslineFilename', strings = {} },
+            }
+          end,
+        },
+      }
 
       -- You can configure sections in the statusline by overriding their
       -- default behavior. For example, here we set the section for
@@ -1055,4 +1106,7 @@ vim.o.foldenable = true
 
 -- winbar setup
 require('custom.winbar').setup()
-vim.o.winbar = "%{%v:lua.require('custom.winbar').setup()%}"
+vim.o.winbar = "%{%v:lua.require('custom.winbar').setup()%}" 
+-- actually just copy the highlight from mini.statusline to match
+vim.api.nvim_set_hl(0, 'WinBar', { link = 'MiniStatuslineFilename' })
+vim.api.nvim_set_hl(0, 'WinBarNC', { link = 'MiniStatuslineFilename' })
