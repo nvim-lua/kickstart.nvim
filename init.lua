@@ -439,6 +439,11 @@ require('lazy').setup({
         --   },
         -- },
         -- pickers = {}
+        defaults = {
+          path_display = {
+            "smart",
+          }
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -452,9 +457,21 @@ require('lazy').setup({
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
+      local function find_files(opts)
+        return function()
+          builtin.find_files(opts)
+        end
+      end
+
+      local include_hidden_files_opts = {
+        hidden = true,
+        no_ignore = true,
+        no_ignore_parent = true,
+      }
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>sf', find_files({}), { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>sF', find_files(include_hidden_files_opts), { desc = '[S]earch [F]iles (hidden)'})
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
@@ -1004,7 +1021,7 @@ require('lazy').setup({
 
           inactive = function()
             return MiniStatusline.combine_groups {
-              { hl = 'MiniStatuslineFilename', strings = {} },
+              { hl = 'MiniStatuslineInactive', strings = {} },
             }
           end,
         },
@@ -1109,4 +1126,4 @@ require('custom.winbar').setup()
 vim.o.winbar = "%{%v:lua.require('custom.winbar').setup()%}" 
 -- actually just copy the highlight from mini.statusline to match
 vim.api.nvim_set_hl(0, 'WinBar', { link = 'MiniStatuslineFilename' })
-vim.api.nvim_set_hl(0, 'WinBarNC', { link = 'MiniStatuslineFilename' })
+vim.api.nvim_set_hl(0, 'WinBarNC', { link = 'MiniStatuslineInactive' })
