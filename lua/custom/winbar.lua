@@ -38,6 +38,35 @@ M.setup = function()
     return '  '
   end
 
+  local function winbar_path(path, keep)
+    keep = keep or 3
+
+    if path == '' or not path:find('/') then
+      return path
+    end
+
+    local parts = vim.split(path, '/', { plain = true })
+
+    local out = {}
+    local cutoff = #parts - keep
+    local truncation_happend = false
+
+    for i, part in ipairs(parts) do
+      if i < cutoff then
+        truncation_happend = true
+      else
+        table.insert(out, part)
+      end
+    end
+
+    local result = table.concat(out, ' > ')
+    if truncation_happend then
+      result = '… > ' .. result
+    end
+
+    return result
+  end
+
   -- file path
   local filepath = vim.fn.expand('%:~:.')
   -- override neo-tree default buffer name
@@ -55,6 +84,8 @@ M.setup = function()
 
   local indent = winbar_indent()
   local icon = winbar_icon(filepath)
+
+  filepath = winbar_path(filepath, 3)
 
   if location ~= '' then
     return indent .. icon .. filepath .. ' > ' .. location
