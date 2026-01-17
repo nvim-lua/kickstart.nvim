@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TS_SEARCH_PATHS=("$HOME/repo:1" "$HOME/repo/astro:2")
+TS_SEARCH_PATHS=("$HOME/repo:1" "$HOME/repo/astro:2" "$HOME/repo/tripletex-frontend/scripts/migrate-repo/:2")
 TS_MAX_DEPTH=2
 
 find_dirs() {

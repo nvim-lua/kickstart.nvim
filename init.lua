@@ -51,36 +51,8 @@ vim.opt.confirm = true
 vim.keymap.set('v', '<leader>l', "yoconsole.log('<Esc>pa', <Esc>pa);<Esc>", { desc = 'log selected value' })
 vim.keymap.set('n', '<leader>e', ':e.<CR>', { desc = 'Open file three' })
 
--- Function to comment out line(s)
-local function comment_line()
-  local count = vim.v.count + 1
-  local start_line = vim.fn.line '.' -- Get current line number
-
-  -- Check only the first line to determine action
-  local first_line = vim.fn.getline(start_line)
-  local is_commented = first_line:match '^%s*//'
-
-  for i = 0, count - 1 do
-    local line_num = start_line + i
-    local line = vim.fn.getline(line_num)
-    local new_line
-
-    if is_commented then
-      -- Uncomment: remove leading whitespace, //, and optional space after //
-      new_line = line:gsub('^%s*//%s?', '')
-    else
-      -- Comment: add // at the very beginning of the line
-      new_line = '// ' .. line
-    end
-
-    vim.fn.setline(line_num, new_line)
-  end
-
-  -- Move cursor down by count lines
-  vim.cmd('normal! ' .. count .. 'j')
-end
-
-vim.keymap.set('n', '<leader>c', comment_line, { desc = 'Toggle line comment(s)' })
+-- Load comment toggle functionality
+dofile(vim.fn.expand '~/repo/config/comment-toggle.lua')
 
 -- NOTE: My personal key bining END
 
@@ -90,6 +62,14 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { desc = 'Show [D]iagnostic in floating window' })
+
+-- Auto-show diagnostic in floating window on cursor hold
+vim.api.nvim_create_autocmd('CursorHold', {
+  callback = function()
+    vim.diagnostic.open_float(nil, { focus = false, scope = 'cursor' })
+  end,
+})
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -315,12 +295,27 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
-        -- pickers = {}
+        defaults = {
+          -- mappings = {
+          --   i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+          -- },
+          file_ignore_patterns = { '.git/' },
+        },
+        pickers = {
+          find_files = {
+            hidden = true,
+          },
+          live_grep = {
+            additional_args = function()
+              return { '--hidden' }
+            end,
+          },
+          grep_string = {
+            additional_args = function()
+              return { '--hidden' }
+            end,
+          },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -501,13 +496,12 @@ require('lazy').setup({
           source = 'if_many',
           spacing = 2,
           format = function(diagnostic)
-            local diagnostic_message = {
-              [vim.diagnostic.severity.ERROR] = diagnostic.message,
-              [vim.diagnostic.severity.WARN] = diagnostic.message,
-              [vim.diagnostic.severity.INFO] = diagnostic.message,
-              [vim.diagnostic.severity.HINT] = diagnostic.message,
-            }
-            return diagnostic_message[diagnostic.severity]
+            local max_width = 80
+            local message = diagnostic.message
+            if #message > max_width then
+              message = message:sub(1, max_width) .. '...'
+            end
+            return message
           end,
         },
       }
