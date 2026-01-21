@@ -137,7 +137,7 @@ return {
     end
 
     -- Set up keymaps
-    vim.keymap.set('n', '<leader>oa', search_by_alias, { desc = '[O]bsidian search by [A]lias' })
+    vim.keymap.set('n', '<leader> ', search_by_alias, { desc = 'Search Obsidian (Alias & Filename)' })
     vim.keymap.set('n', '<leader>od', '<cmd>Obsidian today<cr>', { desc = '[O]bsidian [D]aily note (today)' })
   end,
 }
