@@ -136,8 +136,17 @@ return {
         :find()
     end
 
+    -- Insert link to today's daily note
+    local function insert_today_link()
+      local date_link = os.date '%Y%m%d'
+      local date_display = os.date '%Y/%m/%d'
+      local link = '[[' .. date_link .. '|' .. date_display .. ']]'
+      vim.api.nvim_put({ link }, 'c', true, true)
+    end
+
     -- Set up keymaps
     vim.keymap.set('n', '<leader> ', search_by_alias, { desc = 'Search Obsidian (Alias & Filename)' })
     vim.keymap.set('n', '<leader>od', '<cmd>Obsidian today<cr>', { desc = '[O]bsidian [D]aily note (today)' })
+    vim.keymap.set('n', '<leader>ot', insert_today_link, { desc = '[O]bsidian insert [T]oday link' })
   end,
 }
