@@ -84,14 +84,7 @@ return {
     dependencies = { 'echasnovski/mini.icons' },
     opts = {},
     config = function()
-      require('fzf-lua').setup {
-        grep = {
-          formatter = 'path.filename_first',
-        },
-        files = {
-          formatter = 'path.filename_first', -- places file name first
-        },
-      }
+      require('fzf-lua').setup {}
 
       local builtin = require 'fzf-lua'
 
