@@ -90,6 +90,9 @@ vim.o.conceallevel = 2
 -- Clear highlights on search when pressing <Esc> in normal mode
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+-- Open file explorer (Oil)
+vim.keymap.set('n', '<leader>e', '<cmd>Oil<CR>', { desc = 'Open file [E]xplorer' })
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
@@ -137,6 +140,16 @@ rtp:prepend(lazypath)
 --    :Lazy
 require('lazy').setup({
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+
+  { -- File explorer that lets you edit your filesystem like a buffer
+    'stevearc/oil.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {
+      view_options = {
+        show_hidden = true,
+      },
+    },
+  },
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
