@@ -587,7 +587,31 @@ require('lazy').setup({
       local servers = {
         clangd = {},
         gopls = {},
-        pyright = {},
+        basedpyright = {
+          settings = {
+            basedpyright = {
+              analysis = {
+                autoImportCompletions = true,
+                autoSearchPaths = true, -- auto serach command paths like 'src'
+                diagnosticMode = 'openFilesOnly',
+                useLibraryCodeForTypes = true,
+                diagnosticSeverityOverrides = {
+                  reportUnknownMemberType = 'none', -- ignore warning : cannot infer member type of object like matplot
+                },
+              },
+            },
+          },
+        },
+        ruff = {
+          init_options = {
+            settings = {
+              lint = {
+                enable = false,
+              },
+            },
+          },
+        },
+
         rust_analyzer = {},
         ts_ls = {},
         -- See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -677,7 +701,14 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = {
+          -- To fix auto-fixable lint errors.
+          'ruff_fix',
+          -- To run the Ruff formatter.
+          'ruff_format',
+          -- To organize the imports.
+          'ruff_organize_imports',
+        },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
