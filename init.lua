@@ -559,6 +559,7 @@ require('lazy').setup({
           },
         },
         gopls = {
+          cmd = { '$HOME/go/bin/gopls' },
           settings = {
             gopls = {
               gofumpt = true, -- A stricter gofmt
