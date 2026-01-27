@@ -666,22 +666,13 @@ require('lazy').setup({
       --    :Mason
       --
       -- You can press `g?` for help in this menu.
-      --
-      -- `mason` had to be setup earlier: to configure its options see the
-      -- `dependencies` table for `nvim-lspconfig` above.
-      --
-      -- You can add other tools here that you want Mason to install
-      -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        -- You can add other tools here that you want Mason to install
       })
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-
-      require('mason-lspconfig').setup {
-        ensure_installed = { 'lua_ls' },
-      }
 
       for name, server in pairs(servers) do
         server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
@@ -706,21 +697,11 @@ require('lazy').setup({
                 'lua/?/init.lua',
               },
             },
-            -- Make the server aware of Neovim runtime files
             workspace = {
               checkThirdParty = false,
               -- NOTE: this is a lot slower and will cause issues when working on your own configuration.
-              -- See https://github.com/neovim/nvim-lspconfig/issues/3189
+              --  See https://github.com/neovim/nvim-lspconfig/issues/3189
               library = vim.api.nvim_get_runtime_file('', true),
-              --
-              -- Alternatively:
-              -- library = {
-              --   vim.env.VIMRUNTIME,
-              --   -- Depending on the usage, you might want to add additional paths
-              --   -- here.
-              --   -- '${3rd}/luv/library',
-              --   -- '${3rd}/busted/library',
-              -- },
             },
           })
         end,
@@ -728,6 +709,7 @@ require('lazy').setup({
           Lua = {},
         },
       })
+      vim.lsp.enable 'lua_ls'
     end,
   },
 
