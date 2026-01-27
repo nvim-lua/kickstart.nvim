@@ -7,7 +7,7 @@ return {
     require('mini.files').setup()
     require('mini.comment').setup()
 
-    vim.keymap.set('n', '<leader>E', function()
+    vim.keymap.set('n', '<leader>e', function()
       MiniFiles.open(vim.api.nvim_buf_get_name(0))
     end, { desc = 'File [E]xplorer' })
 
