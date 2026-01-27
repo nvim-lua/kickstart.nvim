@@ -1,0 +1,3 @@
+return {
+  'Mofiqul/adwaita.nvim',
+}
