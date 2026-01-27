@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -100,9 +100,8 @@ vim.g.have_nerd_font = false
 
 -- Make line numbers default
 vim.o.number = true
--- You can also add relative line numbers, to help with jumping.
---  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+-- Add relative line numbers for easier code navigation
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -684,6 +683,9 @@ require('lazy').setup({
         -- ts_ls = {},
         --
 
+        -- Note: jdtls is configured separately below for Java files
+        -- (jdtls requires special setup with workspace directories)
+
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -716,6 +718,8 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'jdtls',  -- Java Language Server
+        'google-java-format', -- Java code formatter
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -733,6 +737,95 @@ require('lazy').setup({
           end,
         },
       }
+    end,
+  },
+
+  -- Configure jdtls (Java Language Server) for Java files
+  -- This sets up jdtls with proper workspace configuration when opening Java files
+  {
+    'neovim/nvim-lspconfig',
+    ft = { 'java' },
+    dependencies = {
+      'neovim/nvim-lspconfig',
+      'saghen/blink.cmp',
+    },
+    config = function()
+      local capabilities = require('blink.cmp').get_lsp_capabilities()
+
+      -- Set up jdtls when opening Java files
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'java',
+        callback = function()
+          local jdtls_path = vim.fn.stdpath 'data' .. '/mason/packages/jdtls'
+
+          -- Find project root for consistent workspace (better caching)
+          local root_dir = require('lspconfig.util').root_pattern('.git', 'pom.xml', 'build.gradle', 'build.gradle.kts', 'settings.gradle', 'settings.gradle.kts', 'mvnw', 'gradlew')(vim.api.nvim_buf_get_name(0))
+            or vim.fn.getcwd()
+
+          -- Use project root name for workspace (consistent across subdirs)
+          local project_name = vim.fn.fnamemodify(root_dir, ':t')
+          local workspace_dir = vim.fn.stdpath 'data' .. '/jdtls-workspace/' .. project_name
+
+          -- Create workspace directory
+          vim.fn.mkdir(workspace_dir, 'p')
+
+          -- Find the launcher jar
+          local launcher = vim.fn.glob(jdtls_path .. '/plugins/org.eclipse.equinox.launcher_*.jar')
+          if launcher == '' then
+            vim.notify('jdtls launcher not found. Run :Mason to install jdtls', vim.log.levels.ERROR)
+            return
+          end
+
+          local config = {
+            cmd = {
+              'java',
+              '-Declipse.application=org.eclipse.jdt.ls.core.id1',
+              '-Dosgi.bundles.defaultStartLevel=4',
+              '-Declipse.product=org.eclipse.jdt.ls.core.product',
+              '-Dlog.protocol=true',
+              '-Dlog.level=ALL',
+              '-Xmx4g',
+              '--add-modules=ALL-SYSTEM',
+              '--add-opens',
+              'java.base/java.util=ALL-UNNAMED',
+              '--add-opens',
+              'java.base/java.lang=ALL-UNNAMED',
+              '-jar',
+              launcher,
+              '-configuration',
+              jdtls_path .. '/config_mac_arm',
+              '-data',
+              workspace_dir,
+            },
+            root_dir = root_dir,
+            settings = {
+              java = {
+                signatureHelp = { enabled = true },
+                contentProvider = { preferred = 'fernflower' },
+                completion = {
+                  favoriteStaticMembers = {
+                    'org.junit.jupiter.api.Assertions.*',
+                    'org.junit.Assert.*',
+                    'org.mockito.Mockito.*',
+                  },
+                },
+                sources = {
+                  organizeImports = {
+                    starThreshold = 9999,
+                    staticStarThreshold = 9999,
+                  },
+                },
+              },
+            },
+            capabilities = capabilities,
+            init_options = {
+              bundles = {},
+            },
+          }
+
+          vim.lsp.start(config)
+        end,
+      })
     end,
   },
 
@@ -768,6 +861,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        java = { 'google-java-format' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -941,21 +1035,22 @@ require('lazy').setup({
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-    opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
-      -- Autoinstall languages that are not installed
-      auto_install = true,
-      highlight = {
-        enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
-      },
-      indent = { enable = true, disable = { 'ruby' } },
-    },
+    config = function()
+      require('nvim-treesitter').setup {
+        ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'java', 'groovy', 'kotlin' },
+        -- Autoinstall languages that are not installed
+        auto_install = true,
+        highlight = {
+          enable = true,
+          -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
+          --  If you are experiencing weird indenting issues, add the language to
+          --  the list of additional_vim_regex_highlighting and disabled languages for indent.
+          additional_vim_regex_highlighting = { 'ruby' },
+        },
+        indent = { enable = true, disable = { 'ruby' } },
+      }
+    end,
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
     --
@@ -977,7 +1072,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.neo-tree',  -- File tree explorer
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
