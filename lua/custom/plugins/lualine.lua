@@ -25,7 +25,7 @@ return {
       sections = {
         lualine_a = { 'mode' },
         lualine_b = { 'branch', 'diff' },
-        lualine_c = { 'local', 'filename' },
+        lualine_c = { 'filename' },
         lualine_x = {},
         lualine_y = {},
         lualine_z = {},

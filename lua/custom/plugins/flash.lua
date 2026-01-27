@@ -12,7 +12,7 @@ return {
       },
       char = {
         enabled = false,
-        jump_labels = true,
+        jump_labels = false,
       },
     },
   },
