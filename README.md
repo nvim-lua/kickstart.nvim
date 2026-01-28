@@ -1,5 +1,7 @@
 # kickstart.nvim
 
+> **📌 Java IDE Setup:** This configuration includes enhanced Java development features. See [JAVA_IDE_SETUP.md](JAVA_IDE_SETUP.md) for complete documentation on Java LSP, keybindings, and customization.
+
 ## Introduction
 
 A starting point for Neovim that is:

@@ -266,22 +266,8 @@ require('lazy').setup({
   --        end,
   --    }
   --
-  -- Here is a more advanced example where we pass configuration
-  -- options to `gitsigns.nvim`.
-  --
-  -- See `:help gitsigns` to understand what the configuration keys do
-  { -- Adds git related signs to the gutter, as well as utilities for managing changes
-    'lewis6991/gitsigns.nvim',
-    opts = {
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
-    },
-  },
+  -- Git integration - provides :Git commands for full git operations
+  { 'tpope/vim-fugitive' },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
@@ -406,11 +392,20 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
+        defaults = {
+          path_display = function(opts, path)
+            -- Get the filename
+            local tail = require('telescope.utils').path_tail(path)
+            -- Get the directory path
+            local dir = vim.fn.fnamemodify(path, ':h')
+            -- Abbreviate each directory to first letter
+            local abbreviated = dir:gsub('([^/])[^/]*/', '%1/')
+            return string.format('%s/%s', abbreviated, tail)
+          end,
+          mappings = {
+            i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+          },
+        },
         -- pickers = {}
         extensions = {
           ['ui-select'] = {
