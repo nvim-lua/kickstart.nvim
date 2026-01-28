@@ -4,4 +4,9 @@ test.sh
 nvim
 
 spell/
+
+# You can uncomment this yourself if you want to lock the lazy-lock.json,
+# but for kickstart, it makes sense to leave it ignored.
 lazy-lock.json
+
+.DS_Store
