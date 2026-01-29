@@ -827,6 +827,8 @@ require('lazy').setup({
         typescript = { 'prettierd', 'eslint_d', stop_after_first = true },
         vue = { 'prettierd', 'eslint_d', stop_after_first = true },
         json = { 'prettierd' },
+        html = { 'prettierd' },
+        css = { 'prettierd' },
       },
     },
   },
