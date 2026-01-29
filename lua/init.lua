@@ -150,13 +150,13 @@ vim.o.splitbelow = true
 --   See `:help lua-options`
 --   and `:help lua-options-guide`
 vim.o.list = false
-vim.o.autoindent = true -- Disable auto-indentation
-vim.o.smartindent = true -- Disable smart indentation
-vim.o.cindent = false -- Disable C-style indentation
-vim.o.expandtab = true -- Ensure tabs are converted to spaces
-vim.o.shiftwidth = 3 -- No extra spaces for indentation
-vim.o.tabstop = 3 -- One space per tab
-vim.o.softtabstop = 3
+vim.o.autoindent = true -- Enable auto-indentation
+vim.o.smartindent = true -- Enable smart indentation
+vim.o.cindent = true -- Enable C-style indentation (important for C programming)
+vim.o.expandtab = true -- Convert tabs to spaces
+vim.o.shiftwidth = 2 -- Use 2 spaces for indentation
+vim.o.tabstop = 2 -- Tab = 2 spaces
+vim.o.softtabstop = 2 -- Backspace removes 2 spaces
 --vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
@@ -254,7 +254,7 @@ rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+  -- 'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically (DISABLED - using manual settings)
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -690,6 +690,9 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         ts_ls = {},
         --
+        
+        -- C# Language Server
+        omnisharp = {},
 
         lua_ls = {
           -- cmd = { ... },
@@ -763,7 +766,7 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
+        local disable_filetypes = {}
         if disable_filetypes[vim.bo[bufnr].filetype] then
           return nil
         else
@@ -775,6 +778,8 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        c = { 'clang_format' },
+        cpp = { 'clang_format' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -888,39 +893,74 @@ require('lazy').setup({
       signature = { enabled = true },
     },
   },
+  -- { -- You can easily change to a different colorscheme.
+  --   -- Change the name of the colorscheme plugin below, and then
+  --   -- change the command in the config to whatever the name of that colorscheme is.
+  --   --
+  --   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
+  --   'folke/tokyonight.nvim',
+  --   priority = 1000, -- Make sure to load this before all the other start plugins.
+  --   transparent = true,
+  --   config = function()
+  --     ---@diagnostic disable-next-line: missing-fields
+  --     require('tokyonight').setup {
+  --       styles = {
+  --         comments = { italic = false }, -- Disable italics in comments
+  --         keywords = { italic = false },
+  --         sidebars = 'dark', -- style for sidebars, see below
+  --         floats = 'dark', -- style for floating windows
+  --       },
+  --     }
+
+  --     -- Load the colorscheme here.
+  --     -- Like many other themes, this one has different styles, and you could load
+  --     -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+  --     vim.cmd.colorscheme 'tokyonight-storm'
+  --     vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
+  --     vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
+  --   end,
+  -- },
+  -- Using Lazy
   -- {
-  -- 'ellisonleao/gruvbox.nvim',
-  --  priority = 1000, -- make sure to load this before all the other start plugins
-  --  config = function()
-  --    require('gruvbox').setup {
-  --      style = 'dark',
-  --    }
-  -- Enable theme
-  --    require('gruvbox').load()
-  --  end,
+  --   "ellisonleao/gruvbox.nvim",
+  --   priority = 1000, -- make sure to load this before all the other start plugins
+  --   config = function()
+  --     require('gruvbox').setup {
+  --       style = 'dark'
+  --     }
+  --     -- Enable theme
+  --     require('gruvbox').load()
+  --   end
   -- },
   -- Or with configuration
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
+  {
+    'projekt0n/github-nvim-theme',
+    name = 'github-theme',
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = false }, -- Disable italics in comments
+      require('github-theme').setup {
+        options = {
+          styles = {
+            --comments = 'italic',
+            --keywords = 'italic',
+            --types = 'italic',
+          },
+        },
+        specs = {
+          github_dark = {
+            syntax = {},
+          },
+        },
+        prettier = {
+          bg1 = '#151b23',
         },
       }
 
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd 'colorscheme github_dark'
     end,
   },
+
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
   { -- Collection of various small independent plugins/modules
