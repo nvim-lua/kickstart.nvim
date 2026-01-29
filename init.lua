@@ -94,9 +94,7 @@ vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
 -- Set your default shell
-if vim.fn.executable 'nu' == 1 then
-  vim.opt.shell = 'nu'
-end
+if vim.fn.executable 'nu' == 1 then vim.opt.shell = 'nu' end
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
