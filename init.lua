@@ -314,6 +314,13 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>w', group = '[W]indow' },
+        { '<leader>b', group = '[B]uffer' },
+        { '<leader>u', group = '[U]I/Toggle' },
+        { '<leader>g', group = '[G]it' },
+        { '<leader>x', group = 'Quickfi[X]/Location' },
+        { '<leader>c', group = '[C]ode' },
+        { '<leader><tab>', group = '[Tab]s' },
       },
     },
   },
@@ -864,6 +871,8 @@ require('lazy').setup({
     },
   },
 })
+
+require('custom.keymaps')
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
