@@ -663,7 +663,7 @@ require('lazy').setup({
         --
 
         yamlls = {
-          filetypes = { 'json', 'yaml', 'yaml.docker-compose', 'yaml.gitlab', 'yaml.helm-values' },
+          filetypes = { 'json', 'jsonc', 'yaml', 'yaml.docker-compose', 'yaml.gitlab', 'yaml.helm-values' },
           settings = {
             yaml = {
               schemaStore = {
@@ -759,6 +759,7 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         json = { 'prettierd' },
+        jsonc = { 'prettierd' },
         css = { 'prettierd' },
         yaml = { 'prettierd' },
         sh = { 'shfmt' },
