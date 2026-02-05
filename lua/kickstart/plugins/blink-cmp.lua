@@ -9,15 +9,12 @@ return {
         'L3MON4D3/LuaSnip',
         version = '2.*',
         build = (function()
-          if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
-            return
-          end
+          if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then return end
           return 'make install_jsregexp'
         end)(),
         dependencies = {},
         opts = {},
       },
-      'folke/lazydev.nvim',
 
       -- Copilot backend (Lua) -- disable inline/panel; we'll use Blink only
       {
@@ -44,10 +41,8 @@ return {
 
       sources = {
         -- add "copilot" to the default sources
-        default = { 'lsp', 'path', 'snippets', 'lazydev', 'copilot' },
+        default = { 'lsp', 'path', 'snippets', 'copilot' },
         providers = {
-          lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
-
           -- define the Copilot provider for Blink
           copilot = {
             name = 'copilot',
@@ -67,7 +62,6 @@ return {
           },
         },
       },
-
       snippets = { preset = 'luasnip' },
       fuzzy = { implementation = 'lua' },
       signature = { enabled = true },
