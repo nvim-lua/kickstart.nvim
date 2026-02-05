@@ -32,6 +32,8 @@ External Requirements:
 - Basic utils: `git`, `make`, `unzip`, C Compiler (`gcc`)
 - [ripgrep](https://github.com/BurntSushi/ripgrep#installation),
   [fd-find](https://github.com/sharkdp/fd#installation)
+- [`tree-sitter-cli`](https://github.com/tree-sitter/tree-sitter/blob/master/crates/cli/README.md) - For syntax highlighting (required by `nvim-treesitter`)
+- [`node`](https://nodejs.org/en/download) - Required by `tree-sitter-cli` to generate parsers
 - Clipboard tool (xclip/xsel/win32yank or other depending on the platform)
 - A [Nerd Font](https://www.nerdfonts.com/): optional, provides various icons
   - if you have it set `vim.g.have_nerd_font` in `init.lua` to true
