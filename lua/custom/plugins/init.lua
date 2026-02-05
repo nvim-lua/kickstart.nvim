@@ -9,19 +9,12 @@ vim.g.netrw_banner = '0' -- disable topbar
 -- vim.g.netrw_browse_split = 4 -- open in prior buffer/window
 -- -- vim.g.netrw_altv = 1 -- open fle splits to the right
 vim.g.netrw_liststyle = 3 -- tree view
-vim.diagnostic.config {
-  virtual_text = {
-    prefix = '●', -- Could be '■', '▎', 'x'
-  },
-  severity_sort = true,
-  float = {
-    source = true, -- Or "if_many"
-  },
-}
 
 vim.wo.foldmethod = 'expr'
-vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-vim.wo.foldenable = false
+-- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+-- vim.wo.foldenable = false
+vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+vim.wo[0][0].foldmethod = 'expr'
 
 -- copy current buffer path to "+
 vim.keymap.set('n', '<leader>yb', '<cmd>let @+ = expand("%")<CR>', { desc = 'yank to plus register current relative path' })
