@@ -23,10 +23,12 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
-    'mxsdev/nvim-dap-vscode-js',
 
     -- Virtual text
     'theHamsta/nvim-dap-virtual-text',
+
+    -- JSON5 parser for .vscode/launch.json (supports comments and trailing commas)
+    'Joakker/lua-json5',
   },
   keys = {
     -- Basic debugging keymaps, feel free to change to your liking!
@@ -36,6 +38,19 @@ return {
         require('dap').continue()
       end,
       desc = 'Debug: Start/Continue',
+    },
+    {
+      '<S-F5>',
+      function()
+        local dap = require('dap')
+        dap.terminate()
+        vim.defer_fn(function()
+          if dap.session() then
+            dap.close()
+          end
+        end, 500)
+      end,
+      desc = 'Debug: Stop/Terminate',
     },
     {
       '<F1>',
@@ -80,6 +95,18 @@ return {
       end,
       desc = 'Debug: See last session result.',
     },
+    {
+      '<leader>dt',
+      function()
+        require('dap').terminate()
+        vim.defer_fn(function()
+          if require('dap').session() then
+            require('dap').close()
+          end
+        end, 500)
+      end,
+      desc = 'Debug: Terminate Session',
+    },
   },
   config = function()
     local dap = require 'dap'
@@ -103,8 +130,13 @@ return {
       },
     }
 
-    -- Read .vscode/launch.json
-    require('dap.ext.vscode').load_launchjs(nil, {})
+    -- Enable JSON5 parser for .vscode/launch.json to support comments and trailing commas
+    -- nvim-dap will automatically load .vscode/launch.json configurations via dap.launch.json provider
+    -- This allows you to use VSCode-style launch.json files with JavaScript-style comments
+    local ok, json5 = pcall(require, 'json5')
+    if ok then
+      require('dap.ext.vscode').json_decode = json5.parse
+    end
 
     -- Basic debugging keymaps, feel free to change to your liking!
     vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/Continue' })
@@ -115,6 +147,16 @@ return {
     vim.keymap.set('n', '<leader>B', function()
       dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
     end, { desc = 'Debug: Set Breakpoint' })
+
+    -- Terminate session (with force close after timeout)
+    vim.keymap.set('n', '<leader>dt', function()
+      dap.terminate()
+      vim.defer_fn(function()
+        if dap.session() then
+          dap.close()
+        end
+      end, 500)
+    end, { desc = 'Debug: Terminate Session' })
 
     -- Dap virtual text setup
     require('nvim-dap-virtual-text').setup()
@@ -192,37 +234,80 @@ return {
     -- end
 
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
-    dap.listeners.before.event_terminated['dapui_config'] = dapui.close
-    dap.listeners.before.event_exited['dapui_config'] = dapui.close
+    dap.listeners.after.event_terminated['dapui_config'] = dapui.close
+    dap.listeners.after.event_exited['dapui_config'] = dapui.close
 
+    -- Configure vscode-js-debug adapter (installed via Mason as js-debug-adapter)
+    -- NOTE: We configure this manually instead of using nvim-dap-vscode-js plugin
+    -- because that plugin is unmaintained. Direct configuration is the recommended
+    -- approach in 2026 and provides better control.
+    -- This adapter supports Node.js debugging
     dap.adapters['pwa-node'] = {
       type = 'server',
-      host = '::1',
+      host = 'localhost',
       port = '${port}',
       executable = {
-        command = 'js-debug-adapter',
+        command = vim.fn.stdpath 'data' .. '/mason/bin/js-debug-adapter',
         args = { '${port}' },
+      },
+      options = {
+        disconnect_on_terminate = true,
       },
     }
 
-    local js_based_languages = { 'typescript', 'javascript' }
+    -- Configure debugging for JavaScript/TypeScript
+    local js_based_languages = { 'typescript', 'javascript', 'typescriptreact', 'javascriptreact' }
 
     for _, language in ipairs(js_based_languages) do
       dap.configurations[language] = {
-        -- {
-        --   type = 'pwa-node',
-        --   request = 'launch',
-        --   name = 'Launch file',
-        --   program = '${file}',
-        --   cwd = '${workspaceFolder}',
-        -- },
-        -- {
-        --   type = 'pwa-node',
-        --   request = 'attach',
-        --   name = 'Attach',
-        --   processId = require('dap.utils').pick_process,
-        --   cwd = '${workspaceFolder}',
-        -- }
+        {
+          type = 'pwa-node',
+          request = 'launch',
+          name = 'Launch Current File (Node)',
+          program = '${file}',
+          cwd = '${workspaceFolder}',
+          sourceMaps = true,
+          protocol = 'inspector',
+          console = 'integratedTerminal',
+        },
+        {
+          type = 'pwa-node',
+          request = 'launch',
+          name = 'Launch Program',
+          program = '${workspaceFolder}/dist/index.js',
+          cwd = '${workspaceFolder}',
+          sourceMaps = true,
+          protocol = 'inspector',
+          console = 'integratedTerminal',
+          preLaunchTask = 'npm: build',
+        },
+        {
+          type = 'pwa-node',
+          request = 'attach',
+          name = 'Attach to Process',
+          processId = require('dap.utils').pick_process,
+          cwd = '${workspaceFolder}',
+          sourceMaps = true,
+          protocol = 'inspector',
+        },
+        {
+          type = 'pwa-node',
+          request = 'launch',
+          name = 'Debug Jest Tests',
+          runtimeExecutable = 'node',
+          runtimeArgs = {
+            './node_modules/jest/bin/jest.js',
+            '--runInBand',
+            '--no-coverage',
+            '--no-cache',
+            '--watchAll=false',
+          },
+          rootPath = '${workspaceFolder}',
+          cwd = '${workspaceFolder}',
+          console = 'integratedTerminal',
+          internalConsoleOptions = 'neverOpen',
+          sourceMaps = true,
+        },
       }
     end
   end,
