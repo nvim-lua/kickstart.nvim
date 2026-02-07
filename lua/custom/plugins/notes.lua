@@ -7,6 +7,14 @@ return {
       require('orgmode').setup {
         org_agenda_files = '~/vault/projects/**/*',
         org_default_notes_file = '~/vault/projects/refile.org',
+        org_todo_keywords = { 'TODO(t)', 'NEXT(n)', '|', 'DONE(d)', '|', 'HOLD(h)' },
+        org_todo_keyword_faces = {
+          NEXT = ':foreground orange :weight bold :underline on',
+          HOLD = ':foreground yellow',
+        },
+        mappings = {
+          org_return_uses_meta_return = true,
+        },
       }
     end,
   },
