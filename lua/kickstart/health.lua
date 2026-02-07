@@ -20,14 +20,22 @@ local check_version = function()
 end
 
 local check_external_reqs = function()
-  -- Basic utils: `git`, `make`, `unzip`
-  for _, exe in ipairs { 'git', 'make', 'unzip', 'rg' } do
+  -- Basic utils: `git`, `make`, `unzip`, `node`
+  for _, exe in ipairs { 'git', 'make', 'unzip', 'rg', 'node' } do
     local is_executable = vim.fn.executable(exe) == 1
     if is_executable then
       vim.health.ok(string.format("Found executable: '%s'", exe))
     else
       vim.health.warn(string.format("Could not find executable: '%s'", exe))
     end
+  end
+
+  -- Special check for tree-sitter CLI (handles naming variations)
+  local ts_exe = vim.fn.executable 'tree-sitter-cli' == 1 and 'tree-sitter-cli' or 'tree-sitter'
+  if vim.fn.executable(ts_exe) == 1 then
+    vim.health.ok(string.format("Found executable: '%s'", ts_exe))
+  else
+    vim.health.warn(string.format("Could not find executable: '%s'", ts_exe))
   end
 
   return true
