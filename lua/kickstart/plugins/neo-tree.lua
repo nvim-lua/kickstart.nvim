@@ -13,7 +13,7 @@ return {
     'nvim-tree/nvim-web-devicons', -- 为文件和文件夹提供图标，虽然不是必需的，但推荐安装以增强界面。
     'MunifTanjim/nui.nvim', -- 一个用于构建用户界面的 Lua 库，NeoTree 用它来创建其界面组件。
   },
-  cmd = 'Neotree', -- 将在执行 :Neotree 命令时加载
+  lazy = false,
   keys = {
     { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
   },
