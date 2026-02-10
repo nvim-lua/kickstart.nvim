@@ -17,6 +17,7 @@ return {
     require('mini.surround').setup()
 
     require('mini.move').setup()
+    require('mini.git').setup()
 
     local statusline = require 'mini.statusline'
     statusline.setup { use_icons = vim.g.have_nerd_font }
