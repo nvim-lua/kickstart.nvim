@@ -231,6 +231,21 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function() vim.hl.on_yank() end,
 })
 
+-- Autosave on focus lost and buffer leave
+vim.api.nvim_create_autocmd({ 'FocusLost', 'BufLeave' }, {
+  pattern = '*',
+  command = 'silent! wall',
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'go',
+  callback = function()
+    vim.opt_local.tabstop = 4 -- a TAB character displays as 8 columns
+    vim.opt_local.shiftwidth = 4 -- indent commands use 8 columns
+    vim.opt_local.expandtab = false -- use real TABs
+  end,
+})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -617,6 +632,14 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'lua-language-server', -- Lua Language server
         'stylua', -- Used to format Lua code
+        'gopls',
+        'gofumpt',
+        'goimports',
+        'goimports-reviser',
+        'golangci-lint-langserver',
+        'golines',
+        'gomodifytags',
+        'gotests',
         -- You can add other tools here that you want Mason to install
       })
 
