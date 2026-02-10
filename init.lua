@@ -853,7 +853,7 @@ require('lazy').setup({
 
       -- ... and there is more!
       --  Check out: https://github.com/nvim-mini/mini.nvim
-      require('mini.starter').setup()
+      -- require('mini.starter').setup()
     end,
   },
 
