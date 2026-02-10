@@ -754,7 +754,6 @@ require('lazy').setup({
         bashls = {},
         awk_ls = {},
         cssls = {},
-        htmx = {},
         html = {},
         jsonls = {},
         yamlls = {},
@@ -1045,20 +1044,7 @@ require('lazy').setup({
       auto_install = true,
     },
     config = function(_, opts)
-      local ts = require 'nvim-treesitter'
-      ts.setup()
-
-      -- Install only parsers that are not already present to avoid repeated startup spam.
-      if opts.auto_install and opts.ensure_installed and #opts.ensure_installed > 0 then
-        local installed = ts.get_installed 'parsers'
-        local missing = vim.tbl_filter(function(lang)
-          return not vim.list_contains(installed, lang)
-        end, opts.ensure_installed)
-
-        if #missing > 0 then
-          ts.install(missing)
-        end
-      end
+      require('nvim-treesitter.configs').setup(opts)
 
       vim.api.nvim_create_autocmd('FileType', {
         group = vim.api.nvim_create_augroup('kickstart-treesitter', { clear = true }),
