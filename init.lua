@@ -313,6 +313,9 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+
+        { '<leader>g', group = '[G]it' },
+        { '<leader>n', group = '[N]otepad' },
       },
     },
   },
@@ -853,7 +856,7 @@ require('lazy').setup({
 
       -- ... and there is more!
       --  Check out: https://github.com/nvim-mini/mini.nvim
-      require('mini.starter').setup()
+      -- require('mini.starter').setup()
     end,
   },
 
