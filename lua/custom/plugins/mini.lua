@@ -23,5 +23,9 @@ return {
     statusline.setup { use_icons = vim.g.have_nerd_font }
     ---@diagnostic disable-next-line: duplicate-set-field
     statusline.section_location = function() return '%2l:%-2v' end
+
+    vim.keymap.set('n', '<leader>ga', '<cmd>Git add -A<CR>', { desc = 'Git add all' })
+    vim.keymap.set('n', '<leader>gc', '<cmd>Git commit<CR>', { desc = 'Git commit' })
+    vim.keymap.set('n', '<leader>gs', '<cmd>Git stash<CR>', { desc = 'Git stash' })
   end,
 }
