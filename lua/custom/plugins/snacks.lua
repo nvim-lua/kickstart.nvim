@@ -9,7 +9,9 @@ return {
     dashboard = { enabled = true },
     gitbrowse = { enabled = true },
     lazygit = { enabled = true },
+    --TODO: determine a method for deleting scratches easily
     scratch = { enabled = true },
+    terminal = { enabled = true },
   },
   --TODO: set whichkey categories for keybinds
   keys = {
@@ -18,5 +20,6 @@ return {
     { '<leader>gl', function() Snacks.lazygit.open() end, desc = 'Open Lazy Git' },
     { '<leader>no', function() Snacks.scratch() end, desc = 'Open Notepad' },
     { '<leader>ns', function() Snacks.scratch.select() end, desc = 'Select Note' },
+    { '<leader><C-t>', function() Snacks.terminal() end, desc = 'Open Terminal' },
   },
 }
