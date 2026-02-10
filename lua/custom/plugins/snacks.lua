@@ -5,7 +5,7 @@ return {
   ---@type snacks.Config
   opts = {
     --TODO: Use this for a bit and compare to mini dashboard
-    --TODO: design a style and featuers for my dashboard
+    --TODO: design a style and featuers for my dashboard (add opening parent directory with Oil)
     dashboard = { enabled = true },
     gitbrowse = { enabled = true },
     lazygit = { enabled = true },
