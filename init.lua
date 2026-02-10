@@ -622,7 +622,8 @@ require('lazy').setup({
         'lua-language-server', -- Lua Language server
         'stylua', -- Used to format Lua code
         -- You can add other tools here that you want Mason to install
-        'typescript-language-server', --Typescript Language Server
+        'typescript-language-server', -- Typescript Language Server
+        'omnisharp', -- C# Language Server
       })
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
