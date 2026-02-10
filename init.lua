@@ -656,6 +656,15 @@ require('lazy').setup({
       vim.lsp.enable 'lua_ls'
     end,
   },
+  
+  -- Git Diff View
+  {
+    'tpope/vim-fugitive',
+    config = function()
+      vim.keymap.set('n', '<leader>gd', ':Gdiff<CR>', { desc = 'Git diff' })
+      vim.keymap.set('n', '<leader>gs', ':Git<CR>', { desc = 'Git status' })
+    end,
+  },
 
   { -- Autoformat
     'stevearc/conform.nvim',
