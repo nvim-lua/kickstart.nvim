@@ -13,7 +13,6 @@ return {
     scratch = { enabled = true },
     terminal = { enabled = true },
   },
-  --TODO: set whichkey categories for keybinds
   keys = {
     { '<leader>=', function() Snacks.dashboard.open() end, desc = 'Dashboard' },
     { '<leader>gb', function() Snacks.gitbrowse.open() end, desc = 'Open Git Repository in Browser' },
