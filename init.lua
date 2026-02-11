@@ -698,10 +698,13 @@ require('lazy').setup({
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
 
+  --FIX: typescript-lsp: This is not working for typescript
   { -- Autocompletion
     'saghen/blink.cmp',
     event = 'VimEnter',
@@ -796,9 +799,9 @@ require('lazy').setup({
     },
   },
 
+  -- THEMES
   { 'catppuccin/nvim', name = 'catppuccin', priority = 1000 },
   { 'rose-pine/neovim', name = 'rose-pine', priority = 1000 },
-
   { -- You can easily change to a different colorscheme.
     -- Change the name of the colorscheme plugin below, and then
     -- change the command in the config to whatever the name of that colorscheme is.
