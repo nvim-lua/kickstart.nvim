@@ -878,5 +878,15 @@ require('lazy').setup({
   },
 })
 
+-- FIX: godot-server: this is preventing multiple nvim sessions from running at the same time
+-- FIX: godot-server: might be launching the server despite not being in a godot directory?
+-- FIX: godot-server: Also, it really should check if the server is already running first...
+local gdprojectfile = vim.fn.getcwd() == '/project.godot'
+if gdprojectfile then vim.fn.serverstart '127.0.0.1:55432' end
+
+--TODO: godot-server: delete logging logic
+print(gdprojectfile)
+if gdprojectfile then print 'running in gd project file' end
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
