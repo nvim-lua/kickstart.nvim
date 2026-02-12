@@ -417,7 +417,14 @@ require('lazy').setup({
         --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
         --   },
         -- },
-        -- pickers = {}
+        pickers = {
+          find_files = {
+            hidden = true,
+            file_ignore_patterns = { '%.git/' },
+            no_ignore = true,
+            no_ignore_parent = true,
+          },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -679,6 +686,7 @@ require('lazy').setup({
         -- clangd = {},
         gopls = {},
         tofu_ls = {},
+        marksman = {},
         -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -866,18 +874,18 @@ require('lazy').setup({
       },
 
       sources = {
-        default = { 'lsp', 'path', 'snippets', 'lazydev', 'minuet' },
+        default = { 'lsp', 'path', 'snippets', 'lazydev' },
         providers = {
           lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
-          minuet = {
-            name = 'minuet',
-            module = 'minuet.blink',
-            async = true,
-            -- Should match minuet.config.request_timeout * 1000,
-            -- since minuet.config.request_timeout is in seconds
-            timeout_ms = 3000,
-            score_offset = 50, -- Gives minuet higher priority among suggestions
-          },
+          -- minuet = {
+          --   name = 'minuet',
+          --   --   module = 'minuet.blink',
+          --   --   async = true,
+          --   --   -- Should match minuet.config.request_timeout * 1000,
+          --   --   -- since minuet.config.request_timeout is in seconds
+          --   timeout_ms = 3000,
+          --   score_offset = 50, -- Gives minuet higher priority among suggestions
+          -- },
         },
       },
 
@@ -965,7 +973,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'go' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'go', 'yaml', 'json' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
