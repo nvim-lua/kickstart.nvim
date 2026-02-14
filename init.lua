@@ -286,6 +286,25 @@ require('lazy').setup({
     },
   },
 
+  { -- Git integration with fugitive
+    'tpope/vim-fugitive',
+    cmd = { 'Git', 'Gvdiffsplit', 'GBrowse', 'Gwrite', 'Gread', 'Gdiffsplit' },
+    dependencies = {
+      'tpope/vim-rhubarb', -- GitHub support for :GBrowse
+      'shumphrey/fugitive-gitlab.vim', -- GitLab support for :GBrowse
+    },
+    keys = {
+      { '<leader>gs', '<cmd>Git<cr>', desc = '[G]it [S]tatus' },
+      { '<leader>gb', '<cmd>Git blame<cr>', desc = '[G]it [B]lame' },
+      { '<leader>gd', '<cmd>Gvdiffsplit<cr>', desc = '[G]it [D]iff' },
+      { '<leader>gl', '<cmd>Git log --oneline<cr>', desc = '[G]it [L]og' },
+      { '<leader>gp', '<cmd>Git push<cr>', desc = '[G]it [P]ush' },
+      { '<leader>gP', '<cmd>Git pull<cr>', desc = '[G]it [P]ull' },
+      { '<leader>gc', '<cmd>Git commit<cr>', desc = '[G]it [C]ommit' },
+      { '<leader>gB', '<cmd>GBrowse<cr>', desc = '[G]it [B]rowse' },
+    },
+  },
+
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
@@ -313,6 +332,8 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>g', group = '[G]it' },
+        { '<leader>gf', group = '[F]ind' },
       },
     },
   },
@@ -469,6 +490,11 @@ require('lazy').setup({
 
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>sn', function() builtin.find_files { cwd = vim.fn.stdpath 'config' } end, { desc = '[S]earch [N]eovim files' })
+
+      -- Git Telescope integration
+      vim.keymap.set('n', '<leader>gfb', builtin.git_branches, { desc = '[G]it [F]ind [B]ranches' })
+      vim.keymap.set('n', '<leader>gfc', builtin.git_commits, { desc = '[G]it [F]ind [C]ommits' })
+      vim.keymap.set('n', '<leader>gfs', builtin.git_stash, { desc = '[G]it [F]ind [S]tash' })
     end,
   },
 
