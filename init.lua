@@ -334,6 +334,7 @@ require('lazy').setup({
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
         { '<leader>g', group = '[G]it' },
         { '<leader>gf', group = '[F]ind' },
+        { '<leader>j', group = '[J]ava' },
       },
     },
   },
@@ -672,6 +673,10 @@ require('lazy').setup({
         'vue-language-server', -- Vue.js LSP (Volar)
         'eslint-lsp', -- ESLint LSP
         'prettierd', -- Prettier daemon (formatter)
+        'jdtls', -- Java LSP (Eclipse JDT)
+        'java-debug-adapter', -- Java debug adapter
+        'java-test', -- Java test runner
+        'google-java-format', -- Java formatter
       }
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -749,6 +754,7 @@ require('lazy').setup({
         css = { 'prettierd', 'prettier', stop_after_first = true },
         html = { 'prettierd', 'prettier', stop_after_first = true },
         json = { 'prettierd', 'prettier', stop_after_first = true },
+        java = { 'google-java-format' },
       },
     },
   },
@@ -913,13 +919,59 @@ require('lazy').setup({
     opts = {},
   },
 
+  { -- Java LSP support via jdtls
+    'mfussenegger/nvim-jdtls',
+    ft = 'java',
+  },
+
+  { -- Test runner framework
+    'nvim-neotest/neotest',
+    dependencies = {
+      'nvim-neotest/nvim-nio',
+      'nvim-lua/plenary.nvim',
+      'nvim-treesitter/nvim-treesitter',
+      'rcasia/neotest-java', -- JUnit 5 adapter
+    },
+    config = function()
+      require('neotest').setup {
+        adapters = {
+          require 'neotest-java',
+        },
+      }
+
+      -- Command to download JUnit jar on machines without Neovim 0.12+
+      vim.api.nvim_create_user_command('NeotestJavaDownload', function()
+        local version = '1.10.1'
+        local dir = vim.fn.stdpath 'data' .. '/neotest-java'
+        local jar = dir .. '/junit-platform-console-standalone-' .. version .. '.jar'
+        if vim.fn.filereadable(jar) == 1 then
+          vim.notify('JUnit jar already exists at ' .. jar, vim.log.levels.INFO)
+          return
+        end
+        vim.fn.mkdir(dir, 'p')
+        local url = 'https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/'
+          .. version
+          .. '/junit-platform-console-standalone-'
+          .. version
+          .. '.jar'
+        vim.notify('Downloading JUnit Platform Console Standalone ' .. version .. '...', vim.log.levels.INFO)
+        vim.fn.system { 'curl', '-L', '-o', jar, url }
+        if vim.v.shell_error == 0 then
+          vim.notify('JUnit jar downloaded successfully!', vim.log.levels.INFO)
+        else
+          vim.notify('Failed to download JUnit jar', vim.log.levels.ERROR)
+        end
+      end, { desc = 'Download JUnit Platform Console Standalone jar for neotest-java' })
+    end,
+  },
+
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     config = function()
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup {
-        ensure_installed = { 'bash', 'c', 'css', 'diff', 'html', 'javascript', 'json', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'tsx', 'typescript', 'vim', 'vimdoc', 'vue' },
+        ensure_installed = { 'bash', 'c', 'css', 'diff', 'html', 'java', 'javascript', 'json', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'tsx', 'typescript', 'vim', 'vimdoc', 'vue' },
         auto_install = true,
         highlight = { enable = true },
         indent = { enable = true },
@@ -936,7 +988,7 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
