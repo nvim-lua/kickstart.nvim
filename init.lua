@@ -100,9 +100,8 @@ vim.g.have_nerd_font = false
 
 -- Make line numbers default
 vim.o.number = true
--- You can also add relative line numbers, to help with jumping.
---  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+-- Relative line numbers, helps with jumping.
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -286,6 +285,52 @@ require('lazy').setup({
     },
   },
 
+  { -- Git integration with fugitive
+    'tpope/vim-fugitive',
+    cmd = { 'Git', 'Gvdiffsplit', 'GBrowse', 'Gwrite', 'Gread', 'Gdiffsplit' },
+    dependencies = {
+      'tpope/vim-rhubarb', -- GitHub support for :GBrowse
+      'shumphrey/fugitive-gitlab.vim', -- GitLab support for :GBrowse
+    },
+    keys = {
+      { '<leader>gs', '<cmd>Git<cr>', desc = '[G]it [S]tatus' },
+      { '<leader>gb', '<cmd>Git blame<cr>', desc = '[G]it [B]lame' },
+      { '<leader>gd', '<cmd>Gvdiffsplit<cr>', desc = '[G]it [D]iff' },
+      { '<leader>gl', '<cmd>Git log --oneline<cr>', desc = '[G]it [L]og' },
+      { '<leader>gp', '<cmd>Git push<cr>', desc = '[G]it [P]ush' },
+      { '<leader>gP', '<cmd>Git pull<cr>', desc = '[G]it [P]ull' },
+      { '<leader>gc', '<cmd>Git commit<cr>', desc = '[G]it [C]ommit' },
+      { '<leader>gB', '<cmd>GBrowse<cr>', desc = '[G]it [B]rowse' },
+    },
+  },
+
+  { -- Quick file navigation (like workspaces)
+    'ThePrimeagen/harpoon',
+    branch = 'harpoon2',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local harpoon = require 'harpoon'
+      harpoon:setup()
+
+      -- Add current file to harpoon list
+      vim.keymap.set('n', '<leader>a', function() harpoon:list():add() end, { desc = 'Harpoon: [A]dd file' })
+
+      -- Toggle harpoon quick menu
+      vim.keymap.set('n', '<leader>e', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = 'Harpoon: Toggle m[E]nu' })
+
+      -- Navigate to files 1-5
+      vim.keymap.set('n', '<leader>1', function() harpoon:list():select(1) end, { desc = 'Harpoon: File [1]' })
+      vim.keymap.set('n', '<leader>2', function() harpoon:list():select(2) end, { desc = 'Harpoon: File [2]' })
+      vim.keymap.set('n', '<leader>3', function() harpoon:list():select(3) end, { desc = 'Harpoon: File [3]' })
+      vim.keymap.set('n', '<leader>4', function() harpoon:list():select(4) end, { desc = 'Harpoon: File [4]' })
+      vim.keymap.set('n', '<leader>5', function() harpoon:list():select(5) end, { desc = 'Harpoon: File [5]' })
+
+      -- Navigate prev/next in harpoon list
+      vim.keymap.set('n', '<leader>p', function() harpoon:list():prev() end, { desc = 'Harpoon: [P]revious file' })
+      vim.keymap.set('n', '<leader>n', function() harpoon:list():next() end, { desc = 'Harpoon: [N]ext file' })
+    end,
+  },
+
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
@@ -313,6 +358,9 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>g', group = '[G]it' },
+        { '<leader>gf', group = '[F]ind' },
+        { '<leader>j', group = '[J]ava' },
       },
     },
   },
@@ -469,6 +517,11 @@ require('lazy').setup({
 
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>sn', function() builtin.find_files { cwd = vim.fn.stdpath 'config' } end, { desc = '[S]earch [N]eovim files' })
+
+      -- Git Telescope integration
+      vim.keymap.set('n', '<leader>gfb', builtin.git_branches, { desc = '[G]it [F]ind [B]ranches' })
+      vim.keymap.set('n', '<leader>gfc', builtin.git_commits, { desc = '[G]it [F]ind [C]ommits' })
+      vim.keymap.set('n', '<leader>gfs', builtin.git_stash, { desc = '[G]it [F]ind [S]tash' })
     end,
   },
 
@@ -592,17 +645,44 @@ require('lazy').setup({
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --  See `:help lsp-config` for information about keys and how to configure
+      -- Path to Vue language server for the TypeScript plugin
+      local vue_language_server_path = vim.fn.stdpath 'data' .. '/mason/packages/vue-language-server/node_modules/@vue/language-server'
+
       local servers = {
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
-        --
-        -- Some languages (like typescript) have entire language plugins that can be useful:
-        --    https://github.com/pmizio/typescript-tools.nvim
-        --
-        -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+
+        vtsls = {
+          settings = {
+            vtsls = {
+              -- Enable auto-use of workspace TypeScript version
+              autoUseWorkspaceTsdk = true,
+              tsserver = {
+                globalPlugins = {
+                  {
+                    name = '@vue/typescript-plugin',
+                    location = vue_language_server_path,
+                    languages = { 'vue' },
+                    configNamespace = 'typescript',
+                  },
+                },
+              },
+            },
+          },
+          -- Include vue so vtsls attaches to .vue files for TypeScript support
+          filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue' },
+        },
+
+        vue_ls = {},
+
+        eslint = {
+          settings = {
+            -- Auto-fix on save
+            run = 'onSave',
+          },
+        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -612,12 +692,18 @@ require('lazy').setup({
       --    :Mason
       --
       -- You can press `g?` for help in this menu.
-      local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        'lua_ls', -- Lua Language server
+      local ensure_installed = {
+        'lua-language-server', -- Lua Language server
         'stylua', -- Used to format Lua code
-        -- You can add other tools here that you want Mason to install
-      })
+        'vtsls', -- TypeScript/JavaScript LSP
+        'vue-language-server', -- Vue.js LSP (Volar)
+        'eslint-lsp', -- ESLint LSP
+        'prettierd', -- Prettier daemon (formatter)
+        'jdtls', -- Java LSP (Eclipse JDT)
+        'java-debug-adapter', -- Java debug adapter
+        'java-test', -- Java test runner
+        'google-java-format', -- Java formatter
+      }
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -686,11 +772,15 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        typescript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        vue = { 'prettierd', 'prettier', stop_after_first = true },
+        css = { 'prettierd', 'prettier', stop_after_first = true },
+        html = { 'prettierd', 'prettier', stop_after_first = true },
+        json = { 'prettierd', 'prettier', stop_after_first = true },
+        java = { 'google-java-format' },
       },
     },
   },
@@ -849,15 +939,69 @@ require('lazy').setup({
     end,
   },
 
+  { -- Auto-close and auto-rename HTML/Vue tags
+    'windwp/nvim-ts-autotag',
+    event = { 'BufReadPre', 'BufNewFile' },
+    opts = {},
+  },
+
+  { -- Java LSP support via jdtls
+    'mfussenegger/nvim-jdtls',
+    ft = 'java',
+  },
+
+  { -- Test runner framework
+    'nvim-neotest/neotest',
+    dependencies = {
+      'nvim-neotest/nvim-nio',
+      'nvim-lua/plenary.nvim',
+      'nvim-treesitter/nvim-treesitter',
+      'rcasia/neotest-java', -- JUnit 5 adapter
+    },
+    config = function()
+      require('neotest').setup {
+        adapters = {
+          require 'neotest-java',
+        },
+      }
+
+      -- Command to download JUnit jar on machines without Neovim 0.12+
+      vim.api.nvim_create_user_command('NeotestJavaDownload', function()
+        local version = '1.10.1'
+        local dir = vim.fn.stdpath 'data' .. '/neotest-java'
+        local jar = dir .. '/junit-platform-console-standalone-' .. version .. '.jar'
+        if vim.fn.filereadable(jar) == 1 then
+          vim.notify('JUnit jar already exists at ' .. jar, vim.log.levels.INFO)
+          return
+        end
+        vim.fn.mkdir(dir, 'p')
+        local url = 'https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/'
+          .. version
+          .. '/junit-platform-console-standalone-'
+          .. version
+          .. '.jar'
+        vim.notify('Downloading JUnit Platform Console Standalone ' .. version .. '...', vim.log.levels.INFO)
+        vim.fn.system { 'curl', '-L', '-o', jar, url }
+        if vim.v.shell_error == 0 then
+          vim.notify('JUnit jar downloaded successfully!', vim.log.levels.INFO)
+        else
+          vim.notify('Failed to download JUnit jar', vim.log.levels.ERROR)
+        end
+      end, { desc = 'Download JUnit Platform Console Standalone jar for neotest-java' })
+    end,
+  },
+
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    build = ':TSUpdate',
     config = function()
-      local filetypes = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
-      require('nvim-treesitter').install(filetypes)
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = filetypes,
-        callback = function() vim.treesitter.start() end,
-      })
+      ---@diagnostic disable-next-line: missing-fields
+      require('nvim-treesitter.configs').setup {
+        ensure_installed = { 'bash', 'c', 'css', 'diff', 'html', 'java', 'javascript', 'json', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'tsx', 'typescript', 'vim', 'vimdoc', 'vue' },
+        auto_install = true,
+        highlight = { enable = true },
+        indent = { enable = true },
+      }
     end,
   },
 
@@ -870,7 +1014,7 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
