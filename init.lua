@@ -100,9 +100,8 @@ vim.g.have_nerd_font = false
 
 -- Make line numbers default
 vim.o.number = true
--- You can also add relative line numbers, to help with jumping.
---  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+-- Relative line numbers, helps with jumping.
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -303,6 +302,33 @@ require('lazy').setup({
       { '<leader>gc', '<cmd>Git commit<cr>', desc = '[G]it [C]ommit' },
       { '<leader>gB', '<cmd>GBrowse<cr>', desc = '[G]it [B]rowse' },
     },
+  },
+
+  { -- Quick file navigation (like workspaces)
+    'ThePrimeagen/harpoon',
+    branch = 'harpoon2',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local harpoon = require 'harpoon'
+      harpoon:setup()
+
+      -- Add current file to harpoon list
+      vim.keymap.set('n', '<leader>a', function() harpoon:list():add() end, { desc = 'Harpoon: [A]dd file' })
+
+      -- Toggle harpoon quick menu
+      vim.keymap.set('n', '<leader>e', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = 'Harpoon: Toggle m[E]nu' })
+
+      -- Navigate to files 1-5
+      vim.keymap.set('n', '<leader>1', function() harpoon:list():select(1) end, { desc = 'Harpoon: File [1]' })
+      vim.keymap.set('n', '<leader>2', function() harpoon:list():select(2) end, { desc = 'Harpoon: File [2]' })
+      vim.keymap.set('n', '<leader>3', function() harpoon:list():select(3) end, { desc = 'Harpoon: File [3]' })
+      vim.keymap.set('n', '<leader>4', function() harpoon:list():select(4) end, { desc = 'Harpoon: File [4]' })
+      vim.keymap.set('n', '<leader>5', function() harpoon:list():select(5) end, { desc = 'Harpoon: File [5]' })
+
+      -- Navigate prev/next in harpoon list
+      vim.keymap.set('n', '<leader>p', function() harpoon:list():prev() end, { desc = 'Harpoon: [P]revious file' })
+      vim.keymap.set('n', '<leader>n', function() harpoon:list():next() end, { desc = 'Harpoon: [N]ext file' })
+    end,
   },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
