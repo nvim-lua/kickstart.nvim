@@ -85,11 +85,11 @@ return {
         -- Core LSP maps
         vim.keymap.set("n", "<leader>cl", "<cmd>LspInfo<CR>", opts("LSP Info"))
 
-        vim.keymap.set("n", "gd", goto_definition_preferring_source, opts("Go to Definition"))
         vim.keymap.set("n", "gr", vim.lsp.buf.references,      opts("References"))
         vim.keymap.set("n", "gI", vim.lsp.buf.implementation,  opts("Go to Implementation"))
         vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, opts("Go to Type Definition"))
         vim.keymap.set("n", "gD", vim.lsp.buf.declaration,     opts("Go to Declaration"))
+        vim.keymap.set("n", "gd", goto_definition_preferring_source, opts("Go to Definition"))
         vim.keymap.set("n", "gK", vim.lsp.buf.signature_help,  opts("Signature Help"))
 
         vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help, opts("Signature Help"))

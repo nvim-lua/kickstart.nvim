@@ -64,9 +64,10 @@ return {
               "-dist","-build","-out","-coverage","-tmp","-.cache",
             },
             semanticTokens = true,
-            memoryMode = "DegradeClosed",
+            -- memoryMode = "DegradeClosed",
             symbolMatcher = "FastFuzzy",
             ["ui.completion.experimentalPostfixCompletions"] = false,
+            vulncheck = "Imports", 
           },
         },
       })

@@ -37,7 +37,7 @@ return {
     }
 
     -- Import color theme based on environment variable NVIM_THEME
-    local env_var_nvim_theme = os.getenv 'NVIM_THEME' or 'nord'
+    local env_var_nvim_theme = os.getenv 'NVIM_THEME' or 'wombat'
 
     -- Define a table of themes
     local themes = {
@@ -95,8 +95,8 @@ return {
       },
       sections = {
         lualine_a = { mode },
-        lualine_b = { 'branch' },
-        lualine_c = { filename },
+        lualine_c = { },
+        lualine_b = { filename },
         lualine_x = { diagnostics, diff, { 'encoding', cond = hide_in_width }, { 'filetype', cond = hide_in_width } },
         lualine_y = { 'location' },
         lualine_z = { 'progress' },
