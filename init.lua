@@ -6,7 +6,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -530,7 +530,7 @@ require('lazy').setup({
       --  See `:help lsp-config` for information about keys and how to configure
       local servers = {
         -- clangd = {},
-        -- gopls = {},
+        gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
         --
@@ -763,6 +763,52 @@ require('lazy').setup({
     end,
   },
 
+  { 'catppuccin/nvim', name = 'catppuccin', priority = 1000 },
+
+  -- lua/plugins/rose-pine.lua
+  {
+    'rose-pine/neovim',
+    name = 'rose-pine',
+    config = function() vim.cmd 'colorscheme rose-pine' end,
+  },
+  {
+    'rebelot/kanagawa.nvim',
+    priority = 1000, -- Load this before other start plugins
+    config = function()
+      -- Load the colorscheme
+      vim.cmd.colorscheme 'kanagawa'
+
+      -- Optional: Configure Kanagawa with your preferred style
+      -- require('kanagawa').setup({
+      --   undercurl = true,        -- Enable undercurl
+      --   commentStyle = { italic = true },
+      --   functionStyle = {},
+      --   keywordStyle = { italic = true },
+      --   statementStyle = { bold = true },
+      --   typeStyle = {},
+      --   transparent = false,      -- Enable transparency
+      --   dimInactive = false,      -- Dim inactive windows
+      --   terminalColors = true,    -- Define vim.g.terminal_color_*
+      --   colors = {
+      --     theme = {
+      --       all = {
+      --         ui = {
+      --           bg_gutter = "none"
+      --         }
+      --       }
+      --     }
+      --   },
+      --   overrides = function(colors)
+      --     return {}
+      --   end,
+      --   theme = "wave",           -- "wave", "dragon", or "lotus"
+      --   background = {
+      --     dark = "wave",          -- Theme for dark background
+      --     light = "lotus"         -- Theme for light background
+      --   }
+      -- })
+    end,
+  },
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
