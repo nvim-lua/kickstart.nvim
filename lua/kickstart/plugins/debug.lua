@@ -21,6 +21,45 @@ return {
     'mfussenegger/nvim-dap-python',
     'leoluz/nvim-dap-go',
   },
+  keys = {
+    -- Basic debugging keymaps, feel free to change to your liking!
+    {
+      '<F5>',
+      function() require('dap').continue() end,
+      desc = 'Debug: Start/Continue',
+    },
+    {
+      '<F1>',
+      function() require('dap').step_into() end,
+      desc = 'Debug: Step Into',
+    },
+    {
+      '<F2>',
+      function() require('dap').step_over() end,
+      desc = 'Debug: Step Over',
+    },
+    {
+      '<F3>',
+      function() require('dap').step_out() end,
+      desc = 'Debug: Step Out',
+    },
+    {
+      '<leader>b',
+      function() require('dap').toggle_breakpoint() end,
+      desc = 'Debug: Toggle Breakpoint',
+    },
+    {
+      '<leader>B',
+      function() require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ') end,
+      desc = 'Debug: Set Breakpoint',
+    },
+    -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
+    {
+      '<F7>',
+      function() require('dapui').toggle() end,
+      desc = 'Debug: See last session result.',
+    },
+  },
   config = function()
     local dap = require 'dap'
     local ui = require 'dapui'
@@ -43,13 +82,9 @@ return {
       display_callback = function(variable)
         local name = string.lower(variable.name)
         local value = string.lower(variable.value)
-        if name:match 'secret' or name:match 'api' or value:match 'secret' or value:match 'api' then
-          return '*****'
-        end
+        if name:match 'secret' or name:match 'api' or value:match 'secret' or value:match 'api' then return '*****' end
 
-        if #variable.value > 15 then
-          return ' ' .. string.sub(variable.value, 1, 15) .. '... '
-        end
+        if #variable.value > 15 then return ' ' .. string.sub(variable.value, 1, 15) .. '... ' end
 
         return ' ' .. variable.value
       end,
@@ -101,9 +136,7 @@ return {
       enrich_config = function(config, on_config)
         -- If the configuration(s) in `launch.json` contains a `cargo` section
         -- send the configuration off to the cargo_inspector.
-        if config['cargo'] ~= nil then
-          on_config(cargo_inspector(config))
-        end
+        if config['cargo'] ~= nil then on_config(cargo_inspector(config)) end
       end,
     }
 
@@ -124,9 +157,7 @@ return {
         name = 'Debug an Executable',
         type = 'lldb',
         request = 'launch',
-        program = function()
-          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-        end,
+        program = function() return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file') end,
         cwd = '${workspaceFolder}',
         stopOnEntry = false,
       },
@@ -155,9 +186,7 @@ return {
     vim.keymap.set('n', '<space>gb', dap.run_to_cursor)
 
     -- Eval var under cursor
-    vim.keymap.set('n', '<space>?', function()
-      require('dapui').eval(nil, { enter = true })
-    end)
+    vim.keymap.set('n', '<space>?', function() require('dapui').eval(nil, { enter = true }) end)
 
     vim.keymap.set('n', '<F1>', dap.continue)
     vim.keymap.set('n', '<F2>', dap.step_into)
@@ -166,18 +195,10 @@ return {
     vim.keymap.set('n', '<F5>', dap.step_back)
     vim.keymap.set('n', '<F13>', dap.restart)
 
-    dap.listeners.before.attach.dapui_config = function()
-      ui.open()
-    end
-    dap.listeners.before.launch.dapui_config = function()
-      ui.open()
-    end
-    dap.listeners.before.event_terminated.dapui_config = function()
-      ui.close()
-    end
-    dap.listeners.before.event_exited.dapui_config = function()
-      ui.close()
-    end
+    dap.listeners.before.attach.dapui_config = function() ui.open() end
+    dap.listeners.before.launch.dapui_config = function() ui.open() end
+    dap.listeners.before.event_terminated.dapui_config = function() ui.close() end
+    dap.listeners.before.event_exited.dapui_config = function() ui.close() end
 
     require('dap-python').setup()
   end,
