@@ -117,8 +117,6 @@ vim.schedule(function()
   vim.o.clipboard = 'unnamedplus'
 end)
 
-require('custom.wrapping').setup()
-
 -- Default to 4-space indentation unless overridden by filetype/plugins
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
@@ -723,6 +721,14 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      local vue_language_server_path = vim.fn.stdpath 'data' .. '/mason/packages/vue-language-server/node_modules/@vue/language-server'
+      local vue_typescript_plugin = {
+        name = '@vue/typescript-plugin',
+        location = vue_language_server_path,
+        languages = { 'vue' },
+        configNamespace = 'typescript',
+      }
+
       local servers = {
         -- Languages
         clangd = {},
@@ -778,6 +784,13 @@ require('lazy').setup({
         -- Tools
         eslint = {},
         astro = {},
+        vue_ls = {},
+        ts_ls = {
+          filetypes = { 'vue' },
+          init_options = {
+            plugins = { vue_typescript_plugin },
+          },
+        },
         tailwindcss = {},
         docker_language_server = {},
         docker_compose_language_service = {},
@@ -792,7 +805,6 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
         --
       }
       ---@type MasonLspconfigSettings
