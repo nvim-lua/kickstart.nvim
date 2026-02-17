@@ -7,6 +7,9 @@ return {
       local lint = require 'lint'
       lint.linters_by_ft = {
         markdown = { 'markdownlint' },
+        dockerfile = { 'hadolint' },
+        yaml = { 'yamllint' },
+        ['yaml.helm-values'] = { 'yamllint' },
       }
       lint.linters.markdownlint = vim.tbl_deep_extend('force', lint.linters.markdownlint or {}, {
         args = {
@@ -56,11 +59,41 @@ return {
       vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
         group = lint_augroup,
         callback = function()
+          local function executable_cmd(cmd)
+            if type(cmd) == 'function' then
+              local ok, value = pcall(cmd)
+              if not ok then
+                return nil
+              end
+              return value
+            end
+            return cmd
+          end
+
+          local function available_linters_for(ft)
+            local configured = lint.linters_by_ft[ft] or {}
+            local available = {}
+
+            for _, linter_name in ipairs(configured) do
+              local linter = lint.linters[linter_name]
+              local cmd = linter and executable_cmd(linter.cmd)
+              if cmd == nil or cmd == '' or vim.fn.executable(cmd) == 1 then
+                table.insert(available, linter_name)
+              end
+            end
+
+            return available
+          end
+
           -- Only run the linter in buffers that you can modify in order to
           -- avoid superfluous noise, notably within the handy LSP pop-ups that
           -- describe the hovered symbol using Markdown.
           if vim.bo.modifiable then
-            lint.try_lint()
+            local filetype = vim.bo.filetype
+            local linters = available_linters_for(filetype)
+            if #linters > 0 then
+              lint.try_lint(linters)
+            end
           end
         end,
       })

@@ -395,13 +395,18 @@ require('lazy').setup({
       -- Document existing key chains
       spec = {
         { '<leader>a', group = 'Harpoon [A]dd' },
+        { '<leader>c', group = '[C]Make' },
         { '<leader>d', group = '[D]iagnostics' },
+        { '<leader>e', group = '[E]xplorer' },
         { '<leader>g', group = '[G]it' },
         { '<leader>m', group = '[M]arkdown' },
+        { '<leader>n', group = '[N]eotest' },
         { '<leader>o', group = '[O]pencode' },
         { '<leader>s', group = '[S]earch' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>w', group = '[W]indow' },
+        { '<leader>x', group = 'Trouble' },
+        { '<leader>j', group = '[J]ump' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
     },
@@ -762,7 +767,23 @@ require('lazy').setup({
         cssls = {},
         html = {},
         jsonls = {},
-        yamlls = {},
+        yamlls = {
+          settings = {
+            yaml = {
+              schemas = {
+                ['https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.32.1-standalone-strict/all.json'] = {
+                  '*.k8s.yaml',
+                  'k8s/**/*.yaml',
+                  'manifests/**/*.yaml',
+                  'kubernetes/**/*.yaml',
+                },
+                ['https://json.schemastore.org/chart'] = 'Chart.yaml',
+                ['https://json.schemastore.org/helmfile.json'] = 'helmfile.yaml',
+                ['https://json.schemastore.org/kustomization.json'] = 'kustomization.yaml',
+              },
+            },
+          },
+        },
         taplo = {},
         elixirls = {},
         gh_actions_ls = {},
@@ -785,6 +806,7 @@ require('lazy').setup({
         eslint = {},
         astro = {},
         vue_ls = {},
+        helm_ls = {},
         ts_ls = {
           filetypes = { 'vue' },
           init_options = {
@@ -830,6 +852,13 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
         'markdownlint', -- Used by nvim-lint for Markdown buffers
+        'prettierd',
+        'prettier',
+        'clang-format',
+        'hadolint',
+        'yamllint',
+        'js-debug-adapter',
+        'codelldb',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -876,6 +905,15 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        typescript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        json = { 'prettierd', 'prettier', stop_after_first = true },
+        jsonc = { 'prettierd', 'prettier', stop_after_first = true },
+        yaml = { 'prettierd', 'prettier', stop_after_first = true },
+        c = { 'clang_format' },
+        cpp = { 'clang_format' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
