@@ -62,6 +62,7 @@ nvim --headless "+MasonToolsInstallSync" "+qa"
 - `<leader>jm` / `<leader>jk`: next/previous function start
 - `<leader>jM` / `<leader>jK`: next/previous function end
 - `<leader>jc` / `<leader>jC`: next/previous class start
+- Textobject select (operator-pending/visual): `af`/`if` for function, `ac`/`ic` for class
 
 ### Tests and debug
 
@@ -119,7 +120,8 @@ Existing DAP keys are unchanged:
 - Core: `nvim-dap`, `nvim-dap-ui`, `mason-nvim-dap`, `nvim-dap-go`.
 - JS/TS: `nvim-dap-vscode-js` configured with `js-debug-adapter` and
   `pwa-node` launch/attach defaults.
-- C/C++: `codelldb` installation added through Mason DAP setup.
+- C/C++: `codelldb` installation via Mason and baseline launch profile
+  (`Launch current file (codelldb)`).
 
 ### Testing
 
@@ -179,7 +181,7 @@ Check with `:Mason` and install manually if needed.
 
 1. Navigate symbols with `<leader>jm/jk/jc/jC`.
 2. Build/test with CMake mappings if project uses CMake.
-3. Debug using existing DAP keys with `codelldb` installed.
+3. Debug using existing DAP keys and select `Launch current file (codelldb)`.
 4. Run gtest via neotest after `:ConfigureGtest` setup.
 
 ### Kubernetes/Helm workflow

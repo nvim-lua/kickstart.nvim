@@ -4,6 +4,15 @@ return {
   dependencies = { 'nvim-treesitter/nvim-treesitter' },
   config = function()
     require('nvim-treesitter-textobjects').setup {
+      select = {
+        lookahead = true,
+        keymaps = {
+          ['af'] = '@function.outer',
+          ['if'] = '@function.inner',
+          ['ac'] = '@class.outer',
+          ['ic'] = '@class.inner',
+        },
+      },
       move = {
         set_jumps = true,
       },

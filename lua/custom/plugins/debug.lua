@@ -145,5 +145,7 @@ return {
         detached = vim.fn.has 'win32' == 0,
       },
     }
+
+    require('custom.dap_cpp').setup(dap)
   end,
 }
