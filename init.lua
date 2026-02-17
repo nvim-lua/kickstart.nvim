@@ -484,6 +484,7 @@ require('lazy').setup({
       library = {
         -- Load luvit types when the `vim.uv` word is found
         { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+        vim.fn.expand '~/.luarocks/share/lua/5.3/',
       },
     },
   },
@@ -687,6 +688,9 @@ require('lazy').setup({
         gopls = {},
         tofu_ls = {},
         marksman = {},
+        bashls = {},
+        jsonls = {},
+        yamlls = {},
         -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -737,7 +741,10 @@ require('lazy').setup({
         ensure_installed = {
           'gopls',
           'yamlls',
+          'jsonls',
           'solargraph',
+          'bashls',
+          'lua_ls',
         }, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
         automatic_installation = false,
         handlers = {
