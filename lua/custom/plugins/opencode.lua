@@ -7,6 +7,83 @@ return {
     { 'folke/snacks.nvim', opts = { input = {}, picker = {}, terminal = {} } },
   },
   config = function()
+    local function redact_sensitive(value)
+      if type(value) ~= 'string' then
+        return value
+      end
+
+      local redacted = value
+      redacted = redacted:gsub('([Aa]uthorization%s*:%s*[Bb]earer%s+)[^%s,;]+', '%1[REDACTED]')
+      redacted = redacted:gsub('([Aa][Pp][Ii][_%-%s]?[Kk][Ee][Yy]%s*[:=]%s*)[^%s,;]+', '%1[REDACTED]')
+      redacted = redacted:gsub('([Tt][Oo][Kk][Ee][Nn]%s*[:=]%s*)[^%s,;]+', '%1[REDACTED]')
+      return redacted
+    end
+
+    local function truncate(value, max_len)
+      if #value <= max_len then
+        return value
+      end
+
+      return value:sub(1, max_len) .. '...'
+    end
+
+    local function format_opencode_error(err)
+      if type(err) == 'string' then
+        return truncate(redact_sensitive(err), 300)
+      end
+
+      if type(err) == 'table' then
+        local message = err.message or err.msg or err.error or err.reason
+        if type(message) == 'string' and message ~= '' then
+          return truncate(redact_sensitive(message), 300)
+        end
+
+        local status = err.status or err.code
+        if status ~= nil then
+          return 'opencode request failed (' .. tostring(status) .. ')'
+        end
+
+        return 'opencode request failed'
+      end
+
+      return truncate(redact_sensitive(tostring(err)), 300)
+    end
+
+    local function notify_opencode_error(err)
+      if not err then
+        return
+      end
+
+      vim.notify(format_opencode_error(err), vim.log.levels.ERROR, { title = 'opencode' })
+    end
+
+    local function opencode_ask(default, opts)
+      opts = opts or {}
+      opts.context = opts.context or require('opencode.context').new()
+
+      return require('opencode.ui.ask')
+        .ask(default, opts.context)
+        :next(function(input)
+          if input:sub(-2) == '\\n' then
+            input = input:sub(1, -3) .. '\n'
+            opts.clear = false
+            opts.submit = false
+          end
+
+          opts.context:clear()
+          return require('opencode.api.prompt').prompt(input, opts)
+        end)
+        :catch(notify_opencode_error)
+    end
+
+    local function opencode_select(opts)
+      return require('opencode.ui.select').select(opts):catch(notify_opencode_error)
+    end
+
+    local function opencode_command(command)
+      return require('opencode.api.command').command(command):catch(notify_opencode_error)
+    end
+
     ---@type opencode.Opts
     vim.g.opencode_opts = {
       provider = {
@@ -27,8 +104,12 @@ return {
     vim.o.autoread = true
 
     -- Recommended/example keymaps.
-    vim.keymap.set({ 'n', 'x' }, '<C-a>', function() require('opencode').ask('@this: ', { submit = true }) end, { desc = 'Ask opencode…' })
-    vim.keymap.set({ 'n', 'x' }, '<C-x>', function() require('opencode').select() end, { desc = 'Execute opencode action…' })
+    vim.keymap.set({ 'n', 'x' }, '<C-a>', function()
+      opencode_ask('@this: ', { submit = true })
+    end, { desc = 'Ask opencode…' })
+    vim.keymap.set({ 'n', 'x' }, '<C-x>', function()
+      opencode_select()
+    end, { desc = 'Execute opencode action…' })
     local function opencode_toggle()
       local ok, err = pcall(function()
         require('opencode').toggle()
@@ -70,11 +151,19 @@ return {
       end,
     })
 
-    vim.keymap.set({ 'n', 'x' }, 'go', function() return require('opencode').operator '@this ' end, { desc = 'Add range to opencode', expr = true })
-    vim.keymap.set('n', 'goo', function() return require('opencode').operator '@this ' .. '_' end, { desc = 'Add line to opencode', expr = true })
+    vim.keymap.set({ 'n', 'x' }, 'go', function()
+      return require('opencode').operator '@this '
+    end, { desc = 'Add range to opencode', expr = true })
+    vim.keymap.set('n', 'goo', function()
+      return require('opencode').operator '@this ' .. '_'
+    end, { desc = 'Add line to opencode', expr = true })
 
-    vim.keymap.set('n', '<S-C-u>', function() require('opencode').command 'session.half.page.up' end, { desc = 'Scroll opencode up' })
-    vim.keymap.set('n', '<S-C-d>', function() require('opencode').command 'session.half.page.down' end, { desc = 'Scroll opencode down' })
+    vim.keymap.set('n', '<S-C-u>', function()
+      opencode_command 'session.half.page.up'
+    end, { desc = 'Scroll opencode up' })
+    vim.keymap.set('n', '<S-C-d>', function()
+      opencode_command 'session.half.page.down'
+    end, { desc = 'Scroll opencode down' })
 
     -- You may want these if you stick with the opinionated "<C-a>" and "<C-x>" above — otherwise consider "<leader>o…".
     vim.keymap.set('n', '+', '<C-a>', { desc = 'Increment under cursor', noremap = true })
