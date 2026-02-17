@@ -1056,7 +1056,12 @@ require('lazy').setup({
       auto_install = true,
     },
     config = function(_, opts)
-      require('nvim-treesitter.configs').setup(opts)
+      local treesitter = require 'nvim-treesitter'
+      treesitter.setup()
+
+      if opts.auto_install and opts.ensure_installed and #opts.ensure_installed > 0 then
+        treesitter.install(opts.ensure_installed)
+      end
 
       vim.api.nvim_create_autocmd('FileType', {
         group = vim.api.nvim_create_augroup('kickstart-treesitter', { clear = true }),
