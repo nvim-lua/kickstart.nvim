@@ -1,0 +1,50 @@
+==============================================================================
+NVIM CONFIG                                                    *nvim-config*
+                                                              *nvimn-config*
+
+This is a custom Neovim configuration based on kickstart.nvim.
+
+QUICK CHECKS                                      *nvim-config-quick-checks*
+
+Run these commands after config changes:
+
+>
+  nvim --headless "+qa"
+  nvim --headless "+checkhealth" "+qa"
+  luac -p init.lua lua/custom/**/*.lua
+<
+
+GIT KEYMAPS                                              *nvim-config-git*
+
+Core git mappings in normal mode:
+
+- <leader>gg: open Neogit
+- <leader>gd: open Diffview
+- <leader>gD: close Diffview
+- <leader>gf: Diffview file history for current file
+- <leader>gF: Diffview repository history
+- <leader>h...: Gitsigns hunk actions
+
+Use |which-key| with <leader>g and <leader>h to discover more actions.
+
+LSP: VUE + TYPESCRIPT                                    *nvim-config-vue*
+
+Vue buffers rely on both:
+
+- `vue_ls` for Vue language features
+- `ts_ls` (filetype-scoped to `vue`) with `@vue/typescript-plugin`
+
+This pairing allows `vue_ls` to forward TypeScript requests for `.vue` files.
+
+TREESITTER                                           *nvim-config-treesitter*
+
+This config uses the current nvim-treesitter API:
+
+>
+  require('nvim-treesitter').setup()
+<
+
+Configured parsers are installed from `ensure_installed` as needed.
+
+==============================================================================
+ vim:tw=78:ts=8:ft=help:norl:

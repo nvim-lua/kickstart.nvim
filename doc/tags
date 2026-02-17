@@ -1,3 +1,9 @@
 kickstart-is	kickstart.txt	/*kickstart-is*
 kickstart-is-not	kickstart.txt	/*kickstart-is-not*
 kickstart.nvim	kickstart.txt	/*kickstart.nvim*
+nvim-config	nvim.txt	/*nvim-config*
+nvim-config-git	nvim.txt	/*nvim-config-git*
+nvim-config-quick-checks	nvim.txt	/*nvim-config-quick-checks*
+nvim-config-treesitter	nvim.txt	/*nvim-config-treesitter*
+nvim-config-vue	nvim.txt	/*nvim-config-vue*
+nvimn-config	nvim.txt	/*nvimn-config*
