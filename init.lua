@@ -149,12 +149,11 @@ rtp:prepend(lazypath)
 --  To check the current status of your plugins, run
 --    :Lazy
 require('lazy').setup({
-  'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
-
   { -- File explorer that lets you edit your filesystem like a buffer
     'stevearc/oil.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = {
+      default_file_explorer = true,
       view_options = {
         show_hidden = true,
       },
