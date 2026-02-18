@@ -9,12 +9,14 @@ return {
     'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
     'MunifTanjim/nui.nvim',
   },
-  lazy = false,
+  cmd = 'Neotree',
   keys = {
     { '<leader>e', ':Neotree reveal<CR>', desc = 'File [E]xplorer', silent = true },
   },
   opts = {
+    open_files_do_not_replace_types = { 'terminal', 'trouble', 'qf', 'neo-tree' },
     filesystem = {
+      hijack_netrw_behavior = 'disabled',
       filtered_items = {
         visible = true,
         hide_dotfiles = false,
