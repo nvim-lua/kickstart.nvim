@@ -49,6 +49,10 @@ If you use Nix with flakes, you can install this configuration via the flake:
 # Try it out without installing
 nix run github:0xWheatyz/kickstart.nvim
 
+# Test locally with development shell (includes nvim + dependencies)
+nix develop
+nix develop -c nvim  # Or run nvim directly
+
 # Or add to your home-manager configuration
 {
   inputs.kickstart-nvim.url = "github:0xWheatyz/kickstart.nvim";
