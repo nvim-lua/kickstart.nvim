@@ -863,6 +863,7 @@ require('lazy').setup({
 
   { -- AI agent done right
     'ThePrimeagen/99',
+    dependencies = { { 'saghen/blink.compat', version = '2.*' } },
     config = function()
       local _99 = require '99'
       _99.setup {
