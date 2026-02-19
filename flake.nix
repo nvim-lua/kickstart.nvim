@@ -15,21 +15,19 @@
         };
 
         config = lib.mkIf config.programs.neovim-kickstart.enable {
-          home.packages = [ self.packages.${pkgs.system}.default ];
-
           home.file.".config/nvim" = {
             source = self;
             recursive = true;
           };
 
-          # Optional: Install recommended dependencies
-          home.packages = with pkgs; [
+          # Install Neovim package and recommended dependencies
+          home.packages = [ self.packages.${pkgs.system}.default ] ++ (with pkgs; [
             ripgrep
             fd
             gcc
             gnumake
             git
-          ];
+          ]);
         };
       };
     in
