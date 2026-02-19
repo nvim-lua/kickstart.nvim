@@ -60,6 +60,56 @@ vim.opt.foldlevel = 99 -- Keep folds open by default
 
 
 
+-- Markdown: enable concealment for render-markdown.nvim rendering
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.opt_local.conceallevel = 2
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
+    vim.opt_local.spell = true
+    vim.opt_local.spelllang = "en_us"
+
+    -- ]e/[e and ]w/[w navigate spell errors (mirrors diagnostic nav in code files)
+    vim.keymap.set("n", "]e", "]s", { buffer = true, remap = true, desc = "Next spell error" })
+    vim.keymap.set("n", "[e", "[s", { buffer = true, remap = true, desc = "Prev spell error" })
+    vim.keymap.set("n", "]w", "]s", { buffer = true, remap = true, desc = "Next spell error" })
+    vim.keymap.set("n", "[w", "[s", { buffer = true, remap = true, desc = "Prev spell error" })
+
+    -- K: spell suggestions picker when on a misspelled word, fallback to LSP hover
+    vim.keymap.set("n", "K", function()
+      local bad = vim.fn.spellbadword()
+      if bad[1] ~= "" then
+        local word = bad[1]
+        local suggestions = vim.fn.spellsuggest(word, 10)
+        local items = {}
+        for _, s in ipairs(suggestions) do
+          table.insert(items, s)
+        end
+        table.insert(items, "── dictionary ──")
+        table.insert(items, "Add to dictionary: " .. word)
+        table.insert(items, "Mark as bad: " .. word)
+
+        vim.ui.select(items, {
+          prompt = "Spell: '" .. word .. "'",
+        }, function(choice)
+          if not choice or choice == "── dictionary ──" then return end
+          if choice == "Add to dictionary: " .. word then
+            vim.cmd("normal! zg")
+          elseif choice == "Mark as bad: " .. word then
+            vim.cmd("normal! zw")
+          else
+            vim.cmd("normal! ciw" .. choice)
+          end
+        end)
+        return
+      end
+      -- fallback: LSP hover (e.g. if marksman is installed later)
+      pcall(vim.lsp.buf.hover)
+    end, { buffer = true, desc = "Spell suggestions / hover" })
+  end,
+})
+
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "templ",
   callback = function()
