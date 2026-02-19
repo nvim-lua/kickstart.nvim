@@ -88,7 +88,6 @@ P.S. You can delete this when you're done too. It's your config now! :)
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = false
 
@@ -691,7 +690,14 @@ require('lazy').setup({
         bashls = {},
         jsonls = {},
         yamlls = {},
-        -- pyright = {},
+        ty = {
+          configuration = {
+            rules = {
+              ['unresolved-reference'] = 'warn',
+              diagnosticMode = 'workspace',
+            },
+          },
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -734,6 +740,7 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'ruff',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -745,6 +752,7 @@ require('lazy').setup({
           'solargraph',
           'bashls',
           'lua_ls',
+          'ty',
         }, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
         automatic_installation = false,
         handlers = {
@@ -794,6 +802,14 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         go = { 'gofmt' },
+        python = {
+          -- To fix auto-fixable lint errors.
+          'ruff_fix',
+          -- To run the Ruff formatter.
+          'ruff_format',
+          -- To organize the imports.
+          'ruff_organize_imports',
+        },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
