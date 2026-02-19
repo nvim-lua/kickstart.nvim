@@ -7,6 +7,32 @@
   };
 
   outputs = { self, nixpkgs, flake-utils }:
+    let
+      # Home Manager module
+      homeManagerModule = { config, lib, pkgs, ... }: {
+        options.programs.neovim-kickstart = {
+          enable = lib.mkEnableOption "kickstart.nvim configuration";
+        };
+
+        config = lib.mkIf config.programs.neovim-kickstart.enable {
+          home.packages = [ self.packages.${pkgs.system}.default ];
+
+          home.file.".config/nvim" = {
+            source = self;
+            recursive = true;
+          };
+
+          # Optional: Install recommended dependencies
+          home.packages = with pkgs; [
+            ripgrep
+            fd
+            gcc
+            gnumake
+            git
+          ];
+        };
+      };
+    in
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
@@ -45,5 +71,9 @@
           neovim = neovim-kickstart;
         };
       }
-    );
+    ) // {
+      # Home Manager module (not system-specific)
+      homeManagerModules.default = homeManagerModule;
+      homeManagerModules.neovim-kickstart = homeManagerModule;
+    };
 }
