@@ -41,6 +41,26 @@ nvim
 
 Run `:Lazy` to check plugin status. Run `:checkhealth` if anything looks wrong.
 
+### Nix Flake (Alternative Installation)
+
+If you use Nix with flakes, you can install this configuration via the flake:
+
+```sh
+# Try it out without installing
+nix run github:0xWheatyz/kickstart.nvim
+
+# Or add to your home-manager configuration
+{
+  inputs.kickstart-nvim.url = "github:0xWheatyz/kickstart.nvim";
+
+  # In your home-manager configuration:
+  programs.neovim-kickstart.enable = true;
+}
+```
+
+The home-manager module automatically installs Neovim with this configuration
+and recommended dependencies (ripgrep, fd, gcc, make, git).
+
 ---
 
 ## Structure
