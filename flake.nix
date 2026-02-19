@@ -68,6 +68,22 @@
           default = neovim-kickstart;
           neovim = neovim-kickstart;
         };
+
+        devShells.default = pkgs.mkShell {
+          buildInputs = [
+            neovim-kickstart
+            pkgs.ripgrep
+            pkgs.fd
+            pkgs.gcc
+            pkgs.gnumake
+            pkgs.git
+          ];
+
+          shellHook = ''
+            echo "Neovim kickstart development environment"
+            echo "Run 'nvim' to start Neovim with the kickstart configuration"
+          '';
+        };
       }
     ) // {
       # Home Manager module (not system-specific)
