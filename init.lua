@@ -861,6 +861,23 @@ require('lazy').setup({
     end,
   },
 
+  { -- AI agent done right
+    'ThePrimeagen/99',
+    config = function()
+      local _99 = require '99'
+      _99.setup {
+        provider = _99.Providers.ClaudeCodeProvider,
+        completion = {
+          source = 'blink',
+        },
+      }
+
+      vim.keymap.set('v', '<leader>9v', function() _99.visual() end, { desc = '[9]9 [V]isual request' })
+      vim.keymap.set('n', '<leader>9x', function() _99.stop_all_requests() end, { desc = '[9]9 Stop all requests' })
+      vim.keymap.set('n', '<leader>9s', function() _99.search() end, { desc = '[9]9 [S]earch' })
+    end,
+  },
+
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
