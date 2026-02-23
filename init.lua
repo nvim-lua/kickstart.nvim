@@ -598,7 +598,7 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        pyright = {},
+        basedpyright = {},
         -- rust_analyzer = {},
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -690,6 +690,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        python = { 'ruff' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -855,40 +856,8 @@ require('lazy').setup({
 
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
-    build = ':TSUpdate',
     config = function()
-      require('nvim-treesitter').setup {
-        highlight = {
-          enable = true, -- Enable syntax highlighting
-        },
-        -- OPTIONAL!! These enable ts-specific textobjects.
-        -- So you can hit `yaf` to copy the closest function,
-        -- `dif` to clear the content of the closest function,
-        -- or whatever keys you map to what query.
-        textobjects = {
-          select = {
-            enable = true,
-            keymaps = {
-              -- You can use the capture groups defined in textobjects.scm
-              -- For example:
-              -- Nushell only
-              ['aP'] = '@pipeline.outer',
-              ['iP'] = '@pipeline.inner',
-
-              -- supported in other languages as well
-              ['af'] = '@function.outer',
-              ['if'] = '@function.inner',
-              ['al'] = '@loop.outer',
-              ['il'] = '@loop.inner',
-              ['aC'] = '@conditional.outer',
-              ['iC'] = '@conditional.inner',
-              ['iS'] = '@statement.inner',
-              ['aS'] = '@statement.outer',
-            }, -- keymaps
-          }, -- select
-        }, -- textobjects
-      }
-      local filetypes = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'nu' }
+      local filetypes = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'nu', 'python' }
       require('nvim-treesitter').install(filetypes)
       vim.api.nvim_create_autocmd('FileType', {
         pattern = filetypes,
