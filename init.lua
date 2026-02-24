@@ -60,9 +60,6 @@ require('lazy').setup({
   require 'plugins.lsp',
   require 'plugins.none-ls',     -- none-ls/null-ls sources & setup
   require 'plugins.autoformat',  -- your autoformat-on-save/idle logic
-
-  -- Optional: pick one formatter stack. If you keep Conform,
-  -- ensure it doesn't also format Go on save to avoid double-format.
   require 'plugins.conform',
 
   -- Debugging / DB (as you had)
@@ -72,6 +69,11 @@ require('lazy').setup({
   require 'plugins.lsp-keymaps',
   require 'plugins.trouble',
   require 'plugins.spectre',
+
+  -- TESTING
+  require 'plugins.octo',
+  require 'plugins.codecompanion',
+
 }, {
   ui = {
     icons = vim.g.have_nerd_font and {} or {
