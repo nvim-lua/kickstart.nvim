@@ -528,6 +528,7 @@ require('lazy').setup({
       -- Mason must be loaded before its dependents so we need to set it up here.
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
       { 'mason-org/mason.nvim', opts = {} },
+      { 'mason-org/mason-lspconfig.nvim', opts = {} },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
@@ -643,6 +644,13 @@ require('lazy').setup({
         -- clangd = {},
         -- gopls = {},
         basedpyright = {},
+        powershell_es = {
+          settings = {
+            powershell = {
+              codeFormatting = { Preset = 'OTBS' }, -- One True Brace Style
+            },
+          },
+        },
         -- rust_analyzer = {},
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -661,9 +669,9 @@ require('lazy').setup({
       -- You can press `g?` for help in this menu.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'lua-language-server', -- Lua Language server
+        'lua_ls', -- Lua Language server
         'stylua', -- Used to format Lua code
-        'ruff',
+        'ruff', -- python formatter
         -- You can add other tools here that you want Mason to install
       })
 
@@ -672,7 +680,7 @@ require('lazy').setup({
       for name, server in pairs(servers) do
         server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
         vim.lsp.config(name, server)
-        vim.lsp.enable(name)
+        -- vim.lsp.enable(name) -- not needed if mason-org/mason-lspconfig.nvim is installed (in dependencies of nvim-lspconfig)
       end
 
       -- Special Lua Config, as recommended by neovim help docs
@@ -901,7 +909,7 @@ require('lazy').setup({
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     config = function()
-      local filetypes = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'nu', 'python' }
+      local filetypes = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'nu', 'python', 'powershell' }
       require('nvim-treesitter').install(filetypes)
       vim.api.nvim_create_autocmd('FileType', {
         pattern = filetypes,
