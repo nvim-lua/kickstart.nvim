@@ -147,4 +147,8 @@ return {
       -- log_level = 'debug',
     },
   },
+  {
+    'DrKJeff16/wezterm-types',
+    version = false, -- Get the latest version
+  },
 }
