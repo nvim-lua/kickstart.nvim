@@ -44,9 +44,7 @@ return {
           local buf_bps = require('dap.breakpoints').get(vim.fn.bufnr())[vim.fn.bufnr()]
           ---@type dap.SourceBreakpoint
           for _, candidate in ipairs(buf_bps) do
-            if candidate.line and candidate.line == vim.fn.line '.' then
-              return candidate
-            end
+            if candidate.line and candidate.line == vim.fn.line '.' then return candidate end
           end
 
           return { condition = '', logMessage = '', hitCondition = '', line = vim.fn.line '.' }
