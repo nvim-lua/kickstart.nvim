@@ -7,7 +7,8 @@ spell/
 
 # You likely want to comment this, since it's recommended to track lazy-lock.json in version
 # control, see https://lazy.folke.io/usage/lockfile
-# For kickstart, it makes sense to leave it ignored.
+# For the canonical kickstart git repository, we leave it ignored to avoid unneeded diff churn
+# and conflict resolutions for PRs that wouldn't otherwise have conflicts.
 lazy-lock.json
 
 .DS_Store
