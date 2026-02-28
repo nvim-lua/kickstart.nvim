@@ -44,9 +44,7 @@ return {
           local buf_bps = require('dap.breakpoints').get(vim.fn.bufnr())[vim.fn.bufnr()]
           ---@type dap.SourceBreakpoint
           for _, candidate in ipairs(buf_bps) do
-            if candidate.line and candidate.line == vim.fn.line '.' then
-              return candidate
-            end
+            if candidate.line and candidate.line == vim.fn.line '.' then return candidate end
           end
 
           return { condition = '', logMessage = '', hitCondition = '', line = vim.fn.line '.' }
@@ -58,21 +56,15 @@ return {
           local props = {
             ['Condition'] = {
               value = bp.condition,
-              setter = function(v)
-                bp.condition = v
-              end,
+              setter = function(v) bp.condition = v end,
             },
             ['Hit Condition'] = {
               value = bp.hitCondition,
-              setter = function(v)
-                bp.hitCondition = v
-              end,
+              setter = function(v) bp.hitCondition = v end,
             },
             ['Log Message'] = {
               value = bp.logMessage,
-              setter = function(v)
-                bp.logMessage = v
-              end,
+              setter = function(v) bp.logMessage = v end,
             },
           }
           local menu_options = {}
@@ -81,9 +73,7 @@ return {
           end
           vim.ui.select(menu_options, {
             prompt = 'Edit Breakpoint',
-            format_item = function(item)
-              return ('%s: %s'):format(item, props[item].value)
-            end,
+            format_item = function(item) return ('%s: %s'):format(item, props[item].value) end,
           }, function(choice)
             if choice == nil then
               -- User cancelled the selection
