@@ -872,7 +872,7 @@ require('lazy').setup({
         default = { 'lsp', 'path', 'snippets', 'buffer' },
         providers = {
           buffer = {
-            -- Make buffer compeletions appear at the end.
+            -- Make buffer completions appear at the end.
             score_offset = -100,
             enabled = function()
               -- Filetypes for which buffer completions are enabled; add filetypes to extend:
