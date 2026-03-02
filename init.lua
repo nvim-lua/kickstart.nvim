@@ -198,6 +198,7 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set('i', '<C-e>', '<Esc>A', { noremap = true })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -930,8 +931,19 @@ require('lazy').setup({
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
-      require('mini.surround').setup()
-
+      require('mini.surround').setup {
+        mappings = {
+          add = 'sa',
+          delete = 'sd',
+          find = 'sf',
+          find_left = 'sF',
+          highlight = 'sh',
+          replace = 'sr',
+          update_n_lines = 'sn',
+        },
+        -- Don't exit visual mode after surrounding
+        respect_selection_type = true,
+      }
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
@@ -1003,6 +1015,14 @@ require('lazy').setup({
   -- Or use telescope!
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
   -- you can continue same window with `<space>sr` which resumes last telescope search
+  {
+    'windwp/nvim-autopairs',
+    event = 'InsertEnter',
+    opts = {
+      check_ts = true, -- Use treesitter to check for pairs
+      fast_wrap = {}, -- Enable Alt+e fast wrap feature
+    },
+  },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
