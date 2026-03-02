@@ -4,7 +4,13 @@ return {
     -- Recommended for `ask()` and `select()`.
     -- Required for `snacks` provider.
     ---@module 'snacks' <- Loads `snacks.nvim` types for configuration intellisense.
-    { 'folke/snacks.nvim', opts = { input = {}, picker = {}, terminal = {} } },
+    {
+      'folke/snacks.nvim',
+      opts = { input = {}, picker = {}, terminal = {}, rename = {} },
+      keys = {
+        { '<leader>cR', function() Snacks.rename.rename_file() end, desc = 'Rename File (LSP)' },
+      },
+    },
   },
   config = function()
     local function redact_sensitive(value)

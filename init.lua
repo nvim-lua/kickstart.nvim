@@ -749,13 +749,12 @@ require('lazy').setup({
             },
           },
         },
-        pyright = {
+        basedpyright = {
           settings = {
-            python = {
+            basedpyright = {
               analysis = {
-                typeCheckingMode = 'basic',
-                autoSearchPaths = true,
-                useLibraryCodeForTypes = true,
+                typeCheckingMode = 'standard',
+                diagnosticMode = 'openFilesOnly',
               },
             },
           },
