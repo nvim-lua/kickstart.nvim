@@ -50,6 +50,16 @@ return {
     config = function(_, opts)
       require('flutter-tools').setup(opts)
 
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "dart",
+        callback = function()
+          vim.opt_local.shiftwidth = 2
+          vim.opt_local.tabstop = 2
+          vim.opt_local.softtabstop = 2
+          vim.opt_local.expandtab = true
+        end,
+      })
+
       local extensions = require('telescope').extensions
       vim.keymap.set('n', '<leader>fl', extensions.flutter.commands, { desc = '[F]lutter commands' })
       vim.keymap.set(
