@@ -1,10 +1,10 @@
 -- lua/kickstart/plugins/devstack.lua
 return {
   -- Mason core + LSP glue
-  { 'williamboman/mason.nvim', build = ':MasonUpdate', config = true },
+  { 'mason-org/mason.nvim', build = ':MasonUpdate', config = true },
   {
-    'williamboman/mason-lspconfig.nvim',
-    dependencies = { 'williamboman/mason.nvim' },
+    'mason-org/mason-lspconfig.nvim',
+    dependencies = { 'mason-org/mason.nvim' },
     opts = {
       ensure_installed = {
         -- LSP servers
@@ -19,7 +19,7 @@ return {
   {
     -- Auto-install external tools on first start
     'WhoIsSethDaniel/mason-tool-installer.nvim',
-    dependencies = { 'williamboman/mason.nvim' },
+    dependencies = { 'mason-org/mason.nvim' },
     opts = {
       ensure_installed = {
         -- Python

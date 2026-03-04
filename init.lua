@@ -697,7 +697,7 @@ require('lazy').setup({
 
         -- Python
         basedpyright = {}, -- type checking
-        ruff_lsp = { -- linting + quickfixes
+        ruff = { -- linting + quickfixes
           on_attach = function(client)
             -- Let basedpyright handle hovers; ruff for diagnostics/code actions
             client.server_capabilities.hoverProvider = false
