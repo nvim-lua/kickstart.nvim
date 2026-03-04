@@ -9,6 +9,7 @@ return {
         org_default_notes_file = '~/vault/projects/refile.org',
         org_todo_keywords = { 'TODO(t)', 'NEXT(n)', '|', 'DONE(d)', '|', 'HOLD(h)' },
         org_todo_keyword_faces = {
+	DONE = ':foreground green',
           NEXT = ':foreground orange :weight bold :underline on',
           HOLD = ':foreground yellow',
         },
