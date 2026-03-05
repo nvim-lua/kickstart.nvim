@@ -814,7 +814,11 @@ require('lazy').setup({
           settings = {
             gopls = {
               buildFlags = {
-                '-tags=integration,small,medium,large',
+                '-tags',
+                'functional,integration,small,medium,large',
+              },
+              env = {
+                GOFLAGS = '-tags=functional,integration,small,medium,large',
               },
               -- Completion settings
               completeUnimported = true, -- Suggest symbols from packages that are not yet imported
@@ -989,6 +993,7 @@ require('lazy').setup({
           javascriptreact = true,
           python = true,
           sql = true,
+          json = true,
         }
         if disable_filetypes[vim.bo[bufnr].filetype] then
           return nil
