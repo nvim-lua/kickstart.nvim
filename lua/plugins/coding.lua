@@ -4,4 +4,5 @@ return {
   require('plugins.coding.zig'),
   require('plugins.coding.clangd'),
   require('plugins.coding.dap'),
+  require('plugins.coding.elixir'),
 }

@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 return { -- Useful plugin to show you pending keybinds.
   'folke/which-key.nvim',
   event = 'VimEnter', -- Sets the loading event to 'VimEnter'
@@ -63,12 +64,12 @@ return { -- Useful plugin to show you pending keybinds.
       { '<leader>l', group = '[L]SP/Language' },
       { '<leader>m', group = '[M]emory/Sessions' },
       { '<leader>D', group = '[D]atabase' },
-      { '<leader>t', group = '[T]oggle', desc = {
-        h = 'Toggle inlay [H]ints',
+      { '<leader>t', group = '[T]roubleshooting', desc = {
+        d = 'Search all [D]iagnostics',
+        l = 'Diagnostics in [L]ocation list',
+        t = 'Diagnostic details in floa[T]',
       }},
-      { '<leader>w', group = '[W]orkspace', desc = {
-        s = '[S]ymbols',
-      }},
+      { '<leader>w', desc = 'Save file' },
       { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       { '<leader>g', group = '[G]it', desc = {
         s = 'Status',
@@ -105,6 +106,7 @@ return { -- Useful plugin to show you pending keybinds.
       { '<leader>X', desc = 'Force close buffer' },
       { '<leader>/', desc = 'Search in current buffer' },
       { '<leader><leader>', desc = 'Find buffers' },
+      { '<leader><space>', desc = 'Search text in all files' },
     },
   },
 }

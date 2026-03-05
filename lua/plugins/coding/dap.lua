@@ -1,6 +1,16 @@
 ---@diagnostic disable: undefined-global
 return {
   "mfussenegger/nvim-dap",
+  keys = {
+    { "<leader>pb", desc = "Toggle [B]reakpoint" },
+    { "<leader>pc", desc = "[C]ontinue debugging" },
+    { "<leader>pn", desc = "Step over ([N]ext)" },
+    { "<leader>pi", desc = "Step [I]nto" },
+    { "<leader>po", desc = "Step [O]ut" },
+    { "<leader>pr", desc = "Open [R]EPL" },
+    { "<leader>pl", desc = "Run [L]ast debug session" },
+    { "<leader>px", desc = "Toggle debug UI" },
+  },
   dependencies = {
     "rcarriga/nvim-dap-ui",
     "theHamsta/nvim-dap-virtual-text",

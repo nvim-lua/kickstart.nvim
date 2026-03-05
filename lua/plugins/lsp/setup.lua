@@ -4,10 +4,50 @@
 local M = {}
 
 function M.setup()
+  -- Apply LSP function overrides for position_encoding
+  require('plugins.lsp.overrides').setup()
+  
   local servers = require('plugins.lsp.servers')
   
-  -- nvim-cmp capabilities
+  -- Enhanced nvim-cmp capabilities (VSCode-like)
   local capabilities = vim.lsp.protocol.make_client_capabilities()
+  capabilities.textDocument.completion.completionItem = {
+    documentationFormat = { 'markdown', 'plaintext' },
+    snippetSupport = true,
+    preselectSupport = true,
+    insertReplaceSupport = true,
+    labelDetailsSupport = true,
+    deprecatedSupport = true,
+    commitCharactersSupport = true,
+    tagSupport = { valueSet = { 1 } },
+    resolveSupport = {
+      properties = {
+        'documentation',
+        'detail',
+        'additionalTextEdits',
+      },
+    },
+  }
+  -- Complete with all available methods and properties
+  capabilities.textDocument.completion.completionList = {
+    itemDefaults = {
+      'commitCharacters',
+      'editRange',
+      'insertTextFormat',
+      'insertTextMode',
+      'data',
+    },
+  }
+  -- Add semantic tokens for better syntax highlighting
+  capabilities.textDocument.semanticTokens = {
+    tokenTypes = { 'namespace', 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter', 'parameter', 'variable', 'property', 'enumMember', 'event', 'function', 'method', 'macro', 'keyword', 'modifier', 'comment', 'string', 'number', 'regexp', 'operator', 'decorator' },
+    tokenModifiers = { 'declaration', 'definition', 'readonly', 'static', 'deprecated', 'abstract', 'async', 'modification', 'documentation', 'defaultLibrary' },
+    formats = { 'relative' },
+    requests = {
+      range = true,
+      full = true,
+    },
+  }
   capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
   -- Setup mason-lspconfig
@@ -20,16 +60,27 @@ function M.setup()
       config.capabilities = capabilities
 
       -- Default on_attach to setup keymaps & navic
-      local function on_attach(client, bufnr)
+      M.default_on_attach = function(client, bufnr)
         require('core.keymaps').setup_lsp_keymaps(bufnr)
-        -- Attach navic if available
-        if client.server_capabilities.documentSymbolProvider then
-          require('nvim-navic').attach(client, bufnr)
+        
+        -- Only attach navic if:
+        -- 1. The client supports document symbols
+        -- 2. The client isn't elixirls (handled by elixir-tools.nvim)
+        if client.server_capabilities.documentSymbolProvider 
+            and client.name ~= 'elixirls' then
+          local status_ok, _ = pcall(require, 'nvim-navic')
+          if status_ok then
+            require('nvim-navic').attach(client, bufnr)
+          end
         end
       end
-      config.on_attach = on_attach
+      
+      -- Only set the default on_attach if one isn't already provided
+      if not config.on_attach then
+        config.on_attach = M.default_on_attach
+      end
 
-      -- Disable gopls semantic tokens to avoid issues
+      -- Enhance LSP capabilities for specific servers
       if server_name == 'gopls' and config.on_attach then
         local orig_on_attach = config.on_attach
         config.on_attach = function(client, bufnr)
@@ -37,11 +88,56 @@ function M.setup()
           orig_on_attach(client, bufnr)
         end
       end
+      
+      -- Force all LSP servers to use incremental completions (like VSCode)
+      if not config.settings then config.settings = {} end
+      if not config.settings.completions then config.settings.completions = {} end
+      config.settings.completions.completeFunctionCalls = true
+      
+      -- Enhanced settings for Lua LSP
+      if server_name == 'lua_ls' then
+        if not config.settings.Lua then config.settings.Lua = {} end
+        config.settings.Lua.completion = {
+          callSnippet = "Replace",
+          showWord = "Disable",
+          workspaceWord = false,
+          displayContext = 5,
+          keywordSnippet = "Both",
+          postfix = ".",
+        }
+        -- More comprehensive inferencing
+        config.settings.Lua.hint = {
+          enable = true,
+          setType = true,
+          paramType = true,
+          paramName = "Literal",
+          arrayIndex = "Enable",
+        }
+        -- Better type resolution
+        config.settings.Lua.type = {
+          castNumberToInteger = true,
+        }
+        -- Add standard Lua libraries for better completion
+        if not config.settings.Lua.workspace then config.settings.Lua.workspace = {} end
+        if not config.settings.Lua.workspace.library then config.settings.Lua.workspace.library = {} end
+        
+        -- Include standard libraries
+        local lua_types = vim.fn.expand('~/.local/share/nvim/mason/packages/lua-language-server/libexec/meta/3rd')
+        if vim.fn.isdirectory(lua_types) == 1 then
+          config.settings.Lua.workspace.library[lua_types] = true
+        end
+        -- Enable all features
+        config.settings.Lua.hover = { enable = true, expandAlias = true }
+        config.settings.Lua.signatureHelp = { enable = true }
+        config.settings.Lua.diagnostics = { enable = true, globals = { "vim" } }
+      end
 
       require('lspconfig')[server_name].setup(config)
     end,
   }
 
+  -- Hover handler will now be provided by Blink
+  
   -- Override references handler
   vim.lsp.handlers['textDocument/references'] = function(err, result, ctx, config)
     if not result or vim.tbl_isempty(result) then

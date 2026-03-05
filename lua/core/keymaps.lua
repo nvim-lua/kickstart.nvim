@@ -12,6 +12,9 @@ vim.g.maplocalleader = ' '
 -- - Line/selection movement (Alt + jk)
 -- - Quick save and quit (<leader>w, <leader>W, <leader>Q)
 local core_keymaps = {
+  -- Quick access to find files by content (shortcut for <leader>sg)
+  { mode = 'n', lhs = '<leader><space>', rhs = function() require('telescope.builtin').live_grep() end, opts = { desc = 'Search text in all files' } },
+
   -- Clear highlights on search when pressing <Esc> in normal mode
   { mode = 'n', lhs = '<Esc>', rhs = '<cmd>nohlsearch<CR>', opts = { desc = 'Clear search highlights' } },
 
@@ -70,8 +73,38 @@ function M.setup_lsp_keymaps(bufnr)
     { mode = 'n', lhs = 'gy', rhs = function() require('telescope.builtin').lsp_type_definitions() end, opts = { desc = 'LSP: Go to type definition' } },
     
     -- Symbol navigation
-    { mode = 'n', lhs = '<leader>ls', rhs = function() require('telescope.builtin').lsp_document_symbols() end, opts = { desc = 'LSP: Document symbols' } },
-    { mode = 'n', lhs = '<leader>lS', rhs = function() require('telescope.builtin').lsp_dynamic_workspace_symbols() end, opts = { desc = 'LSP: Workspace symbols' } },
+    { mode = 'n', lhs = '<leader>ls', rhs = function() 
+      -- Explicitly add position_encoding to fix symbols_to_items error
+      require('telescope.builtin').lsp_document_symbols({ position_encoding = 'utf-16' })
+    end, opts = { desc = 'LSP: Document symbols' } },
+    { mode = 'n', lhs = '<leader>lS', rhs = function() 
+      -- Use a safe wrapper to avoid nil indexing errors
+      local status_ok, _ = pcall(function()
+        require('telescope.builtin').lsp_dynamic_workspace_symbols({
+          position_encoding = 'utf-16',
+          show_line = true,
+          fname_width = 50,
+          symbol_width = 35,
+          attach_mappings = function(prompt_bufnr)
+            -- This prevents errors when no results are found
+            require("telescope.actions").select_default:replace(function()
+              local entry = require("telescope.actions.state").get_selected_entry()
+              if not entry then return end
+              require("telescope.actions").close(prompt_bufnr)
+              if entry.value and entry.value.filename then
+                vim.cmd(string.format('edit %s', entry.value.filename))
+                vim.api.nvim_win_set_cursor(0, {entry.value.lnum, entry.value.col})
+              end
+            end)
+            return true
+          end
+        })
+      end)
+      
+      if not status_ok then
+        vim.notify("Workspace symbols not available for this language server", vim.log.levels.INFO)
+      end
+    end, opts = { desc = 'LSP: Workspace symbols' } },
     
     -- Code actions
     { mode = 'n', lhs = '<leader>lr', rhs = vim.lsp.buf.rename, opts = { desc = 'LSP: Rename symbol' } },
@@ -79,7 +112,7 @@ function M.setup_lsp_keymaps(bufnr)
     { mode = 'n', lhs = '<leader>lf', rhs = function() vim.lsp.buf.format({ async = true }) end, opts = { desc = 'LSP: Format code' } },
     
     -- Documentation
-    { mode = 'n', lhs = 'K', rhs = vim.lsp.buf.hover, opts = { desc = 'LSP: Show documentation' } },
+    { mode = 'n', lhs = 'K', rhs = function() require('hover').hover() end, opts = { desc = 'Enhanced documentation (hover.nvim)' } },
   }
 
   -- First clear any existing LSP keymaps for this buffer
@@ -162,8 +195,9 @@ M.diagnostic_keymaps = {
   { mode = 'n', lhs = ']d', rhs = vim.diagnostic.goto_next, opts = { desc = 'Diagnostic: Next' } },
   
   -- Viewing diagnostics
-  { mode = 'n', lhs = '<leader>tt', rhs = vim.diagnostic.open_float, opts = { desc = 'Diagnostic: Show details' } },
+  { mode = 'n', lhs = '<leader>tt', rhs = vim.diagnostic.open_float, opts = { desc = 'Diagnostic: Show details in float' } },
   { mode = 'n', lhs = '<leader>tl', rhs = vim.diagnostic.setloclist, opts = { desc = 'Diagnostic: Show list' } },
+  { mode = 'n', lhs = '<leader>td', rhs = function() require('telescope.builtin').diagnostics() end, opts = { desc = 'Diagnostic: Search all diagnostics' } },
 }
 
 -- Database keymaps (all under <leader>D for Database)
@@ -223,12 +257,31 @@ M.scratch_keymaps = {
 -- - <C-/>: Toggle terminal in float window
 M.snacks_keymaps = {
   -- Explorer
-  { mode = 'n', lhs = '<leader>e', rhs = function() require('snacks.picker').explorer() end, opts = { desc = 'Explorer: Toggle' } },
-  { mode = 'n', lhs = '<leader>E', rhs = function() require('snacks.picker').explorer({ reveal = true }) end, opts = { desc = 'Explorer: Focus current file' } },
-  { mode = 'n', lhs = '<leader>o', rhs = function() require('snacks.picker').explorer({ reveal = true }) end, opts = { desc = 'Explorer: Focus current file' } },
+  { mode = 'n', lhs = '<leader>e', rhs = function() 
+    -- Open explorer in current window
+    require('snacks').explorer.open() 
+  end, opts = { desc = 'Explorer: Toggle' } },
+  
+  { mode = 'n', lhs = '<leader>E', rhs = function() 
+    -- Reveal current file in explorer
+    require('snacks').explorer.reveal() 
+  end, opts = { desc = 'Explorer: Focus current file' } },
+  
+  { mode = 'n', lhs = '<leader>o', rhs = function() 
+    -- Open current file in a new tab and focus it
+    vim.cmd('tab split %')
+  end, opts = { desc = 'Open current file in new tab' } },
+  
+  -- Custom function to open explorer files in new tabs
+  { mode = 'n', lhs = '<leader>f', rhs = function()
+    -- Open explorer in a new tab
+    vim.cmd('tabnew')
+    require('snacks').explorer.open()
+  end, opts = { desc = 'Explorer: Open in new tab' } },
   
   -- Terminal
   { mode = 'n', lhs = '<C-/>', rhs = function() require('snacks').terminal.toggle() end, opts = { desc = 'Terminal: Toggle float window' } },
+  { mode = 'n', lhs = '<leader>tc', rhs = function() require('snacks').terminal.toggle() end, opts = { desc = 'Terminal: Toggle console' } },
 }
 
 -- Git signs keymaps (all under <leader>g for Git)
@@ -273,6 +326,35 @@ M.gitsigns_keymaps = {
 -- Setup function for git signs keymaps
 function M.setup_gitsigns_keymaps()
   for _, mapping in ipairs(M.gitsigns_keymaps or {}) do
+    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
+  end
+end
+
+-- Elixir keymaps (using 'x' as the prefix - mnemonic for 'eXlixir')
+M.elixir_keymaps = {
+  { mode = 'n', lhs = '<leader>xt', 
+    rhs = function() 
+      require('elixir').run_test_file() 
+    end, 
+    opts = { desc = 'Elixir: Test file' } 
+  },
+  { mode = 'n', lhs = '<leader>xn', 
+    rhs = function() 
+      require('elixir').run_nearest_test() 
+    end, 
+    opts = { desc = 'Elixir: Test nearest' } 
+  },
+  { mode = 'n', lhs = '<leader>xm', 
+    rhs = function() 
+      vim.cmd('Telescope elixir mix')
+    end, 
+    opts = { desc = 'Elixir: Mix tasks' } 
+  },
+}
+
+-- Set up Elixir keymaps
+function M.setup_elixir_keymaps()
+  for _, mapping in ipairs(M.elixir_keymaps or {}) do
     vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
   end
 end
@@ -327,7 +409,7 @@ local function init_keymaps()
     callback = function()
       -- Pause snacks explorer updates during write
       pcall(function()
-        local picker = require('snacks.picker')
+        local picker = require('plugins.snacks.picker')
         if picker.is_open() then
           picker.pause_updates()
           vim.schedule(function()
@@ -405,12 +487,19 @@ local function init_keymaps()
 
   -- Set up database keymaps
   M.setup_dadbod_keymaps()
+  
+  -- Set up default tab navigation
+  vim.keymap.set('n', 'gt', ':tabnext<CR>', { silent = true, desc = 'Next tab' })
+  vim.keymap.set('n', 'gT', ':tabprevious<CR>', { silent = true, desc = 'Previous tab' })
 
   -- Set up session keymaps
   M.setup_session_keymaps()
 
   -- Set up git signs keymaps
   M.setup_gitsigns_keymaps()
+  
+  -- Set up Elixir keymaps
+  M.setup_elixir_keymaps()
 
   -- Set up leap keymaps
   M.setup_leap_keymaps()
@@ -421,6 +510,30 @@ init_keymaps()
 
 -- Export `init_keymaps` as `M.setup` so `require('core.keymaps').setup()` works
 M.setup = init_keymaps
+
+-- Mini-surround keymaps
+-- These define how mini.surround plugin works with text objects
+-- sa - add surroundings (visual mode or with motion like saiw)
+-- sd - delete surroundings
+-- sr - replace surroundings
+-- sn - Find next surrounding
+-- sN - Find previous surrounding
+-- sh - Highlight surrounding
+-- sf - Find surrounding (to use with textobject)
+-- ss - Go to left surrounding
+-- sS - Go to right surrounding
+M.mini_surround_keymaps = {
+  add = 'sa', -- Add surrounding in Normal and Visual modes
+  delete = 'sd', -- Delete surrounding
+  find = 'sf', -- Find surrounding (to the right)
+  find_left = 'sF', -- Find surrounding (to the left)
+  highlight = 'sh', -- Highlight surrounding
+  replace = 'sr', -- Replace surrounding
+  update_n_lines = '', -- Update `n_lines`
+
+  suffix_last = 'l', -- Suffix to search with 'prev' method
+  suffix_next = 'n', -- Suffix to search with 'next' method
+}
 
 -- Return the module
 return M

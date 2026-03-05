@@ -9,6 +9,7 @@ function M.setup()
   local diagnostics = null_ls.builtins.diagnostics
 
   null_ls.setup {
+
     root_dir = null_ls_utils.root_pattern('.null-ls-root', 'Makefile', '.git'),
     timeout = 10000,
     debounce = 250,

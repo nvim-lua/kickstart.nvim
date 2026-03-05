@@ -4,13 +4,42 @@ local go_flags = 'integration' -- add the tags here, instead of searching it bel
 return {
   -- Main LSP Configuration
   'neovim/nvim-lspconfig',
+  event = { "BufReadPre", "BufNewFile" },
   dependencies = {
     -- Automatically install LSPs and related tools to stdpath for Neovim
-    { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
-    'williamboman/mason-lspconfig.nvim',
+    { 
+      'williamboman/mason.nvim', 
+      cmd = { "Mason", "MasonInstall", "MasonUpdate" }, 
+      config = function()
+        require("mason").setup({
+          ui = {
+            icons = {
+              package_installed = "✓",
+              package_pending = "➜",
+              package_uninstalled = "✗"
+            },
+            border = "rounded",
+            width = 0.8,
+            height = 0.9,
+          },
+          log_level = vim.log.levels.INFO,
+          max_concurrent_installers = 4,
+        })
+      end
+    },
+    { 
+      'williamboman/mason-lspconfig.nvim', 
+      dependencies = { 'williamboman/mason.nvim' },
+      config = function()
+        require("mason-lspconfig").setup({
+          automatic_installation = true
+        })
+      end
+    },
     -- 'folke/neodev.nvim',  -- Adds support for Neovim Lua API -- No longer needed with lazydev
     {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
+      event = "VeryLazy",
       config = function()
         require('mason-tool-installer').setup {
           ensure_installed = {
@@ -35,6 +64,8 @@ return {
             'debugpy', -- Python debugger
             -- SQL tools
             'sqls', -- Advanced SQL LSP
+            -- Elixir
+            'elixir-ls' -- Elixir LSP
           },
           auto_update = true,
           run_on_start = true,
