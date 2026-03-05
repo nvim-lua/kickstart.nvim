@@ -813,6 +813,9 @@ require('lazy').setup({
         gopls = {
           settings = {
             gopls = {
+              buildFlags = {
+                '-tags=integration,small,medium,large',
+              },
               -- Completion settings
               completeUnimported = true, -- Suggest symbols from packages that are not yet imported
               usePlaceholders = true, -- Insert argument placeholders for functions
@@ -833,7 +836,6 @@ require('lazy').setup({
                 nilness = true, -- Detect nil pointer errors
                 shadow = true, -- Detect variable shadowing
                 useany = true, -- Recommend using 'any' instead of 'interface{}'
-                unusedvariable = true, -- Detect unused variables
               },
 
               hints = {
@@ -937,6 +939,7 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
         'sql-formatter',
         'prettier',
+        'staticcheck',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
