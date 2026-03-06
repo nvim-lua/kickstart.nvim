@@ -10,10 +10,10 @@ return {
     'DiffviewRefresh',
   },
   keys = {
-    { '<leader>gd', '<cmd>DiffviewOpen<CR>', desc = '[G]it [D]iff view' },
-    { '<leader>gD', '<cmd>DiffviewClose<CR>', desc = '[G]it [D]iff close' },
-    { '<leader>gf', '<cmd>DiffviewFileHistory %<CR>', desc = '[G]it [F]ile history' },
-    { '<leader>gF', '<cmd>DiffviewFileHistory<CR>', desc = '[G]it [F]ull history' },
+    { '<leader>Gd', '<cmd>DiffviewOpen<CR>', desc = '[G]it [D]iff view' },
+    { '<leader>GD', '<cmd>DiffviewClose<CR>', desc = '[G]it [D]iff close' },
+    { '<leader>Gf', '<cmd>DiffviewFileHistory %<CR>', desc = '[G]it [F]ile history' },
+    { '<leader>GF', '<cmd>DiffviewFileHistory<CR>', desc = '[G]it [F]ull history' },
   },
   opts = {},
 }
