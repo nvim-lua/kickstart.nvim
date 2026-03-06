@@ -44,15 +44,20 @@ nvim --headless "+MasonToolsInstallSync" "+qa"
 
 ### Git workflow
 
-- `<leader>gg`: open Neogit UI
-- `<leader>gd`: open Diffview
-- `<leader>gD`: close Diffview
-- `<leader>gf`: Diffview file history (current file)
-- `<leader>gF`: Diffview repo history
+- `<leader>Gg`: open Neogit UI
+- `<leader>Gd`: open Diffview
+- `<leader>GD`: close Diffview
+- `<leader>Gf`: Diffview file history (current file)
+- `<leader>GF`: Diffview repo history
 - `<leader>h...`: Gitsigns hunk actions (`:which-key <leader>h`)
 
 ### Diagnostics and code navigation
 
+- `<leader>gd`: goto definition
+- `<leader>gD`: goto declaration
+- `<leader>gr`: goto references
+- `<leader>gi`: goto implementation
+- `<leader>gt`: goto type definition
 - `<leader>xx`: Trouble diagnostics
 - `<leader>xw`: Trouble workspace diagnostics
 - `<leader>xd`: Trouble current buffer diagnostics
@@ -63,6 +68,13 @@ nvim --headless "+MasonToolsInstallSync" "+qa"
 - `<leader>jM` / `<leader>jK`: next/previous function end
 - `<leader>jc` / `<leader>jC`: next/previous class start
 - Textobject select (operator-pending/visual): `af`/`if` for function, `ac`/`ic` for class
+
+### Yank references (AI-friendly)
+
+- `<leader>ya`: yank absolute reference with location and symbol
+- `<leader>yr`: yank relative reference with location and symbol
+- `<leader>yf`: yank current buffer file as `@relative/path`
+- `<leader>yd`: yank current buffer parent directory as `@relative/dir`
 
 ### Tests and debug
 

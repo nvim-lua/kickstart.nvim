@@ -4,7 +4,7 @@
 - Root entrypoint: `init.lua` (Kickstart-based primary config).
 - Custom Lua modules live under `lua/custom/`.
 - Plugin specs are split into `lua/custom/plugins/*.lua` (one concern per file, e.g. `gitsigns.lua`, `lint.lua`, `persistence.lua`).
-- Utility modules (non-plugin config) live in `lua/custom/*.lua` (for example `wrapping.lua`, `health.lua`).
+- Utility modules (non-plugin config) live in `lua/custom/*.lua` (for example `wrapping.lua`).
 - Reference docs live in `README.md` and `doc/kickstart.txt`.
 - Plugin versions are pinned in `lazy-lock.json`.
 
