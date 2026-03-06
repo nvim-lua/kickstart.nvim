@@ -18,6 +18,7 @@ return {
       vim.g.mkdp_auto_start = 0
       vim.g.mkdp_auto_close = 1
       vim.g.mkdp_refresh_slow = 0
+      vim.g.mkdp_browser = 'google-chrome-stable'
       vim.g.mkdp_filetypes = { 'markdown' }
     end,
     keys = {

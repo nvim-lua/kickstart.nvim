@@ -27,22 +27,4 @@ return {
       desc = '[W]orkspace [D]isable session save',
     },
   },
-  init = function()
-    vim.api.nvim_create_autocmd('VimEnter', {
-      group = vim.api.nvim_create_augroup('persistence-auto-restore', { clear = true }),
-      callback = function()
-        if vim.fn.argc(-1) > 0 then
-          return
-        end
-
-        local ignored = { gitcommit = true, gitrebase = true }
-        if ignored[vim.bo.filetype] then
-          return
-        end
-
-        require('persistence').load()
-      end,
-      nested = true,
-    })
-  end,
 }

@@ -117,10 +117,10 @@ vim.schedule(function()
   vim.o.clipboard = 'unnamedplus'
 end)
 
--- Default to 4-space indentation unless overridden by filetype/plugins
-vim.o.tabstop = 4
-vim.o.shiftwidth = 4
-vim.o.softtabstop = 4
+-- Default to 2-space indentation unless overridden by filetype/plugins
+vim.o.tabstop = 2
+vim.o.shiftwidth = 2
+vim.o.softtabstop = 2
 vim.o.expandtab = true
 
 -- Save undo history
