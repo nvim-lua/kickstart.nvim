@@ -6,6 +6,19 @@ return {
     { '<S-h>', '<cmd>BufferLineCyclePrev<CR>', desc = 'Previous buffer' },
     { '<S-l>', '<cmd>BufferLineCycleNext<CR>', desc = 'Next buffer' },
     { '<leader>bp', '<cmd>BufferLinePick<CR>', desc = '[B]uffer [P]ick' },
+    {
+      '<leader>bD',
+      function()
+        local bufremove = require 'mini.bufremove'
+
+        for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+          if vim.api.nvim_buf_is_valid(bufnr) and vim.bo[bufnr].buflisted and vim.bo[bufnr].filetype ~= 'neo-tree' then
+            bufremove.delete(bufnr, false)
+          end
+        end
+      end,
+      desc = '[B]uffer [D]elete all',
+    },
   },
   opts = {
     options = {
