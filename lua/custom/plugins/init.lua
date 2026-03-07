@@ -11,6 +11,14 @@ vim.opt.expandtab = true
 ---@module 'lazy'
 ---@type LazySpec
 return {
+
+  {
+    'romainl/Apprentice',
+    lazy = false,
+    priority = 1000,
+    config = function() vim.cmd.colorscheme 'apprentice' end,
+  },
+
   {
     'ThePrimeagen/harpoon',
     dependencies = { 'nvim-lua/plenary.nvim' },
