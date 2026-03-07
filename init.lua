@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -159,6 +159,8 @@ vim.o.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.o.scrolloff = 10
 
+-- idk
+vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
@@ -603,7 +605,7 @@ require('lazy').setup({
       --  See `:help lsp-config` for information about keys and how to configure
       ---@type table<string, vim.lsp.Config>
       local servers = {
-        -- clangd = {},
+        clangd = {},
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
@@ -613,6 +615,14 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
+
+        -- Racket language server
+        racket_langserver = {
+          cmd = { 'racket', '--lib', 'racket-langserver' },
+          filetypes = { 'racket' },
+          root_dir = require('lspconfig.util').root_pattern('.git', '.'),
+          single_file_support = true,
+        },
 
         stylua = {}, -- Used to format Lua code
 
@@ -646,6 +656,25 @@ require('lazy').setup({
         },
       }
 
+      vim.filetype.add {
+        extension = {
+          gd = 'gdscript',
+          gdscript = 'gdscript',
+          gdscript3 = 'gdscript',
+        },
+      }
+
+      local lspconfig_util = require 'lspconfig.util'
+
+      vim.lsp.config.gdscript = {
+        cmd = { 'nc', '127.0.0.1', '6005' },
+        filetypes = { 'gdscript' }, -- ONLY the registered type
+        root_dir = lspconfig_util.root_pattern('project.godot', '.git'),
+        single_file_support = true,
+      }
+
+      vim.lsp.enable 'gdscript'
+
       -- Ensure the servers and tools above are installed
       --
       -- To check the current status of installed tools and/or manually install
@@ -653,14 +682,20 @@ require('lazy').setup({
       --    :Mason
       --
       -- You can press `g?` for help in this menu.
-      local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        -- You can add other tools here that you want Mason to install
-      })
 
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      -- Filter out manual LSPs (like racket_langserver) that Mason cannot install
+      local mason_servers = {}
+      for name, _ in pairs(servers) do
+        if name ~= 'racket_langserver' then table.insert(mason_servers, name) end
+      end
+
+      require('mason-tool-installer').setup { ensure_installed = mason_servers }
 
       for name, server in pairs(servers) do
+        local capabilities = require('blink.cmp').get_lsp_capabilities()
+
+        server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+
         vim.lsp.config(name, server)
         vim.lsp.enable(name)
       end
@@ -762,6 +797,7 @@ require('lazy').setup({
         -- <c-e>: Hide menu
         -- <c-k>: Toggle signature help
         --
+        --
         -- See :h blink-cmp-config-keymap for defining your own keymap
         preset = 'default',
 
@@ -779,6 +815,15 @@ require('lazy').setup({
         -- By default, you may press `<c-space>` to show the documentation.
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
         documentation = { auto_show = false, auto_show_delay_ms = 500 },
+
+        trigger = {
+          show_on_insert = true,
+          show_on_keyword = true,
+        },
+
+        keyword = {
+          range = 'full',
+        },
       },
 
       sources = {
@@ -923,7 +968,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
