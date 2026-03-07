@@ -610,6 +610,13 @@ require('lazy').setup({
           },
         },
 
+        gdscript = {
+          cmd = { '/home/ragnar/Downloads/Godot_v4.5-stable_linux.x86_64', '--headless', '--script-language-server' },
+          filetypes = { 'gd', 'gdscript' }, -- GDScript filetypes
+          root_dir = function(fname) return vim.fs.dirname(vim.fs.find({ 'project.godot' }, { upward = true })[1]) end,
+          settings = {}, -- GDScript LS doesn’t require special settings by default
+        },
+
         clangd = {},
         -- gopls = {},
         -- pyright = {},
@@ -662,7 +669,7 @@ require('lazy').setup({
       -- You can press `g?` for help in this menu.
       local ensure_installed = {}
       for name, _ in pairs(servers) do
-        if name ~= 'racket_langserver' then table.insert(ensure_installed, name) end
+        if name ~= 'racket_langserver' and name ~= 'gdscript' then table.insert(ensure_installed, name) end
       end
       vim.list_extend(ensure_installed, {
         -- You can add other tools here that you want Mason to install
