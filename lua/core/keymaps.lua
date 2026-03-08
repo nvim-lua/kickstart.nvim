@@ -33,3 +33,28 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
+
+vim.keymap.set('n', 'n', 'nzz')
+vim.keymap.set('n', 'N', 'Nzz')
+vim.keymap.set('n', '*', '*zz')
+vim.keymap.set('n', '#', '#zz')
+-- vim.keymap.set('n', 'g*', '*zz')
+-- vim.keymap.set('n', 'g#', '#zz')
+vim.keymap.set('n', '{', '{zt')
+vim.keymap.set('n', '}', '}zt')
+vim.keymap.set('n', '(', '(zt')
+vim.keymap.set('n', ')', ')zt')
+
+vim.keymap.set('n', '<leader>tl', '<cmd>Lazy<CR>', { desc = '[T]oggle [L]azy' })
+vim.keymap.set('n', '<leader>tm', '<cmd>Mason<CR>', { desc = '[T]oggle [M]ason' })
+vim.keymap.set('n', '<leader>ta', '<cmd>set arabic!<CR>', { desc = '[T]oggle [A]rabic' })
+vim.keymap.set('n', '<leader>tw', '<cmd>set wrap!<CR>', { noremap = true, silent = true, desc = '[T]oggle [W]rap' })
+
+vim.keymap.set('n', '<leader>w', '<cmd>w<CR>', { desc = '[w]rite buffer' })
+vim.keymap.set('n', '<leader>y', '<cmd>%y<CR>', { desc = '[y]ank buffer' })
+vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = '[q]uit buffer' })
+vim.keymap.set('n', '<leader>c', '<cmd>bdelete<CR>', { desc = '[c]lose file' })
+
+-- Add a keymap for delete while on insert-mode
+-- this works well with <C-h>, <C-w>, <C-u>
+vim.keymap.set('i', '<C-f>', '<Del>')
