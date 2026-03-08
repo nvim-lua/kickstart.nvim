@@ -149,6 +149,10 @@ vim.o.splitbelow = true
 --   and `:help lua-guide-options`
 vim.o.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.tabstop = 4 -- how many spaces a tab counts for
+vim.opt.shiftwidth = 4 -- spaces used for autoindent
+vim.opt.expandtab = true -- convert tabs to spaces
+vim.opt.smartindent = true -- smarter auto indenting
 
 -- Preview substitutions live, as you type!
 vim.o.inccommand = 'split'
@@ -257,6 +261,23 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added via a link or github org/name. To run setup automatically, use `opts = {}`
   { 'NMAC427/guess-indent.nvim', opts = {} },
+
+  -- For commenting
+  { 'numToStr/Comment.nvim', opts = {} },
+
+  {
+    'NeogitOrg/neogit',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'sindrets/diffview.nvim',
+    },
+    config = function()
+      require('neogit').setup {}
+
+      -- Keymap to open Neogit
+      vim.keymap.set('n', '<leader>gg', '<cmd>Neogit<CR>', { desc = 'Open Neogit' })
+    end,
+  },
 
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
   -- If you prefer to call `setup` explicitly, use:
@@ -611,10 +632,7 @@ require('lazy').setup({
         },
 
         gdscript = {
-          cmd = { '/home/ragnar/Downloads/Godot_v4.5-stable_linux.x86_64', '--headless', '--script-language-server' },
-          filetypes = { 'gd', 'gdscript' }, -- GDScript filetypes
-          root_dir = function(fname) return vim.fs.dirname(vim.fs.find({ 'project.godot' }, { upward = true })[1]) end,
-          settings = {}, -- GDScript LS doesn’t require special settings by default
+          cmd = { 'nc', '127.0.0.1', '6005' },
         },
 
         clangd = {},
@@ -671,6 +689,7 @@ require('lazy').setup({
       for name, _ in pairs(servers) do
         if name ~= 'racket_langserver' and name ~= 'gdscript' then table.insert(ensure_installed, name) end
       end
+
       vim.list_extend(ensure_installed, {
         -- You can add other tools here that you want Mason to install
       })
@@ -818,25 +837,13 @@ require('lazy').setup({
     },
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
+  {
+    'wtfox/jellybeans.nvim',
+    lazy = false,
+    priority = 1000,
     config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = false }, -- Disable italics in comments
-        },
-      }
-
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      -- Set default (vibrant dark) variant
+      vim.cmd.colorscheme 'jellybeans'
     end,
   },
 

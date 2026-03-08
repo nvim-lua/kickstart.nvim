@@ -3,22 +3,15 @@
 --
 -- See the kickstart.nvim README for more information
 
-vim.opt.tabstop = 8
-vim.opt.shiftwidth = 8
-vim.opt.softtabstop = 8
-vim.opt.expandtab = true
+vim.filetype.add {
+  extension = {
+    gd = 'gdscript',
+  },
+}
 
 ---@module 'lazy'
 ---@type LazySpec
 return {
-
-  {
-    'romainl/Apprentice',
-    lazy = false,
-    priority = 1000,
-    config = function() vim.cmd.colorscheme 'apprentice' end,
-  },
-
   {
     'ThePrimeagen/harpoon',
     dependencies = { 'nvim-lua/plenary.nvim' },
