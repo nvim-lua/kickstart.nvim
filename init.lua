@@ -207,7 +207,17 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
--- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
+--   vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
+
+-- Opencode integration
+local function run_opencode_query(query)
+  local repo = vim.fn.system('git rev-parse --show-toplevel 2>/dev/null'):gsub('\n', '') or vim.fn.getcwd()
+  vim.fn.jobstart({'opencode', 'run', 'In repo ' .. repo .. ': ' .. query}, {detach = true})
+end
+
+vim.keymap.set('n', '<leader>oa', function() run_opencode_query('Analyze current file: ' .. vim.fn.expand('%')) end, { desc = '[O]pencode [A]nalyze file' })
+vim.keymap.set('v', '<leader>oe', function() run_opencode_query('Explain: ' .. vim.fn.getreg('*')) end, { desc = '[O]pencode [E]xplain selection' })
+vim.keymap.set('n', '<leader>or', function() run_opencode_query('Refactor suggestions for repo') end, { desc = '[O]pencode [R]epo refactor' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
