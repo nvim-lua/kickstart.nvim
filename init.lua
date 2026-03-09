@@ -119,6 +119,12 @@ vim.schedule(function() vim.o.clipboard = 'unnamedplus' end)
 -- Enable break indent
 vim.o.breakindent = true
 
+-- Tab settings: replace tab with 4 spaces
+vim.o.expandtab = true
+vim.o.tabstop = 4
+vim.o.shiftwidth = 4
+vim.o.softtabstop = 4
+
 -- Enable undo/redo changes even after closing and reopening a file
 vim.o.undofile = true
 
@@ -163,6 +169,26 @@ vim.o.scrolloff = 10
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
 vim.o.confirm = true
+
+-- Make active window more pronounced
+vim.o.winblend = 0
+-- Make window separators more visible
+vim.api.nvim_set_hl(0, 'WinSeparator', { fg = '#7aa2f7', bold = true })
+-- Make tab colors more pronounced with vibrant colors
+vim.api.nvim_set_hl(0, 'TabLine', { bg = '#2e3440', fg = '#d8dee9', bold = false })      -- Inactive: gray bg, white text
+vim.api.nvim_set_hl(0, 'TabLineSel', { bg = '#ff79c6', fg = '#000000', bold = true })    -- Active: bright pink bg, black text
+vim.api.nvim_set_hl(0, 'TabLineFill', { bg = '#1e1e2e' })                                 -- Fill: dark background
+-- Dim inactive windows
+vim.api.nvim_create_autocmd({ 'WinEnter', 'BufEnter' }, {
+  callback = function()
+    vim.wo.winhighlight = ''
+  end,
+})
+vim.api.nvim_create_autocmd({ 'WinLeave', 'BufLeave' }, {
+  callback = function()
+    vim.wo.winhighlight = 'Normal:NormalNC'
+  end,
+})
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -388,11 +414,16 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
+        defaults = {
+          mappings = {
+            i = {
+              ['<CR>'] = 'select_tab',
+            },
+            n = {
+              ['<CR>'] = 'select_tab',
+            },
+          },
+        },
         -- pickers = {}
         extensions = {
           ['ui-select'] = { require('telescope.themes').get_dropdown() },
