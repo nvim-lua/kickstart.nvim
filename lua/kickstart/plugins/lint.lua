@@ -2,8 +2,7 @@
 
 ---@module 'lazy'
 ---@type LazySpec
-return 
-{
+return {
   'mfussenegger/nvim-lint',
   event = { 'BufReadPre', 'BufNewFile' },
   config = function()
