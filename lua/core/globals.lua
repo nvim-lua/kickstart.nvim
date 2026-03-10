@@ -11,6 +11,32 @@ vim.g.have_nerd_font = false
 -- Configs for Programming Languages
 -- like LSPs, Tree-sitters, Linters, Fromatters, Debuggers, etc.
 Langs = {
+  lsp = {
+    'bashls',
+    'clangd',
+    'elmls',
+    'gopls',
+    'harper_ls',
+    'html',
+    'intelephense',
+    'just',
+    'laravel_ls',
+    'lua_ls',
+    'markdown_oxide',
+    'marksman',
+    'omnisharp',
+    'phpactor',
+    'pyrefly',
+    'roslyn_ls',
+    'stylua',
+    'superhtml',
+    'svelte',
+    'tailwindcss',
+    'ts_ls',
+    'zls',
+    -- 'fsautocomplete',
+  },
+
   treesitter = {
     'bash',
     'c',
