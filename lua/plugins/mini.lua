@@ -32,6 +32,15 @@ return {
       return '%2l:%-2v'
     end
 
+    -- general icon provider. Several categories (file, directory, OS, LSP, etc.)
+    -- with better styles, colorscheme blending, and more
+    require('mini.icons').setup()
+    require('mini.icons').mock_nvim_web_devicons()
+
+    -- plugin to split and join arguments
+    -- - gS    - Toggle [S]plit/join arguments
+    require('mini.splitjoin').setup()
+
     -- ... and there is more!
     --  Check out: https://github.com/nvim-mini/mini.nvim
   end,
