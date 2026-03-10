@@ -30,7 +30,7 @@ return {
     { 'nvim-telescope/telescope-ui-select.nvim' },
 
     -- Useful for getting pretty icons, but requires a Nerd Font.
-    { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+    { 'nvim-mini/mini.nvim' }, -- for mini.icons
   },
   config = function()
     -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -58,11 +58,37 @@ return {
       -- You can put your default mappings / updates / etc. in here
       --  All the info you're looking for is in `:help telescope.setup()`
       --
-      -- defaults = {
-      --   mappings = {
-      --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-      --   },
-      -- },
+      defaults = {
+        prompt_prefix = ' ',
+        selection_caret = ' ',
+        sorting_strategy = 'ascending',
+        layout_strategy = 'flex',
+        layout_config = {
+          prompt_position = 'top',
+          horizontal = {
+            preview_width = 0.6,
+          },
+          vertical = {
+            preview_height = 0.6,
+            mirror = true,
+          },
+        },
+        mappings = {
+          i = {
+            ['<c-enter>'] = 'to_fuzzy_refine', -- this allows to multiple layers of filtering the search list
+            ['<C-j>'] = {
+              require('telescope.actions').move_selection_next,
+              type = 'action',
+              opts = { nowait = true, silent = true },
+            },
+            ['<C-k>'] = {
+              require('telescope.actions').move_selection_previous,
+              type = 'action',
+              opts = { nowait = true, silent = true },
+            },
+          },
+        },
+      },
       -- pickers = {}
       extensions = {
         ['ui-select'] = { require('telescope.themes').get_dropdown() },
