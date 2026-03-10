@@ -319,6 +319,7 @@ require('lazy').setup({
     -- instead of just disabling it here, to keep your config clean.
     enabled = true,
     event = 'VimEnter',
+    cond = not vim.g.vscode,
     dependencies = {
       'nvim-lua/plenary.nvim',
       { -- If encountering errors, see telescope-fzf-native README for installation instructions
@@ -854,6 +855,11 @@ require('lazy').setup({
       vim.cmd.hi 'Comment gui=none'
       vim.api.nvim_set_hl(0, "LspInlayHint", {fg = "#9DA9A0", bg="#000000" })
     end,
+  },
+
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    ft = { 'markdown', 'quarto' },
   },
 
   -- Highlight todo, notes, etc in comments
