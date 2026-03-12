@@ -58,7 +58,7 @@ return {
       -- Window-local options to use for oil buffers
       win_options = {
         wrap = false,
-        signcolumn = 'no',
+        signcolumn = 'yes:2',
         cursorcolumn = false,
         foldcolumn = '0',
         spell = false,
