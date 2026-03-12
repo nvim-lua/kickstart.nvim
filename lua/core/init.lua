@@ -1,7 +1,6 @@
 require 'core.globals'
 require 'core.options'
 require 'core.keymaps'
-require 'core.diagnostics'
 require 'core.autocommands'
 require 'core.lazy-nvim'
 require 'core.ui'
