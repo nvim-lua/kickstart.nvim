@@ -59,8 +59,8 @@ return {
       --  All the info you're looking for is in `:help telescope.setup()`
       --
       defaults = {
-        prompt_prefix = ' ',
-        selection_caret = ' ',
+        prompt_prefix = Glyphs.ui.prompt .. ' ',
+        selection_caret = Glyphs.ui.prompt .. ' ',
         sorting_strategy = 'ascending',
         layout_strategy = 'flex',
         layout_config = {

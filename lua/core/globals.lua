@@ -6,7 +6,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- Configs for Programming Languages
 -- like LSPs, Tree-sitters, Linters, Fromatters, Debuggers, etc.
@@ -80,5 +80,75 @@ Langs = {
     ['blade-formatter'] = {
       prepend_args = { '-i', '2' },
     },
+  },
+}
+
+-- My set of defined icons, I still don't know if its inclusive or not.
+-- I named it Glyphs to avoid misinterpreting it with something else.
+Glyphs = {
+  ui = {
+    prompt = '',
+  },
+  lazy = {
+    cmd = ' ',
+    config = '',
+    debug = '● ',
+    event = ' ',
+    favorite = ' ',
+    ft = ' ',
+    init = ' ',
+    import = ' ',
+    keys = ' ',
+    lazy = '󰒲 ',
+    loaded = '●',
+    not_loaded = '○',
+    plugin = ' ',
+    runtime = ' ',
+    require = ' ',
+    source = ' ',
+    start = ' ',
+    task = ' ',
+    list = { '●', '○', '◆', '◇' },
+  },
+  kinds = {
+    -- taken from:
+    --     - [Completion.Kind (LSP APIs)](https://bits.netbeans.org/29/javadoc/org-netbeans-api-lsp/org/netbeans/api/lsp/Completion.Kind.html)
+    --     - [StructureElement.Kind (LSP APIs)](https://bits.netbeans.org/29/javadoc/org-netbeans-api-lsp/org/netbeans/api/lsp/StructureElement.Kind.html)
+    Array = '',
+    Boolean = '',
+    Class = '󰒕',
+    Color = '󰏘',
+    Constant = '󰏿',
+    Constructor = '󱌣',
+    Copilot = '', -- for AI indication
+    Enum = '', -- or   
+    EnumMember = '', -- or   
+    Event = '',
+    Field = '󰿨',
+    File = '󰈙',
+    Folder = '󰉋',
+    Function = '󰊕',
+    Interface = '󰩦', -- or 󱖡
+    Key = '',
+    Keyword = '',
+    Method = 'ɱ', -- or ꬺ, I can't decide
+    Module = '󰅩',
+    Namespace = '󰦮',
+    Null = '∅',
+    Number = '󰎠',
+    Object = '󰮄', -- ￼ would more appropriate
+    Operator = '',
+    Package = '󰏗',
+    Property = '󰆦',
+    Reference = '󰬲',
+    Snippet = '󱄽',
+    String = '󱀍', -- or   󰀬
+    Struct = '󰓸', -- or 󰙅  󰆩
+    Text = '󰉿',
+    TypeParameter = '',
+    Unit = '󰑭',
+    Unknown = '', -- for Unknown values
+    Value = '󰼢',
+    Variable = '󰀫',
   },
 }

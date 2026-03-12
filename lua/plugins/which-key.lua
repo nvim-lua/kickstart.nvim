@@ -6,9 +6,11 @@ return {
   ---@type wk.Opts
   ---@diagnostic disable-next-line: missing-fields
   opts = {
+    -- set which-key layout to look like 'helix'
+    preset = 'helix',
     -- delay between pressing a key and opening which-key (milliseconds)
     delay = 0,
-    icons = { mappings = vim.g.have_nerd_font },
+    icons = { mappings = false },
 
     -- Document existing key chains
     spec = {
