@@ -110,6 +110,23 @@ Glyphs = {
     task = ' ',
     list = { '●', '○', '◆', '◇' },
   },
+  diagnostics = {
+    error = '',
+    warn = '',
+    hint = '',
+    info = '',
+  },
+  dev_kit = {
+    lsp = '',
+    fmt = '󰉿',
+    lint = '',
+  },
+  file_status = {
+    modified = '󰏫',
+    unmodifiable = '󰏯',
+    readOnly = '󰌾',
+    preview = '󰈈',
+  },
   kinds = {
     -- taken from:
     --     - [Completion.Kind (LSP APIs)](https://bits.netbeans.org/29/javadoc/org-netbeans-api-lsp/org/netbeans/api/lsp/Completion.Kind.html)
