@@ -151,7 +151,15 @@ return {
     },
 
     sources = {
-      default = { 'lsp', 'path', 'snippets' },
+      default = { 'lsp', 'path', 'snippets', 'blade-nav' },
+      providers = {
+        ['blade-nav'] = {
+          module = 'blade-nav.blink',
+          opts = {
+            close_tag_on_complete = true, --default: true
+          },
+        },
+      },
     },
 
     snippets = { preset = 'luasnip' },
