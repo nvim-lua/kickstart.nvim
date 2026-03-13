@@ -789,28 +789,57 @@ require('lazy').setup({
     },
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
+  { -- Colorscheme
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    priority = 1000,
     config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = false }, -- Disable italics in comments
+      require('catppuccin').setup {
+        flavour = 'mocha',
+        background = {
+          light = 'latte',
+          dark = 'mocha',
         },
+        transparent_background = true,
+        show_end_of_buffer = false,
+        term_colors = true,
+        integrations = {
+          gitsigns = true,
+          mason = true,
+          mini = {
+            enabled = true,
+            indentscope_color = '',
+          },
+          native_lsp = {
+            enabled = true,
+            inlay_hints = {
+              background = true,
+            },
+          },
+          telescope = {
+            enabled = true,
+          },
+          treesitter = true,
+          which_key = true,
+        },
+        custom_highlights = function(colors)
+          return {
+            CursorLineNr = { fg = colors.lavender, bold = true },
+            FloatBorder = { bg = colors.mantle, fg = colors.surface2 },
+            LineNr = { fg = colors.overlay1 },
+            NormalFloat = { bg = colors.mantle },
+            Pmenu = { bg = colors.mantle, fg = colors.text },
+            PmenuSel = { bg = colors.surface0, fg = colors.text, bold = true },
+            StatusLine = { bg = colors.surface0, fg = colors.text },
+            StatusLineNC = { bg = colors.base, fg = colors.overlay1 },
+            Visual = { bg = colors.surface1 },
+          }
+        end,
       }
 
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'catppuccin'
     end,
   },
-  { 'catppuccin/nvim', name = 'catppuccin', priority = 1000 },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
