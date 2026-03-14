@@ -6,8 +6,10 @@ return {
     require('rose-pine').setup {
       styles = {
         transparency = true,
+        italic = false,
+        bold = false,
       },
     }
-    vim.cmd 'colorscheme rose-pine-moon'
+    -- vim.cmd 'colorscheme rose-pine-moon'
   end,
 }

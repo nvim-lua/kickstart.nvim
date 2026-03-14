@@ -7,6 +7,11 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.opt.guicursor = ''
 
+-- Setting my diabolic colorscheme
+vim.cmd 'colorscheme quiet'
+vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
+vim.api.nvim_set_hl(0, 'Normalfloat', { bg = 'none' })
+
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
@@ -30,19 +35,14 @@ vim.o.showmode = false
 
 -- soft and elegant Neotree toggle
 vim.keymap.set('n', '<leader>e', '<cmd>Neotree toggle<CR>')
-vim.keymap.set('v', '<leader>e', '<cmd>Neotree toggle<CR>')
-vim.keymap.set('i', '<leader>e', '<cmd>Neotree toggle<CR>')
+-- vim.keymap.set('v', '<leader>e', '<cmd>Neotree toggle<CR>')
+-- vim.keymap.set('i', '<leader>e', '<cmd>Neotree toggle<CR>')
 
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
--- vim.schedule(function() vim.o.clipboard = 'unnamedplus' end)
-vim.keymap.set('n', '<leader>y', '"+y')
-vim.keymap.set('v', '<leader>y', '"+y')
-vim.keymap.set('n', '<leader>yap', '"+yap')
-vim.keymap.set('v', '<leader>yap', '"+yap')
-vim.keymap.set('n', '<leader>p', '"+p')
+vim.schedule(function() vim.o.clipboard = 'unnamedplus' end)
 
 -- Navigating highlighted text after vap or v-j or k
 vim.keymap.set('v', '<A-j>', ":m '>+1<CR>gv=gv")
@@ -100,8 +100,8 @@ vim.o.splitbelow = true
 --  It is very similar to `vim.o` but offers an interface for conveniently interacting with tables.
 --   See `:help lua-options`
 --   and `:help lua-guide-options`
-vim.o.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+-- vim.o.list = true
+-- vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
@@ -876,7 +876,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
-  require 'kickstart.plugins.neo-tree',
+  -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommended keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
