@@ -14,6 +14,8 @@ return {
       jsonls = {},
       yamlls = {},
       lua_ls = {},
+      pylsp = {},
+      pyright = {},
     },
   },
   config = function(_, opts)

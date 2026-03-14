@@ -24,6 +24,11 @@ return {
               },
             },
           },
+          layout = {
+            layout = {
+              width = 28,
+            },
+          },
         },
       },
     },

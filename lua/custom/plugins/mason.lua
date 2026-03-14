@@ -35,7 +35,7 @@ return {
         'svelte',
         'lua_ls',
         'graphql',
-        'emmet_language_server',
+        -- 'emmet_language_server',
         'prismals',
       },
     }
