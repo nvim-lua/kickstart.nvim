@@ -11,15 +11,15 @@ vim.opt.guicursor = ''
 vim.cmd 'colorscheme quiet'
 vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
 
--- Deep Dark Blue background with White text
-vim.api.nvim_set_hl(0, 'NormalFloat', { bg = '#001f3f', fg = '#ffffff' })
+-- Background with White text
+vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none', fg = '#ffffff' })
 
 -- Border to match the dark blue background with white edges
 vim.api.nvim_set_hl(0, 'FloatBorder', { bg = '#001f3f', fg = '#ffffff' })
 
 -- Optional: Fix the autocomplete menu colors to match
-vim.api.nvim_set_hl(0, 'Pmenu', { bg = '#001f3f', fg = '#ffffff' })
-vim.api.nvim_set_hl(0, 'PmenuSel', { bg = '#ffffff', fg = '#001f3f' }) -- White highlight with Blue text
+-- vim.api.nvim_set_hl(0, 'Pmenu', { bg = '#001f3f', fg = '#ffffff' })
+-- vim.api.nvim_set_hl(0, 'PmenuSel', { bg = '#ffffff', fg = '#001f3f' }) -- White highlight with Blue text
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
@@ -921,4 +921,4 @@ require('lazy').setup({
 })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
+-- vim: ts=2 sts=2 001f3fsw=2 et
