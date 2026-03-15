@@ -9,8 +9,26 @@ return {
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     config = function(_, opts)
       require('nvim-treesitter').setup(opts)
-      local ensureInstalled =
-        { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'go', 'rust', 'elixir', 'toml', 'yaml' }
+      local ensureInstalled = {
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc',
+        'go',
+        'rust',
+        'elixir',
+        'toml',
+        'yaml',
+        'ecma',
+        'typescript',
+      }
       local alreadyInstalled = require('nvim-treesitter').get_installed 'parsers'
       local parsersToInstall = vim
         .iter(ensureInstalled)
@@ -18,7 +36,7 @@ return {
           return not vim.tbl_contains(alreadyInstalled, parser)
         end)
         :totable()
-      print(parsersToInstall)
+      -- print(parsersToInstall)
       if #parsersToInstall > 0 then
         require('nvim-treesitter').install(parsersToInstall)
       end
@@ -37,6 +55,12 @@ return {
             end
           end,
         })
+
+        -- special case for handling tsx files
+        if parser == 'typescript' then
+          -- table.insert(filetypes, 'typescriptreact')
+          vim.treesitter.language.register('typescript', { 'ts', 'typescript', 'typescriptreact' })
+        end
       end
     end,
     -- There are additional nvim-treesitter modules that you can use to interact

@@ -58,7 +58,7 @@ require('lazy').setup({
   require 'custom/plugins/oil',
   require 'custom/plugins/trouble',
   require 'custom/plugins/flash',
-  require 'custom/plugins/harpoon',
+  -- require 'custom/plugins/harpoon',
   require 'custom/plugins/lualine',
   require 'custom/plugins/noice',
   require 'custom/plugins/theme',
