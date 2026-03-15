@@ -705,7 +705,6 @@ require('lazy').setup({
           }
         end
       end,
-      --TODO: need formating for c#/omnisharp
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
