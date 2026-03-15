@@ -10,7 +10,16 @@ vim.opt.guicursor = ''
 -- Setting my diabolic colorscheme
 vim.cmd 'colorscheme quiet'
 vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
-vim.api.nvim_set_hl(0, 'Normalfloat', { bg = 'none' })
+
+-- Deep Dark Blue background with White text
+vim.api.nvim_set_hl(0, 'NormalFloat', { bg = '#001f3f', fg = '#ffffff' })
+
+-- Border to match the dark blue background with white edges
+vim.api.nvim_set_hl(0, 'FloatBorder', { bg = '#001f3f', fg = '#ffffff' })
+
+-- Optional: Fix the autocomplete menu colors to match
+vim.api.nvim_set_hl(0, 'Pmenu', { bg = '#001f3f', fg = '#ffffff' })
+vim.api.nvim_set_hl(0, 'PmenuSel', { bg = '#ffffff', fg = '#001f3f' }) -- White highlight with Blue text
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
@@ -86,7 +95,7 @@ vim.keymap.set('n', '<leader>qq', vim.cmd.q)
 vim.o.updatetime = 250
 
 -- Decrease mapped sequence wait time
-vim.o.timeoutlen = 1000
+vim.o.timeoutlen = 500
 
 -- Configure how new splits should be opened
 vim.o.splitright = true

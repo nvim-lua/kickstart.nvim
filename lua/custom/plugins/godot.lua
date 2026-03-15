@@ -1,11 +1,10 @@
+-- Lowkey, this could have been like one line in the root init.lua, however, we keeping things modular
 return {
-  -- This tells Lazy to use nvim-lspconfig as the base
   'neovim/nvim-lspconfig',
   config = function()
-    -- Use the new 0.11+ syntax to avoid the deprecation warning
     vim.lsp.config('gdscript', {
       cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),
-      filetypes = { 'gdscript', 'gdscript3' },
+      filetypes = { 'gdscript' },
       root_markers = { 'project.godot', '.git' },
     })
 
