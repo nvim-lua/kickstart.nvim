@@ -705,7 +705,7 @@ require('lazy').setup({
           }
         end
       end,
-      --TODO: need formating for c#/roslyn
+      --TODO: need formating for c#/omnisharp
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
@@ -719,7 +719,6 @@ require('lazy').setup({
     },
   },
 
-  --TODO: need autocompletion for c#/roslyn
   { -- Autocompletion
     'saghen/blink.cmp',
     event = 'VimEnter',
@@ -776,7 +775,7 @@ require('lazy').setup({
         -- <c-k>: Toggle signature help
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
-        preset = 'default',
+        preset = 'super-tab',
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
