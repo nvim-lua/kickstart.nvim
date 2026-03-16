@@ -548,7 +548,8 @@ require('lazy').setup({
         -- ts_ls = {},
 
         stylua = {}, -- Used to format Lua code
-
+        gdscript = {},
+        --
         -- Special Lua Config, as recommended by neovim help docs
         lua_ls = {
           on_init = function(client)
@@ -586,11 +587,18 @@ require('lazy').setup({
       --    :Mason
       --
       -- You can press `g?` for help in this menu.
-      local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        -- You can add other tools here that you want Mason to install
-      })
 
+      -- 1. Get all keys from your servers table (includes 'gdscript')
+      local all_servers = vim.tbl_keys(servers or {})
+
+      -- 2. Create a filtered list for Mason (excludes 'gdscript')
+      local mason_ensure_installed = vim.tbl_filter(function(name) return name ~= 'gdscript' end, all_servers)
+
+      -- 3. Add your extra formatting tools to the MASON list
+      vim.list_extend(mason_ensure_installed, {
+        'stylua',
+        'gdtoolkit', -- Mason can find this!
+      })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       for name, server in pairs(servers) do
