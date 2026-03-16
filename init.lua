@@ -1,40 +1,21 @@
--- Thanks TJ :)
-
--- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.opt.guicursor = ''
 
--- Setting my diabolic colorscheme
-vim.cmd 'colorscheme quiet'
-vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
-vim.o.winborder = 'rounded'
-
--- Background with White text
-vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none', fg = '#ffffff' })
-
-vim.api.nvim_set_hl(0, 'FloatBorder', { bg = 'none', fg = '#ffffff' })
-
--- Optional: Fix the autocomplete menu colors to match
-vim.api.nvim_set_hl(0, 'Pmenu', { bg = 'none' })
--- vim.api.nvim_set_hl(0, 'PmenuSel', { bg = '#ffffff', fg = '#001f3f' }) -- White highlight with Blue text
-vim.api.nvim_set_hl(0, 'PmenuKind', { bg = 'none' })
-
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = true
+vim.g.have_nerd_font = false
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
--- add the damn sign columns
-vim.opt.signcolumn = 'yes'
-
 -- Make line numbers default
 vim.o.number = true
+-- You can also add relative line numbers, to help with jumping.
+--  Experiment for yourself to see if you like it!
 vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
@@ -42,11 +23,8 @@ vim.o.mouse = 'a'
 
 -- Don't show the mode, since it's already in the status line
 vim.o.showmode = false
-
 -- soft and elegant Neotree toggle
 vim.keymap.set('n', '<leader>e', '<cmd>Neotree toggle<CR>')
--- vim.keymap.set('v', '<leader>e', '<cmd>Neotree toggle<CR>')
--- vim.keymap.set('i', '<leader>e', '<cmd>Neotree toggle<CR>')
 
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
@@ -62,23 +40,13 @@ vim.keymap.set('v', '<A-h>', '<gv')
 -- Deleting buffers
 vim.keymap.set('n', '<leader>bd', vim.cmd.bdelete)
 
--- go to project view
-vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
-
 -- Enable break indent
 vim.o.breakindent = true
-vim.keymap.set('v', '<A-l>', '>gv')
-
--- Enable break indent
--- vim.o.breakindent = true
 
 -- Enable undo/redo changes even after closing and reopening a file
 vim.o.undofile = true
 vim.opt.swapfile = false
 vim.opt.undodir = os.getenv 'HOME' .. '/.vim/undodir'
-
--- close the damn folds
-vim.opt.foldenable = false
 
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 vim.o.ignorecase = true
@@ -90,8 +58,6 @@ vim.o.signcolumn = 'yes'
 -- color column
 vim.opt.colorcolumn = '100'
 
--- most disgusting keymap to quit
-vim.keymap.set('n', '<leader>qq', vim.cmd.q)
 -- Decrease update time
 vim.o.updatetime = 250
 
@@ -112,7 +78,6 @@ vim.o.splitbelow = true
 --   and `:help lua-guide-options`
 -- vim.o.list = true
 -- vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
@@ -274,7 +239,6 @@ require('lazy').setup({
   -- Then, because we use the `opts` key (recommended), the configuration runs
   -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
 
-  -- I'd intentionally hide  which key... might see its use later
   -- { -- Useful plugin to show you pending keybinds.
   --   'folke/which-key.nvim',
   --   event = 'VimEnter',
@@ -332,7 +296,7 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = false },
+      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -561,9 +525,9 @@ require('lazy').setup({
           -- code, if the language server you are using supports them
           --
           -- This may be unwanted, since they displace some of your code
-          -- if client and client:supports_method('textDocument/inlayHint', event.buf) then
-          --   map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
-          -- end
+          if client and client:supports_method('textDocument/inlayHint', event.buf) then
+            map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
+          end
         end,
       })
 
@@ -572,9 +536,9 @@ require('lazy').setup({
       --  See `:help lsp-config` for information about keys and how to configure
       ---@type table<string, vim.lsp.Config>
       local servers = {
-        clangd = {},
+        -- clangd = {},
         -- gopls = {},
-        pyright = {},
+        -- pyright = {},
         -- rust_analyzer = {},
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -775,22 +739,21 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    -- 'folke/tokyonight.nvim',
-    -- priority = 1000, -- Make sure to load this before all the other start plugins.
-    -- config = function()
-    --   ---@diagnostic disable-next-line: missing-fields
-    --   require('tokyonight').setup {
-    --     styles = {
-    --       comments = { italic = false }, -- Disable italics in comments
-    --     },
-    --     transparent = true,
-    --   }
-    --
-    --   -- Load the colorscheme here.
-    --   -- Like many other themes, this one has different styles, and you could load
-    --   -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-    --   vim.cmd.colorscheme 'tokyonight-night'
-    -- end,
+    'folke/tokyonight.nvim',
+    priority = 1000, -- Make sure to load this before all the other start plugins.
+    config = function()
+      ---@diagnostic disable-next-line: missing-fields
+      require('tokyonight').setup {
+        styles = {
+          comments = { italic = false }, -- Disable italics in comments
+        },
+      }
+
+      -- Load the colorscheme here.
+      -- Like many other themes, this one has different styles, and you could load
+      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+      vim.cmd.colorscheme 'tokyonight-night'
+    end,
   },
 
   -- Highlight todo, notes, etc in comments
@@ -827,7 +790,7 @@ require('lazy').setup({
       --  and try some other statusline plugin
       local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = false }
+      statusline.setup { use_icons = vim.g.have_nerd_font }
 
       -- You can configure sections in the statusline by overriding their
       -- default behavior. For example, here we set the section for
@@ -886,7 +849,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommended keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
