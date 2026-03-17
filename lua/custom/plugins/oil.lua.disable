@@ -1,0 +1,91 @@
+return {
+  'stevearc/oil.nvim',
+  ---@module 'oil'
+  ---@type oil.SetupOpts
+  opts = {
+    default_file_explorer = true,
+    columns = { 'icon' },
+    keymaps = {
+      ['<CR>'] = function()
+        local oil = require('oil')
+        local actions = require('oil.actions')
+        local entry = oil.get_cursor_entry()
+
+        if not entry then
+          return
+        end
+
+        if entry.type == 'directory' then
+          actions.select.callback()
+          return
+        end
+
+        local sidebar_win = vim.api.nvim_get_current_win()
+        local sidebar_pos = vim.api.nvim_win_get_position(sidebar_win)
+        local target_win = nil
+
+        for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+          if win ~= sidebar_win then
+            local buf = vim.api.nvim_win_get_buf(win)
+            if vim.bo[buf].filetype ~= 'oil' then
+              local pos = vim.api.nvim_win_get_position(win)
+              if pos[2] > sidebar_pos[2] then
+                if not target_win then
+                  target_win = win
+                else
+                  local target_pos = vim.api.nvim_win_get_position(target_win)
+                  if pos[2] < target_pos[2] then
+                    target_win = win
+                  end
+                end
+              end
+            end
+          end
+        end
+
+        if not target_win then
+          vim.cmd('vsplit')
+          target_win = vim.api.nvim_get_current_win()
+          vim.api.nvim_set_current_win(sidebar_win)
+        end
+
+        local dir = oil.get_current_dir()
+        if not dir then
+          return
+        end
+
+        local path = vim.fs.joinpath(dir, entry.name)
+        vim.api.nvim_set_current_win(target_win)
+        vim.cmd.edit(vim.fn.fnameescape(path))
+      end,
+    },
+  },
+  keys = {
+    {
+      '<leader>e',
+      function()
+        for _, win in ipairs(vim.api.nvim_list_wins()) do
+          local buf = vim.api.nvim_win_get_buf(win)
+          if vim.bo[buf].filetype == 'oil' then
+            vim.api.nvim_win_close(win, true)
+            return
+          end
+        end
+
+        local current_win = vim.api.nvim_get_current_win()
+        vim.cmd('topleft vsplit')
+        local sidebar_win = vim.api.nvim_get_current_win()
+        require('oil').open()
+        vim.api.nvim_win_set_width(sidebar_win, 20)
+        vim.wo[sidebar_win].winfixwidth = true
+        vim.api.nvim_set_current_win(current_win)
+      end,
+      desc = 'Toggle Oil sidebar',
+    },
+  },
+  -- Optional dependencies
+  dependencies = { { 'nvim-mini/mini.icons', opts = {} } },
+  -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
+  -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
+  lazy = false,
+}
