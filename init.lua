@@ -835,13 +835,138 @@ require('lazy').setup({
               -- Static analysis and diagnostics
               staticcheck = true, -- Enable additional static analysis checks
               analyses = {
-                unusedparams = true, -- Detect unused function parameters
-                unusedwrite = true, -- Detect assignments that are never read
-                nilness = true, -- Detect nil pointer errors
-                shadow = true, -- Detect variable shadowing
-                useany = true, -- Recommend using 'any' instead of 'interface{}'
-              },
+                -- ==========================================
+                -- 1. Core 'go vet' & gopls Specific Checks
+                -- ==========================================
+                asmdecl = true,
+                assign = true,
+                atomic = true,
+                atomicalign = true,
+                bools = true,
+                buildtag = true,
+                cgocall = true,
+                composites = true,
+                copylock = true,
+                defers = true,
+                directive = true,
+                errorsas = true,
+                framepointer = true,
+                httpresponse = true,
+                ifaceassert = true,
+                loopclosure = true,
+                lostcancel = true,
+                nilfunc = true,
+                printf = true,
+                shift = true,
+                sigchanyzer = true,
+                slog = true,
+                stdmethods = true,
+                stringintconv = true,
+                structtag = true,
+                testinggoroutine = true,
+                tests = true,
+                timeformat = true,
+                unmarshal = true,
+                unreachable = true,
+                unsafeptr = true,
+                unusedresult = true,
+                deepequalerrors = true,
+                embed = true,
+                fieldalignment = true,
+                fillreturns = true,
+                infertypeargs = true,
+                nilness = true,
+                nonewvars = true,
+                noresultvalues = true,
+                shadow = true,
+                simplifycompositelit = true,
+                simplifyrange = true,
+                simplifyslice = true,
+                sortslice = true,
+                stubmethods = true,
+                undeclaredname = true,
+                unusedparams = true,
+                unusedvariable = true,
+                unusedwrite = true,
+                useany = true,
 
+                -- ==========================================
+                -- 2. S Series: Staticcheck Simplifications
+                -- ==========================================
+                S1000 = true, -- Use plain channel send or receive instead of single-case select
+                S1001 = true, -- Replace for loop with call to copy
+                S1002 = true, -- Omit comparison with boolean constant
+                S1003 = true, -- Replace call to strings.Index with strings.Contains
+                S1004 = true, -- Replace call to bytes.Compare with bytes.Equal
+                S1005 = true, -- Drop unnecessary use of the blank identifier
+                S1006 = true, -- Use 'for { ... }' for infinite loops
+                S1007 = true, -- Simplify regular expression by using raw string literal
+                S1008 = true, -- Simplify returning boolean expression
+                S1009 = true, -- Omit redundant nil check on slices, maps, and channels
+                S1010 = true, -- Omit default slice index
+                S1011 = true, -- Use a single append to concatenate two slices
+                S1012 = true, -- Replace time.Now().Sub(x) with time.Since(x)
+                S1016 = true, -- Use a type conversion instead of manually copying struct fields
+                S1017 = true, -- Replace manual trimming with strings.TrimPrefix
+                S1018 = true, -- Use 'copy' for sliding elements
+                S1019 = true, -- Simplify 'make' call by omitting redundant arguments
+                S1020 = true, -- Omit redundant nil check in type assertion
+                S1021 = true, -- Merge variable declaration and assignment
+                S1023 = true, -- Omit redundant control flow (e.g. return in void func)
+                S1024 = true, -- Replace x.Sub(time.Now()) with time.Until(x)
+                S1025 = true, -- Don't use fmt.Sprintf("%s", x) unnecessarily
+                S1028 = true, -- Simplify error construction with fmt.Errorf
+                S1029 = true, -- Range over string rather than running loop over bytes
+                S1030 = true, -- Use bytes.Buffer.String or bytes.Buffer.Bytes
+                S1031 = true, -- Omit redundant nil check around loop
+                S1032 = true, -- Use sort.Ints(x), sort.Float64s(x), and sort.Strings(x)
+                S1033 = true, -- Unnecessary guard around call to delete
+                S1034 = true, -- Use result of type assertion to simplify cases
+                S1035 = true, -- Redundant call to net/http.CanonicalHeaderKey
+                S1036 = true, -- Unnecessary guard around map access
+                S1037 = true, -- Elaborate sleep with time.Sleep
+                S1038 = true, -- Unnecessarily complex formatting directives
+                S1039 = true, -- Unnecessary use of fmt.Sprint
+                S1040 = true, -- Type assertion to current type
+
+                -- ==========================================
+                -- 3. ST Series: Staticcheck Style Checks
+                -- ==========================================
+                ST1000 = true, -- Incorrect or missing package comment
+                ST1001 = true, -- Dot imports are discouraged
+                ST1003 = true, -- Poorly chosen identifier names (e.g. snake_case in Go)
+                ST1005 = true, -- Incorrectly formatted error string
+                ST1006 = true, -- Poorly chosen receiver name
+                ST1008 = true, -- A function's error value should be its last return value
+                ST1011 = true, -- Poorly chosen name for variable of type time.Duration
+                ST1012 = true, -- Poorly chosen name for error variable
+                ST1013 = true, -- Should use constants for HTTP error codes
+                ST1015 = true, -- A switch's default case should be the first or last case
+                ST1016 = true, -- Use consistent method receiver names
+                ST1017 = true, -- Don't use Yoda conditions
+                ST1018 = true, -- Avoid zero-width and control characters in string literals
+                ST1019 = true, -- Importing the same package multiple times
+                ST1020 = true, -- The documentation of an exported function should start with the function's name
+                ST1021 = true, -- The documentation of an exported type should start with type's name
+                ST1022 = true, -- The documentation of an exported variable/constant should start with variable's name
+                ST1023 = true, -- Redundant type in variable declaration
+
+                -- ==========================================
+                -- 4. QF Series: Staticcheck Quick Fixes
+                -- ==========================================
+                QF1001 = true, -- Apply De Morgan's law
+                QF1002 = true, -- Convert untagged switch to tagged switch
+                QF1003 = true, -- Convert if/else-if chain to tagged switch
+                QF1004 = true, -- Use strings.ReplaceAll instead of strings.Replace
+                QF1005 = true, -- Expand call to math.Pow
+                QF1006 = true, -- Lift if+break into loop condition
+                QF1007 = true, -- Merge conditional assignment into variable declaration
+                QF1008 = true, -- Omit embedded fields from selector expression
+                QF1009 = true, -- Use time.Time.Equal instead of ==
+                QF1010 = true, -- Convert slice of bytes to string when printing it
+                QF1011 = true, -- Omit redundant type from variable declaration
+                QF1012 = true, -- Use fmt.Fprintf(x, ...) instead of x.Write(fmt.Sprintf(...))
+              },
               hints = {
                 assignVariableTypes = true,
                 compositeLiteralFields = true,
@@ -851,18 +976,17 @@ require('lazy').setup({
                 parameterNames = true,
                 rangeVariableTypes = true,
               },
-
-              -- Code lenses
               codelenses = {
-                gc_details = true, -- Show memory details on functions
-                generate = true, -- Enable 'go generate' code lens
-                regenerate_cgo = true, -- Regenerate cgo definitions
-                tidy = true, -- Enable 'go mod tidy' lens
-                upgrade_dependency = true, -- Upgrade dependencies
-                vendor = true, -- Vendor dependencies
-                test = true, -- Enable run/test lenses
+                gc_details = true, -- Toggles the display of compiler optimization details (escape analysis, inlining)
+                generate = true, -- Injects a "run go generate" link above `//go:generate` comments
+                regenerate_cgo = true, -- Injects a link to regenerate C declarations above `import "C"`
+                run_govulncheck = true, -- (Legacy) Injects a link above `module` in go.mod to run vulnerability analysis
+                test = true, -- Injects "run test" and "debug test" links above `Test...` and `Benchmark...` functions
+                tidy = true, -- Injects a "run go mod tidy" link above the `module` directive in go.mod
+                upgrade_dependency = true, -- Injects links in go.mod to upgrade direct/transitive dependencies
+                vendor = true, -- Injects a "run go mod vendor" link in go.mod
+                vulncheck = true, -- (Modern) Injects a synchronous govulncheck link in go.mod
               },
-
               -- Import management
               gofumpt = true, -- Use `gofumpt` formatting style
               directoryFilters = { '-vendor' }, -- Exclude vendor directories from analysis
