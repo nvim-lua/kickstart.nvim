@@ -874,8 +874,6 @@ require('lazy').setup({
     branch = 'main',
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter-intro`
     config = function()
-      local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
-      require('nvim-treesitter').install(parsers)
       vim.api.nvim_create_autocmd('FileType', {
         callback = function(args)
           local buf, filetype = args.buf, args.match
@@ -897,6 +895,20 @@ require('lazy').setup({
           vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
         end,
       })
+    end,
+  },
+  { -- Automatically install Treesitter parsers for languages you encounter.
+
+    -- NOTE: This plugin is a convenience feature and is not strictly necessary for
+    -- regular use. If you prefer, you can remove it and install parsers manually
+    -- directly with treesitter using `require('nvim-treesitter').install()`.
+    'lewis6991/ts-install.nvim',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+      require('ts-install').setup {
+        ensure_install = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+        auto_install = true,
+      }
     end,
   },
 
