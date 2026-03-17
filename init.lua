@@ -619,7 +619,19 @@ require('lazy').setup({
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
-      { 'mason-org/mason.nvim', opts = {} },
+      {
+        'mason-org/mason.nvim',
+        opts = {
+          ensure_installed = {
+            'goimports',
+            'gofumpt',
+            'gomodifytags',
+            'impl',
+            'golangci-lint',
+            'delve',
+          },
+        },
+      },
       'mason-org/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
@@ -710,10 +722,6 @@ require('lazy').setup({
           map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
 
           -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
-          ---@param client vim.lsp.Client
-          ---@param method vim.lsp.protocol.Method
-          ---@param bufnr? integer some lsp support methods only in specific files
-          ---@return boolean
           local function client_supports_method(client, method, bufnr)
             if vim.fn.has 'nvim-0.11' == 1 then
               return client:supports_method(method, bufnr)
@@ -722,12 +730,31 @@ require('lazy').setup({
             end
           end
 
+          local client = vim.lsp.get_client_by_id(event.data.client_id)
+
+          -- =========================================================================
+          -- NEW: The gopls Semantic Tokens Workaround
+          -- =========================================================================
+          if client and client.name == 'gopls' and not client.server_capabilities.semanticTokensProvider then
+            local semantic = client.config.capabilities.textDocument.semanticTokens
+            if semantic then
+              client.server_capabilities.semanticTokensProvider = {
+                full = true,
+                legend = {
+                  tokenTypes = semantic.tokenTypes,
+                  tokenModifiers = semantic.tokenModifiers,
+                },
+                range = true,
+              }
+            end
+          end
+          -- =========================================================================
+
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
-          local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
@@ -810,34 +837,35 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         clangd = {},
+
+        -- =========================================================================
+        -- UPDATED: The unified "God Mode" gopls config
+        -- =========================================================================
         gopls = {
           settings = {
             gopls = {
+              -- Use just ONE method for build flags to avoid conflicts
               buildFlags = {
                 '-tags',
                 'functional,integration,small,medium,large',
               },
-              env = {
-                GOFLAGS = '-tags=functional,integration,small,medium,large',
-              },
+
               -- Completion settings
-              completeUnimported = true, -- Suggest symbols from packages that are not yet imported
-              usePlaceholders = true, -- Insert argument placeholders for functions
-              deepCompletion = true, -- Include deep completions (e.g., struct fields)
-              matcher = 'Fuzzy', -- Matching algorithm for completions
+              completeUnimported = true,
+              usePlaceholders = true,
+              deepCompletion = true,
+              matcher = 'Fuzzy',
 
               -- Hover and signature help
-              hoverKind = 'FullDocumentation', -- Show full documentation in hover
+              hoverKind = 'FullDocumentation',
               linkTarget = 'pkg.go.dev',
-              linksInHover = true, -- Show documentation links in hover popups
+              linksInHover = true,
 
               -- Static analysis and diagnostics
-              -- Static analysis and diagnostics
-              staticcheck = true, -- Enable additional static analysis checks
+              staticcheck = true, -- THIS automatically runs the officially supported staticcheck suite
+
               analyses = {
-                -- ==========================================
-                -- 1. Core 'go vet' & gopls Specific Checks
-                -- ==========================================
+                -- Only natively supported go vet / gopls checks go here
                 asmdecl = true,
                 assign = true,
                 atomic = true,
@@ -872,7 +900,6 @@ require('lazy').setup({
                 unusedresult = true,
                 deepequalerrors = true,
                 embed = true,
-                fieldalignment = true,
                 fillreturns = true,
                 infertypeargs = true,
                 nilness = true,
@@ -889,84 +916,8 @@ require('lazy').setup({
                 unusedvariable = true,
                 unusedwrite = true,
                 useany = true,
-
-                -- ==========================================
-                -- 2. S Series: Staticcheck Simplifications
-                -- ==========================================
-                S1000 = true, -- Use plain channel send or receive instead of single-case select
-                S1001 = true, -- Replace for loop with call to copy
-                S1002 = true, -- Omit comparison with boolean constant
-                S1003 = true, -- Replace call to strings.Index with strings.Contains
-                S1004 = true, -- Replace call to bytes.Compare with bytes.Equal
-                S1005 = true, -- Drop unnecessary use of the blank identifier
-                S1006 = true, -- Use 'for { ... }' for infinite loops
-                S1007 = true, -- Simplify regular expression by using raw string literal
-                S1008 = true, -- Simplify returning boolean expression
-                S1009 = true, -- Omit redundant nil check on slices, maps, and channels
-                S1010 = true, -- Omit default slice index
-                S1011 = true, -- Use a single append to concatenate two slices
-                S1012 = true, -- Replace time.Now().Sub(x) with time.Since(x)
-                S1016 = true, -- Use a type conversion instead of manually copying struct fields
-                S1017 = true, -- Replace manual trimming with strings.TrimPrefix
-                S1018 = true, -- Use 'copy' for sliding elements
-                S1019 = true, -- Simplify 'make' call by omitting redundant arguments
-                S1020 = true, -- Omit redundant nil check in type assertion
-                S1021 = true, -- Merge variable declaration and assignment
-                S1023 = true, -- Omit redundant control flow (e.g. return in void func)
-                S1024 = true, -- Replace x.Sub(time.Now()) with time.Until(x)
-                S1025 = true, -- Don't use fmt.Sprintf("%s", x) unnecessarily
-                S1028 = true, -- Simplify error construction with fmt.Errorf
-                S1029 = true, -- Range over string rather than running loop over bytes
-                S1030 = true, -- Use bytes.Buffer.String or bytes.Buffer.Bytes
-                S1031 = true, -- Omit redundant nil check around loop
-                S1032 = true, -- Use sort.Ints(x), sort.Float64s(x), and sort.Strings(x)
-                S1033 = true, -- Unnecessary guard around call to delete
-                S1034 = true, -- Use result of type assertion to simplify cases
-                S1035 = true, -- Redundant call to net/http.CanonicalHeaderKey
-                S1036 = true, -- Unnecessary guard around map access
-                S1037 = true, -- Elaborate sleep with time.Sleep
-                S1038 = true, -- Unnecessarily complex formatting directives
-                S1039 = true, -- Unnecessary use of fmt.Sprint
-                S1040 = true, -- Type assertion to current type
-
-                -- ==========================================
-                -- 3. ST Series: Staticcheck Style Checks
-                -- ==========================================
-                ST1000 = true, -- Incorrect or missing package comment
-                ST1001 = true, -- Dot imports are discouraged
-                ST1003 = true, -- Poorly chosen identifier names (e.g. snake_case in Go)
-                ST1005 = true, -- Incorrectly formatted error string
-                ST1006 = true, -- Poorly chosen receiver name
-                ST1008 = true, -- A function's error value should be its last return value
-                ST1011 = true, -- Poorly chosen name for variable of type time.Duration
-                ST1012 = true, -- Poorly chosen name for error variable
-                ST1013 = true, -- Should use constants for HTTP error codes
-                ST1015 = true, -- A switch's default case should be the first or last case
-                ST1016 = true, -- Use consistent method receiver names
-                ST1017 = true, -- Don't use Yoda conditions
-                ST1018 = true, -- Avoid zero-width and control characters in string literals
-                ST1019 = true, -- Importing the same package multiple times
-                ST1020 = true, -- The documentation of an exported function should start with the function's name
-                ST1021 = true, -- The documentation of an exported type should start with type's name
-                ST1022 = true, -- The documentation of an exported variable/constant should start with variable's name
-                ST1023 = true, -- Redundant type in variable declaration
-
-                -- ==========================================
-                -- 4. QF Series: Staticcheck Quick Fixes
-                -- ==========================================
-                QF1001 = true, -- Apply De Morgan's law
-                QF1002 = true, -- Convert untagged switch to tagged switch
-                QF1003 = true, -- Convert if/else-if chain to tagged switch
-                QF1004 = true, -- Use strings.ReplaceAll instead of strings.Replace
-                QF1005 = true, -- Expand call to math.Pow
-                QF1006 = true, -- Lift if+break into loop condition
-                QF1007 = true, -- Merge conditional assignment into variable declaration
-                QF1008 = true, -- Omit embedded fields from selector expression
-                QF1009 = true, -- Use time.Time.Equal instead of ==
-                QF1010 = true, -- Convert slice of bytes to string when printing it
-                QF1011 = true, -- Omit redundant type from variable declaration
-                QF1012 = true, -- Use fmt.Fprintf(x, ...) instead of x.Write(fmt.Sprintf(...))
               },
+
               hints = {
                 assignVariableTypes = true,
                 compositeLiteralFields = true,
@@ -976,24 +927,23 @@ require('lazy').setup({
                 parameterNames = true,
                 rangeVariableTypes = true,
               },
+
               codelenses = {
-                gc_details = true, -- Toggles the display of compiler optimization details (escape analysis, inlining)
-                generate = true, -- Injects a "run go generate" link above `//go:generate` comments
-                regenerate_cgo = true, -- Injects a link to regenerate C declarations above `import "C"`
-                run_govulncheck = true, -- (Legacy) Injects a link above `module` in go.mod to run vulnerability analysis
-                test = true, -- Injects "run test" and "debug test" links above `Test...` and `Benchmark...` functions
-                tidy = true, -- Injects a "run go mod tidy" link above the `module` directive in go.mod
-                upgrade_dependency = true, -- Injects links in go.mod to upgrade direct/transitive dependencies
-                vendor = true, -- Injects a "run go mod vendor" link in go.mod
-                vulncheck = true, -- (Modern) Injects a synchronous govulncheck link in go.mod
+                gc_details = true,
+                generate = true,
+                regenerate_cgo = true,
+                test = true,
+                tidy = true,
+                upgrade_dependency = true,
+                vendor = true,
+                vulncheck = true,
               },
-              -- Import management
-              gofumpt = true, -- Use `gofumpt` formatting style
-              directoryFilters = { '-vendor' }, -- Exclude vendor directories from analysis
+
+              gofumpt = true,
+              directoryFilters = { '-vendor' },
             },
           },
 
-          -- Auto organize imports on save
           on_attach = function(client, bufnr)
             if client.name == 'gopls' then
               vim.api.nvim_create_autocmd('BufWritePre', {
@@ -1008,6 +958,8 @@ require('lazy').setup({
             end
           end,
         },
+        -- =========================================================================
+
         pyright = {},
         rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -1018,12 +970,12 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         ts_ls = {
           settings = {},
-          on_attach = function(client)
+          on_attach = function(client, bufnr)
             client.server_capabilities.documentFormattingProvider = false
             client.server_capabilities.documentRangeFormattingProvider = false
 
             -- Disable format on save for this buffer
-            vim.api.nvim_buf_set_option(bufnr, 'formatoptions', '')
+            vim.api.nvim_set_option_value('formatoptions', '', { buf = bufnr })
             vim.api.nvim_create_autocmd('BufWritePre', {
               buffer = bufnr,
               callback = function()
@@ -1032,7 +984,7 @@ require('lazy').setup({
             })
           end,
         },
-        --
+
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -1048,6 +1000,14 @@ require('lazy').setup({
           },
         },
       }
+      --
+      -- --
+      -- -- FORCE GOPLS SETUP
+      -- --
+      -- local gopls_config = servers.gopls
+      -- gopls_config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, gopls_config.capabilities or {})
+      -- require('lspconfig').gopls.setup(gopls_config)
+      --
 
       -- Ensure the servers and tools above are installed
       --
@@ -1068,26 +1028,41 @@ require('lazy').setup({
         'sql-formatter',
         'prettier',
         'staticcheck',
+        'goimports',
+        'gofumpt',
+        'gomodifytags',
+        'impl',
+        'golangci-lint',
+        'delve',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
         automatic_installation = false,
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for ts_ls)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-          end,
-        },
+        -- We are removing the handlers block here to prevent Mason
+        -- from silently skipping unmanaged/globally-installed binaries.
       }
+
+      -- Ensure lspconfig is loaded so defaults are populated in Nvim 0.11
+      require 'lspconfig'
+
+      -- Explicitly set up all servers defined in the servers table.
+      for server_name, server in pairs(servers) do
+        server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+
+        if vim.fn.has 'nvim-0.11' == 1 then
+          -- Neovim 0.11+ native config API (prevents deprecation warning)
+          local def = vim.lsp.config[server_name] or {}
+          vim.lsp.config[server_name] = vim.tbl_deep_extend('force', def, server)
+          vim.lsp.enable(server_name)
+        else
+          -- Neovim 0.10 and earlier legacy API
+          require('lspconfig')[server_name].setup(server)
+        end
+      end
     end,
   },
-
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
@@ -1325,6 +1300,9 @@ require('lazy').setup({
         'vim',
         'vimdoc',
         'go',
+        'gomod',
+        'gowork',
+        'gosum',
         'rust',
         'python',
         'json',
@@ -1363,6 +1341,20 @@ require('lazy').setup({
       -- This plugin automatically detects helm files (including .tpl)
       -- and sets the filetype to "helm" instead of "yaml"
     end,
+  },
+  {
+    'fredrikaverpil/neotest-golang',
+  },
+  {
+    'nvim-mini/mini.icons',
+    opts = {
+      file = {
+        ['.go-version'] = { glyph = '', hl = 'MiniIconsBlue' },
+      },
+      filetype = {
+        gotmpl = { glyph = '󰟓', hl = 'MiniIconsGrey' },
+      },
+    },
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
