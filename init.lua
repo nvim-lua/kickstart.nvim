@@ -640,6 +640,9 @@ require('lazy').setup({
             enableRoslynAnalyzers = false, -- Enable Roslyn analyzers
             scriptFileSupport = true, -- Enable CSX script support if not needed
             loggingLevel = 'debug', -- Enable debugging logs for better diagnostics
+            format = {
+              enable = false,
+            },
           },
         },
         on_attach = function(_, bufnr)
