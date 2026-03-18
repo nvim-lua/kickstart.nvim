@@ -38,6 +38,7 @@ return {
         typescript = { 'biome' },
         javascript = { 'biome' },
         typescriptreact = { 'biome' },
+        javascriptreact = { 'biome' },
       },
     },
   },
