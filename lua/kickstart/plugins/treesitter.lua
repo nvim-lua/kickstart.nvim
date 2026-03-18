@@ -5,15 +5,6 @@ return {
     branch = 'main',
     build = ':TSUpdate',
     opts = {},
-    -- dependencies = {
-    --   'windwp/nvim-ts-autotag', -- auto close tsx tags
-    -- },
-    -- opts = {
-    --   autotag = {
-    --     -- Setup autotag using treesitter config.
-    --     enable = true,
-    --   },
-    -- },
     -- main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     config = function(_, opts)
@@ -35,9 +26,10 @@ return {
         'elixir',
         'toml',
         'yaml',
-        'ecma',
         'typescript',
+        'javascript',
         'tsx',
+        'jsx',
       }
       local alreadyInstalled = require('nvim-treesitter').get_installed 'parsers'
       local parsersToInstall = vim
@@ -46,7 +38,7 @@ return {
           return not vim.tbl_contains(alreadyInstalled, parser)
         end)
         :totable()
-      -- print(parsersToInstall)
+
       if #parsersToInstall > 0 then
         require('nvim-treesitter').install(parsersToInstall)
       end
@@ -58,7 +50,6 @@ return {
           group = vim.api.nvim_create_augroup('EnableTreesitterHighlighting', { clear = true }),
           pattern = filetypes,
           callback = function(event)
-            print(event.buf)
             local parser_installed = pcall(vim.treesitter.get_parser, event.buf, parser)
             if parser_installed then
               pcall(vim.treesitter.start, event.buf, parser)
@@ -73,11 +64,6 @@ return {
         end
       end
     end,
-    -- There are additional nvim-treesitter modules that you can use to interact
-    -- with nvim-treesitter. You should go explore a few and see what interests you:
-    --
-    --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-    --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
   },
   {
     'nvim-treesitter/nvim-treesitter-textobjects',

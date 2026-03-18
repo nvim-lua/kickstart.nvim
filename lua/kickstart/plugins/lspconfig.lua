@@ -30,20 +30,14 @@ return {
       { 'j-hui/fidget.nvim', opts = {} },
 
       -- Allows extra capabilities provided by blink.cmp
+      -- Already installed in another file
       'saghen/blink.cmp',
     },
     config = function()
       -- Brief aside: **What is LSP?**
       --
-      -- LSP is an initialism you've probably heard, but might not understand what it is.
-      --
       -- LSP stands for Language Server Protocol. It's a protocol that helps editors
       -- and language tooling communicate in a standardized fashion.
-      --
-      -- In general, you have a "server" which is some tool built to understand a particular
-      -- language (such as `gopls`, `lua_ls`, `rust_analyzer`, etc.). These Language Servers
-      -- (sometimes called LSP servers, but that's kind of like ATM Machine) are standalone
-      -- processes that communicate with some "client" - in this case, Neovim!
       --
       -- LSP provides Neovim with features like:
       --  - Go to definition
@@ -65,11 +59,6 @@ return {
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
-          -- NOTE: Remember that Lua is a real programming language, and as such it is possible
-          -- to define small helper and utility functions so you don't have to repeat yourself.
-          --
-          -- In this case, we create a function that lets us more easily define mappings specific
-          -- for LSP related items. It sets the mode, buffer and description for us each time.
           local map = function(keys, func, desc, mode)
             mode = mode or 'n'
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
@@ -84,18 +73,15 @@ return {
           map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
 
           -- Find references for the word under your cursor.
-          -- map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
           map('grr', require('fzf-lua').lsp_references, '[G]oto [R]eferences')
 
           -- Jump to the implementation of the word under your cursor.
           --  Useful when your language has ways of declaring types without an actual implementation.
-          -- map('gri', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
           map('gri', require('fzf-lua').lsp_implementations, '[G]oto [I]mplementation')
 
           -- Jump to the definition of the word under your cursor.
           --  This is where a variable was first declared, or where a function is defined, etc.
           --  To jump back, press <C-t>.
-          -- map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
           map('grd', require('fzf-lua').lsp_definitions, '[G]oto [D]efinition')
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
@@ -104,18 +90,15 @@ return {
 
           -- Fuzzy find all the symbols in your current document.
           --  Symbols are things like variables, functions, types, etc.
-          -- map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
           map('gO', require('fzf-lua').lsp_document_symbols, 'Open Document Symbols')
 
           -- Fuzzy find all the symbols in your current workspace.
           --  Similar to document symbols, except searches over your entire project.
-          -- map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
           map('gW', require('fzf-lua').lsp_workspace_symbols, 'Open Workspace Symbols')
 
           -- Jump to the type of the word under your cursor.
           --  Useful when you're not sure what type a variable is and you want to see
           --  the definition of its *type*, not where it was *defined*.
-          -- map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
           map('grt', require('fzf-lua').lsp_typedefs, '[G]oto [T]ype Definition')
 
           -- The following two autocommands are used to highlight references of the
@@ -129,7 +112,6 @@ return {
               group = highlight_augroup,
               callback = vim.lsp.buf.document_highlight,
             })
-
             -- When you move your cursor, the highlights will be cleared
             vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
               buffer = event.buf,
@@ -148,7 +130,6 @@ return {
 
           -- The following code creates a keymap to toggle inlay hints in your
           -- code, if the language server you are using supports them
-          --
           -- This may be unwanted, since they displace some of your code
           if client and client:supports_method('textDocument/inlayHint', event.buf) then
             map('<leader>th', function()
@@ -191,7 +172,8 @@ return {
       --  By default, Neovim doesn't support everything that is in the LSP specification.
       --  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
       --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
-      -- local capabilities = require('blink.cmp').get_lsp_capabilities()
+      local capabilities = require('blink.cmp').get_lsp_capabilities()
+      vim.lsp.config('*', { capabilities = capabilities })
 
       --  Add any additional override configuration in the following tables. Available keys are:
       --  - cmd (table): Override the default command used to start the server
@@ -199,43 +181,24 @@ return {
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
       local servers = {
         clangd = {},
         gopls = {},
         pyright = {},
         rust_analyzer = {},
-        -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         stylua = {},
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
           -- capabilities = {},
-          on_init = function(client)
-            if client.workspace_folders then
-              local path = client.workspace_folders[1].name
-              if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then
-                return
-              end
-            end
-
-            -- client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
-            --   runtime = {
-            --     version = 'LuaJIT',
-            --     path = { 'lua/?.lua', 'lua/?/init.lua' },
-            --   },
-            --   workspace = {
-            --     checkThirdParty = false,
-            --     -- NOTE: this is a lot slower and will cause issues when working on your own configuration.
-            --     --  See https://github.com/neovim/nvim-lspconfig/issues/3189
-            --     library = vim.tbl_extend('force', vim.api.nvim_get_runtime_file('', true), {
-            --       '${3rd}/luv/library',
-            --       '${3rd}/busted/library',
-            --     }),
-            --   },
-            -- })
-          end,
+          -- on_init = function(client)
+          -- end,
           settings = {
             Lua = {
+              runtime = {
+                version = 'LuaJIT',
+              },
               completion = {
                 callSnippet = 'Replace',
               },
@@ -248,17 +211,13 @@ return {
           },
         },
         ts_ls = {},
-        -- TODO: make biome work as lsp fot ts, js, tsx, jsx files instead of ts_ls
+        -- TODO: make biome work as lsp for ts, js, tsx, jsx files instead of ts_ls
         biome = {
-          --   cmd = { 'biome', 'lsp-proxy' },
-          --   root_dir = require('lspconfig').util.root_pattern('package.json', '.git'),
+          -- cmd = { 'biome', 'lsp-proxy' },
+          -- root_dir = require('lspconfig').util.root_pattern('package.json', '.git'),
         },
       }
 
-      -- Ensure the servers and tools above are installed
-      -- To check the current status of installed tools and/or manually install
-      -- other tools, you can run
-      --    :Mason
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         -- add any other tools we want from mason
