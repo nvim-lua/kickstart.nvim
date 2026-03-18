@@ -4,7 +4,14 @@ return {
     lazy = false,
     branch = 'main',
     build = ':TSUpdate',
-    opts = {},
+    dependencies = {
+      'windwp/nvim-ts-autotag',
+    },
+    opts = {
+      autotag = {
+        enable = true,
+      },
+    },
     -- main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     config = function(_, opts)

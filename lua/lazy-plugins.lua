@@ -40,7 +40,6 @@ require('lazy').setup({
   require 'custom/plugins/theme',
   require 'custom/plugins/indent-blankline',
   -- require 'custom/plugins/leetcode',
-  require 'custom/plugins/ts-tag-autoclose',
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
