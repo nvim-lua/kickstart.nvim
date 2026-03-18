@@ -213,6 +213,9 @@ return {
         ts_ls = {},
         -- TODO: make biome work as lsp for ts, js, tsx, jsx files instead of ts_ls
         biome = {
+          -- I need this here if I want conform formatting to work using biome for ts, tsx, js jsx files.
+          -- Another option is doing npm intall -g @biomejs/biome and commething this biome server
+          -- to have the formatter work too, and then uninstall from mason
           -- cmd = { 'biome', 'lsp-proxy' },
           -- root_dir = require('lspconfig').util.root_pattern('package.json', '.git'),
         },
