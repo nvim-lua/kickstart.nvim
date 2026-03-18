@@ -5,6 +5,15 @@ return {
     branch = 'main',
     build = ':TSUpdate',
     opts = {},
+    -- dependencies = {
+    --   'windwp/nvim-ts-autotag', -- auto close tsx tags
+    -- },
+    -- opts = {
+    --   autotag = {
+    --     -- Setup autotag using treesitter config.
+    --     enable = true,
+    --   },
+    -- },
     -- main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     config = function(_, opts)
@@ -28,6 +37,7 @@ return {
         'yaml',
         'ecma',
         'typescript',
+        'tsx',
       }
       local alreadyInstalled = require('nvim-treesitter').get_installed 'parsers'
       local parsersToInstall = vim

@@ -64,6 +64,7 @@ require('lazy').setup({
   require 'custom/plugins/theme',
   require 'custom/plugins/indent-blankline',
   require 'custom/plugins/leetcode',
+  require 'custom/plugins/ts-tag-autoclose',
 
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
