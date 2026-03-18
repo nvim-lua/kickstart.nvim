@@ -211,7 +211,9 @@ return {
           },
         },
         ts_ls = {},
-        -- TODO: make biome work as lsp for ts, js, tsx, jsx files instead of ts_ls
+        -- TODO: make biome autocompletions and suggestions work for ts, js, tsx, jsx files instead of ts_ls
+        -- NOTE right now doing npm i -g @biomejs/biome activates lsp client, but completions/suggestions
+        -- dont work
         biome = {
           -- I need this here if I want conform formatting to work using biome for ts, tsx, js jsx files.
           -- Another option is doing npm intall -g @biomejs/biome and commething this biome server
