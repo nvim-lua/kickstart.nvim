@@ -40,6 +40,8 @@ vim.keymap.set('v', '<A-h>', '<gv')
 -- Deleting buffers
 vim.keymap.set('n', '<leader>bd', vim.cmd.bdelete)
 
+-- find all Todo's in with Telescope
+vim.keymap.set('n', '<leader>ft', '<cmd>TodoTelescope<CR>')
 -- Enable break indent
 vim.o.breakindent = true
 
