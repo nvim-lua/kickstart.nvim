@@ -11,10 +11,19 @@ return {
     -- delay between pressing a key and opening which-key (milliseconds)
     delay = 0,
     icons = { mappings = false },
+    sort = { 'local', 'order', 'group', 'desc', 'case', 'alphanum', 'mod' },
+
+    plugins = {
+      spelling = { enabled = false },
+    },
 
     -- Document existing key chains
     spec = {
       { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
+      { '<leader>f', group = '[F]uzzy-find', mode = { 'n', 'v' } },
+      { '<leader>g', group = '[G]rep', mode = { 'n', 'v' } },
+      { '<leader>G', group = '[G]it', mode = { 'n', 'v' } },
+      { '<leader>l', group = '[L]SP', mode = { 'n', 'v' } },
       { '<leader>t', group = '[T]oggle' },
       { '<leader>d', group = '[D]iangostic' },
       { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
