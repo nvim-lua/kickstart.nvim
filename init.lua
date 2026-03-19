@@ -145,6 +145,14 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- Handling splits
+vim.opt.splitright = true
+-- NOTE: I used the arrow keys because my terminal has this set to some distint keycodes... just as TJ said in the NOTE below
+vim.keymap.set('n', '<C-S-Left>', '<C-w>H', { desc = 'Move window to the left' })
+vim.keymap.set('n', '<C-S-Right>', '<C-w>L', { desc = 'Move window to the right' })
+vim.keymap.set('n', '<C-S-Down>', '<C-w>J', { desc = 'Move window to the lower' })
+vim.keymap.set('n', '<C-S-Up>', '<C-w>K', { desc = 'Move window to the upper' })
+
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
@@ -780,14 +788,16 @@ require('lazy').setup({
       -- Examples:
       --  - va)  - [V]isually select [A]round [)]paren
       --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
-      --  - ci'  - [C]hange [I]nside [']quote
+      --  - ci'  - [C]hange [I]nside ["]quote
       require('mini.ai').setup { n_lines = 500 }
+      -- this is not mini but yuh, good to know, cib, cab, vib vab yib, yab: [A]round and [I]nside [B]rackets, doesnt matter what bracket that is, just be on or inside it
+      -- If you wnat ot be specific, then yuh, use {} or [] or ()
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
-      -- 'quotes' on [ quotes ]
+      -- "quotes' on [ quotes ]
       -- - saiw) - [(S)][ urround ] [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
-      -- - sr)'  - [S]urround [R]eplace [)] [']
+      -- - sr)"  - [S]urround [R]eplace [)] ["], this an be used with any symbols of your choice
       require('mini.surround').setup()
 
       -- Simple and easy statusline.
