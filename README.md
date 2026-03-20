@@ -262,7 +262,7 @@ available methods being discussed
 <details><summary>Bob</summary>
 
 [Bob](https://github.com/MordechaiHadad/bob) is a Neovim version manager for
-all plattforms. Simply install
+all platforms. Simply install
 [rustup](https://rust-lang.github.io/rustup/installation/other.html),
 and run the following commands:
 
