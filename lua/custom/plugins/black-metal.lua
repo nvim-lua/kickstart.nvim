@@ -7,7 +7,7 @@ return {
     require('black-metal').setup {
       -- optional configuration here
     }
-    -- require("black-metal").load()
+    -- require('black-metal').load()
     -- vim.cmd 'colorscheme burzum'
   end,
 }
