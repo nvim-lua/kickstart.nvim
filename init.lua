@@ -905,8 +905,12 @@ require('lazy').setup({
     'lewis6991/ts-install.nvim',
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
     config = function()
+      local ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+      vim.list_extend(ensure_installed, {
+        -- You can add other parsers here that you want to be always installed
+      })
       require('ts-install').setup {
-        ensure_install = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+        ensure_install = ensure_installed,
         auto_install = true,
       }
     end,
