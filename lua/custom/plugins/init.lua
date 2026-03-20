@@ -9,9 +9,30 @@ vim.filetype.add {
   },
 }
 
+-- C++ compile and run
+vim.keymap.set('n', '<leader>rc', function()
+  vim.cmd 'w'
+  vim.cmd 'vs | terminal g++ -std=c++17 -Wall -Wextra -Wshadow -Wconversion % -o %:r && ./%:r'
+end, { desc = 'Compile and run C++ with warnings' })
+
+-- Racket run
+vim.keymap.set('n', '<leader>rr', function()
+  vim.cmd 'w'
+  vim.cmd 'vs | terminal racket %'
+end, { desc = 'Run Racket file' })
+
 ---@module 'lazy'
 ---@type LazySpec
 return {
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+      'nvim-mini/mini.nvim',
+    },
+    opts = {},
+  },
+
   {
     'ThePrimeagen/harpoon',
     dependencies = { 'nvim-lua/plenary.nvim' },

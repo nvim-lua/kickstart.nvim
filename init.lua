@@ -45,7 +45,7 @@ Kickstart Guide:
 
   TODO: The very first thing you should do is to run the command `:Tutor` in Neovim.
 
-    If you don't know what this means, type the following:
+    If you don't know what this means, type the following:init
       - <escape key>
       - :
       - Tutor
@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -149,8 +149,6 @@ vim.o.splitbelow = true
 --   and `:help lua-guide-options`
 vim.o.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-vim.opt.tabstop = 4 -- how many spaces a tab counts for
-vim.opt.shiftwidth = 4 -- spaces used for autoindent
 vim.opt.expandtab = true -- convert tabs to spaces
 vim.opt.smartindent = true -- smarter auto indenting
 
@@ -175,23 +173,47 @@ vim.o.confirm = true
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
--- Diagnostic Config & Keymaps
--- See :help vim.diagnostic.Opts
+-- Global LSP diagnostics configuration
 vim.diagnostic.config {
-  update_in_insert = false,
+  -- Show diagnostics automatically, even while in insert mode
+  update_in_insert = true,
+
+  -- Sort by severity (errors first)
   severity_sort = true,
-  float = { border = 'rounded', source = 'if_many' },
-  underline = { severity = { min = vim.diagnostic.severity.WARN } },
 
-  -- Can switch between these as you prefer
-  virtual_text = true, -- Text shows up at the end of the line
-  virtual_lines = false, -- Text shows up underneath the line, with virtual lines
+  -- Show virtual text inline for all severities
+  virtual_text = {
+    spacing = 2, -- space between code and diagnostic
+    prefix = '●', -- inline icon
+    format = function(diagnostic)
+      -- Only show the message itself, no file path
+      -- Replace newlines with space for a clean single-line message
+      return diagnostic.message:gsub('\n', ' ')
+    end,
+  },
 
-  -- Auto open the float, so you can easily read the errors when jumping with `[d` and `]d`
-  jump = { float = true },
+  -- Disable virtual lines
+  virtual_lines = false,
+
+  -- Floating window (optional, on hover)
+  float = {
+    source = false, -- hide LSP name
+    border = 'rounded',
+    focusable = false,
+    header = '',
+    prefix = '',
+  },
 }
 
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+-- Automatically show the diagnostic float when cursor is on a line
+vim.api.nvim_create_autocmd('CursorHold', {
+  callback = function() vim.diagnostic.open_float(nil, { focusable = false }) end,
+})
+
+-- Keymaps for navigation (still useful)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Previous diagnostic' })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Next diagnostic' })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic list' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -636,8 +658,9 @@ require('lazy').setup({
         },
 
         clangd = {},
+        pyright = {},
+        svlangserver = {},
         -- gopls = {},
-        -- pyright = {},
         -- rust_analyzer = {},
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -838,12 +861,13 @@ require('lazy').setup({
   },
 
   {
-    'wtfox/jellybeans.nvim',
+    'sainnhe/sonokai',
     lazy = false,
     priority = 1000,
     config = function()
-      -- Set default (vibrant dark) variant
-      vim.cmd.colorscheme 'jellybeans'
+      vim.g.sonokai_style = 'andromeda' -- or: default, atlantis, andromeda, shusia, maia, espresso
+      vim.g.sonokai_better_performance = 1
+      vim.cmd.colorscheme 'sonokai'
     end,
   },
 
