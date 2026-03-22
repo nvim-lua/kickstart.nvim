@@ -9,6 +9,6 @@ spell/
 # lazy-lock.json in version control - see https://lazy.folke.io/usage/lockfile
 # For the official `nvim-lua/kickstart.nvim` git repository, we leave it ignored to avoid unneeded
 # merge conflicts.
-lazy-lock.json
+# lazy-lock.json
 
 .DS_Store
