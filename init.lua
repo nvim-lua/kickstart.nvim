@@ -603,7 +603,16 @@ require('lazy').setup({
         -- clangd = {},
         -- gopls = {},
         pyright = {},
-        omnisharp = {},
+        csharp_ls = {
+          root_dir = function(bufnr, on_dir)
+            local util = require 'lspconfig.util'
+            local fname = vim.api.nvim_buf_get_name(bufnr)
+            on_dir(
+              util.root_pattern('*.sln', '*.slnx', '*.csproj', 'global.json')(fname)
+                or vim.fs.root(fname, function(name) return vim.tbl_contains({ '*.sln', '*.slnx' }, name) end)
+            )
+          end,
+        }, -- omnisharp = {},
         -- rust_analyzer = {},
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
