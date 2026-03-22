@@ -286,13 +286,19 @@ require('lazy').setup({
       require('telescope').setup {
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
-        --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
-        -- pickers = {}
+        defaults = {
+          file_ignore_patterns = { '%.git/', 'node_modules/', 'dist/', 'build/' },
+        },
+        pickers = {
+          find_files = {
+            no_ignore = true,
+          },
+          live_grep = {
+            additional_args = function()
+              return { '--no-ignore' }
+            end,
+          },
+        },
         extensions = {
           ['ui-select'] = { require('telescope.themes').get_dropdown() },
         },
@@ -497,6 +503,17 @@ require('lazy').setup({
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --  See `:help lsp-config` for information about keys and how to configure
+      local util = require 'lspconfig.util'
+
+      local function root_dir_from_pattern(...)
+        local matcher = util.root_pattern(...)
+        return function(bufnr, on_dir)
+          local fname = vim.api.nvim_buf_get_name(bufnr)
+          local root = matcher(fname)
+          if root then on_dir(root) end
+        end
+      end
+
       ---@type table<string, vim.lsp.Config>
       local servers = {
         -- clangd = {},
@@ -508,9 +525,16 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        ts_ls = {},
+        ts_ls = {
+          root_dir = root_dir_from_pattern('package.json', 'tsconfig.json', 'jsconfig.json'),
+          single_file_support = false,
+        },
 
-        stylua = {}, -- Used to format Lua code
+        -- Use Deno's built-in language server when deno configuration files are present
+        denols = {
+          root_dir = root_dir_from_pattern('deno.json', 'deno.jsonc'),
+          single_file_support = false,
+        },
 
         -- Special Lua Config, as recommended by neovim help docs
         lua_ls = {
@@ -549,9 +573,13 @@ require('lazy').setup({
       --    :Mason
       --
       -- You can press `g?` for help in this menu.
-      local ensure_installed = vim.tbl_keys(servers or {})
+      local ensure_installed = {}
+      for server_name in pairs(servers or {}) do
+        if server_name ~= 'denols' then table.insert(ensure_installed, server_name) end
+      end
       vim.list_extend(ensure_installed, {
         -- You can add other tools here that you want Mason to install
+        'stylua',
       })
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
