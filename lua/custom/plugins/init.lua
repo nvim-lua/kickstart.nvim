@@ -31,4 +31,8 @@ vim.o.foldlevelstart = 99
 local set = vim.opt_local
 set.shiftwidth = 2
 vim.o.shiftwidth = 2
+
+--
+vim.cmd "set statusline+=%{get(b:,'gitsigns_status','')}"
+
 return {}
