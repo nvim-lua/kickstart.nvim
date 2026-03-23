@@ -2,6 +2,9 @@
 --  I promise not to create any merge conflicts in this directory :)
 --
 -- See the kickstart.nvim README for more information
+
+---@module 'lazy'
+---@type LazySpec
 return {
   vim.keymap.set('n', '<leader>bc', function()
     local path = vim.fn.expand '%:.'
