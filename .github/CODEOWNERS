@@ -1,0 +1,3 @@
+# Any PR that inadvertently includes lazy-lock.json will require maintainer review.
+# See .github/workflows/check-no-lockfile.yml for the CI enforcement.
+lazy-lock.json @oriori1703 @tjdevries

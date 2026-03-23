@@ -1,0 +1,24 @@
+# Prevent lazy-lock.json from being accidentally included in upstream PRs.
+# Fork users are encouraged to track this file in their own repos.
+# Contributors working directly against this repo should add lazy-lock.json
+# to .git/info/exclude to ignore it locally without touching .gitignore.
+name: Check No Lockfile
+on: pull_request_target
+
+jobs:
+  check-no-lockfile:
+    if: github.repository == 'nvim-lua/kickstart.nvim'
+    name: Check No Lockfile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Check lazy-lock.json not included
+        run: |
+          if [ -f "lazy-lock.json" ]; then
+            echo "::error::lazy-lock.json should not be committed to the upstream repo."
+            echo "To ignore it locally without modifying .gitignore, add it to .git/info/exclude."
+            exit 1
+          fi
