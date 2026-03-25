@@ -138,6 +138,8 @@ vim.o.timeoutlen = 300
 -- Configure how new splits should be opened
 vim.o.splitright = true
 vim.o.splitbelow = true
+-- Doesn't work well with WezTerm mux server; disable for now and revisit later.
+vim.opt.termsync = false
 
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
@@ -228,6 +230,17 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function() vim.hl.on_yank() end,
+})
+
+local warned_missing_bean_format = false
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'beancount',
+  group = vim.api.nvim_create_augroup('beancount-format-check', { clear = true }),
+  callback = function()
+    if warned_missing_bean_format or vim.fn.executable 'bean-format' == 1 then return end
+    warned_missing_bean_format = true
+    vim.notify('bean-format not found. Install it with: uv tool install beancount', vim.log.levels.WARN, { title = 'conform.nvim' })
+  end,
 })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
@@ -699,6 +712,7 @@ require('lazy').setup({
         lua = { 'stylua' },
         json = { 'prettier' },
         yaml = { 'prettier' },
+        beancount = { 'bean-format' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
