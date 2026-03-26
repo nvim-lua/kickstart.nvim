@@ -5,8 +5,10 @@ nvim
 
 spell/
 
-# You can uncomment this yourself if you want to lock the lazy-lock.json,
-# but for kickstart, it makes sense to leave it ignored.
-#lazy-lock.json
+# In your personal fork, you likely want to comment this, since it's recommended to track
+# lazy-lock.json in version control - see https://lazy.folke.io/usage/lockfile
+# For the official `nvim-lua/kickstart.nvim` git repository, we leave it ignored to avoid unneeded
+# merge conflicts.
+lazy-lock.json
 
 .DS_Store
