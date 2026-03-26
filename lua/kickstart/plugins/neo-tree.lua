@@ -24,6 +24,11 @@ return {
           ['\\'] = 'close_window',
         },
       },
+      follow_current_file = {
+        enabled = true,
+        leave_dirs_open = false,
+      },
+      buffers = { follow_current_file = { enable = true } },
     },
   },
 }
