@@ -416,6 +416,15 @@ require('lazy').setup({
         group = vim.api.nvim_create_augroup('telescope-lsp-attach', { clear = true }),
         callback = function(event)
           local buf = event.buf
+          local client = vim.lsp.get_client_by_id(event.data.client_id)
+
+          local goto_declaration = function()
+            if client and client:supports_method('textDocument/declaration', buf) then
+              vim.lsp.buf.declaration()
+            else
+              builtin.lsp_definitions()
+            end
+          end
 
           -- Find references for the word under your cursor.
           vim.keymap.set('n', 'grr', builtin.lsp_references, { buffer = buf, desc = '[G]oto [R]eferences' })
@@ -427,7 +436,9 @@ require('lazy').setup({
           -- Jump to the definition of the word under your cursor.
           -- This is where a variable was first declared, or where a function is defined, etc.
           -- To jump back, press <C-t>.
+          vim.keymap.set('n', 'gd', builtin.lsp_definitions, { buffer = buf, desc = '[G]oto [D]efinition' })
           vim.keymap.set('n', 'grd', builtin.lsp_definitions, { buffer = buf, desc = '[G]oto [D]efinition' })
+          vim.keymap.set('n', 'gD', goto_declaration, { buffer = buf, desc = '[G]oto [D]eclaration' })
 
           -- Fuzzy find all the symbols in your current document.
           -- Symbols are things like variables, functions, types, etc.
@@ -480,7 +491,15 @@ require('lazy').setup({
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
-      { 'mason-org/mason.nvim', opts = {} },
+      {
+        'mason-org/mason.nvim',
+        opts = {
+          registries = {
+            'github:mason-org/mason-registry',
+            'github:Crashdummyy/mason-registry',
+          },
+        },
+      },
       { 'mason-org/mason-lspconfig.nvim', opts = {} },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
@@ -523,6 +542,8 @@ require('lazy').setup({
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
+          local client = vim.lsp.get_client_by_id(event.data.client_id)
+
           -- NOTE: Remember that Lua is a real programming language, and as such it is possible
           -- to define small helper and utility functions so you don't have to repeat yourself.
           --
@@ -537,20 +558,28 @@ require('lazy').setup({
           --  Most Language Servers support renaming across files, etc.
           map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
 
+          -- Show documentation for the symbol under your cursor.
+          map('K', vim.lsp.buf.hover, 'Hover Documentation')
+
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
           map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
-          map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+          map('grD', function()
+            if client and client:supports_method('textDocument/declaration', event.buf) then
+              vim.lsp.buf.declaration()
+            else
+              vim.lsp.buf.definition()
+            end
+          end, '[G]oto [D]eclaration')
 
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
-          local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client:supports_method('textDocument/documentHighlight', event.buf) then
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
@@ -853,12 +882,25 @@ require('lazy').setup({
 
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    build = ':TSUpdate',
     config = function()
-      local filetypes = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
-      require('nvim-treesitter').install(filetypes)
       vim.api.nvim_create_autocmd('FileType', {
-        pattern = filetypes,
-        callback = function() vim.treesitter.start() end,
+        pattern = {
+          'bash',
+          'c',
+          'cs',
+          'diff',
+          'html',
+          'lua',
+          'markdown',
+          'query',
+          'vim',
+          'help',
+        },
+        callback = function(args)
+          local lang = vim.treesitter.language.get_lang(args.match) or args.match
+          pcall(vim.treesitter.start, args.buf, lang)
+        end,
       })
     end,
   },
@@ -883,7 +925,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
