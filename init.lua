@@ -344,6 +344,17 @@ require('lazy').setup({
           vim.keymap.set(mode, l, r, opts)
         end
 
+        -- Detect branch once per buffer attach
+        local primary_branch = 'main'
+        local handle = io.popen 'git branch --list main master'
+        if handle then
+          local result = handle:read '*a'
+          handle:close()
+          if not string.find(result, 'main') and string.find(result, 'master') then
+            primary_branch = 'master'
+          end
+        end
+
         -- Navigation
         map('n', ']c', function()
           if vim.wo.diff then
@@ -362,14 +373,13 @@ require('lazy').setup({
         end, { desc = 'Jump to previous git [c]hange' })
 
         -- Actions
-        -- visual mode
         map('v', '<leader>hs', function()
           gitsigns.stage_hunk { vim.fn.line '.', vim.fn.line 'v' }
         end, { desc = 'git [s]tage hunk' })
         map('v', '<leader>hr', function()
           gitsigns.reset_hunk { vim.fn.line '.', vim.fn.line 'v' }
         end, { desc = 'git [r]eset hunk' })
-        -- normal mode
+
         map('n', '<leader>hs', gitsigns.stage_hunk, { desc = 'git [s]tage hunk' })
         map('n', '<leader>hr', gitsigns.reset_hunk, { desc = 'git [r]eset hunk' })
         map('n', '<leader>hS', gitsigns.stage_buffer, { desc = 'git [S]tage buffer' })
@@ -378,13 +388,20 @@ require('lazy').setup({
         map('n', '<leader>hp', gitsigns.preview_hunk, { desc = 'git [p]review hunk' })
         map('n', '<leader>hb', gitsigns.blame_line, { desc = 'git [b]lame line' })
         map('n', '<leader>hB', gitsigns.blame, { desc = 'git [B]lame toggle' })
+
+        -- Diff Mappings
         map('n', '<leader>hd', gitsigns.diffthis, { desc = 'git [d]iff against index' })
         map('n', '<leader>hD', function()
           gitsigns.diffthis '@'
         end, { desc = 'git [D]iff against last commit' })
+
+        map('n', '<leader>hm', function()
+          gitsigns.diffthis(primary_branch)
+        end, { desc = 'git diff against [m]ain/master' })
+
         -- Toggles
-        map('n', '<leader>tb', gitsigns.toggle_current_line_blame, { desc = '[T]oggle git show [b]lame line' })
-        map('n', '<leader>tD', gitsigns.preview_hunk_inline, { desc = '[T]oggle git show [D]eleted' })
+        map('n', '<leader>ht', gitsigns.toggle_current_line_blame, { desc = '[t]oggle git show blame line' })
+        map('n', '<leader>hv', gitsigns.preview_hunk_inline, { desc = 'toggle git show deleted ([v]iew)' })
       end,
     },
   },
