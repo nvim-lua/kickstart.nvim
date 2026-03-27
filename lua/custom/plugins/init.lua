@@ -2,4 +2,16 @@
 --  I promise not to create any merge conflicts in this directory :)
 --
 -- See the kickstart.nvim README for more information
-return {}
+return {
+  {
+    'neovim/nvim-lspconfig',
+    init_options = {
+      userLanguages = {
+        eelixir = 'html-eex',
+        eruby = 'erb',
+        rust = 'html',
+        python = 'py',
+      },
+    },
+  },
+}

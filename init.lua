@@ -359,6 +359,7 @@ require('lazy').setup({
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
+      local utils = require 'telescope.utils'
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
@@ -379,7 +380,7 @@ require('lazy').setup({
         })
       end, { desc = '[/] Fuzzily search in current buffer' })
 
-      -- Also possible to pass additional configuration options.
+      -- Also possible to pass additional configuration options.ini
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
       vim.keymap.set('n', '<leader>s/', function()
         builtin.live_grep {
@@ -388,6 +389,10 @@ require('lazy').setup({
         }
       end, { desc = '[S]earch [/] in Open Files' })
 
+      -- Shortcut for searching your neovim configuration files
+      vim.keymap.set('n', '<leader>sp', function()
+        builtin.find_files { cwd = utils.buffer_dir() }
+      end, { desc = 'Find files in cwd' })
       -- Shortcut for searching your neovim configuration files
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
@@ -531,7 +536,41 @@ require('lazy').setup({
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
-        -- rust_analyzer = {},
+        basedpyright = {
+          cmd = { 'basedpyright-langserver', '--stdio' },
+          settings = {
+            basedpyright = {
+              analysis = {
+                useLibraryCodeForTypes = true,
+                typeCheckingMode = 'basic',
+                diagnosticMode = 'workspace',
+                autoSearchPath = true,
+                inlayHints = {
+                  callArgumentNames = true,
+                },
+                extraPaths = {
+                  '...',
+                  '...',
+                },
+              },
+              python = {
+                '/home/guus/.local/share/uv/python',
+              },
+            },
+          },
+        },
+
+        -- ruff = {},
+        rust_analyzer = {
+          procMacro = {
+            ignored = {
+              leptos_macro = {
+                'component',
+                'server',
+              },
+            },
+          },
+        },
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -580,6 +619,7 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format lua code
         'rustfmt', -- Used to format rust code
+        'ruff',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -614,7 +654,7 @@ require('lazy').setup({
         lua = { 'stylua' },
         rust = { 'rustfmt' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = { 'ruff' },
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
@@ -772,7 +812,7 @@ require('lazy').setup({
 
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup {
-        ensure_installed = { 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc' },
+        ensure_installed = { 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc', 'rust', 'python' },
         -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
         auto_install = true,
         highlight = { enable = true },
