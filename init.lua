@@ -625,6 +625,11 @@ require('lazy').setup({
               if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then return end
             end
 
+            local config_path = vim.fn.stdpath 'config'
+            local runtime_files = vim.tbl_filter(function(file)
+              return file ~= config_path and file ~= (config_path .. '/after')
+            end, vim.api.nvim_get_runtime_file('', true))
+
             client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
               runtime = {
                 version = 'LuaJIT',
@@ -634,7 +639,7 @@ require('lazy').setup({
                 checkThirdParty = false,
                 -- NOTE: this is a lot slower and will cause issues when working on your own configuration.
                 --  See https://github.com/neovim/nvim-lspconfig/issues/3189
-                library = vim.tbl_extend('force', vim.api.nvim_get_runtime_file('', true), {
+                library = vim.tbl_extend('force', runtime_files, {
                   '${3rd}/luv/library',
                   '${3rd}/busted/library',
                 }),
@@ -938,9 +943,9 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommended keymaps
 
