@@ -770,7 +770,7 @@ require('lazy').setup({
         -- <c-k>: Toggle signature help
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
-        preset = 'default',
+        preset = 'super-tab',
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -921,6 +921,7 @@ require('lazy').setup({
     opts = {},
   },
 
+  -- image render
   {
     '3rd/image.nvim',
     config = function()
@@ -937,6 +938,17 @@ require('lazy').setup({
             end,
           },
         },
+      }
+    end,
+  },
+
+  {
+    'TrevorS/uuid-nvim',
+    lazy = true,
+    config = function()
+      -- optional configuration
+      require('uuid-nvim').setup {
+        case = 'upper',
       }
     end,
   },
@@ -1120,3 +1132,12 @@ map('n', '<leader>M', function() set_mark(true) end, { desc = 'Set global mark' 
 
 map('n', "<leader>'", '<cmd>marks<CR>', { desc = 'List marks' })
 map('n', '<leader>"', '<cmd>marks<CR>', { desc = 'List all marks' })
+
+local uuid = require 'uuid-nvim'
+uuid.setup {
+  case = 'lower',
+  quotes = 'single',
+}
+
+-- vim.keymap.set('n', '<leader>ut', uuid.toggle_highlighting)
+vim.keymap.set('n', '<leader>uu', uuid.insert_v4)
