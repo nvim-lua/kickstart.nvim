@@ -3,6 +3,9 @@
 --
 -- See the kickstart.nvim README for more information
 
+---@module 'lazy'
+---@type LazySpec
+
 vim.cmd 'language en_GB.UTF-8'
 
 vim.opt.encoding = 'utf-8'
