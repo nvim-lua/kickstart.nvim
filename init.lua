@@ -626,9 +626,10 @@ require('lazy').setup({
             end
 
             local config_path = vim.fn.stdpath 'config'
-            local runtime_files = vim.tbl_filter(function(file)
-              return file ~= config_path and file ~= (config_path .. '/after')
-            end, vim.api.nvim_get_runtime_file('', true))
+            local runtime_files = vim.tbl_filter(
+              function(file) return file ~= config_path and file ~= (config_path .. '/after') end,
+              vim.api.nvim_get_runtime_file('', true)
+            )
 
             client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
               runtime = {

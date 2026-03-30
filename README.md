@@ -40,6 +40,7 @@ External Requirements:
 - Language Setup:
   - If you want to write Typescript, you need `npm`
   - If you want to write Golang, you will need `go`
+  - If you want to lint Markdown, install `markdownlint-cli2` (via `npm i -g markdownlint-cli2` or Mason)
   - etc.
 
 > [!NOTE]

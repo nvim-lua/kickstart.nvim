@@ -23,9 +23,19 @@ return {
       opts.filesystem = vim.tbl_deep_extend('force', opts.filesystem or {}, {
         use_libuv_file_watcher = true,
         follow_current_file = { enabled = true },
+        filtered_items = {
+          visible = false,
+          hide_dotfiles = true,
+          hide_gitignored = true,
+          hide_hidden = true,
+          always_show = {
+            '.github',
+          },
+        },
         window = {
           mappings = {
             ['R'] = 'refresh',
+            ['H'] = 'toggle_hidden',
           },
         },
       })
