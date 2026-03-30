@@ -6,6 +6,7 @@ return {
     config = function()
       local lint = require 'lint'
       lint.linters_by_ft = {
+        -- installed with go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
         go = { 'golangcilint' },
         typescript = { 'biomejs' },
         typescriptreact = { 'biomejs' },
