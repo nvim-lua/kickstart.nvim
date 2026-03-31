@@ -24,10 +24,10 @@ vim.o.mouse = 'a'
 -- Don't show the mode, since it's already in the status line
 vim.o.showmode = false
 
-vim.opt.tags = "./tags,../tags,../../tags,../../../tags,../../../../tags,../../../../../tags,../../../../../../tags,../../../../../../../tags"
+vim.opt.tags = './tags,../tags,../../tags,../../../tags,../../../../tags,../../../../../tags,../../../../../../tags,../../../../../../../tags'
 
 vim.opt.backup = true
-local home_backup_path = os.getenv('HOME') .. '/.backup'
+local home_backup_path = os.getenv 'HOME' .. '/.backup'
 vim.opt.backupdir = home_backup_path
 
 vim.opt.errorbells = false
@@ -97,10 +97,10 @@ vim.o.scrolloff = 10
 vim.o.confirm = true
 
 vim.opt.foldlevel = 5
-vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 
-vim.opt.diffopt="internal,filler,closeoff,iwhite,linematch:60"
+vim.opt.diffopt = 'internal,filler,closeoff,iwhite,linematch:60'
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -170,19 +170,14 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 vim.api.nvim_create_autocmd('BufReadPost', {
-    pattern = { '*' },
-    desc = 'When editing a file, always jump to the last known cursor position',
-    callback = function()
-        local line = vim.fn.line '\'"'
-        if
-            line >= 1
-            and line <= vim.fn.line '$'
-            and vim.bo.filetype ~= 'commit'
-            and vim.fn.index({ 'xxd', 'gitrebase' }, vim.bo.filetype) == -1
-        then
-            vim.cmd 'normal! g`"'
-        end
-    end,
+  pattern = { '*' },
+  desc = 'When editing a file, always jump to the last known cursor position',
+  callback = function()
+    local line = vim.fn.line '\'"'
+    if line >= 1 and line <= vim.fn.line '$' and vim.bo.filetype ~= 'commit' and vim.fn.index({ 'xxd', 'gitrebase' }, vim.bo.filetype) == -1 then
+      vim.cmd 'normal! g`"'
+    end
+  end,
 })
 
 --vim.api.nvim_set_hl(0, '@lsp.type.comment.cpp', {})
@@ -251,8 +246,8 @@ require('lazy').setup({
   },
 
   {
-    "folke/flash.nvim",
-    event = "VeryLazy",
+    'folke/flash.nvim',
+    event = 'VeryLazy',
     -- @type Flash.Config
     opts = {},
     -- stylua: ignore
@@ -375,19 +370,17 @@ require('lazy').setup({
         --    },
         --},
         pickers = {
-            find_files = {
-                find_command = { "rg", "--files", "-g", "!**/**Linux_x86_64/**", "-g", "!compile_commands.json"},
-            },
-            live_grep = {
-                additional_args = {"-w", "-g", "!**/**Linux_x86_64/**"},
-            },
-            grep_string = {
-                additional_args = {"-w", "-g", "!**/**Linux_x86_64/**"},
-            },
+          find_files = {
+            find_command = { 'rg', '--files', '-g', '!**/**Linux_x86_64/**', '-g', '!compile_commands.json' },
+          },
+          live_grep = {
+            additional_args = { '-w', '-g', '!**/**Linux_x86_64/**' },
+          },
+          grep_string = {
+            additional_args = { '-w', '-g', '!**/**Linux_x86_64/**' },
+          },
         },
-        cond = function (lang, bufnr)
-            return lang == "cpp" and vim.api.nvim_buf_line_count(bufnr) < 10000
-        end,
+        cond = function(lang, bufnr) return lang == 'cpp' and vim.api.nvim_buf_line_count(bufnr) < 10000 end,
         extensions = {
           ['ui-select'] = { require('telescope.themes').get_dropdown() },
         },
@@ -410,8 +403,8 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader>sc', builtin.commands, { desc = '[S]earch [C]ommands' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
-      vim.keymap.set("n", "<C-q>", "<cmd> Telescope grep_string<CR>", {desc="Telescope Grep String"})
-      vim.keymap.set("n", "<C-p>", "<cmd> Telescope find_files<CR>", {desc="Telescope Files"})
+      vim.keymap.set('n', '<C-q>', '<cmd> Telescope grep_string<CR>', { desc = 'Telescope Grep String' })
+      vim.keymap.set('n', '<C-p>', '<cmd> Telescope find_files<CR>', { desc = 'Telescope Files' })
 
       -- This runs on LSP attach per buffer (see main LSP attach function in 'neovim/nvim-lspconfig' config for more info,
       -- it is better explained there). This allows easily switching between pickers if you prefer using something else!
@@ -479,7 +472,7 @@ require('lazy').setup({
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
-    ft = {"lua", "cpp", "python"},
+    ft = { 'lua', 'python' },
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
@@ -600,37 +593,6 @@ require('lazy').setup({
       --  See `:help lsp-config` for information about keys and how to configure
       ---@type table<string, vim.lsp.Config>
       local servers = {
-        clangd = {
-          mason = true,
-          cmd = {'/home/utils/llvm-17.0.6/bin/clangd',
-          "--background-index",
-          "--clang-tidy",
-          "--header-insertion=never",
-          "--j=2"},
-          init_options = {
-            clangdFileStatus = true,
-            inlayHints= {
-              enabled = true,
-              parameterNames = true,
-              autoDeducedTypes = true,  -- Enable auto type hints
-              typeHints = true,
-              typeNameLimit = 24,
-              lambdaReturnType = true,
-              blockEnd = true,
-              designators = true,
-            },
-          },
-          filetypes = {"cpp"},
-          single_file_support = true,
-          capabilities = capabilities,
-          --on_attach = on_attach,
-          --root_dir = function() 
-              --  return vim.fn.getcwd()
-              --end
-          root_dir = function(fname)
-              return require('lspconfig/util').root_pattern( unpack({'compile_commands.json'}))(fname)
-          end
-        },
         -- gopls = {},
         pyright = {},
         -- rust_analyzer = {},
@@ -745,7 +707,7 @@ require('lazy').setup({
         'L3MON4D3/LuaSnip',
         version = '2.*',
         build = (function()
-          CC={"/home/utils/gcc-14.1.0/bin/gcc"}
+          CC = { '/home/utils/gcc-14.1.0/bin/gcc' }
           -- Build Step is needed for regex support in snippets.
           -- This step is not supported in many windows environments.
           -- Remove the below condition to re-enable on windows.
@@ -759,8 +721,8 @@ require('lazy').setup({
           {
             'rafamadriz/friendly-snippets',
             config = function()
-              require('luasnip.loaders.from_vscode').lazy_load({ include={"cpp", "python", "lua"} })
-              require('luasnip.loaders.from_vscode').lazy_load({ paths = vim.fn.stdpath("config").."/snippets/" })
+              require('luasnip.loaders.from_vscode').lazy_load { include = { 'cpp', 'python', 'lua' } }
+              require('luasnip.loaders.from_vscode').lazy_load { paths = vim.fn.stdpath 'config' .. '/snippets/' }
             end,
           },
         },
@@ -849,11 +811,11 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'catppuccin-mocha'
+      vim.cmd.colorscheme 'tokyonight-night'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
-      vim.api.nvim_set_hl(0, "LspInlayHint", {fg = "#9DA9A0", bg="#000000" })
+      vim.api.nvim_set_hl(0, 'LspInlayHint', { fg = '#9DA9A0', bg = '#000000' })
     end,
   },
 
