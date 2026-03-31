@@ -151,12 +151,12 @@ require('lazy').setup({
     'numToStr/Comment.nvim',
     opts = {
       toggler = {
-        line = '<leader>/',  -- Changed from <gc>
-        block = '<leader>b', -- Changed from <gb>
+        line = 'gc',
+        block = 'gb',
       },
       opleader = {
-        line = '<leader>/',  -- Optional
-        block = '<leader>B', -- Optional
+        line = 'gc',
+        block = 'gb',
       },
     }
   },
@@ -216,6 +216,15 @@ vim.o.softtabstop = 2
 vim.o.shiftwidth = 2
 vim.o.expandtab = true
 
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'python' },
+  callback = function()
+    vim.bo.tabstop = 4
+    vim.bo.softtabstop = 4
+    vim.bo.shiftwidth = 4
+  end,
+})
+
 -- Basic keymaps
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -257,7 +266,27 @@ end, { desc = '[/] Fuzzily search in current buffer' })
 -- Treesitter configuration
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+    ensure_installed = {
+      'c',
+      'cpp',
+      'go',
+      'lua',
+      'python',
+      'rust',
+      'tsx',
+      'javascript',
+      'typescript',
+      'vimdoc',
+      'vim',
+      'bash',
+      'html',
+      'css',
+      'json',
+      'toml',
+      'yaml',
+      'dockerfile',
+      'htmldjango',
+    },
     auto_install = false,
     highlight = { enable = true },
     indent = { enable = true },
@@ -357,11 +386,53 @@ end
 
 require('mason').setup()
 require('mason-lspconfig').setup()
-local servers = { lua_ls = { Lua = { workspace = { checkThirdParty = false }, telemetry = { enable = false } } } }
+local lspconfig = require 'lspconfig'
+local servers = {
+  pyright = {
+    python = {
+      analysis = {
+        autoSearchPaths = true,
+        diagnosticMode = 'openFilesOnly',
+        useLibraryCodeForTypes = true,
+      },
+    },
+  },
+  lua_ls = {
+    Lua = {
+      workspace = { checkThirdParty = false },
+      telemetry = { enable = false },
+    },
+  },
+}
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 local mason_lspconfig = require 'mason-lspconfig'
 mason_lspconfig.setup { ensure_installed = vim.tbl_keys(servers) }
 mason_lspconfig.setup_handlers { function(server_name) require('lspconfig')[server_name].setup { capabilities = capabilities, on_attach = on_attach, settings = servers[server_name], filetypes = (servers[server_name] or {}).filetypes, } end }
+
+-- Ruff installation via Mason can fail on some Python setups.
+-- If a system ruff binary exists, attach Ruff LSP directly.
+local ruff_server = nil
+if lspconfig.ruff then
+  ruff_server = 'ruff'
+elseif lspconfig.ruff_lsp then
+  ruff_server = 'ruff_lsp'
+end
+
+if vim.fn.executable 'ruff' == 1 and ruff_server then
+  lspconfig[ruff_server].setup {
+    capabilities = capabilities,
+    on_attach = on_attach,
+  }
+end
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client and (client.name == 'ruff' or client.name == 'ruff_lsp') then
+      client.server_capabilities.hoverProvider = false
+    end
+  end,
+})
 
 -- CMP setup
 local cmp = require 'cmp'
@@ -408,13 +479,10 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
   },
-}
-
-require("cmp").setup({
   formatting = {
-    format = require("tailwindcss-colorizer-cmp").formatter
-  }
-})
+    format = require('tailwindcss-colorizer-cmp').formatter,
+  },
+}
 
 require("colorizer").setup {
   user_default_options = {
