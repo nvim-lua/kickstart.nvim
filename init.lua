@@ -913,12 +913,195 @@ require('lazy').setup({
   -- inline markdown
   {
     'MeanderingProgrammer/render-markdown.nvim',
-    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' }, -- if you use the mini.nvim suite
-    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },        -- if you use standalone mini plugins
-    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
-    ---@module 'render-markdown'
-    ---@type render.md.UserConfig
-    opts = {},
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+      local function get_hl(name)
+        local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
+        if ok then return hl end
+        return {}
+      end
+
+      local function apply_highlights()
+        local normal = get_hl 'Normal'
+        local normal_float = get_hl 'NormalFloat'
+        local color_column = get_hl 'ColorColumn'
+        local comment = get_hl 'Comment'
+
+        local code_bg = color_column.bg or normal_float.bg or normal.bg
+        local quote_fg = comment.fg or normal.fg
+
+        for i = 1, 6 do
+          vim.api.nvim_set_hl(0, 'RenderMarkdownH' .. i, {
+            fg = 'fg',
+            bold = true,
+          })
+
+          vim.api.nvim_set_hl(0, 'RenderMarkdownH' .. i .. 'Bg', {
+            fg = 'fg',
+            bg = 'NONE',
+            bold = true,
+          })
+        end
+
+        vim.api.nvim_set_hl(0, 'RenderMarkdownBullet', {
+          fg = 'fg',
+        })
+
+        vim.api.nvim_set_hl(0, 'RenderMarkdownUnchecked', {
+          fg = 'fg',
+        })
+
+        vim.api.nvim_set_hl(0, 'RenderMarkdownChecked', {
+          fg = 'fg',
+        })
+
+        for i = 1, 6 do
+          vim.api.nvim_set_hl(0, 'RenderMarkdownQuote' .. i, {
+            fg = quote_fg or 'fg',
+          })
+        end
+
+        if code_bg then
+          vim.api.nvim_set_hl(0, 'RenderMarkdownCode', {
+            bg = code_bg,
+          })
+
+          vim.api.nvim_set_hl(0, 'RenderMarkdownCodeBorder', {
+            bg = code_bg,
+          })
+
+          vim.api.nvim_set_hl(0, 'RenderMarkdownCodeInline', {
+            bg = code_bg,
+          })
+        else
+          vim.api.nvim_set_hl(0, 'RenderMarkdownCode', {
+            bg = 'NONE',
+          })
+
+          vim.api.nvim_set_hl(0, 'RenderMarkdownCodeBorder', {
+            bg = 'NONE',
+          })
+
+          vim.api.nvim_set_hl(0, 'RenderMarkdownCodeInline', {
+            bg = 'NONE',
+          })
+        end
+      end
+
+      apply_highlights()
+
+      vim.api.nvim_create_autocmd('ColorScheme', {
+        callback = apply_highlights,
+      })
+
+      require('render-markdown').setup {
+        sign = {
+          enabled = false,
+        },
+
+        heading = {
+          sign = false,
+          icons = { '', '', '', '', '', '' },
+          position = 'inline',
+          width = 'block',
+          left_margin = 0,
+          left_pad = 0,
+          right_pad = 0,
+          border = { true, true, false, false, false, false },
+          above = ' ',
+          below = '━',
+          foregrounds = {
+            'RenderMarkdownH1',
+            'RenderMarkdownH2',
+            'RenderMarkdownH3',
+            'RenderMarkdownH4',
+            'RenderMarkdownH5',
+            'RenderMarkdownH6',
+          },
+          backgrounds = {
+            'RenderMarkdownH1Bg',
+            'RenderMarkdownH2Bg',
+            'RenderMarkdownH3Bg',
+            'RenderMarkdownH4Bg',
+            'RenderMarkdownH5Bg',
+            'RenderMarkdownH6Bg',
+          },
+        },
+
+        paragraph = {
+          left_margin = 0,
+          indent = 0,
+        },
+
+        bullet = {
+          icons = { '•', '◦', '▪' },
+          left_pad = 0,
+          right_pad = 1,
+          highlight = 'RenderMarkdownBullet',
+        },
+
+        checkbox = {
+          bullet = false,
+          left_pad = 0,
+          right_pad = 1,
+          unchecked = {
+            icon = '☐ ',
+            highlight = 'RenderMarkdownUnchecked',
+          },
+          checked = {
+            icon = '☑ ',
+            highlight = 'RenderMarkdownChecked',
+          },
+        },
+
+        quote = {
+          icon = '│',
+          repeat_linebreak = false,
+          highlight = {
+            'RenderMarkdownQuote1',
+            'RenderMarkdownQuote2',
+            'RenderMarkdownQuote3',
+            'RenderMarkdownQuote4',
+            'RenderMarkdownQuote5',
+            'RenderMarkdownQuote6',
+          },
+        },
+
+        code = {
+          style = 'normal',
+          border = 'none',
+          width = 'full',
+          left_margin = 0,
+          left_pad = 0,
+          right_pad = 0,
+          inline = true,
+          inline_left = '',
+          inline_right = '',
+          inline_pad = 0,
+          highlight = 'RenderMarkdownCode',
+          highlight_border = 'RenderMarkdownCodeBorder',
+          highlight_inline = 'RenderMarkdownCodeInline',
+        },
+
+        pipe_table = {
+          preset = 'none',
+          cell = 'padded',
+          padding = 1,
+          border_enabled = true,
+          style = 'full',
+        },
+
+        link = {
+          hyperlink = '',
+          email = '',
+          image = '',
+          wiki = {
+            enabled = false,
+          },
+          custom = {},
+        },
+      }
+    end,
   },
 
   -- image render
