@@ -921,13 +921,28 @@ require('lazy').setup({
         return {}
       end
 
+      local function lighten(color, amount)
+        if type(color) ~= 'number' then return color end
+
+        local r = math.floor(color / 0x10000) % 0x100
+        local g = math.floor(color / 0x100) % 0x100
+        local b = color % 0x100
+
+        r = math.min(255, math.floor(r + (255 - r) * amount + 0.5))
+        g = math.min(255, math.floor(g + (255 - g) * amount + 0.5))
+        b = math.min(255, math.floor(b + (255 - b) * amount + 0.5))
+
+        return r * 0x10000 + g * 0x100 + b
+      end
+
       local function apply_highlights()
         local normal = get_hl 'Normal'
         local normal_float = get_hl 'NormalFloat'
         local color_column = get_hl 'ColorColumn'
         local comment = get_hl 'Comment'
 
-        local code_bg = color_column.bg or normal_float.bg or normal.bg
+        local code_bg_base = color_column.bg or normal_float.bg or normal.bg
+        local code_bg = lighten(code_bg_base, 0.10)
         local quote_fg = comment.fg or normal.fg
 
         for i = 1, 6 do
@@ -1009,7 +1024,7 @@ require('lazy').setup({
           right_pad = 0,
           border = { true, true, false, false, false, false },
           above = ' ',
-          below = '━',
+          below = '.',
           foregrounds = {
             'RenderMarkdownH1',
             'RenderMarkdownH2',
@@ -1124,6 +1139,48 @@ require('lazy').setup({
       }
     end,
   },
+ 
+{
+  "3rd/diagram.nvim",
+  dependencies = {
+    { "3rd/image.nvim", opts = {} }, -- you'd probably want to configure image.nvim manually instead of doing this
+  },
+  opts = { -- you can just pass {}, defaults below
+    events = {
+      render_buffer = { "InsertLeave", "BufWinEnter", "TextChanged" },
+      clear_buffer = {"BufLeave"},
+    },
+    renderer_options = {
+      mermaid = {
+        background = nil, -- nil | "transparent" | "white" | "#hex"
+        theme = nil, -- nil | "default" | "dark" | "forest" | "neutral"
+        scale = 1, -- nil | 1 (default) | 2  | 3 | ...
+        width = nil, -- nil | 800 | 400 | ...
+        height = nil, -- nil | 600 | 300 | ...
+        cli_args = nil, -- nil | { "--no-sandbox" } | { "-p", "/path/to/puppeteer" } | ...
+      },
+      plantuml = {
+        charset = nil,
+        cli_args = nil, -- nil | { "-Djava.awt.headless=true" } | ...
+      },
+      d2 = {
+        theme_id = nil,
+        dark_theme_id = nil,
+        scale = nil,
+        layout = nil,
+        sketch = nil,
+        cli_args = nil, -- nil | { "--pad", "0" } | ...
+      },
+      gnuplot = {
+        size = nil, -- nil | "800,600" | ...
+        font = nil, -- nil | "Arial,12" | ...
+        theme = nil, -- nil | "light" | "dark" | custom theme string
+        cli_args = nil, -- nil | { "-p" } | { "-c", "config.plt" } | ...
+      },
+    }
+  },
+},
+
 
   {
     'TrevorS/uuid-nvim',
@@ -1225,7 +1282,7 @@ vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 vim.opt.smartindent = true
-vim.opt.wrap = false
+vim.opt.wrap = true
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
