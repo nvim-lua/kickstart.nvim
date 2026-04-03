@@ -133,6 +133,24 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+local formatting = require 'custom.formatting'
+
+vim.api.nvim_create_autocmd('FileType', {
+  desc = 'Apply per-filetype indentation settings',
+  group = vim.api.nvim_create_augroup('kickstart-indent-rules', { clear = true }),
+  callback = function()
+    local width = formatting.indent_by_ft[vim.bo.filetype]
+    if not width then
+      return
+    end
+
+    vim.opt_local.expandtab = true
+    vim.opt_local.tabstop = width
+    vim.opt_local.softtabstop = width
+    vim.opt_local.shiftwidth = width
+  end,
+})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -405,6 +423,7 @@ require('lazy').setup({
 
       -- Allows extra capabilities provided by blink.cmp
       'saghen/blink.cmp',
+      { 'AstroNvim/astrolsp', opts = {} },
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -648,12 +667,18 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'prettierd', -- Used to format JavaScript and TypeScript
+        'prettier', -- Fallback formatter when prettierd is unavailable
+        'astro',
+        'html',
+        'cssls',
+        'tailwindcss',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
-        automatic_installation = false,
+        automatic_installation = true,
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
@@ -698,21 +723,7 @@ require('lazy').setup({
           }
         end
       end,
-      formatters_by_ft = {
-        lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        python = {
-          -- To fix auto-fixable lint errors.
-          'ruff_fix',
-          -- To run the Ruff formatter.
-          'ruff_format',
-          -- To organize the imports.
-          'ruff_organize_imports',
-        },
-        --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
-      },
+      formatters_by_ft = formatting.formatters_by_ft,
     },
   },
 
@@ -883,7 +894,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'astro', 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
