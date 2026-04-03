@@ -110,6 +110,14 @@ Glyphs = {
     task = ' ',
     list = { '●', '○', '◆', '◇' },
   },
+  snacksPicker = {
+    lsp = {
+      unavailable = '',
+      enabled = '',
+      disabled = '',
+      attached = '',
+    },
+  },
   diagnostics = {
     error = '',
     warn = '',

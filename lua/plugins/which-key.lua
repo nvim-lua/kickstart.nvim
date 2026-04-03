@@ -23,6 +23,7 @@ return {
       { '<leader>f', group = '[F]uzzy-find', mode = { 'n', 'v' } },
       { '<leader>g', group = '[G]rep', mode = { 'n', 'v' } },
       { '<leader>G', group = '[G]it', mode = { 'n', 'v' } },
+      { '<leader>v', group = '[V]ersion control', mode = { 'n', 'v' } },
       { '<leader>l', group = '[L]SP', mode = { 'n', 'v' } },
       { '<leader>t', group = '[T]oggle' },
       { '<leader>d', group = '[D]iangostic' },

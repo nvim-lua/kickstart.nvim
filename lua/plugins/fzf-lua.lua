@@ -44,16 +44,18 @@ return {
       fl.live_grep { cwd = '~/.local/share/nvim/lazy/' }
     end, { desc = 'Grep Neovim plugins src' })
 
-    -- Git specific
-    vim.keymap.set('n', '<leader>GC', fl.git_bcommits, { desc = 'Git: commits - current buf' })
-    vim.keymap.set('n', '<leader>GS', fl.git_stash, { desc = 'Git: stash' })
-    vim.keymap.set('n', '<leader>Gb', fl.git_branches, { desc = 'Git: branches' })
-    vim.keymap.set('n', '<leader>Gc', fl.git_commits, { desc = 'Git: commits' })
-    vim.keymap.set('n', '<leader>Gd', fl.git_diff, { desc = 'Git: diff' })
-    vim.keymap.set('n', '<leader>Gf', fl.git_files, { desc = 'Git: files' })
-    vim.keymap.set('n', '<leader>Gh', fl.git_hunks, { desc = 'Git: hunks' })
-    vim.keymap.set('n', '<leader>Gs', fl.git_status, { desc = 'Git: status' })
-    vim.keymap.set('n', '<leader>Gw', fl.git_worktrees, { desc = 'Git: worktrees' })
+    -- -- Git specific
+    -- vim.keymap.set('n', '<leader>GC', fl.git_bcommits, { desc = 'Git: commits - current buf' })
+    -- vim.keymap.set('n', '<leader>GS', fl.git_stash, { desc = 'Git: stash' })
+    -- vim.keymap.set('n', '<leader>Gb', fl.git_branches, { desc = 'Git: branches' })
+    -- vim.keymap.set('n', '<leader>Gc', fl.git_commits, { desc = 'Git: commits' })
+    -- vim.keymap.set('n', '<leader>Gd', fl.git_diff, { desc = 'Git: diff' })
+    -- vim.keymap.set('n', '<leader>Gf', fl.git_files, { desc = 'Git: files' })
+    -- vim.keymap.set('n', '<leader>Gh', fl.git_hunks, { desc = 'Git: hunks' })
+    -- vim.keymap.set('n', '<leader>Gs', fl.git_status, { desc = 'Git: status' })
+    -- vim.keymap.set('n', '<leader>Gw', fl.git_worktrees, { desc = 'Git: worktrees' })
+    -- vim.keymap.set('n', '<leader>vh', fl.git_hunks, { desc = 'Git: hunks' })
+    -- vim.keymap.set('n', '<leader>vw', fl.git_worktrees, { desc = 'Git: worktrees' })
 
     -- LSP specific
     vim.api.nvim_create_autocmd('LspAttach', {
