@@ -1,3 +1,129 @@
+---@class TreesitterTextobjectGroup
+---@field group_leader string
+local TSTO_GROUP = {}
+
+---@param query_group string
+---@param opts table<string,string>
+---@return any
+function TSTO_GROUP:new(query_group, opts)
+  self.query_group = query_group
+  self.__index = self
+  return setmetatable(opts or {
+    group_leader = '',
+  }, self)
+end
+
+---@param key string
+---@param object string
+---@return TreesitterTextobjectGroup
+function TSTO_GROUP:set(key, object)
+  self.key = key
+  self.object = object
+  return self
+end
+
+---@param query_name string
+---@return string|nil
+function TSTO_GROUP:textobject_check(query_name)
+  local lang = vim.treesitter.language.get_lang(vim.bo.filetype) or ''
+  local query = vim.treesitter.query.get(lang, self.query_group) or {}
+
+  return vim.iter(query.captures or {}):any(function(val)
+    return val:match(query_name)
+  end) and query_name or nil
+end
+
+---@param attr string|nil
+---@return TreesitterTextobjectGroup
+function TSTO_GROUP:sel_outer(attr)
+  attr = attr or 'outer'
+
+  local obj = TSTO_GROUP:textobject_check(self.object .. '.' .. attr)
+  if not obj then
+    return self
+  end
+  obj = '@' .. obj
+
+  vim.keymap.set({ 'x', 'o' }, 'a' .. self.group_leader .. self.key, function()
+    require('nvim-treesitter-textobjects.select').select_textobject(obj, self.query_group)
+  end, { buffer = true, desc = 'arround ' .. self.object })
+
+  return self
+end
+
+---@param attr string|nil
+---@return TreesitterTextobjectGroup
+function TSTO_GROUP:sel_inner(attr)
+  attr = attr or 'inner'
+
+  local obj = TSTO_GROUP:textobject_check(self.object .. '.' .. attr)
+  if not obj then
+    return self
+  end
+  obj = '@' .. obj
+
+  vim.keymap.set({ 'x', 'o' }, 'i' .. self.group_leader .. self.key, function()
+    require('nvim-treesitter-textobjects.select').select_textobject(obj, self.query_group)
+  end, { buffer = true, desc = 'inner ' .. self.object })
+
+  return self
+end
+
+---@param opts table<string,string>
+---@return TreesitterTextobjectGroup
+function TSTO_GROUP:goto_start(opts)
+  ---@class opts
+  ---@field attribute? string
+  ---@field key? string
+  ---@field desc? string
+  opts = vim.tbl_extend('keep', opts or {}, {
+    attribute = 'outer',
+    key = self.key,
+    desc = 'start',
+  })
+
+  local obj = TSTO_GROUP:textobject_check(self.object .. '.' .. opts.attribute)
+  if not obj then
+    return self
+  end
+  obj = '@' .. obj
+
+  vim.keymap.set({ 'n', 'x', 'o' }, ']' .. self.group_leader .. opts.key, function()
+    require('nvim-treesitter-textobjects.move').goto_next_start(obj, self.query_group)
+  end, { buffer = true, desc = 'next ' .. self.object .. ' ' .. opts.desc })
+  vim.keymap.set({ 'n', 'x', 'o' }, '[' .. self.group_leader .. opts.key, function()
+    require('nvim-treesitter-textobjects.move').goto_previous_start(obj, self.query_group)
+  end, { buffer = true, desc = 'previous ' .. self.object .. ' ' .. opts.desc })
+
+  return self
+end
+
+---@param attr string|nil
+---@return TreesitterTextobjectGroup
+function TSTO_GROUP:goto_end(opts)
+  attr = attr or 'outer'
+  opts = vim.tbl_extend('keep', opts or {}, {
+    attribute = 'outer',
+    key = self.key:upper(),
+    desc = 'end',
+  })
+
+  local obj = TSTO_GROUP:textobject_check(self.object .. '.' .. opts.attribute)
+  if not obj then
+    return self
+  end
+  obj = '@' .. obj
+
+  vim.keymap.set({ 'n', 'x', 'o' }, ']' .. self.group_leader .. opts.key, function()
+    require('nvim-treesitter-textobjects.move').goto_next_end(obj, self.query_group)
+  end, { buffer = true, desc = 'next ' .. self.object .. ' ' .. opts.desc })
+  vim.keymap.set({ 'n', 'x', 'o' }, '[' .. self.group_leader .. opts.key, function()
+    require('nvim-treesitter-textobjects.move').goto_previous_end(obj, self.query_group)
+  end, { buffer = true, desc = 'previous ' .. self.object .. ' ' .. opts.desc })
+
+  return self
+end
+
 return {
   'nvim-treesitter/nvim-treesitter-textobjects',
   branch = 'main',
@@ -49,52 +175,43 @@ return {
       },
     }
 
-    local select = require 'nvim-treesitter-textobjects.select'
-    local move = require 'nvim-treesitter-textobjects.move'
+    vim.api.nvim_create_autocmd({ 'FileType', 'BufEnter' }, {
+      desc = 'Set treesitter keymaps when treesitter is avaliable for the file',
+      group = vim.api.nvim_create_augroup('TSparser', { clear = true }),
+      callback = function()
+        local buf = vim.api.nvim_get_current_buf()
+        local has_parser, parser = pcall(vim.treesitter.get_parser, buf, nil, { error = false })
 
-    -- One-place defined treesitter-textobjects
-    local ts_to = {
-      ['b'] = 'block',
-      ['c'] = 'class',
-      ['f'] = 'function',
-      ['i'] = 'conditional',
-      ['l'] = 'loop',
-      ['m'] = 'comment',
-      ['p'] = 'parameter',
-      ['r'] = 'return',
-    }
+        if not has_parser or parser == nil then
+          return
+        end
 
-    -- Set a _leader_ key to put all treesitter-textobjects under one prefix
-    -- I set this for:
-    --   - avoid conflict. (it's better than setting vim.g.no_plugin_maps = false)
-    --   - experimenting with other plugins like mini.ai and mini.move
-    local ldr = 'o'
+        local tsto = TSTO_GROUP:new('textobjects', { group_leader = 'o' })
+        for k, v in pairs {
+          -- ['b'] = 'block', -- for brace-less languages like python
+          ['c'] = 'class',
+          ['f'] = 'function',
+          ['i'] = 'conditional',
+          ['l'] = 'loop',
+          ['p'] = 'parameter',
+          ['r'] = 'return',
+          ['t'] = 'attribute',
+          ['x'] = 'regex',
+        } do
+          tsto:set(k, v):sel_outer():sel_inner():goto_start():goto_end()
+        end
 
-    for k, o in pairs(ts_to) do
-      local outer = '@' .. o .. '.outer'
-      local inner = '@' .. o .. '.inner'
-
-      -- [a]round/[i]nner
-      vim.keymap.set({ 'x', 'o' }, 'a' .. ldr .. k, function()
-        select.select_textobject(outer, 'textobjects')
-      end, { desc = 'arround ' .. o })
-      vim.keymap.set({ 'x', 'o' }, 'i' .. ldr .. k, function()
-        select.select_textobject(inner, 'textobjects')
-      end, { desc = 'inner ' .. o })
-
-      -- jump next] / previous[
-      vim.keymap.set({ 'n', 'x', 'o' }, ']' .. ldr .. k, function()
-        move.goto_next_start(outer, 'textobjects')
-      end, { desc = 'next ' .. o .. ' start' })
-      vim.keymap.set({ 'n', 'x', 'o' }, ']' .. ldr .. k:upper(), function()
-        move.goto_next_end(outer, 'textobjects')
-      end, { desc = 'next ' .. o .. ' end' })
-      vim.keymap.set({ 'n', 'x', 'o' }, '[' .. ldr .. k, function()
-        move.goto_previous_start(outer, 'textobjects')
-      end, { desc = 'previous ' .. o .. ' start' })
-      vim.keymap.set({ 'n', 'x', 'o' }, '[' .. ldr .. k:upper(), function()
-        move.goto_previous_end(outer, 'textobjects')
-      end, { desc = 'previous ' .. o .. ' end' })
-    end
+        tsto:set('{', 'block'):sel_outer():sel_inner():goto_start():goto_end { key = '}' }
+        tsto:set('(', 'call'):sel_outer():sel_inner():goto_start():goto_end { key = ')' }
+        tsto:set('/', 'comment'):sel_outer():sel_inner():goto_start()
+        tsto:set(';', 'statement'):sel_outer():goto_start():goto_end { key = ':' }
+        tsto
+          :set('=', 'assignment')
+          :sel_outer()
+          :sel_inner('rhs')
+          :goto_start({ attribute = 'lhs' })
+          :goto_start { attribute = 'rhs', key = '-', desc = 'rhs' }
+      end,
+    })
   end,
 }
