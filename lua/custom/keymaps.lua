@@ -1,1 +1,1 @@
-vim.keymap.set('n', '<leader>wr', function() require('custom.layout').reset_ide_layout() end, { desc = '[W]indows: [R]eset IDE layout' })
+vim.keymap.set('n', '<leader>wR', function() require('custom.layout').reset_ide_layout() end, { desc = '[W]indows: [R]eset IDE layout' })
