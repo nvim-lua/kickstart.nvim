@@ -8,12 +8,18 @@ local sidebar_filetypes = {
   ['opencode'] = true,
 }
 
+function M.is_main_window(win)
+  if not win or not vim.api.nvim_win_is_valid(win) then return false end
+
+  local buf = vim.api.nvim_win_get_buf(win)
+  local ft = vim.bo[buf].filetype
+  local bt = vim.bo[buf].buftype
+  return not sidebar_filetypes[ft] and bt == ''
+end
+
 function M.focus_main_window()
   for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-    local buf = vim.api.nvim_win_get_buf(win)
-    local ft = vim.bo[buf].filetype
-    local bt = vim.bo[buf].buftype
-    if not sidebar_filetypes[ft] and bt == '' then
+    if M.is_main_window(win) then
       vim.api.nvim_set_current_win(win)
       return true
     end
@@ -29,6 +35,38 @@ local function find_window_by_filetype(filetype)
   end
 
   return nil
+end
+
+function M.capture_focus()
+  local current_win = vim.api.nvim_get_current_win()
+  if not M.is_main_window(current_win) then return nil end
+
+  local buf = vim.api.nvim_win_get_buf(current_win)
+  local buf_name = vim.api.nvim_buf_get_name(buf)
+  if buf_name == '' then return nil end
+
+  return {
+    buf_name = buf_name,
+  }
+end
+
+function M.restore_focus(focus)
+  if type(focus) ~= 'table' then return M.focus_main_window() end
+
+  local target_buf_name = focus.buf_name
+  if type(target_buf_name) ~= 'string' or target_buf_name == '' then return M.focus_main_window() end
+
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    if M.is_main_window(win) then
+      local buf = vim.api.nvim_win_get_buf(win)
+      if vim.api.nvim_buf_get_name(buf) == target_buf_name then
+        vim.api.nvim_set_current_win(win)
+        return true
+      end
+    end
+  end
+
+  return M.focus_main_window()
 end
 
 local function ensure_neotree_window()
@@ -59,7 +97,9 @@ local function ensure_opencode_window()
   return find_window_by_filetype 'opencode'
 end
 
-function M.reset_ide_layout()
+function M.reset_ide_layout(opts)
+  opts = opts or {}
+
   local neotree_win = ensure_neotree_window()
   local opencode_win = ensure_opencode_window()
 
@@ -77,7 +117,7 @@ function M.reset_ide_layout()
   if neotree_win and vim.api.nvim_win_is_valid(neotree_win) then vim.api.nvim_win_set_width(neotree_win, left_width) end
   if opencode_win and vim.api.nvim_win_is_valid(opencode_win) then vim.api.nvim_win_set_width(opencode_win, right_width) end
 
-  M.focus_main_window()
+  if opts.focus_main ~= false then M.focus_main_window() end
 end
 
 return M
