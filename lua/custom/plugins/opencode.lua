@@ -25,27 +25,7 @@ return {
     },
   },
   config = function()
-    local sidebar_filetypes = {
-      ['neo-tree'] = true,
-      ['snacks_layout_box'] = true,
-      ['snacks_terminal'] = true,
-      ['toggleterm'] = true,
-      ['opencode'] = true,
-    }
-
-    local function focus_main_window()
-      for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-        local buf = vim.api.nvim_win_get_buf(win)
-        local ft = vim.bo[buf].filetype
-        local bt = vim.bo[buf].buftype
-        if not sidebar_filetypes[ft] and bt == '' then
-          vim.api.nvim_set_current_win(win)
-          return true
-        end
-      end
-
-      return false
-    end
+    local layout = require 'custom.layout'
 
     ---@type opencode.Opts
     vim.g.opencode_opts = {
@@ -85,15 +65,13 @@ return {
 
     vim.api.nvim_create_autocmd('VimEnter', {
       callback = function()
-        if vim.fn.argc() == 1 and vim.fn.isdirectory(vim.fn.argv(0)) == 1 then
+        local argv = vim.fn.argv()
+        local first_arg = argv[1]
+        if vim.fn.argc() == 1 and type(first_arg) == 'string' and vim.fn.isdirectory(first_arg) == 1 then
           vim.schedule(function()
-            pcall(function() require('persistence').load() end)
-
-            vim.schedule(function()
-              focus_main_window()
-              require('opencode').toggle()
-              focus_main_window()
-            end)
+            layout.focus_main_window()
+            require('opencode').toggle()
+            layout.focus_main_window()
           end)
         end
       end,

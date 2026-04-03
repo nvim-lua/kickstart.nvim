@@ -143,6 +143,14 @@ Do not remove useful annotations just to reduce lines.
 - Respect platform guards (e.g., `make` checks, Windows conditionals).
 - Do not edit lockfile manually; let lazy manage `lazy-lock.json` updates.
 
+## Custom Keymap and Layout Conventions
+
+- Keep **custom** keymaps in `lua/custom/keymaps.lua`.
+- Keep upstream kickstart keymaps in `init.lua` unless intentionally overriding behavior.
+- If adding a new `<leader>` namespace in `lua/custom/keymaps.lua`, also register its group in which-key (`init.lua` `which-key` spec).
+- Keep layout/window helper logic centralized in `lua/custom/layout.lua` (for example `focus_main_window()`), and reuse it from plugin modules instead of duplicating sidebar/window filtering logic.
+- If a plugin needs startup window choreography, call `require('custom.layout')` helpers rather than re-implementing window focus rules.
+
 ## Editing and Change Scope
 
 - Keep changes minimal and local to the requested task.
