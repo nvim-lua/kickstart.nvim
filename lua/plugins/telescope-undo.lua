@@ -9,11 +9,11 @@ return {
   -- lazy = true,
   keys = {
     { -- lazy style key map
-      '<leader>su',
+      '<leader>fu',
       function()
         require('telescope').extensions.undo.undo()
       end,
-      desc = '[S]earch [U]ndo history',
+      desc = 'Undo history',
     },
   },
   opts = {

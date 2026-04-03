@@ -58,3 +58,8 @@ vim.keymap.set('n', '<leader>c', '<cmd>bdelete<CR>', { desc = '[c]lose file' })
 -- Add a keymap for delete while on insert-mode
 -- this works well with <C-h>, <C-w>, <C-u>
 vim.keymap.set('i', '<C-f>', '<Del>')
+
+-- [[ Keymap Deletion ]]
+
+-- this would be remapped to `grs` so I don't want to keep it.
+vim.keymap.del('n', 'gO')

@@ -56,16 +56,56 @@ return {
     vim.keymap.set('n', '<leader>Gw', fl.git_worktrees, { desc = 'Git: worktrees' })
 
     -- LSP specific
-    vim.keymap.set({ 'n', 'v' }, '<leader>la', fl.lsp_code_actions, { desc = 'LSP: code actions' })
-    vim.keymap.set({ 'n', 'v' }, '<leader>lD', fl.lsp_declarations, { desc = 'LSP: declaration' })
-    vim.keymap.set({ 'n', 'v' }, '<leader>ld', fl.lsp_definitions, { desc = 'LSP: definition' })
-    vim.keymap.set({ 'n', 'v' }, '<leader>li', fl.lsp_implementations, { desc = 'LSP: implementations' })
-    vim.keymap.set({ 'n', 'v' }, '<leader>lI', fl.lsp_incoming_calls, { desc = 'LSP: incoming calls' })
-    vim.keymap.set({ 'n', 'v' }, '<leader>lO', fl.lsp_outgoing_calls, { desc = 'LSP: outgoing calls' })
-    vim.keymap.set({ 'n', 'v' }, '<leader>lr', fl.lsp_references, { desc = 'LSP: references' })
-    vim.keymap.set('n', '<leader>ls', fl.lsp_document_symbols, { desc = 'LSP: symbols - current buf' })
-    vim.keymap.set('n', '<leader>lw', fl.lsp_workspace_symbols, { desc = 'LSP: symbols - workspace' })
-    vim.keymap.set({ 'n', 'v' }, '<leader>lt', fl.lsp_typedefs, { desc = 'LSP: type definition' })
+    vim.api.nvim_create_autocmd('LspAttach', {
+      group = vim.api.nvim_create_augroup('fzflua-lsp-attach', { clear = true }),
+      callback = function(event)
+        local buf = event.buf
+
+        -- `gr` keymap style
+        vim.keymap.set({ 'n', 'v' }, 'gra', fl.lsp_code_actions, { buffer = buf, desc = 'LSP: code actions' })
+        vim.keymap.set({ 'n', 'v' }, 'grD', fl.lsp_declarations, { buffer = buf, desc = 'LSP: declaration' })
+        vim.keymap.set({ 'n', 'v' }, 'grd', fl.lsp_definitions, { buffer = buf, desc = 'LSP: definition' })
+        vim.keymap.set({ 'n', 'v' }, 'gri', fl.lsp_implementations, { buffer = buf, desc = 'LSP: implementations' })
+        vim.keymap.set({ 'n', 'v' }, 'grI', fl.lsp_incoming_calls, { buffer = buf, desc = 'LSP: incoming calls' })
+        vim.keymap.set({ 'n', 'v' }, 'grO', fl.lsp_outgoing_calls, { buffer = buf, desc = 'LSP: outgoing calls' })
+        vim.keymap.set({ 'n', 'v' }, 'grr', fl.lsp_references, { buffer = buf, desc = 'LSP: references' })
+        vim.keymap.set('n', 'grs', fl.lsp_document_symbols, { buffer = buf, desc = 'LSP: symbols - current buf' })
+        vim.keymap.set('n', 'grw', fl.lsp_workspace_symbols, { buffer = buf, desc = 'LSP: symbols - workspace' })
+        vim.keymap.set({ 'n', 'v' }, 'grt', fl.lsp_typedefs, { buffer = buf, desc = 'LSP: type definition' })
+
+        -- my style
+        vim.keymap.set({ 'n', 'v' }, '<leader>la', fl.lsp_code_actions, { buffer = buf, desc = 'LSP: code actions' })
+        vim.keymap.set({ 'n', 'v' }, '<leader>lD', fl.lsp_declarations, { buffer = buf, desc = 'LSP: declaration' })
+        vim.keymap.set({ 'n', 'v' }, '<leader>ld', fl.lsp_definitions, { buffer = buf, desc = 'LSP: definition' })
+        vim.keymap.set(
+          { 'n', 'v' },
+          '<leader>li',
+          fl.lsp_implementations,
+          { buffer = buf, desc = 'LSP: implementations' }
+        )
+        vim.keymap.set(
+          { 'n', 'v' },
+          '<leader>lI',
+          fl.lsp_incoming_calls,
+          { buffer = buf, desc = 'LSP: incoming calls' }
+        )
+        vim.keymap.set(
+          { 'n', 'v' },
+          '<leader>lO',
+          fl.lsp_outgoing_calls,
+          { buffer = buf, desc = 'LSP: outgoing calls' }
+        )
+        vim.keymap.set({ 'n', 'v' }, '<leader>lr', fl.lsp_references, { buffer = buf, desc = 'LSP: references' })
+        vim.keymap.set(
+          'n',
+          '<leader>ls',
+          fl.lsp_document_symbols,
+          { buffer = buf, desc = 'LSP: symbols - current buf' }
+        )
+        vim.keymap.set('n', '<leader>lw', fl.lsp_workspace_symbols, { buffer = buf, desc = 'LSP: symbols - workspace' })
+        vim.keymap.set({ 'n', 'v' }, '<leader>lt', fl.lsp_typedefs, { buffer = buf, desc = 'LSP: type definition' })
+      end,
+    })
 
     -- Diagnostic specific
     vim.keymap.set('n', '<leader>dd', fl.diagnostics_document, { desc = 'List diagnostics - current buf' })
