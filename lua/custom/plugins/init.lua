@@ -1,7 +1,8 @@
--- You can add your own plugins here or in other files in this directory!
---  I promise not to create any merge conflicts in this directory :)
+-- Custom plugin layout (nginx style):
+-- - enable/*.lua : loaded by lazy via `import = 'custom.plugins.enable'`
+-- - disable/*.lua: not imported; keep plugin specs here to disable quickly
 --
--- See the kickstart.nvim README for more information
+-- See init.lua import config for details.
 
 ---@module 'lazy'
 ---@type LazySpec

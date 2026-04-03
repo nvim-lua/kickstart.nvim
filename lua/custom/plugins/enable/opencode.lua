@@ -25,8 +25,6 @@ return {
     },
   },
   config = function()
-    local layout = require 'custom.layout'
-
     ---@type opencode.Opts
     vim.g.opencode_opts = {
       server = {
@@ -63,18 +61,20 @@ return {
     vim.keymap.set('n', '+', '<C-a>', { desc = 'Increment under cursor', noremap = true })
     vim.keymap.set('n', '-', '<C-x>', { desc = 'Decrement under cursor', noremap = true })
 
-    vim.api.nvim_create_autocmd('VimEnter', {
-      callback = function()
-        local argv = vim.fn.argv()
-        local first_arg = argv[1]
-        if vim.fn.argc() == 1 and type(first_arg) == 'string' and vim.fn.isdirectory(first_arg) == 1 then
-          vim.schedule(function()
-            layout.focus_main_window()
-            require('opencode').toggle()
-            layout.focus_main_window()
-          end)
-        end
-      end,
-    })
+    -- Disabled: startup session/window orchestration is handled by persistence workflow.
+    -- vim.api.nvim_create_autocmd('VimEnter', {
+    --   callback = function()
+    --     local layout = require 'custom.layout'
+    --     local argv = vim.fn.argv()
+    --     local first_arg = argv[1]
+    --     if vim.fn.argc() == 1 and type(first_arg) == 'string' and vim.fn.isdirectory(first_arg) == 1 then
+    --       vim.schedule(function()
+    --         layout.focus_main_window()
+    --         require('opencode').toggle()
+    --         layout.focus_main_window()
+    --       end)
+    --     end
+    --   end,
+    -- })
   end,
 }

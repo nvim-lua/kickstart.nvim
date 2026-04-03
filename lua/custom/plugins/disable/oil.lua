@@ -7,13 +7,11 @@ return {
     columns = { 'icon' },
     keymaps = {
       ['<CR>'] = function()
-        local oil = require('oil')
-        local actions = require('oil.actions')
+        local oil = require 'oil'
+        local actions = require 'oil.actions'
         local entry = oil.get_cursor_entry()
 
-        if not entry then
-          return
-        end
+        if not entry then return end
 
         if entry.type == 'directory' then
           actions.select.callback()
@@ -34,9 +32,7 @@ return {
                   target_win = win
                 else
                   local target_pos = vim.api.nvim_win_get_position(target_win)
-                  if pos[2] < target_pos[2] then
-                    target_win = win
-                  end
+                  if pos[2] < target_pos[2] then target_win = win end
                 end
               end
             end
@@ -44,15 +40,13 @@ return {
         end
 
         if not target_win then
-          vim.cmd('vsplit')
+          vim.cmd 'vsplit'
           target_win = vim.api.nvim_get_current_win()
           vim.api.nvim_set_current_win(sidebar_win)
         end
 
         local dir = oil.get_current_dir()
-        if not dir then
-          return
-        end
+        if not dir then return end
 
         local path = vim.fs.joinpath(dir, entry.name)
         vim.api.nvim_set_current_win(target_win)
@@ -73,7 +67,7 @@ return {
         end
 
         local current_win = vim.api.nvim_get_current_win()
-        vim.cmd('topleft vsplit')
+        vim.cmd 'topleft vsplit'
         local sidebar_win = vim.api.nvim_get_current_win()
         require('oil').open()
         vim.api.nvim_win_set_width(sidebar_win, 20)

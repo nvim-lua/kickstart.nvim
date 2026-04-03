@@ -118,7 +118,7 @@ Do not remove useful annotations just to reduce lines.
 
 - Modules/files:
   - lower_snake_case for filenames where practical.
-  - plugin files grouped by feature in `lua/custom/plugins/`.
+  - plugin files grouped by feature under `lua/custom/plugins/enable/` (active) and `lua/custom/plugins/disable/` (inactive).
 - Local variables/functions:
   - descriptive lower_snake_case.
   - short names only for conventional temporary values (`buf`, `opts`, `client`).
@@ -138,7 +138,8 @@ Do not remove useful annotations just to reduce lines.
 ## Plugin and Dependency Conventions
 
 - Add plugins through `lazy` specs, keeping structure consistent with existing blocks.
-- When adding a new plugin, prefer putting it under `lua/custom/plugins/*.lua` (or other custom modules) instead of editing upstream kickstart blocks in `init.lua`, to minimize merge conflicts with upstream updates.
+- When adding a new plugin, prefer putting it under `lua/custom/plugins/enable/*.lua` (or other custom modules) instead of editing upstream kickstart blocks in `init.lua`, to minimize merge conflicts with upstream updates.
+- To disable a custom plugin without deleting its spec, move it to `lua/custom/plugins/disable/`.
 - Prefer minimal configuration first (`opts = {}`), then extend only if needed.
 - Respect platform guards (e.g., `make` checks, Windows conditionals).
 - Do not edit lockfile manually; let lazy manage `lazy-lock.json` updates.
