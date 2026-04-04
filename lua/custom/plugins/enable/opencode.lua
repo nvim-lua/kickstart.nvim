@@ -25,18 +25,20 @@ return {
     },
   },
   config = function()
+    local opencode_cmd = [[zsh -ic 'opencode --port']]
+
     ---@type opencode.Opts
     vim.g.opencode_opts = {
       server = {
         start = function()
-          require('opencode.terminal').open('opencode --port', {
+          require('opencode.terminal').open(opencode_cmd, {
             split = 'right',
             width = math.max(40, math.floor(vim.o.columns * 0.4)),
           })
         end,
         stop = function() require('opencode.terminal').close() end,
         toggle = function()
-          require('opencode.terminal').toggle('opencode --port', {
+          require('opencode.terminal').toggle(opencode_cmd, {
             split = 'right',
             width = math.max(40, math.floor(vim.o.columns * 0.4)),
           })
