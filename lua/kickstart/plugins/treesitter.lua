@@ -12,6 +12,9 @@ return {
         enable = true,
       },
     },
+    -- pin to specific commit since newest version dropped support for neovom 0.11
+    commit = '7caec274fd19c12b55902a5b795100d21531391f',
+    pin = true,
     -- main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     config = function(_, opts)
@@ -72,32 +75,33 @@ return {
       end
     end,
   },
-  {
-    'nvim-treesitter/nvim-treesitter-textobjects',
-    opts = {},
-    branch = 'main',
-    config = function()
-      require('nvim-treesitter-textobjects').setup {
-        textobjects = {
-          select = {
-            enable = true,
-            -- Automatically jump forward to textobj, similar to targets.vim
-            lookahead = true,
-            keymaps = {
-              -- You can use the capture groups defined in textobjects.scm
-              ['af'] = { query = '@function.outer', desc = 'Select outer function region' },
-              ['if'] = { query = '@function.inner', desc = 'Select inner function region' },
-              ['ac'] = { query = '@class.outer', desc = 'Select outer class region' },
-              -- You can optionally set descriptions to the mappings (used in the desc parameter of
-              -- nvim_buf_set_keymap) which plugins like which-key display
-              ['ic'] = { query = '@class.inner', desc = 'Select inner class region' },
-              -- You can also use captures from other query groups like `locals.scm`
-              ['as'] = { query = '@local.scope', query_group = 'locals', desc = 'Select language scope' },
-            },
-          },
-        },
-      }
-    end,
-  },
+  -- TODO: not sure if i need it, removing for now
+  -- {
+  --   'nvim-treesitter/nvim-treesitter-textobjects',
+  --   opts = {},
+  --   branch = 'main',
+  --   config = function()
+  --     require('nvim-treesitter-textobjects').setup {
+  --       textobjects = {
+  --         select = {
+  --           enable = true,
+  --           -- Automatically jump forward to textobj, similar to targets.vim
+  --           lookahead = true,
+  --           keymaps = {
+  --             -- You can use the capture groups defined in textobjects.scm
+  --             ['af'] = { query = '@function.outer', desc = 'Select outer function region' },
+  --             ['if'] = { query = '@function.inner', desc = 'Select inner function region' },
+  --             ['ac'] = { query = '@class.outer', desc = 'Select outer class region' },
+  --             -- You can optionally set descriptions to the mappings (used in the desc parameter of
+  --             -- nvim_buf_set_keymap) which plugins like which-key display
+  --             ['ic'] = { query = '@class.inner', desc = 'Select inner class region' },
+  --             -- You can also use captures from other query groups like `locals.scm`
+  --             ['as'] = { query = '@local.scope', query_group = 'locals', desc = 'Select language scope' },
+  --           },
+  --         },
+  --       },
+  --     }
+  --   end,
+  -- },
 }
 -- vim: ts=2 sts=2 sw=2 et

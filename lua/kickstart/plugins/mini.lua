@@ -17,6 +17,7 @@ return {
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
       -- TODO: not sure if I need it, will disable for now
+      -- NOTE 's' keymap clashes with flash current keymaps
       -- require('mini.surround').setup()
 
       -- Simple and easy statusline.
