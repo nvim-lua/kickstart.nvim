@@ -37,6 +37,30 @@ local function find_window_by_filetype(filetype)
   return nil
 end
 
+local function is_opencode_window(win)
+  if not win or not vim.api.nvim_win_is_valid(win) then return false end
+
+  local buf = vim.api.nvim_win_get_buf(win)
+  local ft = vim.bo[buf].filetype
+  if ft == 'opencode' then return true end
+
+  local bt = vim.bo[buf].buftype
+  if bt ~= 'terminal' then return false end
+
+  if ft ~= '' and ft ~= 'snacks_terminal' and ft ~= 'toggleterm' then return false end
+
+  local buf_name = string.lower(vim.api.nvim_buf_get_name(buf))
+  return buf_name:find('opencode', 1, true) ~= nil
+end
+
+local function find_opencode_window()
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    if is_opencode_window(win) then return win end
+  end
+
+  return nil
+end
+
 function M.capture_focus()
   local current_win = vim.api.nvim_get_current_win()
   if not M.is_main_window(current_win) then return nil end
@@ -88,13 +112,13 @@ local function ensure_neotree_window()
 end
 
 local function ensure_opencode_window()
-  local opencode_win = find_window_by_filetype 'opencode'
+  local opencode_win = find_opencode_window()
   if opencode_win then return opencode_win end
 
   pcall(function() require('opencode').toggle() end)
 
-  vim.wait(1000, function() return find_window_by_filetype 'opencode' ~= nil end, 50)
-  return find_window_by_filetype 'opencode'
+  vim.wait(1000, function() return find_opencode_window() ~= nil end, 50)
+  return find_opencode_window()
 end
 
 function M.reset_ide_layout(opts)

@@ -2,6 +2,10 @@ return {
   {
     'rmagatti/auto-session',
     lazy = false,
+    init = function()
+      -- Required by auto-session for filetype and highlighting to survive session restore
+      vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
+    end,
     keys = {
       -- Will use Telescope if installed or a vim.ui.select picker otherwise
       { '<leader>wr', '<cmd>AutoSession search<CR>', desc = 'Session search' },
