@@ -234,6 +234,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 require 'custom.beancount'
 require 'custom.keymaps'
+require 'custom.treesitter'
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
