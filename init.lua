@@ -728,17 +728,6 @@ require('lazy').setup({
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
-
-        -- my customizations
-        json = { 'jq' },
-        sarif = { 'jq' },
-        python = { 'ruff_format', 'ruff_organize_imports' },
-        html = { 'prettier' },
-        javascript = { 'prettier' },
-        typescript = { 'prettier' },
-        typescriptreact = { 'prettier' },
-        markdown = { 'markdownlint' },
-        yaml = { 'prettier' },
       },
     },
   },
