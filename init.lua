@@ -921,6 +921,25 @@ require('lazy').setup({
           end
         end,
       })
+
+      -- Treesitter incremental selection, see `:help treesitter-incremental-selection`
+      -- Note: the default keymaps `an` and `in` collide with mini.ai, so we remap them below
+      -- Try putting your cursor in one of the lines below and typing `v+` (then continue to type `+` or `-`)
+      vim.keymap.set({ 'x', 'o' }, '+', function()
+        if vim.treesitter.get_parser(nil, nil, { error = false }) then
+          require('vim.treesitter._select').select_parent(vim.v.count1)
+        else
+          vim.lsp.buf.selection_range(vim.v.count1)
+        end
+      end, { desc = 'Select parent (outer) node' })
+
+      vim.keymap.set({ 'x', 'o' }, '-', function()
+        if vim.treesitter.get_parser(nil, nil, { error = false }) then
+          require('vim.treesitter._select').select_child(vim.v.count1)
+        else
+          vim.lsp.buf.selection_range(-vim.v.count1)
+        end
+      end, { desc = 'Select child (inner) node' })
     end,
   },
 
