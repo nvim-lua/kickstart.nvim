@@ -641,26 +641,6 @@ require('lazy').setup({
             Lua = {},
           },
         },
-
-        -- my customizations
-        clangd = {},
-        gopls = {},
-        pyright = {
-          settings = {
-            pyright = {
-              -- Using Ruff's import organizer
-              disableOrganizeImports = true,
-            },
-            python = {
-              analysis = {
-                -- Ignore all files for analysis to exclusively use Ruff for linting
-                ignore = { '*' },
-              },
-            },
-          },
-        },
-        ts_ls = {},
-        ruff = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -673,13 +653,6 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         -- You can add other tools here that you want Mason to install
-
-        -- my customizations
-        'markdownlint',
-        'mypy',
-        'jq',
-        'prettier',
-        'codelldb',
       })
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
