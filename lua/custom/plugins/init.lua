@@ -56,4 +56,6 @@ require('guess-indent').setup {}
 --   },
 -- }
 
+---@module 'lazy'
+---@type LazySpec
 return {}
