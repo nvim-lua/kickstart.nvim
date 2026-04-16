@@ -3,10 +3,17 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.opt.guicursor = ''
--- vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
--- vim.o.background = 'dark'
--- vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'none' })
 
+-- my personal color scheme setup
+vim.cmd 'colorscheme quiet'
+vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
+vim.o.background = 'dark'
+vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'none' })
+vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none', fg = '#ffffff' })
+vim.api.nvim_set_hl(0, 'FloatBorder', { fg = 'none', bg = '#1e1e1e' })
+-- vim.api.nvim_set_hl(0, 'Pmenu', { bg = '#1e1e1e', fg = '#ffffff' })
+-- vim.api.nvim_set_hl(0, 'PmenuSel', { bg = '#3d59a1', fg = '#ffffff' })
+--
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
@@ -808,15 +815,15 @@ require('lazy').setup({
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
-      local statusline = require 'mini.statusline'
+      -- local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
+      -- statusline.setup { use_icons = vim.g.have_nerd_font }
 
       -- You can configure sections in the statusline by overriding their
       -- default behavior. For example, here we set the section for
       -- cursor location to LINE:COLUMN
       ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function() return '%2l:%-2v' end
+      -- statusline.section_location = function() return '%2l:%-2v' end
 
       -- ... and there is more!
       --  Check out: https://github.com/nvim-mini/mini.nvim
