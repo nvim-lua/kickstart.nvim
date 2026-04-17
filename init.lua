@@ -208,13 +208,23 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
--- Set correct indendation for Go files
+-- Set correct indendation for Go/templ files
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'go',
+  pattern = { 'go', 'templ' },
   callback = function()
     vim.bo.tabstop = 4
     vim.bo.shiftwidth = 4
     vim.bo.softtabstop = 4
+    vim.bo.expandtab = false
+  end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'typescript', 'json', 'jsonc' },
+  callback = function()
+    vim.bo.tabstop = 2
+    vim.bo.shiftwidth = 2
+    vim.bo.softtabstop = 2
     vim.bo.expandtab = false
   end,
 })
@@ -348,6 +358,7 @@ require('lazy').setup({
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
         { '<leader>r', group = '[R]efactor' },
+        { '<leader>sp', group = '[Sp]elling' },
         { '<leader>g', group = '[G]oto' },
         { '<leader>e', group = '[E]rror Diagnostics' },
       },
@@ -439,6 +450,23 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+
+      local themes = require 'telescope.themes'
+      vim.keymap.set('n', '<leader>sps', function()
+        builtin.spell_suggest(themes.get_cursor())
+      end, { desc = '[sp]elling: [s]uggestions ' })
+
+      -- toggle spell
+      vim.keymap.set('n', '<leader>spt', function()
+        vim.wo.spell = not vim.wo.spell
+        vim.notify('spell: ' .. (vim.wo.spell and 'ON' or 'OFF'))
+      end, { desc = '[sp]elling: [t]oggle' })
+
+      vim.keymap.set('n', '<leader>spg', 'zg', { desc = '[sp]elling: mark as [g]ood', silent = true })
+      vim.keymap.set('n', '<leader>spw', 'zw', { desc = '[sp]elling: mark as [w]rong', silent = true })
+      vim.keymap.set('n', '<leader>spu', 'zug', { desc = '[sp]elling: [u]ndo last mark', silent = true })
+      vim.keymap.set('n', '<leader>spn', ']s', { desc = '[sp]elling: [n]ext error', silent = true })
+      vim.keymap.set('n', '<leader>spp', '[s', { desc = '[sp]elling: [p]rev error', silent = true })
 
       vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { desc = '[R]e[n]ame' })
       vim.keymap.set('n', '<leader>rr', vim.lsp.buf.references, { desc = '[R]eferences' })
@@ -733,6 +761,8 @@ require('lazy').setup({
                   'docker-compose*.yaml',
                   'compose*.yml',
                   'compose*.yaml',
+                  'dc*.yml',
+                  'dc*.yaml',
                 },
                 ['https://json.schemastore.org/github-workflow.json'] = {
                   '.github/workflows/*.yml',
@@ -829,6 +859,9 @@ require('lazy').setup({
         terraform = { 'terraform_fmt' },
         tex = { 'latexindent' },
         sql = { 'prettier' },
+        templ = { 'templ' },
+        javascript = { 'prettier' },
+        typescript = { 'prettier' },
         -- sql = { 'sql_formatter' },
 
         -- Conform can also run multiple formatters sequentially
