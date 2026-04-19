@@ -585,6 +585,13 @@ require('lazy').setup({
             })
           end
 
+          -- Set your preferred document color highlight style in the document if the LSP supports it and Neovim is >=0.12
+          --    See `:help lsp-document_color` for more information.
+          if client and client:supports_method('textDocument/documentColor', event.buf) and vim.fn.has 'nvim-0.12' == 1 then
+            -- Possible presets for the `style` option: 'background', 'foreground', 'virtual', or a literal string
+            vim.lsp.document_color.enable(true, nil, { style = '󰌁 ' })
+          end
+
           -- The following code creates a keymap to toggle inlay hints in your
           -- code, if the language server you are using supports them
           --
