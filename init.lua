@@ -702,6 +702,10 @@ require('lazy').setup({
             },
           },
         },
+
+        opencl_ls = {
+          filetypes = { 'opencl', 'cl' },
+        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -833,7 +837,7 @@ require('lazy').setup({
         --
         -- All presets have the following mappings:
         -- <tab>/<s-tab>: move to right/left of your snippet expansion
-        -- <c-space>: Open menu or open docs if already open
+        -- <c-space>: cpen menu or open docs if already open
         -- <c-n>/<c-p> or <up>/<down>: Select next/previous item
         -- <c-e>: Hide menu
         -- <c-k>: Toggle signature help
