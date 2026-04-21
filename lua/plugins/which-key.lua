@@ -26,7 +26,7 @@ return {
       { '<leader>v', group = '[V]ersion control', mode = { 'n', 'v' } },
       { '<leader>l', group = '[L]SP', mode = { 'n', 'v' } },
       { '<leader>t', group = '[T]oggle' },
-      { '<leader>d', group = '[D]iangostic' },
+      { '<leader>d', group = '[D]iagnostic' },
       { 'ao', group = 'TS text[O]bject', mode = { 'v', 'o' } },
       { 'io', group = 'TS text[O]bject', mode = { 'v', 'o' } },
       { '[o', group = 'TS text[O]bject', mode = { 'n', 'v', 'o' } },

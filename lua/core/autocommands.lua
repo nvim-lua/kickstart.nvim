@@ -13,7 +13,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 vim.api.nvim_create_autocmd('ColorScheme', {
-  desc = 'Reset colors for some elemnts after changeing the colorscheme.',
+  desc = 'Reset colors for some elements after changing the colorscheme.',
   group = vim.api.nvim_create_augroup('ElementsColorReset', { clear = true }),
   callback = function()
     vim.api.nvim_set_hl(0, 'WinSeparator', vim.api.nvim_get_hl(0, { name = 'CursorLineNr' }))

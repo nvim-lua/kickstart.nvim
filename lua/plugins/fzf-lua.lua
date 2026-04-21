@@ -24,10 +24,10 @@ return {
     vim.keymap.set('n', '<leader>fr', fl.oldfiles, { desc = 'Recent files' })
     vim.keymap.set('n', '<leader>ft', fl.treesitter, { desc = 'Treesiter objects' })
     vim.keymap.set('n', '<leader>fn', function()
-      fl.files { cwd = '~/.config/nvim/' }
+      fl.files { cwd = vim.fn.stdpath 'config' }
     end, { desc = 'Neovim config files' })
     vim.keymap.set('n', '<leader>fN', function()
-      fl.files { cwd = '~/.local/share/nvim/lazy/' }
+      fl.files { cwd = vim.fn.stdpath 'data' .. '/lazy/' }
     end, { desc = 'Neovim plugins src' })
 
     -- grep specific
@@ -40,8 +40,11 @@ return {
     vim.keymap.set('n', '<leader>g.', function()
       fl.grep { resume = true }
     end, { desc = 'Resume last grep' })
+    vim.keymap.set('n', '<leader>gn', function()
+      fl.live_grep { cwd = '$VIMRUNTIME/doc' }
+    end, { desc = 'Grep Neovim docs' })
     vim.keymap.set('n', '<leader>gN', function()
-      fl.live_grep { cwd = '~/.local/share/nvim/lazy/' }
+      fl.live_grep { cwd = vim.fn.stdpath 'data' .. '/lazy/' }
     end, { desc = 'Grep Neovim plugins src' })
 
     -- -- Git specific

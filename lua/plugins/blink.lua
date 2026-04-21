@@ -35,7 +35,7 @@ return {
     -- set autocommand for blink-menu-sourcename.
     vim.api.nvim_create_autocmd('ColorScheme', {
       desc = 'set italic to BlinkCmpSource, and try to change fg',
-      group = vim.api.nvim_create_augroup('ColorReadjust', { clear = true }),
+      group = vim.api.nvim_create_augroup('blink.cmp-source-hl', { clear = true }),
       callback = function()
         local hl = {
           default = true,
