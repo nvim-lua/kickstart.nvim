@@ -205,6 +205,17 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+vim.api.nvim_create_autocmd('BufWritePre', {
+  desc = 'Remove trailing whitespace on save',
+  group = vim.api.nvim_create_augroup('kickstart-trim-whitespace', { clear = true }),
+  pattern = '*',
+  callback = function()
+    local save_cursor = vim.fn.getpos(".")
+    vim.cmd([[%s/\s\+$//e]])
+    vim.fn.setpos(".", save_cursor)
+  end,
+})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -479,6 +490,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>f', builtin.find_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
+      vim.keymap.set('n', '<leader>gd', builtin.grep_string, { desc = '[G] to [D]efinition' })
       vim.keymap.set('n', '<leader>F', builtin.live_grep, { desc = '[S]earch by [G]rep' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
@@ -709,8 +721,8 @@ require('lazy').setup({
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
         --
-        -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {},
+        -- But for many setups, the LSP (`ts_ls`) will work just fine
+        ts_ls = {},
         --
 
         lua_ls = {
@@ -751,7 +763,7 @@ require('lazy').setup({
             local server = servers[server_name] or {}
             -- This handles overriding only values explicitly passed
             -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for tsserver)
+            -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
