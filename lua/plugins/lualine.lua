@@ -264,7 +264,36 @@ return {
         lualine_y = {},
         lualine_z = {},
       },
-      tabline = {},
+      tabline = {
+        lualine_a = {
+          {
+            'tabs',
+            max_length = vim.o.columns, -- Maximum width of tabs component.
+            mode = 2, -- Shows tab_nr + tab_name
+
+            -- Automatically updates active tab color to match color of other components (will be overidden if buffers_color is set)
+            use_mode_colors = true,
+
+            show_modified_status = false, -- I don't need this option, because I handle it in another place
+
+            fmt = function(name, context)
+              -- match buffers similar to 'term://', 'oil://'
+              local buffer_protocol = context.file:match '(.-://).+'
+              if buffer_protocol then
+                name = buffer_protocol .. name
+              end
+
+              -- Show + if buffer is modified in tab
+              local buflist = vim.fn.tabpagebuflist(context.tabnr)
+              local winnr = vim.fn.tabpagewinnr(context.tabnr)
+              local bufnr = buflist[winnr]
+              local mod = vim.fn.getbufvar(bufnr, '&mod')
+
+              return name .. (mod == 1 and ' ' .. Glyphs.file_status.modified or '')
+            end,
+          },
+        },
+      },
       winbar = {},
       inactive_winbar = {},
       extensions = {},
