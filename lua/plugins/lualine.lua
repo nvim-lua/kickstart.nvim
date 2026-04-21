@@ -1,5 +1,6 @@
-local col_mark_1 = 120
-local col_mark_2 = 180
+local col_mark_80 = 80
+local col_mark_120 = 120
+local col_mark_180 = 180
 
 ---@class Section
 local S = {}
@@ -50,7 +51,7 @@ end
 ---@param onColumn integer? The column number where the section will be hidden when the buffer's width is less than
 ---@return Section
 function S:set_autohide_fmt(onColumn)
-  onColumn = onColumn or col_mark_1
+  onColumn = onColumn or col_mark_120
 
   if self.fmt ~= nil then
     vim.defer_fn(function()
@@ -69,13 +70,11 @@ function S:set_autohide_fmt(onColumn)
 end
 
 local devKit_icons = Glyphs.dev_kit
-
+local fs_icons = Glyphs.file_status
 local diag_icons = {}
 for key, val in pairs(Glyphs.diagnostics) do
   diag_icons[key] = val .. ' '
 end
-
-local fs_icons = Glyphs.file_status
 
 return {
   'nvim-lualine/lualine.nvim',
@@ -95,7 +94,7 @@ return {
         },
         ignore_focus = {},
         always_divide_middle = true,
-        always_show_tabline = true,
+        always_show_tabline = false,
         globalstatus = false,
         refresh = {
           statusline = 1000,
@@ -121,7 +120,7 @@ return {
           S:new({ 'mode' })
             :set_fmt( -- trim to initials using kebab-case
               function(str)
-                if vim.api.nvim_win_get_width(0) > col_mark_1 then
+                if vim.api.nvim_win_get_width(0) > col_mark_120 then
                   return str
                 end
                 if str:match '-' then
@@ -136,10 +135,10 @@ return {
         },
 
         lualine_b = {
-          S:new({ 'branch' })
+          S:new({ 'branch', icon = '' })
             :set_fmt( -- trim to first char
               function(str)
-                if vim.api.nvim_win_get_width(0) > col_mark_1 then
+                if vim.api.nvim_win_get_width(0) > col_mark_120 then
                   return str
                 end
                 -- just the first char
@@ -153,39 +152,37 @@ return {
 
         lualine_c = {
           {
-            -- TODO: this still doesn't work with buffers like oil.nvim
             function()
               -- do some evaluation
               local buff_width = vim.api.nvim_win_get_width(0)
-              local m_flag = vim.api.nvim_eval_statusline('%m', {}).str
-              local r_flag = vim.api.nvim_eval_statusline('%r', {}).str
-              local w_flag = vim.api.nvim_eval_statusline('%w', {}).str
+              local proto_prefix = vim.fn.expand('%'):match '(.-://).+' or ''
 
-              local filename_parts = {
+              local filename_parts = {}
+
+              -- handle special case before setting default
+              if proto_prefix == 'oil://' then
+                filename_parts[1] = (buff_width > col_mark_80 and '%F')
+                  or proto_prefix .. '.../' .. vim.fs.basename(vim.fn.fnamemodify(vim.fn.getcwd(), '%:p')) .. '/'
+              elseif proto_prefix == 'term://' then
+                filename_parts[1] = proto_prefix .. '%t'
+              else
                 -- responsive file-path-name
-                (buff_width > col_mark_2 and '%F') -- full path
-                  or (buff_width > col_mark_1 and '%f') -- relative path
-                  or '%t', -- file name only
-                -- modifiable indicator
-                (m_flag == '[+]' and fs_icons.modified)
-                  or (m_flag == '[-]' and fs_icons.unmodifiable)
-                  or m_flag,
-                -- read-only indicator
-                (r_flag == '[RO]' and fs_icons.readOnly) or r_flag,
-                -- preview indicator
-                (w_flag == '[Preview]' and fs_icons.preview) or w_flag,
-              }
-
-              -- immediately concating table puts more whitespace for empty fields
-              -- so I'm manually concating
-              local str = '%<'
-              for _, v in ipairs(filename_parts) do
-                if v ~= '' then
-                  str = str .. v .. ' '
-                end
+                filename_parts[1] = (buff_width > col_mark_180 and '%F') -- full path
+                  or (buff_width > col_mark_120 and '%f') -- relative path
+                  or proto_prefix .. '%t' -- file name only
               end
 
-              return str
+              -- modifiable indicator
+              filename_parts[#filename_parts + 1] = vim.bo.modified and fs_icons.modified
+                or not vim.bo.modifiable and fs_icons.unmodifiable
+                or nil
+              -- read-only indicator
+              filename_parts[#filename_parts + 1] = (vim.bo.readonly and fs_icons.readOnly) or nil
+
+              -- preview indicator
+              filename_parts[#filename_parts + 1] = (vim.wo.previewwindow and fs_icons.preview) or nil
+
+              return '%<' .. table.concat(filename_parts, ' ')
             end,
           },
         },
@@ -247,7 +244,7 @@ return {
           S:new({
             -- A location section, row:col
             function()
-              if vim.api.nvim_win_get_width(0) > col_mark_1 then
+              if vim.api.nvim_win_get_width(0) > col_mark_120 then
                 -- padding with two char
                 return '%2l:%-2v'
               end
