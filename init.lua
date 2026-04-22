@@ -808,11 +808,11 @@ statusline.section_location = function() return '%2l:%-2v' end
 --  Check out: https://github.com/nvim-mini/mini.nvim
 
 -- [[ Configure Treesitter ]]
---  Used ighlight, edit, and navigate code
+--  Used to highlight, edit, and navigate code
 --
 --  See `:help nvim-treesitter-intro`
 
--- ensure basic parser are installed
+-- ensure basic parsers are installed
 local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
 require('nvim-treesitter').install(parsers)
 

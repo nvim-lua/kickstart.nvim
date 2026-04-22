@@ -113,7 +113,8 @@ nvim
 
 That's it! `vim.pack` will install all the plugins from your config. Use
 `:lua vim.pack.update(nil, { offline = true })` to inspect plugin state and
-`:lua vim.pack.update()` to fetch updates.
+`:lua vim.pack.update()` to fetch updates (`:write` applies updates, `:quit`
+cancels them).
 
 #### Read The Friendly Documentation
 
@@ -169,17 +170,36 @@ After installing all the dependencies continue with the [Install Kickstart](#ins
 #### Windows Installation
 
 <details><summary>Windows with Microsoft C++ Build Tools and CMake</summary>
-Installation may require installing build tools and updating the run command for `telescope-fzf-native`
+Kickstart's default config is make-only for `telescope-fzf-native.nvim`.
+If `make` is unavailable, the plugin is skipped.
 
-See `telescope-fzf-native` documentation for [more details](https://github.com/nvim-telescope/telescope-fzf-native.nvim#installation)
+Recommended: install `make` (see the chocolatey section below).
 
-This requires:
+If you want a CMake-only setup, customize `init.lua` in two places:
 
-- Install CMake and the Microsoft C++ Build Tools on Windows
+1. Include `telescope-fzf-native.nvim` when `cmake` is available:
 
 ```lua
-{'nvim-telescope/telescope-fzf-native.nvim', build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
+if vim.fn.executable 'make' == 1 or vim.fn.executable 'cmake' == 1 then
+  table.insert(plugins, gh 'nvim-telescope/telescope-fzf-native.nvim')
+end
 ```
+
+2. In the `PackChanged` hook, use CMake when `make` is unavailable:
+
+```lua
+if name == 'telescope-fzf-native.nvim' then
+  if vim.fn.executable 'make' == 1 then
+    run_build(name, { 'make' }, ev.data.path)
+  elseif vim.fn.executable 'cmake' == 1 then
+    run_build(name, { 'cmake', '-S.', '-Bbuild', '-DCMAKE_BUILD_TYPE=Release' }, ev.data.path)
+    run_build(name, { 'cmake', '--build', 'build', '--config', 'Release', '--target', 'install' }, ev.data.path)
+  end
+  return
+end
+```
+
+See `telescope-fzf-native` documentation for [build details](https://github.com/nvim-telescope/telescope-fzf-native.nvim#installation).
 </details>
 <details><summary>Windows with gcc/make using chocolatey</summary>
 Alternatively, one can install gcc and make which don't require changing the config,
