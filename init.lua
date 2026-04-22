@@ -359,8 +359,8 @@ require('lazy').setup({
       },
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
-      -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+      -- Get pretty icons using `mini.icons`, but requires a Nerd Font.
+      { 'nvim-mini/mini.nvim', enabled = vim.g.have_nerd_font },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -841,6 +841,13 @@ require('lazy').setup({
   { -- Collection of various small independent plugins/modules
     'nvim-mini/mini.nvim',
     config = function()
+      -- If nerd font is available, load the icons module for pretty icons in various plugins.
+      if vim.g.have_nerd_font then
+        require('mini.icons').setup()
+        -- Used for backwards compatibility with plugins that require `nvim-web-devicons` (e.g. telescope.nvim)
+        MiniIcons.mock_nvim_web_devicons()
+      end
+
       -- Better Around/Inside textobjects
       --
       -- Examples:
