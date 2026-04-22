@@ -84,7 +84,7 @@ I hope you enjoy your Neovim journey,
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
 
--- Enables faster startup time by caching your compiled Lua modules.
+-- Enable faster startup by caching compiled Lua modules
 vim.loader.enable()
 
 -- Set <space> as the leader key
@@ -175,7 +175,7 @@ vim.o.confirm = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic Config & Keymaps
--- See :help vim.diagnostic.Opts
+-- See `:help vim.diagnostic.Opts`
 vim.diagnostic.config {
   update_in_insert = false,
   severity_sort = true,
@@ -254,8 +254,10 @@ local function run_build(name, cmd, cwd)
   end
 end
 
--- This autocommand runs after a plugin is installed or updated and runs the appropriate build command for that plugin if necessary.
---  See `:help vim.pack-events`
+-- This autocommand runs after a plugin is installed or updated and
+--  runs the appropriate build command for that plugin if necessary.
+--
+-- See `:help vim.pack-events`
 vim.api.nvim_create_autocmd('PackChanged', {
   callback = function(ev)
     local name = ev.data.spec.name
@@ -284,7 +286,7 @@ local gh = function(repo) return 'https://github.com/' .. repo end
 
 ---@type (string|vim.pack.Spec)[]
 local plugins = {
-  -- You can specify plugins using just a git URL. It will use the default branch (usually `main` or `master`)
+  -- You can specify plugins with a git URL. `vim.pack` then uses the default branch (usually `main` or `master`)
   gh 'NMAC427/guess-indent.nvim',
   gh 'lewis6991/gitsigns.nvim',
   gh 'folke/which-key.nvim',
@@ -297,14 +299,14 @@ local plugins = {
   gh 'WhoIsSethDaniel/mason-tool-installer.nvim',
   gh 'j-hui/fidget.nvim',
   gh 'stevearc/conform.nvim',
-  -- You can also specify plugin using a version range for its git tag.
+  -- You can also specify plugins with a version range for semver git tags
   --  See `:help vim.version.range()` for more info
   { src = gh 'saghen/blink.cmp', version = vim.version.range '1.*' },
   { src = gh 'L3MON4D3/LuaSnip', version = vim.version.range '2.*' },
   gh 'folke/tokyonight.nvim',
   gh 'folke/todo-comments.nvim',
   gh 'nvim-mini/mini.nvim',
-  -- It is also possible to specify a branch or a specific commit to checkout
+  -- You can also specify a branch or a specific commit
   { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' },
 }
 
@@ -313,7 +315,7 @@ if vim.fn.executable 'make' == 1 then table.insert(plugins, gh 'nvim-telescope/t
 -- Useful for getting pretty icons, but requires a Nerd Font.
 if vim.g.have_nerd_font then table.insert(plugins, gh 'nvim-tree/nvim-web-devicons') end
 
--- NOTE: Here is where the plugins are actually installed.
+-- NOTE: Here is where the plugins are actually installed and added to the path
 vim.pack.add(plugins)
 
 -- [[ Configure plugins ]]
@@ -323,10 +325,9 @@ vim.pack.add(plugins)
 --  which will automatically detect and set your indentation settings based on the current file.
 require('guess-indent').setup {}
 
--- Here is a more advanced example where we pass configuration
--- options to `gitsigns.nvim`.
+-- Here is a more advanced example that passes configuration options to `gitsigns.nvim`
 --
--- See `:help gitsigns` to understand what the configuration keys do
+-- See `:help gitsigns` to understand what each configuration key does.
 -- Adds git related signs to the gutter, as well as utilities for managing changes
 require('gitsigns').setup {
   signs = {
@@ -340,7 +341,7 @@ require('gitsigns').setup {
 
 -- Useful plugin to show you pending keybinds.
 require('which-key').setup {
-  -- delay between pressing a key and opening which-key (milliseconds)
+  -- Delay between pressing a key and opening which-key (milliseconds)
   delay = 0,
   icons = { mappings = vim.g.have_nerd_font },
   -- Document existing key chains
@@ -410,8 +411,8 @@ vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Fi
 vim.keymap.set('n', '<leader>sc', builtin.commands, { desc = '[S]earch [C]ommands' })
 vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
--- This runs on LSP attach per buffer (see main LSP attach function in 'neovim/nvim-lspconfig' config for more info,
--- it is better explained there). This allows easily switching between pickers if you prefer using something else!
+-- Add Telescope-based LSP pickers when an LSP attaches to a buffer.
+-- If you later switch picker plugins, this is where to update these mappings.
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('telescope-lsp-attach', { clear = true }),
   callback = function(event)
@@ -739,7 +740,7 @@ require('blink.cmp').setup {
   -- By default, we use the Lua implementation instead, but you may enable
   -- the rust implementation via `'prefer_rust_with_warning'`
   --
-  -- See :h blink-cmp-config-fuzzy for more information
+  -- See `:help blink-cmp-config-fuzzy` for more information
   fuzzy = { implementation = 'lua' },
 
   -- Shows a signature help window while you type arguments for a function
@@ -795,7 +796,7 @@ require('mini.surround').setup()
 --  You could remove this setup call if you don't like it,
 --  and try some other statusline plugin
 local statusline = require 'mini.statusline'
--- set use_icons to true if you have a Nerd Font
+-- Set `use_icons` to true if you have a Nerd Font
 statusline.setup { use_icons = vim.g.have_nerd_font }
 
 -- You can configure sections in the statusline by overriding their
@@ -812,28 +813,28 @@ statusline.section_location = function() return '%2l:%-2v' end
 --
 --  See `:help nvim-treesitter-intro`
 
--- ensure basic parsers are installed
+-- Ensure basic parsers are installed
 local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
 require('nvim-treesitter').install(parsers)
 
 ---@param buf integer
 ---@param language string
 local function treesitter_try_attach(buf, language)
-  -- check if parser exists and load it
+  -- Check if a parser exists and load it
   if not vim.treesitter.language.add(language) then return end
-  -- enables syntax highlighting and other treesitter features
+  -- Enable syntax highlighting and other treesitter features
   vim.treesitter.start(buf, language)
 
-  -- enables treesitter based folds
-  -- for more info on folds see `:help folds`
+  -- Enable treesitter based folds
+  -- For more info on folds see `:help folds`
   -- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
   -- vim.wo.foldmethod = 'expr'
 
-  -- check if treesitter indentation is available for this language, and if so enable it
+  -- Check if treesitter indentation is available for this language, and if so enable it
   -- in case there is no indent query, the indentexpr will fallback to the vim's built in one
   local has_indent_query = vim.treesitter.query.get(language, 'indents') ~= nil
 
-  -- enables treesitter based indentation
+  -- Enable treesitter based indentation
   if has_indent_query then vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" end
 end
 
@@ -848,13 +849,13 @@ vim.api.nvim_create_autocmd('FileType', {
     local installed_parsers = require('nvim-treesitter').get_installed 'parsers'
 
     if vim.tbl_contains(installed_parsers, language) then
-      -- enable the parser if it is installed
+      -- Enable the parser if it is already installed
       treesitter_try_attach(buf, language)
     elseif vim.tbl_contains(available_parsers, language) then
-      -- if a parser is available in `nvim-treesitter` auto install it, and enable it after the installation is done
+      -- If a parser is available in `nvim-treesitter`, auto-install it and enable it after the installation is done
       require('nvim-treesitter').install(language):await(function() treesitter_try_attach(buf, language) end)
     else
-      -- try to enable treesitter features in case the parser exists but is not available from `nvim-treesitter`
+      -- Try to enable treesitter features in case the parser exists but is not available from `nvim-treesitter`
       treesitter_try_attach(buf, language)
     end
   end,
