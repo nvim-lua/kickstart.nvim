@@ -5,12 +5,12 @@ vim.g.maplocalleader = ' '
 vim.opt.guicursor = ''
 
 -- my personal color scheme setup
-vim.cmd 'colorscheme quiet'
-vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
-vim.o.background = 'dark'
-vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'none' })
-vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none', fg = '#ffffff' })
-vim.api.nvim_set_hl(0, 'FloatBorder', { fg = 'none', bg = '#1e1e1e' })
+-- vim.cmd 'colorscheme quiet'
+-- vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
+-- vim.o.background = 'dark'
+-- vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'none' })
+-- vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none', fg = '#ffffff' })
+-- vim.api.nvim_set_hl(0, 'FloatBorder', { fg = 'none', bg = '#1e1e1e' })
 -- vim.api.nvim_set_hl(0, 'Pmenu', { bg = '#1e1e1e', fg = '#ffffff' })
 -- vim.api.nvim_set_hl(0, 'PmenuSel', { bg = '#3d59a1', fg = '#ffffff' })
 --
@@ -657,6 +657,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        typerscript = { 'biome' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
