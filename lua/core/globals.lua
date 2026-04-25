@@ -63,7 +63,7 @@ Langs = {
   },
 
   fmt = {
-    lua = { 'stylua' },
+    -- lua = { 'stylua' }, -- see [Use stylua as an lsp formatter instead of an external formatter · nvim-lua/kickstart.nvim@459b868](https://github.com/nvim-lua/kickstart.nvim/commit/459b86865e9e81235c9db3be553d107adac5f72f)
     sh = { 'shfmt' },
     bash = { 'shfmt' },
     python = { 'ruff_format' },
