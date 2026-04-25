@@ -20,3 +20,13 @@ vim.api.nvim_create_autocmd('ColorScheme', {
     vim.api.nvim_set_hl(0, 'EndOfBuffer', vim.api.nvim_get_hl(0, { name = 'CursorLineNr' }))
   end,
 })
+
+vim.api.nvim_create_autocmd('TermOpen', {
+  desc = 'Rename terminal buffer',
+  group = vim.api.nvim_create_augroup('RenameTerminalBufer', { clear = true }),
+  callback = function(ev)
+    local pid, cmd = ev.file:match '//(%d-:)(.+)'
+    cmd = vim.fs.basename(cmd)
+    vim.api.nvim_buf_set_name(ev.buf, 'term://' .. pid .. cmd)
+  end,
+})

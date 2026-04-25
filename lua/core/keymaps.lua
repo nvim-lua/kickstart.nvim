@@ -55,6 +55,32 @@ vim.keymap.set('n', '<leader>y', '<cmd>%y<CR>', { desc = '[y]ank buffer' })
 vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = '[q]uit buffer' })
 vim.keymap.set('n', '<leader>c', '<cmd>bdelete<CR>', { desc = '[c]lose file' })
 
+-- terminal keymaps
+vim.keymap.set('n', '<leader>;;', function()
+  vim.cmd.term()
+end, { desc = 'New termianl proc - current buf' })
+vim.keymap.set('n', '<leader>;s', function()
+  vim.cmd.new() -- or vim.cmd.vnew(); vim.cmd.wincmd 'J'
+  vim.cmd.term()
+  vim.api.nvim_win_set_height(0, 10)
+end, { desc = 'New termianl proc - horizontal' })
+vim.keymap.set('n', '<leader>;v', function()
+  vim.cmd.vnew()
+  vim.cmd.term()
+end, { desc = 'New termianl proc - vertical' })
+vim.keymap.set('n', '<leader>;t', function()
+  vim.cmd.tabnew()
+  vim.cmd.term()
+end, { desc = 'New termianl proc - tab' })
+vim.keymap.set('n', '<leader>;o', function()
+  vim.cmd.tabnew()
+  vim.cmd.term 'opencode'
+end, { desc = 'New opencode proc' })
+vim.keymap.set('n', '<leader>;l', function()
+  vim.cmd.tabnew()
+  vim.cmd.term 'lazygit'
+end, { desc = 'New lazygit proc' })
+
 -- Add a keymap for delete while on insert-mode
 -- this works well with <C-h>, <C-w>, <C-u>
 vim.keymap.set('i', '<C-f>', '<Del>')

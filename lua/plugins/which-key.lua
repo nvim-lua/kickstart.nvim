@@ -27,6 +27,7 @@ return {
       { '<leader>l', group = '[L]SP', mode = { 'n', 'v' } },
       { '<leader>t', group = '[T]oggle' },
       { '<leader>d', group = '[D]iagnostic' },
+      { '<leader>;', group = '[;]terminal' },
       { 'ao', group = 'TS text[O]bject', mode = { 'v', 'o' } },
       { 'io', group = 'TS text[O]bject', mode = { 'v', 'o' } },
       { '[o', group = 'TS text[O]bject', mode = { 'n', 'v', 'o' } },
