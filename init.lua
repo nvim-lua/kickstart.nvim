@@ -92,7 +92,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -244,6 +244,11 @@ require('lazy').setup({
   --    require('gitsigns').setup({ ... })
   --
   -- See `:help gitsigns` to understand what the configuration keys do
+  {
+    'nvim-tree/nvim-web-devicons',
+    enabled = true,
+    lazy = false,
+  },
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -355,7 +360,6 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -463,7 +467,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim', lazy = false, opts = {} },
 
       -- Allows extra capabilities provided by nvim-cmp
       'hrsh7th/cmp-nvim-lsp',
@@ -554,7 +558,7 @@ require('lazy').setup({
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
-          if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+          if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
@@ -581,7 +585,7 @@ require('lazy').setup({
           -- code, if the language server you are using supports them
           --
           -- This may be unwanted, since they displace some of your code
-          if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+          if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
             map('<leader>th', function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
             end, '[T]oggle Inlay [H]ints')
@@ -615,6 +619,45 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      vim.lsp.config('gdscript', {
+        cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),
+        filetypes = { 'gdscript' },
+        root_dir = vim.fs.root(0, { 'project.godot', '.git' }),
+      })
+      vim.lsp.enable 'gdscript'
+
+      vim.lsp.config('basedpyright', {
+        settings = {
+          basedpyright = {
+            analysis = {
+              typeCheckingMode = 'standard',
+              autoSearchPaths = true,
+              useLibraryCodeForTypes = true,
+              autoImportCompletions = true,
+              diagnosticMode = 'workspace', -- sobreescribe el "openFilesOnly" del default
+            },
+          },
+        },
+      })
+
+      vim.lsp.enable 'basedpyright'
+
+      vim.lsp.config('arduino_language_server', {
+        cmd = {
+          'arduino-language-server',
+          '-clangd',
+          vim.fn.exepath 'clangd',
+          '-cli',
+          vim.fn.exepath 'arduino-cli',
+          '-cli-config',
+          vim.fn.expand '~/.arduino15/arduino-cli.yaml',
+          '-fqbn',
+          'arduino:avr:mega',
+        },
+      })
+
+      vim.lsp.enable 'arduino_language_server'
+
       local servers = {
         -- clangd = {},
         -- gopls = {},
@@ -669,10 +712,13 @@ require('lazy').setup({
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
+            vim.lsp.config(server_name, server)
+            vim.lsp.enable(server_name)
           end,
         },
       }
+      -- GDScript (Godot 4) — el servidor está integrado en Godot, no en Mason
+      -- Godot debe estar abierto con el proyecto para que el LSP funcione
     end,
   },
 
@@ -696,7 +742,8 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
+        -- local disable_filetypes = { c = true, cpp = true  }
+        local disable_filetypes = {}
         local lsp_format_opt
         if disable_filetypes[vim.bo[bufnr].filetype] then
           lsp_format_opt = 'never'
@@ -710,6 +757,19 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        go = { 'goimports' },
+        python = { 'ruff_format' },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescript = { 'prettierd', 'prettier', stop_after_first = true },
+        javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        css = { 'prettierd', 'prettier', stop_after_first = true },
+        html = { 'prettierd', 'prettier', stop_after_first = true },
+        json = { 'prettierd', 'prettier', stop_after_first = true },
+        yaml = { 'prettierd', 'prettier', stop_after_first = true },
+        markdown = { 'prettierd', 'prettier', stop_after_first = true },
+        c = { 'clang_format' },
+        cpp = { 'clang_format' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -739,12 +799,27 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
+          {
+            'rafamadriz/friendly-snippets',
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load()
+              require('luasnip.loaders.from_snipmate').lazy_load()
+              require('luasnip.loaders.from_lua').lazy_load()
+              require('luasnip').filetype_extend('typescript', { 'tsdoc' })
+              require('luasnip').filetype_extend('javascript', { 'jsdoc' })
+              require('luasnip').filetype_extend('lua', { 'luadoc' })
+              require('luasnip').filetype_extend('python', { 'pydoc' })
+              require('luasnip').filetype_extend('rust', { 'rustdoc' })
+              require('luasnip').filetype_extend('cs', { 'csharpdoc' })
+              require('luasnip').filetype_extend('java', { 'javadoc' })
+              require('luasnip').filetype_extend('c', { 'cdoc' })
+              require('luasnip').filetype_extend('cpp', { 'cppdoc' })
+              require('luasnip').filetype_extend('php', { 'phpdoc' })
+              require('luasnip').filetype_extend('kotlin', { 'kdoc' })
+              require('luasnip').filetype_extend('ruby', { 'rdoc' })
+              require('luasnip').filetype_extend('sh', { 'shelldoc' })
+            end,
+          },
         },
       },
       'saadparwaiz1/cmp_luasnip',
@@ -790,10 +865,10 @@ require('lazy').setup({
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
-          --['<CR>'] = cmp.mapping.confirm { select = true },
-          --['<Tab>'] = cmp.mapping.select_next_item(),
-          --['<S-Tab>'] = cmp.mapping.select_prev_item(),
-
+          ['<CR>'] = cmp.mapping.confirm { select = true },
+          ['<Tab>'] = cmp.mapping.select_next_item(),
+          ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+          --
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
           --  completions whenever it has completion options available.
@@ -856,67 +931,69 @@ require('lazy').setup({
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
-  { -- Collection of various small independent plugins/modules
-    'echasnovski/mini.nvim',
-    config = function()
-      -- Better Around/Inside textobjects
-      --
-      -- Examples:
-      --  - va)  - [V]isually select [A]round [)]paren
-      --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
-      --  - ci'  - [C]hange [I]nside [']quote
-      require('mini.ai').setup { n_lines = 500 }
-
-      -- Add/delete/replace surroundings (brackets, quotes, etc.)
-      --
-      -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-      -- - sd'   - [S]urround [D]elete [']quotes
-      -- - sr)'  - [S]urround [R]eplace [)] [']
-      require('mini.surround').setup()
-
-      -- Simple and easy statusline.
-      --  You could remove this setup call if you don't like it,
-      --  and try some other statusline plugin
-      local statusline = require 'mini.statusline'
-      -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
-
-      -- You can configure sections in the statusline by overriding their
-      -- default behavior. For example, here we set the section for
-      -- cursor location to LINE:COLUMN
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return '%2l:%-2v'
-      end
-
-      -- ... and there is more!
-      --  Check out: https://github.com/echasnovski/mini.nvim
-    end,
-  },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    lazy = false,
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
-    -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-    opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
-      -- Autoinstall languages that are not installed
-      auto_install = true,
-      highlight = {
-        enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
-      },
-      indent = { enable = true, disable = { 'ruby' } },
-    },
-    -- There are additional nvim-treesitter modules that you can use to interact
-    -- with nvim-treesitter. You should go explore a few and see what interests you:
-    --
-    --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-    --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-    --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+    branch = 'main',
+    -- [[ Configure Treesitter ]] See `:help nvim-treesitter-intro`
+    config = function()
+      -- ensure basic parser are installed
+      local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+      require('nvim-treesitter').install(parsers)
+
+      ---@param buf integer
+      ---@param language string
+      local function treesitter_try_attach(buf, language)
+        -- check if parser exists and load it
+        if not vim.treesitter.language.add(language) then
+          return
+        end
+        -- enables syntax highlighting and other treesitter features
+        vim.treesitter.start(buf, language)
+
+        -- enables treesitter based folds
+        -- for more info on folds see `:help folds`
+        vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+        vim.wo.foldmethod = 'expr'
+
+        -- check if treesitter indentation is available for this language, and if so enable it
+        -- in case there is no indent query, the indentexpr will fallback to the vim's built in one
+        local has_indent_query = vim.treesitter.query.get(language, 'indents') ~= nil
+
+        -- enables treesitter based indentation
+        if has_indent_query then
+          vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end
+      end
+
+      local available_parsers = require('nvim-treesitter').get_available()
+      vim.api.nvim_create_autocmd('FileType', {
+        callback = function(args)
+          local buf, filetype = args.buf, args.match
+
+          local language = vim.treesitter.language.get_lang(filetype)
+          if not language then
+            return
+          end
+
+          local installed_parsers = require('nvim-treesitter').get_installed 'parsers'
+
+          if vim.tbl_contains(installed_parsers, language) then
+            -- enable the parser if it is installed
+            treesitter_try_attach(buf, language)
+          elseif vim.tbl_contains(available_parsers, language) then
+            -- if a parser is available in `nvim-treesitter` auto install it, and enable it after the installation is done
+            require('nvim-treesitter').install(language):await(function()
+              treesitter_try_attach(buf, language)
+            end)
+          else
+            -- try to enable treesitter features in case the parser exists but is not available from `nvim-treesitter`
+            treesitter_try_attach(buf, language)
+          end
+        end,
+      })
+    end,
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
@@ -971,128 +1048,86 @@ require('lazy').setup({
 -- vim: ts=2 sts=2 sw=2 et
 
 -- NOTE: addietions
-
-require('rose-pine').setup {
-  variant = 'main', -- auto, main, moon, or dawn
-  dark_variant = 'main', -- main, moon, or dawn
-  dim_inactive_windows = false,
-  extend_background_behind_borders = true,
-
-  enable = {
-    terminal = true,
-    legacy_highlights = true, -- Improve compatibility for previous versions of Neovim
-    migrations = true, -- Handle deprecated options automatically
+--
+--
+---- Default options:
+require('kanagawa').setup {
+  compile = false, -- enable compiling the colorscheme
+  undercurl = true, -- enable undercurls
+  commentStyle = { italic = true },
+  functionStyle = {},
+  keywordStyle = { italic = true },
+  statementStyle = { bold = true },
+  typeStyle = {},
+  transparent = true, -- do not set background color
+  dimInactive = true, -- dim inactive window `:h hl-NormalNC`
+  terminalColors = true, -- define vim.g.terminal_color_{0,17}
+  colors = { -- add/modify theme and palette colors
+    palette = {},
+    theme = { wave = {}, lotus = {}, dragon = {}, all = {
+      ui = {
+        bg_gutter = 'none',
+      },
+    } },
   },
+  overrides = function(colors)
+    local theme = colors.theme
+    return {
+      NormalFloat = { bg = 'none' },
+      FloatBorder = { bg = 'none' },
+      FloatTitle = { bg = 'none' },
 
-  styles = {
-    bold = true,
-    italic = true,
-    transparency = true,
-  },
+      -- Save an hlgroup with dark background and dimmed foreground
+      -- so that you can use it where your still want darker windows.
+      -- E.g.: autocmd TermOpen * setlocal winhighlight=Normal:NormalDark
+      NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m3 },
 
-  groups = {
-    border = 'muted',
-    link = 'iris',
-    panel = 'surface',
+      -- Popular plugins that open floats will link to NormalFloat by default;
+      -- set their background accordingly if you wish to keep them dark and borderless
+      LazyNormal = { bg = theme.ui.bg_m3, fg = theme.ui.fg_dim },
+      MasonNormal = { bg = theme.ui.bg_m3, fg = theme.ui.fg_dim },
 
-    error = 'love',
-    hint = 'iris',
-    info = 'foam',
-    note = 'pine',
-    todo = 'rose',
-    warn = 'gold',
-
-    git_add = 'foam',
-    git_change = 'rose',
-    git_delete = 'love',
-    git_dirty = 'rose',
-    git_ignore = 'muted',
-    git_merge = 'iris',
-    git_rename = 'pine',
-    git_stage = 'iris',
-    git_text = 'rose',
-    git_untracked = 'subtle',
-
-    h1 = 'iris',
-    h2 = 'foam',
-    h3 = 'rose',
-    h4 = 'gold',
-    h5 = 'pine',
-    h6 = 'foam',
-  },
-
-  palette = {
-    -- Override the builtin palette per variant
-    moon = {
-      base = '#18191a',
-      overlay = '#363738',
-    },
-  },
-
-  highlight_groups = {
-    Comment = { fg = 'foam' },
-    VertSplit = { fg = 'muted', bg = 'muted' },
-  },
-
-  before_highlight = function(group, highlight, palette)
-    -- Disable all undercurls
-    -- if highlight.undercurl then
-    --     highlight.undercurl = false
-    -- end
-    --
-    -- Change palette colour
-    -- if highlight.fg == palette.pine then
-    --     highlight.fg = palette.foam
-    -- end
+      TelescopeTitle = { fg = theme.ui.special, bold = true },
+      TelescopePromptNormal = { bg = theme.ui.bg_p1 },
+      TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
+      TelescopeResultsNormal = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m1 },
+      TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
+      TelescopePreviewNormal = { bg = theme.ui.bg_dim },
+      TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
+    }
   end,
+  theme = 'dragon', -- Load "wave" theme
+  background = { -- map the value of 'background' option to a theme
+    dark = 'dragon', -- try "dragon" !
+    light = 'lotus',
+  },
 }
 
-vim.cmd 'colorscheme rose-pine'
--- vim.cmd("colorscheme rose-pine-main")
--- vim.cmd("colorscheme rose-pine-moon")
--- vim.cmd("colorscheme rose-pine-dawn")
---
---
---
+-- setup must be called before loading
+vim.cmd 'colorscheme kanagawa'
 --
 --
 -- NOTE: This are my personal keybinds
 --
 --
---
-vim.g.vimtex_view_method = ''
+vim.g.vimtex_view_method = 'zathura'
 vim.g.vimtex_compiler_method = 'latexmk'
-vim.opt.guicursor = 'a:block'
-vim.keymap.set('n', '<leader>e', '<cmd>Telescope emoji<cr>', { desc = 'Open NerdIcons' })
+
+vim.keymap.set('n', '<leader>ee', '<cmd>Telescope emoji<cr>', { desc = 'Open NerdIcons' })
 vim.cmd [[
   autocmd CmdwinEnter * q
 ]]
-
+vim.opt.guicursor = 'n-v-c:block,i-ci-ve:hor1-blinkon0'
 vim.keymap.set('n', '<leader>n', '<cmd>NerdIcons<cr>', { desc = 'Open NerdIcons' })
 vim.keymap.set({ 'n', 'v' }, '<C-p>', '"*p', { desc = 'Paste from selection clipboard' })
 vim.keymap.set({ 'n', 'v' }, 'p', '"+p', { desc = 'Paste from system clipboard' })
-vim.keymap.set({ 'v', 'n' }, '<leader>t', '<cmd>TSBufToggle highlight<cr>', { desc = 'Toggle Tree-sitter highlighting' })
-vim.keymap.set('n', '<leader>z', ":!zathura <C-r>=expand('%:r')<cr>.pdf &<cr>", { desc = 'Open PDF' })
+vim.keymap.set({ 'v', 'n' }, '<leader>tt', '<cmd>TSBufToggle highlight<cr>', { desc = 'Toggle Tree-sitter highlighting' })
+vim.keymap.set({ 'n', 'v', 'x' }, ';', ':')
+vim.keymap.set({ 'n', 'v', 'x' }, ':', ';')
 
-vim.keymap.set({ 'n' }, '<leader>p', function()
-  local file_name = vim.fn.expand '%:t'
-  if file_name ~= '' then
-    -- Open Explorer in the current directory and select the file
-    vim.fn.system { 'explorer.exe', '/select,', file_name }
-  else
-    print 'No file name found. Save the buffer first.'
-  end
-end, { desc = 'Open file location in Explorer' })
+vim.keymap.set({ 'x', 'n' }, '<C-s>', [[<esc>:'<,'>s/]], { desc = 'Enter substitute mode' })
 
-vim.keymap.set({ 'n' }, '<leader>o', function()
-  local file_name = vim.fn.expand '%:t'
-  if file_name ~= '' then
-    -- Open Explorer in the current directory and select the file
-    vim.fn.system { 'explorer.exe', file_name }
-  else
-    print 'No file found. Make sure the buffer is saved.'
-  end
-end, { desc = 'Open file ' })
+--
 
 -- NOTE: THESE ARE FROM https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 
@@ -1108,10 +1143,10 @@ vim.keymap.set({ 'n', 'x' }, 'k', "v:count == 0 ? 'gk' : 'k'", { desc = 'Up', ex
 -- vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Go to Right Window', remap = true })
 
 vim.keymap.set('n', '<A-j>', "<cmd>execute 'move .+' . v:count1<cr>==", { desc = 'Move Down' })
-vim.keymap.set('n', '<A-k>', "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = 'Move Up' })
 vim.keymap.set('i', '<A-j>', '<esc><cmd>m .+1<cr>==gi', { desc = 'Move Down' })
-vim.keymap.set('i', '<A-k>', '<esc><cmd>m .-2<cr>==gi', { desc = 'Move Up' })
 vim.keymap.set('v', '<A-j>', ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = 'Move Down' })
+vim.keymap.set('n', '<A-k>', "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = 'Move Up' })
+vim.keymap.set('i', '<A-k>', '<esc><cmd>m .-2<cr>==gi', { desc = 'Move Up' })
 vim.keymap.set('v', '<A-k>', ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = 'Move Up' })
 
 -- better indenting
@@ -1141,223 +1176,10 @@ end
 
 vim.keymap.set('n', '<leader>cr', function()
   return ':IncRename ' .. vim.fn.expand '<cword>'
-end, { expr = true })
+end, { expr = true, desc = 'Rename' })
 
 -- NOTE: END OF LINE CHARS
 vim.opt.fillchars = { eob = ' ' }
--- NOTE: LULALINE CONFIG
---
---
-local lualine = require 'lualine'
-
--- Color table for highlights
--- stylua: ignore
-local colors = {
-  bg       = '#191724',
-  fg       = '#26233a',
-  yellow   = '#f6c177',
-  cyan     = '#9ccfd8',
-  darkblue = '#31748f',
-  green    = '#31748f',
-  orange   = '#ebbcba',
-  violet   = '#c4a7e7',
-  magenta  = '#c4a7e7',
-  blue     = '#31748f',
-  red      = 'eb6f92',
-}
-
-local conditions = {
-  buffer_not_empty = function()
-    return vim.fn.empty(vim.fn.expand '%:t') ~= 1
-  end,
-  hide_in_width = function()
-    return vim.fn.winwidth(0) > 80
-  end,
-  check_git_workspace = function()
-    local filepath = vim.fn.expand '%:p:h'
-    local gitdir = vim.fn.finddir('.git', filepath .. ';')
-    return gitdir and #gitdir > 0 and #gitdir < #filepath
-  end,
-}
-
--- Config
---
---
-
-local config = {
-  options = {
-    -- Disable sections and component separators
-    component_separators = '',
-    section_separators = '',
-    theme = {
-      -- We are going to use lualine_c an lualine_x as left and
-      -- right section. Both are highlighted by c theme .  So we
-      -- are just setting default looks o statusline
-      normal = { c = { fg = colors.fg, bg = colors.bg } },
-      inactive = { c = { fg = colors.fg, bg = colors.bg } },
-    },
-  },
-  sections = {
-    -- these are to remove the defaults
-    lualine_a = {},
-    lualine_b = {},
-    lualine_y = {},
-    lualine_z = {},
-    -- These will be filled later
-    lualine_c = {},
-    lualine_x = {},
-  },
-  inactive_sections = {
-    -- these are to remove the defaults
-    lualine_a = {},
-    lualine_b = {},
-    lualine_y = {},
-    lualine_z = {},
-    lualine_c = {},
-    lualine_x = {},
-  },
-}
-
--- Inserts a component in lualine_c at left section
-local function ins_left(component)
-  table.insert(config.sections.lualine_c, component)
-end
-
--- Inserts a component in lualine_x at right section
-local function ins_right(component)
-  table.insert(config.sections.lualine_x, component)
-end
-
-ins_left {
-  function()
-    return '▊'
-  end,
-  color = { fg = colors.blue }, -- Sets highlighting of component
-  padding = { left = 0, right = 1 }, -- We don't need space before this
-}
-
-ins_left {
-  -- mode component
-  function()
-    return ''
-  end,
-  color = function()
-    -- auto change color according to neovims mode
-    local mode_color = {
-      n = colors.red,
-      i = colors.green,
-      v = colors.blue,
-      [''] = colors.blue,
-      V = colors.blue,
-      c = colors.magenta,
-      no = colors.red,
-      s = colors.orange,
-      S = colors.orange,
-      [''] = colors.orange,
-      ic = colors.yellow,
-      R = colors.violet,
-      Rv = colors.violet,
-      cv = colors.red,
-      ce = colors.red,
-      r = colors.cyan,
-      rm = colors.cyan,
-      ['r?'] = colors.cyan,
-      ['!'] = colors.red,
-      t = colors.red,
-    }
-    return { fg = mode_color[vim.fn.mode()] }
-  end,
-  padding = { right = 1 },
-}
-
-ins_left {
-  -- filesize component
-  'filesize',
-  cond = conditions.buffer_not_empty,
-  color = { fg = colors.yellow },
-}
-
-ins_left {
-  'filename',
-  cond = conditions.buffer_not_empty,
-  color = { fg = colors.magenta, gui = 'bold' },
-}
-
-ins_left { 'location', color = { fg = colors.yellow } }
-
--- Insert mid section. You can make any number of sections in neovim :)
--- for lualine it's any number greater then 2
-ins_left {
-  function()
-    return '%='
-  end,
-}
-
-ins_left {
-  icon = ' LSP:',
-  color = { fg = '#ffffff', gui = 'bold' },
-  'filetype',
-  -- -- Lsp server name .
-  -- function()
-  --   local msg = 'No Active Lsp'
-  --   local buf_ft = vim.api.nvim_get_option_value('filetype', { buf = 0 })
-  --   local clients = vim.lsp.get_clients()
-  --   if next(clients) == nil then
-  --     return msg
-  --   end
-  --   for _, client in ipairs(clients) do
-  --     local filetypes = client.config.filetypes
-  --     if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-  --       return client.name
-  --     end
-  --   end
-  --   return msg
-  -- end,
-}
-
--- Add components to right sections
--- ins_right {
---   'o:encoding', -- option component same as &encoding in viml
---   fmt = string.upper, -- I'm not sure why it's upper case either ;)
---   cond = conditions.hide_in_width,
---   color = { fg = colors.green, gui = 'bold' },
--- }
-
--- ins_right {
---   'fileformat',
---   fmt = string.upper,
---   icons_enabled = false, -- I think icons are cool but Eviline doesn't have them. sigh
---   color = { fg = colors.green, gui = 'bold' },
--- }
-
-ins_right {
-  'branch',
-  icon = '',
-  color = { fg = colors.violet, gui = 'bold' },
-}
-
-ins_right {
-  'diff',
-  -- Is it me or the symbol for modified us really weird
-  symbols = { added = ' ', modified = '󰬊  ', removed = ' ' },
-  diff_color = {
-    added = { fg = colors.green },
-    modified = { fg = colors.orange },
-    removed = { fg = colors.red },
-  },
-  cond = conditions.hide_in_width,
-}
-
-ins_right {
-  function()
-    return '▊'
-  end,
-  color = { fg = colors.blue },
-  padding = { left = 1 },
-}
-
--- Now don't forget to initialize lualine
-lualine.setup(config)
 
 require('colorizer').setup {
   filetypes = { '*' },
@@ -1396,3 +1218,322 @@ require('colorizer').setup {
 vim.opt.termguicolors = true
 vim.api.nvim_set_hl(0, 'CursorLine', { bg = '#191724' }) -- Use a darker or blended color
 vim.wo.relativenumber = true
+
+vim.opt.conceallevel = 2
+
+-- Config noice.nvim
+--
+--
+--
+
+require('supermaven-nvim').setup {
+  keymaps = {
+    accept_suggestion = '<C-s>',
+    clear_suggestion = '<C-]>',
+    accept_word = '<C-j>',
+  },
+  -- ignore_filetypes = { cpp = true }, -- or { "cpp", }
+  color = {
+    suggestion_color = '#c4a7e7',
+
+    cterm = 244,
+  },
+  log_level = 'info', -- set to "off" to disable logging completely
+  disable_inline_completion = false, -- disables inline completion for use with cmp
+  disable_keymaps = false, -- disables built in keymaps for more manual control
+  condition = function()
+    return false
+  end, -- condition to check for stopping supermaven, `true` means to stop supermaven when the condition is true. }
+}
+
+vim.keymap.set('n', '<leader>aa', '<cmd>ArduinoAttach<cr>', { desc = 'attach to a device' })
+vim.keymap.set('n', '<leader>av', '<cmd>ArduinoVerify<cr>', { desc = 'verify a sketch' })
+vim.keymap.set('n', '<leader>au', '<cmd>ArduinoUpload<cr>', { desc = 'upload a sketch' })
+vim.keymap.set('n', '<leader>aU', '<cmd>ArduinoUploadAndSerial<cr>', { desc = 'upload a sketch and open serial monitor' })
+vim.keymap.set('n', '<leader>as', '<cmd>ArduinoSerial<cr>', { desc = 'open serial monitor' })
+vim.keymap.set('n', '<leader>ab', '<cmd>ArduinoChooseBoard<cr>', { desc = 'choose board' })
+vim.keymap.set('n', '<leader>ap', '<cmd>ArduinoChooseProgrammer<cr>', { desc = 'choose programmer' })
+
+-- Autocmd
+--
+-- Auto hot reload on save for Dart files
+vim.api.nvim_create_autocmd('BufWritePost', {
+  pattern = '*.dart',
+  callback = function()
+    local ok, flutter_tools = pcall(require, 'flutter-tools')
+    if ok then
+      flutter_tools.reload() -- this does hot reload
+    end
+  end,
+})
+
+-- ZETTELKASTEN
+--
+vim.keymap.set('n', '<leader>nn', function()
+  local name = vim.fn.input 'Note name: '
+  if name == '' then
+    print 'Aborted'
+    return
+  end
+  name = string.lower(name):gsub('%s+', '-'):gsub('[^%w%-]', '')
+
+  local date = os.date '%Y-%m-%d'
+  local cwd = vim.fn.getcwd()
+
+  -- Perfect base_dir (already correct in your version)
+  local base_dir = cwd
+  if vim.fn.isdirectory(cwd .. '/chapters') == 1 then
+    base_dir = cwd .. '/chapters'
+  elseif #vim.fn.glob(cwd .. '/*.tex', false, true) > 0 then
+    base_dir = vim.fn.fnamemodify(cwd, ':h')
+    print('Inside existing note → using parent:', base_dir)
+  end
+
+  -- THIS IS THE ONLY THING THAT WAS WRONG → now 100% correct
+  local function get_highest_number()
+    local highest = 0
+    -- Use basename so we only see the folder name, not the full path
+    local folders = vim.fn.systemlist {
+      'find',
+      base_dir,
+      '-type',
+      'd',
+      '-name',
+      '[0-9][0-9][0-9]-*',
+      '-exec',
+      'basename',
+      '{}',
+      ';',
+    }
+
+    for _, foldername in ipairs(folders) do
+      local num = foldername:match '^(%d%d%d)%-' -- ^ = start of string
+      if num then
+        local n = tonumber(num)
+        if n > highest then
+          highest = n
+        end
+      end
+    end
+    return highest
+  end
+
+  local next_num = get_highest_number() + 1
+  local num_str = string.format('%03d', next_num)
+
+  local folder = base_dir .. '/' .. num_str .. '-' .. date .. '-' .. name
+  local texfile = folder .. '/' .. num_str .. '-' .. date .. '-' .. name .. '.tex'
+  local template = vim.fn.expand '~/git/Clase/template/template.tex'
+
+  vim.fn.mkdir(folder, 'p')
+
+  if vim.fn.filereadable(texfile) == 0 then
+    if vim.fn.filereadable(template) == 1 then
+      vim.fn.system { 'cp', template, texfile }
+      print('Created → ' .. texfile)
+    else
+      vim.fn.writefile({
+        '\\documentclass{article}',
+        '\\begin{document}',
+        '\\title{' .. name .. '}',
+        '\\date{' .. date .. '}',
+        '\\maketitle',
+        '',
+        '\\end{document}',
+      }, texfile)
+      print('Created minimal → ' .. texfile)
+    end
+  end
+
+  vim.cmd.edit(vim.fn.fnameescape(texfile))
+end, { desc = 'Zettel: New numbered note — NOW IT REALLY WORKS' })
+-------------------------------------------------------------------------------
+--  Modify nvim notify
+-------------------------------------------------------------------------------
+require('notify').setup {
+  render = 'minimal',
+  stages = 'fade_in_slide_out',
+  top_down = false,
+  timeout = 4000,
+  merge_duplicates = true,
+}
+
+-- Open all past notifications with Telescope
+vim.keymap.set('n', '<leader>fn', '<cmd>Telescope notify<cr>', { desc = 'Find notifications' })
+
+-------------------------------------------------------------------------------
+--    incfig.nvim (Telescope fuzzy search version)
+-------------------------------------------------------------------------------
+local has_telescope, telescope = pcall(require, 'telescope')
+if not has_telescope then
+  vim.notify('Telescope not found!', vim.log.levels.WARN)
+  return
+end
+
+local actions = require 'telescope.actions'
+local action_state = require 'telescope.actions.state'
+local pickers = require 'telescope.pickers'
+local finders = require 'telescope.finders'
+local conf = require('telescope.config').values
+
+-- Git root helper
+local function git_root()
+  local file_dir = vim.fn.expand '%:p:h'
+  local cmd = string.format('cd %s && git rev-parse --show-toplevel 2>/dev/null', vim.fn.shellescape(file_dir))
+  local result = vim.fn.systemlist(cmd)[1]
+  if result and result ~= '' then
+    return result
+  end
+  return nil
+end
+
+-- Spawn Inkscape
+local function spawn_inkscape(file_path)
+  local script_path = vim.fn.expand '~/.config/nvim/inkscape_move_dynamic.sh'
+  vim.fn.jobstart({ script_path, file_path }, { detach = true })
+end
+
+-- Insert \incfig[size]{filename} with size prompt
+local function insert_incfig(filename)
+  vim.ui.input({ prompt = 'Enter size for \\incfig[size]{file} (0 < size <= 1): ' }, function(size)
+    if not size or size == '' then
+      return
+    end
+    local num = tonumber(size)
+    if not num or num <= 0 or num > 1 then
+      print 'Invalid size! Must be >0 and <=1'
+      return
+    end
+    local line = vim.api.nvim_win_get_cursor(0)[1]
+    vim.api.nvim_buf_set_lines(0, line, line, true, { string.format('\\incfig[%s]{%s}', num, filename) })
+  end)
+end
+
+-- Open/create SVG with Telescope fuzzy search
+local function open_or_create_inkscape_svg()
+  local repo_root = git_root() or vim.fn.getcwd()
+  print('raw repo_root:', vim.inspect(repo_root)) -- debug
+
+  -- sanitize repo_root
+  repo_root = repo_root:gsub('\27%[[%d;]*[A-Za-z]', ''):gsub('%c', ''):gsub('^%s+', ''):gsub('%s+$', '')
+  print('clean repo_root:', vim.inspect(repo_root)) -- debug
+
+  local images_dir = repo_root .. '/images'
+
+  vim.fn.mkdir(images_dir, 'p')
+
+  local svg_files = vim.fn.globpath(images_dir, '*.svg', false, true)
+  local filenames = {}
+  for _, path in ipairs(svg_files) do
+    table.insert(filenames, vim.fn.fnamemodify(path, ':t:r')) -- base name without extension
+  end
+  table.insert(filenames, '▶ New file') -- option to create a new one
+
+  pickers
+    .new({}, {
+      prompt_title = 'Select or create SVG',
+      finder = finders.new_table { results = filenames },
+      sorter = conf.generic_sorter {},
+      attach_mappings = function(prompt_bufnr, map)
+        actions.select_default:replace(function()
+          local selection = action_state.get_selected_entry()
+          actions.close(prompt_bufnr)
+
+          local template_path = vim.fn.expand '~/git/Clase/templates-inkscape/cross.svg'
+          if not selection then
+            return
+          end
+
+          if selection[1] == '▶ New file' then
+            vim.ui.input({ prompt = 'Enter new SVG file name: ' }, function(input)
+              if not input or input == '' then
+                return
+              end
+              local file_path = images_dir .. '/' .. input .. '.svg'
+              vim.fn.system { 'cp', template_path, file_path }
+              spawn_inkscape(file_path)
+              insert_incfig(input)
+            end)
+          else
+            local filename = selection[1]
+            local file_path = images_dir .. '/' .. filename .. '.svg'
+            local options = {
+              'Open in Inkscape + insert \\incfig',
+              'Insert \\incfig only',
+              'Open in Inkscape only (edit, no insert)',
+              'Do nothing',
+            }
+            vim.ui.select(options, { prompt = 'File exists, choose action:' }, function(opt)
+              if not opt then
+                return
+              end
+              if opt == 'Open in Inkscape + insert \\incfig' then
+                spawn_inkscape(file_path)
+                insert_incfig(filename)
+              elseif opt == 'Insert \\incfig only' then
+                insert_incfig(filename)
+              elseif opt == 'Open in Inkscape only (edit, no insert)' then
+                spawn_inkscape(file_path)
+              end
+            end)
+          end
+        end)
+        return true
+      end,
+    })
+    :find()
+end
+
+-- Keymap
+vim.keymap.set('n', '<leader>i', open_or_create_inkscape_svg, { desc = 'Open/create Inkscape SVG + insert \\incfig (fuzzy)' })
+-- Auto-export SVG -> PDF + PDF_TeX asynchronously
+local repo_root = git_root() or vim.fn.getcwd()
+local images_dir = repo_root .. '/images'
+-- TODO: FIX THIS AUTOCMD: it does not export avg into PDF + PDF_TeX on save
+vim.api.nvim_create_autocmd('BufWritePost', {
+  pattern = '*.svg',
+  callback = function(args)
+    local svg_file = args.file
+    if svg_file:sub(1, #images_dir) == images_dir then
+      local pdf_file = svg_file:gsub('%.svg$', '.pdf')
+      vim.fn.jobstart {
+        'inkscape',
+        svg_file,
+        '--export-type=pdf',
+        '--export-latex',
+        '--export-filename=' .. pdf_file,
+      }
+    end
+  end,
+  desc = 'Auto-export SVG to PDF + PDF_TeX asynchronously on save',
+})
+
+--- Spell checking
+---
+-- Enable spell checking
+vim.opt_local.spell = true
+vim.opt_local.spelllang = { 'es', 'en_us' }
+
+vim.keymap.set({ 'i', 'n' }, '<C-j>', function()
+  vim.cmd 'stopinsert'
+  vim.cmd 'normal! ma[s1z=`a'
+end, { noremap = true, silent = true })
+
+vim.diagnostic.config {
+  float = {
+    border = 'none',
+    header = '',
+    prefix = '',
+    source = false,
+  },
+}
+
+vim.o.updatetime = 250
+
+vim.api.nvim_create_autocmd('CursorHold', {
+  callback = function()
+    vim.diagnostic.open_float(nil, { focus = false })
+  end,
+})
+
+vim.filetype.add { extension = { ino = 'cpp' } }
