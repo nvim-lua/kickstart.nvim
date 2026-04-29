@@ -24,6 +24,12 @@ Official documentation [here](https://neovim.io/doc/user/usr_03.html)
 - `*` search for the word under the cursor
 - `#` search for the word under the cursor in reverse direction
 
+- `gd` go to the definition of the word under the cursor
+- `gD` go to the declaration of the word under the cursor
+- `gi` go to the implementation of the word under the cursor
+- `gr` go to the references of the word under the cursor
+- `Ctrl + o` go to the previous location in the jump list
+
 
 
 ## Replace regex in selected lines
