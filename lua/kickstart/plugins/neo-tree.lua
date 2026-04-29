@@ -20,6 +20,17 @@ return {
           ['\\'] = 'close_window',
         },
       },
+      filtered_items = {
+        hide_by_pattern = { -- uses glob style patterns
+          '*.uid',
+          '*.tscn',
+          '*.scn',
+          '*.tres',
+          '*.res',
+          '*.meta',
+          --"*/src/*/tsconfig.json",
+        },
+      },
     },
   },
 }

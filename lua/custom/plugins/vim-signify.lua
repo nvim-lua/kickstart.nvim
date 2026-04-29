@@ -1,0 +1,3 @@
+return {
+  'mhinz/vim-signify',
+}
