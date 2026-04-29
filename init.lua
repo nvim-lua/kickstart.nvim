@@ -960,5 +960,11 @@ require('lazy').setup({
   },
 })
 
+-- FIX: godot-server: should check if the server is already running first...
+local gdprojectfilepath = vim.fn.getcwd() .. '/project.godot'
+local isInGdDirectory = vim.fn.filereadable(gdprojectfilepath) == 1
+
+if isInGdDirectory then vim.fn.serverstart '127.0.0.1:55432' end
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
