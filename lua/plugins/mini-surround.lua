@@ -1,7 +1,7 @@
 return {
   'echasnovski/mini.surround',
   version = '*',
-  event = "VeryLazy",
+  event = 'VeryLazy',
   config = function()
     require('mini.surround').setup({
       -- Use mappings from centralized keymaps

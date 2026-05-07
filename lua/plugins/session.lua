@@ -2,53 +2,33 @@
 return {
   'echasnovski/mini.sessions',
   version = '*',
-  event = "VimEnter",
+  event = 'VimEnter',
   config = function()
-    -- Function to get current directory name
     local function get_session_name()
+      return vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+    end
+
+    -- Cache Go project check per directory
+    local go_project_cache = {}
+    local function is_go_project()
       local cwd = vim.fn.getcwd()
-      return vim.fn.fnamemodify(cwd, ':t')
+      if go_project_cache[cwd] == nil then
+        -- Single glob with brace expansion
+        go_project_cache[cwd] = vim.fn.glob(cwd .. '/{*.go,go.mod,go.work}') ~= ''
+      end
+      return go_project_cache[cwd]
     end
 
     require('mini.sessions').setup({
-      -- Whether to read latest session if Neovim opened without file arguments
       autoread = false,
-      -- Whether to write current session before quitting Neovim
       autowrite = true,
-      -- Directory where global sessions are stored (use `''` to disable)
       directory = vim.fn.stdpath('data') .. '/sessions',
-      -- File for local session (use `''` to disable)
       file = '',
-      -- Whether to force possibly harmful actions (meaning depends on function)
       force = { read = false, write = true, delete = false },
-      -- Hook functions for actions. Default `nil` means 'do nothing'.
       hooks = {
-        -- Before successful action
         pre = {
-          read = function()
-            -- Skip session operations for Go projects
-            local current_dir = vim.fn.getcwd()
-            local has_go_files = vim.fn.glob(current_dir .. "/*.go") ~= "" or
-                                vim.fn.glob(current_dir .. "/go.mod") ~= "" or
-                                vim.fn.glob(current_dir .. "/go.work") ~= ""
-            
-            if has_go_files then
-              return false -- Skip for Go projects
-            end
-            return true
-          end,
-          write = function()
-            -- Skip session operations for Go projects
-            local current_dir = vim.fn.getcwd()
-            local has_go_files = vim.fn.glob(current_dir .. "/*.go") ~= "" or
-                                vim.fn.glob(current_dir .. "/go.mod") ~= "" or
-                                vim.fn.glob(current_dir .. "/go.work") ~= ""
-            
-            if has_go_files then
-              return false -- Skip for Go projects
-            end
-            return true
-          end,
+          read = function() return not is_go_project() end,
+          write = function() return not is_go_project() end,
         },
         -- After successful action
         post = { read = nil, write = nil, delete = nil },

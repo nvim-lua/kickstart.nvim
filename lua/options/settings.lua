@@ -6,7 +6,7 @@
 ---@diagnostic disable: undefined-global
 -- Make line numbers default
 vim.opt.number = true
-vim.o.relativenumber = true
+vim.opt.relativenumber = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
 -- vim.opt.relativenumber = true
@@ -99,10 +99,6 @@ vim.diagnostic.config({
 local M = {}
 
 function M.setup()
-  -- Leader keys
-  vim.g.mapleader = ' '
-  vim.g.maplocalleader = ' '
-
   -- Ensure swapfile directory exists and configure swapfile settings
   local swap_dir = vim.fn.stdpath('data') .. '/swapfiles'
   if vim.fn.isdirectory(swap_dir) == 0 then
@@ -110,7 +106,6 @@ function M.setup()
   end
   vim.opt.directory = swap_dir
   vim.opt.swapfile = true
-  vim.opt.updatetime = 300
   vim.opt.updatecount = 100
 end
 

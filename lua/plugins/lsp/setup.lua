@@ -50,12 +50,12 @@ function M.setup()
   }
   capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
-  -- Setup mason-lspconfig
+  -- Setup mason-lspconfig with handlers
   local mason_lspconfig = require('mason-lspconfig')
-  mason_lspconfig.setup { ensure_installed = vim.tbl_keys(servers) }
-
-  mason_lspconfig.setup_handlers {
-    function(server_name)
+  mason_lspconfig.setup {
+    ensure_installed = vim.tbl_keys(servers),
+    handlers = {
+      function(server_name)
       local config = servers[server_name] or {}
       config.capabilities = capabilities
 
@@ -134,6 +134,7 @@ function M.setup()
 
       require('lspconfig')[server_name].setup(config)
     end,
+    },
   }
 
   -- Hover handler will now be provided by Blink

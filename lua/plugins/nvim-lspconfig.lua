@@ -39,7 +39,7 @@ return {
     -- 'folke/neodev.nvim',  -- Adds support for Neovim Lua API -- No longer needed with lazydev
     {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-      event = "VeryLazy",
+      event = 'VeryLazy',
       config = function()
         require('mason-tool-installer').setup {
           ensure_installed = {

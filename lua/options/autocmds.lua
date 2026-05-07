@@ -12,41 +12,31 @@ function M.setup()
   })
 
 
-  -- Add a smart format-on-save command that only uses null-ls
-  -- Fix for zig.vim ftplugin error - handles both JSON and struct output
+  -- Fix for zig.vim ftplugin error - cache zig env result
   vim.api.nvim_create_autocmd('FileType', {
     pattern = 'zig',
     group = vim.api.nvim_create_augroup('user-zig-fix', { clear = true }),
     callback = function()
       if vim.fn.executable('zig') ~= 1 or vim.g.zig_std_dir then return end
-      
-      -- First try with --json flag
-      local handle = io.popen('zig env --json 2>/dev/null')
-      if handle then
-        local result = handle:read('*a')
-        handle:close()
-        
-        -- Try to parse as JSON first
-        local success, env = pcall(vim.fn.json_decode, result)
-        if success and type(env) == 'table' and env.std_dir then
-          vim.g.zig_std_dir = env.std_dir
-          vim.opt_local.path:prepend(env.std_dir)
-          return
-        end
+
+      -- Single popen call - try JSON first (newer zig), fallback to struct parsing
+      local handle = io.popen('zig env 2>/dev/null')
+      if not handle then return end
+
+      local result = handle:read('*a')
+      handle:close()
+
+      -- Try JSON parse first
+      local success, env = pcall(vim.fn.json_decode, result)
+      if success and type(env) == 'table' and env.std_dir then
+        vim.g.zig_std_dir = env.std_dir
+      else
+        -- Fallback: extract from struct output
+        vim.g.zig_std_dir = result:match('%.std_dir%s*=%s*"([^"]+)"')
       end
-      
-      -- If JSON parsing failed, try to parse the struct output
-      handle = io.popen('zig env 2>/dev/null')
-      if handle then
-        local result = handle:read('*a')
-        handle:close()
-        
-        -- Extract std_dir from struct output
-        local std_dir = result:match('%.std_dir%s*=%s*"([^"]+)"')
-        if std_dir then
-          vim.g.zig_std_dir = std_dir
-          vim.opt_local.path:prepend(std_dir)
-        end
+
+      if vim.g.zig_std_dir then
+        vim.opt_local.path:prepend(vim.g.zig_std_dir)
       end
     end,
   })
