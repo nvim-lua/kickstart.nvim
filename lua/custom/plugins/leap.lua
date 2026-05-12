@@ -1,9 +1,13 @@
+-- flash.nvim: smarter `s`/`S` jump with treesitter-aware selection and
+-- remote operations (e.g. `yr<motion>` to yank a remote region).
 return {
-  'ggandor/leap.nvim',
+  'folke/flash.nvim',
   event = 'VeryLazy',
-  config = function()
-    vim.keymap.set({ 'n', 'x', 'o' }, 's', '<Plug>(leap-forward)', { noremap = true, silent = true })
-    vim.keymap.set({ 'n', 'x', 'o' }, 'S', '<Plug>(leap-backward)', { noremap = true, silent = true })
-    vim.keymap.set({ 'n', 'x', 'o' }, 'gs', '<Plug>(leap-from-window)', { noremap = true, silent = true })
-  end,
+  opts = {},
+  keys = {
+    { 's', mode = { 'n', 'x', 'o' }, function() require('flash').jump() end,              desc = 'Flash' },
+    { 'S', mode = { 'n', 'x', 'o' }, function() require('flash').treesitter() end,        desc = 'Flash Treesitter' },
+    { 'r', mode = 'o',               function() require('flash').remote() end,            desc = 'Remote Flash' },
+    { 'R', mode = { 'o', 'x' },      function() require('flash').treesitter_search() end, desc = 'Treesitter Search' },
+  },
 }

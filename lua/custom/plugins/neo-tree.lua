@@ -8,56 +8,30 @@ return {
     'saifulapm/neotree-file-nesting-config',
   },
   cmd = 'Neotree',
-  opts = {
-    -- recommended config for better UI
-    hide_root_node = true,
-    retain_hidden_root_indent = true,
-    filesystem = {
-      filtered_items = {
-        show_hidden_count = false,
-        never_show = {
-          '.DS_Store',
-        },
-      },
-    },
-    default_component_configs = {
-      indent = {
-        with_expanders = true,
-        expander_collapsed = '',
-        expander_expanded = '',
-      },
-    },
-  },
+  -- Auto-open on startup when nvim is launched without a file or on a directory.
+  init = function()
+    vim.api.nvim_create_autocmd('VimEnter', {
+      group = vim.api.nvim_create_augroup('neo-tree-auto-open', { clear = true }),
+      callback = function()
+        local argc = vim.fn.argc()
+        local arg = argc > 0 and vim.fn.argv(0) or ''
+        if argc == 0 or vim.fn.isdirectory(arg) == 1 then
+          vim.schedule(function()
+            -- `reveal_force_cwd` roots at cwd and avoids the
+            -- expand_to_node recursion that `show` can hit.
+            vim.cmd('Neotree reveal_force_cwd')
+          end)
+        end
+      end,
+    })
+  end,
   keys = {
     { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
-    {
-      '<leader>b',
-      function()
-        require('neo-tree.command').execute { toggle = true, source = 'buffers', position = 'left' }
-      end,
-      desc = 'Buffers (root dir)',
-    },
-    {
-      '<leader>e',
-      function()
-        require('neo-tree.command').execute { toggle = true, source = 'filesystem', position = 'left' }
-      end,
-      desc = 'Filesystem (root dir)',
-    },
-    {
-      '<leader>g',
-      function()
-        require('neo-tree.command').execute { toggle = true, source = 'git_status', position = 'left' }
-      end,
-      desc = 'Filesystem (root dir)',
-    },
+    { '<leader>e', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
   },
-  config = function(_, opts)
-    opts.nesting_rules = require('neotree-file-nesting-config').nesting_rules
-    require('neo-tree').setup(opts)
-
+  config = function()
     local inputs = require 'neo-tree.ui.inputs'
-    -- Trash the target
+
     local function trash(state)
       local node = state.tree:get_node()
       if node.type == 'message' then
@@ -74,7 +48,6 @@ return {
       end)
     end
 
-    -- Trash the selections (visual mode)
     local function trash_visual(state, selected_nodes)
       local paths_to_trash = {}
       for _, node in ipairs(selected_nodes) do
@@ -95,6 +68,25 @@ return {
     end
 
     require('neo-tree').setup {
+      -- hide_root_node + follow_current_file used to cause an infinite
+      -- expand_to_node/restore recursion at startup; both disabled here.
+      nesting_rules = require('neotree-file-nesting-config').nesting_rules,
+      filesystem = {
+        filtered_items = {
+          show_hidden_count = false,
+          never_show = { '.DS_Store' },
+        },
+        follow_current_file = {
+          enabled = false,
+        },
+      },
+      default_component_configs = {
+        indent = {
+          with_expanders = true,
+          expander_collapsed = '',
+          expander_expanded = '',
+        },
+      },
       event_handlers = {
         {
           event = 'neo_tree_buffer_enter',

@@ -18,7 +18,7 @@ return { -- Autoformat
       -- Disable "format_on_save lsp_fallback" for languages that don't
       -- have a well standardized coding style. You can add additional
       -- languages here or re-enable it for the disabled ones.
-      local disable_filetypes = { c = true, cpp = true }
+      local disable_filetypes = { c = true, cpp = true, json = true, xml = true, html = true }
       local lsp_format_opt
       if disable_filetypes[vim.bo[bufnr].filetype] then
         lsp_format_opt = 'never'
@@ -35,7 +35,7 @@ return { -- Autoformat
       terraform = { 'terraform_fmt' },
       xml = { 'xmlformatter', 'prettier' },
       lua = { 'stylua' },
-      python = { 'isort', 'black' },
+      python = { 'ruff_organize_imports', 'ruff_format' },
       javascript = { 'prettierd', 'prettier', stop_after_first = true },
     },
   },

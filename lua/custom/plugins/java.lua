@@ -1,0 +1,23 @@
+return {
+  -- 'mfussenegger/nvim-jdtls',
+  -- ft = { 'java' },
+  -- config = function()
+  --   local jdtls = require 'jdtls'
+  --   local home = os.getenv 'HOME'
+  --   local workspace_dir = home .. '~/.cache/jdtls/workspace/' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
+  --
+  --   require('jdtls').start_or_attach {
+  --     cmd = { 'jdtls' },
+  --     root_dir = require('jdtls.setup').find_root { '.git', 'mvnw', 'gradlew' },
+  --     settings = {
+  --       java = {
+  --         format = {
+  --           enabled = true,
+  --           settings = home .. '/.config/nvim/eclipse-java-style.xml', -- Use your exported formatter
+  --         },
+  --       },
+  --     },
+  --     workspace_dir = workspace_dir,
+  --   }
+  -- end,
+}

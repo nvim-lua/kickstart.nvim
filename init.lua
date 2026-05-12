@@ -4,13 +4,19 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
+-- Skip nvim's OSC 11/DSR terminal probe (zellij sometimes delays the response,
+-- producing the "Did not detect DSR response" warning + 100ms slower startup).
+-- Setting background explicitly tells defaults.lua to bypass the query.
+vim.opt.background = 'dark'
+
 vim.opt.relativenumber = true
 vim.opt.mouse = 'a'
 vim.opt.showmode = false
 vim.opt.smartindent = true
 vim.opt.spelllang = 'en_us'
 vim.o.spell = true
-vim.o.colorcolumn = '80'
+-- colorcolumn set per-filetype (see autocmd below); default off.
+vim.o.colorcolumn = ''
 
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
@@ -97,17 +103,21 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
--- Keybinds to make split navigation easier.
---  Use CTRL+<hjkl> to switch between windows
---
---  See `:help wincmd` for a list of all window commands
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+-- Window-nav Ctrl-h/j/k/l owned by smart-splits.nvim (custom/plugins/tmux.lua).
+-- Falls through to zellij when at a split edge.
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
+
+-- Per-filetype colorcolumn (Go allows long lines; markdown shouldn't have a ruler).
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('per-ft-colorcolumn', { clear = true }),
+  callback = function(args)
+    local widths = { python = '80', lua = '100', go = '120', rust = '100', java = '120' }
+    vim.bo[args.buf].textwidth = 0
+    vim.wo.colorcolumn = widths[vim.bo[args.buf].filetype] or ''
+  end,
+})
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
@@ -132,39 +142,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
-local floating_win = nil
-
-function FloatingTerm()
-  if floating_win and vim.api.nvim_win_is_valid(floating_win) then
-    vim.api.nvim_win_close(floating_win, true)
-    floating_win = nil
-    return
-  end
-
-  local buf = vim.api.nvim_create_buf(false, true)
-  local width = math.floor(vim.o.columns * 0.8)
-  local height = math.floor(vim.o.lines * 0.8)
-  local row = math.floor((vim.o.lines - height) / 2)
-  local col = math.floor((vim.o.columns - width) / 2)
-
-  floating_win = vim.api.nvim_open_win(buf, true, {
-    relative = 'editor',
-    width = width,
-    height = height,
-    row = row,
-    col = col,
-    style = 'minimal',
-    border = 'rounded',
-  })
-
-  vim.fn.termopen(vim.o.shell)
-  vim.cmd 'startinsert'
-
-  -- Map <Esc> to close the floating terminal when inside it
-  vim.api.nvim_buf_set_keymap(buf, 't', '<Esc>', '<C-\\><C-n>:lua FloatingTerm()<CR>', { noremap = true, silent = true })
-end
-
-vim.api.nvim_set_keymap('n', '<leader>t', ':lua FloatingTerm()<CR>', { noremap = true, silent = true })
+require('custom.zed-keymaps')
 
 require('lazy').setup({ { import = 'custom.plugins' } }, {
   ui = {

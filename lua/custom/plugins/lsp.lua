@@ -25,8 +25,8 @@ return {
       -- Useful status updates for LSP.
       { 'j-hui/fidget.nvim', opts = {} },
 
-      -- Allows extra capabilities provided by nvim-cmp
-      'hrsh7th/cmp-nvim-lsp',
+      -- Completion capabilities from blink.cmp.
+      'saghen/blink.cmp',
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -114,7 +114,7 @@ return {
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
-          if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+          if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
@@ -141,10 +141,32 @@ return {
           -- code, if the language server you are using supports them
           --
           -- This may be unwanted, since they displace some of your code
-          if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+          if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
             map('<leader>th', function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
             end, '[T]oggle Inlay [H]ints')
+            -- Inlay hints on by default for Go.
+            if vim.bo[event.buf].filetype == 'go' then
+              vim.lsp.inlay_hint.enable(true, { bufnr = event.buf })
+            end
+          end
+        end,
+      })
+
+      -- Go: organize imports on save via gopls code action.
+      vim.api.nvim_create_autocmd('BufWritePre', {
+        group = vim.api.nvim_create_augroup('go-organize-imports', { clear = true }),
+        pattern = '*.go',
+        callback = function()
+          local params = vim.lsp.util.make_range_params(0, 'utf-8')
+          params.context = { only = { 'source.organizeImports' } }
+          local result = vim.lsp.buf_request_sync(0, 'textDocument/codeAction', params, 1000)
+          for _, res in pairs(result or {}) do
+            for _, action in pairs(res.result or {}) do
+              if action.edit then
+                vim.lsp.util.apply_workspace_edit(action.edit, 'utf-8')
+              end
+            end
           end
         end,
       })
@@ -163,8 +185,7 @@ return {
       --  By default, Neovim doesn't support everything that is in the LSP specification.
       --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
       --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+      local capabilities = require('blink.cmp').get_lsp_capabilities()
 
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -181,6 +202,8 @@ return {
           filetypes = { 'go', 'go.mod', 'go.work' },
           settings = {
             gopls = {
+              -- Resolve files behind `//go:build integration`. Matches Zed's gopls config.
+              buildFlags = { '-tags=integration' },
               completeUnimported = true,
               usePlaceholders = true,
               analyses = {
@@ -190,13 +213,38 @@ return {
               },
               gofumpt = true,
               staticcheck = true,
+              hints = {
+                assignVariableTypes = true,
+                compositeLiteralFields = true,
+                compositeLiteralTypes = true,
+                constantValues = true,
+                functionTypeParameters = true,
+                parameterNames = true,
+                rangeVariableTypes = true,
+              },
             },
           },
-          env = {
-            GOEXPERIMENT = 'rangefunc',
+        },
+        pyright = {
+          settings = {
+            pyright = {
+              -- Disable pyright's import organizer; let ruff handle it.
+              disableOrganizeImports = true,
+            },
+            python = {
+              analysis = {
+                -- ignore lint errors; ruff handles linting.
+                ignore = { '*' },
+              },
+            },
           },
         },
-        pyright = {},
+        ruff = {
+          -- Disable ruff's hover; pyright provides better hover.
+          on_attach = function(client, _)
+            client.server_capabilities.hoverProvider = false
+          end,
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -239,8 +287,10 @@ return {
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'jdtls', -- Java LSP
         'gopls',
         'pyright',
+        'ruff', -- Python linter/formatter LSP.
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
