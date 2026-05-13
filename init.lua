@@ -372,7 +372,7 @@ do
     spec = {
       { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
       { '<leader>t', group = '[T]oggle' },
-      { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first
+      { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- Depends on gitsigns plugin. Uncomment in Section 9
       { 'gr', group = 'LSP Actions', mode = { 'n' } },
     },
   }
