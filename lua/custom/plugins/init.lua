@@ -16,12 +16,7 @@ vim.cmd [[
 ]]
 
 -- Set the blinking cursor settings
-vim.api.nvim_create_autocmd('VimEnter', {
-  callback = function()
-    vim.notify 'Setting guicursor via VimEnter'
-    vim.opt.guicursor = 'n-v:block,i:ver25,r-cr-o:hor20,a:blinkwait700-blinkoff400-blinkon250'
-  end,
-})
+vim.opt.guicursor = 'n-v:block,i:ver25,r-cr-o:hor20,a:blinkwait700-blinkoff400-blinkon250'
 
 -- Remap for dealing with word wrap in v mode
 vim.keymap.set('v', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -44,5 +39,12 @@ local map = vim.api.nvim_set_keymap
 map('n', '<A-w>', '<C-w>', { noremap = false })
 map('n', '<C-w>s', '<C-w>v', { noremap = true })
 map('n', '<C-w>v', '<C-w>s', { noremap = true })
+
+-- Mapping for delete into black hole register in normal mode
+-- and replace visual selection with yanked text (unnamed register) without losing it.
+-- Example: yiw or yi" to yank some text => <leader>xiwP or <leader>xiw"P to replace.
+--                                       => visual select and <leader>x to replace.
+vim.keymap.set('n', '<leader>x', '"_d', { desc = 'Delete to black hole register' })
+vim.keymap.set('v', '<leader>x', '"_dP', { desc = 'Replace selection with yanked text' })
 
 return {}
