@@ -4,9 +4,19 @@ return {
   cmd = 'Trouble',
   keys = {
     {
-      '<leader>xx',
+      '<leader>xd',
       '<cmd>Trouble diagnostics toggle<cr>',
       desc = 'Diagnostics (Trouble)',
+    },
+    {
+      '<leader>xl',
+      function()
+        require('trouble').toggle {
+          mode = 'diagnostics',
+          win = { position = 'right', type = 'split', size = 75 },
+        }
+      end,
+      desc = 'Toggle Trouble diagnostics sidebar',
     },
     {
       '<leader>xX',

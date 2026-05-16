@@ -25,6 +25,8 @@ return {
       },
     },
 
-    -- see below for full list of options 👇
+    checkbox = {
+      order = { ' ', 'x', '~', '!', '>' },
+    },
   },
 }
