@@ -94,10 +94,10 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- TIP: Disable arrow keys in normal mode
-vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
-vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
-vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
-vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+-- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+-- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+-- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+-- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -128,10 +128,19 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- -- Show errors and warnings in a floating window
+-- vim.api.nvim_create_autocmd('CursorHold', {
+--   desc = 'Show errors and warnings in a floating window',
+--   callback = function()
+--     vim.diagnostic.open_float(nil, { focusable = true, source = 'if_many' })
+--   end,
+-- })
+
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'markdown' },
   callback = function()
     vim.wo.conceallevel = 2
+    vim.cmd 'Pencil'
   end,
 })
 
@@ -574,99 +583,85 @@ require('lazy').setup({
       --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
       local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-      -- Enable the following language servers
-      --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
-      --
-      --  Add any additional override configuration in the following tables. Available keys are:
-      --  - cmd (table): Override the default command used to start the server
-      --  - filetypes (table): Override the default list of associated filetypes for the server
-      --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
-      --  - settings (table): Override the default settings passed when initializing the server.
-      --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      -- Enable the following language servers. Configs are merged on top of the
+      -- defaults shipped in nvim-lspconfig's `lsp/<name>.lua`, so we keep cmd /
+      -- root_dir defaults without using the deprecated require('lspconfig')
+      -- framework. See `:help lspconfig-nvim-0.11`.
       local servers = {
-        -- clangd = {},
-        -- gopls = {},
-        -- pyright = {},
-        -- rust_analyzer = {},
-        -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-        --
-        -- Some languages (like typescript) have entire language plugins that can be useful:
-        --    https://github.com/pmizio/typescript-tools.nvim
-        --
-        -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
-        --
         lua_ls = {
-          -- cmd = { ... },
-          -- filetypes = { ... },
-          -- capabilities = {},
           settings = {
             Lua = {
-              completion = {
-                callSnippet = 'Replace',
-              },
-              -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-              -- diagnostics = { disable = { 'missing-fields' } },
+              completion = { callSnippet = 'Replace' },
             },
           },
         },
-      }
-      require('lspconfig').ruff.setup {
-        init_options = {
+        terraformls = {
+          cmd = { 'terraform-ls', 'serve' },
+          filetypes = { 'terraform', 'tf', 'terraform-vars' },
+        },
+        tflint = {
+          filetypes = { 'terraform', 'tf' },
+        },
+        ansiblels = {
+          filetypes = { 'yaml.ansible', 'ansible' },
           settings = {
-            -- Ruff language server settings go here
-          },
-        },
-      }
-
-      require('lspconfig').basedpyright.setup {
-        settings = {
-          pyright = {
-            -- Using Ruff's import organizer
-            disableOrganizeImports = true,
-          },
-          python = {
-            analysis = {
-              -- Ignore all files for analysis to exclusively use Ruff for linting
-              ignore = { '*' },
+            ansible = {
+              python = { interpreterPath = 'python3' },
+              ansible = { path = 'ansible' },
+              executionEnvironment = { enabled = false },
+              validation = {
+                enabled = true,
+                lint = { enabled = true, path = 'ansible-lint' },
+              },
             },
           },
         },
+        yamlls = {
+          filetypes = { 'yaml', 'yml' },
+          settings = {
+            yaml = {
+              schemas = {
+                kubernetes = '*.yaml',
+                ['http://json.schemastore.org/ansible-stable-2.9'] = 'playbooks/*.{yml,yaml}',
+                ['http://json.schemastore.org/ansible-playbook'] = '*play*.{yml,yaml}',
+                ['http://json.schemastore.org/github-workflow'] = '.github/workflows/*',
+              },
+              format = { enable = true },
+              validate = true,
+              completion = true,
+              hover = true,
+            },
+          },
+        },
+        ruff = {
+          init_options = { settings = {} },
+        },
+        basedpyright = {
+          settings = {
+            pyright = { disableOrganizeImports = true },
+            python = { analysis = { ignore = { '*' } } },
+          },
+        },
       }
 
-      -- Ensure the servers and tools above are installed
-      --
-      -- To check the current status of installed tools and/or manually install
-      -- other tools, you can run
-      --    :Mason
-      --
-      -- You can press `g?` for help in this menu.
-      --
-      -- `mason` had to be setup earlier: to configure its options see the
-      -- `dependencies` table for `nvim-lspconfig` above.
-      --
-      -- You can add other tools here that you want Mason to install
-      -- for you, so that they are available from within Neovim.
-      local ensure_installed = vim.tbl_keys(servers or {})
+      -- Mason installs servers (above) plus extra tools that are NOT LSPs
+      -- (formatters/linters). Tools live in a separate list so we never hand
+      -- them to vim.lsp.enable.
+      local ensure_installed = vim.tbl_keys(servers)
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
+        'stylua',
+        'terraform-ls',
+        'tflint',
+        'ansible-language-server',
+        'yaml-language-server',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-      require('mason-lspconfig').setup {
-        ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
-        automatic_installation = false,
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for ts_ls)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-          end,
-        },
-      }
+      for name, cfg in pairs(servers) do
+        cfg.capabilities = vim.tbl_deep_extend('force', {}, capabilities, cfg.capabilities or {})
+        vim.lsp.config(name, cfg)
+        vim.lsp.enable(name)
+      end
     end,
   },
 
