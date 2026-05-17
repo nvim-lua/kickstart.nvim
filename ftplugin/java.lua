@@ -26,7 +26,7 @@
 --jdtls.start_or_attach(config)
 local jdtls = require 'jdtls'
 
-local root_dir = require('jdtls.setup').find_root { '.git', 'pom.xml', 'build.gradle' }
+local root_dir = require('jdtls.setup').find_root { '.git', 'pom.xml', '.project', 'build.gradle' }
 if root_dir == '' then
   root_dir = vim.fn.getcwd()
 end

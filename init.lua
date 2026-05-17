@@ -118,6 +118,7 @@ vim.o.showmode = false
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 vim.schedule(function()
+  vim.opt.clipboard:append 'unnamedplus'
   vim.o.clipboard = 'unnamedplus'
 end)
 
@@ -208,6 +209,15 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
 
+vim.keymap.set('n', '<F5>', function()
+  require('jdtls').setup_dap { hotcodereplace = 'auto' }
+  --require('dapui').open()
+  require('dap').continue()
+end, { buffer = true })
+
+vim.keymap.set('n', '<leader>du', function()
+  require('dapui').toggle()
+end, { desc = 'Open/close DAP UI' })
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -251,6 +261,7 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   spec = {
     { import = 'kickstart.plugins' },
+    { import = 'custom.plugins' },
     -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
     'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
 
@@ -259,6 +270,13 @@ require('lazy').setup({
     -- keys can be used to configure plugin behavior/loading/etc.
     --
     -- Use `opts = {}` to automatically pass options to a plugin's `setup()` function, forcing the plugin to be loaded.
+    {
+      'vyfor/cord.nvim',
+      ---@type CordConfig
+      opts = {
+        -- ...
+      },
+    },
     {
       'fatih/vim-go',
       build = ':GoInstallBinaries',
@@ -686,6 +704,7 @@ require('lazy').setup({
         --  - settings (table): Override the default settings passed when initializing the server.
         --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
         local servers = {
+          --drools_lsp = {},
           -- clangd = {},
           -- gopls = {},
           -- pyright = {},
@@ -728,10 +747,20 @@ require('lazy').setup({
         --
         -- You can add other tools here that you want Mason to install
         -- for you, so that they are available from within Neovim.
+        --local ensure_installed = vim.tbl_keys(servers or {})
+        --vim.list_extend(ensure_installed, {
+        --  'stylua', -- Used to format Lua code
+        --})
+
         local ensure_installed = vim.tbl_keys(servers or {})
-        vim.list_extend(ensure_installed, {
-          'stylua', -- Used to format Lua code
-        })
+
+        -- Remove servers that Mason doesn't manage
+        ensure_installed = vim.tbl_filter(function(name)
+          return name ~= 'drools_lsp'
+        end, ensure_installed)
+
+        vim.list_extend(ensure_installed, { 'stylua' })
+
         require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
         require('mason-lspconfig').setup {
@@ -1004,7 +1033,7 @@ require('lazy').setup({
     --    This is the easiest way to modularize your config.
     --
     --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-    -- { import = 'custom.plugins' },
+    --{ import = 'custom.plugins' },
     --
     -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
     -- Or use telescope!
