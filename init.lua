@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -166,6 +166,16 @@ vim.o.scrolloff = 10
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
+vim.filetype.add {
+  extension = {
+    gotmpl = 'gotmpl',
+  },
+  pattern = {
+    ['.*/templates/.*%.tpl'] = 'helm',
+    ['.*/templates/.*%.ya?ml'] = 'helm',
+    ['helmfile.*%.ya?ml'] = 'helm',
+  },
+}
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -204,6 +214,9 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
+
+vim.keymap.set('n', '<C-s>', "<cmd>%!yq eval 'sort_keys(..)' -<CR>", { desc = 'sort with yq' })
+vim.keymap.set('v', '<C-s>', "<cmd>'<,'>!yq eval 'sort_keys(..)' -<CR>", { desc = 'sort with yq' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -283,7 +296,32 @@ require('lazy').setup({
       },
     },
   },
-
+  {
+    'sindrets/diffview.nvim',
+  },
+  {
+    'f-person/git-blame.nvim',
+    -- load the plugin at startup
+    event = 'VeryLazy',
+    -- Because of the keys part, you will be lazy loading this plugin.
+    -- The plugin will only load once one of the keys is used.
+    -- If you want to load the plugin at startup, add something like event = "VeryLazy",
+    -- or lazy = false. One of both options will work.
+    opts = {
+      -- your configuration comes here
+      -- for example
+      enabled = true, -- if you want to enable the plugin
+      message_template = ' <summary> • <date> • <author> • <<sha>>', -- template for the blame message, check the Message template section for more options
+      date_format = '%m-%d-%Y %H:%M:%S', -- template for the date, check Date format section for more options
+      virtual_text_column = 1, -- virtual text start column, check Start virtual text at column section for more options
+    },
+  },
+  -- Git conflict handler
+  {
+    'akinsho/git-conflict.nvim',
+    version = 'v2.1.0',
+    config = true,
+  },
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
@@ -350,7 +388,8 @@ require('lazy').setup({
       },
     },
   },
-
+  -- helm language server
+  { 'qvalentin/helm-ls.nvim', ft = 'helm' },
   -- NOTE: Plugins can specify dependencies.
   --
   -- The dependencies are proper plugin specifications as well - anything
@@ -412,7 +451,11 @@ require('lazy').setup({
         --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
         --   },
         -- },
-        -- pickers = {}
+        pickers = {
+          find_files = {
+            hidden = true,
+          },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -696,6 +739,11 @@ require('lazy').setup({
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               -- diagnostics = { disable = { 'missing-fields' } },
             },
+            ['helm-ls'] = {
+              yamlls = {
+                path = '/opt/homebrew/Cellar/helm-ls/0.4.1/bin/helm_ls',
+              },
+            },
           },
         },
       }
@@ -876,25 +924,44 @@ require('lazy').setup({
     },
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
+  --  { -- You can easily change to a different colorscheme.
+  --    -- Change the name of the colorscheme plugin below, and then
+  --    -- change the command in the config to whatever the name of that colorscheme is.
+  --    --
+  --    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
+  --    'folke/tokyonight.nvim',
+  --    priority = 1000, -- Make sure to load this before all the other start plugins.
+  --    config = function()
+  --      ---@diagnostic disable-next-line: missing-fields
+  --      require('tokyonight').setup {
+  --        style = 'night',
+  --        styles = {
+  --          comments = { italic = false }, -- Disable italics in comments
+  --        },
+  --        on_colors = function(colors)
+  --          colors.bg = colors.black
+  --        end,
+  --      }
+
+  --      -- Load the colorscheme here.
+  --      -- Like many other themes, this one has different styles, and you could load
+  --      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+  --      vim.cmd.colorscheme 'tokyonight-night'
+  --    end,
+  --  },
+
+  {
+    -- test flexoki as color scheme
+    'nuvic/flexoki-nvim',
+    name = 'flexoki',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
+      require('flexoki').setup {
         styles = {
-          comments = { italic = false }, -- Disable italics in comments
+          bold = false,
         },
       }
-
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'flexoki'
     end,
   },
 
@@ -944,7 +1011,23 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = {
+        'bash',
+        'c',
+        'diff',
+        'gotmpl',
+        'helm',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'sql',
+        'query',
+        'vim',
+        'vimdoc',
+        'yaml',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -974,11 +1057,11 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
