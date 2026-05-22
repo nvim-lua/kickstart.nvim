@@ -36,6 +36,17 @@ return {
   },
   {
     'mbbill/undotree',
+    config = function()
+      local wk = require 'which-key'
+      wk.add {
+        {
+          '<leader>u',
+          desc = 'Show undotree',
+          mode = 'n',
+          buffer = true,
+        },
+      }
+    end,
   },
   {
     'lervag/vimtex',
@@ -45,6 +56,30 @@ return {
       -- VimTeX configuration goes here, e.g.
       vim.g.vimtex_view_method = 'zathura'
       vim.g.vimtex_compiler_method = 'pdflatex'
+    end,
+    config = function()
+      local wk = require 'which-key'
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = { 'tex' },
+        callback = function()
+          vim.keymap.set('n', '<Leader>m', 'i\\[<CR><CR>\\]<Esc>kA', { buffer = true })
+          vim.keymap.set('n', '<Leader>p', 'i\\begin{pmatrix}<CR><CR>\\end{pmatrix}<Esc>kA', { buffer = true })
+        end,
+      })
+      wk.add {
+        {
+          '<leader>m',
+          desc = 'Insert display math block',
+          mode = 'n',
+          buffer = true,
+        },
+        {
+          '<leader>p',
+          desc = 'Insert pmatrix block',
+          mode = 'n',
+          buffer = true,
+        },
+      }
     end,
   },
 }
