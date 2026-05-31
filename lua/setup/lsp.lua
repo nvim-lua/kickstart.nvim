@@ -3,7 +3,7 @@ vim.lsp.enable {
   'basedpyright',
   'clangd',
   -- 'typos_lsp',
-  'ty',
+  -- 'ty',  -- removed: redundant with basedpyright, adds diagnostic noise
   'ts_ls',
   'cssls',
   'html',
@@ -12,17 +12,18 @@ vim.lsp.enable {
 vim.lsp.inlay_hint.enable(true)
 
 local virtual_text_mode = nil
+local base_virtual_text = {
+  source = 'if_many',
+  spacing = 2,
+  format = function(diagnostic)
+    return diagnostic.message
+  end,
+}
+local diagnostic_underline = { severity = vim.diagnostic.severity.ERROR }
 
 vim.diagnostic.config {
-  virtual_text = {
-    source = 'if_many',
-    spacing = 2,
-    format = function(diagnostic)
-      return diagnostic.message
-    end,
-    current_line = virtual_text_mode,
-  },
-  underline = { severity = vim.diagnostic.severity.ERROR },
+  virtual_text = base_virtual_text,
+  underline = diagnostic_underline,
   update_in_insert = false,
   severity_sort = true,
   float = {
@@ -55,10 +56,8 @@ vim.api.nvim_create_user_command('LspToggleDiagnostic', function()
   else
     virtual_text_mode = nil
     vim.diagnostic.config {
-      virtual_text = {
-        current_line = virtual_text_mode,
-      },
-      underline = true,
+      virtual_text = base_virtual_text,
+      underline = diagnostic_underline,
     }
   end
 end, {})
@@ -79,14 +78,14 @@ local function restart_lsp(client_name)
 
   -- 1) Collect buffers that had this client and the client configs to reuse
   local target = {} -- [bufnr] = client.config
-  local to_stop = {} -- [client_id] = true
+  local to_stop = {} -- [client_id] = client
 
   for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
     if vim.api.nvim_buf_is_loaded(bufnr) then
       for _, c in ipairs(vim.lsp.get_clients { bufnr = bufnr }) do
         if c.name == client_name then
           target[bufnr] = c.config
-          to_stop[c.id] = true
+          to_stop[c.id] = c
         end
       end
     end
@@ -97,9 +96,9 @@ local function restart_lsp(client_name)
     return
   end
 
-  -- 2) Stop all those clients (force=true to avoid waiting handshake)
-  for id in pairs(to_stop) do
-    vim.lsp.stop_client(id)
+  -- 2) Stop all those clients (force=true)
+  for _, client in pairs(to_stop) do
+    client:stop(true)
   end
 
   -- 3) For each buffer, (re)start using the original config.

@@ -1,6 +1,6 @@
 return {
   'folke/which-key.nvim',
-  event = 'VimEnter',
+  event = 'VeryLazy',
   opts = {
     delay = 0,
     icons = {
@@ -40,7 +40,14 @@ return {
       { '<leader>s', group = '[S]earch' },
       { '<leader>t', group = '[T]oggle' },
       { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
-      { '<leader>b', group = '[B]uild ' },
+      { '<leader>b', group = '[B]reakpoint' },
+      { '<leader>l', group = '[L]SP' },
+      { '<leader>g', group = '[G]it' },
+      { '<leader>c', group = '[C]ode / C++' },
+      { '<leader>d', group = '[D]ebug' },
+      { '<leader>r', group = '[R]un' },
+      { '<leader>u', group = '[U]nreal' },
+      { '<leader>a', group = '[A]I' },
     },
   },
 }

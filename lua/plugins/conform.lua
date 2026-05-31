@@ -29,7 +29,7 @@ return {
       lua = { 'stylua' },
       c = { 'clang_format' },
       cpp = { 'clang_format' },
-      python = { 'isort', 'black' },
+      python = { 'ruff_format', 'ruff_organize_imports' },
       javascript = { 'prettier' },
       typescript = { 'prettier' },
       javascriptreact = { 'prettier' },
@@ -37,6 +37,7 @@ return {
       json = { 'prettier' },
       html = { 'prettier' },
       css = { 'prettier' },
+      markdown = { 'prettier' },
     },
   },
 }

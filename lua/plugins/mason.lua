@@ -28,8 +28,9 @@ return {
           -- Formatters / linters
           'stylua',
           'prettier',
-          'black',
-          'isort',
+          'ruff',
+          'clang-format',
+          'markdownlint',
         },
       }
     end,

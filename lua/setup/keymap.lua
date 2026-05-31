@@ -3,7 +3,7 @@ vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setqflist, { desc = 'Open diagnostic [Q]uickfix list' })
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- Disables <Space> as a normal/visual key, so it only works as leader
@@ -47,12 +47,14 @@ vim.keymap.set({ 'n', 'v' }, '<leader>d', [["_d]])
 -- In insert mode, Ctrl+c acts as <Esc>.
 vim.keymap.set('i', '<C-c>', '<Esc>')
 
--- Format file or selection using LSP with <leader>f.
-vim.keymap.set('n', '<leader>f', vim.lsp.buf.format)
-vim.keymap.set('v', '<leader>f', vim.lsp.buf.format)
+-- Diagnostic navigation
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Next [D]iagnostic' })
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Previous [D]iagnostic' })
 
--- Replace word under cursor throughout file.
-vim.keymap.set('n', '<leader>s', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+-- Buffer navigation
+vim.keymap.set('n', ']b', '<cmd>bnext<CR>', { desc = 'Next [B]uffer' })
+vim.keymap.set('n', '[b', '<cmd>bprev<CR>', { desc = 'Previous [B]uffer' })
 
--- Open terminal in vertical split.
-vim.keymap.set('n', '<leader>tn', ':vs term://bash<CR>')
+-- Quickfix navigation
+vim.keymap.set('n', ']q', '<cmd>cnext<CR>', { desc = 'Next [Q]uickfix' })
+vim.keymap.set('n', '[q', '<cmd>cprev<CR>', { desc = 'Previous [Q]uickfix' })

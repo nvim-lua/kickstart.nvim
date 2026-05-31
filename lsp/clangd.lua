@@ -1,3 +1,5 @@
+local machine = require('machine')
+
 local function switch_source_header(bufnr)
   local method_name = 'textDocument/switchSourceHeader'
   local client = vim.lsp.get_clients({ bufnr = bufnr, name = 'clangd' })[1]
@@ -7,7 +9,8 @@ local function switch_source_header(bufnr)
   local params = vim.lsp.util.make_text_document_params(bufnr)
   client.request(method_name, params, function(err, result)
     if err then
-      error(tostring(err))
+      vim.notify(tostring(err), vim.log.levels.ERROR)
+      return
     end
     if not result then
       vim.notify 'corresponding file cannot be determined'
@@ -26,7 +29,7 @@ local function symbol_info()
   local win = vim.api.nvim_get_current_win()
   local params = vim.lsp.util.make_position_params(win, clangd_client.offset_encoding)
   clangd_client.request('textDocument/symbolInfo', params, function(err, res)
-    if err or #res == 0 then
+    if err or not res or #res == 0 then
       -- Clangd always returns an error, there is not reason to parse it
       return
     end
@@ -47,7 +50,7 @@ end
 ---@field offsetEncoding? string
 
 return {
-  cmd = { 'D:\\language-servers\\clangd\\bin\\clangd.exe' },
+  cmd = { machine.get('clangd', vim.fn.exepath('clangd')) },
   filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
   root_markers = {
     '.clangd',
@@ -81,5 +84,9 @@ return {
     vim.api.nvim_buf_create_user_command(bufnr, 'LspClangdShowSymbolInfo', function()
       symbol_info()
     end, { desc = 'Show symbol info' })
+
+    vim.keymap.set('n', '<leader>ch', function()
+      switch_source_header(bufnr)
+    end, { buffer = bufnr, desc = '[C]langd Switch [H]eader/Source' })
   end,
 }

@@ -11,7 +11,14 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
   -- Git related plugins
-  'sindrets/diffview.nvim',
+  {
+    'sindrets/diffview.nvim',
+    cmd = { 'DiffviewOpen', 'DiffviewFileHistory', 'DiffviewClose' },
+    keys = {
+      { '<leader>gv', '<cmd>DiffviewOpen<CR>', desc = '[G]it Diff[V]iew' },
+      { '<leader>gh', '<cmd>DiffviewFileHistory %<CR>', desc = '[G]it File [H]istory' },
+    },
+  },
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',

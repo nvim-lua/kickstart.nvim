@@ -1,16 +1,25 @@
+local machine = require('machine')
+
 local function set_python_path(path)
   local clients = vim.lsp.get_clients {
     bufnr = vim.api.nvim_get_current_buf(),
     name = 'basedpyright',
   }
   for _, client in ipairs(clients) do
+    client.config.settings = vim.tbl_deep_extend('force', client.config.settings or {}, { python = { pythonPath = path } })
     if client.settings then
       client.settings.python = vim.tbl_deep_extend('force', client.settings.python or {}, { pythonPath = path })
-    else
-      client.config.settings = vim.tbl_deep_extend('force', client.config.settings, { python = { pythonPath = path } })
     end
-    client.notify('workspace/didChangeConfiguration', { settings = nil })
+    client.notify('workspace/didChangeConfiguration', { settings = client.config.settings })
   end
+end
+
+local function is_ue_project()
+  local ok, unreal_nvim = pcall(require, 'unreal-nvim')
+  if ok and unreal_nvim.find_uproject and unreal_nvim.find_uproject() then
+    return true
+  end
+  return vim.fn.glob(vim.fn.getcwd() .. '/*.uproject') ~= ''
 end
 
 local function get_python_path()
@@ -18,7 +27,12 @@ local function get_python_path()
   if venv_path then
     return venv_path .. '/scripts/python.exe'
   end
-  return 'C:/Program Files/Epic Games/UE_5.7/Engine/Binaries/ThirdParty/Python3/Win64/python.exe'
+  if is_ue_project() then
+    local ue_python = machine.get('ue_python', nil)
+    if ue_python then return ue_python end
+  end
+  local python_on_path = vim.fn.exepath('python')
+  return python_on_path ~= '' and python_on_path or 'python'
 end
 
 local function get_current_ue_python_stub()
@@ -40,13 +54,14 @@ local function get_ue_python_plugins()
   if ue_project then
     local ue_folder = ue_project:match '^(.*[\\/])'
     local ue_plugins = ue_folder .. 'Plugins\\'
-    local handle = vim.loop.fs_scandir(ue_plugins)
+    local handle = vim.uv.fs_scandir(ue_plugins)
+    if not handle then return folders end
     while true do
-      local name, t = vim.loop.fs_scandir_next(handle)
+      local name, t = vim.uv.fs_scandir_next(handle)
       if not name then break end
       if t == 'directory' then
         local plugin_folder = ue_plugins .. name .. '\\Content\\Python'
-        local stat = vim.loop.fs_stat(plugin_folder)
+        local stat = vim.uv.fs_stat(plugin_folder)
         if stat ~= nil and stat.type == 'directory' then
           table.insert(folders, plugin_folder)
         end
@@ -67,7 +82,7 @@ local function get_extra_paths()
 end
 
 return {
-  cmd = { 'D:\\language-servers\\basedpyright\\Scripts\\basedpyright-langserver.exe', '--stdio' },
+  cmd = { machine.get('basedpyright', vim.fn.exepath('basedpyright-langserver')), '--stdio' },
   filetypes = { 'python' },
   root_markers = {
     'pyproject.toml',
@@ -95,7 +110,7 @@ return {
           autoImportCompletions = true,
           autoSearchPaths = true,
           useLibraryCodeForTypes = true,
-          diagnosticMode = 'workspace',
+          diagnosticMode = 'openFilesOnly',
           extraPaths = get_extra_paths(),
         },
       },
@@ -109,10 +124,14 @@ return {
       }
     end, { desc = 'Organize Imports' })
 
-    vim.api.nvim_buf_create_user_command(bufnr, 'LspPyrightSetPythonPath', set_python_path, {
+    vim.api.nvim_buf_create_user_command(bufnr, 'LspPyrightSetPythonPath', function(opts)
+      set_python_path(opts.args)
+    end, {
       desc = 'Reconfigure basedpyright with the provided python path',
       nargs = 1,
       complete = 'file',
     })
+
+    vim.keymap.set('n', '<leader>pi', '<cmd>LspPyrightOrganizeImports<CR>', { buffer = bufnr, desc = '[P]ython Organize [I]mports' })
   end,
 }

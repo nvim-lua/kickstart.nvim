@@ -1,7 +1,8 @@
 return {
   'CopilotC-Nvim/CopilotChat.nvim',
+  cmd = { 'CopilotChat', 'CopilotChatToggle', 'CopilotChatOpen' },
   dependencies = {
-    'github/copilot.vim',
+    'zbirenbaum/copilot.lua',
     'nvim-lua/plenary.nvim',
   },
   opts = {

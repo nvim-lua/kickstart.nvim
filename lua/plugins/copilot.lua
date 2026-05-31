@@ -1,4 +1,10 @@
 return {
-  'github/copilot.vim',
-  event = 'InsertEnter',
+  {
+    'zbirenbaum/copilot.lua',
+    event = 'InsertEnter',
+    opts = {
+      suggestion = { enabled = false }, -- handled by blink.cmp
+      panel = { enabled = false },
+    },
+  },
 }

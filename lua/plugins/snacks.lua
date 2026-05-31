@@ -17,8 +17,8 @@ return {
     picker = { enabled = true },
     quickfile = { enabled = true },
     scope = { enabled = true },
-    -- scroll = { enabled = true },
-    words = { enabled = false },
+    scroll = { enabled = false },
+    words = { enabled = true },
     -- image = {
     --   enabled = true,
     --   resolve = function(path, src)

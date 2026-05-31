@@ -1,0 +1,6 @@
+{
+  "_comment": "Machine-specific paths — DO NOT COMMIT. See machine.json.template for the template.",
+  "basedpyright": "D:\\language-servers\\basedpyright\\Scripts\\basedpyright-langserver.exe",
+  "clangd": "D:\\language-servers\\clangd\\bin\\clangd.exe",
+  "ue_python": "C:\\Program Files\\Epic Games\\UE_5.7\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe"
+}

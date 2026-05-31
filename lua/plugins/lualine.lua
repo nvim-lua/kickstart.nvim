@@ -4,7 +4,7 @@ return {
   -- See `:help lualine.txt`
   opts = {
     options = {
-      icons_enabled = false,
+      icons_enabled = true,
       theme = 'gruvbox',
       component_separators = '|',
       section_separators = '',

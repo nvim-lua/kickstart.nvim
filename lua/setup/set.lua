@@ -1,4 +1,4 @@
-vim.g.nofsync = true
+vim.opt.fsync = false
 
 -- System Clipboard Integration
 vim.schedule(function()
@@ -10,7 +10,7 @@ vim.opt.nu = true
 vim.opt.relativenumber = true
 
 -- Default terminal to pwsh
-vim.opt.shell = vim.fn.executable 'pwsh' and 'pwsh' or 'powershell'
+vim.opt.shell = vim.fn.executable('pwsh') == 1 and 'pwsh' or 'powershell'
 vim.opt.shellcmdflag =
   '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;'
 vim.opt.shellredir = '-RedirectStandardOutput %s -NoNewWindow -Wait'
@@ -27,6 +27,7 @@ vim.cmd 'command! Qw wq'
 vim.cmd 'command! Q q'
 
 -- Save undo history
+vim.fn.mkdir(vim.fn.stdpath('data') .. '/undodir', 'p')
 vim.opt.undodir = vim.fn.stdpath 'data' .. '/undodir'
 vim.opt.undofile = true
 
@@ -59,7 +60,7 @@ vim.opt.expandtab = true
 
 vim.opt.smartindent = true
 vim.o.autoindent = true
-vim.opt.wrap = true
+vim.opt.wrap = false
 
 -- Disable swap and backup files
 vim.opt.swapfile = false

@@ -23,6 +23,8 @@ return {
       opts = {},
     },
     'folke/lazydev.nvim',
+    'zbirenbaum/copilot.lua',
+    'giuxtaposition/blink-cmp-copilot',
   },
   opts = {
     -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
@@ -38,9 +40,10 @@ return {
       documentation = { auto_show = false, auto_show_delay_ms = 200 },
     },
     sources = {
-      default = { 'lsp', 'path', 'snippets', 'lazydev', 'buffer' },
+      default = { 'lsp', 'path', 'snippets', 'lazydev', 'buffer', 'copilot' },
       providers = {
         lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
+        copilot = { module = 'blink-cmp-copilot', score_offset = 100, async = true },
       },
     },
     snippets = { preset = 'luasnip' },

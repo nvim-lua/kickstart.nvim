@@ -1,0 +1,6 @@
+{
+  "_comment": "Copy this file to machine.json and fill in the paths for this machine. machine.json is gitignored.",
+  "basedpyright": "D:\\language-servers\\basedpyright\\Scripts\\basedpyright-langserver.exe",
+  "clangd": "D:\\language-servers\\clangd\\bin\\clangd.exe",
+  "ue_python": "C:\\Program Files\\Epic Games\\UE_5.7\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe"
+}

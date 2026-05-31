@@ -25,6 +25,10 @@ return {
         'tsx',
         'json',
         'css',
+        'glsl',
+        'cmake',
+        'hlsl',
+        'ini',
       },
       auto_install = true,
       highlight = {
