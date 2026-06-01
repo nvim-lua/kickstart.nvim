@@ -518,7 +518,6 @@ require('lazy').setup({
         opts = {
           registries = {
             'github:mason-org/mason-registry',
-            'github:Crashdummyy/mason-registry',
           },
         },
       },
