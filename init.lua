@@ -99,7 +99,7 @@ do
   vim.g.maplocalleader = ' '
 
   -- Set to true if you have a Nerd Font installed and selected in the terminal
-  vim.g.have_nerd_font = false
+  vim.g.have_nerd_font = true
 
   -- [[ Setting options ]]
   --  See `:help vim.o`
@@ -227,7 +227,50 @@ do
   vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
   vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
   vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+  -- ============================================================
+  -- Auto terminal split when opening a project folder
+  -- ============================================================
 
+  local auto_terminal_group = vim.api.nvim_create_augroup('AutoProjectTerminal', {
+    clear = true,
+  })
+
+  vim.api.nvim_create_autocmd('VimEnter', {
+    group = auto_terminal_group,
+    desc = 'Open a terminal split when Neovim starts in a project folder',
+    callback = function()
+      -- Only run if you opened Neovim with something like:
+      -- nvim ~/Projects/MyProject
+      if vim.fn.argc() == 0 then return end
+
+      local arg = vim.fn.argv(0)
+
+      -- Only continue if the thing you opened is a folder
+      if vim.fn.isdirectory(arg) == 0 then return end
+
+      -- Turn the folder path into a full path
+      local project_path = vim.fn.fnamemodify(arg, ':p')
+
+      -- Optional safety check:
+      -- Only auto-open the terminal for folders inside ~/Projects/
+      local projects_root = vim.fn.expand '~/Projects/'
+
+      if not vim.startswith(project_path, projects_root) then return end
+
+      -- Open terminal at the bottom
+      vim.cmd 'botright split'
+      vim.cmd 'resize 12'
+      vim.cmd 'terminal'
+
+      -- Make the terminal cleaner
+      vim.opt_local.number = false
+      vim.opt_local.relativenumber = false
+      vim.opt_local.signcolumn = 'no'
+
+      -- Go back to the code window instead of staying inside the terminal
+      vim.cmd 'wincmd k'
+    end,
+  })
   -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
   -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
   -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
@@ -246,7 +289,16 @@ do
     callback = function() vim.hl.on_yank() end,
   })
 end
-
+-- C# files usually use 4 spaces.
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'cs',
+  callback = function()
+    vim.bo.shiftwidth = 4
+    vim.bo.tabstop = 4
+    vim.bo.softtabstop = 4
+    vim.bo.expandtab = true
+  end,
+})
 -- ============================================================
 -- SECTION 2: PLUGIN MANAGER INTRO
 -- vim.pack intro, build hooks
@@ -372,7 +424,8 @@ do
     spec = {
       { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
       { '<leader>t', group = '[T]oggle' },
-      { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first
+      { '<leader>h', group = '[H]arpoon / Git Hunk', mode = { 'n', 'v' } },
+      { '<leader>c', group = '[C]ode / C#' },
       { 'gr', group = 'LSP Actions', mode = { 'n' } },
     },
   }
@@ -383,20 +436,19 @@ do
   -- change the command under that to load whatever the name of that colorscheme is.
   --
   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-  vim.pack.add { gh 'folke/tokyonight.nvim' }
-  ---@diagnostic disable-next-line: missing-fields
-  require('tokyonight').setup {
+  -- Highlight todo, notes, etc in comments
+  vim.pack.add { gh 'catppuccin/nvim' }
+
+  require('catppuccin').setup {
+    flavour = 'mocha',
+    transparent_background = false,
     styles = {
-      comments = { italic = false }, -- Disable italics in comments
+      comments = {},
     },
   }
 
-  -- Load the colorscheme here.
-  -- Like many other themes, this one has different styles, and you could load
-  -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-  vim.cmd.colorscheme 'tokyonight-night'
+  vim.cmd.colorscheme 'catppuccin'
 
-  -- Highlight todo, notes, etc in comments
   vim.pack.add { gh 'folke/todo-comments.nvim' }
   require('todo-comments').setup { signs = false }
 
@@ -482,7 +534,34 @@ do
 
   -- NOTE: You can install multiple plugins at once
   vim.pack.add(telescope_plugins)
+  -- [[ Harpoon ]]
+  -- Quick file marking and jumping.
+  -- Great for switching between your main project files without searching every time.
+  vim.pack.add {
+    {
+      src = gh 'ThePrimeagen/harpoon',
+      version = 'harpoon2',
+    },
+  }
 
+  local harpoon = require 'harpoon'
+  harpoon:setup {}
+
+  vim.keymap.set('n', '<leader>ha', function() harpoon:list():add() end, { desc = '[H]arpoon [A]dd file' })
+
+  vim.keymap.set('n', '<leader>hh', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = '[H]arpoon menu' })
+
+  vim.keymap.set('n', '<leader>h1', function() harpoon:list():select(1) end, { desc = '[H]arpoon file 1' })
+
+  vim.keymap.set('n', '<leader>h2', function() harpoon:list():select(2) end, { desc = '[H]arpoon file 2' })
+
+  vim.keymap.set('n', '<leader>h3', function() harpoon:list():select(3) end, { desc = '[H]arpoon file 3' })
+
+  vim.keymap.set('n', '<leader>h4', function() harpoon:list():select(4) end, { desc = '[H]arpoon file 4' })
+
+  vim.keymap.set('n', '<leader>hn', function() harpoon:list():next() end, { desc = '[H]arpoon [N]ext file' })
+
+  vim.keymap.set('n', '<leader>hp', function() harpoon:list():prev() end, { desc = '[H]arpoon [P]revious file' })
   -- See `:help telescope` and `:help telescope.setup()`
   require('telescope').setup {
     -- You can put your default mappings / updates / etc. in here
@@ -584,72 +663,50 @@ end
 -- ============================================================
 do
   -- [[ LSP Configuration ]]
-  -- Brief aside: **What is LSP?**
-  --
-  -- LSP is an initialism you've probably heard, but might not understand what it is.
-  --
-  -- LSP stands for Language Server Protocol. It's a protocol that helps editors
-  -- and language tooling communicate in a standardized fashion.
-  --
-  -- In general, you have a "server" which is some tool built to understand a particular
-  -- language (such as `gopls`, `lua_ls`, `rust_analyzer`, etc.). These Language Servers
-  -- (sometimes called LSP servers, but that's kind of like ATM Machine) are standalone
-  -- processes that communicate with some "client" - in this case, Neovim!
-  --
-  -- LSP provides Neovim with features like:
-  --  - Go to definition
-  --  - Find references
-  --  - Autocompletion
-  --  - Symbol Search
-  --  - and more!
-  --
-  -- Thus, Language Servers are external tools that must be installed separately from
-  -- Neovim. This is where `mason` and related plugins come into play.
-  --
-  -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
-  -- and elegantly composed help section, `:help lsp-vs-treesitter`
 
   -- Useful status updates for LSP.
   vim.pack.add { gh 'j-hui/fidget.nvim' }
   require('fidget').setup {}
 
-  --  This function gets run when an LSP attaches to a particular buffer.
-  --    That is to say, every time a new file is opened that is associated with
-  --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
-  --    function will be executed to configure the current buffer
+  -- LSP keymaps that activate when an LSP attaches to a buffer.
   vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
     callback = function(event)
-      -- NOTE: Remember that Lua is a real programming language, and as such it is possible
-      -- to define small helper and utility functions so you don't have to repeat yourself.
-      --
-      -- In this case, we create a function that lets us more easily define mappings specific
-      -- for LSP related items. It sets the mode, buffer and description for us each time.
       local map = function(keys, func, desc, mode)
         mode = mode or 'n'
         vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
       end
 
-      -- Rename the variable under your cursor.
-      --  Most Language Servers support renaming across files, etc.
+      -- Rename the variable, method, class, etc. under your cursor.
       map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
 
-      -- Execute a code action, usually your cursor needs to be on top of an error
-      -- or a suggestion from your LSP for this to activate.
+      -- Execute a code action.
       map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
 
-      -- WARN: This is not Goto Definition, this is Goto Declaration.
-      --  For example, in C this would take you to the header.
+      -- Go to declaration.
       map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
-      -- The following two autocommands are used to highlight references of the
-      -- word under your cursor when your cursor rests there for a little while.
-      --    See `:help CursorHold` for information about when this is executed
-      --
-      -- When you move your cursor, the highlights will be cleared (the second autocommand).
+      -- Format the current buffer.
+      map('<leader>cf', function() vim.lsp.buf.format { async = true } end, '[C]ode [F]ormat')
+
+      -- Show diagnostics under cursor.
+      map(
+        '<leader>cd',
+        function()
+          vim.diagnostic.open_float {
+            scope = 'cursor',
+            border = 'rounded',
+          }
+        end,
+        '[C]ode [D]iagnostics'
+      )
+
       local client = vim.lsp.get_client_by_id(event.data.client_id)
+
+      -- Highlight references of the word under your cursor.
       if client and client:supports_method('textDocument/documentHighlight', event.buf) then
         local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+
         vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
           buffer = event.buf,
           group = highlight_augroup,
@@ -671,64 +728,60 @@ do
         })
       end
 
-      -- The following code creates a keymap to toggle inlay hints in your
-      -- code, if the language server you are using supports them
-      --
-      -- This may be unwanted, since they displace some of your code
+      -- Toggle inlay hints if supported.
       if client and client:supports_method('textDocument/inlayHint', event.buf) then
-        map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
+        map(
+          '<leader>th',
+          function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }, {
+              bufnr = event.buf,
+            })
+          end,
+          '[T]oggle Inlay [H]ints'
+        )
       end
     end,
   })
 
-  -- Enable the following language servers
-  --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
-  --  See `:help lsp-config` for information about keys and how to configure
+  -- Regular LSP servers.
+  -- IMPORTANT:
+  -- Do not put roslyn here.
+  -- Do not put stylua here.
   ---@type table<string, vim.lsp.Config>
   local servers = {
-    -- clangd = {},
-    -- gopls = {},
-    -- pyright = {},
-    -- rust_analyzer = {},
-    --
-    -- Some languages (like typescript) have entire language plugins that can be useful:
-    --    https://github.com/pmizio/typescript-tools.nvim
-    --
-    -- But for many setups, the LSP (`ts_ls`) will work just fine
-    -- ts_ls = {},
-
-    stylua = {}, -- Used to format Lua code
-
-    -- Special Lua Config, as recommended by neovim help docs
     lua_ls = {
       on_init = function(client)
-        client.server_capabilities.documentFormattingProvider = false -- Disable formatting (formatting is done by stylua)
+        -- Formatting is handled by stylua, not lua_ls.
+        client.server_capabilities.documentFormattingProvider = false
 
         if client.workspace_folders then
           local path = client.workspace_folders[1].name
+
           if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then return end
         end
 
-        client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
-          runtime = {
-            version = 'LuaJIT',
-            path = { 'lua/?.lua', 'lua/?/init.lua' },
-          },
-          workspace = {
-            checkThirdParty = false,
-            -- NOTE: this is a lot slower and will cause issues when working on your own configuration.
-            --  See https://github.com/neovim/nvim-lspconfig/issues/3189
-            library = vim.tbl_extend('force', vim.api.nvim_get_runtime_file('', true), {
-              '${3rd}/luv/library',
-              '${3rd}/busted/library',
-            }),
+        client.config.settings = vim.tbl_deep_extend('force', client.config.settings or {}, {
+          Lua = {
+            runtime = {
+              version = 'LuaJIT',
+              path = { 'lua/?.lua', 'lua/?/init.lua' },
+            },
+            workspace = {
+              checkThirdParty = false,
+              library = vim.tbl_extend('force', vim.api.nvim_get_runtime_file('', true), {
+                '${3rd}/luv/library',
+                '${3rd}/busted/library',
+              }),
+            },
           },
         })
       end,
-      ---@type lspconfig.settings.lua_ls
+
       settings = {
         Lua = {
-          format = { enable = false }, -- Disable formatting (formatting is done by stylua)
+          format = {
+            enable = false,
+          },
         },
       },
     },
@@ -739,29 +792,91 @@ do
     gh 'mason-org/mason.nvim',
     gh 'mason-org/mason-lspconfig.nvim',
     gh 'WhoIsSethDaniel/mason-tool-installer.nvim',
+
+    -- C# Roslyn support.
+    gh 'seblyng/roslyn.nvim',
   }
 
-  -- Automatically install LSPs and related tools to stdpath for Neovim
-  require('mason').setup {}
+  -- Mason setup.
+  -- Roslyn.nvim recommends this custom registry because it provides a newer Roslyn package.
+  -- It provides `roslyn` and `roslyn-nightly`.
+  require('mason').setup {
+    registries = {
+      'github:mason-org/mason-registry',
+      'github:Crashdummyy/mason-registry',
+    },
+  }
 
-  -- Ensure the servers and tools above are installed
-  --
-  -- To check the current status of installed tools and/or manually install
-  -- other tools, you can run
-  --    :Mason
-  --
-  -- You can press `g?` for help in this menu.
-  local ensure_installed = vim.tbl_keys(servers or {})
-  vim.list_extend(ensure_installed, {
-    -- You can add other tools here that you want Mason to install
-  })
+  -- Tools to install through Mason.
+  -- Keep formatters/tools separate from LSP servers.
+  local ensure_installed = {
+    'lua_ls',
+    'stylua',
+    'roslyn',
+  }
 
-  require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+  require('mason-tool-installer').setup {
+    ensure_installed = ensure_installed,
+  }
 
+  -- Enable regular LSP servers.
   for name, server in pairs(servers) do
     vim.lsp.config(name, server)
     vim.lsp.enable(name)
   end
+
+  -- Configure Roslyn language server settings.
+  -- Roslyn.nvim docs say server settings should be passed through vim.lsp.config("roslyn", ...).
+  vim.lsp.config('roslyn', {
+    settings = {
+      ['csharp|background_analysis'] = {
+        dotnet_analyzer_diagnostics_scope = 'fullSolution',
+        dotnet_compiler_diagnostics_scope = 'fullSolution',
+      },
+
+      ['csharp|completion'] = {
+        dotnet_show_completion_items_from_unimported_namespaces = true,
+        dotnet_show_name_completion_suggestions = true,
+      },
+
+      ['csharp|inlay_hints'] = {
+        csharp_enable_inlay_hints_for_implicit_object_creation = true,
+        csharp_enable_inlay_hints_for_implicit_variable_types = true,
+        csharp_enable_inlay_hints_for_lambda_parameter_types = true,
+        csharp_enable_inlay_hints_for_types = true,
+
+        dotnet_enable_inlay_hints_for_indexer_parameters = true,
+        dotnet_enable_inlay_hints_for_literal_parameters = true,
+        dotnet_enable_inlay_hints_for_object_creation_parameters = true,
+        dotnet_enable_inlay_hints_for_other_parameters = true,
+        dotnet_enable_inlay_hints_for_parameters = true,
+
+        dotnet_suppress_inlay_hints_for_parameters_that_differ_only_by_suffix = true,
+        dotnet_suppress_inlay_hints_for_parameters_that_match_argument_name = true,
+        dotnet_suppress_inlay_hints_for_parameters_that_match_method_intent = true,
+      },
+
+      ['csharp|code_lens'] = {
+        dotnet_enable_references_code_lens = true,
+        dotnet_enable_tests_code_lens = true,
+      },
+
+      ['csharp|symbol_search'] = {
+        dotnet_search_reference_assemblies = true,
+      },
+
+      ['csharp|formatting'] = {
+        dotnet_organize_imports_on_format = true,
+      },
+    },
+  })
+
+  -- Start roslyn.nvim.
+  require('roslyn').setup {
+    broad_search = true,
+    lock_target = false,
+    silent = false,
+  }
 end
 
 -- ============================================================
@@ -776,7 +891,8 @@ do
     format_on_save = function(bufnr)
       -- You can specify filetypes to autoformat on save here:
       local enabled_filetypes = {
-        -- lua = true,
+        lua = true,
+        cs = true,
         -- python = true,
       }
       if enabled_filetypes[vim.bo[bufnr].filetype] then
@@ -793,7 +909,8 @@ do
       -- rust = { 'rustfmt' },
       -- Conform can also run multiple formatters sequentially
       -- python = { "isort", "black" },
-      --
+      lua = { 'stylua' },
+      cs = {},
       -- You can use 'stop_after_first' to run the first available formatter from the list
       -- javascript = { "prettierd", "prettier", stop_after_first = true },
     },
@@ -898,7 +1015,24 @@ do
   vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 
   -- Ensure basic parsers are installed
-  local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+  local parsers = {
+    'bash',
+    'c',
+    'diff',
+    'html',
+    'lua',
+    'luadoc',
+    'markdown',
+    'markdown_inline',
+    'query',
+    'vim',
+    'vimdoc',
+    'c_sharp',
+    'xml',
+    'json',
+    'yaml',
+    'toml',
+  }
   require('nvim-treesitter').install(parsers)
 
   ---@param buf integer
@@ -962,7 +1096,7 @@ do
   --
   -- require 'kickstart.plugins.debug'
   -- require 'kickstart.plugins.indent_line'
-  -- require 'kickstart.plugins.lint'
+  require 'kickstart.plugins.lint'
   -- require 'kickstart.plugins.autopairs'
   -- require 'kickstart.plugins.neo-tree'
   -- require 'kickstart.plugins.gitsigns' -- adds gitsigns recommended keymaps
