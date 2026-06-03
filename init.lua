@@ -165,7 +165,15 @@ do
   -- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
   -- or just use <C-\><C-n> to exit terminal mode
   vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+  vim.keymap.set('n', '<leader>tt', function()
+    vim.cmd 'botright split'
+    vim.cmd 'resize 12'
+    vim.cmd 'terminal'
 
+    vim.opt_local.number = false
+    vim.opt_local.relativenumber = false
+    vim.opt_local.signcolumn = 'no'
+  end, { desc = '[T]erminal split' })
   -- TIP: Disable arrow keys in normal mode
   -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
   -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
@@ -180,50 +188,6 @@ do
   vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
   vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
   vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-  -- ============================================================
-  -- Auto terminal split when opening a project folder
-  -- ============================================================
-
-  local auto_terminal_group = vim.api.nvim_create_augroup('AutoProjectTerminal', {
-    clear = true,
-  })
-
-  vim.api.nvim_create_autocmd('VimEnter', {
-    group = auto_terminal_group,
-    desc = 'Open a terminal split when Neovim starts in a project folder',
-    callback = function()
-      -- Only run if you opened Neovim with something like:
-      -- nvim ~/Projects/MyProject
-      if vim.fn.argc() == 0 then return end
-
-      local arg = vim.fn.argv(0)
-
-      -- Only continue if the thing you opened is a folder
-      if vim.fn.isdirectory(arg) == 0 then return end
-
-      -- Turn the folder path into a full path
-      local project_path = vim.fn.fnamemodify(arg, ':p')
-
-      -- Optional safety check:
-      -- Only auto-open the terminal for folders inside ~/Projects/
-      local projects_root = vim.fn.expand '~/Projects/'
-
-      if not vim.startswith(project_path, projects_root) then return end
-
-      -- Open terminal at the bottom
-      vim.cmd 'botright split'
-      vim.cmd 'resize 12'
-      vim.cmd 'terminal'
-
-      -- Make the terminal cleaner
-      vim.opt_local.number = false
-      vim.opt_local.relativenumber = false
-      vim.opt_local.signcolumn = 'no'
-
-      -- Go back to the code window instead of staying inside the terminal
-      vim.cmd 'wincmd k'
-    end,
-  })
   -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
   -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
   -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
@@ -370,19 +334,18 @@ do
   -- Useful plugin to show you pending keybinds.
   vim.pack.add { gh 'folke/which-key.nvim' }
   require('which-key').setup {
-    -- Delay between pressing a key and opening which-key (milliseconds)
     delay = 0,
     icons = { mappings = vim.g.have_nerd_font },
-    -- Document existing key chains
     spec = {
       { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
       { '<leader>t', group = '[T]oggle' },
       { '<leader>h', group = '[H]arpoon / Git Hunk', mode = { 'n', 'v' } },
       { '<leader>c', group = '[C]ode / C#' },
+      { '<leader>x', group = 'Trouble' },
+      { '<leader>o', group = '[O]verseer / Tasks' },
       { 'gr', group = 'LSP Actions', mode = { 'n' } },
     },
   }
-
   -- [[ Colorscheme ]]
   -- You can easily change to a different colorscheme.
   -- Change the name of the colorscheme plugin below, and then
@@ -515,6 +478,38 @@ do
   vim.keymap.set('n', '<leader>hn', function() harpoon:list():next() end, { desc = '[H]arpoon [N]ext file' })
 
   vim.keymap.set('n', '<leader>hp', function() harpoon:list():prev() end, { desc = '[H]arpoon [P]revious file' })
+
+  -- [[ Trouble ]]
+  -- Better diagnostics, references, symbols, quickfix, and LSP result lists.
+  vim.pack.add { gh 'folke/trouble.nvim' }
+
+  require('trouble').setup {}
+
+  vim.keymap.set('n', '<leader>xx', '<cmd>Trouble diagnostics toggle<CR>', { desc = 'Trouble diagnostics' })
+  vim.keymap.set('n', '<leader>xX', '<cmd>Trouble diagnostics toggle filter.buf=0<CR>', { desc = 'Trouble buffer diagnostics' })
+  vim.keymap.set('n', '<leader>xs', '<cmd>Trouble symbols toggle<CR>', { desc = 'Trouble symbols' })
+  vim.keymap.set('n', '<leader>xl', '<cmd>Trouble lsp toggle<CR>', { desc = 'Trouble LSP' })
+  vim.keymap.set('n', '<leader>xq', '<cmd>Trouble qflist toggle<CR>', { desc = 'Trouble quickfix list' })
+  vim.keymap.set('n', '<leader>xlc', '<cmd>Trouble loclist toggle<CR>', { desc = 'Trouble location list' })
+
+  -- [[ Oil ]]
+  -- File explorer that lets you edit directories like normal buffers.
+  -- Great for creating, renaming, moving, and deleting files/folders.
+  vim.pack.add { gh 'stevearc/oil.nvim' }
+
+  require('oil').setup {
+    default_file_explorer = false,
+    view_options = {
+      show_hidden = true,
+    },
+  }
+
+  -- Open the parent directory of the current file.
+  vim.keymap.set('n', '-', '<cmd>Oil<CR>', { desc = 'Open parent directory' })
+
+  -- Open Oil with a leader key.
+  vim.keymap.set('n', '<leader>e', '<cmd>Oil<CR>', { desc = '[E]xplore files' })
+
   -- See `:help telescope` and `:help telescope.setup()`
   require('telescope').setup {
     -- You can put your default mappings / updates / etc. in here
@@ -873,6 +868,96 @@ do
 end
 
 -- ============================================================
+-- SECTION 6.5: TASK RUNNER
+-- Overseer setup for dotnet build/run/test
+-- ============================================================
+do
+  -- [[ Overseer ]]
+  -- Task runner for commands like dotnet build, dotnet run, and dotnet test.
+  vim.pack.add { gh 'stevearc/overseer.nvim' }
+
+  local overseer = require 'overseer'
+
+  overseer.setup {}
+
+  overseer.register_template {
+    name = 'dotnet build',
+    builder = function()
+      return {
+        cmd = { 'dotnet' },
+        args = { 'build' },
+        components = {
+          'default',
+          'on_output_quickfix',
+          'on_result_diagnostics',
+        },
+      }
+    end,
+    condition = {
+      filetype = { 'cs' },
+    },
+  }
+
+  overseer.register_template {
+    name = 'dotnet run',
+    builder = function()
+      return {
+        cmd = { 'dotnet' },
+        args = { 'run' },
+        components = {
+          'default',
+        },
+      }
+    end,
+    condition = {
+      filetype = { 'cs' },
+    },
+  }
+
+  overseer.register_template {
+    name = 'dotnet test',
+    builder = function()
+      return {
+        cmd = { 'dotnet' },
+        args = { 'test' },
+        components = {
+          'default',
+          'on_output_quickfix',
+          'on_result_diagnostics',
+        },
+      }
+    end,
+    condition = {
+      filetype = { 'cs' },
+    },
+  }
+
+  overseer.register_template {
+    name = 'dotnet watch run',
+    builder = function()
+      return {
+        cmd = { 'dotnet' },
+        args = { 'watch', 'run' },
+        components = {
+          'default',
+        },
+      }
+    end,
+    condition = {
+      filetype = { 'cs' },
+    },
+  }
+
+  vim.keymap.set('n', '<leader>oo', '<cmd>OverseerToggle<CR>', { desc = '[O]verseer [O]pen' })
+
+  vim.keymap.set('n', '<leader>ob', function() overseer.run_task { name = 'dotnet build' } end, { desc = '[O]verseer dotnet [B]uild' })
+
+  vim.keymap.set('n', '<leader>or', function() overseer.run_task { name = 'dotnet run' } end, { desc = '[O]verseer dotnet [R]un' })
+
+  vim.keymap.set('n', '<leader>ot', function() overseer.run_task { name = 'dotnet test' } end, { desc = '[O]verseer dotnet [T]est' })
+
+  vim.keymap.set('n', '<leader>ow', function() overseer.run_task { name = 'dotnet watch run' } end, { desc = '[O]verseer dotnet [W]atch run' })
+end -- ============================================================
 -- SECTION 7: AUTOCOMPLETE & SNIPPETS
 -- blink.cmp and luasnip setup
 -- ============================================================
