@@ -353,17 +353,19 @@ do
   --
   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
   -- Highlight todo, notes, etc in comments
-  vim.pack.add { gh 'catppuccin/nvim' }
+  vim.pack.add { gh 'EdenEast/nightfox.nvim' }
 
-  require('catppuccin').setup {
-    flavour = 'mocha',
-    transparent_background = false,
-    styles = {
-      comments = {},
+  require('nightfox').setup {
+    options = {
+      styles = {
+        comments = 'NONE',
+        keywords = 'bold',
+        types = 'bold',
+      },
     },
   }
 
-  vim.cmd.colorscheme 'catppuccin'
+  vim.cmd.colorscheme 'carbonfox'
 
   vim.pack.add { gh 'folke/todo-comments.nvim' }
   require('todo-comments').setup { signs = false }
@@ -1133,10 +1135,10 @@ do
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug'
-  -- require 'kickstart.plugins.indent_line'
+  require 'kickstart.plugins.indent_line'
   require 'kickstart.plugins.lint'
-  -- require 'kickstart.plugins.autopairs'
-  -- require 'kickstart.plugins.neo-tree'
+  require 'kickstart.plugins.autopairs'
+  require 'kickstart.plugins.neo-tree'
   -- require 'kickstart.plugins.gitsigns' -- adds gitsigns recommended keymaps
 
   -- NOTE: You can add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
