@@ -104,6 +104,9 @@ vim.o.number = true
 --  Experiment for yourself to see if you like it!
 vim.o.relativenumber = true
 
+-- Set to nowrap //TODO: can this be in a separate file than the init.lua to avoid conflicts with upstream?
+vim.o.wrap = false
+
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
 
@@ -703,6 +706,7 @@ require('lazy').setup({
           javascript = true,
           typescript = true,
           typescriptreact = true,
+          cs = true,
           -- python = true,
         }
         if enabled_filetypes[vim.bo[bufnr].filetype] then
