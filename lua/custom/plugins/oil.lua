@@ -4,6 +4,11 @@ return {
   config = function()
     require('mini.icons').setup()
     require('oil').setup {
+      float = {
+        border = 'rounded',
+        title = ' Oil ',
+        title_pos = 'center',
+      },
       view_options = {
         show_hidden = false,
         is_hidden_file = function(name, bufnr)
