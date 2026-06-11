@@ -4,7 +4,7 @@ return {
     require('notify').setup {
       background_colour = '#000000',
       stages = 'fade',
-      timeout = 500,
+      timeout = 300,
       render = 'wrapped-compact',
     }
 
