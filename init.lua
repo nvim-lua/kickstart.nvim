@@ -69,6 +69,18 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
+local lsp_show = true
+vim.keymap.set('n', '<leader>ul', function()
+  lsp_show = not lsp_show
+
+  if lsp_show then
+    vim.lsp.handlers['window/showMessage'] = vim.lsp.handlers['window/showMessageDefault']
+    print 'LSP messages ON'
+  else
+    vim.lsp.handlers['window/showMessage'] = function() end
+    print 'LSP messages OFF'
+  end
+end, { desc = 'Toggle LSP messages' })
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -134,6 +146,16 @@ end, { desc = 'Toggle RenderMarkdown + enable wrap' })
 vim.keymap.set('n', '<leader>tp', '<cmd>RenderMarkdown preview<CR>', { desc = 'Toggle Render md preview' })
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
+--
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'fsharp',
+  callback = function()
+    vim.opt_local.expandtab = true
+    vim.opt_local.tabstop = 4
+    vim.opt_local.shiftwidth = 4
+    vim.opt_local.softtabstop = 4
+  end,
+})
 
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
@@ -371,7 +393,27 @@ require('lazy').setup({
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
-      { 'j-hui/fidget.nvim', opts = {} },
+      {
+        'j-hui/fidget.nvim',
+        enabled = false,
+        opts = {
+          progress = {
+            display = {
+              render_limit = 2,
+              done_ttl = 0.5,
+              progress_ttl = 0.5,
+              skip_history = true,
+            },
+          },
+
+          notification = {
+            window = {
+              winblend = 40,
+              override_vim_notify = false,
+            },
+          },
+        },
+      },
 
       -- Allows extra capabilities provided by blink.cmp
       'saghen/blink.cmp',
@@ -734,7 +776,7 @@ require('lazy').setup({
       completion = {
         -- By default, you may press `<c-space>` to show the documentation.
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
-        documentation = { auto_show = false, auto_show_delay_ms = 500 },
+        documentation = { auto_show = false, auto_show_delay_ms = 500, window = { max_width = 30, max_height = 8 } },
       },
 
       sources = {
@@ -869,9 +911,8 @@ require('lazy').setup({
   -- Or use telescope!
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
   -- you can continue same window with `<space>sr` which resumes last telescope search
-},
-{
-lockfile = vim.fn.stdpath("data") .. "/lazy-lock.json",
+}, {
+  lockfile = vim.fn.stdpath 'data' .. '/lazy-lock.json',
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
@@ -896,4 +937,33 @@ lockfile = vim.fn.stdpath("data") .. "/lazy-lock.json",
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 
+vim.lsp.config('fsautocomplete', {
+  cmd = { 'fsautocomplete', '--adaptive-lsp-server-enabled' },
+
+  filetypes = { 'fsharp' },
+
+  root_dir = function(bufnr)
+    return vim.fs.root(bufnr, { '*.fsproj', '.git' })
+  end,
+
+  settings = {
+    FsAutoComplete = {
+      LazyProjectWorkspace = true,
+      BackgroundAnalysis = false,
+      ExternalAutocomplete = false,
+      Linter = false,
+      UnionCaseStubGeneration = false,
+      RecordStubGeneration = false,
+      InterfaceStubGeneration = false,
+    },
+  },
+
+  on_attach = function(client, bufnr)
+    client.server_capabilities.semanticTokensProvider = nil
+    client.server_capabilities.documentFormattingProvider = false
+    client.server_capabilities.documentRangeFormattingProvider = false
+  end,
+})
+
+vim.lsp.enable 'fsautocomplete'
 require 'custom.themes'
