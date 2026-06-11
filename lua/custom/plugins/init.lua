@@ -11,3 +11,8 @@ for file_name, type in vim.fs.dir(plugins_dir) do
     require('custom.plugins.' .. module)
   end
 end
+--custom keymaps i will set here
+--
+--1) this one is for moving lines like in vscode, up and down with alt j or down with alt-k
+vim.keymap.set("n", "<A-j>", ":m .+1<CR>==")
+vim.keymap.set("n", "<A-k>", ":m .-2<CR>==")
