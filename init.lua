@@ -100,7 +100,7 @@ do
   vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
   -- Diagnostic Config & Keymaps
-  --  See :help vim.diagnostic.Opts
+  --  See `:help vim.diagnostic.Opts`
   vim.diagnostic.config {
     update_in_insert = false,
     severity_sort = true,
@@ -385,7 +385,7 @@ do
   -- a corresponding preview of the help.
   --
   -- Two important keymaps to use while in Telescope are:
-  --  - Insert mode: <c-/>\
+  --  - Insert mode: <c-/>
   --  - Normal mode: ?
   --
   -- This opens a window that shows you all of the keymaps for the current
@@ -433,7 +433,7 @@ do
   vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
   vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
   vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
-  vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files (".") for repeat)' })
+  vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
   vim.keymap.set('n', '<leader>sc', builtin.commands, { desc = '[S]earch [C]ommands' })
   vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
@@ -765,7 +765,7 @@ do
       -- <c-e>: Hide menu
       -- <c-k>: Toggle signature help
       --
-      -- See :h blink-cmp-config-keymap for defining your own keymap
+      -- See `:help blink-cmp-config-keymap` for defining your own keymap
       preset = 'default',
 
       -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
@@ -796,7 +796,7 @@ do
     -- By default, we use the Lua implementation instead, but you may enable
     -- the rust implementation via `'prefer_rust_with_warning'`
     --
-    -- See :h blink-cmp-config-fuzzy for more information
+    -- See `:help blink-cmp-config-fuzzy` for more information
     fuzzy = { implementation = 'lua' },
 
     -- Shows a signature help window while you type arguments for a function
@@ -881,16 +881,16 @@ do
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug'
-  --require 'kickstart.plugins.indent_line'
-  --require 'kickstart.plugins.lint'
-  --require 'kickstart.plugins.autopairs'
-  --require 'kickstart.plugins.neo-tree'
-  --require 'kickstart.plugins.gitsigns' -- adds gitsigns recommended keymaps
+  -- require 'kickstart.plugins.indent_line'
+  -- require 'kickstart.plugins.lint'
+  -- require 'kickstart.plugins.autopairs'
+  -- require 'kickstart.plugins.neo-tree'
+  -- require 'kickstart.plugins.gitsigns' -- adds gitsigns recommended keymaps
 
   -- NOTE: You can add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  --require 'custom.plugins'
+  -- require 'custom.plugins'
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
