@@ -67,6 +67,12 @@ button so that you have your own copy that you can modify, then install by
 cloning your new repo to your machine using one of the commands below,
 depending on your OS.
 
+Alternatively, you can [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo)
+this repo if you prefer an easy upstream sync path (e.g., keeping your config
+on a separate branch and fast-forwarding `master` from upstream). See the
+[discussion in #1740](https://github.com/nvim-lua/kickstart.nvim/issues/1740)
+for the tradeoffs between the two approaches.
+
 > [!NOTE]
 > Your repo's URL will be something like this:
 > `https://github.com/<your_github_username>/kickstart.nvim.git`
@@ -79,8 +85,8 @@ it's recommended to track it in version control (see `:help vim.pack-lockfile`).
 
 > [!NOTE]
 > If following the recommended step above (i.e., creating your own repo from
-> the template), replace `nvim-lua` with `<your_github_username>` in the
-> commands below
+> the template or fork), replace `nvim-lua` with `<your_github_username>`
+> in the commands below
 
 <details><summary> Linux and Mac </summary>
 
