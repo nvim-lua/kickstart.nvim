@@ -353,19 +353,16 @@ do
   --
   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
   -- Highlight todo, notes, etc in comments
-  vim.pack.add { gh 'EdenEast/nightfox.nvim' }
+  -- [[ Colorscheme ]]
 
-  require('nightfox').setup {
-    options = {
-      styles = {
-        comments = 'NONE',
-        keywords = 'bold',
-        types = 'bold',
-      },
-    },
-  }
+  vim.pack.add { gh 'sainnhe/gruvbox-material' }
 
-  vim.cmd.colorscheme 'carbonfox'
+  vim.g.gruvbox_material_background = 'hard'
+  vim.g.gruvbox_material_foreground = 'original'
+  vim.g.gruvbox_material_enable_italic = 0
+
+  vim.o.background = 'dark'
+  vim.cmd.colorscheme 'gruvbox-material'
 
   vim.pack.add { gh 'folke/todo-comments.nvim' }
   require('todo-comments').setup { signs = false }
@@ -895,9 +892,6 @@ do
         },
       }
     end,
-    condition = {
-      filetype = { 'cs' },
-    },
   }
 
   overseer.register_template {
@@ -911,9 +905,6 @@ do
         },
       }
     end,
-    condition = {
-      filetype = { 'cs' },
-    },
   }
 
   overseer.register_template {
@@ -929,9 +920,6 @@ do
         },
       }
     end,
-    condition = {
-      filetype = { 'cs' },
-    },
   }
 
   overseer.register_template {
@@ -945,9 +933,6 @@ do
         },
       }
     end,
-    condition = {
-      filetype = { 'cs' },
-    },
   }
 
   vim.keymap.set('n', '<leader>oo', '<cmd>OverseerToggle<CR>', { desc = '[O]verseer [O]pen' })
