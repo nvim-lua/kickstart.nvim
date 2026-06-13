@@ -1,0 +1,255 @@
+# Welcome to the multicursor.nvim Tutorial
+
+# Chapter 1: Multi-Cursor Basics
+
+multicursor.nvim allows you to have multiple cursors in your buffer, letting you edit multiple lines or words simultaneously. It's like having a superpower for repetitive editing tasks.
+
+This tutorial is designed to be interactive. To learn these commands, you must practice them on the text provided. If you make a mistake, remember that pressing `<Esc>` will clear all additional cursors and return you to a single cursor.
+
+# Lesson 1.1: ADDING CURSORS LINEARLY
+
+** To add a cursor on the line above or below, use the `<up>` and `<down>` keys. **
+
+1. Move the cursor to the first line below marked ✗.
+2. Press the `<down>` key twice. You should now see three cursors.
+3. Press `i` to enter Insert mode and type " -> " at the beginning of the lines.
+4. Press `<Esc>` to return to Normal mode and clear the cursors.
+
+✗ item one
+✗ item two
+✗ item three
+
+5. Now try adding cursors above. Move the cursor to the third item.
+6. Press the `<up>` key twice.
+7. Press `A` to append at the end of the lines and type " (done)".
+8. Press `<Esc>`.
+
+9. Sometimes you want to add a cursor but skip a line. Use `<leader><up>` or `<leader><down>`.
+10. Move to the first line below. Use `<down>` then `<leader><down>` then `<down>`.
+11. You should have cursors on lines 1, 2, and 4, skipping line 3.
+12. Change "bad" to "good" using `cw` and `<Esc>`.
+
+✗ bad apple
+Keep this one
+✗ bad orange
+✗ bad banana
+
+11. When you are comfortable adding and skipping cursors, move to Lesson 1.2.
+
+# Lesson 1.2: WORD MATCHING
+
+** To add a cursor to the next occurrence of the word under the cursor, press `<leader>n`. For the previous occurrence, press `<leader>N`. Use `<leader>s` to skip the next match and `<leader>S` to skip the previous match. **
+
+1. Move the cursor to the first "apple" in the text below.
+2. Press `<leader>n` repeatedly until all "apple" words have cursors.
+3. Press `cw` and type "fruit" then press `<Esc>`.
+4. Press `<Esc>` to clear the cursors.
+
+✗ apple is red.
+The apple is tasty.
+An apple a day keeps the doctor away.
+
+5. Now try skipping a match. Move the cursor to "error".
+6. Press `<leader>n` to select the second "error", then `<leader>s` to skip the third one, then `<leader>n` again to select the fourth.
+7. Use `cw` to change "error" to "warning" on the selected cursors.
+8. Press `<Esc>`.
+
+✗ error: file not found
+✗ error: disk full
+This is a normal line.
+✗ error: network timeout
+✗ error: permission denied
+
+9. To select EVERY occurrence of a word in the whole document, use `<leader>A`.
+10. Move to "TODO". Press `<leader>A`.
+11. Change "TODO" to "DONE" using `cw` and `<Esc>`.
+
+✗ TODO: Fix bug A
+✗ TODO: Fix bug B
+✗ TODO: Fix bug C
+
+12. Move to Lesson 1.3.
+
+# Lesson 1.3: MANAGING CURSORS
+
+    ** If you have multiple cursors, you can move the "main" cursor with `<left>` (next) and `<right>` (previous), or delete a specific cursor with `<leader>x`. **
+
+1. Use `<down>` to create three cursors on the lines below.
+2. Press `<left>` to move the focus to the cursor below.
+3. Press `<leader>x` to delete that specific cursor.
+4. You should now have only two cursors.
+5. Press `<Esc>` to clear.
+
+✗ Line 1
+✗ Line 2
+✗ Line 3
+
+6. You can also "disable" cursors with `<c-q>`. This means only the main cursor moves, but the others stay put.
+7. Create three cursors on the lines below.
+8. Press `<c-q>`. Move the main cursor to the end of the line. Notice the others didn't move.
+9. Press `<c-q>` again to re-enable them, or `<esc>` to clear them.
+
+✗ Cursor A
+✗ Cursor B
+✗ Cursor C
+
+10. Move to Lesson 2.1.
+
+# Chapter 2: ADVANCED SELECTIONS
+
+# Lesson 2.1: THE GA OPERATOR
+
+** The `ga` command adds a cursor to every line in the current paragraph or visual selection. **
+
+1. Move the cursor to the block of text below.
+2. Press `ga`. You should now have a cursor on every line of the paragraph.
+3. Press `I` (Shift+i) and type "  " (two spaces) to indent the whole block.
+4. Press `<Esc>`.
+
+✗ This is a block
+✗ of text that
+✗ needs to be
+✗ indented.
+
+5. Now try it with a visual selection.
+6. Press `v`, select the first three lines below, then press `ga`.
+7. Change the start of the lines to "S" using `cw` and `<Esc>`.
+
+✗ Small
+✗ small
+✗ small
+Big
+
+8. Move to Lesson 2.2.
+
+# Lesson 2.2: VISUAL BLOCK EDITING
+
+** In Visual mode, `I` and `A` allow you to insert or append text across all selected cursors. **
+
+1. Press `v` and select the lines below.
+2. Press `I` (Shift+i) and type "Fixed: " then press `<Esc>`.
+3. Notice how "Fixed: " was added to the start of every selected line.
+
+✗ Error 404
+✗ Error 500
+✗ Error 502
+
+4. Now try appending. Press `v` and select the lines below.
+5. Press `A` (Shift+a) and type " [PROCESSED]" then press `<Esc>`.
+
+✗ Data A
+✗ Data B
+✗ Data C
+
+6. Move to Lesson 2.3.
+
+# Lesson 2.3: ALIGNMENT AND TRANSPOSITION
+
+** Use `<leader>a` to align cursor columns and `<leader>t` to transpose text between cursors. **
+
+1. Create cursors on the lines below using `<down>`.
+2. Move the cursors so they are at the `=` signs.
+3. Press `<leader>a`. The cursors should now be aligned in a straight vertical column.
+4. Use `i` and space to create a consistent gap.
+
+✗ var_a = 10
+✗ long_variable_name = 20
+✗ b = 30
+
+5. Transposing allows you to swap text between cursors.
+6. Create cursors on the two lines below.
+7. Use `v` to select the word "First" and the word "Second".
+8. Press `<leader>t`. The words should have swapped positions.
+
+✗ First
+✗ Second
+
+9. Move to Lesson 2.4.
+
+# Lesson 2.4: VISUAL SELECTION TOOLS
+
+** In Visual mode, `S` splits the selection by a regex separator, and `M` adds cursors for all matches of a pattern within the selection. **
+
+1. Move the cursor to the text below.
+2. Press `v` and select "apple,banana,cherry".
+3. Press `S`, type `,` and press `<Enter>`.
+4. You should now have three cursors, one on each fruit.
+5. Press `<Esc>` to clear.
+
+✗ apple,banana,cherry
+
+6. Now try matching. Press `v` and select the block below.
+7. Press `M`, type `\d+` (to match numbers) and press `<Enter>`.
+8. Cursors should appear on all numbers. Change them to "X" using `rX`.
+9. Press `<Esc>`.
+
+✗ item 1
+✗ item 2
+✗ item 3
+
+10. Move to Lesson 3.1.
+
+
+# Chapter 3: POWER USER TOOLS
+
+# Lesson 3.1: SEQUENCE INCREMENT
+
+** Use `g<c-a>` to increment numbers in a sequence across all cursors. **
+
+1. Use `<down>` to create cursors on the lines below.
+2. Place all cursors on the "0" characters.
+3. Press `g<c-a>` repeatedly.
+4. The numbers should increment as 1, 2, 3... instead of all becoming 1.
+
+✗ Item 0
+✗ Item 0
+✗ Item 0
+
+5. Use `g<c-x>` to decrement them back to 0.
+
+6. Move to Lesson 3.2.
+
+# Lesson 3.2: SEARCH-BASED CURSORS
+
+** Use `<leader>/n` and `<leader>/N` to add cursors based on a search, `<leader>/s` and `<leader>/S` to skip matches, and `<leader>/A` for all matches. **
+
+1. Type `/test` `<Enter>` to search for "test".
+2. Press `<leader>/n` several times to add cursors to each "test" match.
+3. Change "test" to "prod" using `cw` and `<Esc>`.
+
+✗ this is a test
+Another test here.
+No test in this line.
+A final test.
+
+4. Try `<leader>/A` to immediately select all matches of the current search.
+5. Move to Lesson 3.3.
+
+# Lesson 3.3: DIAGNOSTICS CURSORS
+
+** If you have an LSP configured, you can add cursors to diagnostic errors with `]d` and `[d`. **
+
+1. Move to the lines below. If you see diagnostic markers (like ⚠ or ✘), use `]d` to add a cursor to the next error.
+2. Use `[d` for the previous error.
+3. This allows you to fix multiple linting errors across the file quickly.
+
+✗ local x = 10  -- unused variable
+✗ print(y)       -- undefined variable y
+
+(Note: This requires a working LSP to see the effects).
+
+# LESSON SUMMARY
+
+1. Linear addition: `<up>`, `<down>` (Add), `<leader><up>`, `<leader><down>` (Skip).
+2. Word matching: `<leader>n` (Next), `<leader>N` (Prev), `<leader>s` (Skip Next), `<leader>S` (Skip Prev), `<leader>A` (All).
+3. Management: `<left>` (Next Cursor), `<right>` (Prev Cursor), `<leader>x` (Delete main), `<c-q>` (Disable/Toggle), `<esc>` (Clear).
+4. Selection: `ga` (Paragraph/Selection lines), `I`/`A` in Visual (Block Insert/Append).
+5. Advanced: `<leader>a` (Align), `<leader>t` (Transpose), `g<c-a>`/`g<c-x>` (Sequence Inc/Dec).
+6. Search/Diag: `<leader>/n` (Search next), `<leader>/N` (Search prev), `<leader>/s` (Search skip), `<leader>/A` (Search all), `]d`/`[d` (Diagnostic add).
+
+# CONCLUSION
+
+You have completed the multicursor.nvim tutorial!
+Multi-cursors are a powerful way to avoid repetitive editing. The key is to combine these selection methods with your existing Neovim motions and operators.
+
+To practice further, try using these commands in your own code!
