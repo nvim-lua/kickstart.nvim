@@ -42,6 +42,8 @@ require('mason-nvim-dap').setup {
   ensure_installed = {
     -- Update this to ensure that you have the debuggers for the langs you want
     'delve',
+    'java-debug-adapter',
+    'java-test',
   },
 }
 

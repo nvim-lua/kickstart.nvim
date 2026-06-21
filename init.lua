@@ -99,7 +99,7 @@ do
   vim.g.maplocalleader = ' '
 
   -- Set to true if you have a Nerd Font installed and selected in the terminal
-  vim.g.have_nerd_font = false
+  vim.g.have_nerd_font = true
 
   -- [[ Setting options ]]
   --  See `:help vim.o`
@@ -705,6 +705,30 @@ do
 
     stylua = {}, -- Used to format Lua code
 
+    -- Java language server (installed via Mason).
+    jdtls = {},
+
+    -- ty: Astral's Python type checker. Not yet shipped by nvim-lspconfig, so we
+    -- define the whole config here (ported from the old `lspconfig.configs.ty`
+    -- approach to the new `vim.lsp.config` API). Installed separately via uv, so
+    -- it is excluded from Mason below.
+    ty = {
+      cmd = { 'ty', 'server' },
+      filetypes = { 'python' },
+      root_markers = { 'pyproject.toml', 'ty.toml', '.git' },
+    },
+
+    -- ruff: Python linter/formatter LSP. nvim-lspconfig ships the base `ruff`
+    -- config (cmd, etc.); this only overlays init_options. Installed separately
+    -- via uv, so it is excluded from Mason below.
+    ruff = {
+      init_options = {
+        settings = {
+          fixAll = true,
+        },
+      },
+    },
+
     -- Special Lua Config, as recommended by neovim help docs
     lua_ls = {
       on_init = function(client)
@@ -758,6 +782,9 @@ do
   --
   -- You can press `g?` for help in this menu.
   local ensure_installed = vim.tbl_keys(servers or {})
+  -- ty and ruff are installed separately via uv (~/.local/bin), so exclude them
+  -- from Mason auto-install.
+  ensure_installed = vim.tbl_filter(function(name) return name ~= 'ty' and name ~= 'ruff' end, ensure_installed)
   vim.list_extend(ensure_installed, {
     -- You can add other tools here that you want Mason to install
   })
@@ -796,12 +823,12 @@ do
     },
     -- You can also specify external formatters in here.
     formatters_by_ft = {
-      -- rust = { 'rustfmt' },
+      lua = { 'stylua' },
       -- Conform can also run multiple formatters sequentially
-      -- python = { "isort", "black" },
-      --
+      python = { 'isort', 'black' },
       -- You can use 'stop_after_first' to run the first available formatter from the list
-      -- javascript = { "prettierd", "prettier", stop_after_first = true },
+      javascript = { 'prettierd', 'prettier', stop_after_first = true },
+      SQL = { 'sql-formatter' },
     },
   }
 
@@ -904,7 +931,7 @@ do
   vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 
   -- Ensure basic parsers are installed
-  local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+  local parsers = { 'bash', 'c', 'diff', 'html', 'latex', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
   require('nvim-treesitter').install(parsers)
 
   ---@param buf integer
@@ -966,17 +993,17 @@ do
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug'
-  -- require 'kickstart.plugins.indent_line'
-  -- require 'kickstart.plugins.lint'
-  -- require 'kickstart.plugins.autopairs'
-  -- require 'kickstart.plugins.neo-tree'
-  -- require 'kickstart.plugins.gitsigns' -- adds gitsigns recommended keymaps
+  require 'kickstart.plugins.debug'
+  require 'kickstart.plugins.indent_line'
+  require 'kickstart.plugins.lint'
+  require 'kickstart.plugins.autopairs'
+  require 'kickstart.plugins.neo-tree'
+  require 'kickstart.plugins.gitsigns' -- adds gitsigns recommended keymaps
 
   -- NOTE: You can add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- require 'custom.plugins'
+  require 'custom.plugins'
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
