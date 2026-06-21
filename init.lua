@@ -371,6 +371,7 @@ do
     spec = {
       { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
       { '<leader>t', group = '[T]oggle' },
+      { '<leader>l', group = '[L]aTeX' }, -- VimTeX maps (see lua/custom/plugins/vimtex.lua)
       { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first
       { 'gr', group = 'LSP Actions', mode = { 'n' } },
     },
@@ -729,6 +730,10 @@ do
       },
     },
 
+    -- texlab: LaTeX language server (completion/refs/diagnostics). VimTeX does not
+    -- provide this. Installed via Mason.
+    texlab = {},
+
     -- Special Lua Config, as recommended by neovim help docs
     lua_ls = {
       on_init = function(client)
@@ -824,11 +829,18 @@ do
     -- You can also specify external formatters in here.
     formatters_by_ft = {
       lua = { 'stylua' },
-      -- Conform can also run multiple formatters sequentially
-      python = { 'isort', 'black' },
+      -- ruff handles BOTH import-sorting and formatting (black/isort are not
+      -- installed; ruff is). Organize imports first, then format.
+      python = { 'ruff_organize_imports', 'ruff_format' },
       -- You can use 'stop_after_first' to run the first available formatter from the list
       javascript = { 'prettierd', 'prettier', stop_after_first = true },
-      SQL = { 'sql-formatter' },
+      -- conform matches the lowercase `vim.bo.filetype`, so the key must be `sql`
+      -- (an uppercase `SQL` key would never fire).
+      sql = { 'sql-formatter' },
+      -- Wire in installed-but-previously-unused Mason tools:
+      java = { 'google-java-format' },
+      tex = { 'latexindent' },
+      plaintex = { 'latexindent' },
     },
   }
 
