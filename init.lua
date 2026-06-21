@@ -844,8 +844,9 @@ do
       -- You can use 'stop_after_first' to run the first available formatter from the list
       javascript = { 'prettierd', 'prettier', stop_after_first = true },
       -- conform matches the lowercase `vim.bo.filetype`, so the key must be `sql`
-      -- (an uppercase `SQL` key would never fire).
-      sql = { 'sql-formatter' },
+      -- (an uppercase `SQL` key would never fire). The formatter id is
+      -- `sql_formatter` (conform's name); it wraps the `sql-formatter` executable.
+      sql = { 'sql_formatter' },
       -- Wire in installed-but-previously-unused Mason tools:
       java = { 'google-java-format' },
       tex = { 'latexindent' },
