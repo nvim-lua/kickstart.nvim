@@ -706,7 +706,11 @@ do
 
     stylua = {}, -- Used to format Lua code
 
-    -- Java language server (installed via Mason).
+    -- Java: jdtls is installed via Mason (it's a key here so mason-tool-installer
+    -- picks it up), but its LSP config and `vim.lsp.enable` are owned by nvim-java
+    -- (see lua/custom/plugins/nvim-java.lua). We therefore SKIP jdtls in the
+    -- config/enable loop below so nvim-java's jdtls bootstrap is the one that wins
+    -- and there is no competing vanilla jdtls setup.
     jdtls = {},
 
     -- ty: Astral's Python type checker. Not yet shipped by nvim-lspconfig, so we
@@ -797,8 +801,13 @@ do
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
   for name, server in pairs(servers) do
-    vim.lsp.config(name, server)
-    vim.lsp.enable(name)
+    -- jdtls is configured and enabled by nvim-java (lua/custom/plugins/nvim-java.lua),
+    -- which must run `require('java').setup()` before `vim.lsp.enable('jdtls')`.
+    -- Skip it here to avoid a second, competing jdtls setup.
+    if name ~= 'jdtls' then
+      vim.lsp.config(name, server)
+      vim.lsp.enable(name)
+    end
   end
 end
 
