@@ -6,6 +6,6 @@ vim.lsp.config('dbt', {
   root_markers = { 'dbt_project.yml' },
   settings = {},
 })
-vim.lsp.enable('dbt')
+vim.lsp.enable 'dbt'
 
 return {}
