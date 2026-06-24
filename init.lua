@@ -506,27 +506,39 @@ require('lazy').setup({
     {
       'stevearc/conform.nvim',
       config = function()
+        local prettier_ft = {
+          'javascript',
+          'javascriptreact',
+          'typescript',
+          'typescriptreact',
+          'vue',
+          'css',
+          'scss',
+          'less',
+          'html',
+          'json',
+          'jsonc',
+          'yaml',
+          'markdown',
+          'graphql',
+        }
+        local formatters_by_ft = {}
+        for _, ft in ipairs(prettier_ft) do
+          formatters_by_ft[ft] = { 'prettierd', 'prettier', stop_after_first = true }
+        end
+
         require('conform').setup {
           notify_on_error = false,
           format_on_save = function(bufnr)
-            local enabled_filetypes = {
-              -- lua = true,
-              -- python = true,
-            }
-            if enabled_filetypes[vim.bo[bufnr].filetype] then
-              return { timeout_ms = 500 }
-            else
-              return nil
+            if formatters_by_ft[vim.bo[bufnr].filetype] then
+              return { timeout_ms = 500, lsp_format = 'fallback' }
             end
+            return nil
           end,
           default_format_opts = {
             lsp_format = 'fallback',
           },
-          formatters_by_ft = {
-            -- rust = { 'rustfmt' },
-            -- python = { "isort", "black" },
-            -- javascript = { "prettierd", "prettier", stop_after_first = true },
-          },
+          formatters_by_ft = formatters_by_ft,
         }
         vim.keymap.set({ 'n', 'v' }, '<leader>f', function() require('conform').format { async = true } end, { desc = '[F]ormat buffer' })
       end,
