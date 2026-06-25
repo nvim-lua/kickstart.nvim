@@ -607,8 +607,8 @@ do
   ---@type table<string, vim.lsp.Config>
   local servers = {
     -- clangd = {},
-    -- gopls = {},
-    -- pyright = {},
+    gopls = {},
+    pyright = {},
     -- rust_analyzer = {},
     --
     -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -616,6 +616,9 @@ do
     --
     -- But for many setups, the LSP (`ts_ls`) will work just fine
     -- ts_ls = {},
+    terraformls = {},
+    ansiblels = {},
+    jinja_lsp = {},
 
     stylua = {}, -- Used to format Lua code
 
