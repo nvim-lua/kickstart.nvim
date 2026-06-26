@@ -944,7 +944,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'retrobox'
     end,
   },
 
@@ -1123,7 +1123,18 @@ vim.o.foldenable = true
 
 -- winbar setup
 require('custom.winbar').setup()
-vim.o.winbar = "%{%v:lua.require('custom.winbar').setup()%}" 
+vim.o.winbar = "%{%v:lua.require('custom.winbar').setup()%}"
 -- actually just copy the highlight from mini.statusline to match
 vim.api.nvim_set_hl(0, 'WinBar', { link = 'MiniStatuslineFilename' })
 vim.api.nvim_set_hl(0, 'WinBarNC', { link = 'MiniStatuslineInactive' })
+
+-- enable zip plugin for jvm based lsp's
+vim.g.loaded_zipPlugin = nil
+
+-- kotlin-lsp override before lspconfig patches it
+vim.lsp.config('kotlin_lsp', {
+  cmd = { "intellij-server", "--stdio" },
+  filetypes = { "kotlin" },
+  root_markers = { "settings.gradle", "settings.gradle.kts", "build.gradle", "build.gradle.kts" },
+})
+vim.lsp.enable('kotlin_lsp')
