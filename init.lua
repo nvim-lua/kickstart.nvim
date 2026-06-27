@@ -619,7 +619,7 @@ do
     terraformls = {},
     ansiblels = {},
     jinja_lsp = {},
-
+    hclfmt = {},
     stylua = {}, -- Used to format Lua code
 
     -- Special Lua Config, as recommended by neovim help docs
@@ -695,10 +695,12 @@ do
   -- [[ Formatting ]]
   vim.pack.add { gh 'stevearc/conform.nvim' }
   require('conform').setup {
-    notify_on_error = false,
+    notify_on_error = true,
     format_on_save = function(bufnr)
       -- You can specify filetypes to autoformat on save here:
       local enabled_filetypes = {
+        go = true,
+        hcl = true,
         -- lua = true,
         -- python = true,
       }
@@ -713,12 +715,18 @@ do
     },
     -- You can also specify external formatters in here.
     formatters_by_ft = {
+      hcl = { "hclfmt" },
       -- rust = { 'rustfmt' },
       -- Conform can also run multiple formatters sequentially
       -- python = { "isort", "black" },
       --
       -- You can use 'stop_after_first' to run the first available formatter from the list
       -- javascript = { "prettierd", "prettier", stop_after_first = true },
+    },
+    formatters = {
+    hclfmt = {
+        command = "hclfmt",
+      },
     },
   }
 
