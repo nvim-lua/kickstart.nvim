@@ -4,4 +4,5 @@ test.sh
 nvim
 
 spell/
-lazy-lock.json
+# The plugin lockfile is intentionally committed. It is the rollback point for
+# safe updates and must not be ignored.

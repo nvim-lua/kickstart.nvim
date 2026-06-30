@@ -1,22 +1,29 @@
 vim.g.maplocalleader = ' '
 vim.g.mapleader = ' '
 
--- install deps if need to
-require 'bootstrap.pacman'
+vim.loader.enable()
+
+local version = vim.version()
+if version.major ~= 0 or version.minor ~= 12 then
+  error(('This config supports Neovim 0.12.x (found %s)'):format(tostring(version)))
+end
 
 -- =========================
 -- Lazy.nvim bootstrap
 -- =========================
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system {
+if not vim.uv.fs_stat(lazypath) then
+  local result = vim.system({
     'git',
     'clone',
     '--filter=blob:none',
     'https://github.com/folke/lazy.nvim.git',
     '--branch=stable',
     lazypath,
-  }
+  }, { text = true }):wait()
+  if result.code ~= 0 then
+    error(('Unable to install lazy.nvim:\n%s'):format(result.stderr or 'unknown error'))
+  end
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -91,43 +98,46 @@ require('lazy').setup({
 
   {
     'nvim-treesitter/nvim-treesitter',
+    branch = 'main',
     lazy = false,
     build = ':TSUpdate',
-    opts = {
-      ensure_installed = {
-        'lua',
-        'rust',
-        'python',
-        'javascript',
-        'typescript',
-        'c',
-        'c_sharp',
-        'cpp',
-        'bash',
-        'json',
-        'yaml',
-        'toml',
-      },
-      highlight = {
-        enable = true,
-      },
-    },
   },
 
   {
     'MeanderingProgrammer/treesitter-modules.nvim',
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
-    opts = {
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = '<A-Space>', -- Alt+Space
-          node_incremental = '<A-Space>', -- Alt+Space (expand)
-          node_decremental = '<A-BS>', -- Alt+Backspace (shrink)
-          scope_incremental = '<A-S-Space>', -- Alt+Shift+Space (scope expand)
+    config = function()
+      local parsers = {
+        'bash',
+        'c',
+        'c_sharp',
+        'cpp',
+        'gdscript',
+        'javascript',
+        'json',
+        'lua',
+        'markdown',
+        'python',
+        'rust',
+        'toml',
+        'typescript',
+        'yaml',
+      }
+
+      require('treesitter-modules').setup {
+        ensure_installed = vim.env.NVIM_SKIP_TOOL_INSTALL == '1' and {} or parsers,
+        highlight = { enable = true },
+        incremental_selection = {
+          enable = true,
+          keymaps = {
+            init_selection = '<A-Space>',
+            node_incremental = '<A-Space>',
+            node_decremental = '<A-BS>',
+            scope_incremental = '<A-S-Space>',
+          },
         },
-      },
-    },
+      }
+    end,
   },
 
   'rhysd/git-messenger.vim',
@@ -404,34 +414,6 @@ require('lazy').setup({
     end,
   },
 
-  -- Tooling installer
-  {
-    'WhoIsSethDaniel/mason-tool-installer.nvim',
-    dependencies = { 'williamboman/mason.nvim' },
-    opts = {
-      ensure_installed = {
-        'clangd',
-        'clang-format',
-        'codelldb',
-        'cpplint',
-        'cpptools',
-        'csharpier',
-        'csharp-language-server',
-        'lua-language-server',
-        'netcoredbg',
-        'omnisharp',
-        'omnisharp-mono',
-        'prettier',
-        'ruff',
-        'rust-analyzer',
-        'sonarlint-language-server',
-        'stylua',
-      },
-      auto_update = false,
-      run_on_start = true,
-    },
-  },
-
   -- Terminal UX
   {
     'akinsho/toggleterm.nvim',
@@ -459,7 +441,7 @@ require('lazy').setup({
 
       function _G.set_terminal_keymaps()
         local opts = { noremap = true }
-        vim.diagnostic.disable(0)
+        vim.diagnostic.enable(false, { bufnr = 0 })
         vim.api.nvim_buf_set_keymap(0, 't', '<esc>', [[<C-\><C-n>]], opts)
       end
       vim.cmd 'autocmd! TermOpen term://* lua set_terminal_keymaps()'
@@ -473,7 +455,7 @@ require('lazy').setup({
         float_opts = { width = vim.o.columns, height = vim.o.lines },
         on_open = function(term)
           vim.cmd 'startinsert!'
-          vim.diagnostic.disable(0)
+          vim.diagnostic.enable(false, { bufnr = 0 })
           vim.api.nvim_buf_set_keymap(0, 't', '<esc>', '<cmd>close<CR>', { silent = false, noremap = true })
           if vim.fn.mapcheck('<esc>', 't') ~= '' then
             vim.api.nvim_buf_del_keymap(term.bufnr, 't', '<esc>')
@@ -592,8 +574,8 @@ require('lazy').setup({
   {
     'neovim/nvim-lspconfig',
     dependencies = {
-      { 'williamboman/mason.nvim', config = true },
-      'williamboman/mason-lspconfig.nvim',
+      { 'mason-org/mason.nvim', config = true },
+      'mason-org/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       {
         'j-hui/fidget.nvim',
@@ -660,12 +642,14 @@ require('lazy').setup({
           },
         },
         pyright = {
-          python = {
-            analysis = {
-              autoSearchPaths = true,
-              diagnosticMode = 'openFilesOnly',
-              useLibraryCodeForTypes = true,
-              reportDuplicateImport = true,
+          settings = {
+            python = {
+              analysis = {
+                autoSearchPaths = true,
+                diagnosticMode = 'openFilesOnly',
+                useLibraryCodeForTypes = true,
+                reportDuplicateImport = true,
+              },
             },
           },
         },
@@ -692,30 +676,38 @@ require('lazy').setup({
       capabilities.textDocument.foldingRange = { dynamicRegistration = false, lineFoldingOnly = true }
 
       require('mason').setup { ui = { border = 'rounded' } }
+      for server_name, server in pairs(servers) do
+        server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+        vim.lsp.config(server_name, server)
+      end
+
       require('mason-lspconfig').setup {
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-          end,
-        },
+        ensure_installed = vim.env.NVIM_SKIP_TOOL_INSTALL == '1' and {} or vim.tbl_keys(servers),
+        automatic_enable = true,
       }
 
       require('mason-tool-installer').setup {
         ensure_installed = {
           'clangd',
+          'clang-format',
           'lua_ls',
           'pyright',
           'ruff',
           'codelldb',
           'cpptools',
           'cpplint',
+          'csharpier',
+          'csharp-language-server',
+          'netcoredbg',
+          'omnisharp',
+          'omnisharp-mono',
+          'rust-analyzer',
+          'sonarlint-language-server',
           'stylua',
           'prettier',
         },
         auto_update = false,
-        run_on_start = true,
+        run_on_start = vim.env.NVIM_SKIP_TOOL_INSTALL ~= '1',
         start_delay = 3000,
         debounce_hours = 5,
       }
@@ -801,25 +793,18 @@ require('lazy').setup({
         }),
       })
 
-      require('lspconfig.ui.windows').default_options.border = 'rounded'
-      vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
-      vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' })
-
-      local diagnostic_signs = {
-        { name = 'DiagnosticSignError', text = ' ' },
-        { name = 'DiagnosticSignWarn', text = ' ' },
-        { name = 'DiagnosticSignHint', text = ' ' },
-        { name = 'DiagnosticSignInfo', text = ' ' },
-      }
-      for _, sign in ipairs(diagnostic_signs) do
-        vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })
-      end
-
       vim.diagnostic.config {
         virtual_text = { prefix = '●' },
         severity_sort = true,
         float = { source = 'always' },
-        signs = true,
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = ' ',
+            [vim.diagnostic.severity.WARN] = ' ',
+            [vim.diagnostic.severity.HINT] = ' ',
+            [vim.diagnostic.severity.INFO] = ' ',
+          },
+        },
       }
     end,
   },
@@ -862,11 +847,11 @@ require('lazy').setup({
             ['end'] = { args.line2, end_line:len() },
           }
         end
-        require('conform').format { async = true, lsp_fallback = true, range = range }
+        require('conform').format { async = true, lsp_format = 'fallback', range = range }
       end, { range = true })
 
       vim.keymap.set('', '<leader>fa', function()
-        require('conform').format { async = true, lsp_fallback = true }
+        require('conform').format { async = true, lsp_format = 'fallback' }
       end, { desc = '[F]ormat [a]ll' })
     end,
   },
@@ -1032,18 +1017,7 @@ require('lazy').setup({
   {
     'MeanderingProgrammer/render-markdown.nvim',
     dependencies = {
-      {
-        'nvim-treesitter/nvim-treesitter',
-        branch = 'main',
-        config = function()
-          vim.api.nvim_create_autocmd('FileType', {
-            pattern = { 'llm', 'markdown' },
-            callback = function()
-              vim.treesitter.start(0, 'markdown')
-            end,
-          })
-        end,
-      },
+      'nvim-treesitter/nvim-treesitter',
       'nvim-mini/mini.icons',
     }, -- if you use standalone mini plugins
     ft = { 'markdown', 'llm' },
@@ -1170,7 +1144,12 @@ require('lazy').setup({
       vim.api.nvim_create_user_command('DapResetUI', ":lua require('dapui').open({reset = true})", { desc = 'Reset DAP UI Layout' })
     end,
   },
-}, {})
+}, {
+  lockfile = vim.fn.stdpath 'config' .. '/lazy-lock.json',
+  checker = { enabled = false },
+  change_detection = { enabled = false, notify = false },
+  install = { colorscheme = { 'gruvbox-material', 'habamax' } },
+})
 
 -- =========================================
 -- ============ START SMEAR PROFILE ========
@@ -1533,12 +1512,20 @@ vim.keymap.set('x', '<leader>p', [["_dP]], { desc = 'Paste without overwriting r
 vim.keymap.set('n', '<leader>ya', ':%y+<CR>', { desc = 'Yank entire buffer to clipboard' })
 
 -- diagnostics
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Previous diagnostic' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Next diagnostic' })
+vim.keymap.set('n', '[d', function()
+  vim.diagnostic.jump { count = -1, float = true }
+end, { desc = 'Previous diagnostic' })
+vim.keymap.set('n', ']d', function()
+  vim.diagnostic.jump { count = 1, float = true }
+end, { desc = 'Next diagnostic' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic under cursor' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Diagnostics to loclist' })
-vim.keymap.set('n', '<leader>dd', vim.diagnostic.disable, { desc = 'Disable diagnostics' })
-vim.keymap.set('n', '<leader>de', vim.diagnostic.enable, { desc = 'Enable diagnostics' })
+vim.keymap.set('n', '<leader>dd', function()
+  vim.diagnostic.enable(false)
+end, { desc = 'Disable diagnostics' })
+vim.keymap.set('n', '<leader>de', function()
+  vim.diagnostic.enable(true)
+end, { desc = 'Enable diagnostics' })
 
 -- misc
 vim.keymap.set('n', '<leader>cw', ':cd %:p:h<CR>:pwd<CR>', { desc = 'cd to current file directory' })
@@ -1586,9 +1573,9 @@ vim.keymap.set('n', '<leader>me', ':!chmod +x %:p<CR>', { desc = 'Make file exec
 vim.keymap.set('n', '<leader>P', require('spectre').open, { desc = 'Open Spectre search/replace' })
 
 -- Trouble
-vim.keymap.set('n', '<leader>xx', '<cmd>TroubleToggle<cr>', { silent = true, noremap = true, desc = 'Toggle Trouble' })
-vim.keymap.set('n', '<leader>xw', '<cmd>TroubleToggle workspace_diagnostics<cr>', { silent = true, noremap = true, desc = 'Workspace diagnostics (Trouble)' })
-vim.keymap.set('n', '<leader>xd', '<cmd>TroubleToggle document_diagnostics<cr>', { silent = true, noremap = true, desc = 'Document diagnostics (Trouble)' })
+vim.keymap.set('n', '<leader>xx', '<cmd>Trouble diagnostics toggle<cr>', { silent = true, desc = 'Toggle Trouble diagnostics' })
+vim.keymap.set('n', '<leader>xw', '<cmd>Trouble diagnostics toggle<cr>', { silent = true, desc = 'Workspace diagnostics (Trouble)' })
+vim.keymap.set('n', '<leader>xd', '<cmd>Trouble diagnostics toggle filter.buf=0<cr>', { silent = true, desc = 'Document diagnostics (Trouble)' })
 
 -- DAP
 vim.keymap.set('n', '<leader>dap', ":lua require('dapui').toggle()<CR>", { desc = 'Toggle DAP UI' })
@@ -1692,9 +1679,6 @@ vim.api.nvim_set_keymap('i', '<C-H>', '<C-W>', { noremap = true })
 
 -- git coauthors
 vim.keymap.set('n', '<leader>ga', ':Telescope coauthors<CR>')
-
--- install treesitter parsers
-require('nvim-treesitter').install { 'c', 'rust', 'gdscript', 'c_sharp' }
 
 -- ======== LSP settings ===========
 -- signature help

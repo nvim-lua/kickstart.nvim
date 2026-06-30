@@ -1,0 +1,52 @@
+name: Update locked plugins
+
+on:
+  schedule:
+    - cron: '17 7 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential curl git ripgrep
+      - name: Install Neovim 0.12.2
+        run: |
+          curl -fL https://github.com/neovim/neovim/releases/download/v0.12.2/nvim-linux-x86_64.tar.gz -o /tmp/nvim.tar.gz
+          tar -xzf /tmp/nvim.tar.gz -C /tmp
+          echo "/tmp/nvim-linux-x86_64/bin" >> "$GITHUB_PATH"
+      - name: Update plugins and smoke test the result
+        run: scripts/nvim-test.sh update
+      - name: Open or refresh the update pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- lazy-lock.json; then
+            echo "Plugin lockfile is already current."
+            exit 0
+          fi
+
+          branch=automation/plugin-updates
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git fetch origin "$branch" || true
+          git switch -C "$branch"
+          git add lazy-lock.json
+          git commit -m "chore: update locked plugins"
+          git push --force-with-lease origin "$branch"
+
+          gh pr create \
+            --base "${GITHUB_REF_NAME}" \
+            --head "$branch" \
+            --title "chore: update locked Neovim plugins" \
+            --body "Automated weekly plugin update. Merge only after the Neovim config check passes." \
+            || gh pr edit "$branch" --body "Automated weekly plugin update. Merge only after the Neovim config check passes."

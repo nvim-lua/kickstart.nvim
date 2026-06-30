@@ -1,0 +1,24 @@
+name: Neovim config
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential curl git ripgrep
+      - name: Install Neovim 0.12.2
+        run: |
+          curl -fL https://github.com/neovim/neovim/releases/download/v0.12.2/nvim-linux-x86_64.tar.gz -o /tmp/nvim.tar.gz
+          tar -xzf /tmp/nvim.tar.gz -C /tmp
+          echo "/tmp/nvim-linux-x86_64/bin" >> "$GITHUB_PATH"
+      - name: Restore locked plugins and start Neovim
+        run: scripts/nvim-test.sh restore
