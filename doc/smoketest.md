@@ -3,6 +3,13 @@
 A manual smoketest checklist to ensure features are working:
 
 ## Plugins
+### Default
+- [ ] Whichkey should have accurate keybindings
+    - g -> [G]it
+    - n -> [N]otepad
+    - s -> [S]earch
+    - t -> [T]oggle
+
 ### Kickstart
 Kickstart plugins *that are enabled* should be working
 - [ ] Autopairs
