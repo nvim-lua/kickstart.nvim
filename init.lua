@@ -707,6 +707,8 @@ require('lazy').setup({
           typescript = true,
           typescriptreact = true,
           cs = true,
+          --TODO: not getting any lsp completion for svelte files
+          svelte = true,
           -- python = true,
         }
         if enabled_filetypes[vim.bo[bufnr].filetype] then
@@ -729,6 +731,7 @@ require('lazy').setup({
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
         typescript = { 'prettierd', 'prettier', stop_after_first = true },
         typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        svelte = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
