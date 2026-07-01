@@ -2,8 +2,6 @@
 -- NOTE: gitsigns is already included in init.lua but contains only the base
 -- config. This will add also the recommended keymaps.
 
-vim.pack.add { 'https://github.com/lewis6991/gitsigns.nvim' }
-
 require('gitsigns').setup {
   on_attach = function(bufnr)
     local gitsigns = require 'gitsigns'
