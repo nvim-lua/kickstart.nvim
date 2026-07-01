@@ -16,6 +16,8 @@ A manual smoketest checklist to ensure features are working:
     - `<leader><C-t>` should open a terminal
 - [ ] VimTmuxNavigator
     - Should be able to navigate between nvim and tmux panes using `<C-j>`, `<C-k>`, `<C-h>`, `<C-l>` for each respective direction
+- [ ] Guttermarks
+    - Marks (place a mark with `m<char>`) should be displayed in the gutter by their character
 
 ### Themes
 - [ ] Catppuccin Theme
