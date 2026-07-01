@@ -1,8 +1,5 @@
-return {
-  'nosduco/remote-sshfs.nvim',
-  dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' },
-  opts = {},
-}
+vim.pack.add { "https://github.com/nosduco/remote-sshfs.nvim"}
+require('remote-sshfs').setup()
 
 -- Usage: :RemoteSSHFSConnect <user>@<ipaddress>:/path/to/file
 -- Sometimes you have to force close, and that causes permission failed on reconnect.
