@@ -31,3 +31,14 @@ Custom plugins should be working
 ### Themes
 - [ ] Catppuccin Theme
 - [ ] Rose Pine Theme
+
+## Settings
+- [ ] Nerd fonts should be enabled
+- [ ] Line numbers should be relative
+- [ ] Virtual Diagnostic Lines (errors/warnings) should be beneath the applicable line
+- [ ] Arrow key navigation should be disabled
+- [ ] Should connect to godot server when running
+
+## LSP
+
+### Formatting
