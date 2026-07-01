@@ -4,9 +4,11 @@ A manual smoketest checklist to ensure features are working:
 
 ## Plugins
 ### Default
-- [ ] Whichkey should have accurate keybindings
+- [ ] Whichkey groups should have accurate keybindings
+    - c -> LSP: [C]ode
     - g -> [G]it
     - n -> [N]otepad
+    - r -> [R]e[N]ame
     - s -> [S]earch
     - t -> [T]oggle
 
