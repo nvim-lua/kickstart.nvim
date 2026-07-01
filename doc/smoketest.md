@@ -2,9 +2,16 @@
 
 A manual smoketest checklist to ensure features are working:
 
-## Plugin
+## Plugins
+### Kickstart
+Kickstart plugins *that are enabled* should be working
+- [ ] Autopairs
+    - Brackets, parenthesis, etc, should automatically close
+- [ ] IndentLine
+    - Should see visual indentation guides for indented lines
 
 ### Custom
+Custom plugins should be working
 - [ ] Oil
     - Shortcut `<leader>-` should open Oil
 - [ ] Snacks
