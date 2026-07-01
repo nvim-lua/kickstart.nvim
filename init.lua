@@ -374,6 +374,8 @@ do
       { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first
       -- TODO: LSP actions (anything with `gr`) should be with the leader key
       { 'gr', group = 'LSP Actions', mode = { 'n' } },
+      { '<leader>g', group = '[G]it' },
+      { '<leader>n', group = '[N]otepad' },
     },
   }
 
