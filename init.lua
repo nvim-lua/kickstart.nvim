@@ -374,8 +374,9 @@ do
     spec = {
       { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
       { '<leader>t', group = '[T]oggle' },
-      { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first
       { '<leader>g', group = '[G]it' },
+      { '<leader>gh', group = '[G]it [H]unk', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first
+      { '<leader>gt', group = '[G]it [T]oggle', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first
       { '<leader>n', group = '[N]otepad' },
       { '<leader>r', group = '[R]e[N]ame', mode = { 'n' } },
       { '<leader>c', group = 'LSP: [C]ode', mode = { 'n' } },
