@@ -379,6 +379,7 @@ do
       { 'gr', group = 'LSP Actions', mode = { 'n' } },
       { '<leader>g', group = '[G]it' },
       { '<leader>n', group = '[N]otepad' },
+      { '<leader>r', group = '[R]e[N]ame' },
     },
   }
 
@@ -650,9 +651,9 @@ do
 
       -- Rename the variable under your cursor.
       --  Most Language Servers support renaming across files, etc.
-      map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
-
+      map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
       -- Execute a code action, usually your cursor needs to be on top of an error
+
       -- or a suggestion from your LSP for this to activate.
       map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
 
