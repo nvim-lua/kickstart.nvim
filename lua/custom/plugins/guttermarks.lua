@@ -1,4 +1,1 @@
-return {
-  'dimtion/guttermarks.nvim',
-  event = { 'BufReadPost', 'BufNewFile', 'BufWritePre', 'FileType' },
-}
+vim.pack.add { "https://github.com/dimtion/guttermarks.nvim" }
