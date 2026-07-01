@@ -16,7 +16,7 @@ require('snacks').setup {
 }
 
 vim.keymap.set('n', '<leader>=', function() Snacks.dashboard.open() end, { desc = 'Dashboard' })
-vim.keymap.set('n', '<leader>gb', function() Snacks.gitbrowse.open() end, { desc = 'Open [G]it Repository in [B]rowser' })
+vim.keymap.set('n', '<leader>gr', function() Snacks.gitbrowse.open() end, { desc = 'Open [G]it [R]emore Repository in Browser' })
 vim.keymap.set('n', '<leader>gl', function() Snacks.lazygit.open() end, { desc = 'Open [L]azy [G]it' })
 vim.keymap.set('n', '<leader>no', function() Snacks.scratch() end, { desc = '[O]pen [N]otepad' })
 vim.keymap.set('n', '<leader>ns', function() Snacks.scratch.select() end, { desc = '[S]elect [N]ote' })
