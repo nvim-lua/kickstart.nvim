@@ -16,6 +16,15 @@ A manual smoketest checklist to ensure features are working:
 Kickstart plugins *that are enabled* should be working
 - [ ] Autopairs
     - Brackets, parenthesis, etc, should automatically close
+- [ ] Git Signs
+    - `<leader>ghs` should stage a hunk of changes
+    - `<leader>ghr` should reset a hunk of changes
+    - `<leader>ghS` should stage a buffer of changes
+    - `<leader>ghR` should reset a buffer of changes
+    - `<leader>ghp` should preview changes in a git hunk
+    - `<leader>gb` should show the git blame line
+    - `<leader>gd` should show the git diff since the index
+    - `<leader>gD` should show the git diff since the last commit
 - [ ] IndentLine
     - Should see visual indentation guides for indented lines
 
@@ -25,7 +34,7 @@ Custom plugins should be working
     - Shortcut `<leader>-` should open Oil
 - [ ] Snacks
     - Should load dashboard at start, and `<leader>=` should open dashboard
-    - `<leader>gb` should open the remote git repository in a browser
+    - `<leader>gr` should open the remote git repository in a browser
     - `<leader>gl` should open lazy git
     - `<leader>no` should open a scratchpad
     - `<leader>ns` browses existing notes in scratchpad
