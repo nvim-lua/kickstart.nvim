@@ -806,7 +806,6 @@ do
         cs = true,
         --TODO: not getting any lsp completion for svelte files
         svelte = true,
-        -- python = true,
       }
       if enabled_filetypes[vim.bo[bufnr].filetype] then
         return { timeout_ms = 500 }
