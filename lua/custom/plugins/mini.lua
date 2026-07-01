@@ -1,3 +1,4 @@
+--FIX: fix/postmerge-20260701: make sure this configuration applies to upstreams version of mini
 return {
   'nvim-mini/mini.nvim',
   config = function()
