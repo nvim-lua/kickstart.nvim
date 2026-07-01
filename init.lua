@@ -420,6 +420,7 @@ do
   --  - va)  - [V]isually select [A]round [)]paren
   --  - yiiq - [Y]ank [I]nside [I]+1 [Q]uote
   --  - ci'  - [C]hange [I]nside [']quote
+  --FIX: mini.ai does not seem to be working correctly. Conflicts?
   require('mini.ai').setup {
     -- NOTE: Avoid conflicts with the built-in incremental selection mappings on Neovim>=0.12 (see `:help treesitter-incremental-selection`)
     mappings = {
@@ -434,6 +435,7 @@ do
   -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
   -- - sd'   - [S]urround [D]elete [']quotes
   -- - sr)'  - [S]urround [R]eplace [)] [']
+  --FIX: mini.surround does not seem to be working correctly. Conflicts?
   require('mini.surround').setup()
 
   -- Simple and easy statusline.
