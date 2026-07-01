@@ -45,6 +45,7 @@ Custom plugins should be working
 - [ ] Virtual Diagnostic Lines (errors/warnings) should be beneath the applicable line
 - [ ] Arrow key navigation should be disabled
 - [ ] Should connect to godot server when running
+- [ ] Files should format on save
 
 ## LSP
 
