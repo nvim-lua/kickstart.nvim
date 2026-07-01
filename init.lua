@@ -372,7 +372,7 @@ do
       { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
       { '<leader>t', group = '[T]oggle' },
       { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first
-      -- TODO: LSP actions should be with the leader key
+      -- TODO: LSP actions (anything with `gr`) should be with the leader key
       { 'gr', group = 'LSP Actions', mode = { 'n' } },
     },
   }
@@ -697,9 +697,9 @@ do
   --  See `:help lsp-config` for information about keys and how to configure
   ---@type table<string, vim.lsp.Config>
   local servers = {
-    -- clangd = {},
+    clangd = {},
     -- gopls = {},
-    -- pyright = {},
+    pyright = {},
     -- rust_analyzer = {},
     --
     -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -707,6 +707,8 @@ do
     --
     -- But for many setups, the LSP (`ts_ls`) will work just fine
     -- ts_ls = {},
+
+    omnisharp = {}, -- Used to format C# code
 
     stylua = {}, -- Used to format Lua code
 
@@ -765,6 +767,9 @@ do
   local ensure_installed = vim.tbl_keys(servers or {})
   vim.list_extend(ensure_installed, {
     -- You can add other tools here that you want Mason to install
+    'clangd',
+    'pyright',
+    'omnisharp',
   })
 
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }

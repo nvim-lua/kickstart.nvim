@@ -41,4 +41,13 @@ Custom plugins should be working
 
 ## LSP
 
-### Formatting
+- [ ] LSP, autocomplete, and formatting should work for the following file types
+    - Javascript `.js`, `.jsx`
+    - Typescript `.ts`, `.tsx`
+    - Svelte `.svelte`
+    - C# `.cs`
+    - Lua `.lua`
+- [ ] Mason should ensure that the following tools are installed
+    - Clangd
+    - Pyright
+    - Omnisharp
