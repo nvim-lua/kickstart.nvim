@@ -619,7 +619,9 @@ do
     terraformls = {},
     ansiblels = {},
     jinja_lsp = {},
-    hclfmt = {},
+    powershell_es = {
+bundle_path = vim.fn.stdpath('data') .. '/mason/packages/powershell-editor-services',
+    },
     stylua = {}, -- Used to format Lua code
 
     -- Special Lua Config, as recommended by neovim help docs
@@ -651,7 +653,7 @@ do
       ---@type lspconfig.settings.lua_ls
       settings = {
         Lua = {
-          format = { enable = false }, -- Disable formatting (formatting is done by stylua)
+          format = { enable = true }, -- Disable formatting (formatting is done by stylua)
         },
       },
     },
@@ -701,7 +703,8 @@ do
       local enabled_filetypes = {
         go = true,
         hcl = true,
-        -- lua = true,
+        ps1 = true,
+        lua = true,
         -- python = true,
       }
       if enabled_filetypes[vim.bo[bufnr].filetype] then
