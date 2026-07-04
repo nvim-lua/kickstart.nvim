@@ -1,5 +1,5 @@
 ---@diagnostic disable: undefined-global
--- Plugin keymaps (dadbod, session, scratch, snacks, leap, elixir, mini-surround)
+-- Plugin keymaps (dadbod, session, scratch, snacks, leap, mini-surround)
 
 local M = {}
 
@@ -58,13 +58,6 @@ M.leap = {
   end, opts = { desc = 'Leap: Search across windows' } },
 }
 
--- Elixir keymaps
-M.elixir = {
-  { mode = 'n', lhs = '<leader>xt', rhs = function() require('elixir').run_test_file() end, opts = { desc = 'Elixir: Test file' } },
-  { mode = 'n', lhs = '<leader>xn', rhs = function() require('elixir').run_nearest_test() end, opts = { desc = 'Elixir: Test nearest' } },
-  { mode = 'n', lhs = '<leader>xm', rhs = function() vim.cmd('Telescope elixir mix') end, opts = { desc = 'Elixir: Mix tasks' } },
-}
-
 -- Mini-surround keymaps (used by mini.surround config)
 M.mini_surround = {
   add = 'sa',
@@ -107,12 +100,6 @@ end
 
 function M.setup_leap()
   for _, mapping in ipairs(M.leap) do
-    vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
-  end
-end
-
-function M.setup_elixir()
-  for _, mapping in ipairs(M.elixir) do
     vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
   end
 end

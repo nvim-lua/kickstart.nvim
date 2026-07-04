@@ -63,11 +63,8 @@ function M.setup()
       M.default_on_attach = function(client, bufnr)
         require('core.keymaps').setup_lsp_keymaps(bufnr)
         
-        -- Only attach navic if:
-        -- 1. The client supports document symbols
-        -- 2. The client isn't elixirls (handled by elixir-tools.nvim)
-        if client.server_capabilities.documentSymbolProvider 
-            and client.name ~= 'elixirls' then
+        -- Attach navic if client supports document symbols
+        if client.server_capabilities.documentSymbolProvider then
           local status_ok, _ = pcall(require, 'nvim-navic')
           if status_ok then
             require('nvim-navic').attach(client, bufnr)

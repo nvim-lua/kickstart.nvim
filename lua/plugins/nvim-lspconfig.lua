@@ -44,6 +44,7 @@ return {
         require('mason-tool-installer').setup {
           ensure_installed = {
             'lua-language-server',
+            'stylua', -- Lua formatter
             'marksman',
             -- Go tools
             'gopls', -- Go LSP
@@ -64,8 +65,10 @@ return {
             'debugpy', -- Python debugger
             -- SQL tools
             'sqls', -- Advanced SQL LSP
-            -- Elixir
-            'elixir-ls' -- Elixir LSP
+            -- Shell tools
+            'bash-language-server', -- Bash LSP
+            'shellcheck', -- Shell linter
+            'shfmt', -- Shell formatter
           },
           auto_update = true,
           run_on_start = true,

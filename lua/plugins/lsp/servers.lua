@@ -8,6 +8,17 @@ local gopls_build_flags = go_flags ~= '' and { '-tags=' .. go_flags } or {}
 return {
   -- Python
   pyright = {},
+
+  -- Bash/Shell
+  bashls = {
+    filetypes = { 'sh', 'bash', 'zsh' },
+    settings = {
+      bashIde = {
+        globPattern = '*@(.sh|.inc|.bash|.command)',
+        shellcheckPath = 'shellcheck',
+      },
+    },
+  },
   -- Go
   gopls = {
     settings = {
@@ -131,17 +142,4 @@ return {
       },
     },
   },
-
-  -- Elixir
-  elixirls = {
-    cmd = { 'elixir-ls' },
-    settings = {
-      elixirLS = {
-        dialyzerEnabled = true,
-        fetchDeps = true,
-        enableTestLenses = true,
-        suggestSpecs = true,
-      }
-    }
-  }
 }

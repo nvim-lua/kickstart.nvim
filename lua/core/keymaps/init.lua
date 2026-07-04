@@ -24,14 +24,12 @@ M.session_keymaps = plugins.session
 M.scratch_keymaps = plugins.scratch
 M.snacks_keymaps = plugins.snacks
 M.leap_keymaps = plugins.leap
-M.elixir_keymaps = plugins.elixir
 M.mini_surround_keymaps = plugins.mini_surround
 
 -- Setup functions
 M.setup_gitsigns_keymaps = git.setup
 M.setup_dadbod_keymaps = plugins.setup_dadbod
 M.setup_session_keymaps = plugins.setup_session
-M.setup_elixir_keymaps = plugins.setup_elixir
 M.setup_leap_keymaps = plugins.setup_leap
 
 -- Default on_attach for LSP (used by lsp/setup.lua)
@@ -107,7 +105,6 @@ local function init_keymaps()
   plugins.setup_dadbod()
   plugins.setup_session()
   plugins.setup_leap()
-  plugins.setup_elixir()
   git.setup()
 
   -- Tab navigation
