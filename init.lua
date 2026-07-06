@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -175,7 +175,18 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+local opts = { noremap = true, silent = true }
 
+local function quickfix()
+  vim.lsp.buf.code_action {
+    filter = function(a)
+      return a.isPreferred
+    end,
+    apply = true,
+  }
+end
+
+vim.keymap.set('n', '<leader>qf', quickfix, opts)
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -247,8 +258,10 @@ rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
-
+  {
+    'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+    event = 'VimEnter',
+  },
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -670,8 +683,40 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      local util = require 'lspconfig.util'
       local servers = {
-        -- clangd = {},
+        clangd = {
+          cmd = {
+            'clangd',
+            '--background-index', -- Keep a persistent index for faster nav
+            '--clang-tidy', -- Enable static analysis
+            '--completion-style=detailed', -- Better completion info
+            '--header-insertion=never', -- Avoid unwanted #include insertions
+            '--function-arg-placeholders=0', -- Avoid intrusive placeholders
+            '--offset-encoding=utf-16', -- Match Neovim default (important)
+          },
+          filetypes = { 'c', 'cpp', 'objc', 'objcpp' },
+          root_dir = function(fname)
+            -- Common STM32 project roots: .clangd, Makefile, or CubeIDE files
+            return util.root_pattern('.clangd', 'compile_commands.json', 'Makefile', '.git')(fname) or vim.fs.dirname(fname)
+          end,
+          capabilities = vim.tbl_deep_extend('force', vim.lsp.protocol.make_client_capabilities(), {
+            offsetEncoding = { 'utf-16' },
+            textDocument = {
+              completion = {
+                completionItem = {
+                  snippetSupport = false,
+                },
+              },
+            },
+          }),
+          on_init = function(client, result)
+            -- Safeguard against offset encoding mismatch
+            if result and result.offsetEncoding then
+              client.offset_encoding = result.offsetEncoding
+            end
+          end,
+        },
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
@@ -1012,5 +1057,7 @@ require('lazy').setup({
   },
 })
 
+-- disable modeline
+vim.opt.modeline = false
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
