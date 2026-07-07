@@ -8,7 +8,6 @@ vim.pack.add { gh 'mfussenegger/nvim-lint' }
 local lint = require 'lint'
 
 lint.linters_by_ft = {
-  markdown = { 'markdownlint' },
   sh = { 'shellcheck' },
   bash = { 'shellcheck' },
   zsh = { 'shellcheck' },
