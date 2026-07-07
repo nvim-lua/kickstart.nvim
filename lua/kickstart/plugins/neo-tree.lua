@@ -44,6 +44,7 @@ require('neo-tree').setup {
 
   -- Configuration for filesystem source (files, folders)
   filesystem = {
+    hijack_netrw_behavior = "disabled", -- Don't auto-open on `nvim .`
     filtered_items = {
       visibility = 'all',        -- Show: all | visible_filtered | filtered
       hide_dotfiles = false,     -- Hide files starting with .

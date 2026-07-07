@@ -1,52 +1,72 @@
 # Neovim Development Environment
 
-A highly opinionated, single-file Neovim configuration built for performance, transparency, and a terminal-native workflow.
+A single-file Neovim configuration forked from Kickstart.nvim, tuned for infrastructure and backend development.
 
 ## Philosophy
 
-This configuration is intentionally streamlined. It avoids the bloat of heavy distributions in favor of a clear, maintainable `init.lua` that acts as its own documentation. 
-
-* **Built for Infrastructure & Backend:** Tuned specifically for a DevOps engineering workflow, with deep integrations for Go, Terraform, Bicep, and bash scripting.
-* **Terminal-Native:** Optimized for fast, keyboard-driven navigation. No unnecessary GUI abstractions.
-* **Radical Transparency:** Every line of code is meant to be understood. The configuration is a foundation, ready to be scaled or refactored as tooling requirements evolve.
+- **Built for DevOps:** Deep integrations for Go, Terraform/HCL, Bicep, PowerShell, Ansible, Jinja, and Bash.
+- **vim.pack native:** Uses Neovim 0.12+'s built-in `vim.pack` plugin manager — no external plugin manager needed.
+- **Terminal-native:** Keyboard-driven. No GUI fluff.
+- **Modular:** Each plugin lives in its own file under `lua/kickstart/plugins/`. Enable or disable by commenting a single `require` in Section 10 of `init.lua`.
 
 ## Prerequisites
 
-This setup expects a modern Unix environment. It is primarily developed and tested on Arch Linux.
-
-Ensure you have the following system dependencies installed so tools like Telescope and Treesitter compile correctly:
-
+Arch Linux:
 ```bash
 sudo pacman -S --needed neovim gcc make git ripgrep fd tree-sitter-cli unzip xclip
 ```
 
+Optional but recommended:
+```bash
+sudo pacman -S --needed shellcheck golangci-lint  # for linting
+```
+
 ## Installation
 
-**1. Prepare the Environment**
-Back up any existing configuration and clear the local share directory to avoid plugin conflicts.
 ```bash
+# Backup existing config
 mv ~/.config/nvim ~/.config/nvim.bak
 rm -rf ~/.local/share/nvim
+
+# Clone and bootstrap
+git clone https://github.com/<your-username>/nvim.git ~/.config/nvim
+nvim  # Plugins auto-install on first run
 ```
 
-**2. Clone the Repository**
-```bash
-git clone https://github.com/YOUR_GITHUB_USERNAME/kickstart.nvim.git ~/.config/nvim
-```
+## Core Stack
 
-**3. Bootstrap**
-Launch Neovim. The package manager will automatically pull and compile all plugins on the first run.
-```bash
-nvim
-```
+| Category | Tooling |
+|---|---|
+| **LSP** | gopls, terraformls, ansiblels, jinja_lsp, powershell_es, pyright, bicep-lsp, lua_ls |
+| **Autocomplete** | blink.cmp + LuaSnip |
+| **Fuzzy Finder** | Telescope.nvim (ripgrep + fd + fzf-native) |
+| **Parsing** | Treesitter (auto-installs parsers on demand) |
+| **Formatting** | conform.nvim — autoformat on save for go, hcl, ps1, lua; external hclfmt for HCL |
+| **Linting** | nvim-lint — shellcheck (bash/sh/zsh), golangci-lint (Go), markdownlint (markdown) |
+| **Git** | gitsigns.nvim — hunk staging, blame, diff, text objects |
+| **File Tree** | neo-tree.nvim — toggle with `<leader>ff` |
+| **Debug** | nvim-dap + dap-ui + dap-go (commented out by default) |
 
-## Core Stack & Integrations
+## Custom Keymaps
 
-* **LSP & Linting:** Native Neovim LSP setup configured for `gopls`, `terraform-ls`, and `bicep-lsp`.
-* **Fuzzy Finding:** Telescope.nvim powered by `ripgrep` and `fd` for instant project-wide navigation.
-* **Parsing:** Treesitter for high-performance syntax highlighting and structural code manipulation.
+| Key | Action |
+|---|---|
+| `<C-s>` | Save file (insert + normal mode) |
+| `<PageUp>` / `<PageDown>` | Scroll up/down |
+| `<C-h/j/k/l>` | Navigate splits |
+| `<leader>ff` | Toggle neo-tree file explorer |
+| `<leader>fb` | Toggle neo-tree buffer explorer |
+| `<leader>sf` | Telescope find files |
+| `<leader>sg` | Telescope live grep |
+| `<leader>f` | Format buffer |
+| `<leader>hs` | Stage git hunk |
+| `<leader>hr` | Reset git hunk |
+| `<leader>tb` | Toggle git blame |
 
-## Management & Updates
+## Management
 
-* **Inspect State:** Run `:lua vim.pack.update(nil, { offline = true })`
-* **Apply Updates:** Run `:lua vim.pack.update()` (`:write` to apply, `:quit` to cancel)
+- **Check plugin status:** `:lua vim.pack.update(nil, { offline = true })`
+- **Update plugins:** `:lua vim.pack.update()` (`:write` to apply, `:quit` to cancel)
+- **Health check:** `:checkhealth kickstart`
+- **Add a plugin:** Create `lua/kickstart/plugins/<name>.lua`, add `require 'kickstart.plugins.<name>'` in init.lua Section 10
+- **Disable a plugin:** Comment its `require` in init.lua Section 10
