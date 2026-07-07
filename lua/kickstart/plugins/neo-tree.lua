@@ -10,7 +10,7 @@ local neo_tree_spec = {
   },
 }
 
-vim.pack.add(neo_tree_spec)
+vim.pack.add { neo_tree_spec }
 
 require('neo-tree').setup {
   -- Show file explorer by default on NeoTree open
