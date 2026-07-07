@@ -285,7 +285,7 @@ do
   require 'kickstart.plugins.treesitter'
 
   -- Optional plugins (uncomment to enable)
-  require 'kickstart.plugins.neo-tree'
+  -- require 'kickstart.plugins.neo-tree'
   require 'kickstart.plugins.lint'
   -- require 'kickstart.plugins.debug'
   -- require 'kickstart.plugins.autopairs'
