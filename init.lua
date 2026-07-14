@@ -186,6 +186,12 @@ vim.keymap.set('n', '<leader>e', '<CMD>Oil<CR>', { desc = 'Open folder structure
 vim.keymap.set('n', '<leader>E', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
+-- Move lines up and down with J and K
+vim.keymap.set('n', 'J', '<CMD>m .+1<CR>==', { desc = 'Move line down' })
+vim.keymap.set('n', 'K', '<CMD>m .-2<CR>==', { desc = 'Move line up' })
+vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", { desc = 'Move line down' })
+vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { desc = 'Move line up' })
+
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
