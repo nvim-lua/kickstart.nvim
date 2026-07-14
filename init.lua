@@ -168,6 +168,10 @@ rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   {
+    'habamax/vim-godot',
+    event = 'VimEnter',
+  },
+  {
     'nvim-tree/nvim-tree.lua',
     version = '*',
     lazy = false,
@@ -506,7 +510,7 @@ require('lazy').setup({
       require('telescope').setup {
         defaults = {
           -- prevent telescope from searching inside the .git/ folder itself
-          file_ignore_patterns = { '.git/', '.venv/' },
+          file_ignore_patterns = { '.git/', '.venv/', 'node_modules/', 'dist/', 'generated/', 'migrations/' },
         },
         pickers = {
           find_files = {
@@ -682,7 +686,7 @@ require('lazy').setup({
             if vim.fn.has 'nvim-0.11' == 1 then
               return client:supports_method(method, bufnr)
             else
-              return client.supports_method(method, { bufnr = bufnr })
+              return client:supports_method(method, { bufnr = bufnr })
             end
           end
 
@@ -869,11 +873,14 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescript = { 'prettierd', 'prettier', stop_after_first = true },
+        javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        json = { 'prettierd', 'prettier', stop_after_first = true },
+        css = { 'prettierd', 'prettier', stop_after_first = true },
+        html = { 'prettierd', 'prettier', stop_after_first = true },
+        markdown = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
@@ -1099,10 +1106,11 @@ require('lazy').setup({
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
-  {
+  { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    lazy = false, -- Force it to load immediately to debug the "not found" issue
+    main = 'nvim-treesitter.config', -- Sets main module to use for opts
+    -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
       ensure_installed = {
         'bash',
@@ -1120,21 +1128,18 @@ require('lazy').setup({
         'typescript',
         'tsx',
         'xml',
+        'gdscript',
+        'godot_resource',
+        'gdshader',
       },
       auto_install = true,
       highlight = {
         enable = true,
         additional_vim_regex_highlighting = { 'ruby' },
       },
-      indent = { enable = true, disable = { 'ruby' } },
-      parser_install_dir = vim.fn.stdpath 'data' .. '/lazy/nvim-treesitter/parser',
+      indent = { enable = true, disable = { 'ruby', 'gdscript', 'godot_resource', 'gdshader' } },
     },
-    config = function(_, opts)
-      vim.opt.runtimepath:prepend(opts.parser_install_dir)
-      require('nvim-treesitter.configs').setup(opts)
-    end,
   },
-
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
@@ -1144,7 +1149,7 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
@@ -1194,6 +1199,7 @@ require('oil').setup {
   keymaps = {
     ['<C-r>'] = 'actions.refresh',
     ['<C-i>'] = { 'actions.select', opts = { horizontal = true } },
+    ['<C-c>'] = false,
     ['<C-l>'] = false,
     ['<C-h>'] = false,
   },
@@ -1224,3 +1230,29 @@ vim.api.nvim_create_autocmd({ 'InsertLeave' }, {
     vim.opt.relativenumber = true
   end,
 })
+
+vim.lsp.config('gdscript', {
+  capabilities = capabilities,
+})
+
+vim.lsp.enable 'gdscript'
+
+local paths_to_check = { '/', '/../' }
+local is_godot_project = false
+local godot_project_path = ''
+local cwd = vim.fn.getcwd()
+
+-- iterate over paths and check
+for key, value in pairs(paths_to_check) do
+  if vim.uv.fs_stat(cwd .. value .. 'project.godot') then
+    is_godot_project = true
+    godot_project_path = cwd .. value
+    break
+  end
+end
+
+local is_server_running = vim.uv.fs_stat(godot_project_path .. '/server.pipe')
+-- start server, if not already running
+if is_godot_project and not is_server_running then
+  vim.fn.serverstart(godot_project_path .. '/server.pipe')
+end
