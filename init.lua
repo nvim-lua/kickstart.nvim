@@ -354,13 +354,6 @@ do
   -- Highlight todo, notes, etc in comments
   -- [[ Colorscheme ]]
 
-  vim.pack.add {
-    {
-      src = gh 'catppuccin/nvim',
-      name = 'catppuccin',
-    },
-  }
-
   vim.pack.add { gh 'Soroushsrd/glacier.vim' }
 
   vim.o.termguicolors = true
