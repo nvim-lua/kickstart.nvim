@@ -354,17 +354,21 @@ do
   -- Highlight todo, notes, etc in comments
   -- [[ Colorscheme ]]
 
-  vim.pack.add { gh 'sainnhe/gruvbox-material' }
+  vim.pack.add {
+    {
+      src = gh 'catppuccin/nvim',
+      name = 'catppuccin',
+    },
+  }
 
-  vim.g.gruvbox_material_background = 'hard'
-  vim.g.gruvbox_material_foreground = 'original'
-  vim.g.gruvbox_material_enable_italic = 0
+  vim.pack.add { gh 'Soroushsrd/glacier.vim' }
 
+  vim.o.termguicolors = true
   vim.o.background = 'dark'
-  vim.cmd.colorscheme 'gruvbox-material'
+  vim.cmd.colorscheme 'glacier'
 
   vim.pack.add { gh 'folke/todo-comments.nvim' }
-  require('todo-comments').setup { signs = false }
+  require('todo-comments').setup { signs = true }
 
   -- [[ mini.nvim ]]
   --  A collection of various small independent plugins/modules
