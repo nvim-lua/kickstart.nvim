@@ -174,7 +174,7 @@ do
 end
 
 -- ============================================================
--- SECTION 2: KEYMAPS
+-- SECTION 2: KEYMAPS & AUTOCMDS
 -- basic keymaps, basic autocmds
 -- ============================================================
 do
