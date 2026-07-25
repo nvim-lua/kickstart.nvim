@@ -86,7 +86,7 @@ P.S. You can delete this when you're done too. It's your config now! :)
 
 -- ============================================================
 -- SECTION 1: OPTIONS
--- Core Neovim settings, leaders, options, basic keymaps, basic autocmds
+-- Core Neovim settings, leaders, options
 -- ============================================================
 do
   -- Enable faster startup by caching compiled Lua modules
@@ -175,7 +175,7 @@ end
 
 -- ============================================================
 -- SECTION 2: KEYMAPS
--- basic keymaps
+-- basic keymaps, basic autocmds
 -- ============================================================
 do
   -- [[ Basic Keymaps ]]
