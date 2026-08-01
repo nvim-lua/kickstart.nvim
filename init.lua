@@ -164,6 +164,9 @@ do
   -- Show which line your cursor is on
   vim.o.cursorline = true
 
+  -- Block cursor in insert mode instead of the default vertical bar, no blinking anywhere
+  vim.o.guicursor = 'n-v-c-sm:block,i-ci-ve:block,r-cr:hor20,o:hor50,a:blinkon0'
+
   -- Minimal number of screen lines to keep above and below the cursor.
   vim.o.scrolloff = 10
 
@@ -427,10 +430,22 @@ do
 
   -- Add/delete/replace surroundings (brackets, quotes, etc.)
   --
-  -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-  -- - sd'   - [S]urround [D]elete [']quotes
-  -- - sr)'  - [S]urround [R]eplace [)] [']
-  require('mini.surround').setup()
+  -- NOTE: Default mappings use `s` as a prefix (sa/sd/sr/...), which steals
+  -- normal-mode `s` (substitute). Use `gs` instead so `s` works like vanilla Vim.
+  -- - gsaiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
+  -- - gsd'   - [S]urround [D]elete [']quotes
+  -- - gsr)'  - [S]urround [R]eplace [)] [']
+  require('mini.surround').setup {
+    mappings = {
+      add = 'gsa',
+      delete = 'gsd',
+      find = 'gsf',
+      find_left = 'gsF',
+      highlight = 'gsh',
+      replace = 'gsr',
+      update_n_lines = 'gsn',
+    },
+  }
 
   -- Simple and easy statusline.
   --  You could remove this setup call if you don't like it,
@@ -540,6 +555,7 @@ do
       -- Jump to the definition of the word under your cursor.
       -- This is where a variable was first declared, or where a function is defined, etc.
       -- To jump back, press <C-t>.
+      vim.keymap.set('n', 'gd', builtin.lsp_definitions, { buffer = buf, desc = '[G]oto [D]efinition' })
       vim.keymap.set('n', 'grd', builtin.lsp_definitions, { buffer = buf, desc = '[G]oto [D]efinition' })
 
       -- Fuzzy find all the symbols in your current document.
@@ -693,7 +709,7 @@ do
   ---@type table<string, vim.lsp.Config>
   local servers = {
     -- clangd = {},
-    -- gopls = {},
+    gopls = {},
     -- pyright = {},
     -- rust_analyzer = {},
     --
