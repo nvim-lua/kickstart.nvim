@@ -23,7 +23,6 @@ return {
       if disable_filetypes[vim.bo[bufnr].filetype] then
         return nil
       else
-        print("test")
         return {
           timeout_ms = 500,
           lsp_format = "fallback",
