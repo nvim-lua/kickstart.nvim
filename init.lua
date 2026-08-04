@@ -128,6 +128,14 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
+-- Turn off spell check in terminal mode
+vim.api.nvim_create_autocmd("TermOpen", {
+  desc = "Turn off spell check in terminal mode",
+  callback = function()
+    vim.o.spell = false
+  end,
+})
+
 ---
 ------------------- [[ Install `lazy.nvim` plugin manager ]] -------------------
 
