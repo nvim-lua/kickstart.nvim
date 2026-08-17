@@ -710,9 +710,9 @@ require('lazy').setup({
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
-          --['<CR>'] = cmp.mapping.confirm { select = true },
-          --['<Tab>'] = cmp.mapping.select_next_item(),
-          --['<S-Tab>'] = cmp.mapping.select_prev_item(),
+          -- ['<CR>'] = cmp.mapping.confirm { select = true },
+          -- ['<Tab>'] = cmp.mapping.select_next_item(),
+          -- ['<S-Tab>'] = cmp.mapping.select_prev_item(),
 
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
@@ -912,3 +912,15 @@ vim.keymap.set('n', 'gof', function()
     vim.notify('No file to reveal', vim.log.levels.WARN)
   end
 end, { desc = 'Reveal file in Finder' })
+
+vim.keymap.set('n', '<leader>cd', function()
+  local line = vim.fn.line '.' - 1
+  local diagnostics = vim.diagnostic.get(0, { lnum = line })
+  if #diagnostics == 0 then
+    vim.notify('No diagnostics on this line', vim.log.levels.INFO)
+    return
+  end
+  local msg = diagnostics[1].message
+  vim.fn.setreg('+', msg) -- Copy to system clipboard
+  vim.notify('Copied diagnostic: ' .. msg)
+end, { desc = 'Copy diagnostic from current line' })
