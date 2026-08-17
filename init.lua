@@ -592,6 +592,19 @@ require('lazy').setup({
       -- definition under lsp/phpantom_lsp.lua.
       vim.lsp.config('phpantom_lsp', { capabilities = capabilities })
       vim.lsp.enable 'phpantom_lsp'
+
+      -- kotlin-lsp (JetBrains' official Kotlin LSP, https://github.com/Kotlin/kotlin-lsp)
+      -- isn't a Mason package, so it's enabled manually here rather than
+      -- through the mason-lspconfig handler above. Install the CLI with
+      -- `brew install JetBrains/utils/kotlin-lsp` and make sure it's on $PATH.
+      -- This replaces the older, unmaintained `kotlin_language_server` (fwcd).
+      vim.lsp.config('kotlin_lsp', {
+        cmd = { 'kotlin-lsp', '--stdio' },
+        filetypes = { 'kotlin' },
+        root_markers = { 'settings.gradle', 'settings.gradle.kts', 'build.gradle', 'build.gradle.kts', 'pom.xml' },
+        capabilities = capabilities,
+      })
+      vim.lsp.enable 'kotlin_lsp'
     end,
   },
 
