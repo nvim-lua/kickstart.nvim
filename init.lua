@@ -304,6 +304,9 @@ require('lazy').setup({
             'node_modules',
             'vendor',
           },
+          mappings = {
+            n = { ['q'] = require('telescope.actions').close },
+          },
         },
         -- pickers = {}
         extensions = {
@@ -524,19 +527,7 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        intelephense = {
-          init_options = {
-            licenceKey = 'LICENSE_KEY',
-            globalStoragePath = os.getenv 'HOME' .. '/.local/share/intelephense',
-          },
-          settings = {
-            intelephense = {
-              format = {
-                enable = true,
-              },
-            },
-          },
-        },
+        phpantom_lsp = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -755,21 +746,24 @@ require('lazy').setup({
     end,
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
+  {
     'catppuccin/nvim',
     name = 'catppuccin',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
+    priority = 1000,
     init = function()
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'catppuccin-macchiato'
+      -- Detect macOS appearance via system call
+      local function get_macos_appearance()
+        local handle = io.popen 'defaults read -g AppleInterfaceStyle 2>/dev/null'
+        if handle then
+          local result = handle:read '*a'
+          handle:close()
+          return result:find 'Dark' and 'dark' or 'light'
+        end
+        return 'dark' -- fallback
+      end
 
-      -- You can configure highlights by doing something like:
+      local flavor = get_macos_appearance() == 'light' and 'latte' or 'macchiato'
+      vim.cmd.colorscheme('catppuccin-' .. flavor)
       vim.cmd.hi 'Comment gui=none'
     end,
   },
@@ -888,6 +882,8 @@ require('lazy').setup({
 -- vim: ts=2 sts=2 sw=2 et
 
 -- Custom mapping
+vim.keymap.set({ 'n', 'v' }, '^', 'H', { noremap = true })
+vim.keymap.set({ 'n', 'v' }, '$', 'L', { noremap = true })
 
 -- recenter screen after vertical movement
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
@@ -897,3 +893,12 @@ vim.keymap.set('n', 'N', 'Nzzzv')
 
 -- Best alias ever. Set ':W' as alias to ':w'
 vim.cmd 'command! W w'
+
+vim.keymap.set('n', 'gof', function()
+  local file = vim.fn.expand '%:p'
+  if file ~= '' then
+    vim.fn.system { 'open', '-R', file }
+  else
+    vim.notify('No file to reveal', vim.log.levels.WARN)
+  end
+end, { desc = 'Reveal file in Finder' })
