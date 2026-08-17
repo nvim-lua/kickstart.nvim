@@ -571,6 +571,8 @@ require('lazy').setup({
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
+        ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
+        automatic_installation = false,
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
@@ -578,10 +580,18 @@ require('lazy').setup({
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
+            vim.lsp.config(server_name, server)
+            vim.lsp.enable(server_name)
           end,
         },
       }
+
+      -- mason-lspconfig doesn't map the `phpantom_lsp` mason package to its
+      -- lspconfig server name yet, so the handler above skips it. Enable it
+      -- directly via the native API; nvim-lspconfig ships the server
+      -- definition under lsp/phpantom_lsp.lua.
+      vim.lsp.config('phpantom_lsp', { capabilities = capabilities })
+      vim.lsp.enable 'phpantom_lsp'
     end,
   },
 
