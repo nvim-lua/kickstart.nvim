@@ -354,13 +354,18 @@ do
   -- Highlight todo, notes, etc in comments
   -- [[ Colorscheme ]]
 
-  vim.pack.add { gh 'Soroushsrd/glacier.vim' }
+  -- [[ Colorscheme ]]
+
+  vim.pack.add { gh 'folke/tokyonight.nvim' }
 
   vim.o.termguicolors = true
   vim.o.background = 'dark'
-  vim.cmd.colorscheme 'glacier'
 
-  vim.pack.add { gh 'folke/todo-comments.nvim' }
+  require('tokyonight').setup {
+    style = 'night',
+  }
+
+  vim.cmd.colorscheme 'tokyonight'
   require('todo-comments').setup { signs = true }
 
   -- [[ mini.nvim ]]
