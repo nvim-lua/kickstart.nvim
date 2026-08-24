@@ -124,7 +124,7 @@ return {
     local servers = {
       -- clangd = {},
       -- gopls = {},
-      pyright = {},
+      basedpyright = {},
       cssls = {},
       ts_ls = {},
       html = {},
