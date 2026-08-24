@@ -499,7 +499,15 @@ do
     --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
     --   },
     -- },
-    -- pickers = {}
+    pickers = {
+      find_files = {
+        hidden = true,
+        no_ignore = false,
+      },
+      live_grep = {
+        additional_args = function(_) return { '--hidden' } end,
+      },
+    },
     extensions = {
       ['ui-select'] = { require('telescope.themes').get_dropdown() },
     },
@@ -801,10 +809,10 @@ do
     formatters_by_ft = {
       rust = { 'rustfmt' },
       -- Conform can also run multiple formatters sequentially
-      python = { "isort", "black" },
+      python = { 'isort', 'black' },
       --
       -- You can use 'stop_after_first' to run the first available formatter from the list
-      javascript = { "prettierd", "prettier", stop_after_first = true },
+      javascript = { 'prettierd', 'prettier', stop_after_first = true },
     },
   }
 
