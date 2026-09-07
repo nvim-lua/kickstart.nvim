@@ -364,7 +364,12 @@ do
     on_attach = function(bufnr)
       local function map(mode, l, r, opts)
         opts = opts or {}
-        opts.buffer = bufnr
+        -- opts.buf requires Neovim 0.12.1+; older versions use opts.buffer
+        if vim.version.ge and vim.version.ge(vim.version(), '0.12.1') then
+          opts.buf = bufnr
+        else
+          opts.buffer = bufnr
+        end
         vim.keymap.set(mode, l, r, opts)
       end
 
