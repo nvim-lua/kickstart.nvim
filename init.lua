@@ -389,6 +389,7 @@ require("lazy").setup({
 			-- Automatically install LSPs and related tools to stdpath for Neovim
 			-- Mason must be loaded before its dependents so we need to set it up here.
 			{ "mason-org/mason.nvim", opts = {} },
+			"mason-org/mason-lspconfig.nvim",
 
 			-- Useful status updates for LSP.
 			{ "j-hui/fidget.nvim", opts = {} },
@@ -555,9 +556,8 @@ require("lazy").setup({
 						"--fallback-style=llvm",
 					},
 				},
-				rust_analyzer = {
-					cmd = { "rustup", "run", "stable", "rust-analyzer" },
-				},
+				rust_analyzer = {},
+				ts_ls = {},
 				lua_ls = {
 					settings = {
 						Lua = {
@@ -576,13 +576,19 @@ require("lazy").setup({
 			local servers_overrides = (opt_require("local.overrides") or {}).lsp
 			servers = vim.tbl_deep_extend("force", {}, servers, servers_overrides or {})
 
-			-- Set up and enable servers.
+			-- Set up servers before Mason installs and enables them.
 			for server_name, server_config in pairs(servers) do
 				server_config.capabilities =
 					vim.tbl_deep_extend("force", {}, capabilities, server_config.capabilities or {})
 				vim.lsp.config(server_name, server_config)
-				vim.lsp.enable(server_name)
 			end
+
+			local ensure_installed = vim.tbl_keys(servers)
+			table.sort(ensure_installed)
+			require("mason-lspconfig").setup({
+				ensure_installed = ensure_installed,
+				automatic_enable = ensure_installed,
+			})
 		end,
 	},
 
@@ -799,20 +805,33 @@ require("lazy").setup({
 		--    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
 		--    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
 		config = function()
-			require("nvim-treesitter").setup({
-				ensure_installed = { "c", "cpp", "lua", "python", "rust", "vim", "vimdoc" },
-				auto_install = true,
-			})
+			local parsers = {
+				"c",
+				"cpp",
+				"css",
+				"html",
+				"javascript",
+				"json",
+				"lua",
+				"python",
+				"rust",
+				"tsx",
+				"typescript",
+				"vim",
+				"vimdoc",
+			}
+
+			require("nvim-treesitter").setup({})
+			require("nvim-treesitter").install(parsers)
 
 			-- Auto start treesitter if a parser is available.
 			vim.api.nvim_create_autocmd("FileType", {
 				callback = function(args)
 					local ft = vim.bo[args.buf].filetype
-					-- TODO: add a file type to lang mapper here
-					local lang = ft
+					local lang = vim.treesitter.language.get_lang(ft)
 
 					-- Only start if a parser exists
-					if vim.treesitter.language.get_lang(lang) then
+					if lang then
 						pcall(vim.treesitter.start, args.buf, lang)
 					end
 				end,
