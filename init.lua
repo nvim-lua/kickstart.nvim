@@ -131,6 +131,7 @@ do
   -- require 'custom.plugins.ui'
   -- require 'custom.plugins.git'
   require 'custom.plugins.copilot'
+  require 'custom.plugins.cds-lsp'
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
