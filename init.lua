@@ -185,6 +185,42 @@ do
   --  See `:help hlsearch`
   vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+  -- Close the current buffer with a double <Esc>.
+  --  - Special windows (nvim-tree, help, quickfix, ...) are closed instead of having their buffer deleted.
+  --  - If other files are open, the window stays and shows the next one (mini.bufremove).
+  --  - If this was the last file, its window is closed too (unless it's the only window).
+  --  - If the buffer has unsaved changes, ask whether to save, discard, or cancel.
+  local function close_buffer(force)
+    local buf = vim.api.nvim_get_current_buf()
+    local has_other_files = vim.iter(vim.api.nvim_list_bufs()):any(function(b) return b ~= buf and vim.bo[b].buflisted end)
+
+    if not has_other_files and #vim.api.nvim_tabpage_list_wins(0) > 1 then
+      vim.cmd.close()
+      vim.api.nvim_buf_delete(buf, { force = force })
+    else
+      require('mini.bufremove').delete(buf, force)
+    end
+  end
+
+  vim.keymap.set('n', '<Esc><Esc>', function()
+    if vim.bo.buftype ~= '' then
+      pcall(vim.cmd.close)
+      return
+    end
+
+    if not vim.bo.modified then return close_buffer(false) end
+
+    local name = vim.fn.expand '%:t'
+    if name == '' then name = '[No Name]' end
+    local choice = vim.fn.confirm(('"%s" has unsaved changes.'):format(name), '&Save and close\n&Discard and close\n&Cancel', 3, 'Warning')
+    if choice == 1 then
+      vim.cmd.write()
+      close_buffer(false)
+    elseif choice == 2 then
+      close_buffer(true)
+    end
+  end, { desc = 'Close buffer' })
+
   -- Diagnostic Config & Keymaps
   --  See `:help vim.diagnostic.Opts`
   vim.diagnostic.config {
@@ -462,6 +498,9 @@ do
   -- - sr)'  - [S]urround [R]eplace [)] [']
   require('mini.surround').setup()
 
+  -- Delete buffers without closing their windows (used by the <Esc><Esc> keymap)
+  require('mini.bufremove').setup()
+
   -- Simple and easy statusline.
   --  You could remove this setup call if you don't like it,
   --  and try some other statusline plugin
@@ -717,11 +756,89 @@ do
     end,
   })
 
+  -- JSON/YAML schemas from https://www.schemastore.org (package.json, tsconfig, appsettings, GitHub workflows, etc.)
+  vim.pack.add { gh 'b0o/SchemaStore.nvim' }
+
+  -- Vue's TypeScript plugin ships inside the Mason `vue-language-server` package. vtsls loads it
+  -- so TypeScript inside .vue files is handled by vtsls, while vue_ls handles templates/styles.
+  local vue_language_server_path = vim.fn.stdpath 'data' .. '/mason/packages/vue-language-server/node_modules/@vue/language-server'
+
   -- Enable the following language servers
   --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
   --  See `:help lsp-config` for information about keys and how to configure
+  --
+  --  C# (Roslyn) is configured separately in `lua/custom/plugins/dotnet.lua`.
   ---@type table<string, vim.lsp.Config>
   local servers = {
+    -- JavaScript / TypeScript (also serves TypeScript inside .vue files)
+    vtsls = {
+      filetypes = { 'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx', 'vue' },
+      settings = {
+        vtsls = {
+          tsserver = {
+            globalPlugins = {
+              {
+                name = '@vue/typescript-plugin',
+                location = vue_language_server_path,
+                languages = { 'vue' },
+                configNamespace = 'typescript',
+              },
+            },
+          },
+        },
+        typescript = {
+          inlayHints = {
+            parameterNames = { enabled = 'literals' },
+            parameterTypes = { enabled = true },
+            variableTypes = { enabled = false },
+            propertyDeclarationTypes = { enabled = true },
+            functionLikeReturnTypes = { enabled = true },
+            enumMemberValues = { enabled = true },
+          },
+        },
+      },
+    },
+    vue_ls = {}, -- Vue templates, styles and SFC structure
+    -- Angular templates; uses the project's @angular/language-service from node_modules.
+    -- Only starts inside a workspace with angular.json / nx.json, so plain TS projects don't get it.
+    angularls = { workspace_required = true },
+    eslint = {}, -- ESLint diagnostics and code actions, driven by the project's eslint config
+    html = {},
+    cssls = {},
+
+    -- Python: pyright for types/navigation, ruff for linting, import sorting and formatting
+    pyright = {
+      settings = {
+        pyright = { disableOrganizeImports = true }, -- ruff handles imports
+        python = { analysis = { typeCheckingMode = 'standard' } },
+      },
+    },
+    ruff = {
+      on_init = function(client)
+        client.server_capabilities.hoverProvider = false -- Let pyright provide hover
+      end,
+    },
+
+    -- Data / config files
+    jsonls = {
+      settings = {
+        json = {
+          schemas = require('schemastore').json.schemas(),
+          validate = { enable = true },
+        },
+      },
+    },
+    yamlls = {
+      settings = {
+        yaml = {
+          schemaStore = { enable = false, url = '' }, -- Use SchemaStore.nvim's catalog instead
+          schemas = require('schemastore').yaml.schemas(),
+        },
+      },
+    },
+    taplo = {}, -- TOML
+
+
     -- clangd = {},
     -- gopls = {},
     -- pyright = {},
@@ -776,7 +893,12 @@ do
   }
 
   -- Automatically install LSPs and related tools to stdpath for Neovim
-  require('mason').setup {}
+  require('mason').setup {
+    registries = {
+      'github:mason-org/mason-registry',
+      'github:Crashdummyy/mason-registry', -- Provides the `roslyn` C# language server
+    },
+  }
 
   -- Translates between nvim-lspconfig server names and mason.nvim package names (e.g. lua_ls <-> lua-language-server)
   require('mason-lspconfig').setup {
@@ -793,6 +915,12 @@ do
   local ensure_installed = vim.tbl_keys(servers or {})
   vim.list_extend(ensure_installed, {
     -- You can add other tools here that you want Mason to install
+    'roslyn', -- C# language server (used by roslyn.nvim)
+    'csharpier', -- C# formatter
+    'prettierd', -- JS/TS/Vue/Angular/HTML/CSS/JSON/YAML formatter
+    'sqlfluff', -- SQL linter
+    'sql-formatter', -- SQL formatter
+    'yamllint', -- YAML linter
   })
 
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -835,6 +963,27 @@ do
       --
       -- You can use 'stop_after_first' to run the first available formatter from the list
       -- javascript = { "prettierd", "prettier", stop_after_first = true },
+      cs = { 'csharpier' },
+      python = { 'ruff_organize_imports', 'ruff_format' },
+      javascript = { 'prettierd', 'prettier', stop_after_first = true },
+      javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+      typescript = { 'prettierd', 'prettier', stop_after_first = true },
+      typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+      vue = { 'prettierd', 'prettier', stop_after_first = true },
+      html = { 'prettierd', 'prettier', stop_after_first = true },
+      htmlangular = { 'prettierd', 'prettier', stop_after_first = true },
+      css = { 'prettierd', 'prettier', stop_after_first = true },
+      scss = { 'prettierd', 'prettier', stop_after_first = true },
+      json = { 'prettierd', 'prettier', stop_after_first = true },
+      jsonc = { 'prettierd', 'prettier', stop_after_first = true },
+      yaml = { 'prettierd', 'prettier', stop_after_first = true },
+      toml = { 'taplo' },
+      sql = { 'sql_formatter' },
+    },
+    formatters = {
+      sql_formatter = {
+        prepend_args = { '--language', 'transactsql' },
+      },
     },
   }
 
@@ -937,7 +1086,11 @@ do
   vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 
   -- Ensure basic parsers are installed
-  local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+  local parsers = {
+    'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc',
+    'c_sharp', 'razor', 'angular', 'vue', 'python', 'javascript', 'typescript', 'tsx', 'jsdoc',
+    'css', 'scss', 'sql', 'toml', 'yaml', 'json', 'xml',
+  }
   require('nvim-treesitter').install(parsers)
 
   ---@param buf integer

@@ -5,6 +5,10 @@
       "src": "https://github.com/L3MON4D3/LuaSnip",
       "version": "2.0.0 - 3.0.0"
     },
+    "SchemaStore.nvim": {
+      "rev": "411163b2be396495c76788a016cb1354f1e8acd0",
+      "src": "https://github.com/b0o/SchemaStore.nvim"
+    },
     "blink.cmp": {
       "rev": "78336bc89ee5365633bcf754d93df01678b5c08f",
       "src": "https://github.com/saghen/blink.cmp",
@@ -46,6 +50,10 @@
       "rev": "561751e839b99a4baca36b9d963166b66d2536a6",
       "src": "https://github.com/nvim-mini/mini.nvim"
     },
+    "nvim-lint": {
+      "rev": "3d55c8f67c6ae5c15e1042571e107c7a3d5c5f4e",
+      "src": "https://github.com/mfussenegger/nvim-lint"
+    },
     "nvim-lspconfig": {
       "rev": "a9bb4d5f4276aa5cddc015faa3ecc5a7b5a26b14",
       "src": "https://github.com/neovim/nvim-lspconfig"
@@ -67,6 +75,10 @@
     "plenary.nvim": {
       "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",
       "src": "https://github.com/nvim-lua/plenary.nvim"
+    },
+    "roslyn.nvim": {
+      "rev": "bf1bd4e70bc7068d1b4aebf4ce03cc19a86615be",
+      "src": "https://github.com/seblyng/roslyn.nvim"
     },
     "telescope-fzf-native.nvim": {
       "rev": "b25b749b9db64d375d782094e2b9dce53ad53a40",
