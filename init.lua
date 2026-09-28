@@ -104,7 +104,7 @@ do
   require 'kickstart.plugins.keymap'
   require 'kickstart.plugins.vim-pack'
   require 'kickstart.plugins.ui'
-  require 'kickstart.plugins.search-and-nav'
+  require 'kickstart.plugins.telescope'
   require 'kickstart.plugins.lsp'
   require 'kickstart.plugins.conform'
   require 'kickstart.plugins.code-completion'
@@ -131,7 +131,8 @@ do
   -- require 'custom.plugins.ui'
   -- require 'custom.plugins.git'
   require 'custom.plugins.copilot'
-  require 'custom.plugins.cds-lsp'
+  require 'custom.plugins.cds'
+  require 'custom.plugins.lazygit'
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`

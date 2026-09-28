@@ -365,3 +365,13 @@ asdf reshim neovim
 </details>
 
 </details>
+
+## SAP CDS nvim-treesitter setup
+
+Create the queries/cds directory in the root of the nvim config.
+Run the script below to fetch the files required for syntax highlighting
+
+```fish
+for f in highlights injections locals tags; curl -fsSL "https://raw.githubusercontent.com/cap-js-community/tree-sitter-cds/main/queries/$f.scm" -o ~/.config/nvim/queries/cds/$f.scm; end
+```
+
