@@ -1,4 +1,4 @@
--- ============================================================
+-- ============================================================init
 -- Core Neovim settings, leaders, options
 -- ============================================================
 do
@@ -133,6 +133,7 @@ do
   require 'custom.plugins.copilot'
   require 'custom.plugins.cds'
   require 'custom.plugins.lazygit'
+  require 'custom.plugins.fugitive'
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
