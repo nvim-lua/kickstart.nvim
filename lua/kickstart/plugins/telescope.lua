@@ -58,6 +58,8 @@ do
       find_files = {
         theme = "ivy",
         previewer = false,
+        hidden = true,
+        no_ignore = false,
       },
       buffers = {
         theme = "ivy",
@@ -65,6 +67,8 @@ do
       },
       live_grep = {
         theme = "ivy",
+        hidden = true,
+        no_ignore = false,
       },
       git_files = {
         theme = "ivy",
