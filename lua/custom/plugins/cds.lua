@@ -11,6 +11,7 @@ vim.filetype.add {
 vim.api.nvim_create_autocmd('User', {
   pattern = 'TSUpdate',
   callback = function()
+    vim.bo.commentstring = '// %s'
     require('nvim-treesitter.parsers').cds = {
       install_info = {
         url = 'https://github.com/cap-js-community/tree-sitter-cds.git',
