@@ -1,6 +1,15 @@
-vim.pack.add({
-  "https://github.com/ellisonleao/gruvbox.nvim"
-})
+vim.pack.add {{
+  src = "https://github.com/catppuccin/nvim",
+  name = "catppuccin",
+}}
 
-require("gruvbox").setup()
-vim.cmd.colorscheme("gruvbox")
+require("catppuccin").setup {
+  no_italics = true,
+}
+
+if vim.o.background == "dark" then
+  vim.cmd.colorscheme "catppuccin-mocha"
+else
+  vim.cmd.colorscheme "catppuccin-latte"
+end
+
