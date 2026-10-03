@@ -178,7 +178,55 @@ After installing all the dependencies continue with the [Install Kickstart](#ins
 
 #### Windows Installation
 
-<details><summary>Windows with Microsoft C++ Build Tools and CMake</summary>
+<details><summary>Windows</summary>
+<details><summary>Chocolatey Install</summary>
+
+Install [chocolatey](https://chocolatey.org/install)
+Either follow the instructions on the page or use `winget`,
+Run in cmd as **admin**:
+```
+winget install --accept-source-agreements chocolatey.chocolatey
+```
+</details>
+
+With _Chocolatey_ already installed, use the below. See additional detail for minimal installs or non standard installs.
+```
+choco install -y neovim git ripgrep wget fd unzip gzip tree-sitter visualstudio2026buildtools visualstudio2026-workload-vctools mingw make
+```
+<details><summary>Windows Detail</summary>
+<details><summary>General Dependencies</summary>
+
+```
+choco install -y neovim git ripgrep wget fd unzip gzip tree-sitter
+```
+</details>
+<details><summary>Windows Microsoft C++ Build Tools</summary>
+
+The tools are required by the `tree-sitter` command line tool which is used by the `nvim-treesitter` plugin. This is the recommended way for a typical Windows install outside of _MSYS2_ , _Git Bash_, etc.
+
+The below installs the base build tools and the [_Microsoft_](https://learn.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-build-tools?view=visualstudio) recommended _Visual C_ workload and components. Installing it this way is recommended by the _Chocolatey_ package maintainer and allows for easier upgrades, etc. The dependency requires the compiler ( e.g. `cl.exe` ) and header files like `stdlib.h` in the _Windows_ SDK.
+```
+choco install -y visualstudio2026buildtools visualstudio2026-workload-vctools
+```
+<details><summary>Check Previous Install</summary>
+
+If you already are a _Visual Studio_ user with _C_ workloads, you may not require the build tools. You can check your installation with the below to make sure the applicable workload and components are available. It should output something like _Visual Studio Community_ or _Microsoft Visual Studio Build Tools_. If you don't receive any output and you aren't using preview builds, etc, you may need to install the tools.
+```
+powershell -NoExit -Command "& 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe' -latest -sort -products * -requires Microsoft.VisualStudio.Workload.VCTools Microsoft.VisualStudio.Component.VC.Tools.x86.x64 Microsoft.VisualStudio.Component.Windows11SDK.26100 -property displayName -format value"
+```
+
+If you do not have the `vswhere.exe` binary in that location you can download the [`release`](https://github.com/microsoft/vswhere) directly. It is available too with `choco install vswhere -y`.
+</details>
+
+<details><summary>Minimal Install</summary>
+
+The below will install the minimum required for a successful config. If one wants to upgrade or add additional components, it may be necessary to install the `visualstudio2026-workload-vctools` later or use the _Visual Studio Installer_.
+```
+choco install visualstudio2026buildtools -y --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100"
+```
+</details>
+</details>
+<details><summary>telescope-fzf-native.nvim with Microsoft C++ Build Tools and CMake</summary>
 Kickstart's default config is make-only for `telescope-fzf-native.nvim`.
 If `make` is unavailable, the plugin is skipped.
 
@@ -210,22 +258,18 @@ end
 
 See `telescope-fzf-native` documentation for [build details](https://github.com/nvim-telescope/telescope-fzf-native.nvim#installation).
 </details>
-<details><summary>Windows with gcc/make using chocolatey</summary>
+<details><summary>telescope-fzf-native.nvim with gcc/make using chocolatey</summary>
 Alternatively, one can install gcc and make which don't require changing the config,
 the easiest way is to use choco:
 
-1. install [chocolatey](https://chocolatey.org/install)
-either follow the instructions on the page or use winget,
-run in cmd as **admin**:
-```
-winget install --accept-source-agreements chocolatey.chocolatey
-```
-
-2. install all requirements using choco, exit the previous cmd and
+Install all requirements ( i.e. `gcc` and `make` ) using choco, exit the previous cmd and
 open a new one so that choco path is set, and run in cmd as **admin**:
+
 ```
-choco install -y neovim git ripgrep wget fd unzip gzip mingw make tree-sitter
+choco install -y mingw make
 ```
+</details>
+</details>
 </details>
 <details><summary>WSL (Windows Subsystem for Linux)</summary>
 
