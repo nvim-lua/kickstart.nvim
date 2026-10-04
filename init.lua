@@ -173,6 +173,10 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
+vim.keymap.set('n', '<leader>th', function()
+  vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { 0 }, { 0 })
+end)
+
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
 -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
@@ -217,6 +221,12 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
+-- Setup Workspace
+local home = os.getenv 'HOME'
+local workspace_path = home .. '/.local/share/nvim/jdtls-workspace/'
+local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
+local workspace_dir = workspace_path .. project_name
+
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
@@ -231,6 +241,7 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  'lambdalisue/vim-suda',
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -254,6 +265,39 @@ require('lazy').setup({
   -- options to `gitsigns.nvim`.
   --
   -- See `:help gitsigns` to understand what the configuration keys do
+  --
+  {
+    'mfussenegger/nvim-jdtls',
+    ft = 'java',
+    config = function()
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'java',
+        callback = function()
+          require('jdtls').start_or_attach {
+            cmd = { '/bin/eclipse-jdtls/bin/jdtls', '-data', workspace_dir },
+            -- root_dir = vim.fs.dirname(vim.fs.find({ '.git' }, { upward = true })[1]),
+            root_dir = require('jdtls.setup').find_root { 'pom.xml' },
+            settings = {
+              java = {
+                inlayHints = { parameterNames = { enabled = 'all' } },
+                signatureHelp = { enabled = true },
+                contentProvider = { preferred = 'fernflower' },
+                format = {
+                  -- onType = {
+                  --   enabled = true,
+                  -- },
+                  enabled = false,
+                  -- settings = {
+                  --   url = 'https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml',
+                  -- },
+                },
+              },
+            },
+          }
+        end,
+      })
+    end,
+  },
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -266,6 +310,8 @@ require('lazy').setup({
       },
     },
   },
+  --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
+  { import = 'custom' },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
@@ -449,42 +495,6 @@ require('lazy').setup({
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
-  {
-    'nvim-java/nvim-java',
-    dependencies = {
-      {
-        'neovim/nvim-lspconfig',
-        config = true,
-        opts = {
-          servers = {
-            jdtls = {},
-          },
-          setup = {
-            jdtls = function()
-              -- Your nvim-java configuration goes here
-              require('java').setup {
-                'settings.gradle',
-                'settings.gradle.kts',
-                'pom.xml',
-                'build.gradle',
-                'mvnw',
-                'gradlew',
-                'build.gradle',
-                'build.gradle.kts',
-              }
-            end,
-          },
-        },
-      },
-    },
-    keys = {
-      {
-        '<leader>jb',
-        '<cmd>JavaBuildWorkspace<cr>',
-        desc = 'Build java workspace',
-      },
-    },
-  },
   -- LSP Plugins
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
@@ -640,12 +650,12 @@ require('lazy').setup({
           -- The following code creates a keymap to toggle inlay hints in your
           -- code, if the language server you are using supports them
           --
-          -- This may be unwanted, since they displace some of your code
-          if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
-            map('<leader>th', function()
-              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
-            end, '[T]oggle Inlay [H]ints')
-          end
+          -- -- This may be unwanted, since they displace some of your code
+          -- if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
+          --   map('<leader>th', function()
+          --     vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
+          --   end, '[T]oggle Inlay [H]ints')
+          -- end
         end,
       })
 
@@ -744,6 +754,7 @@ require('lazy').setup({
         'sqlfluff',
         'eslint',
         'terraformls',
+        'semgrep',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -821,7 +832,8 @@ require('lazy').setup({
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
-        typescript = { 'eslint' },
+        typescript = { 'prettier' },
+        -- scala = { 'scalafmt' },
       },
     },
   },
@@ -1157,8 +1169,6 @@ require('lazy').setup({
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
-  --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
