@@ -639,7 +639,7 @@ do
   -- and language tooling communicate in a standardized fashion.
   --
   -- In general, you have a "server" which is some tool built to understand a particular
-  -- language (such as `gopls`, `lua_ls`, `rust_analyzer`, etc.). These Language Servers
+  -- language (such as `gopls`, `emmylua_ls`, `rust_analyzer`, etc.). These Language Servers
   -- (sometimes called LSP servers, but that's kind of like ATM Machine) are standalone
   -- processes that communicate with some "client" - in this case, Neovim!
   --
@@ -747,33 +747,34 @@ do
     stylua = {}, -- Used to format Lua code
 
     -- Special Lua Config, as recommended by neovim help docs
-    lua_ls = {
+    emmylua_ls = {
       on_init = function(client)
         client.server_capabilities.documentFormattingProvider = false -- Disable formatting (formatting is done by stylua)
-
+        -- If the workspace has its own emmylua_ls/lua_ls config file, defer to it.
         if client.workspace_folders then
           local path = client.workspace_folders[1].name
-          if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then return end
+          if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.emmyrc.json') or vim.uv.fs_stat(path .. '/.luarc.json')) then
+            client.config.settings = {}
+          end
         end
-
-        local current_settings = client.config.settings --[[@as lspconfig.settings.lua_ls]]
-        client.config.settings.Lua = vim.tbl_deep_extend('force', current_settings.Lua, {
-          runtime = {
-            version = 'LuaJIT',
-            path = { 'lua/?.lua', 'lua/?/init.lua' },
-          },
-          workspace = {
-            checkThirdParty = false,
-            -- NOTE: this is a lot slower and will cause issues when working on your own configuration.
-            --  See https://github.com/neovim/nvim-lspconfig/issues/3189
-            library = vim.api.nvim_get_runtime_file('', true),
-          },
-        })
       end,
-      ---@type lspconfig.settings.lua_ls
+      ---@type lspconfig.settings.emmylua_ls
       settings = {
-        Lua = {
-          format = { enable = false }, -- Disable formatting (formatting is done by stylua)
+        emmylua = {
+          -- Tell the server which Lua you're using (usually LuaJIT, for Neovim).
+          runtime = { version = 'LuaJIT' },
+          diagnostics = {
+            globals = {
+              'vim',
+              -- You can add globals here to make emmylua aware of them
+              'MiniIcons',
+            },
+          },
+          -- Make the server aware of Neovim runtime files.
+          workspace = {
+            library = vim.api.nvim_get_runtime_file('', true),
+            format = { enable = false }, -- Disable formatting (formatting is done by stylua)
+          },
         },
       },
     },
@@ -789,7 +790,7 @@ do
   -- Automatically install LSPs and related tools to stdpath for Neovim
   require('mason').setup {}
 
-  -- Translates between nvim-lspconfig server names and mason.nvim package names (e.g. lua_ls <-> lua-language-server)
+  -- Translates between nvim-lspconfig server names and mason.nvim package names (e.g. yaml_ls <-> yaml-language-server)
   require('mason-lspconfig').setup {
     automatic_enable = false, -- Change this to true if you want to automatically enable servers that are installed manually (e.g. via :Mason / :MasonInstall)
   }
