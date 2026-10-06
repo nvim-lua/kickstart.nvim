@@ -134,7 +134,6 @@ do
   require 'custom.plugins.cds'
   require 'custom.plugins.lazygit'
   require 'custom.plugins.fugitive'
-  require 'custom.plugins.dashboard'
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
