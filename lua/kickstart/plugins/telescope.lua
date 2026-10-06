@@ -56,22 +56,34 @@ do
     -- },
     pickers = {
       find_files = {
-        theme = "ivy",
+        theme = 'ivy',
         previewer = false,
-        hidden = true,
-        no_ignore = false,
+        find_command = {
+          'fd',
+          '--type',
+          'f',
+          '--hidden',
+          '--exclude',
+          '.git',
+        },
       },
       buffers = {
-        theme = "ivy",
+        theme = 'ivy',
         previewer = false,
       },
       live_grep = {
-        theme = "ivy",
-        hidden = true,
-        no_ignore = false,
+        theme = 'ivy',
+        find_command = {
+          'fd',
+          '--type',
+          'f',
+          '--hidden',
+          '--exclude',
+          '.git',
+        },
       },
       git_files = {
-        theme = "ivy",
+        theme = 'ivy',
         previewer = false,
       },
     },
