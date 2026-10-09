@@ -136,6 +136,7 @@ do
   require 'custom.plugins.fugitive'
   require 'custom.plugins.gitsigns'
   require 'custom.plugins.mini_starter'
+  require 'custom.plugins.github-actions'
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
