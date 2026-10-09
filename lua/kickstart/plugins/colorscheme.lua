@@ -1,18 +1,7 @@
-vim.pack.add { {
-  src = 'https://github.com/catppuccin/nvim',
-  name = 'catppuccin',
-} }
+vim.pack.add { 'https://github.com/Mofiqul/vscode.nvim' }
 
-require('catppuccin').setup {
-  no_italics = true,
-  transparent_background = true,
-  float = {
-    solid = true,
-  },
+require('vscode').setup {
+  style = 'dark'
 }
 
-if vim.o.background == 'dark' then
-  vim.cmd.colorscheme 'catppuccin-mocha'
-else
-  vim.cmd.colorscheme 'catppuccin-latte'
-end
+vim.cmd.colorscheme 'vscode'
