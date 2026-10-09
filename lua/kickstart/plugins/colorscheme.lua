@@ -7,7 +7,6 @@ require('catppuccin').setup {
   no_italics = true,
   transparent_background = true,
   float = {
-    transparent = false,
     solid = true,
   },
 }
