@@ -16,6 +16,9 @@ if not vim.uv.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Mason's prebuilt binaries can't run on NixOS; there, tools come from Nix instead
+local is_nixos = vim.uv.fs_stat '/etc/NIXOS' ~= nil
+
 -- [[ Configure and install plugins ]]
 -- To check the current status of your plugins, run :Lazy
 -- To update plugins you can run :Lazy update
@@ -159,7 +162,7 @@ require('lazy').setup({
   {
     'neovim/nvim-lspconfig',
     dependencies = {
-      { 'williamboman/mason.nvim', config = true },
+      { 'williamboman/mason.nvim', opts = { PATH = is_nixos and 'skip' or 'prepend' } },
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       { 'j-hui/fidget.nvim', opts = {} },
@@ -235,9 +238,10 @@ require('lazy').setup({
         },
       }
 
-      -- Setup Mason and language servers
-      require('mason').setup()
-      require('mason-tool-installer').setup { ensure_installed = vim.tbl_keys(servers) }
+      -- Install servers through Mason, except on NixOS where they come from Nix packages
+      if not is_nixos then
+        require('mason-tool-installer').setup { ensure_installed = vim.tbl_keys(servers) }
+      end
 
       -- Native LSP config (Neovim 0.11+); nvim-lspconfig supplies the base configs
       vim.lsp.config('*', { capabilities = capabilities })
@@ -245,8 +249,11 @@ require('lazy').setup({
         vim.lsp.config(server_name, server)
       end
 
-      -- Installs servers and auto-enables everything installed through Mason
-      require('mason-lspconfig').setup { automatic_enable = true }
+      -- Enable the configured servers wherever their binary comes from (Mason, Nix, system)
+      vim.lsp.enable(vim.tbl_keys(servers))
+
+      -- Also auto-enable any extra servers installed through Mason (not on NixOS)
+      require('mason-lspconfig').setup { automatic_enable = not is_nixos }
     end,
   },
 
