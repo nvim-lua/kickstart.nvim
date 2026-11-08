@@ -237,11 +237,7 @@ require('lazy').setup({
 
       -- Setup Mason and language servers
       require('mason').setup()
-      local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
-      })
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      require('mason-tool-installer').setup { ensure_installed = vim.tbl_keys(servers) }
 
       -- Native LSP config (Neovim 0.11+); nvim-lspconfig supplies the base configs
       vim.lsp.config('*', { capabilities = capabilities })
