@@ -1,19 +1,19 @@
 # Neovim Configuration
 
 A modular Neovim configuration that started from kickstart.nvim. It targets
-**Neovim 0.12+**. Plugins are managed with [lazy.nvim](https://github.com/folke/lazy.nvim).
+**Neovim 0.12+**. Plugins are managed with Neovim's built-in plugin manager,
+[`vim.pack`](https://neovim.io/doc/user/pack.html), so there is no plugin-manager plugin.
 Language servers and formatters come from your OS package manager, not Mason.
 
 ## Requirements
 
 | What | Why |
 |---|---|
-| Neovim **0.12** or newer | nvim-treesitter (`main` branch) and the built-in LSP setup need it |
-| `git`, `curl`, `tar` | lazy.nvim and nvim-treesitter download plugins and parsers |
-| `gcc` (or another C compiler), `make` | compiling treesitter parsers, telescope-fzf-native, CopilotChat |
+| Neovim **0.12** or newer | `vim.pack`, nvim-treesitter (`main` branch) and the built-in LSP setup need it |
+| `git`, `curl`, `tar` | `vim.pack` clones plugins with git; nvim-treesitter downloads parsers |
+| `gcc` (or another C compiler), `make` | compiling treesitter parsers, telescope-fzf-native and LuaSnip's regex support |
 | `tree-sitter` CLI **0.26.1** or newer | nvim-treesitter compiles parsers with it (install it from a package or release binary, not npm) |
 | `ripgrep` | Telescope live grep |
-| Node.js + npm | GitHub Copilot |
 | `wl-clipboard` (Wayland) or `xclip` (X11) | system clipboard (`clipboard=unnamedplus`) |
 | A [Nerd Font](https://www.nerdfonts.com/) | icons (`vim.g.have_nerd_font = true`) |
 
@@ -36,7 +36,7 @@ These language tools are optional. Each language server is only started if its p
 ### Arch Linux
 
 ```sh
-sudo pacman -S --needed neovim git curl tar gcc make tree-sitter-cli ripgrep nodejs npm \
+sudo pacman -S --needed neovim git curl tar gcc make tree-sitter-cli ripgrep \
   wl-clipboard xclip lazygit \
   clang lua-language-server taplo-cli yaml-language-server pyright ruff \
   bash-language-server shellcheck shfmt rustup
@@ -48,7 +48,7 @@ rustup component add rust-analyzer rustfmt
 
 ### Ubuntu (26.04 LTS)
 
-Ubuntu's own `neovim` (0.11) and `tree-sitter-cli` (0.25) packages are too old, so install those two from upstream releases. Several language servers aren't packaged either; they come from npm, pipx, cargo or rustup.
+Ubuntu's own `neovim` (0.11) and `tree-sitter-cli` (0.25) packages are too old, so install those two from upstream releases. Several language servers aren't packaged either; they come from npm, pipx, cargo or rustup (`nodejs`/`npm` are only needed for those servers).
 
 ```sh
 # Base tools and the language tools that Ubuntu packages
@@ -99,7 +99,6 @@ home.packages = with pkgs; [
   # General tools
   neovim                # text editor
   ripgrep               # fast grep, used by Telescope live grep
-  nodejs                # JavaScript runtime, needed by Copilot
   gcc                   # C compiler, used to build treesitter parsers
   tree-sitter           # CLI that nvim-treesitter uses to compile parsers
   lazygit               # terminal UI for git
@@ -134,34 +133,54 @@ nvim
 ```
 
 On first start:
-- lazy.nvim installs all plugins.
+- `vim.pack` clones all plugins at the versions in `nvim-pack-lock.json` (this takes a few seconds) and runs their build steps.
 - nvim-treesitter compiles the base parsers, and compiles others the first time you open a file of that type.
-- Run `:Copilot setup` once to sign in to GitHub Copilot.
 
 Use `:checkhealth` to find anything that's missing.
 
 ## Structure
 
 ```
-init.lua                  -- entry point: loads core modules, sets up lazy.nvim and the main plugins
+init.lua                  -- entry point: loads the core modules and the plugins
+nvim-pack-lock.json       -- plugin versions, written by vim.pack (tracked in git)
 lua/user/core/
   globals.lua             -- leader key, nerd-font flag, WSL clipboard
   options.lua             -- editor options
   keymaps.lua             -- general key mappings
   autocmds.lua            -- autocommands (restore cursor, highlight on yank)
-lua/user/plugins/         -- one file per larger plugin, imported by lazy.nvim
+lua/user/plugins/
+  init.lua                -- the plugin list (vim.pack.add), build hooks, :Pack* commands
+  colorscheme.lua         -- tokyonight (default), catppuccin, github, iceberg
+  ui.lua                  -- which-key, lualine, bufferline, indent guides, todo-comments, fidget
+  editor.lua              -- oil, flash, smooth scrolling, maximizer, sessions, tmux navigation
+  telescope.lua           -- fuzzy finder and its keymaps
+  treesitter.lua          -- parsers, highlighting, indentation, text objects
   completion.lua          -- nvim-cmp + LuaSnip
+  lua-ls.lua              -- lazydev (Neovim Lua API for lua_ls)
+  lsp.lua                 -- language servers and LSP keymaps
   formatter.lua           -- conform.nvim (formatting on demand only)
   lint.lua                -- nvim-lint (only runs linters that are installed)
   git.lua                 -- gitsigns, diffview, lazygit
-  debugging.lua           -- nvim-dap + dap-ui (ARM gdb adapter)
-  copilot.lua             -- Copilot + CopilotChat
-  lua-ls.lua              -- lazydev (Neovim Lua API for lua_ls)
-  tmux-navigator.lua      -- move between Neovim splits and tmux panes
+  markdown.lua            -- render-markdown
 ```
 
-Only `*.lua` files in `lua/user/plugins/` are loaded. Rename a file to `*.disabled` to turn it off (the alpha dashboard is disabled this way).
-`lazy-lock.json` is not tracked, so every machine keeps its own plugin versions.
+## Plugins
+
+Plugins are installed by `vim.pack` into `~/.local/share/nvim/site/pack/core/opt/`.
+There is no lazy-loading, so most plugins load at startup. The slower ones are set up on first use:
+Telescope (first picker), nvim-cmp (first time you enter insert mode) and catppuccin (when you switch to it).
+
+| Command | Key | What it does |
+|---|---|---|
+| `:PackUpdate` | `<leader>pu` | download updates and show them; `:write` applies them, `:quit` cancels |
+| `:PackList` | `<leader>pl` | show installed plugins and their versions (offline) |
+| `:PackClean` | `<leader>pc` | delete plugins that are no longer in the plugin list |
+
+- **Add a plugin:** add it to the `vim.pack.add` list in `lua/user/plugins/init.lua`, put its setup in the matching file, and restart (`:restart`).
+- **Remove a plugin:** delete it from the list and its setup, restart, then run `:PackClean`.
+- **Versions:** `nvim-pack-lock.json` records the exact commit of every plugin. Commit it after updating, so other machines get the same versions on their next start.
+
+Coming from the earlier lazy.nvim version of this config? Its plugins in `~/.local/share/nvim/lazy/` and `lazy-lock.json` are no longer used and can be deleted.
 
 ## Formatting
 
@@ -231,28 +250,16 @@ Leader is `<Space>`. Press `<leader>` and wait to see which-key's overview. `<le
 | `<leader>wr` / `<leader>wl` / `<leader>wd` | restore session / restore last session / stop saving session |
 | `[[` / `]]` | smooth scroll up / down |
 
-### Debugging
+### UI and plugins
 | Key | Action |
 |---|---|
-| `<F5>` / `<leader>dc` | start / continue |
-| `<F10>` / `<F11>` / `<F9>` | step over / into / out |
-| `<leader>db` / `<leader>dB` | toggle breakpoint / conditional breakpoint |
-| `<F7>` / `<leader>dt` | toggle debug UI |
-
-The C debug configuration attaches to `arm-none-eabi-gdb` on `127.0.0.1:3333`, so that gdb has to be installed.
-
-### Copilot and UI
-| Key | Action |
-|---|---|
-| `<leader>ac` / `<leader>an` | open Copilot Chat / new chat session |
-| `<leader>ae` `af` `ar` `ao` `at` `ad` (visual) | explain / fix / review / optimize / tests / docs |
 | `<leader>tm` | toggle Markdown rendering (in Markdown files) |
 | `<leader>uc` | pick a colorscheme |
 | `<leader>un` / `<leader>um` / `<leader>ul` | tokyonight-night / catppuccin mocha / latte |
-| `<leader>pl` | open Lazy |
+| `<leader>pu` / `<leader>pl` / `<leader>pc` | update / list / clean plugins |
 
 ## Adding a language
 
 1. Install the language server (and formatter) with your package manager.
-2. Add the server to the `servers` table in `init.lua`, using its [nvim-lspconfig name](https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md).
+2. Add the server to the `servers` table in `lua/user/plugins/lsp.lua`, using its [nvim-lspconfig name](https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md).
 3. Optionally add a formatter for the filetype in `lua/user/plugins/formatter.lua`.
