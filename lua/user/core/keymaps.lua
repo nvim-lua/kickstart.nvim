@@ -45,7 +45,13 @@ vim.keymap.set('i', '<S-up>', '<esc>V<up>')
 vim.keymap.set('i', '<S-down>', '<esc>V<down>')
 
 -- Oil file manager
-vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Oil parent directory' })
+vim.keymap.set('n', '<leader>e', function()
+  if vim.bo.filetype == 'oil' then
+    require('oil').close()
+  else
+    require('oil').open()
+  end
+end, { desc = 'Toggle Oil file manager' })
 
 -- Terminal mode keymaps
 vim.keymap.set('t', '<S-Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
