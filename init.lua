@@ -235,6 +235,14 @@ require('lazy').setup({
       -- Enable the configured servers wherever their binary comes from (Mason, Nix, system)
       vim.lsp.enable(vim.tbl_keys(servers))
 
+      -- Nix language server, only where it's installed (e.g. via home.packages on NixOS)
+      if vim.fn.executable 'nil' == 1 then
+        vim.lsp.config('nil_ls', {
+          settings = { ['nil'] = { formatting = { command = { 'nixpkgs-fmt' } } } },
+        })
+        vim.lsp.enable 'nil_ls'
+      end
+
       -- Also auto-enable any extra servers installed through Mason (not on NixOS)
       require('mason-lspconfig').setup { automatic_enable = not is_nixos }
     end,
