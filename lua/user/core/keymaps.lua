@@ -73,7 +73,6 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 
 -- Package manager
 vim.keymap.set('n', '<leader>pl', '<cmd>Lazy<CR>', { desc = 'Lazy' })
-vim.keymap.set('n', '<leader>pm', '<cmd>Mason<CR>', { desc = 'Mason' })
 
 -- Better up/down movement
 vim.keymap.set({ 'n', 'x' }, 'j', "v:count == 0 ? 'gj' : 'j'", { desc = 'Down', expr = true, silent = true })

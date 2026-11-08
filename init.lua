@@ -16,9 +16,6 @@ if not vim.uv.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- Mason's prebuilt binaries can't run on NixOS; there, tools come from Nix instead
-local is_nixos = vim.uv.fs_stat '/etc/NIXOS' ~= nil
-
 -- [[ Configure and install plugins ]]
 -- To check the current status of your plugins, run :Lazy
 -- To update plugins you can run :Lazy update
@@ -146,9 +143,6 @@ require('lazy').setup({
   {
     'neovim/nvim-lspconfig',
     dependencies = {
-      { 'williamboman/mason.nvim', opts = { PATH = is_nixos and 'skip' or 'prepend' } },
-      'williamboman/mason-lspconfig.nvim',
-      'WhoIsSethDaniel/mason-tool-installer.nvim',
       { 'j-hui/fidget.nvim', opts = {} },
     },
     config = function()
@@ -205,46 +199,33 @@ require('lazy').setup({
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
-      -- Language servers configuration
+      -- Language servers. Binaries come from the OS package manager
+      -- (pacman on Arch, home.packages on NixOS); nvim-lspconfig supplies base configs.
       local servers = {
-        clangd = {
-          filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
+        clangd = { filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' } }, -- C/C++
+        lua_ls = { settings = { Lua = { completion = { callSnippet = 'Replace' } } } }, -- Lua
+        nil_ls = { settings = { ['nil'] = { formatting = { command = { 'nixpkgs-fmt' } } } } }, -- Nix
+        taplo = {}, -- TOML
+        yamlls = { settings = { yaml = { format = { enable = true } } } }, -- YAML
+        pyright = {}, -- Python: types, completion, navigation
+        ruff = { -- Python: linting and quick fixes (hover is left to pyright)
+          on_attach = function(client)
+            client.server_capabilities.hoverProvider = false
+          end,
         },
-        lua_ls = {
-          settings = {
-            Lua = {
-              completion = {
-                callSnippet = 'Replace',
-              },
-            },
-          },
-        },
+        bashls = {}, -- Bash (uses shellcheck for diagnostics when installed)
+        rust_analyzer = {}, -- Rust
       }
 
-      -- Install servers through Mason, except on NixOS where they come from Nix packages
-      if not is_nixos then
-        require('mason-tool-installer').setup { ensure_installed = vim.tbl_keys(servers) }
-      end
-
-      -- Native LSP config (Neovim 0.11+); nvim-lspconfig supplies the base configs
       vim.lsp.config('*', { capabilities = capabilities })
-      for server_name, server in pairs(servers) do
-        vim.lsp.config(server_name, server)
+      for name, server in pairs(servers) do
+        vim.lsp.config(name, server)
+        -- Only enable servers that are installed on this machine
+        local cmd = vim.lsp.config[name].cmd
+        if type(cmd) ~= 'table' or vim.fn.executable(cmd[1]) == 1 then
+          vim.lsp.enable(name)
+        end
       end
-
-      -- Enable the configured servers wherever their binary comes from (Mason, Nix, system)
-      vim.lsp.enable(vim.tbl_keys(servers))
-
-      -- Nix language server, only where it's installed (e.g. via home.packages on NixOS)
-      if vim.fn.executable 'nil' == 1 then
-        vim.lsp.config('nil_ls', {
-          settings = { ['nil'] = { formatting = { command = { 'nixpkgs-fmt' } } } },
-        })
-        vim.lsp.enable 'nil_ls'
-      end
-
-      -- Also auto-enable any extra servers installed through Mason (not on NixOS)
-      require('mason-lspconfig').setup { automatic_enable = not is_nixos }
     end,
   },
 

@@ -32,7 +32,7 @@ git clone <repository-url> ~/.config/nvim
 - **Clean Plugin Management**: Uses Lazy.nvim with organized plugin definitions
 - **Simplified Dashboard**: Alpha dashboard reduced from 13 headers to 3 clean options
 - **Consistent Keymaps**: Removed duplicates and organized by functionality
-- **LSP Ready**: Full LSP support with Mason for easy language server management
+- **LSP Ready**: Language servers and formatters come from the OS package manager (pacman / Nix home.packages)
 - **Development Tools**: Git integration, debugging, completion, and more
 
 ## Key Mappings Highlights
