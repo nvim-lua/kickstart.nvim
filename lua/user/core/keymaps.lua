@@ -13,12 +13,18 @@ vim.keymap.set('c', '<C-k>', '<C-p>', { desc = 'Previous item' })
 vim.keymap.set('n', '<C-a>', 'ggVG', { desc = 'select all' })
 vim.keymap.set('v', 'p', '"_dP', { desc = 'paste without yanking in visual mode' })
 
--- Diagnostic keymaps ([d / ]d are Neovim 0.11+ defaults)
-vim.keymap.set('n', '<leader>le', vim.diagnostic.open_float, { desc = 'Show diagnostic Error messages' })
+-- Diagnostic keymaps ([d / ]d and <C-w>d for the float are Neovim defaults)
 vim.keymap.set('n', '<leader>xq', vim.diagnostic.setloclist, { desc = 'Open diagnostic Quickfix list' })
 
--- Undotree (simplified to one keymap)
-vim.keymap.set('n', '<leader>ut', vim.cmd.UndotreeToggle, { desc = 'Toggle Undo Tree' })
+-- Undotree (built-in since 0.12; toggles)
+vim.keymap.set('n', '<leader>ut', function()
+  vim.cmd.packadd 'nvim.undotree'
+  require('undotree').open()
+end, { desc = 'Toggle Undo Tree' })
+
+-- Commenting (built-in gc/gcc since 0.10)
+vim.keymap.set('n', '<leader>/', 'gcc', { remap = true, desc = 'Toggle comment line' })
+vim.keymap.set('x', '<leader>/', 'gc', { remap = true, desc = 'Toggle comment selection' })
 
 -- Increment/decrement
 vim.keymap.set('n', '+', '<C-a>')
@@ -87,11 +93,9 @@ vim.keymap.set('i', '<A-k>', '<esc><cmd>m .-2<cr>==gi', { desc = 'Move Up' })
 vim.keymap.set('v', '<A-j>', ":m '>+1<cr>gv=gv", { desc = 'Move Down' })
 vim.keymap.set('v', '<A-k>', ":m '<-2<cr>gv=gv", { desc = 'Move Up' })
 
--- Buffer management (consolidated)
+-- Buffer management ([b / ]b are Neovim defaults)
 vim.keymap.set('n', '<S-h>', '<cmd>bprevious<cr>', { desc = 'Previous Buffer' })
 vim.keymap.set('n', '<S-l>', '<cmd>bnext<cr>', { desc = 'Next Buffer' })
-vim.keymap.set('n', '[b', '<cmd>bprevious<cr>', { desc = 'Previous Buffer' })
-vim.keymap.set('n', ']b', '<cmd>bnext<cr>', { desc = 'Next Buffer' })
 vim.keymap.set('n', '<leader>bd', '<cmd>:bd<cr>', { desc = 'Delete Buffer' })
 vim.keymap.set('n', '<leader>bb', '<cmd>Telescope buffers<cr>', { desc = 'Telescope Buffers' })
 vim.keymap.set('n', '<leader>ba', '<cmd>%bd<CR><cmd>e#<CR><cmd>bd#<CR>', { desc = 'Close all but current' })
@@ -105,11 +109,7 @@ vim.keymap.set('n', '<leader>ugl', '<cmd>colorscheme github_light<CR>', { desc =
 vim.keymap.set('n', '<leader>ugd', '<cmd>colorscheme github_dark_default<CR>', { desc = 'github_dark' })
 vim.keymap.set('n', '<leader>us', '<cmd>set laststatus=3<bar>hi WinSeparator guifg=#ff0000<CR>', { desc = 'add red window seperators' })
 
--- Quickfix
-vim.keymap.set('n', '[q', '<cmd>cprevious<cr>', { desc = 'Prev quickfix' })
-vim.keymap.set('n', ']q', '<cmd>cnext<cr>', { desc = 'Next quickfix' })
-vim.keymap.set('n', '[Q', '<cmd>cfirst<cr>', { desc = 'First quickfix' })
-vim.keymap.set('n', ']Q', '<cmd>clast<cr>', { desc = 'last quickfix' })
+-- Quickfix: [q ]q [Q ]Q are Neovim defaults
 
 -- [[ Custom commands ]]
 -- This function finds the root git directory of a current buffer

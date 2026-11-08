@@ -47,14 +47,14 @@ git clone <repository-url> ~/.config/nvim
 
 ### Git Integration
 - `<leader>gg` - LazyGit
-- `<leader>gn` - NeoGit
-- `<leader>gs` - Git stage hunk
+- `<leader>gdi` - Diffview
+- `<leader>gs` - Git stage/unstage hunk
 - `<leader>gr` - Git reset hunk
 
 ### LSP Features
 - `gd` - Go to definition
-- `gr` - Go to references  
-- `K` - Hover documentation
+- `grr` - Go to references (Telescope)
+- `K` - Hover documentation (built-in)
 - `<leader>lr` - Rename symbol
 - `<leader>la` - Code actions
 

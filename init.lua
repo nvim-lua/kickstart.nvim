@@ -23,22 +23,6 @@ local is_nixos = vim.uv.fs_stat '/etc/NIXOS' ~= nil
 -- To check the current status of your plugins, run :Lazy
 -- To update plugins you can run :Lazy update
 require('lazy').setup({
-  -- Essential plugins
-  'mbbill/undotree',
-
-  -- Comment plugin with custom keybinds
-  {
-    'numToStr/Comment.nvim',
-    opts = {
-      toggler = {
-        line = '<leader>/',
-      },
-      opleader = {
-        line = '<leader>/',
-      },
-    },
-  },
-
   -- Which-key for keybind discovery
   {
     'folke/which-key.nvim',
@@ -177,14 +161,13 @@ require('lazy').setup({
 
           -- LSP keymaps
           map('gd', require('telescope.builtin').lsp_definitions, 'Goto Definition')
-          map('gr', require('telescope.builtin').lsp_references, 'Goto References')
+          map('grr', require('telescope.builtin').lsp_references, 'Goto References')
           map('gI', require('telescope.builtin').lsp_implementations, 'Goto Implementation')
           map('<leader>lD', require('telescope.builtin').lsp_type_definitions, 'Type Definition')
           map('<leader>ls', require('telescope.builtin').lsp_document_symbols, 'Symbols')
           map('<leader>lS', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Workspace Symbols')
           map('<leader>lr', vim.lsp.buf.rename, 'LSP Rename under cursor')
           map('<leader>la', vim.lsp.buf.code_action, 'Code Action')
-          map('K', vim.lsp.buf.hover, 'Hover Documentation')
           map('gD', vim.lsp.buf.declaration, 'Goto Declaration')
 
           local client = vim.lsp.get_client_by_id(event.data.client_id)

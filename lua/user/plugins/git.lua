@@ -56,22 +56,10 @@ return {
   --   end,
   -- },
 
-  { 'sindrets/diffview.nvim' },
-
   {
-    'NeogitOrg/neogit',
-    dependencies = {
-      'nvim-lua/plenary.nvim', -- required
-      'sindrets/diffview.nvim', -- optional - Diff integration
-
-      -- Only one of these is needed.
-      'nvim-telescope/telescope.nvim', -- optional
-      -- 'ibhagwan/fzf-lua', -- optional
-      -- 'echasnovski/mini.pick', -- optional
-    },
-    config = true,
+    'sindrets/diffview.nvim',
+    cmd = { 'DiffviewOpen', 'DiffviewClose', 'DiffviewFileHistory' },
     keys = {
-      { '<leader>gn', '<cmd>Neogit<cr>', desc = 'NeoGit' },
       { '<leader>gdi', '<cmd>DiffviewOpen<cr>', desc = 'git diff' },
       { '<leader>gdd', '<cmd>DiffviewOpen develop<cr>', desc = 'git diff against develop' },
       { '<leader>gdc', '<cmd>DiffviewClose<cr>', desc = 'DiffviewClose' },
