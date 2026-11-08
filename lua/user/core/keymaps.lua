@@ -111,18 +111,6 @@ vim.keymap.set('n', ']q', '<cmd>cnext<cr>', { desc = 'Next quickfix' })
 vim.keymap.set('n', '[Q', '<cmd>cfirst<cr>', { desc = 'First quickfix' })
 vim.keymap.set('n', ']Q', '<cmd>clast<cr>', { desc = 'last quickfix' })
 
--- Which-key group descriptions
-vim.keymap.set('n', '<leader>x', '', { desc = 'quicklist' })
-vim.keymap.set('n', '<leader>b', '', { desc = 'buffer' })
-vim.keymap.set('n', '<leader>d', '', { desc = 'debug' })
-vim.keymap.set('n', '<leader>f', '', { desc = 'find' })
-vim.keymap.set('n', '<leader>l', '', { desc = 'language' })
-vim.keymap.set('n', '<leader>w', '', { desc = 'workspace' })
-vim.keymap.set('n', '<leader>t', '', { desc = 'toggle' })
-vim.keymap.set('n', '<leader>g', '', { desc = 'git' })
-vim.keymap.set('n', '<leader>p', '', { desc = 'plugins' })
-vim.keymap.set('n', '<leader>u', '', { desc = 'ux' })
-
 -- [[ Custom commands ]]
 -- This function finds the root git directory of a current buffer
 local function get_git_root()

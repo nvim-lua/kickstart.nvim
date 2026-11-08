@@ -40,7 +40,23 @@ require('lazy').setup({
   {
     'folke/which-key.nvim',
     event = 'VeryLazy',
-    opts = {},
+    opts = {
+      spec = {
+        { '<leader>a', group = 'ai' },
+        { '<leader>b', group = 'buffer' },
+        { '<leader>d', group = 'debug' },
+        { '<leader>f', group = 'find' },
+        { '<leader>fn', group = 'neovim config' },
+        { '<leader>g', group = 'git' },
+        { '<leader>gd', group = 'diff' },
+        { '<leader>l', group = 'language' },
+        { '<leader>p', group = 'plugins' },
+        { '<leader>t', group = 'toggle' },
+        { '<leader>u', group = 'ux' },
+        { '<leader>w', group = 'workspace' },
+        { '<leader>x', group = 'quicklist' },
+      },
+    },
     keys = {
       {
         '<leader>?',
@@ -118,7 +134,6 @@ require('lazy').setup({
       end, { desc = 'Find / in Open Files' })
 
       -- Neovim config shortcuts
-      vim.keymap.set('n', '<leader>fn', '', { desc = 'neovim config...' })
       vim.keymap.set('n', '<leader>fnf', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = 'Find Neovim Files' })
@@ -514,6 +529,7 @@ require('lazy').setup({
   -- Import modular plugin configurations
   { import = 'user/plugins' },
 }, {
+  rocks = { enabled = false }, -- no plugin needs luarocks; avoids hererocks health errors
   ui = {
     icons = vim.g.have_nerd_font and {} or {
       cmd = '⌘',
