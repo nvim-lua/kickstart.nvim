@@ -25,7 +25,6 @@ git clone <repository-url> ~/.config/nvim
 
 ### Main Files
 - `init.lua` - Main configuration entry point (streamlined from 1,036 to ~400 lines)
-- `init-old.lua` - Backup of original monolithic configuration
 
 ## Key Features
 

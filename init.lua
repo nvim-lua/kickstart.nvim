@@ -3,7 +3,7 @@
 
 -- Core configuration modules
 require 'user.core.globals'  -- Global settings and variables
-require 'user.core.options'  -- Vim options and settings  
+require 'user.core.options'  -- Vim options and settings
 require 'user.core.keymaps'  -- Key mappings and shortcuts
 require 'user.core.autocmds' -- Auto commands and events
 
@@ -169,8 +169,12 @@ require('lazy').setup({
           map('K', vim.lsp.buf.hover, 'Hover Documentation')
           map('gD', vim.lsp.buf.declaration, 'Goto Declaration')
 
-          -- Document highlighting
           local client = vim.lsp.get_client_by_id(event.data.client_id)
+          if client and client.name == 'clangd' then
+            map('gs', '<cmd>LspClangdSwitchSourceHeader<cr>', 'Switch between source/header')
+          end
+
+          -- Document highlighting
           if client and client.server_capabilities.documentHighlightProvider then
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
@@ -203,8 +207,7 @@ require('lazy').setup({
       -- Language servers configuration
       local servers = {
         clangd = {
-          filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto', 'hpp' },
-          vim.keymap.set('n', 'gs', '<cmd>:ClangdSwitchSourceHeader<cr>', { desc = 'Switch between source/header' }),
+          filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
         },
         lua_ls = {
           settings = {
@@ -225,15 +228,14 @@ require('lazy').setup({
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-      require('mason-lspconfig').setup {
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-          end,
-        },
-      }
+      -- Native LSP config (Neovim 0.11+); nvim-lspconfig supplies the base configs
+      vim.lsp.config('*', { capabilities = capabilities })
+      for server_name, server in pairs(servers) do
+        vim.lsp.config(server_name, server)
+      end
+
+      -- Installs servers and auto-enables everything installed through Mason
+      require('mason-lspconfig').setup { automatic_enable = true }
     end,
   },
 
@@ -273,7 +275,7 @@ require('lazy').setup({
     'karb94/neoscroll.nvim',
     config = function()
       require('neoscroll').setup {}
-      neoscroll = require 'neoscroll'
+      local neoscroll = require 'neoscroll'
       local keymap = {
         ['[['] = function()
           neoscroll.ctrl_u { duration = 250 }
