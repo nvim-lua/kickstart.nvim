@@ -1,15 +1,10 @@
--- lazydev.nvim is a plugin that properly configures LuaLS for editing your Neovim config by lazily updating your workspace libraries.
-return {
-  {
-    'folke/lazydev.nvim',
-    ft = 'lua', -- only load on lua files
-    opts = {
-      library = {
-        -- See the configuration section for more details
-        -- Load luvit types when the `vim.uv` word is found
-        { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
-      },
-    },
+-- [[ lazydev ]]
+-- Teaches lua_ls about the Neovim Lua API and installed plugins when editing
+-- this config. Its completion source is registered in completion.lua.
+
+require('lazydev').setup {
+  library = {
+    -- Load luv (vim.uv) type definitions when `vim.uv` is used
+    { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
   },
-  -- the lazydev cmp source is registered in completion.lua
 }

@@ -44,14 +44,7 @@ vim.keymap.set('v', '<S-down>', '<down>')
 vim.keymap.set('i', '<S-up>', '<esc>V<up>')
 vim.keymap.set('i', '<S-down>', '<esc>V<down>')
 
--- Oil file manager
-vim.keymap.set('n', '<leader>e', function()
-  if vim.bo.filetype == 'oil' then
-    require('oil').close()
-  else
-    require('oil').open()
-  end
-end, { desc = 'Toggle Oil file manager' })
+-- Oil file manager: <leader>e (see lua/user/plugins/editor.lua)
 
 -- Terminal mode keymaps
 vim.keymap.set('t', '<S-Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
@@ -71,8 +64,7 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
--- Package manager
-vim.keymap.set('n', '<leader>pl', '<cmd>Lazy<CR>', { desc = 'Lazy' })
+-- Plugin manager keymaps (<leader>p*) are in lua/user/plugins/init.lua
 
 -- Better up/down movement
 vim.keymap.set({ 'n', 'x' }, 'j', "v:count == 0 ? 'gj' : 'j'", { desc = 'Down', expr = true, silent = true })
