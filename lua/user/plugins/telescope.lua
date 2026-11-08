@@ -1,57 +1,76 @@
 -- [[ Telescope fuzzy finder ]]
+-- Telescope is set up the first time a picker is opened, which keeps it out
+-- of startup time.
 
-local telescope = require 'telescope'
-local builtin = require 'telescope.builtin'
-local themes = require 'telescope.themes'
+local did_setup = false
+local function builtin()
+  if not did_setup then
+    did_setup = true
+    local telescope = require 'telescope'
+    telescope.setup {
+      pickers = {
+        colorscheme = {
+          enable_preview = true,
+        },
+      },
+      extensions = {
+        ['ui-select'] = {
+          require('telescope.themes').get_dropdown(),
+        },
+      },
+    }
+    -- Extensions (fzf is only there if `make` built it)
+    pcall(telescope.load_extension, 'fzf')
+    pcall(telescope.load_extension, 'ui-select')
+  end
+  return require 'telescope.builtin'
+end
 
-telescope.setup {
-  pickers = {
-    colorscheme = {
-      enable_preview = true,
-    },
-  },
-  extensions = {
-    ['ui-select'] = {
-      themes.get_dropdown(),
-    },
-  },
-}
+-- Route vim.ui.select (code actions etc.) through telescope's ui-select.
+-- Loading the extension replaces vim.ui.select; fall back to the default if it didn't.
+local default_select = vim.ui.select
+local function lazy_select(...)
+  builtin()
+  if vim.ui.select == lazy_select then
+    vim.ui.select = default_select
+  end
+  return vim.ui.select(...)
+end
+vim.ui.select = lazy_select
 
--- Extensions (fzf is only there if `make` built it)
-pcall(telescope.load_extension, 'fzf')
-pcall(telescope.load_extension, 'ui-select')
+local function map(lhs, picker, desc, opts)
+  vim.keymap.set('n', lhs, function()
+    builtin()[picker](opts and opts() or nil)
+  end, { desc = desc })
+end
 
-vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Help' })
-vim.keymap.set('n', '<leader>fk', builtin.keymaps, { desc = 'Keymaps' })
-vim.keymap.set('n', '<leader>fc', builtin.commands, { desc = 'Commands' })
-vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Files' })
-vim.keymap.set('n', '<leader>ft', builtin.builtin, { desc = 'Telescope' })
-vim.keymap.set('n', '<leader>f.', builtin.grep_string, { desc = 'word under cursor' })
-vim.keymap.set('n', '<leader>fw', builtin.live_grep, { desc = 'Word' })
-vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = 'Diagnostics' })
-vim.keymap.set('n', '<leader>f<cr>', builtin.resume, { desc = 'Resume' })
-vim.keymap.set('n', '<leader>fr', builtin.oldfiles, { desc = 'Recent Files' })
-vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Buffers' })
-vim.keymap.set('n', '<leader>uc', builtin.colorscheme, { desc = 'Find Colorscheme' })
+map('<leader>fh', 'help_tags', 'Help')
+map('<leader>fk', 'keymaps', 'Keymaps')
+map('<leader>fc', 'commands', 'Commands')
+map('<leader>ff', 'find_files', 'Files')
+map('<leader>ft', 'builtin', 'Telescope')
+map('<leader>f.', 'grep_string', 'word under cursor')
+map('<leader>fw', 'live_grep', 'Word')
+map('<leader>fd', 'diagnostics', 'Diagnostics')
+map('<leader>f<cr>', 'resume', 'Resume')
+map('<leader>fr', 'oldfiles', 'Recent Files')
+map('<leader>fb', 'buffers', 'Buffers')
+map('<leader>uc', 'colorscheme', 'Find Colorscheme')
 
-vim.keymap.set('n', '<leader>b/', function()
-  builtin.current_buffer_fuzzy_find(themes.get_dropdown {
-    winblend = 10,
-    previewer = false,
-  })
-end, { desc = '/ Fuzzily search in current buffer' })
-
-vim.keymap.set('n', '<leader>f/', function()
-  builtin.live_grep {
-    grep_open_files = true,
-    prompt_title = 'Live Grep in Open Files',
-  }
-end, { desc = 'Find / in Open Files' })
+map('<leader>b/', 'current_buffer_fuzzy_find', '/ Fuzzily search in current buffer', function()
+  return require('telescope.themes').get_dropdown { winblend = 10, previewer = false }
+end)
+map('<leader>f/', 'live_grep', 'Find / in Open Files', function()
+  return { grep_open_files = true, prompt_title = 'Live Grep in Open Files' }
+end)
 
 -- Neovim config shortcuts
-vim.keymap.set('n', '<leader>fnf', function()
-  builtin.find_files { cwd = vim.fn.stdpath 'config' }
-end, { desc = 'Find Neovim Files' })
-vim.keymap.set('n', '<leader>fnw', function()
-  builtin.live_grep { cwd = vim.fn.stdpath 'config' }
-end, { desc = 'Find Neovim Words' })
+map('<leader>fnf', 'find_files', 'Find Neovim Files', function()
+  return { cwd = vim.fn.stdpath 'config' }
+end)
+map('<leader>fnw', 'live_grep', 'Find Neovim Words', function()
+  return { cwd = vim.fn.stdpath 'config' }
+end)
+
+-- lsp.lua uses this to open the LSP pickers
+return builtin
