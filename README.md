@@ -29,7 +29,7 @@ These language tools are optional. Each language server is only started if its p
 | Python | `pyright` + `ruff` | ruff |
 | Bash | `bash-language-server` (+ `shellcheck` for diagnostics) | `shfmt` |
 | Rust | `rust-analyzer` | `rustfmt` |
-| Markdown | – (lint: `markdownlint`, if installed) | – |
+| Markdown | – (rendered in the editor by render-markdown; lint: `markdownlint`, if installed) | – |
 
 ## Installation
 
@@ -246,6 +246,7 @@ The C debug configuration attaches to `arm-none-eabi-gdb` on `127.0.0.1:3333`, s
 |---|---|
 | `<leader>ac` / `<leader>an` | open Copilot Chat / new chat session |
 | `<leader>ae` `af` `ar` `ao` `at` `ad` (visual) | explain / fix / review / optimize / tests / docs |
+| `<leader>tm` | toggle Markdown rendering (in Markdown files) |
 | `<leader>uc` | pick a colorscheme |
 | `<leader>un` / `<leader>um` / `<leader>ul` | tokyonight-night / catppuccin mocha / latte |
 | `<leader>pl` | open Lazy |

@@ -375,7 +375,7 @@ require('lazy').setup({
     build = ':TSUpdate',
     config = function()
       local ts = require 'nvim-treesitter'
-      ts.install { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+      ts.install { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'yaml' }
 
       local no_indent = { ruby = true }
       local regex_highlight = { ruby = true }
@@ -480,25 +480,17 @@ require('lazy').setup({
   -- Development tools
   'dstein64/vim-startuptime',
 
-  -- Markdown preview
+  -- Markdown rendering inside the editor (headings, tables, code blocks, checkboxes)
   {
-    'iamcco/markdown-preview.nvim',
-    cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
+    'MeanderingProgrammer/render-markdown.nvim',
     ft = { 'markdown' },
-    init = function()
-      vim.g.mkdp_filetypes = { 'markdown' }
-    end,
-    build = function()
-      vim.fn['mkdp#util#install']()
-    end,
-    config = function()
-      vim.cmd [[
-           let g:mkdp_echo_preview_url = 1
-           let g:mkdp_open_to_the_world = 0
-           let g:mkdp_open_ip = '127.0.0.1'
-           let g:mkdp_port = '8080'
-        ]]
-    end,
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' },
+    opts = {
+      latex = { enabled = false }, -- would need the latex parser plus utftex/latex2text
+    },
+    keys = {
+      { '<leader>tm', '<cmd>RenderMarkdown toggle<cr>', ft = 'markdown', desc = 'Toggle Markdown rendering' },
+    },
   },
 
   -- Import modular plugin configurations
