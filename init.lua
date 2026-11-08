@@ -75,7 +75,7 @@ require('lazy').setup({
   {
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
-    branch = '0.1.x',
+    version = '*', -- latest release; 0.1.x uses nvim-treesitter master APIs
     dependencies = {
       'nvim-lua/plenary.nvim',
       {
