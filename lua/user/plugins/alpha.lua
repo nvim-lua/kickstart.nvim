@@ -3,7 +3,7 @@
 local options
 
 -- Only runs this script if Alpha Screen loads -- only if there isn't files to read
-if vim.api.nvim_exec('echo argc()', true) == '0' then
+if vim.fn.argc() == 0 then
   -- Create button for initial keybind.
   --- @param sc string
   --- @param txt string
@@ -111,7 +111,7 @@ if vim.api.nvim_exec('echo argc()', true) == '0' then
     padding_between = 3, -- STATIC: can be set to anything, padding between keybinds and header
   }
 
-  local left_terminal_value = vim.api.nvim_get_option 'lines' - (ol.length_buttons + ol.padding_between + ol.icon + ol.neovim_lines)
+  local left_terminal_value = vim.o.lines - (ol.length_buttons + ol.padding_between + ol.icon + ol.neovim_lines)
 
   -- Not screen enough to run the command.
   if left_terminal_value >= 0 then
@@ -136,7 +136,7 @@ end
 
 return {
   'goolord/alpha-nvim',
-  dependencies = 'kyazdani42/nvim-web-devicons',
+  dependencies = 'nvim-tree/nvim-web-devicons',
   config = function()
     if options ~= nil then
       require('alpha').setup(options)

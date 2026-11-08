@@ -13,9 +13,7 @@ vim.keymap.set('c', '<C-k>', '<C-p>', { desc = 'Previous item' })
 vim.keymap.set('n', '<C-a>', 'ggVG', { desc = 'select all' })
 vim.keymap.set('v', 'p', '"_dP', { desc = 'paste without yanking in visual mode' })
 
--- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous Diagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next Diagnostic message' })
+-- Diagnostic keymaps ([d / ]d are Neovim 0.11+ defaults)
 vim.keymap.set('n', '<leader>le', vim.diagnostic.open_float, { desc = 'Show diagnostic Error messages' })
 vim.keymap.set('n', '<leader>xq', vim.diagnostic.setloclist, { desc = 'Open diagnostic Quickfix list' })
 
@@ -37,7 +35,7 @@ vim.keymap.set('n', '<S-up>', 'V<up>')
 vim.keymap.set('n', '<S-down>', 'V<down>')
 vim.keymap.set('v', '<S-up>', '<up>')
 vim.keymap.set('v', '<S-down>', '<down>')
-vim.keymap.set('i', '<S-up>', ',<esc>V<up>')
+vim.keymap.set('i', '<S-up>', '<esc>V<up>')
 vim.keymap.set('i', '<S-down>', '<esc>V<down>')
 
 -- Oil file manager

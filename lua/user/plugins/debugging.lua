@@ -40,7 +40,7 @@ return {
     dap.adapters.armgdb = {
       type = 'executable',
       command = 'arm-none-eabi-gdb',
-      args = { '-i', 'dap', '-q', '-ex', '"target remote 127.0.0.1:3333"' },
+      args = { '-i', 'dap', '-q', '-ex', 'target remote 127.0.0.1:3333' },
     }
     dap.configurations.c = {
       {

@@ -5,7 +5,7 @@ return { -- Autoformat
     {
       '<leader>lf',
       function()
-        require('conform').format { async = true, lsp_fallback = true }
+        require('conform').format { async = true, lsp_format = 'fallback' }
       end,
       mode = '',
       desc = 'LSP Format buffer',
@@ -20,7 +20,7 @@ return { -- Autoformat
       local disable_filetypes = { c = true, cpp = true }
       return {
         timeout_ms = 500,
-        lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
+        lsp_format = disable_filetypes[vim.bo[bufnr].filetype] and 'never' or 'fallback',
       }
     end,
     formatters_by_ft = {
@@ -31,13 +31,13 @@ return { -- Autoformat
       -- You can use a sub-list to tell conform to run *until* a formatter
       -- is found.
       -- javascript = { { "prettierd", "prettier" } },
-      formatters = {
-        clang_format = {
-          prepend_args = { '-style="{IndentWidth: 4}"' },
-        },
-        prettier = {
-          append_args = { '--tab-width', '4' },
-        },
+    },
+    formatters = {
+      clang_format = {
+        prepend_args = { '-style={IndentWidth: 4}' },
+      },
+      prettier = {
+        append_args = { '--tab-width', '4' },
       },
     },
   },

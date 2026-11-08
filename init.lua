@@ -10,10 +10,10 @@ require 'user.core.autocmds' -- Auto commands and events
 -- [[ Install `lazy.nvim` plugin manager ]]
 -- See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
   vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
-end ---@diagnostic disable-next-line: undefined-field
+end
 vim.opt.rtp:prepend(lazypath)
 
 -- [[ Configure and install plugins ]]
@@ -163,7 +163,7 @@ require('lazy').setup({
           map('gI', require('telescope.builtin').lsp_implementations, 'Goto Implementation')
           map('<leader>lD', require('telescope.builtin').lsp_type_definitions, 'Type Definition')
           map('<leader>ls', require('telescope.builtin').lsp_document_symbols, 'Symbols')
-          map('<leader>ls', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'language')
+          map('<leader>lS', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Workspace Symbols')
           map('<leader>lr', vim.lsp.buf.rename, 'LSP Rename under cursor')
           map('<leader>la', vim.lsp.buf.code_action, 'Code Action')
           map('K', vim.lsp.buf.hover, 'Hover Documentation')
@@ -325,7 +325,7 @@ require('lazy').setup({
     opts = {
       custom_highlights = function(colors)
         return {
-          WinSeperator = { fg = '#ff0000' },
+          WinSeparator = { fg = '#ff0000' },
         }
       end,
     },
@@ -504,7 +504,7 @@ require('lazy').setup({
     config = function()
       vim.cmd [[
            let g:mkdp_echo_preview_url = 1
-           let g:mkdp_open_to_the_world = 1
+           let g:mkdp_open_to_the_world = 0
            let g:mkdp_open_ip = '127.0.0.1'
            let g:mkdp_port = '8080'
         ]]

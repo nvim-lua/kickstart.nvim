@@ -14,7 +14,7 @@ return {
         -- Navigation
         map('n', ']g', function()
           if vim.wo.diff then
-            vim.cmd.normal { ']g', bang = true }
+            vim.cmd.normal { ']c', bang = true }
           else
             gitsigns.nav_hunk 'next'
           end
@@ -22,7 +22,7 @@ return {
 
         map('n', '[g', function()
           if vim.wo.diff then
-            vim.cmd.normal { '[g', bang = true }
+            vim.cmd.normal { '[c', bang = true }
           else
             gitsigns.nav_hunk 'prev'
           end
@@ -37,15 +37,14 @@ return {
           gitsigns.reset_hunk { vim.fn.line '.', vim.fn.line 'v' }
         end, { desc = 'reset git hunk' })
         -- normal mode
-        map('n', '<leader>gs', gitsigns.stage_hunk, { desc = 'git stage hunk' })
+        map('n', '<leader>gs', gitsigns.stage_hunk, { desc = 'git stage/unstage hunk' })
         map('n', '<leader>gr', gitsigns.reset_hunk, { desc = 'git reset hunk' })
         map('n', '<leader>gS', gitsigns.stage_buffer, { desc = 'git Stage buffer' })
-        map('n', '<leader>gu', gitsigns.undo_stage_hunk, { desc = 'git undo stage hunk' })
         map('n', '<leader>gR', gitsigns.reset_buffer, { desc = 'git Reset buffer' })
         map('n', '<leader>gp', gitsigns.preview_hunk, { desc = 'git preview hunk' })
         map('n', '<leader>gb', gitsigns.blame_line, { desc = 'git blame line' })
         map('n', '<leader>gB', gitsigns.toggle_current_line_blame, { desc = 'Toggle git show blame line' })
-        map('n', '<leader>gtd', gitsigns.toggle_deleted, { desc = 'git Toggle Deleted' })
+        map('n', '<leader>gtd', gitsigns.preview_hunk_inline, { desc = 'git preview hunk inline (deleted lines)' })
       end,
     },
   },

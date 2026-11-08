@@ -11,7 +11,7 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '<leader>e', '<cmd>Neotree toggle position=right<CR>', { desc = 'NeoTree reveal' } },
+    { '<leader>e', '<cmd>Neotree toggle position=right<CR>', desc = 'NeoTree reveal' },
   },
   opts = {
     filesystem = {
@@ -35,19 +35,19 @@ return {
         },
       },
     },
-  },
 
-  default_component_configs = {
-    indent = {
-      with_expanders = true, -- if nil and file nesting is enabled, will enable expanders
-      expander_collapsed = '',
-      expander_expanded = '',
-      expander_highlight = 'NeoTreeExpander',
-    },
-    git_status = {
-      symbols = {
-        unstaged = '󰄱',
-        staged = '󰱒',
+    default_component_configs = {
+      indent = {
+        with_expanders = true, -- if nil and file nesting is enabled, will enable expanders
+        expander_collapsed = '',
+        expander_expanded = '',
+        expander_highlight = 'NeoTreeExpander',
+      },
+      git_status = {
+        symbols = {
+          unstaged = '󰄱',
+          staged = '󰱒',
+        },
       },
     },
   },
