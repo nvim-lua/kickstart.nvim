@@ -92,6 +92,10 @@ do
   -- Enable faster startup by caching compiled Lua modules
   vim.loader.enable()
 
+  -- NOTE: add neovim -u path to runtime path, so require 'kickstart.plugins.*'
+  -- and queries/ work
+  vim.opt.rtp:prepend(vim.fs.dirname(debug.getinfo(1, 'S').source:sub(2)))
+
   -- Set <space> as the leader key
   -- See `:help mapleader`
   --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
