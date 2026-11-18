@@ -33,8 +33,8 @@ return {
         lua = { 'stylua' },
         go = { 'gofmt', 'goimports', 'golines' },
         terraform = { 'terraform_fmt' },
-        json = { 'jsonnetfmt', 'jq' },
-        puthon = { 'isort', 'black' },
+        json = { 'jq' },
+        python = { 'isort', 'black' },
         rust = { 'rustfmt' },
         -- yaml = { 'yq' },
         -- Conform can also run multiple formatters sequentially
