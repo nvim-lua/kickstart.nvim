@@ -1,7 +1,1 @@
-return {
-  'github/copilot.vim',
-  opts = {},
-  config = function()
-    -- vim.g.copilot#enable()
-  end,
-}
+return { 'github/copilot.vim' }

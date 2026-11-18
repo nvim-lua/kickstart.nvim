@@ -27,9 +27,12 @@ return {
   },
   { 'folke/tokyonight.nvim', name = 'tokyonight', priority = 1000, opts = { transparent = true } },
   { 'rose-pine/neovim', name = 'rose-pine' },
+  { 'deparr/tairiki.nvim', name = 'tairiki' },
+  { 'sainnhe/sonokai', name = 'sonokai' },
   { 'rebelot/kanagawa.nvim', name = 'kanagawa' },
   { 'vague-theme/vague.nvim', name = 'vague' },
   { 'EdenEast/nightfox.nvim', name = 'nightfox' },
   { 'webhooked/kanso.nvim', name = 'kanso' },
+  { 'jacoborus/tender.vim', name = 'tender' },
   { 'projekt0n/github-nvim-theme', name = 'github-theme', priority = 1000 }, -- More info here: https://github.com/projekt0n/github-nvim-theme
 }
