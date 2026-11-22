@@ -210,12 +210,6 @@ require('lazy').setup({
   { 'Joakker/lua-json5',         build = './install.sh' },
   { 'statico/vim-javascript-sql' },
   {
-    'kevinhwang91/nvim-hlslens',
-    config = function()
-      require('scrollbar.handlers.search').setup()
-    end,
-  },
-  {
     'nvimdev/lspsaga.nvim',
     config = function()
       require('lspsaga').setup {
@@ -294,10 +288,9 @@ require('lazy').setup({
   {
     'neovim/nvim-lspconfig',
     dependencies = {
-      { 'williamboman/mason.nvim', config = true },
-      'williamboman/mason-lspconfig.nvim',
+      { 'mason-org/mason.nvim', config = true },
+      'mason-org/mason-lspconfig.nvim',
       { 'j-hui/fidget.nvim',       opts = {} },
-      'folke/neodev.nvim',
       'saghen/blink.cmp',
     },
   },
@@ -319,6 +312,11 @@ require('lazy').setup({
   --     'rafamadriz/friendly-snippets',
   --   },
   -- },
+  {
+    'folke/lazydev.nvim',
+    ft = 'lua',
+    opts = {},
+  },
   {
     'HiPhish/rainbow-delimiters.nvim',
   },
@@ -533,10 +531,8 @@ vim.g.rainbow_delimiters = {
   },
 }
 
-local _border = 'single'
-vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = _border })
-vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = _border })
-vim.diagnostic.config { float = { border = _border } }
+-- winborder (0.11+) borders hover, signature help, diagnostics floats and completion docs
+vim.o.winborder = 'single'
 
 vim.cmd.colorscheme = require("catppuccin").load()
 
@@ -616,9 +612,9 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
   end,
 })
 
-require('scrollbar.handlers.gitsigns').setup()
 require('scrollbar').setup {
-  handle = { color = 'black' },
+  providers = { gitsigns = true, search = true },
+  scrollbar = { thumb = { highlight = { bg = 'black' } } },
 }
 
 require('telescope').setup {
@@ -693,86 +689,54 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 vim.keymap.set('n', '<leader>sU', ':UndotreeShow<cr>', { desc = '[S]earch [U]ndotree' })
 
-vim.defer_fn(function()
-  require('nvim-treesitter.configs').setup {
-    modules = {},
-    ensure_installed = {
-      'html',
-      'markdown',
-      'c',
-      'cpp',
-      'go',
-      'lua',
-      'python',
-      'rust',
-      'sql',
-      'yaml',
-      'tsx',
-      'javascript',
-      'typescript',
-      'vimdoc',
-      'vim',
-      'bash',
-    },
-    auto_install = true,
-    sync_install = true,
-    ignore_install = {},
-    highlight = { enable = true, additional_vim_regex_highlighting = false },
-    indent = { enable = true },
-    incremental_selection = {
-      enable = true,
-      keymaps = {
-        init_selection = '<c-space>',
-        node_incremental = '<c-space>',
-        scope_incremental = '<c-s>',
-        node_decremental = '<M-space>',
-      },
-    },
-    textobjects = {
-      select = {
-        enable = true,
-        lookahead = true,
-        keymaps = {
-          ['aa'] = '@parameter.outer',
-          ['ia'] = '@parameter.inner',
-          ['af'] = '@function.outer',
-          ['if'] = '@function.inner',
-          ['ac'] = '@class.outer',
-          ['ic'] = '@class.inner',
-        },
-      },
-      move = {
-        enable = true,
-        set_jumps = true,
-        goto_next_start = {
-          [']m'] = '@function.outer',
-          [']]'] = '@class.outer',
-        },
-        goto_next_end = {
-          [']M'] = '@function.outer',
-          [']['] = '@class.outer',
-        },
-        goto_previous_start = {
-          ['[m'] = '@function.outer',
-          ['[['] = '@class.outer',
-        },
-        goto_previous_end = {
-          ['[M'] = '@function.outer',
-          ['[]'] = '@class.outer',
-        },
-      },
-      swap = {
-        enable = true,
-        swap_next = {
-          ['<leader>a'] = '@parameter.inner',
-        },
-        swap_previous = {
-          ['<leader>A'] = '@parameter.inner',
-        },
-      },
-    },
-  }
-end, 0)
+-- nvim-treesitter `main` branch: parsers are installed explicitly (needs the `tree-sitter` CLI),
+-- and highlighting/indent are enabled per-filetype with Neovim's built-in treesitter.
+require('nvim-treesitter').install {
+  'html', 'markdown', 'markdown_inline', 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'sql', 'yaml',
+  'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'query',
+}
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('custom-treesitter', { clear = true }),
+  callback = function(args)
+    local lang = vim.treesitter.language.get_lang(args.match)
+    if lang and pcall(vim.treesitter.start, args.buf, lang) then
+      vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end
+  end,
+})
+
+-- Incremental selection is built into Neovim 0.12: `an` / `in` in visual mode (:help v_an)
+
+-- Textobjects (main branch API)
+require('nvim-treesitter-textobjects').setup {
+  select = { lookahead = true },
+  move = { set_jumps = true },
+}
+local ts_select = require 'nvim-treesitter-textobjects.select'
+local ts_move = require 'nvim-treesitter-textobjects.move'
+local ts_swap = require 'nvim-treesitter-textobjects.swap'
+for key, query in pairs {
+  aa = '@parameter.outer', ia = '@parameter.inner',
+  af = '@function.outer', ['if'] = '@function.inner',
+  ac = '@class.outer', ic = '@class.inner',
+} do
+  vim.keymap.set({ 'x', 'o' }, key, function() ts_select.select_textobject(query, 'textobjects') end)
+end
+for key, spec in pairs {
+  [']m'] = { ts_move.goto_next_start, '@function.outer' },
+  [']]'] = { ts_move.goto_next_start, '@class.outer' },
+  [']M'] = { ts_move.goto_next_end, '@function.outer' },
+  [']['] = { ts_move.goto_next_end, '@class.outer' },
+  ['[m'] = { ts_move.goto_previous_start, '@function.outer' },
+  ['[['] = { ts_move.goto_previous_start, '@class.outer' },
+  ['[M'] = { ts_move.goto_previous_end, '@function.outer' },
+  ['[]'] = { ts_move.goto_previous_end, '@class.outer' },
+} do
+  vim.keymap.set({ 'n', 'x', 'o' }, key, function() spec[1](spec[2], 'textobjects') end)
+end
+vim.keymap.set('n', '<leader>a', function() ts_swap.swap_next '@parameter.inner' end)
+vim.keymap.set('n', '<leader>A', function() ts_swap.swap_previous '@parameter.inner' end)
 
 local on_attach = function(_, bufnr)
   local nmap = function(keys, func, desc)
@@ -845,102 +809,76 @@ require('which-key').add {
   { '<leader>h', desc = 'Git [H]unk',       mode = 'v' },
 }
 
-require('neodev').setup()
-local mason = require('mason')
-local mason_lspconfig = require('mason-lspconfig')
-local lspconfig = require('lspconfig')
-local blink = require('blink.cmp')
+local mason = require 'mason'
+local mason_lspconfig = require 'mason-lspconfig'
+local blink = require 'blink.cmp'
 
 -- Mason Setup
-mason.setup({
+mason.setup {
   ui = {
     icons = {
-      package_installed = "✓",
-      package_pending = "➜",
-      package_uninstalled = "✗"
-    }
-  }
-})
+      package_installed = '✓',
+      package_pending = '➜',
+      package_uninstalled = '✗',
+    },
+  },
+}
 
--- Servers Configuration
+-- Servers Configuration (merged over nvim-lspconfig's defaults via vim.lsp.config)
 local servers = {
   clangd = {},
-  ts_ls = {},
+  ts_ls = {
+    settings = { completions = { completeFunctionCalls = true } },
+  },
   gopls = {},
   pyright = {},
   rust_analyzer = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
   lua_ls = {
-    Lua = {
-      workspace = { checkThirdParty = false },
-      telemetry = { enable = false },
+    settings = {
+      Lua = {
+        workspace = { checkThirdParty = false },
+        telemetry = { enable = false },
+      },
     },
   },
 }
 
--- Blink Completion Setup
-blink.setup()
-
--- Capabilities for LSP
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = blink.get_lsp_capabilities(capabilities)
+-- Capabilities for LSP (blink.cmp + folding)
+local capabilities = blink.get_lsp_capabilities()
 capabilities = vim.tbl_deep_extend('force', capabilities, {
   textDocument = {
     foldingRange = {
       dynamicRegistration = false,
-      lineFoldingOnly = true
-    }
-  }
-})
--- Mason LSP Configuration
-mason_lspconfig.setup {
-  ensure_installed = vim.tbl_keys(servers)
-}
-
--- LSP Setup Handler
-mason_lspconfig.setup_handlers {
-  function(server_name)
-    lspconfig[server_name].setup {
-      capabilities = capabilities,
-      on_attach = function(client, bufnr)
-        -- Custom on_attach logic
-        -- Example: key mappings, highlighting, etc.
-        local bufopts = { noremap = true, silent = true, buffer = bufnr }
-        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-        vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-      end,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
-    }
-  end
-}
-
--- TypeScript-specific LSP Configuration
-lspconfig.ts_ls.setup {
-  on_attach = function(client)
-    client.server_capabilities.documentFormattingProvider = false
-    client.server_capabilities.documentRangeFormattingProvider = false
-    on_attach(client)
-  end,
-  settings = {
-    completions = {
-      completeFunctionCalls = true,
+      lineFoldingOnly = true,
     },
   },
-  root_dir = function(fname)
-    return lspconfig.util.root_pattern('tsconfig.json', 'package.json', 'jsconfig.json')(fname)
-        or lspconfig.util.find_git_ancestor(fname)
-        or lspconfig.util.path.dirname(fname)
+})
+vim.lsp.config('*', { capabilities = capabilities })
+for name, cfg in pairs(servers) do
+  vim.lsp.config(name, cfg)
+end
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('custom-lsp-attach', { clear = true }),
+  callback = function(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if not client then
+      return
+    end
+    -- Formatting for TypeScript is handled by conform/prettier
+    if client.name == 'ts_ls' then
+      client.server_capabilities.documentFormattingProvider = false
+      client.server_capabilities.documentRangeFormattingProvider = false
+    end
+    on_attach(client, ev.buf)
   end,
-  handlers = {
-    ['textDocument/publishDiagnostics'] = function(_, result, ctx, config)
-      if result.diagnostics == nil then
-        return
-      end
-      vim.lsp.diagnostic.on_publish_diagnostics(_, result, ctx, config)
-    end,
-  },
+})
+
+-- Installs the servers and calls vim.lsp.enable() for each of them
+mason_lspconfig.setup {
+  ensure_installed = vim.tbl_keys(servers),
+  automatic_enable = true,
 }
 
 -- Optional: Snippet Support
