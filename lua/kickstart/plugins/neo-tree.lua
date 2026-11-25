@@ -14,6 +14,7 @@ return {
   },
   opts = {
     filesystem = {
+      use_libuv_file_watcher = true,
       filtered_items = {
         always_show = {
           '.gitignore',
@@ -28,4 +29,14 @@ return {
       },
     },
   },
+  config = function(_, opts)
+    require('neo-tree').setup(opts)
+    -- Refresh git status when git changes happen outside the tree (stage, commit, checkout, ...)
+    local function refresh()
+      local events = require 'neo-tree.events'
+      events.fire_event(events.GIT_EVENT)
+    end
+    vim.api.nvim_create_autocmd({ 'FocusGained', 'ShellCmdPost', 'TermClose' }, { callback = refresh })
+    vim.api.nvim_create_autocmd('User', { pattern = { 'GitSignsUpdate', 'GitSignsChanged' }, callback = refresh })
+  end,
 }
